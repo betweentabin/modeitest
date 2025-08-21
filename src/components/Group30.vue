@@ -2,13 +2,13 @@
   <div class="group-30-1">
     <img
       class="vector-16-1"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-15-1.svg"
+      src="/img/vector-15-1.svg"
       alt="Vector 16"
     />
     <div class="about-us valign-text-middle inter-bold-white-20px">About us</div>
     <img
       class="vector-15-1"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-15-1.svg"
+      src="/img/vector-15-1.svg"
       alt="Vector 15"
     />
   </div>

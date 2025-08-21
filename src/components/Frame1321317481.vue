@@ -6,7 +6,7 @@
     </div>
     <img
       class="vector-26"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-28.svg"
+      src="/img/vector-28.svg"
       alt="Vector"
     />
   </div>

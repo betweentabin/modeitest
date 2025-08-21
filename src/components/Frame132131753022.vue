@@ -1,15 +1,29 @@
 <template>
   <div class="frame-1321317530">
     <div class="frame-1321317521">
-      <frame13213175225 :text14="frame132131752251Props.text14" />
-      <frame13213175225 :text14="frame132131752252Props.text14" />
-      <frame13213175225 :text14="frame132131752253Props.text14" />
-      <frame13213175225 :text14="frame132131752254Props.text14" />
-      <frame13213175225 :text14="frame132131752255Props.text14" />
+      <router-link to="/" class="footer-link">
+        <frame13213175225 :text14="frame132131752251Props.text14" />
+      </router-link>
+      <router-link to="/about" class="footer-link">
+        <frame13213175225 :text14="frame132131752252Props.text14" />
+      </router-link>
+      <router-link to="/news" class="footer-link">
+        <frame13213175225 :text14="frame132131752253Props.text14" />
+      </router-link>
+      <router-link to="/faq" class="footer-link">
+        <frame13213175225 :text14="frame132131752254Props.text14" />
+      </router-link>
+      <router-link to="/contact" class="footer-link">
+        <frame13213175225 :text14="frame132131752255Props.text14" />
+      </router-link>
     </div>
     <div class="frame-1321317522">
-      <frame13213175222 :text19="frame132131752221Props.text19" />
-      <frame13213175222 :text19="frame132131752222Props.text19" />
+      <router-link to="/seminar" class="footer-link">
+        <frame13213175222 :text19="frame132131752221Props.text19" />
+      </router-link>
+      <router-link to="/publications" class="footer-link">
+        <frame13213175222 :text19="frame132131752222Props.text19" />
+      </router-link>
       <frame13213175273
         :frame13213175222Props="frame132131752731Props.frame13213175222Props"
         :frame13213175251Props="frame132131752731Props.frame13213175251Props"
@@ -24,21 +38,21 @@
     <div class="frame-1321317523">
       <div class="frame-container">
         <div class="frame-1321317527">
-          <div class="frame-1321317524">
+          <router-link to="/services" class="frame-1321317524 footer-link">
             <img
               class="vector-27"
-              src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+              src="/img/vector.svg"
               alt="Vector"
             />
             <div class="text-25 valign-text-middle inter-normal-black-16px">会員サービスのご案内</div>
-          </div>
+          </router-link>
           <frame132131752522 :text26="frame1321317525221Props.text26" />
           <frame132131752522 :text26="frame1321317525222Props.text26" />
         </div>
         <div class="frame-1321317522-1">
           <img
             class="vector-27"
-            src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+            src="/img/vector.svg"
             alt="Vector"
           />
           <div class="cri valign-text-middle inter-normal-black-16px">CRI 経営コンサルティング</div>
@@ -46,7 +60,7 @@
         <div class="frame-1321317523-1">
           <img
             class="vector-27"
-            src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+            src="/img/vector.svg"
             alt="Vector"
           />
           <div class="text-28 valign-text-middle inter-normal-black-16px">決算報告</div>
@@ -225,4 +239,15 @@ export default {
   min-height: 170px;
   position: relative;
 }
+.footer-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: opacity 0.3s;
+}
+
+.footer-link:hover {
+  opacity: 0.7;
+}
+
 </style>

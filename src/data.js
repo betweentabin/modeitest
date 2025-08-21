@@ -4,7 +4,7 @@ export const frame13213174811Data = {
 };
 
 export const card1Data = {
-    image: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/image@2x.png",
+    image: "/img/image.png",
     frame1321317481Props: frame13213174811Data,
 };
 
@@ -14,7 +14,7 @@ export const frame13213174812Data = {
 };
 
 export const card2Data = {
-    image: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/image-1@2x.png",
+    image: "/img/image-1.png",
     className: "card-1",
     frame1321317481Props: frame13213174812Data,
 };
@@ -25,21 +25,21 @@ export const frame13213174813Data = {
 };
 
 export const frame13213174741Data = {
-    x22: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-2.png",
+    x22: "/img/-----2-2.png",
 };
 
 export const frame13213174751Data = {
-    x22: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/-----2-2-1@2x.png",
+    x22: "/img/-----2-2-1.png",
     hotInformationVol324: "経営参考BOOK vol.5２",
 };
 
 export const frame13213174752Data = {
-    x22: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-2-4@2x.png",
+    x22: "/img/-----2-2-4.png",
     hotInformationVol324: "Hot Information Vol.323",
 };
 
 export const frame13213174742Data = {
-    x22: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-2-2.png",
+    x22: "/img/-----2-2-2.png",
     className: "frame-1321317472-1",
 };
 
@@ -158,65 +158,65 @@ export const frame132131753022Data = {
 };
 
 export const screen2Data = {
-    heroImage: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/hero-image.png",
+    heroImage: "/img/hero-image.png",
     text66: "産・官・学・金（金融機関）の力で",
     text67: "企業活動を支援",
     text68: "お問い合わせはコチラ",
-    frame13213174901: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---2@2x.png",
+    frame13213174901: "/img/---2.png",
     text72: "セミナー",
     seminar: "SEMINAR",
-    frame1321317491: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/--@2x.png",
+    frame1321317491: "/img/--.png",
     text69: "刊行物",
     publications1: "PUBLICATIONS",
-    frame13213174902: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---1@2x.png",
+    frame13213174902: "/img/---1.png",
     text70: "各種情報",
     infomation1: "INFOMATION",
-    frame1321317492: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---7@2x.png",
+    frame1321317492: "/img/---7.png",
     text71: "会員について",
     membership: "MEMBERSHIP",
     text112: "ちくぎん地域経済研究所について",
     forYou: "FOR YOU",
     text113: "産・官・学・金（金融）のネットワークによる<br />様々な分野の調査研究を通じ、企業活動などをサポートします。",
-    image1: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/image-2@2x.png",
+    image1: "/img/image-2.png",
     text120: "詳細はこちら",
     infomation2: "INFOMATION",
     text121: "ニュース",
     date1: "2025.05.12",
     hotInfomationVol319: "HOT infomation Vol.319掲載しました！",
-    vector3: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
+    vector3: "/img/rectangle-6-7.png",
     date2: "2025.05.12",
     text123: "採用力強化！経営・人事向け　面接官トレーニングセミナー",
-    vector5: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
+    vector5: "/img/rectangle-6-7.png",
     date3: "2025.05.12",
     hotInformationVol318: "Hot Information Vol.318掲載しました！",
-    vector8: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
+    vector8: "/img/rectangle-6-7.png",
     date4: "2025.05.12",
     hotInformationVol3161: "Hot Information Vol.316掲載しました。",
-    vector10: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
+    vector10: "/img/rectangle-6-7.png",
     date5: "2025.05.12",
     hotInformationVol3162: "Hot Information Vol.316掲載しました。",
-    vector12: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
+    vector12: "/img/rectangle-6-7.png",
     text101: "刊行物",
     publications2: "PUBLICATIONS",
-    x221: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/-----2-2-5@2x.png",
+    x221: "/img/-----2-2-5.png",
     date6: "2025.04.28",
     viweMore1: "Viwe More .",
     hotInformationVol324: "Hot Information Vol.324",
     text104: "その他の情報",
     otherInfomation: "OTHER INFOMATION",
-    x222: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-2-5.png",
+    x222: "/img/-----2-2-5.png",
     text108: "経済指標バナー",
     viweMore2: "Viwe More .",
-    vector17: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
-    x23: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-3.png",
+    vector17: "/img/rectangle-6-7.png",
+    x23: "/img/-----2-3.png",
     text106: "決算報告",
     viweMore3: "Viwe More .",
-    vector19: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
-    x24: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-4.png",
+    vector19: "/img/rectangle-6-7.png",
+    x24: "/img/-----2-4.png",
     text107: "用語集",
     viweMore4: "Viwe More .",
-    vector21: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
-    rectangle3: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/rectangle-3.png",
+    vector21: "/img/rectangle-6-7.png",
+    rectangle3: "/img/rectangle-3.png",
     text75: "会社情報",
     text77: "会社名：株式会社ちくぎん地域経済研究所",
     text76: "住所：〒839-0864<br />　　　福岡県久留米市百年公園1番1号久留米リサーチセンタービル6階",
@@ -230,10 +230,10 @@ export const screen2Data = {
     x497M6: "【予約制】軒先パーキング 合川スタンド跡駐車場 | 約497m 徒歩で約6分",
     x811M10: "タイムズ合川町混 | 約811m 徒歩で約10分",
     d1830M10: "Dパーキング諏訪野町第1 | 約830m 徒歩で約10分",
-    image2: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---3@2x.png",
-    image3: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---4@2x.png",
-    image4: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---5@2x.png",
-    image5: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---6@2x.png",
+    image2: "/img/---3.png",
+    image3: "/img/---4.png",
+    image4: "/img/---5.png",
+    image5: "/img/---6.png",
     card1Props: card1Data,
     card2Props: card2Data,
     frame1321317481Props: frame13213174813Data,
