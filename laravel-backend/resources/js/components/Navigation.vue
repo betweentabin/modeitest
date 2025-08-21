@@ -8,7 +8,6 @@
     </div>
     <div class="frame-1321317498">
       <div class="group-2">
-        <navigation-menu />
         <div class="items">
           <x-button />
           <x-button2 />
@@ -44,7 +43,6 @@ import Group1 from "./Group1.vue";
 import XButton from "./XButton.vue";
 import XButton2 from "./XButton2.vue";
 import Items from "./Items.vue";
-import NavigationMenu from "./NavigationMenu.vue";
 
 export default {
   name: "Navigation",
@@ -54,7 +52,6 @@ export default {
     XButton,
     XButton2,
     Items,
-    NavigationMenu,
   },
 };
 </script>

@@ -27,6 +27,18 @@ export default new Router({
       props: { ...screen2Data },
     },
     {
+      path: "/news",
+      name: "news",
+      component: Screen2,
+      props: { ...screen2Data },
+    },
+    {
+      path: "/faq",
+      name: "faq",
+      component: Screen2,
+      props: { ...screen2Data },
+    },
+    {
       path: "/contact",
       name: "contact",
       component: Screen2,

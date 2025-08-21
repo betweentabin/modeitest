@@ -1,30 +1,30 @@
 <template>
   <div class="items-1 inter-bold-black-15px">
-    <div class="text-6 valign-text-middle">トップ</div>
+    <router-link to="/" class="text-6 valign-text-middle nav-link" exact-active-class="active">トップ</router-link>
     <img
       class="vector-22"
       src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
       alt="Vector 1"
     />
-    <div class="text-6 valign-text-middle">会員サービスのご案内</div>
+    <router-link to="/services" class="text-6 valign-text-middle nav-link" active-class="active">会員サービスのご案内</router-link>
     <img
       class="vector-22"
       src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
       alt="Vector 2"
     />
-    <div class="text-6 valign-text-middle">会社概要</div>
+    <router-link to="/about" class="text-6 valign-text-middle nav-link" active-class="active">会社概要</router-link>
     <img
       class="vector-22"
       src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
       alt="Vector 3"
     />
-    <div class="text-6 valign-text-middle">お知らせ</div>
+    <router-link to="/news" class="text-6 valign-text-middle nav-link" active-class="active">お知らせ</router-link>
     <img
       class="vector-22"
       src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
       alt="Vector 4"
     />
-    <div class="text-6 valign-text-middle">よくあるご質問</div>
+    <router-link to="/faq" class="text-6 valign-text-middle nav-link" active-class="active">よくあるご質問</router-link>
   </div>
 </template>
 
@@ -57,5 +57,20 @@ export default {
   height: 10px;
   position: relative;
   width: 1px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #007bff;
+}
+
+.nav-link.active {
+  color: #007bff;
+  font-weight: 700;
 }
 </style>
