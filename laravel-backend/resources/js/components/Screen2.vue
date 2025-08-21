@@ -17,7 +17,7 @@
                 <div class="frame-1321317612">
                   <img
                     class="vector-2"
-                    src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-35.svg"
+                    src="/img/vector-35.svg"
                     alt="Vector"
                   />
                 </div>
@@ -55,7 +55,7 @@
       <frame1321317493 />
       <img
         class="vector-13"
-        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-13.svg"
+        src="/img/vector-13.svg"
         alt="Vector 13"
       />
       <div class="overlap-group8">
@@ -65,20 +65,20 @@
             <div class="flex-col-1">
               <img
                 class="ico_logo-2"
-                src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/ico-logo-2.svg"
+                src="/img/ico-logo-2.svg"
                 alt="ico_logo 2"
               />
               <div class="text-47">{{ text112 }}</div>
               <div class="group-30">
                 <img
                   class="vector-16"
-                  src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-15-2.svg"
+                  src="/img/vector-15-2.svg"
                   alt="Vector 16"
                 />
                 <div class="for-you valign-text-middle">{{ forYou }}</div>
                 <img
                   class="vector-15"
-                  src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-15-2.svg"
+                  src="/img/vector-15-2.svg"
                   alt="Vector 15"
                 />
               </div>
@@ -113,7 +113,7 @@
                 <div class="flex-row">
                   <img
                     class="vector-6"
-                    src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-6-3.svg"
+                    src="/img/vector-6-3.svg"
                     alt="Vector 6"
                   />
                   <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
@@ -131,7 +131,7 @@
                     <div class="overlap-group">
                       <img
                         class="vector"
-                        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-74.svg"
+                        src="/img/vector-74.svg"
                         alt="Vector"
                       />
                     </div>
@@ -148,7 +148,7 @@
                     <div class="overlap-group">
                       <img
                         class="vector"
-                        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-74.svg"
+                        src="/img/vector-74.svg"
                         alt="Vector"
                       />
                     </div>
@@ -165,7 +165,7 @@
                     <div class="overlap-group">
                       <img
                         class="vector"
-                        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-74.svg"
+                        src="/img/vector-74.svg"
                         alt="Vector"
                       />
                     </div>
@@ -182,7 +182,7 @@
                     <div class="overlap-group">
                       <img
                         class="vector"
-                        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-74.svg"
+                        src="/img/vector-74.svg"
                         alt="Vector"
                       />
                     </div>
@@ -199,7 +199,7 @@
                     <div class="overlap-group">
                       <img
                         class="vector"
-                        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-74.svg"
+                        src="/img/vector-74.svg"
                         alt="Vector"
                       />
                     </div>
@@ -218,7 +218,7 @@
               <div class="group-20">
                 <img
                   class="vector-6"
-                  src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-6.svg"
+                  src="/img/vector-6.svg"
                   alt="Vector 6"
                 />
                 <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text101 }}</div>
@@ -233,12 +233,12 @@
                 <div class="group-18">
                   <img
                     class="vector-9"
-                    src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-9-1.svg"
+                    src="/img/vector-9-1.svg"
                     alt="Vector 9"
                   />
                   <img
                     class="vector-10"
-                    src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-10-1.svg"
+                    src="/img/vector-10-1.svg"
                     alt="Vector 10"
                   />
                 </div>
@@ -259,7 +259,7 @@
                     <div class="overlap-group-3">
                       <img
                         class="rectangle-6"
-                        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/rectangle-6-2.svg"
+                        src="/img/rectangle-6-2.svg"
                         alt="Rectangle 6"
                       />
                       <div class="date-1 valign-text-middle inter-normal-ship-gray-10px">{{ date6 }}</div>
@@ -277,17 +277,17 @@
             <div class="vector-container">
               <img
                 class="vector-11"
-                src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-11-1.svg"
+                src="/img/vector-11-1.svg"
                 alt="Vector 11"
               />
               <img
                 class="vector-13-1"
-                src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-13-2.svg"
+                src="/img/vector-13-2.svg"
                 alt="Vector 13"
               />
               <img
                 class="vector-12"
-                src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-12-1.svg"
+                src="/img/vector-12-1.svg"
                 alt="Vector 12"
               />
             </div>
@@ -299,7 +299,7 @@
               <div class="group-20-1">
                 <img
                   class="vector-6"
-                  src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-6.svg"
+                  src="/img/vector-6.svg"
                   alt="Vector 6"
                 />
                 <div class="text-39 valign-text-middle inter-bold-black-24px">{{ text104 }}</div>
@@ -322,7 +322,7 @@
                       <div class="caret-right">
                         <img
                           class="vector-14"
-                          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-65.svg"
+                          src="/img/vector-65.svg"
                           alt="Vector"
                         />
                         <img class="vector-17" :src="vector17" alt="Vector" />
@@ -339,7 +339,7 @@
                       <div class="caret-right">
                         <img
                           class="vector-1"
-                          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-61.svg"
+                          src="/img/vector-61.svg"
                           alt="Vector"
                         />
                         <img class="vector-18" :src="vector19" alt="Vector" />
@@ -356,7 +356,7 @@
                       <div class="caret-right">
                         <img
                           class="vector-1"
-                          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-61.svg"
+                          src="/img/vector-61.svg"
                           alt="Vector"
                         />
                         <img class="vector-19" :src="vector21" alt="Vector" />
@@ -371,7 +371,7 @@
       </div>
       <img
         class="vector-14-1"
-        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-14.svg"
+        src="/img/vector-14.svg"
         alt="Vector 14"
       />
       <div class="view-2">
@@ -413,7 +413,7 @@
         </div>
         <img
           class="vector-5-1"
-          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-5.svg"
+          src="/img/vector-5.svg"
           alt="Vector 5"
         />
       </div>
@@ -421,7 +421,7 @@
         <frame132131753022 v-bind="frame132131753022Props" />
         <img
           class="vector-7-1"
-          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-7.svg"
+          src="/img/vector-7.svg"
           alt="Vector 7"
         />
         <group27 />
@@ -1124,7 +1124,7 @@ export default {
 .overlap-group {
   align-items: center;
   align-self: center;
-  background-image: url(https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/vector-73.svg);
+  background-image: url(/img/vector-73.svg);
   background-size: 100% 100%;
   display: flex;
   height: 27px;

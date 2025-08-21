@@ -3,7 +3,7 @@
     <div class="frame-1321317494">
       <img
         class="vector-23"
-        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-32.svg"
+        src="/img/vector-32.svg"
         alt="Vector"
       />
       <div class="text-68 valign-text-middle inter-bold-white-13px">ログイン</div>
@@ -11,7 +11,7 @@
     <div class="frame-1321317495">
       <img
         class="vector-24"
-        src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-33.svg"
+        src="/img/vector-33.svg"
         alt="Vector"
       />
       <div class="text-69 valign-text-middle inter-bold-white-13px">お問い合わせ</div>

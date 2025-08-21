@@ -4,7 +4,7 @@
       <div class="group-8">
         <img
           class="ico_logo-1"
-          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/687f21920f7550798ae31b24/img/ico-logo-1-1.svg"
+          src="/img/ico-logo-1-1.svg"
           alt="ico_logo 1"
         />
         <view3 />

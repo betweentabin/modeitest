@@ -43,7 +43,7 @@ export default {
 
 .overlap-group-8 {
   align-items: flex-start;
-  background-image: url(https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/rectangle-6.svg);
+  background-image: url(/img/rectangle-6.svg);
   background-size: 100% 100%;
   display: flex;
   flex-direction: column;

@@ -27,7 +27,7 @@
           <div class="frame-1321317524">
             <img
               class="vector-27"
-              src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+              src="/img/vector.svg"
               alt="Vector"
             />
             <div class="text-25 valign-text-middle inter-normal-black-16px">会員サービスのご案内</div>
@@ -38,7 +38,7 @@
         <div class="frame-1321317522-1">
           <img
             class="vector-27"
-            src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+            src="/img/vector.svg"
             alt="Vector"
           />
           <div class="cri valign-text-middle inter-normal-black-16px">CRI 経営コンサルティング</div>
@@ -46,7 +46,7 @@
         <div class="frame-1321317523-1">
           <img
             class="vector-27"
-            src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+            src="/img/vector.svg"
             alt="Vector"
           />
           <div class="text-28 valign-text-middle inter-normal-black-16px">決算報告</div>

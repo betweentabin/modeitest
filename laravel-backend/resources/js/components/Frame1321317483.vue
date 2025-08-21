@@ -41,7 +41,7 @@ export default {
 }
 
 .overlap-group6 {
-  background-image: url(https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----1-1.png);
+  background-image: url(/img/-----1-1.png);
   background-position: 50% 50%;
   background-size: cover;
   height: 706px;

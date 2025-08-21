@@ -1,7 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Screen2 from "./components/Screen2.vue";
-import { screen2Data } from "./data";
+import HomePage from "./components/HomePage.vue";
+import AboutPage from "./components/AboutPage.vue";
+import ServicesPage from "./components/ServicesPage.vue";
+import NewsPage from "./components/NewsPage.vue";
+import FaqPage from "./components/FaqPage.vue";
 
 Vue.use(Router);
 
@@ -11,38 +14,27 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Screen2,
-      props: { ...screen2Data },
+      component: HomePage,
     },
     {
       path: "/about",
       name: "about",
-      component: Screen2,
-      props: { ...screen2Data },
+      component: AboutPage,
     },
     {
       path: "/services",
       name: "services",
-      component: Screen2,
-      props: { ...screen2Data },
+      component: ServicesPage,
     },
     {
       path: "/news",
       name: "news",
-      component: Screen2,
-      props: { ...screen2Data },
+      component: NewsPage,
     },
     {
       path: "/faq",
       name: "faq",
-      component: Screen2,
-      props: { ...screen2Data },
-    },
-    {
-      path: "/contact",
-      name: "contact",
-      component: Screen2,
-      props: { ...screen2Data },
+      component: FaqPage,
     },
     {
       path: "*",

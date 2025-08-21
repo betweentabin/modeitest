@@ -4,7 +4,7 @@
       <div class="flex-row-1">
         <img
           class="vector-6-1"
-          src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-6.svg"
+          src="/img/vector-6.svg"
           alt="Vector 6"
         />
         <div class="text-8-1 valign-text-middle inter-bold-black-24px">アクセス</div>

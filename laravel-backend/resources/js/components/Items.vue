@@ -3,25 +3,25 @@
     <router-link to="/" class="text-6 valign-text-middle nav-link" exact-active-class="active">トップ</router-link>
     <img
       class="vector-22"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
+      src="/img/vector-1.svg"
       alt="Vector 1"
     />
     <router-link to="/services" class="text-6 valign-text-middle nav-link" active-class="active">会員サービスのご案内</router-link>
     <img
       class="vector-22"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
+      src="/img/vector-1.svg"
       alt="Vector 2"
     />
     <router-link to="/about" class="text-6 valign-text-middle nav-link" active-class="active">会社概要</router-link>
     <img
       class="vector-22"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
+      src="/img/vector-1.svg"
       alt="Vector 3"
     />
     <router-link to="/news" class="text-6 valign-text-middle nav-link" active-class="active">お知らせ</router-link>
     <img
       class="vector-22"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6846ceece9555a0f73238379/img/vector-1.svg"
+      src="/img/vector-1.svg"
       alt="Vector 4"
     />
     <router-link to="/faq" class="text-6 valign-text-middle nav-link" active-class="active">よくあるご質問</router-link>

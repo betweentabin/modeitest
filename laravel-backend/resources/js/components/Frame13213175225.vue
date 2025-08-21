@@ -2,7 +2,7 @@
   <div class="frame-132131752">
     <img
       class="vector-28"
-      src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector.svg"
+      src="/img/vector.svg"
       alt="Vector"
     />
     <div class="text-1-1 valign-text-middle inter-normal-black-16px">{{ text14 }}</div>
