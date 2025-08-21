@@ -1,5 +1,5 @@
 <template>
-  <div class="button-1">
+  <div class="button-1" @click="makePhoneCall" style="cursor: pointer;">
     <img
       class="vector-21"
       src="https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/vector-31.svg"
@@ -17,6 +17,13 @@
 <script>
 export default {
   name: "XButton",
+  methods: {
+    makePhoneCall() {
+      console.log('Making phone call to: 0942-46-5081');
+      // 電話をかける処理
+      window.location.href = 'tel:0942-46-5081';
+    }
+  }
 };
 </script>
 

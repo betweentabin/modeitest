@@ -1,5 +1,5 @@
 <template>
-  <div :class="[`card-1-1`, className || ``]">
+  <div :class="[`card-1-1`, className || ``]" @click="handleCardClick" style="cursor: pointer;">
     <div class="image-5" :style="{ 'background-image': 'url(' + image + ')' }">
       <frame1321317481 :text49="frame1321317481Props.text49" :text50="frame1321317481Props.text50" />
     </div>
@@ -14,6 +14,13 @@ export default {
     Frame1321317481,
   },
   props: ["image", "className", "frame1321317481Props"],
+  methods: {
+    handleCardClick() {
+      console.log('Card clicked:', this.frame1321317481Props);
+      // カードクリック時の処理
+      alert('カードがクリックされました');
+    }
+  }
 };
 </script>
 
