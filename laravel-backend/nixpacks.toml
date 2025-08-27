@@ -1,0 +1,18 @@
+[providers]
+php = "*"
+
+[phases.build]
+cmds = [
+    "composer install --no-dev --optimize-autoloader",
+    "php artisan config:cache",
+    "php artisan route:cache",
+    "touch database/database.sqlite",
+    "php artisan migrate --force",
+    "php artisan db:seed --force"
+]
+
+[phases.setup]
+cmds = ["mkdir -p storage/logs", "chmod -R 775 storage", "chmod -R 775 bootstrap/cache"]
+
+[start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"

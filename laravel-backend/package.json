@@ -2,8 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "dev": "echo 'Frontend build disabled for API-only deployment'",
+        "build": "echo 'Frontend build disabled for API-only deployment'"
     },
     "devDependencies": {
         "axios": "^1.6.4",
