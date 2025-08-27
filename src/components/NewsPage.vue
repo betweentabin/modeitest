@@ -154,6 +154,7 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import mockServer from '@/mockServer';
 
 export default {
   name: "NewsPage",
@@ -165,10 +166,26 @@ export default {
     return {
       currentPage: 1,
       totalPages: 3,
-      selectedCategory: 'all'
+      selectedCategory: 'all',
+      newsItems: [],
+      loading: false
     };
   },
+  async mounted() {
+    await this.loadNews()
+  },
   methods: {
+    async loadNews() {
+      this.loading = true
+      try {
+        const allNews = await mockServer.getAllNews()
+        this.newsItems = allNews
+      } catch (err) {
+        console.error('ニュースの読み込みに失敗しました:', err)
+      } finally {
+        this.loading = false
+      }
+    },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
@@ -176,6 +193,14 @@ export default {
     },
     filterCategory(category) {
       this.selectedCategory = category;
+    }
+  },
+  computed: {
+    filteredNews() {
+      if (this.selectedCategory === 'all') {
+        return this.newsItems
+      }
+      return this.newsItems.filter(item => item.category === this.selectedCategory)
     }
   }
 };

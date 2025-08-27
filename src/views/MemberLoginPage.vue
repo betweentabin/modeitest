@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-login-page">
+  <div class="member-login-page">
     <div class="login-container">
       <div class="login-card">
         <div class="logo-section">
@@ -8,8 +8,8 @@
             src="/img/ico-logo-2.svg"
             alt="Logo"
           />
-          <h1 class="title inter-bold-black-24px">管理者ログイン</h1>
-          <p class="subtitle inter-normal-ship-gray-16px">コンテンツ管理システムへようこそ</p>
+          <h1 class="title inter-bold-black-24px">会員ログイン</h1>
+          <p class="subtitle inter-normal-ship-gray-16px">会員限定コンテンツへアクセス</p>
         </div>
         
         <form @submit.prevent="handleLogin" class="login-form">
@@ -23,7 +23,7 @@
               type="email"
               required
               class="form-input inter-normal-ship-gray-16px"
-              placeholder="admin@example.com"
+              placeholder="member@example.com"
             />
           </div>
 
@@ -41,6 +41,20 @@
             />
           </div>
 
+          <div class="form-options">
+            <label class="remember-me">
+              <input
+                type="checkbox"
+                v-model="rememberMe"
+                class="checkbox"
+              />
+              <span class="inter-normal-ship-gray-15px">ログイン情報を記憶する</span>
+            </label>
+            <a href="#" class="forgot-link inter-normal-ship-gray-15px" @click.prevent="showForgotPassword">
+              パスワードを忘れた方
+            </a>
+          </div>
+
           <div v-if="error" class="error-message inter-normal-ship-gray-15px">
             <img src="/img/vector-28.svg" alt="Error" class="error-icon" />
             {{ error }}
@@ -53,7 +67,35 @@
           >
             {{ loading ? 'ログイン中...' : 'ログイン' }}
           </button>
+
+          <div class="divider">
+            <span class="divider-text inter-normal-ship-gray-10px">または</span>
+          </div>
+
+          <router-link
+            to="/register"
+            class="register-button inter-bold-mandy-15px"
+          >
+            新規会員登録
+          </router-link>
         </form>
+
+        <div class="membership-info">
+          <div class="membership-types">
+            <div class="membership-type">
+              <img src="/img/vector-70.svg" alt="Basic" class="membership-icon" />
+              <span class="inter-semi-bold-ship-gray-11px">ベーシック会員</span>
+            </div>
+            <div class="membership-type">
+              <img src="/img/vector-71.svg" alt="Standard" class="membership-icon" />
+              <span class="inter-semi-bold-ship-gray-11px">スタンダード会員</span>
+            </div>
+            <div class="membership-type">
+              <img src="/img/vector-73.svg" alt="Premium" class="membership-icon" />
+              <span class="inter-semi-bold-ship-gray-11px">プレミアム会員</span>
+            </div>
+          </div>
+        </div>
 
         <div class="footer-text inter-normal-ship-gray-10px">
           セキュアな接続で保護されています
@@ -67,11 +109,12 @@
 import axios from 'axios'
 
 export default {
-  name: 'AdminLoginPage',
+  name: 'MemberLoginPage',
   data() {
     return {
       email: '',
       password: '',
+      rememberMe: false,
       loading: false,
       error: ''
     }
@@ -82,21 +125,25 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.post('http://localhost:8000/api/admin/login', {
+        const response = await axios.post('http://localhost:8000/api/login', {
           email: this.email,
           password: this.password
         })
 
-        localStorage.setItem('adminToken', response.data.token)
-        localStorage.setItem('adminUser', JSON.stringify(response.data.user))
+        localStorage.setItem('memberToken', response.data.token)
+        localStorage.setItem('memberUser', JSON.stringify(response.data.user))
+        
+        if (this.rememberMe) {
+          localStorage.setItem('rememberEmail', this.email)
+        } else {
+          localStorage.removeItem('rememberEmail')
+        }
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
         
-        this.$router.push('/admin/dashboard')
+        this.$router.push('/member/dashboard')
       } catch (err) {
-        if (err.response?.status === 403) {
-          this.error = '管理者権限がありません'
-        } else if (err.response?.data?.message) {
+        if (err.response?.data?.message) {
           this.error = err.response.data.message
         } else {
           this.error = 'ログインに失敗しました'
@@ -104,13 +151,23 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    showForgotPassword() {
+      this.$router.push('/forgot-password')
+    }
+  },
+  mounted() {
+    const rememberedEmail = localStorage.getItem('rememberEmail')
+    if (rememberedEmail) {
+      this.email = rememberedEmail
+      this.rememberMe = true
     }
   }
 }
 </script>
 
 <style scoped>
-.admin-login-page {
+.member-login-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
   display: flex;
@@ -201,6 +258,37 @@ export default {
   color: var(--celeste);
 }
 
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--mandy);
+}
+
+.forgot-link {
+  color: var(--mandy);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.forgot-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
 .error-message {
   background: rgba(218, 87, 97, 0.08);
   border: 1px solid rgba(218, 87, 97, 0.2);
@@ -247,9 +335,81 @@ export default {
   cursor: not-allowed;
 }
 
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--celeste);
+}
+
+.divider-text {
+  position: relative;
+  background: var(--white);
+  padding: 0 16px;
+  color: var(--sonic-silver);
+}
+
+.register-button {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  background: var(--white);
+  border: 2px solid var(--mandy);
+  border-radius: 8px;
+  color: var(--mandy);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.register-button:hover {
+  background: var(--mandy);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.2);
+}
+
+.membership-info {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--cararra);
+}
+
+.membership-types {
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+}
+
+.membership-type {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.membership-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+}
+
 .footer-text {
   text-align: center;
-  margin-top: 32px;
+  margin-top: 24px;
   color: var(--sonic-silver);
   display: flex;
   align-items: center;
@@ -273,6 +433,16 @@ export default {
   
   .subtitle {
     font-size: 14px;
+  }
+  
+  .membership-types {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .membership-type {
+    flex-direction: row;
+    justify-content: center;
   }
 }
 </style>

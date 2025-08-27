@@ -102,56 +102,58 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+<script>
 import axios from 'axios'
 
-const router = useRouter()
-const pages = ref([])
-const loading = ref(false)
-const error = ref('')
-const adminUser = ref(null)
+export default {
+  name: 'AdminDashboard',
+  data() {
+    return {
+      pages: [],
+      loading: false,
+      error: '',
+      adminUser: null
+    }
+  },
+  async mounted() {
+    const token = localStorage.getItem('adminToken')
+    const userStr = localStorage.getItem('adminUser')
+    
+    if (!token) {
+      this.$router.push('/admin/login')
+      return
+    }
 
-onMounted(() => {
-  const token = localStorage.getItem('adminToken')
-  const userStr = localStorage.getItem('adminUser')
-  
-  if (!token) {
-    router.push('/admin/login')
-    return
+    this.adminUser = userStr ? JSON.parse(userStr) : null
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    
+    await this.fetchPages()
+  },
+  methods: {
+    async fetchPages() {
+      this.loading = true
+      this.error = ''
+
+      try {
+        const response = await axios.get('http://localhost:8000/api/admin/pages')
+        this.pages = response.data
+      } catch (err) {
+        this.error = 'ページの取得に失敗しました'
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('ja-JP') + ' ' + date.toLocaleTimeString('ja-JP')
+    },
+    handleLogout() {
+      localStorage.removeItem('adminToken')
+      localStorage.removeItem('adminUser')
+      delete axios.defaults.headers.common['Authorization']
+      this.$router.push('/admin/login')
+    }
   }
-
-  adminUser.value = userStr ? JSON.parse(userStr) : null
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  
-  fetchPages()
-})
-
-const fetchPages = async () => {
-  loading.value = true
-  error.value = ''
-
-  try {
-    const response = await axios.get('http://localhost:8000/api/admin/pages')
-    pages.value = response.data
-  } catch (err) {
-    error.value = 'ページの取得に失敗しました'
-    console.error(err)
-  } finally {
-    loading.value = false
-  }
-}
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('ja-JP') + ' ' + date.toLocaleTimeString('ja-JP')
-}
-
-const handleLogout = () => {
-  localStorage.removeItem('adminToken')
-  localStorage.removeItem('adminUser')
-  delete axios.defaults.headers.common['Authorization']
-  router.push('/admin/login')
 }
 </script>

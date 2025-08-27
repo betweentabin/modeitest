@@ -8,8 +8,24 @@ import FaqPage from "./components/FaqPage";
 import ApplicationFormPage from "./components/ApplicationFormPage";
 import SeminarRegistrationPage from "./components/SeminarRegistrationPage";
 import AdminLoginPage from "./views/admin/AdminLoginPage";
+import SimpleAdminLogin from "./views/admin/SimpleAdminLogin";
+import NewAdminLogin from "./views/admin/NewAdminLogin";
 import AdminDashboard from "./views/admin/AdminDashboard";
+import NewAdminDashboard from "./views/admin/NewAdminDashboard";
+import MemberManagement from "./views/admin/MemberManagement";
+import SeminarManagement from "./views/admin/SeminarManagement";
+import PublicationManagement from "./views/admin/PublicationManagement";
+import NoticeManagement from "./views/admin/NoticeManagement";
+import MediaManagement from "./views/admin/MediaManagement";
 import PageEditForm from "./views/admin/PageEditForm";
+import NewPageEditForm from "./views/admin/NewPageEditForm";
+import SeminarEditForm from "./views/admin/SeminarEditForm";
+import PublicationEditForm from "./views/admin/PublicationEditForm";
+import NoticeEditForm from "./views/admin/NoticeEditForm";
+import MediaEditForm from "./views/admin/MediaEditForm";
+import TestPage from "./components/TestPage";
+import MemberLoginPage from "./views/MemberLoginPage";
+import MemberRegisterPage from "./views/MemberRegisterPage";
 
 Vue.use(Router);
 
@@ -54,22 +70,102 @@ export default new Router({
     {
       path: "/admin/login",
       name: "adminLogin",
-      component: AdminLoginPage,
+      component: NewAdminLogin,
     },
     {
       path: "/admin/dashboard",
       name: "adminDashboard",
-      component: AdminDashboard,
+      component: MemberManagement,
+    },
+    {
+      path: "/admin/members",
+      name: "memberManagement",
+      component: MemberManagement,
+    },
+    {
+      path: "/admin/seminars",
+      name: "seminarManagement",
+      component: SeminarManagement,
+    },
+    {
+      path: "/admin/seminars/:id/edit",
+      name: "seminarEdit",
+      component: SeminarEditForm,
+    },
+    {
+      path: "/admin/seminars/new",
+      name: "seminarNew",
+      component: SeminarEditForm,
+    },
+    {
+      path: "/admin/publications",
+      name: "publicationManagement",
+      component: PublicationManagement,
+    },
+    {
+      path: "/admin/publications/:id/edit",
+      name: "publicationEdit",
+      component: PublicationEditForm,
+    },
+    {
+      path: "/admin/publications/new",
+      name: "publicationNew",
+      component: PublicationEditForm,
+    },
+    {
+      path: "/admin/notices",
+      name: "noticeManagement",
+      component: NoticeManagement,
+    },
+    {
+      path: "/admin/notices/:id/edit",
+      name: "noticeEdit",
+      component: NoticeEditForm,
+    },
+    {
+      path: "/admin/notices/new",
+      name: "noticeNew",
+      component: NoticeEditForm,
+    },
+    {
+      path: "/admin/media",
+      name: "mediaManagement",
+      component: MediaManagement,
+    },
+    {
+      path: "/admin/media/:id/edit",
+      name: "mediaEdit",
+      component: MediaEditForm,
+    },
+    {
+      path: "/admin/media/new",
+      name: "mediaNew",
+      component: MediaEditForm,
+    },
+    {
+      path: "/admin/pages",
+      name: "pageManagement",
+      component: NewAdminDashboard,
     },
     {
       path: "/admin/pages/:pageKey/edit",
       name: "pageEdit",
-      component: PageEditForm,
+      component: NewPageEditForm,
     },
     {
       path: "/admin/pages/new",
       name: "pageNew",
-      component: PageEditForm,
+      component: NewPageEditForm,
+    },
+    {
+      path: "/login",
+      name: "memberLogin",
+      component: MemberLoginPage,
+    },
+    {
+      path: "/register",
+      name: "memberRegister",
+      component: MemberRegisterPage,
     },
     {
       path: "*",

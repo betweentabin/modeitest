@@ -134,106 +134,111 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+<script>
 import axios from 'axios'
 
-const router = useRouter()
-const route = useRoute()
-
-const isNew = computed(() => route.params.pageKey === 'new')
-const pageKey = computed(() => route.params.pageKey)
-
-const formData = ref({
-  page_key: '',
-  title: '',
-  content: {},
-  meta_description: '',
-  meta_keywords: '',
-  is_published: false
-})
-
-const contentJson = ref('')
-const jsonError = ref('')
-const loading = ref(false)
-const error = ref('')
-const successMessage = ref('')
-
-onMounted(() => {
-  const token = localStorage.getItem('adminToken')
-  
-  if (!token) {
-    router.push('/admin/login')
-    return
-  }
-
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  
-  if (!isNew.value) {
-    fetchPageData()
-  } else {
-    contentJson.value = JSON.stringify({}, null, 2)
-  }
-})
-
-const fetchPageData = async () => {
-  loading.value = true
-  error.value = ''
-
-  try {
-    const response = await axios.get(`http://localhost:8000/api/admin/pages/${pageKey.value}`)
-    formData.value = response.data
-    contentJson.value = JSON.stringify(response.data.content, null, 2)
-  } catch (err) {
-    error.value = 'ページデータの取得に失敗しました'
-    console.error(err)
-  } finally {
-    loading.value = false
-  }
-}
-
-watch(contentJson, (newValue) => {
-  jsonError.value = ''
-  try {
-    formData.value.content = JSON.parse(newValue)
-  } catch (e) {
-    jsonError.value = 'JSONの形式が正しくありません'
-  }
-})
-
-const handleSubmit = async () => {
-  loading.value = true
-  error.value = ''
-  successMessage.value = ''
-
-  try {
-    if (isNew.value) {
-      await axios.post('http://localhost:8000/api/admin/pages', formData.value)
-      successMessage.value = 'ページを作成しました'
-      setTimeout(() => {
-        router.push('/admin/dashboard')
-      }, 1500)
-    } else {
-      await axios.put(`http://localhost:8000/api/admin/pages/${pageKey.value}`, formData.value)
-      successMessage.value = 'ページを更新しました'
+export default {
+  name: 'PageEditForm',
+  data() {
+    return {
+      formData: {
+        page_key: '',
+        title: '',
+        content: {},
+        meta_description: '',
+        meta_keywords: '',
+        is_published: false
+      },
+      contentJson: '',
+      jsonError: '',
+      loading: false,
+      error: '',
+      successMessage: ''
     }
-  } catch (err) {
-    if (err.response?.data?.errors) {
-      error.value = Object.values(err.response.data.errors).flat().join(', ')
-    } else {
-      error.value = isNew.value ? 'ページの作成に失敗しました' : 'ページの更新に失敗しました'
+  },
+  computed: {
+    isNew() {
+      return this.$route.params.pageKey === 'new'
+    },
+    pageKey() {
+      return this.$route.params.pageKey
     }
-    console.error(err)
-  } finally {
-    loading.value = false
-  }
-}
+  },
+  watch: {
+    contentJson(newValue) {
+      this.jsonError = ''
+      try {
+        this.formData.content = JSON.parse(newValue)
+      } catch (e) {
+        this.jsonError = 'JSONの形式が正しくありません'
+      }
+    }
+  },
+  async mounted() {
+    const token = localStorage.getItem('adminToken')
+    
+    if (!token) {
+      this.$router.push('/admin/login')
+      return
+    }
 
-const handleLogout = () => {
-  localStorage.removeItem('adminToken')
-  localStorage.removeItem('adminUser')
-  delete axios.defaults.headers.common['Authorization']
-  router.push('/admin/login')
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    
+    if (!this.isNew) {
+      await this.fetchPageData()
+    } else {
+      this.contentJson = JSON.stringify({}, null, 2)
+    }
+  },
+  methods: {
+    async fetchPageData() {
+      this.loading = true
+      this.error = ''
+
+      try {
+        const response = await axios.get(`http://localhost:8000/api/admin/pages/${this.pageKey}`)
+        this.formData = response.data
+        this.contentJson = JSON.stringify(response.data.content, null, 2)
+      } catch (err) {
+        this.error = 'ページデータの取得に失敗しました'
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+    async handleSubmit() {
+      this.loading = true
+      this.error = ''
+      this.successMessage = ''
+
+      try {
+        if (this.isNew) {
+          await axios.post('http://localhost:8000/api/admin/pages', this.formData)
+          this.successMessage = 'ページを作成しました'
+          setTimeout(() => {
+            this.$router.push('/admin/dashboard')
+          }, 1500)
+        } else {
+          await axios.put(`http://localhost:8000/api/admin/pages/${this.pageKey}`, this.formData)
+          this.successMessage = 'ページを更新しました'
+        }
+      } catch (err) {
+        if (err.response?.data?.errors) {
+          this.error = Object.values(err.response.data.errors).flat().join(', ')
+        } else {
+          this.error = this.isNew ? 'ページの作成に失敗しました' : 'ページの更新に失敗しました'
+        }
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+    handleLogout() {
+      localStorage.removeItem('adminToken')
+      localStorage.removeItem('adminUser')
+      delete axios.defaults.headers.common['Authorization']
+      this.$router.push('/admin/login')
+    }
+  }
 }
 </script>

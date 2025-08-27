@@ -1,5 +1,7 @@
 <template>
-  <div class="button-2"><div class="text-62 valign-text-middle inter-bold-white-13px">ログイン</div></div>
+  <router-link to="/login" class="button-2">
+    <div class="text-62 valign-text-middle inter-bold-white-13px">ログイン</div>
+  </router-link>
 </template>
 
 <script>
@@ -21,6 +23,15 @@ export default {
   justify-content: center;
   padding: 0px 24px 0px 20px;
   position: relative;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button-2:hover {
+  background-color: var(--mandy);
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .text-62 {
