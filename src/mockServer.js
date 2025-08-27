@@ -160,6 +160,46 @@ const mockData = {
       title: 'サービス一覧',
       content: '経済調査、コンサルティング、セミナー開催など',
       lastUpdated: '2025-04-28'
+    },
+    seminars: {
+      title: 'セミナー',
+      content: 'セミナー情報ページ',
+      lastUpdated: '2025-04-28'
+    },
+    publications: {
+      title: '刊行物',
+      content: '刊行物一覧ページ',
+      lastUpdated: '2025-04-28'
+    },
+    news: {
+      title: 'お知らせ',
+      content: 'お知らせ一覧ページ',
+      lastUpdated: '2025-04-28'
+    },
+    contact: {
+      title: 'お問い合わせ',
+      content: 'お問い合わせフォーム',
+      lastUpdated: '2025-04-28'
+    },
+    faq: {
+      title: 'よくある質問',
+      content: 'よくある質問と回答',
+      lastUpdated: '2025-04-28'
+    },
+    glossary: {
+      title: '用語集',
+      content: '経済用語集',
+      lastUpdated: '2025-04-28'
+    },
+    privacy: {
+      title: 'プライバシーポリシー',
+      content: 'プライバシーポリシーページ',
+      lastUpdated: '2025-04-28'
+    },
+    terms: {
+      title: '利用規約',
+      content: '利用規約ページ',
+      lastUpdated: '2025-04-28'
     }
   }
 }
@@ -174,11 +214,16 @@ class MockAPIServer {
 
   loadData() {
     const savedData = localStorage.getItem(STORAGE_KEY)
+    console.log('Loading data from localStorage...')
     if (savedData) {
       this.data = JSON.parse(savedData)
+      console.log('Data loaded from localStorage:', this.data)
+      console.log('Pages in loaded data:', this.data.pages)
     } else {
+      console.log('No saved data, using default mockData')
       this.data = mockData
       this.saveData()
+      console.log('Default data saved and loaded:', this.data)
     }
   }
 
@@ -320,6 +365,14 @@ class MockAPIServer {
     return Promise.resolve(this.data.media)
   }
 
+  getMediaItem(id) {
+    const media = this.data.media.find(m => m.id === parseInt(id))
+    if (media) {
+      return Promise.resolve(media)
+    }
+    return Promise.reject(new Error('Media not found'))
+  }
+
   uploadMedia(data) {
     const newMedia = {
       ...data,
@@ -329,6 +382,16 @@ class MockAPIServer {
     this.data.media.push(newMedia)
     this.saveData()
     return Promise.resolve(newMedia)
+  }
+
+  updateMedia(id, data) {
+    const index = this.data.media.findIndex(m => m.id === parseInt(id))
+    if (index !== -1) {
+      this.data.media[index] = { ...this.data.media[index], ...data }
+      this.saveData()
+      return Promise.resolve(this.data.media[index])
+    }
+    return Promise.reject(new Error('Media not found'))
   }
 
   deleteMedia(id) {
@@ -365,6 +428,18 @@ class MockAPIServer {
   }
 
   // Pages
+  getPages() {
+    // ページオブジェクトを配列形式で返す
+    console.log('MockServer getPages called')
+    console.log('Current pages data:', this.data.pages)
+    const pagesArray = Object.entries(this.data.pages).map(([key, value]) => ({
+      pageKey: key,
+      ...value
+    }))
+    console.log('Returning pages array:', pagesArray)
+    return Promise.resolve(pagesArray)
+  }
+
   getPage(pageKey) {
     const page = this.data.pages[pageKey]
     if (page) {
