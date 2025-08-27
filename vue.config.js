@@ -1,3 +1,10 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : './'
+  publicPath: './',
+  devServer: {
+    historyApiFallback: {
+      rewrites: [
+        { from: /.*/, to: '/index.html' }
+      ]
+    }
+  }
 }
