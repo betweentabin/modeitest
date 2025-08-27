@@ -5,6 +5,7 @@ import AboutPage from "./components/AboutPage";
 import ServicesPage from "./components/ServicesPage";
 import NewsPage from "./components/NewsPage";
 import FaqPage from "./components/FaqPage";
+import PublicationsPage from "./components/PublicationsPage";
 import ApplicationFormPage from "./components/ApplicationFormPage";
 import SeminarRegistrationPage from "./components/SeminarRegistrationPage";
 import AdminLoginPage from "./views/admin/AdminLoginPage";
@@ -23,6 +24,8 @@ import SeminarEditForm from "./views/admin/SeminarEditForm";
 import PublicationEditForm from "./views/admin/PublicationEditForm";
 import NoticeEditForm from "./views/admin/NoticeEditForm";
 import MediaEditForm from "./views/admin/MediaEditForm";
+import PublicationDetailPage from "./components/PublicationDetailPage";
+import NewsDetailPage from "./components/NewsDetailPage";
 import TestPage from "./components/TestPage";
 import MemberLoginPage from "./views/MemberLoginPage";
 import MemberRegisterPage from "./views/MemberRegisterPage";
@@ -53,9 +56,24 @@ export default new Router({
       component: NewsPage,
     },
     {
+      path: "/news/:id",
+      name: "newsDetail",
+      component: NewsDetailPage,
+    },
+    {
       path: "/faq",
       name: "faq",
       component: FaqPage,
+    },
+    {
+      path: "/publications",
+      name: "publications",
+      component: PublicationsPage,
+    },
+    {
+      path: "/publications/:id",
+      name: "publicationDetail",
+      component: PublicationDetailPage,
     },
     {
       path: "/apply",
@@ -103,13 +121,13 @@ export default new Router({
       component: PublicationManagement,
     },
     {
-      path: "/admin/publications/:id/edit",
-      name: "publicationEdit",
+      path: "/admin/publications/new",
+      name: "publicationNew",
       component: PublicationEditForm,
     },
     {
-      path: "/admin/publications/new",
-      name: "publicationNew",
+      path: "/admin/publications/:id/edit",
+      name: "publicationEdit",
       component: PublicationEditForm,
     },
     {

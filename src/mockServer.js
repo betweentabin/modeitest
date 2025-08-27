@@ -29,19 +29,63 @@ const mockData = {
   publications: [
     {
       id: 1,
-      title: 'HOT Information Vol.319',
+      title: '事業継承から描く九州の未来',
       description: '最新の地域経済動向レポート。九州地域の製造業の動向と今後の展望について特集。',
-      publishedDate: '2025-05-12',
-      category: 'monthly',
-      fileUrl: '/files/hot-info-319.pdf'
+      publication_date: '2025-04-28',
+      category: 'research',
+      type: 'pdf',
+      author: 'ちくぎん地域経済研究所',
+      pages: 45,
+      file_url: '/files/kyushu-future.pdf',
+      image_url: '', // 空にしてデフォルト画像を使用
+      file_size: 2.1,
+      download_count: 234,
+      is_published: true
     },
     {
       id: 2,
       title: '経営参考BOOK vol.52',
       description: '事業承継をテーマに、成功事例と具体的な進め方を解説。',
-      publishedDate: '2025-04-28',
-      category: 'book',
-      fileUrl: '/files/management-book-52.pdf'
+      publication_date: '2025-04-28',
+      category: 'quarterly',
+      type: 'pdf',
+      author: 'ちくぎん地域経済研究所',
+      pages: 32,
+      file_url: '/files/management-book-52.pdf',
+      image_url: '', // 空にしてデフォルト画像を使用
+      file_size: 1.8,
+      download_count: 156,
+      is_published: true
+    },
+    {
+      id: 3,
+      title: 'Hot Information Vol.323',
+      description: '2025年度の経済展望と地域企業が取り組むべき課題について特集。',
+      publication_date: '2025-04-28',
+      category: 'special',
+      type: 'pdf',
+      author: 'ちくぎん地域経済研究所',
+      pages: 28,
+      file_url: '/files/hot-info-323.pdf',
+      image_url: '', // 空にしてデフォルト画像を使用
+      file_size: 1.5,
+      download_count: 89,
+      is_published: true
+    },
+    {
+      id: 4,
+      title: 'Hot Information Vol.324',
+      description: 'DX推進のポイントや、新たな成長戦略について詳しく解説。',
+      publication_date: '2025-05-01',
+      category: 'special',
+      type: 'pdf',
+      author: 'ちくぎん地域経済研究所',
+      pages: 35,
+      file_url: '/files/hot-info-324.pdf',
+      image_url: '/img/-----2-2-4.png', // この1つだけCMS画像設定例として残す
+      file_size: 2.0,
+      download_count: 45,
+      is_published: true
     }
   ],
   notices: [
@@ -49,7 +93,7 @@ const mockData = {
       id: 1,
       title: 'GW休業のお知らせ',
       content: '5月3日から5月6日まで休業いたします。',
-      date: '2025-04-25',
+      date: '2025-06-20',
       category: 'notice',
       isImportant: true
     },
@@ -57,9 +101,17 @@ const mockData = {
       id: 2,
       title: 'ホームページリニューアルのお知らせ',
       content: 'より使いやすいホームページにリニューアルしました。',
-      date: '2025-04-01',
+      date: '2025-06-15',
       category: 'notice',
       isImportant: false
+    },
+    {
+      id: 3,
+      title: '新年度の経済展望について',
+      content: '2025年度の九州地域経済展望レポートを公開しました。',
+      date: '2025-05-12',
+      category: 'notice',
+      isImportant: true
     }
   ],
   media: [
@@ -181,7 +233,7 @@ class MockAPIServer {
   getPublications() {
     return Promise.resolve(this.data.publications)
   }
-
+  
   getPublication(id) {
     const publication = this.data.publications.find(p => p.id === parseInt(id))
     if (publication) {
@@ -354,7 +406,7 @@ class MockAPIServer {
     this.data.publications.forEach(publication => {
       news.push({
         id: `publication-${publication.id}`,
-        date: publication.publishedDate,
+        date: publication.publication_date, // 正しいフィールド名を使用
         category: 'publication',
         title: publication.title,
         description: publication.description,

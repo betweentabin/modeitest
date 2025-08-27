@@ -16,58 +16,36 @@
 
       <div class="featured-publications">
         <h2>最新刊行物</h2>
-        <div class="publication-grid">
-          <div class="publication-card featured">
+        <div v-if="loading" class="loading-message">読み込み中...</div>
+        <div v-else-if="error" class="error-message">{{ error }}</div>
+        <div v-else class="publication-grid">
+          <div v-if="featuredPublication" class="publication-card featured" @click="goToPublication(featuredPublication.id)">
             <div class="publication-image">
-              <img src="/img/-----2-2-5.png" alt="Hot Information Vol.324" />
+              <img :src="featuredPublication.image_url || '/img/-----2-2-5.png'" :alt="featuredPublication.title" />
               <div class="publication-badge">NEW</div>
             </div>
             <div class="publication-content">
-              <div class="publication-date">2025.04.28</div>
-              <h3>Hot Information Vol.324</h3>
-              <p class="publication-description">
-                2025年度の経済展望と地域企業が取り組むべき課題について特集しています。
-                DX推進のポイントや、新たな成長戦略についても詳しく解説。
-              </p>
+              <div class="publication-date">{{ formatDate(featuredPublication.publication_date) }}</div>
+              <h3>{{ featuredPublication.title }}</h3>
+              <p class="publication-description">{{ featuredPublication.description }}</p>
               <div class="publication-actions">
-                <button class="view-btn">詳細を見る</button>
-                <button class="download-btn">PDFダウンロード</button>
+                <button class="view-btn" @click.stop="goToPublication(featuredPublication.id)">詳細を見る</button>
+                <button class="download-btn" @click.stop="downloadPDF(featuredPublication)">PDFダウンロード</button>
               </div>
             </div>
           </div>
 
-          <div class="publication-card">
+          <div v-for="(publication, index) in otherPublications" :key="publication.id" class="publication-card" @click="goToPublication(publication.id)">
             <div class="publication-image">
-              <img src="/img/-----2-2-1.png" alt="経営参考BOOK vol.52" />
+              <img :src="publication.image_url || getDefaultImage(index + 1)" :alt="publication.title" />
             </div>
             <div class="publication-content">
-              <div class="publication-date">2025.04.28</div>
-              <h3>経営参考BOOK vol.52</h3>
-              <p class="publication-description">
-                事業承継をテーマに、成功事例と具体的な進め方を解説。
-                後継者育成のポイントも詳しく紹介しています。
-              </p>
+              <div class="publication-date">{{ formatDate(publication.publication_date) }}</div>
+              <h3>{{ publication.title }}</h3>
+              <p class="publication-description">{{ publication.description }}</p>
               <div class="publication-actions">
-                <button class="view-btn">詳細を見る</button>
-                <button class="download-btn">PDFダウンロード</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="publication-card">
-            <div class="publication-image">
-              <img src="/img/-----2-2-4.png" alt="Hot Information Vol.323" />
-            </div>
-            <div class="publication-content">
-              <div class="publication-date">2025.03.15</div>
-              <h3>Hot Information Vol.323</h3>
-              <p class="publication-description">
-                地域金融機関の新たな取り組みと、地域企業への支援策について詳しく解説。
-                融資制度の活用方法も掲載。
-              </p>
-              <div class="publication-actions">
-                <button class="view-btn">詳細を見る</button>
-                <button class="download-btn">PDFダウンロード</button>
+                <button class="view-btn" @click.stop="goToPublication(publication.id)">詳細を見る</button>
+                <button class="download-btn" @click.stop="downloadPDF(publication)">PDFダウンロード</button>
               </div>
             </div>
           </div>
@@ -201,12 +179,76 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import mockServer from "@/mockServer";
 
 export default {
   name: "PublicationsPage",
   components: {
     Navigation,
     FooterComplete
+  },
+  data() {
+    return {
+      loading: true,
+      error: '',
+      publications: [],
+      featuredPublication: null,
+      otherPublications: []
+    };
+  },
+  async mounted() {
+    await this.loadPublications();
+  },
+  methods: {
+    async loadPublications() {
+      try {
+        this.loading = true;
+        this.error = '';
+        
+        const publications = await mockServer.getPublications();
+        this.publications = publications;
+        
+        // 最新の刊行物をフィーチャーとして設定
+        this.featuredPublication = publications[0] || null;
+        
+        // 残りの刊行物をその他として設定（最大3件）
+        this.otherPublications = publications.slice(1, 4);
+        
+      } catch (err) {
+        this.error = '刊行物データの取得に失敗しました';
+        console.error('Publications loading error:', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
+    },
+    downloadPDF(publication) {
+      // PDFダウンロード機能
+      if (publication.file_url) {
+        window.open(publication.file_url, '_blank');
+      } else {
+        alert('PDFファイルが見つかりません');
+      }
+    },
+    getDefaultImage(index) {
+      // インデックスに応じてデフォルト画像を返す
+      const defaultImages = [
+        '/img/-----2-2-1.png', // 1番目
+        '/img/-----2-2-2.png', // 2番目
+        '/img/-----2-2-4.png'  // 3番目
+      ];
+      return defaultImages[index] || '/img/-----2-2-1.png';
+    },
+    goToPublication(publicationId) {
+      // 刊行物詳細ページに遷移
+      this.$router.push(`/publications/${publicationId}`);
+    }
   }
 };
 </script>
@@ -275,6 +317,7 @@ export default {
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   transition: transform 0.3s;
+  cursor: pointer;
 }
 
 .publication-card:hover {
