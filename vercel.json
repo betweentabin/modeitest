@@ -1,19 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/admin/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/news/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/publications/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/((?!js/|css/|img/|favicon.ico|_next/|api/).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
