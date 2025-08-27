@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{any}', function () {
-    return view('app');
-})->where('any', '.*');
+Route::get('/', function () {
+    return response()->json([
+        'message' => 'ちくぎん地域経済研究所 API',
+        'status' => 'running',
+        'version' => '1.0.0'
+    ]);
+});
+
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
