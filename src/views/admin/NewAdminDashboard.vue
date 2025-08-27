@@ -81,10 +81,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="page in filteredPages" :key="page.id">
-                <td class="page-name">{{ page.title || page.page_key }}</td>
+              <tr v-for="page in filteredPages" :key="page.pageKey">
+                <td class="page-name">{{ page.title || page.pageKey }}</td>
                 <td class="upload-date">
-                  {{ formatDate(page.updated_at) }}<br>
+                  {{ formatDate(page.lastUpdated) }}<br>
                   <span class="time">16:00～ 17:00</span>
                 </td>
                 <td>
@@ -93,7 +93,7 @@
                 <td>
                   <input 
                     type="checkbox" 
-                    :value="page.id" 
+                    :value="page.pageKey" 
                     v-model="selectedPages"
                     class="checkbox"
                   >
@@ -114,7 +114,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import axios from 'axios'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'NewAdminDashboard',
@@ -143,7 +143,7 @@ export default {
         const keyword = this.searchKeyword.toLowerCase()
         result = result.filter(page => 
           (page.title && page.title.toLowerCase().includes(keyword)) ||
-          (page.page_key && page.page_key.toLowerCase().includes(keyword))
+          (page.pageKey && page.pageKey.toLowerCase().includes(keyword))
         )
       }
       
@@ -158,7 +158,6 @@ export default {
       return
     }
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     await this.fetchPages()
   },
   methods: {
@@ -167,11 +166,14 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.get('http://localhost:8000/api/admin/pages')
-        this.pages = response.data
+        console.log('Fetching pages from mockServer...')
+        const data = await mockServer.getPages()
+        console.log('Pages received:', data)
+        this.pages = data
+        console.log('Pages set to component:', this.pages)
       } catch (err) {
         this.error = 'ページの取得に失敗しました'
-        console.error(err)
+        console.error('Error fetching pages:', err)
       } finally {
         this.loading = false
       }
@@ -187,7 +189,7 @@ export default {
       return `${year}年${month}月${day}日(${weekday})`
     },
     editPage(page) {
-      this.$router.push(`/admin/pages/${page.page_key}/edit`)
+      this.$router.push(`/admin/pages/${page.pageKey}/edit`)
     },
     createNewPage() {
       this.$router.push('/admin/pages/new')

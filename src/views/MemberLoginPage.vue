@@ -107,6 +107,7 @@
 
 <script>
 import axios from 'axios'
+import { getApiUrl } from '@/config/api'
 
 export default {
   name: 'MemberLoginPage',
@@ -125,7 +126,7 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.post('http://localhost:8000/api/login', {
+        const response = await axios.post(getApiUrl('/api/login'), {
           email: this.email,
           password: this.password
         })

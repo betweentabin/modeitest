@@ -257,7 +257,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import axios from 'axios'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'PublicationEditForm',
@@ -303,7 +303,7 @@ export default {
       return
     }
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    // モックサーバーを使用するため、認証ヘッダーは不要
     
     if (!this.isNew) {
       await this.fetchPublicationData()
@@ -315,9 +315,13 @@ export default {
       this.error = ''
 
       try {
-        // TODO: 実際のAPIエンドポイントに置き換える
-        const response = await axios.get(`http://localhost:8000/api/admin/publications/${this.publicationId}`)
-        this.formData = response.data
+        const data = await mockServer.getPublication(this.publicationId)
+        // mockServerのデータ形式に合わせて調整
+        this.formData = {
+          ...data,
+          issue_number: data.issue_number || '',
+          download_count: data.download_count || 0
+        }
       } catch (err) {
         this.error = '刊行物データの取得に失敗しました'
         console.error(err)
@@ -332,13 +336,13 @@ export default {
 
       try {
         if (this.isNew) {
-          await axios.post('http://localhost:8000/api/admin/publications', this.formData)
+          await mockServer.createPublication(this.formData)
           this.successMessage = '刊行物を作成しました'
           setTimeout(() => {
             this.$router.push('/admin/publications')
           }, 1500)
         } else {
-          await axios.put(`http://localhost:8000/api/admin/publications/${this.publicationId}`, this.formData)
+          await mockServer.updatePublication(this.publicationId, this.formData)
           this.successMessage = '刊行物を更新しました'
         }
       } catch (err) {
@@ -358,7 +362,7 @@ export default {
     handleLogout() {
       localStorage.removeItem('adminToken')
       localStorage.removeItem('adminUser')
-      delete axios.defaults.headers.common['Authorization']
+      // モックサーバーを使用するため、認証ヘッダーの削除は不要
       this.$router.push('/admin/login')
     }
   }

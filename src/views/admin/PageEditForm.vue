@@ -136,6 +136,7 @@
 
 <script>
 import axios from 'axios'
+import { getApiUrl } from '@/config/api'
 
 export default {
   name: 'PageEditForm',
@@ -196,7 +197,7 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.get(`http://localhost:8000/api/admin/pages/${this.pageKey}`)
+        const response = await axios.get(getApiUrl(`/api/admin/pages/${this.pageKey}`))
         this.formData = response.data
         this.contentJson = JSON.stringify(response.data.content, null, 2)
       } catch (err) {
@@ -213,13 +214,13 @@ export default {
 
       try {
         if (this.isNew) {
-          await axios.post('http://localhost:8000/api/admin/pages', this.formData)
+          await axios.post(getApiUrl('/api/admin/pages'), this.formData)
           this.successMessage = 'ページを作成しました'
           setTimeout(() => {
             this.$router.push('/admin/dashboard')
           }, 1500)
         } else {
-          await axios.put(`http://localhost:8000/api/admin/pages/${this.pageKey}`, this.formData)
+          await axios.put(getApiUrl(`/api/admin/pages/${this.pageKey}`), this.formData)
           this.successMessage = 'ページを更新しました'
         }
       } catch (err) {

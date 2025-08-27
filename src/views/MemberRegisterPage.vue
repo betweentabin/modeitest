@@ -224,6 +224,7 @@
 
 <script>
 import axios from 'axios'
+import { getApiUrl } from '@/config/api'
 
 export default {
   name: 'MemberRegisterPage',
@@ -291,7 +292,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://localhost:8000/api/register', {
+        const response = await axios.post(getApiUrl('/api/register'), {
           name: `${this.formData.lastName} ${this.formData.firstName}`,
           email: this.formData.email,
           phone: this.formData.phone,

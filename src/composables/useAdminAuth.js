@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import axios from 'axios';
+import { getApiUrl } from '@/config/api';
 
 export function useAdminAuth() {
   const isAuthenticated = ref(false);
@@ -23,7 +24,7 @@ export function useAdminAuth() {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/admin/login', {
+      const response = await axios.post(getApiUrl('/api/admin/login'), {
         email,
         password
       });

@@ -44,6 +44,7 @@
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import LoginModal from './LoginModal.vue';
+import { getApiUrl } from '@/config/api';
 
 export default {
   name: 'UserMenu',
@@ -132,7 +133,7 @@ export default {
       const token = localStorage.getItem('auth_token');
       
       try {
-        await fetch('http://localhost:8000/api/logout', {
+        await fetch(getApiUrl('/api/logout'), {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,

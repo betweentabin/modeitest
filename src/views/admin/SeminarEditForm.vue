@@ -235,7 +235,7 @@ export default {
   },
   computed: {
     isNew() {
-      return this.$route.params.id === 'new'
+      return this.$route.name === 'seminarNew' || !this.$route.params.id
     },
     seminarId() {
       return this.$route.params.id
@@ -251,6 +251,7 @@ export default {
 
     // モックサーバーを使用するため、認証ヘッダーは不要
     
+    // 新規作成の場合はデータ取得をスキップ
     if (!this.isNew) {
       await this.fetchSeminarData()
     }

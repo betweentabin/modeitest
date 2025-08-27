@@ -288,7 +288,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import axios from 'axios'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'MediaEditForm',
@@ -336,7 +336,7 @@ export default {
       return
     }
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    // モックサーバーを使用するため、認証ヘッダーは不要
     
     if (!this.isNew) {
       await this.fetchMediaData()
@@ -348,9 +348,16 @@ export default {
       this.error = ''
 
       try {
-        // TODO: 実際のAPIエンドポイントに置き換える
-        const response = await axios.get(`http://localhost:8000/api/admin/media/${this.mediaId}`)
-        this.formData = response.data
+        const data = await mockServer.getMediaItem(this.mediaId)
+        // mockServerのデータ形式に合わせて調整
+        this.formData = {
+          ...data,
+          description: data.description || '',
+          category: data.category || '',
+          file_url: data.url,
+          file_name: data.title,
+          is_public: true
+        }
       } catch (err) {
         this.error = 'メディアデータの取得に失敗しました'
         console.error(err)
@@ -365,13 +372,28 @@ export default {
 
       try {
         if (this.isNew) {
-          await axios.post('http://localhost:8000/api/admin/media', this.formData)
+          // mockServerのデータ形式に合わせて変換
+          const mediaData = {
+            title: this.formData.title || this.formData.file_name,
+            url: this.formData.file_url,
+            type: this.formData.type || 'document',
+            description: this.formData.description,
+            category: this.formData.category
+          }
+          await mockServer.uploadMedia(mediaData)
           this.successMessage = 'メディアを追加しました'
           setTimeout(() => {
             this.$router.push('/admin/media')
           }, 1500)
         } else {
-          await axios.put(`http://localhost:8000/api/admin/media/${this.mediaId}`, this.formData)
+          const mediaData = {
+            title: this.formData.title || this.formData.file_name,
+            url: this.formData.file_url,
+            type: this.formData.type || 'document',
+            description: this.formData.description,
+            category: this.formData.category
+          }
+          await mockServer.updateMedia(this.mediaId, mediaData)
           this.successMessage = 'メディアを更新しました'
         }
       } catch (err) {
@@ -391,7 +413,7 @@ export default {
     handleLogout() {
       localStorage.removeItem('adminToken')
       localStorage.removeItem('adminUser')
-      delete axios.defaults.headers.common['Authorization']
+      // モックサーバーを使用するため、認証ヘッダーの削除は不要
       this.$router.push('/admin/login')
     }
   }

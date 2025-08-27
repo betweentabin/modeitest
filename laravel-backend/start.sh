@@ -2,6 +2,14 @@
 
 echo "🚀 Laravel API Starting..."
 
+# APP_KEYが設定されていない場合は生成
+if [ -z "$APP_KEY" ]; then
+  echo "APP_KEYが設定されていません。生成中..."
+  php artisan key:generate --force
+else
+  echo "APP_KEY設定済み"
+fi
+
 # データベースディレクトリを作成
 mkdir -p database
 touch database/database.sqlite
@@ -12,9 +20,15 @@ mkdir -p storage/logs
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
-# マイグレーション実行
-php artisan migrate --force
-php artisan db:seed --force
+# マイグレーション実行（エラーでも続行）
+php artisan migrate --force || echo "マイグレーション失敗、続行します"
+
+# シードの実行（エラーでも続行）
+php artisan db:seed --force || echo "シード失敗、続行します"
+
+# キャッシュクリア
+php artisan config:cache || echo "設定キャッシュ失敗"
+php artisan route:cache || echo "ルートキャッシュ失敗"
 
 # Laravel 起動
 echo "✅ Starting Laravel server on port $PORT"

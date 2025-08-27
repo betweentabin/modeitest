@@ -104,6 +104,7 @@
 
 <script>
 import axios from 'axios'
+import { getApiUrl } from '@/config/api'
 
 export default {
   name: 'AdminDashboard',
@@ -135,7 +136,7 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.get('http://localhost:8000/api/admin/pages')
+        const response = await axios.get(getApiUrl('/api/admin/pages'))
         this.pages = response.data
       } catch (err) {
         this.error = 'ページの取得に失敗しました'

@@ -19,9 +19,17 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'http://localhost:8080', 'http://localhost:5173'],
+    'allowed_origins' => [
+        'http://localhost:3000', 
+        'http://localhost:8080', 
+        'http://localhost:5173',
+        'https://heroic-celebration-production.up.railway.app'
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '/^https:\/\/.*\.vercel\.app$/',
+        '/^https:\/\/.*\.railway\.app$/'
+    ],
 
     'allowed_headers' => ['*'],
 

@@ -59,6 +59,7 @@
 
 <script>
 import axios from 'axios'
+import { getApiUrl } from '@/config/api'
 
 export default {
   name: 'SimpleAdminLogin',
@@ -76,7 +77,7 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.post('http://localhost:8000/api/admin/login', {
+        const response = await axios.post(getApiUrl('/api/admin/login'), {
           email: this.email,
           password: this.password
         })

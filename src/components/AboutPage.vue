@@ -104,6 +104,7 @@
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
 import axios from 'axios';
+import { getApiUrl } from '@/config/api';
 
 export default {
   name: "AboutPage",
@@ -120,7 +121,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get('http://localhost:8000/api/pages/about');
+      const response = await axios.get(getApiUrl('/api/pages/about'));
       this.pageData = response.data;
       this.loading = false;
     } catch (err) {

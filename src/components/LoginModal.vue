@@ -125,6 +125,7 @@
 
 <script>
 import { ref, reactive, watch } from 'vue';
+import { getApiUrl } from '@/config/api';
 
 export default {
   name: 'LoginModal',
@@ -177,7 +178,7 @@ export default {
 
       try {
         const endpoint = isLoginMode.value ? '/api/login' : '/api/register';
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
+        const response = await fetch(`${getApiUrl(endpoint)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

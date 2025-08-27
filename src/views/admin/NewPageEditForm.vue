@@ -181,7 +181,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import axios from 'axios'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'NewPageEditForm',
@@ -233,8 +233,6 @@ export default {
       return
     }
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    
     if (!this.isNew) {
       await this.fetchPageData()
     } else {
@@ -250,9 +248,9 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.get(`http://localhost:8000/api/admin/pages/${this.pageKey}`)
-        this.formData = response.data
-        this.contentJson = JSON.stringify(response.data.content, null, 2)
+        const data = await mockServer.getPage(this.pageKey)
+        this.formData = data
+        this.contentJson = JSON.stringify(data.content || data, null, 2)
       } catch (err) {
         this.error = 'ページデータの取得に失敗しました'
         console.error(err)
@@ -267,13 +265,10 @@ export default {
 
       try {
         if (this.isNew) {
-          await axios.post('http://localhost:8000/api/admin/pages', this.formData)
-          this.successMessage = 'ページを作成しました'
-          setTimeout(() => {
-            this.$router.push('/admin/pages')
-          }, 1500)
+          // 新規作成機能は未実装
+          this.submitError = '新規ページ作成機能は未実装です'
         } else {
-          await axios.put(`http://localhost:8000/api/admin/pages/${this.pageKey}`, this.formData)
+          await mockServer.updatePage(this.pageKey, this.formData)
           this.successMessage = 'ページを更新しました'
         }
       } catch (err) {

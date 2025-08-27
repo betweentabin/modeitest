@@ -131,6 +131,7 @@
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
 import axios from 'axios';
+import { getApiUrl } from '@/config/api';
 
 export default {
   name: "ServicesPage",
@@ -147,7 +148,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get('http://localhost:8000/api/pages/services');
+      const response = await axios.get(getApiUrl('/api/pages/services'));
       this.pageData = response.data;
       this.loading = false;
     } catch (err) {

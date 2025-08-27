@@ -238,7 +238,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import axios from 'axios'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'NoticeEditForm',
@@ -269,7 +269,9 @@ export default {
   },
   computed: {
     isNew() {
-      return this.$route.params.id === 'new'
+      // /admin/notices/new の場合は params.id が undefined
+      // /admin/notices/:id/edit の場合は params.id が存在
+      return !this.$route.params.id || this.$route.params.id === 'new'
     },
     noticeId() {
       return this.$route.params.id
@@ -283,7 +285,7 @@ export default {
       return
     }
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    // モックサーバーを使用するため、認証ヘッダーは不要
     
     if (!this.isNew) {
       await this.fetchNoticeData()
@@ -299,9 +301,14 @@ export default {
       this.error = ''
 
       try {
-        // TODO: 実際のAPIエンドポイントに置き換える
-        const response = await axios.get(`http://localhost:8000/api/admin/notices/${this.noticeId}`)
-        this.formData = response.data
+        const data = await mockServer.getNotice(this.noticeId)
+        // mockServerのデータ形式に合わせて調整
+        this.formData = {
+          ...data,
+          publish_date: data.date,
+          is_pinned: data.isImportant,
+          is_published: true
+        }
       } catch (err) {
         this.error = 'お知らせデータの取得に失敗しました'
         console.error(err)
@@ -316,13 +323,28 @@ export default {
 
       try {
         if (this.isNew) {
-          await axios.post('http://localhost:8000/api/admin/notices', this.formData)
+          // mockServerのデータ形式に合わせて変換
+          const noticeData = {
+            title: this.formData.title,
+            content: this.formData.content,
+            date: this.formData.publish_date,
+            category: this.formData.category || 'notice',
+            isImportant: this.formData.is_pinned
+          }
+          await mockServer.createNotice(noticeData)
           this.successMessage = 'お知らせを作成しました'
           setTimeout(() => {
             this.$router.push('/admin/notices')
           }, 1500)
         } else {
-          await axios.put(`http://localhost:8000/api/admin/notices/${this.noticeId}`, this.formData)
+          const noticeData = {
+            title: this.formData.title,
+            content: this.formData.content,
+            date: this.formData.publish_date,
+            category: this.formData.category || 'notice',
+            isImportant: this.formData.is_pinned
+          }
+          await mockServer.updateNotice(this.noticeId, noticeData)
           this.successMessage = 'お知らせを更新しました'
         }
       } catch (err) {
