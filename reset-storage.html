@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ストレージリセット</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        button {
+            background: #da5761;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            font-size: 16px;
+        }
+        button:hover { background: #c44853; }
+        .secondary {
+            background: #6c757d;
+        }
+        .secondary:hover { background: #5a6268; }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #d1fae5;
+            border-color: #6ee7b7;
+            color: #065f46;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th { background: #f5f5f5; }
+        .page-key { 
+            font-family: monospace;
+            background: #e5e5e5;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 LocalStorage データ管理</h1>
+        
+        <div>
+            <button onclick="showCurrentData()">現在のデータを表示</button>
+            <button onclick="resetToFullData()">全ページデータでリセット</button>
+            <button class="secondary" onclick="clearAll()">完全クリア</button>
+        </div>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'cms_mock_data';
+
+        // 完全なデフォルトデータ
+        const fullMockData = {
+            seminars: [
+                {
+                    id: 1,
+                    title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+                    description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
+                    date: '2025-06-15',
+                    start_time: '14:00',
+                    end_time: '17:00',
+                    location: 'ちくぎん地域経済研究所 会議室A',
+                    capacity: 30,
+                    fee: 5000,
+                    status: 'ongoing'
+                },
+                {
+                    id: 2,
+                    title: 'DX推進セミナー',
+                    description: 'デジタルトランスフォーメーションの基礎から実践まで学べるセミナーです。',
+                    date: '2025-06-20',
+                    start_time: '13:00',
+                    end_time: '16:00',
+                    location: 'オンライン開催',
+                    capacity: 100,
+                    fee: 3000,
+                    status: 'scheduled'
+                }
+            ],
+            publications: [
+                {
+                    id: 1,
+                    title: '事業継承から描く九州の未来',
+                    description: '最新の地域経済動向レポート。',
+                    publication_date: '2025-04-28',
+                    category: 'research',
+                    type: 'pdf',
+                    author: 'ちくぎん地域経済研究所',
+                    pages: 45,
+                    file_url: '/files/kyushu-future.pdf',
+                    image_url: '',
+                    file_size: 2.1,
+                    download_count: 234,
+                    is_published: true
+                },
+                {
+                    id: 2,
+                    title: '経営参考BOOK vol.52',
+                    description: '事業承継をテーマに解説。',
+                    publication_date: '2025-04-28',
+                    category: 'quarterly',
+                    type: 'pdf',
+                    author: 'ちくぎん地域経済研究所',
+                    pages: 32,
+                    file_url: '/files/management-book-52.pdf',
+                    image_url: '',
+                    file_size: 1.8,
+                    download_count: 156,
+                    is_published: true
+                }
+            ],
+            notices: [
+                {
+                    id: 1,
+                    title: 'GW休業のお知らせ',
+                    content: '5月3日から5月6日まで休業いたします。',
+                    date: '2025-06-20',
+                    category: 'notice',
+                    isImportant: true
+                }
+            ],
+            media: [
+                {
+                    id: 1,
+                    title: 'TOP画像1',
+                    type: 'hero_image',
+                    url: '/images/hero1.jpg',
+                    uploadDate: '2025-05-01'
+                }
+            ],
+            members: [
+                {
+                    id: 1,
+                    name: '山田太郎',
+                    email: 'yamada@example.com',
+                    company: '株式会社山田商事',
+                    joinedDate: '2024-01-15',
+                    status: 'active'
+                }
+            ],
+            pages: {
+                about: {
+                    title: 'ちくぎん地域経済研究所について',
+                    content: '地域経済の発展に貢献する研究機関です。',
+                    lastUpdated: '2025-05-01'
+                },
+                services: {
+                    title: 'サービス一覧',
+                    content: '経済調査、コンサルティング、セミナー開催など',
+                    lastUpdated: '2025-04-28'
+                },
+                seminars: {
+                    title: 'セミナー',
+                    content: 'セミナー情報ページ',
+                    lastUpdated: '2025-04-28'
+                },
+                publications: {
+                    title: '刊行物',
+                    content: '刊行物一覧ページ',
+                    lastUpdated: '2025-04-28'
+                },
+                news: {
+                    title: 'お知らせ',
+                    content: 'お知らせ一覧ページ',
+                    lastUpdated: '2025-04-28'
+                },
+                contact: {
+                    title: 'お問い合わせ',
+                    content: 'お問い合わせフォーム',
+                    lastUpdated: '2025-04-28'
+                },
+                faq: {
+                    title: 'よくある質問',
+                    content: 'よくある質問と回答',
+                    lastUpdated: '2025-04-28'
+                },
+                glossary: {
+                    title: '用語集',
+                    content: '経済用語集',
+                    lastUpdated: '2025-04-28'
+                },
+                privacy: {
+                    title: 'プライバシーポリシー',
+                    content: 'プライバシーポリシーページ',
+                    lastUpdated: '2025-04-28'
+                },
+                terms: {
+                    title: '利用規約',
+                    content: '利用規約ページ',
+                    lastUpdated: '2025-04-28'
+                }
+            }
+        };
+
+        function showCurrentData() {
+            const resultDiv = document.getElementById('result');
+            const data = localStorage.getItem(STORAGE_KEY);
+            
+            if (data) {
+                const parsed = JSON.parse(data);
+                let html = '<h3>📊 現在のLocalStorageデータ:</h3>';
+                
+                // サマリー
+                html += `<p>セミナー: ${parsed.seminars?.length || 0}件</p>`;
+                html += `<p>刊行物: ${parsed.publications?.length || 0}件</p>`;
+                html += `<p>お知らせ: ${parsed.notices?.length || 0}件</p>`;
+                
+                // ページデータ
+                if (parsed.pages) {
+                    const pageKeys = Object.keys(parsed.pages);
+                    html += `<h4>ページデータ (${pageKeys.length}件):</h4>`;
+                    html += '<table>';
+                    html += '<tr><th>ページキー</th><th>タイトル</th><th>最終更新</th></tr>';
+                    pageKeys.forEach(key => {
+                        const page = parsed.pages[key];
+                        html += '<tr>';
+                        html += `<td><span class="page-key">${key}</span></td>`;
+                        html += `<td>${page.title || '(未設定)'}</td>`;
+                        html += `<td>${page.lastUpdated || '(未設定)'}</td>`;
+                        html += '</tr>';
+                    });
+                    html += '</table>';
+                } else {
+                    html += '<p style="color: red;">⚠️ ページデータがありません</p>';
+                }
+                
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = '<p style="color: red;">LocalStorageにデータがありません</p>';
+            }
+        }
+
+        function resetToFullData() {
+            const resultDiv = document.getElementById('result');
+            
+            // 新しいデータを保存
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(fullMockData));
+            
+            resultDiv.className = 'result success';
+            resultDiv.innerHTML = `
+                <h3>✅ データをリセットしました！</h3>
+                <p>以下のページデータが追加されました：</p>
+                <ul>
+                    <li>about - ちくぎん地域経済研究所について</li>
+                    <li>services - サービス一覧</li>
+                    <li>seminars - セミナー</li>
+                    <li>publications - 刊行物</li>
+                    <li>news - お知らせ</li>
+                    <li>contact - お問い合わせ</li>
+                    <li>faq - よくある質問</li>
+                    <li>glossary - 用語集</li>
+                    <li>privacy - プライバシーポリシー</li>
+                    <li>terms - 利用規約</li>
+                </ul>
+                <p><strong>アプリケーションページをリロードすると反映されます。</strong></p>
+            `;
+        }
+
+        function clearAll() {
+            const resultDiv = document.getElementById('result');
+            localStorage.removeItem(STORAGE_KEY);
+            resultDiv.innerHTML = '<p>LocalStorageを完全にクリアしました。</p>';
+        }
+
+        // 初期表示
+        showCurrentData();
+    </script>
+</body>
+</html>

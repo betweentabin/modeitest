@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刊行物動的表示テスト</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #da5761;
+            padding-bottom: 10px;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: #da5761;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #c44853;
+        }
+        .success-btn {
+            background-color: #28a745;
+        }
+        .success-btn:hover {
+            background-color: #218838;
+        }
+        .info-btn {
+            background-color: #17a2b8;
+        }
+        .info-btn:hover {
+            background-color: #138496;
+        }
+        .result {
+            background-color: #e8f5e9;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.error {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+        .result.show {
+            display: block;
+        }
+        .publication-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .test-step {
+            background-color: #fff3cd;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .check-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .check-list li {
+            padding: 5px 0;
+        }
+        .check-list li:before {
+            content: "☐ ";
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 刊行物の動的表示テスト</h1>
+    
+    <div class="section">
+        <h2>📋 現在のシステム状態</h2>
+        <p>HomePage.vueには以下の刊行物表示機能が実装済みです：</p>
+        <ul>
+            <li>✅ 上部カードの「刊行物(N件)」カウンター</li>
+            <li>✅ Publicationsセクションのメイン刊行物（最新1件）</li>
+            <li>✅ 右側の刊行物リスト（最大4件）</li>
+            <li>✅ クリックで詳細ページへの遷移</li>
+            <li>✅ CMSからのデータ自動取得</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>🚀 Step 1: 現在のデータを確認</h2>
+        <button onclick="checkCurrentData()" class="info-btn">現在のデータを確認</button>
+        <div id="current-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>📚 Step 2: 新しい刊行物を追加</h2>
+        <p>CMSに新しい刊行物データを追加して、HomePage.vueに反映されるか確認します。</p>
+        <div class="button-group">
+            <button onclick="addTestPublication()">テスト刊行物を追加</button>
+            <button onclick="addMultiplePublications()">複数の刊行物を一括追加</button>
+            <button onclick="clearPublications()" style="background-color: #dc3545;">刊行物をクリア</button>
+        </div>
+        <div id="add-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>👀 Step 3: HomePage.vueで確認</h2>
+        <div class="test-step">
+            <h3>確認項目：</h3>
+            <ul class="check-list">
+                <li>上部の刊行物カードに「刊行物(N件)」と表示される</li>
+                <li>Publicationsセクションのメイン画像が更新される</li>
+                <li>右側のリストに最新4件が表示される</li>
+                <li>刊行物をクリックすると詳細ページに遷移する</li>
+            </ul>
+        </div>
+        <button onclick="openHomePage()" class="success-btn">HomePage を開く</button>
+    </div>
+    
+    <div class="section">
+        <h2>🔄 Step 4: リアルタイム更新のテスト</h2>
+        <p>データを変更してからHomePageをリロードすると、最新の情報が表示されます。</p>
+        <button onclick="testRealtimeUpdate()">リアルタイム更新テスト</button>
+        <div id="realtime-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>🛠️ デバッグ情報</h2>
+        <button onclick="showDebugInfo()">詳細なデバッグ情報を表示</button>
+        <div id="debug-result" class="result"></div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'cms_mock_data';
+        
+        function loadMockData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        }
+        
+        function saveMockData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+        
+        function checkCurrentData() {
+            const resultDiv = document.getElementById('current-result');
+            resultDiv.className = 'result show';
+            
+            const data = loadMockData();
+            if (data && data.publications) {
+                let html = `<strong>📚 現在の刊行物データ (${data.publications.length}件):</strong><br><br>`;
+                data.publications.forEach((pub, index) => {
+                    html += `<div class="publication-item">
+                        <strong>#${index + 1}: ${pub.title}</strong><br>
+                        発行日: ${pub.publication_date || pub.publishedDate || '未設定'}<br>
+                        カテゴリー: ${pub.category || '未分類'}<br>
+                        説明: ${pub.description ? pub.description.substring(0, 50) + '...' : '説明なし'}
+                    </div>`;
+                });
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = '❌ 刊行物データがありません';
+            }
+        }
+        
+        function addTestPublication() {
+            const resultDiv = document.getElementById('add-result');
+            resultDiv.className = 'result show';
+            
+            const data = loadMockData() || { publications: [] };
+            data.publications = data.publications || [];
+            
+            const newPublication = {
+                id: Date.now(),
+                title: `【新着】テスト刊行物 ${new Date().toLocaleDateString('ja-JP')}`,
+                description: 'これは動的表示テストのために追加された刊行物です。HomePage.vueに正しく表示されるか確認してください。',
+                publication_date: new Date().toISOString().split('T')[0],
+                publishedDate: new Date().toISOString().split('T')[0], // 互換性のため両方設定
+                category: 'special',
+                type: 'pdf',
+                author: 'テスト管理者',
+                pages: 42,
+                file_url: '/files/test-publication.pdf',
+                image_url: '', // デフォルト画像を使用
+                file_size: 3.2,
+                download_count: 0,
+                is_published: true
+            };
+            
+            // 最新を先頭に追加
+            data.publications.unshift(newPublication);
+            saveMockData(data);
+            
+            resultDiv.innerHTML = `
+                <strong>✅ 刊行物を追加しました！</strong><br><br>
+                <strong>タイトル:</strong> ${newPublication.title}<br>
+                <strong>発行日:</strong> ${newPublication.publication_date}<br>
+                <strong>カテゴリー:</strong> ${newPublication.category}<br><br>
+                <strong>次のステップ:</strong><br>
+                1. HomePage をリロード<br>
+                2. Publicationsセクションを確認<br>
+                3. 刊行物カードのカウンターを確認
+            `;
+        }
+        
+        function addMultiplePublications() {
+            const resultDiv = document.getElementById('add-result');
+            resultDiv.className = 'result show';
+            
+            const data = loadMockData() || { publications: [] };
+            data.publications = data.publications || [];
+            
+            const today = new Date();
+            const publications = [
+                {
+                    id: Date.now() + 1,
+                    title: 'Hot Information Vol.999（最新号）',
+                    description: '2025年度下半期の経済展望と地域活性化戦略について詳しく解説。',
+                    publication_date: today.toISOString().split('T')[0],
+                    publishedDate: today.toISOString().split('T')[0],
+                    category: 'monthly',
+                    type: 'pdf',
+                    image_url: '/img/-----2-2-5.png'
+                },
+                {
+                    id: Date.now() + 2,
+                    title: '地域経済白書2025',
+                    description: '九州地域の経済動向を包括的に分析した年次レポート。',
+                    publication_date: new Date(today.getTime() - 86400000).toISOString().split('T')[0],
+                    publishedDate: new Date(today.getTime() - 86400000).toISOString().split('T')[0],
+                    category: 'research',
+                    type: 'pdf',
+                    image_url: ''
+                },
+                {
+                    id: Date.now() + 3,
+                    title: '経営参考BOOK vol.100（記念号）',
+                    description: '創刊100号記念。過去の優良事例と未来への提言。',
+                    publication_date: new Date(today.getTime() - 172800000).toISOString().split('T')[0],
+                    publishedDate: new Date(today.getTime() - 172800000).toISOString().split('T')[0],
+                    category: 'book',
+                    type: 'pdf',
+                    image_url: '/img/-----2-2-1.png'
+                },
+                {
+                    id: Date.now() + 4,
+                    title: 'SDGs実践ガイド',
+                    description: '中小企業のためのSDGs実践マニュアル。',
+                    publication_date: new Date(today.getTime() - 259200000).toISOString().split('T')[0],
+                    publishedDate: new Date(today.getTime() - 259200000).toISOString().split('T')[0],
+                    category: 'special',
+                    type: 'pdf',
+                    image_url: ''
+                },
+                {
+                    id: Date.now() + 5,
+                    title: 'DXハンドブック',
+                    description: 'デジタル変革を成功させるための実践的手引き。',
+                    publication_date: new Date(today.getTime() - 345600000).toISOString().split('T')[0],
+                    publishedDate: new Date(today.getTime() - 345600000).toISOString().split('T')[0],
+                    category: 'guide',
+                    type: 'pdf',
+                    image_url: ''
+                }
+            ];
+            
+            // 既存データの前に追加（最新順）
+            data.publications = [...publications, ...data.publications];
+            saveMockData(data);
+            
+            resultDiv.innerHTML = `
+                <strong>✅ 5件の刊行物を追加しました！</strong><br><br>
+                追加された刊行物：<br>
+                ${publications.map(p => `• ${p.title}`).join('<br>')}<br><br>
+                <strong>HomePage.vueで確認できること：</strong><br>
+                • 刊行物カード: 「刊行物(${data.publications.length}件)」<br>
+                • メイン刊行物: 「${publications[0].title}」<br>
+                • 右側リスト: 最新4件が表示
+            `;
+        }
+        
+        function clearPublications() {
+            if (confirm('すべての刊行物データを削除してもよろしいですか？')) {
+                const data = loadMockData() || {};
+                data.publications = [];
+                saveMockData(data);
+                
+                const resultDiv = document.getElementById('add-result');
+                resultDiv.className = 'result show';
+                resultDiv.innerHTML = '✅ 刊行物データをクリアしました';
+            }
+        }
+        
+        function openHomePage() {
+            window.open('http://localhost:8081', '_blank');
+        }
+        
+        function testRealtimeUpdate() {
+            const resultDiv = document.getElementById('realtime-result');
+            resultDiv.className = 'result show';
+            
+            // タイムスタンプ付きの刊行物を追加
+            const timestamp = new Date().toLocaleTimeString('ja-JP');
+            const data = loadMockData() || { publications: [] };
+            data.publications = data.publications || [];
+            
+            const realtimePublication = {
+                id: Date.now(),
+                title: `リアルタイム更新テスト [${timestamp}]`,
+                description: 'このデータは' + timestamp + 'に追加されました。',
+                publication_date: new Date().toISOString().split('T')[0],
+                publishedDate: new Date().toISOString().split('T')[0],
+                category: 'test',
+                type: 'pdf'
+            };
+            
+            data.publications.unshift(realtimePublication);
+            saveMockData(data);
+            
+            resultDiv.innerHTML = `
+                <strong>⏱️ リアルタイムデータを追加しました！</strong><br><br>
+                <strong>タイムスタンプ:</strong> ${timestamp}<br>
+                <strong>タイトル:</strong> ${realtimePublication.title}<br><br>
+                <strong>確認方法:</strong><br>
+                1. HomePage.vue をリロード<br>
+                2. Publications セクションのメイン画像下に表示<br>
+                3. タイムスタンプが一致することを確認
+            `;
+        }
+        
+        function showDebugInfo() {
+            const resultDiv = document.getElementById('debug-result');
+            resultDiv.className = 'result show';
+            
+            const data = loadMockData();
+            
+            let html = '<strong>🔍 デバッグ情報:</strong><br><br>';
+            
+            if (data) {
+                html += '<div class="code-block">' + JSON.stringify(data, null, 2) + '</div>';
+                
+                html += '<br><strong>データサマリー:</strong><br>';
+                html += `• セミナー: ${data.seminars ? data.seminars.length : 0}件<br>`;
+                html += `• 刊行物: ${data.publications ? data.publications.length : 0}件<br>`;
+                html += `• お知らせ: ${data.notices ? data.notices.length : 0}件<br>`;
+                
+                if (data.publications && data.publications.length > 0) {
+                    html += '<br><strong>最新の刊行物（HomePage.vueのメインに表示）:</strong><br>';
+                    html += `タイトル: ${data.publications[0].title}<br>`;
+                    html += `画像URL: ${data.publications[0].image_url || 'デフォルト画像'}<br>`;
+                }
+            } else {
+                html += '❌ LocalStorageにデータがありません';
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        // ページ読み込み時に現在のデータを表示
+        window.onload = function() {
+            checkCurrentData();
+        };
+    </script>
+</body>
+</html>

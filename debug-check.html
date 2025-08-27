@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vue Component Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .code-block { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
+        .button { background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        h2 { color: #333; border-bottom: 2px solid #dc3545; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Vue Component デバッグツール</h1>
+    
+    <h2>1. ブラウザコンソールで以下を実行してください</h2>
+    <p>HomePage (http://localhost:8081) を開いて、F12でコンソールを開き、以下のコマンドを<strong>1つずつ</strong>貼り付けて実行：</p>
+    
+    <div class="code-block">
+// Step 1: Vueコンポーネントを取得
+const app = document.querySelector('#app').__vue__;
+console.log('Vue app:', app);
+
+// Step 2: HomePageコンポーネントを探す
+const findComponent = (root, name) => {
+  if (root.$options.name === name) return root;
+  for (let child of root.$children) {
+    const found = findComponent(child, name);
+    if (found) return found;
+  }
+  return null;
+};
+
+const homePage = findComponent(app, 'HomePage');
+console.log('HomePage component:', homePage);
+
+// Step 3: データの内容を確認
+if (homePage) {
+  console.log('=== Current Data Values ===');
+  console.log('seminar:', homePage.seminar);
+  console.log('publications1:', homePage.publications1);
+  console.log('infomation1:', homePage.infomation1);
+  console.log('date1:', homePage.date1);
+  console.log('hotInfomationVol319:', homePage.hotInfomationVol319);
+  console.log('date2:', homePage.date2);
+  console.log('text123:', homePage.text123);
+  console.log('===========================');
+} else {
+  console.error('HomePage component not found!');
+}
+    </div>
+    
+    <h2>2. 手動でデータを更新</h2>
+    <p>もしデータが古い場合、以下のコマンドで<strong>直接</strong>更新してみてください：</p>
+    
+    <div class="code-block">
+// HomePageコンポーネントのデータを直接更新
+if (homePage) {
+  // 直接データを変更
+  homePage.seminar = '【テスト】セミナー(99件)';
+  homePage.publications1 = '【テスト】刊行物(88件)';
+  homePage.infomation1 = '【テスト】お知らせ(77件)';
+  homePage.date1 = '2025.12.31';
+  homePage.hotInfomationVol319 = '【テスト】これは手動更新のテストです';
+  
+  // 強制的に再描画
+  homePage.$forceUpdate();
+  
+  console.log('✅ データを手動で更新しました！');
+  console.log('画面に【テスト】が表示されているか確認してください');
+} else {
+  console.error('❌ HomePageコンポーネントが見つかりません');
+}
+    </div>
+    
+    <h2>3. 表示要素を直接確認</h2>
+    <p>DOM要素の内容を確認：</p>
+    
+    <div class="code-block">
+// DOM要素を直接確認
+console.log('=== DOM Elements ===');
+const seminarEl = document.querySelector('.seminar');
+const publicationsEl = document.querySelector('.publications');
+const infomationEl = document.querySelector('.infomation');
+
+console.log('Seminar element text:', seminarEl ? seminarEl.textContent : 'Not found');
+console.log('Publications element text:', publicationsEl ? publicationsEl.textContent : 'Not found');
+console.log('Infomation element text:', infomationEl ? infomationEl.textContent : 'Not found');
+
+// ニュース項目を確認
+const dates = document.querySelectorAll('.date');
+console.log('Date elements count:', dates.length);
+dates.forEach((el, i) => {
+  console.log(`Date ${i+1}:`, el.textContent);
+});
+    </div>
+    
+    <h2>4. 結果を教えてください</h2>
+    <ul>
+        <li><strong>Step 1-3 の結果：</strong> データの値は更新されていますか？</li>
+        <li><strong>手動更新の結果：</strong> 【テスト】の文字が画面に表示されましたか？</li>
+        <li><strong>DOM要素の結果：</strong> 要素は見つかりましたか？</li>
+    </ul>
+    
+    <p style="background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin-top: 20px;">
+        <strong>⚠️ 重要：</strong><br>
+        もし手動更新で【テスト】が表示された場合 → loadLatestData()メソッドの問題<br>
+        もし手動更新でも表示されない場合 → Vue.jsのリアクティビティまたはテンプレートの問題
+    </p>
+</body>
+</html>

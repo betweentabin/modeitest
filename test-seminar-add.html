@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>セミナー追加エラーテスト</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #da5761;
+            padding-bottom: 10px;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #da5761;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #c44853;
+        }
+        .info-btn {
+            background-color: #17a2b8;
+        }
+        .info-btn:hover {
+            background-color: #138496;
+        }
+        .success-btn {
+            background-color: #28a745;
+        }
+        .success-btn:hover {
+            background-color: #218838;
+        }
+        .result {
+            background-color: #e8f5e9;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.error {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+        .result.show {
+            display: block;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        .step-box {
+            background-color: #fff3cd;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 セミナー追加エラーのデバッグ</h1>
+    
+    <div class="section">
+        <h2>📋 問題の説明</h2>
+        <p>管理画面のセミナー管理から「追加」ボタンをクリックすると、「セミナーデータの取得に失敗しました」というエラーが表示される問題について調査します。</p>
+        <div class="step-box">
+            <strong>期待される動作：</strong><br>
+            • /admin/seminars/new にアクセス<br>
+            • 新規作成フォームが表示される<br>
+            • エラーメッセージは表示されない
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>🚀 Step 1: ルーティングテスト</h2>
+        <p>正しいルートが設定されているか確認します。</p>
+        <button onclick="testRoutes()" class="info-btn">ルート情報を確認</button>
+        <div id="route-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>🔧 Step 2: Mock Server のデバッグ</h2>
+        <p>mockServer.getSeminar() が 'new' IDで呼ばれたときの動作を確認します。</p>
+        <button onclick="testMockServer()">MockServer テスト</button>
+        <div id="mock-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>🎯 Step 3: 直接アクセステスト</h2>
+        <p>以下のリンクから直接アクセスして動作を確認します。</p>
+        <div style="margin: 20px 0;">
+            <button onclick="window.open('http://localhost:8081/#/admin/seminars', '_blank')" class="info-btn">セミナー管理を開く</button>
+            <button onclick="window.open('http://localhost:8081/#/admin/seminars/new', '_blank')" class="success-btn">新規作成画面を直接開く</button>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>💡 Step 4: コンソールでデバッグ</h2>
+        <p>新規作成画面を開いてから、ブラウザのコンソールで以下のコマンドを実行してください：</p>
+        <div class="code-block">
+// Vue コンポーネントを確認
+const app = document.querySelector('#app').__vue__;
+let seminarEditForm = null;
+
+// SeminarEditForm を探す
+function findSeminarEditForm(vm) {
+    if (vm.$options.name === 'SeminarEditForm') {
+        seminarEditForm = vm;
+        return;
+    }
+    if (vm.$children && vm.$children.length) {
+        vm.$children.forEach(child => {
+            if (!seminarEditForm) findSeminarEditForm(child);
+        });
+    }
+}
+
+findSeminarEditForm(app);
+
+if (seminarEditForm) {
+    console.log('✅ SeminarEditForm found!');
+    console.log('Route params:', seminarEditForm.$route.params);
+    console.log('isNew:', seminarEditForm.isNew);
+    console.log('loading:', seminarEditForm.loading);
+    console.log('error:', seminarEditForm.error);
+    console.log('formData:', seminarEditForm.formData);
+} else {
+    console.log('❌ SeminarEditForm not found');
+}
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>🛠️ Step 5: localStorage の確認</h2>
+        <button onclick="checkLocalStorage()">localStorage データを確認</button>
+        <div id="storage-result" class="result"></div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'cms_mock_data';
+        
+        function testRoutes() {
+            const resultDiv = document.getElementById('route-result');
+            resultDiv.className = 'result show';
+            
+            const routes = [
+                '/admin/seminars',
+                '/admin/seminars/new',
+                '/admin/seminars/1/edit',
+                '/admin/seminars/999/edit'
+            ];
+            
+            let html = '<strong>📍 設定されているルート:</strong><br><br>';
+            html += '• /admin/seminars - セミナー管理一覧<br>';
+            html += '• /admin/seminars/new - 新規作成（問題のルート）<br>';
+            html += '• /admin/seminars/:id/edit - 編集<br><br>';
+            html += '<strong>router.js の該当部分:</strong><br>';
+            html += '<div class="code-block">';
+            html += '{\n';
+            html += '  path: "/admin/seminars/new",\n';
+            html += '  name: "seminarNew",\n';
+            html += '  component: SeminarEditForm\n';
+            html += '},\n';
+            html += '{\n';
+            html += '  path: "/admin/seminars/:id/edit",\n';
+            html += '  name: "seminarEdit",\n';
+            html += '  component: SeminarEditForm\n';
+            html += '}';
+            html += '</div>';
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        async function testMockServer() {
+            const resultDiv = document.getElementById('mock-result');
+            resultDiv.className = 'result show';
+            
+            let html = '<strong>🔍 MockServer テスト結果:</strong><br><br>';
+            
+            // Load mock server data
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                const mockData = JSON.parse(data);
+                html += `• 現在のセミナー数: ${mockData.seminars ? mockData.seminars.length : 0}<br>`;
+                
+                // Test getSeminar with 'new'
+                html += '<br><strong>getSeminar("new") のテスト:</strong><br>';
+                html += '<div class="code-block">';
+                html += 'getSeminar(id) {\n';
+                html += '  const seminar = this.data.seminars.find(s => s.id === parseInt(id))\n';
+                html += '  // parseInt("new") = NaN なので見つからない\n';
+                html += '  // → Promise.reject(new Error("Seminar not found"))\n';
+                html += '}';
+                html += '</div>';
+                html += '<br>⚠️ <strong>問題:</strong> "new" がparseInt()でNaNになるため、エラーが発生する可能性があります。';
+            } else {
+                html += '❌ MockServer データが見つかりません';
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        function checkLocalStorage() {
+            const resultDiv = document.getElementById('storage-result');
+            resultDiv.className = 'result show';
+            
+            const data = localStorage.getItem(STORAGE_KEY);
+            const adminToken = localStorage.getItem('adminToken');
+            
+            let html = '<strong>📦 LocalStorage の状態:</strong><br><br>';
+            
+            if (data) {
+                const mockData = JSON.parse(data);
+                html += `✅ CMSデータ: 存在<br>`;
+                html += `• セミナー: ${mockData.seminars ? mockData.seminars.length : 0}件<br>`;
+                html += `• 刊行物: ${mockData.publications ? mockData.publications.length : 0}件<br>`;
+                html += `• お知らせ: ${mockData.notices ? mockData.notices.length : 0}件<br>`;
+            } else {
+                html += '❌ CMSデータ: なし<br>';
+            }
+            
+            html += '<br>';
+            
+            if (adminToken) {
+                html += '✅ 管理者トークン: ログイン済み<br>';
+            } else {
+                html += '❌ 管理者トークン: 未ログイン<br>';
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        // ページ読み込み時に自動でルート情報を表示
+        window.onload = function() {
+            testRoutes();
+        };
+    </script>
+</body>
+</html>
