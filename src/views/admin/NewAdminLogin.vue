@@ -87,25 +87,28 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.post('http://localhost:8000/api/admin/login', {
-          email: this.email,
-          password: this.password
-        })
+        // mockServer用の簡易認証
+        if (this.email === 'admin@example.com' && this.password === 'password123') {
+          // 仮のトークンとユーザー情報を作成
+          const mockAdminData = {
+            token: 'mock-admin-token-' + Date.now(),
+            user: {
+              id: 1,
+              email: 'admin@example.com',
+              name: '管理者',
+              role: 'admin'
+            }
+          }
 
-        localStorage.setItem('adminToken', response.data.token)
-        localStorage.setItem('adminUser', JSON.stringify(response.data.user))
-        
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
-        
-        this.$router.push('/admin/dashboard')
-      } catch (err) {
-        if (err.response?.status === 403) {
-          this.error = '管理者権限がありません'
-        } else if (err.response?.data?.message) {
-          this.error = err.response.data.message
+          localStorage.setItem('adminToken', mockAdminData.token)
+          localStorage.setItem('adminUser', JSON.stringify(mockAdminData.user))
+          
+          this.$router.push('/admin/dashboard')
         } else {
-          this.error = 'ログインに失敗しました'
+          this.error = 'メールアドレスまたはパスワードが正しくありません'
         }
+      } catch (err) {
+        this.error = 'ログインに失敗しました'
         console.error('Login error:', err)
       } finally {
         this.loading = false
