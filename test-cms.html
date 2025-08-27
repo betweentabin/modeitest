@@ -138,7 +138,18 @@
         </div>
         
         <div class="test-step">
-            <h3>ステップ 5: データの永続性確認</h3>
+            <h3>ステップ 5: HomePage.vueでの表示確認</h3>
+            <p>1. CMS管理画面で新しいデータを追加</p>
+            <p>2. <a href="http://localhost:8081" target="_blank">ホームページ</a>を開く（またはリロード）</p>
+            <p>3. 最新のニュース、セミナー数、刊行物数が自動的に表示されることを確認</p>
+            <div class="button-group">
+                <button onclick="testHomePageIntegration()">ホームページ連携テスト</button>
+            </div>
+            <div id="homepage-result" class="result"></div>
+        </div>
+        
+        <div class="test-step">
+            <h3>ステップ 6: データの永続性確認</h3>
             <p>ページをリロードして、データが保持されているか確認します。</p>
             <div class="button-group">
                 <button onclick="checkAllData()">全データ確認</button>
@@ -346,6 +357,91 @@
                 `;
             } else {
                 displayDiv.textContent = 'データがありません';
+            }
+        }
+        
+        // ホームページ連携テスト
+        function testHomePageIntegration() {
+            const resultDiv = document.getElementById('homepage-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            
+            try {
+                // テストデータを追加
+                const mockData = loadMockData() || { 
+                    seminars: [], 
+                    publications: [], 
+                    notices: [] 
+                };
+                
+                // 複数のテストデータを追加
+                const testItems = [
+                    {
+                        type: 'seminar',
+                        data: {
+                            id: Date.now(),
+                            title: 'ホームページ連携テスト用セミナー',
+                            description: 'ホームページに表示されるかテスト',
+                            date: new Date().toISOString().split('T')[0],
+                            start_time: '15:00',
+                            end_time: '17:00',
+                            location: 'テスト会場',
+                            status: 'ongoing'
+                        }
+                    },
+                    {
+                        type: 'publication',
+                        data: {
+                            id: Date.now() + 1,
+                            title: 'テスト刊行物 Vol.999',
+                            description: 'ホームページ表示テスト用',
+                            publishedDate: new Date().toISOString().split('T')[0],
+                            category: 'monthly'
+                        }
+                    },
+                    {
+                        type: 'notice',
+                        data: {
+                            id: Date.now() + 2,
+                            title: '重要：ホームページ連携テスト',
+                            content: 'このお知らせがホームページに表示されます',
+                            date: new Date().toISOString().split('T')[0],
+                            category: 'notice',
+                            isImportant: true
+                        }
+                    }
+                ];
+                
+                // データを追加
+                testItems.forEach(item => {
+                    if (item.type === 'seminar') {
+                        mockData.seminars = mockData.seminars || [];
+                        mockData.seminars.unshift(item.data);
+                    } else if (item.type === 'publication') {
+                        mockData.publications = mockData.publications || [];
+                        mockData.publications.unshift(item.data);
+                    } else if (item.type === 'notice') {
+                        mockData.notices = mockData.notices || [];
+                        mockData.notices.unshift(item.data);
+                    }
+                });
+                
+                saveMockData(mockData);
+                
+                resultDiv.innerHTML = `
+                    <span class="success">✅ テストデータを追加しました！</span><br>
+                    <strong>次の手順：</strong><br>
+                    1. ホームページを開く/リロードする<br>
+                    2. 以下が更新されているか確認：<br>
+                    　・最新のニュース欄に「${testItems[2].data.title}」<br>
+                    　・セミナー数の更新<br>
+                    　・刊行物数の更新<br>
+                    <br>
+                    <a href="http://localhost:8081" target="_blank" style="color: #0066cc;">→ ホームページを開く</a>
+                `;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<span class="error">❌ エラー:</span> ${error.message}`;
             }
         }
         

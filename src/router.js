@@ -106,13 +106,13 @@ export default new Router({
       component: SeminarManagement,
     },
     {
-      path: "/admin/seminars/:id/edit",
-      name: "seminarEdit",
+      path: "/admin/seminars/new",
+      name: "seminarNew",
       component: SeminarEditForm,
     },
     {
-      path: "/admin/seminars/new",
-      name: "seminarNew",
+      path: "/admin/seminars/:id/edit",
+      name: "seminarEdit",
       component: SeminarEditForm,
     },
     {
@@ -136,13 +136,13 @@ export default new Router({
       component: NoticeManagement,
     },
     {
-      path: "/admin/notices/:id/edit",
-      name: "noticeEdit",
+      path: "/admin/notices/new",
+      name: "noticeNew",
       component: NoticeEditForm,
     },
     {
-      path: "/admin/notices/new",
-      name: "noticeNew",
+      path: "/admin/notices/:id/edit",
+      name: "noticeEdit",
       component: NoticeEditForm,
     },
     {
@@ -151,13 +151,13 @@ export default new Router({
       component: MediaManagement,
     },
     {
-      path: "/admin/media/:id/edit",
-      name: "mediaEdit",
+      path: "/admin/media/new",
+      name: "mediaNew",
       component: MediaEditForm,
     },
     {
-      path: "/admin/media/new",
-      name: "mediaNew",
+      path: "/admin/media/:id/edit",
+      name: "mediaEdit",
       component: MediaEditForm,
     },
     {

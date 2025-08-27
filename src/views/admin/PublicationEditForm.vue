@@ -289,7 +289,7 @@ export default {
   },
   computed: {
     isNew() {
-      return this.$route.params.id === 'new'
+      return this.$route.name === 'publicationNew' || !this.$route.params.id
     },
     publicationId() {
       return this.$route.params.id

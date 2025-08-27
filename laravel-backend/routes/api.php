@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\InquiriesController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\PageContentController;
+use App\Http\Controllers\Api\PublicationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,7 +82,23 @@ Route::prefix('admin')->group(function () {
             Route::put('/{pageKey}', [PageContentController::class, 'update']);
             Route::delete('/{pageKey}', [PageContentController::class, 'destroy']);
         });
+        
+        Route::prefix('publications')->group(function () {
+            Route::get('/', [PublicationsController::class, 'index']);
+            Route::post('/', [PublicationsController::class, 'store']);
+            Route::get('/{id}', [PublicationsController::class, 'show']);
+            Route::put('/{id}', [PublicationsController::class, 'update']);
+            Route::delete('/{id}', [PublicationsController::class, 'destroy']);
+        });
     });
 });
 
 Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
+
+Route::prefix('publications')->group(function () {
+    Route::get('/', [PublicationsController::class, 'index']);
+    Route::get('/featured', [PublicationsController::class, 'featured']);
+    Route::get('/latest', [PublicationsController::class, 'latest']);
+    Route::get('/{id}', [PublicationsController::class, 'show']);
+    Route::get('/{id}/download', [PublicationsController::class, 'download'])->middleware('auth:sanctum');
+});
