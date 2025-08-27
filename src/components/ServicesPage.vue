@@ -3,14 +3,13 @@
     <Navigation />
     <div class="page-content">
       <div class="page-header">
-        <h1>会員サービスのご案内</h1>
+        <h1>{{ pageData ? pageData.title : '会員サービスのご案内' }}</h1>
         <p class="subtitle">SERVICES</p>
       </div>
 
-      <div class="services-intro">
+      <div class="services-intro" v-if="pageData && pageData.content">
         <p class="lead-text">
-          ちくぎん地域経済研究所では、地域企業の皆様の成長と発展を支援するため、<br />
-          様々なサービスをご提供しています。
+          {{ pageData.content.description || 'ちくぎん地域経済研究所では、地域企業の皆様の成長と発展を支援するため、様々なサービスをご提供しています。' }}
         </p>
       </div>
 
@@ -131,12 +130,31 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import axios from 'axios';
 
 export default {
   name: "ServicesPage",
   components: {
     Navigation,
     FooterComplete
+  },
+  data() {
+    return {
+      pageData: null,
+      loading: true,
+      error: null
+    };
+  },
+  async mounted() {
+    try {
+      const response = await axios.get('http://localhost:8000/api/pages/services');
+      this.pageData = response.data;
+      this.loading = false;
+    } catch (err) {
+      console.error('Failed to fetch page data:', err);
+      this.error = 'ページデータの取得に失敗しました';
+      this.loading = false;
+    }
   }
 };
 </script>

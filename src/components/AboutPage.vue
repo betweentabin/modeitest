@@ -3,7 +3,7 @@
     <Navigation />
     <div class="page-content">
       <div class="about-header">
-        <h1>会社概要</h1>
+        <h1>{{ pageData ? pageData.title : '会社概要' }}</h1>
         <p class="subtitle">ABOUT US</p>
       </div>
 
@@ -76,20 +76,18 @@
           </div>
         </section>
         
-        <section class="mission">
+        <section class="mission" v-if="pageData && pageData.content">
           <h2>私たちの理念</h2>
           <div class="mission-content">
             <div class="mission-text">
-              <h3>地域と共に歩む</h3>
-              <p>
-                ちくぎん地域経済研究所は、産・官・学・金（金融機関）のネットワークを活かし、
-                地域経済の持続的な発展と地域企業の成長を支援することを使命としています。
-              </p>
-              <p>
-                1991年の設立以来、福岡県久留米市を拠点に、九州地域の経済発展に貢献してまいりました。
-                長年培ってきた知識と経験、そして幅広いネットワークを活用し、
-                企業活動を総合的にサポートいたします。
-              </p>
+              <h3>{{ pageData.content.mission || '地域と共に歩む' }}</h3>
+              <p>{{ pageData.content.mission || 'ちくぎん地域経済研究所は、産・官・学・金（金融機関）のネットワークを活かし、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。' }}</p>
+              <p>{{ pageData.content.history || '1991年の設立以来、福岡県久留米市を拠点に、九州地域の経済発展に貢献してまいりました。長年培ってきた知識と経験、そして幅広いネットワークを活用し、企業活動を総合的にサポートいたします。' }}</p>
+              <div v-if="pageData.content.team">
+                <p>エコノミスト: {{ pageData.content.team.economists }}名</p>
+                <p>データサイエンティスト: {{ pageData.content.team.data_scientists }}名</p>
+                <p>エンジニア: {{ pageData.content.team.engineers }}名</p>
+              </div>
             </div>
             <div class="mission-image">
               <img src="/img/image-2.png" alt="研究所イメージ" />
@@ -105,12 +103,31 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import axios from 'axios';
 
 export default {
   name: "AboutPage",
   components: {
     Navigation,
     FooterComplete
+  },
+  data() {
+    return {
+      pageData: null,
+      loading: true,
+      error: null
+    };
+  },
+  async mounted() {
+    try {
+      const response = await axios.get('http://localhost:8000/api/pages/about');
+      this.pageData = response.data;
+      this.loading = false;
+    } catch (err) {
+      console.error('Failed to fetch page data:', err);
+      this.error = 'ページデータの取得に失敗しました';
+      this.loading = false;
+    }
   }
 };
 </script>

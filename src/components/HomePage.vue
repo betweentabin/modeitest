@@ -1,60 +1,77 @@
 <template>
-  <div class="page-container">
-    <Navigation />
-    <div class="page-content">
-      <h1>トップページ</h1>
-      <div class="hero-section">
-        <h2>ちくぎん地域経済研究所へようこそ</h2>
-        <p>地域経済の発展をサポートします</p>
-      </div>
-      <Screen2 v-bind="screen2Data" />
-    </div>
+  <div v-if="loading" class="loading-container">
+    <p>読み込み中...</p>
   </div>
+  <div v-else-if="error" class="error-container">
+    <p>{{ error }}</p>
+  </div>
+  <Screen2 v-else v-bind="screen2Props" />
 </template>
 
 <script>
-import Navigation from "./Navigation.vue";
-import Screen2 from "./Screen2.vue";
-import { screen2Data } from "../data";
+import Screen2 from './Screen2.vue';
+import { screen2Data } from '../data';
+import axios from 'axios';
 
 export default {
-  name: "HomePage",
+  name: 'HomePage',
   components: {
-    Navigation,
     Screen2
   },
   data() {
     return {
-      screen2Data
+      screen2Props: { ...screen2Data },
+      pageData: null,
+      loading: true,
+      error: null
     };
+  },
+  async mounted() {
+    try {
+      const response = await axios.get('http://localhost:8000/api/pages/home');
+      this.pageData = response.data;
+      
+      // CMSデータがある場合は、該当するプロパティを上書き
+      if (this.pageData && this.pageData.content) {
+        const content = this.pageData.content;
+        
+        // ヒーローセクションのテキストを更新
+        if (content.hero_title) {
+          this.screen2Props.text66 = content.hero_title;
+        }
+        if (content.hero_subtitle) {
+          this.screen2Props.text67 = content.hero_subtitle;
+        }
+        
+        // About セクションを更新
+        if (content.about_text) {
+          this.screen2Props.text113 = content.about_text;
+        }
+        
+        // その他のコンテンツも必要に応じて更新
+      }
+      
+      this.loading = false;
+    } catch (err) {
+      console.error('Failed to fetch page data:', err);
+      // CMSデータ取得に失敗してもデフォルトデータで表示
+      this.loading = false;
+    }
   }
 };
 </script>
 
 <style scoped>
-.page-container {
+.loading-container,
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
-}
-
-.page-content {
-  padding: 20px;
-}
-
-.hero-section {
-  text-align: center;
-  padding: 60px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  margin-bottom: 40px;
-  border-radius: 10px;
-}
-
-.hero-section h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-
-.hero-section p {
   font-size: 1.2rem;
+}
+
+.error-container {
+  color: red;
 }
 </style>
