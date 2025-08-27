@@ -1,6 +1,18 @@
 {
   "rewrites": [
     {
+      "source": "/admin/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/news/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/publications/(.*)",
+      "destination": "/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
