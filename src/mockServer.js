@@ -40,7 +40,8 @@ const mockData = {
       image_url: '', // 空にしてデフォルト画像を使用
       file_size: 2.1,
       download_count: 234,
-      is_published: true
+      is_published: true,
+      membershipLevel: 'premium' // プレミアム会員限定
     },
     {
       id: 2,
@@ -55,7 +56,8 @@ const mockData = {
       image_url: '', // 空にしてデフォルト画像を使用
       file_size: 1.8,
       download_count: 156,
-      is_published: true
+      is_published: true,
+      membershipLevel: 'standard' // スタンダード会員以上
     },
     {
       id: 3,
@@ -70,7 +72,8 @@ const mockData = {
       image_url: '', // 空にしてデフォルト画像を使用
       file_size: 1.5,
       download_count: 89,
-      is_published: true
+      is_published: true,
+      membershipLevel: 'basic' // ベーシック会員以上
     },
     {
       id: 4,
@@ -85,7 +88,8 @@ const mockData = {
       image_url: '/img/-----2-2-4.png', // この1つだけCMS画像設定例として残す
       file_size: 2.0,
       download_count: 45,
-      is_published: true
+      is_published: true,
+      membershipLevel: 'free' // 無料公開
     }
   ],
   notices: [
@@ -151,6 +155,12 @@ const mockData = {
     }
   ],
   pages: {
+    // 基本ページ
+    home: {
+      title: 'トップページ',
+      content: 'ちくぎん地域経済研究所のメインページ',
+      lastUpdated: '2025-05-01'
+    },
     about: {
       title: 'ちくぎん地域経済研究所について',
       content: '地域経済の発展に貢献する研究機関です。',
@@ -161,29 +171,74 @@ const mockData = {
       content: '経済調査、コンサルティング、セミナー開催など',
       lastUpdated: '2025-04-28'
     },
-    seminars: {
-      title: 'セミナー',
-      content: 'セミナー情報ページ',
-      lastUpdated: '2025-04-28'
-    },
-    publications: {
-      title: '刊行物',
-      content: '刊行物一覧ページ',
-      lastUpdated: '2025-04-28'
-    },
+    // ニュース・お知らせ関連
     news: {
       title: 'お知らせ',
       content: 'お知らせ一覧ページ',
       lastUpdated: '2025-04-28'
     },
-    contact: {
-      title: 'お問い合わせ',
-      content: 'お問い合わせフォーム',
+    newsDetail: {
+      title: 'お知らせ詳細',
+      content: 'お知らせ記事の詳細ページ',
       lastUpdated: '2025-04-28'
     },
+    // セミナー関連
+    seminars: {
+      title: 'セミナー',
+      content: 'セミナー情報ページ',
+      lastUpdated: '2025-04-28'
+    },
+    seminarRegistration: {
+      title: 'セミナー申込',
+      content: 'セミナー申込フォーム',
+      lastUpdated: '2025-04-28'
+    },
+    // 刊行物関連
+    publications: {
+      title: '刊行物',
+      content: '刊行物一覧ページ',
+      lastUpdated: '2025-04-28'
+    },
+    publicationDetail: {
+      title: '刊行物詳細',
+      content: '刊行物詳細ページ',
+      lastUpdated: '2025-04-28'
+    },
+    // 会員関連
+    memberLogin: {
+      title: '会員ログイン',
+      content: '会員ログインページ',
+      lastUpdated: '2025-04-28'
+    },
+    memberRegister: {
+      title: '会員登録',
+      content: '会員登録ページ',
+      lastUpdated: '2025-04-28'
+    },
+    myAccount: {
+      title: 'マイアカウント',
+      content: '会員マイページ',
+      lastUpdated: '2025-04-28'
+    },
+    upgrade: {
+      title: 'プランアップグレード',
+      content: '会員プランアップグレードページ',
+      lastUpdated: '2025-04-28'
+    },
+    // その他のページ
     faq: {
       title: 'よくある質問',
       content: 'よくある質問と回答',
+      lastUpdated: '2025-04-28'
+    },
+    apply: {
+      title: '申込みフォーム',
+      content: '各種申込みフォーム',
+      lastUpdated: '2025-04-28'
+    },
+    contact: {
+      title: 'お問い合わせ',
+      content: 'お問い合わせフォーム',
       lastUpdated: '2025-04-28'
     },
     glossary: {
@@ -199,6 +254,23 @@ const mockData = {
     terms: {
       title: '利用規約',
       content: '利用規約ページ',
+      lastUpdated: '2025-04-28'
+    },
+    // 管理画面関連
+    adminLogin: {
+      title: '管理者ログイン',
+      content: '管理者ログインページ',
+      lastUpdated: '2025-04-28'
+    },
+    adminDashboard: {
+      title: '管理ダッシュボード',
+      content: '管理画面のダッシュボード',
+      lastUpdated: '2025-04-28'
+    },
+    // テスト・開発用
+    test: {
+      title: 'テストページ',
+      content: 'Vue.js動作確認用テストページ',
       lastUpdated: '2025-04-28'
     }
   }
@@ -425,6 +497,113 @@ class MockAPIServer {
       return Promise.resolve(this.data.members[index])
     }
     return Promise.reject(new Error('Member not found'))
+  }
+
+  // Member Authentication
+  memberLogin(email, password) {
+    // 簡易的な認証（実際のパスワード検証の代わり）
+    const member = this.data.members.find(m => m.email === email && m.status === 'active')
+    
+    if (member) {
+      // パスワードは仮で "password123" とする
+      if (password === 'password123') {
+        const token = 'member_token_' + Date.now()
+        const userData = {
+          id: member.id,
+          name: member.name,
+          email: member.email,
+          company: member.company,
+          membershipType: member.membershipType,
+          expiryDate: member.expiryDate || '2025-12-31',
+          token: token
+        }
+        return Promise.resolve({
+          success: true,
+          user: userData,
+          token: token
+        })
+      }
+    }
+    
+    return Promise.reject(new Error('メールアドレスまたはパスワードが正しくありません'))
+  }
+
+  // Get current member from token
+  getCurrentMember(token) {
+    if (!token || !token.startsWith('member_token_')) {
+      return null
+    }
+    // 簡易実装: トークンがあれば最初のアクティブ会員を返す
+    const member = this.data.members.find(m => m.status === 'active')
+    if (member) {
+      return {
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        company: member.company,
+        membershipType: member.membershipType,
+        expiryDate: member.expiryDate || '2025-12-31'
+      }
+    }
+    return null
+  }
+
+  // Check if member can access content
+  canAccessContent(contentLevel, userMembershipType) {
+    const levels = {
+      'free': 0,
+      'basic': 1,
+      'standard': 2,
+      'premium': 3
+    }
+    
+    const contentRequirement = levels[contentLevel] || 0
+    const userLevel = userMembershipType ? (levels[userMembershipType] || 0) : 0
+    
+    return userLevel >= contentRequirement
+  }
+
+  // Get restriction message
+  getRestrictionMessage(contentLevel, userMembershipType) {
+    if (!userMembershipType) {
+      return '会員登録してアクセス'
+    }
+    
+    const messages = {
+      'basic': 'ベーシック会員以上で閲覧可能',
+      'standard': 'スタンダード会員以上で閲覧可能',
+      'premium': 'プレミアム会員限定コンテンツ'
+    }
+    
+    return messages[contentLevel] || 'アップグレードが必要です'
+  }
+
+  memberRegister(data) {
+    // 既存メールチェック
+    const existingMember = this.data.members.find(m => m.email === data.email)
+    if (existingMember) {
+      return Promise.reject(new Error('このメールアドレスは既に登録されています'))
+    }
+    
+    const newMember = {
+      id: Math.max(...this.data.members.map(m => m.id), 0) + 1,
+      name: data.name,
+      email: data.email,
+      company: data.company || '',
+      membershipType: data.membershipType || 'basic', // デフォルトはベーシック会員
+      joinedDate: new Date().toISOString().split('T')[0],
+      status: 'active'
+    }
+    
+    this.data.members.push(newMember)
+    this.saveData()
+    
+    const token = 'member_token_' + Date.now()
+    return Promise.resolve({
+      success: true,
+      user: newMember,
+      token: token
+    })
   }
 
   // Pages

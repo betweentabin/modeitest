@@ -91,7 +91,7 @@
             </div>
             <div class="membership-price">
               <p class="price-label">年会費</p>
-              <p class="price">¥120,000</p>
+              <p class="price">¥12,000</p>
             </div>
           </div>
 
@@ -109,7 +109,7 @@
             </div>
             <div class="membership-price">
               <p class="price-label">年会費</p>
-              <p class="price">¥360,000</p>
+              <p class="price">¥36,000</p>
             </div>
           </div>
         </div>

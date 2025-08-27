@@ -19,36 +19,19 @@
         <div v-if="loading" class="loading-message">読み込み中...</div>
         <div v-else-if="error" class="error-message">{{ error }}</div>
         <div v-else class="publication-grid">
-          <div v-if="featuredPublication" class="publication-card featured" @click="goToPublication(featuredPublication.id)">
-            <div class="publication-image">
-              <img :src="featuredPublication.image_url || '/img/-----2-2-5.png'" :alt="featuredPublication.title" />
-              <div class="publication-badge">NEW</div>
-            </div>
-            <div class="publication-content">
-              <div class="publication-date">{{ formatDate(featuredPublication.publication_date) }}</div>
-              <h3>{{ featuredPublication.title }}</h3>
-              <p class="publication-description">{{ featuredPublication.description }}</p>
-              <div class="publication-actions">
-                <button class="view-btn" @click.stop="goToPublication(featuredPublication.id)">詳細を見る</button>
-                <button class="download-btn" @click.stop="downloadPDF(featuredPublication)">PDFダウンロード</button>
-              </div>
-            </div>
-          </div>
-
-          <div v-for="(publication, index) in otherPublications" :key="publication.id" class="publication-card" @click="goToPublication(publication.id)">
-            <div class="publication-image">
-              <img :src="publication.image_url || getDefaultImage(index + 1)" :alt="publication.title" />
-            </div>
-            <div class="publication-content">
-              <div class="publication-date">{{ formatDate(publication.publication_date) }}</div>
-              <h3>{{ publication.title }}</h3>
-              <p class="publication-description">{{ publication.description }}</p>
-              <div class="publication-actions">
-                <button class="view-btn" @click.stop="goToPublication(publication.id)">詳細を見る</button>
-                <button class="download-btn" @click.stop="downloadPDF(publication)">PDFダウンロード</button>
-              </div>
-            </div>
-          </div>
+          <PublicationCard 
+            v-if="featuredPublication"
+            :publication="featuredPublication"
+            :is-new="true"
+            class="featured-card"
+          />
+          
+          <PublicationCard 
+            v-for="(publication, index) in otherPublications"
+            :key="publication.id"
+            :publication="publication"
+            :default-image="getDefaultImage(index + 1)"
+          />
         </div>
       </div>
 
@@ -164,12 +147,21 @@
       </div>
 
       <div class="member-notice">
-        <h3>会員の皆様へ</h3>
-        <p>
-          会員の方は、すべての刊行物を無料でダウンロードいただけます。<br />
-          ログイン後、マイページからアクセスしてください。
+        <h3 v-if="!isLoggedIn()">会員の皆様へ</h3>
+        <h3 v-else>{{ getMembershipLabel(getMembershipType()) }}の皆様へ</h3>
+        <p v-if="!isLoggedIn()">
+          会員の方は、会員ランクに応じた刊行物をダウンロードいただけます。<br />
+          まずはログインまたは会員登録をお願いします。
         </p>
-        <button class="login-btn">会員ログイン</button>
+        <p v-else>
+          現在、{{ getMembershipLabel(getMembershipType()) }}としてログインしています。<br />
+          会員ランクに応じた刊行物をダウンロードいただけます。
+        </p>
+        <button v-if="!isLoggedIn()" class="login-btn" @click="goToLogin">会員ログイン</button>
+        <div v-else class="member-actions">
+          <button class="account-btn" @click="goToMyAccount">マイアカウント</button>
+          <button class="upgrade-btn" @click="goToUpgrade">プランアップグレード</button>
+        </div>
       </div>
     </div>
     <FooterComplete />
@@ -179,13 +171,25 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import PublicationCard from "./PublicationCard.vue";
 import mockServer from "@/mockServer";
+import { useMemberAuth } from '@/composables/useMemberAuth';
 
 export default {
   name: "PublicationsPage",
   components: {
     Navigation,
-    FooterComplete
+    FooterComplete,
+    PublicationCard
+  },
+  setup() {
+    const { isLoggedIn, getMembershipLabel, getMembershipType } = useMemberAuth();
+    
+    return {
+      isLoggedIn,
+      getMembershipLabel,
+      getMembershipType
+    };
   },
   data() {
     return {
@@ -248,6 +252,15 @@ export default {
     goToPublication(publicationId) {
       // 刊行物詳細ページに遷移
       this.$router.push(`/publications/${publicationId}`);
+    },
+    goToLogin() {
+      this.$router.push('/login');
+    },
+    goToMyAccount() {
+      this.$router.push('/my-account');
+    },
+    goToUpgrade() {
+      this.$router.push('/upgrade');
     }
   }
 };
@@ -311,22 +324,8 @@ export default {
   gap: 30px;
 }
 
-.publication-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
-  cursor: pointer;
-}
-
-.publication-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
-.publication-card.featured {
-  border: 2px solid #dc3545;
+.featured-card {
+  grid-column: span 2;
 }
 
 .publication-image {
@@ -679,6 +678,42 @@ export default {
 
 .login-btn:hover {
   transform: scale(1.05);
+}
+
+.member-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.account-btn,
+.upgrade-btn {
+  padding: 12px 30px;
+  background: white;
+  color: #dc3545;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.account-btn:hover,
+.upgrade-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.upgrade-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid white;
+}
+
+.upgrade-btn:hover {
+  background: white;
+  color: #dc3545;
 }
 
 @media (max-width: 768px) {

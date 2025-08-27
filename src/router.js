@@ -29,6 +29,8 @@ import NewsDetailPage from "./components/NewsDetailPage";
 import TestPage from "./components/TestPage";
 import MemberLoginPage from "./views/MemberLoginPage";
 import MemberRegisterPage from "./views/MemberRegisterPage";
+import MyAccountPage from "./views/MyAccountPage";
+import UpgradePage from "./views/UpgradePage";
 
 Vue.use(Router);
 
@@ -208,6 +210,18 @@ const router = new Router({
       name: "memberRegister",
       component: MemberRegisterPage,
       meta: { title: "会員登録 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/my-account",
+      name: "myAccount",
+      component: MyAccountPage,
+      meta: { title: "マイアカウント - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/upgrade",
+      name: "upgrade",
+      component: UpgradePage,
+      meta: { title: "プランアップグレード - ちくぎん地域経済研究所" }
     },
     {
       path: "*",

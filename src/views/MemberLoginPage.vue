@@ -106,8 +106,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { getApiUrl } from '@/config/api'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'MemberLoginPage',
@@ -126,13 +125,10 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.post(getApiUrl('/api/login'), {
-          email: this.email,
-          password: this.password
-        })
+        const response = await mockServer.memberLogin(this.email, this.password)
 
-        localStorage.setItem('memberToken', response.data.token)
-        localStorage.setItem('memberUser', JSON.stringify(response.data.user))
+        localStorage.setItem('memberToken', response.token)
+        localStorage.setItem('memberUser', JSON.stringify(response.user))
         
         if (this.rememberMe) {
           localStorage.setItem('rememberEmail', this.email)
@@ -140,15 +136,11 @@ export default {
           localStorage.removeItem('rememberEmail')
         }
         
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
-        
-        this.$router.push('/member/dashboard')
+        // 前のページまたはホームページへリダイレクト
+        const redirectTo = this.$route.query.redirect || '/'
+        this.$router.push(redirectTo)
       } catch (err) {
-        if (err.response?.data?.message) {
-          this.error = err.response.data.message
-        } else {
-          this.error = 'ログインに失敗しました'
-        }
+        this.error = 'ログインに失敗しました'
       } finally {
         this.loading = false
       }
