@@ -26,9 +26,10 @@ php artisan migrate --force || echo "マイグレーション失敗、続行し�
 # シードの実行（エラーでも続行）
 php artisan db:seed --force || echo "シード失敗、続行します"
 
-# キャッシュクリア
+# キャッシュクリア（ルートキャッシュは無効化）
 php artisan config:cache || echo "設定キャッシュ失敗"
-php artisan route:cache || echo "ルートキャッシュ失敗"
+php artisan route:clear || echo "ルートキャッシュクリア失敗"
+# php artisan route:cache || echo "ルートキャッシュ失敗" # 一時的に無効化
 
 # Laravel 起動
 echo "✅ Starting Laravel server on port $PORT"
