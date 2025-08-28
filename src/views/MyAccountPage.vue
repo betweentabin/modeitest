@@ -174,7 +174,7 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router' // Vue 2では利用不可
 import Navigation from '@/components/Navigation.vue'
 import FooterComplete from '@/components/FooterComplete.vue'
 import PublicationCard from '@/components/PublicationCard.vue'
@@ -187,9 +187,132 @@ export default {
     FooterComplete,
     PublicationCard
   },
-  setup() {
-    const router = useRouter()
-    const { getMemberInfo, isLoggedIn, logout, getMembershipLabel } = useMemberAuth()
+  data() {
+    return {
+      activeTab: 'profile',
+      memberInfo: null,
+      downloadHistory: [],
+      favoritePublications: [],
+      settings: {
+        newsletter: true,
+        emailNotifications: true,
+        smsNotifications: false
+      }
+    }
+  },
+  computed: {
+    userInitial() {
+      return this.memberInfo?.name?.charAt(0) || 'G'
+    },
+    menuItems() {
+      return [
+        { id: 'profile', label: 'アカウント情報', icon: '👤' },
+        { id: 'membership', label: '会員プラン', icon: '★' },
+        { id: 'downloads', label: 'ダウンロード履歴', icon: '↓' },
+        { id: 'favorites', label: 'お気に入り', icon: '♥' },
+        { id: 'settings', label: '設定', icon: '⚙' }
+      ]
+    }
+  },
+  async mounted() {
+    const { getMemberInfo, isLoggedIn } = useMemberAuth()
+    
+    // ログインチェック
+    if (!isLoggedIn()) {
+      this.$router.push('/login?redirect=/my-account')
+      return
+    }
+
+    // 会員情報の取得
+    try {
+      this.memberInfo = await getMemberInfo()
+    } catch (error) {
+      console.error('会員情報の取得に失敗:', error)
+    }
+
+    // サンプルデータの設定
+    this.downloadHistory = [
+      {
+        id: 1,
+        title: 'ちくぎん地域経済レポート Vol.15',
+        date: '2024-03-15',
+        type: 'PDF',
+        size: '2.3MB'
+      },
+      {
+        id: 2,
+        title: 'Hot Information 2024年2月号',
+        date: '2024-02-28',
+        type: 'PDF',
+        size: '1.8MB'
+      }
+    ]
+
+    this.favoritePublications = [
+      {
+        id: 1,
+        title: 'ちくぎん地域経済レポート',
+        description: '地域経済の動向分析',
+        category: 'research'
+      },
+      {
+        id: 2,
+        title: 'Hot Information',
+        description: '最新の経済情報',
+        category: 'quarterly'
+      }
+    ]
+  },
+  methods: {
+    handleLogout() {
+      if (confirm('ログアウトしますか？')) {
+        const { logout } = useMemberAuth()
+        logout()
+        this.$router.push('/')
+      }
+    },
+    
+    goToUpgrade() {
+      this.$router.push('/upgrade')
+    },
+    
+    redownload(item) {
+      // 再ダウンロードの実装
+      console.log('再ダウンロード:', item)
+    },
+    
+    getMembershipLabel() {
+      const { getMembershipLabel } = useMemberAuth()
+      return getMembershipLabel()
+    },
+    
+    getMembershipFeatures(type) {
+      const features = {
+        basic: [
+          'ベーシック向け刊行物の閲覧',
+          'セミナー情報の確認',
+          'メール配信サービス'
+        ],
+        premium: [
+          'すべての刊行物への無制限アクセス',
+          'セミナーの優先参加',
+          '限定レポートの配信',
+          '経済統計データの詳細分析',
+          '個別相談サービス'
+        ]
+      }
+      return features[type] || []
+    },
+    
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('ja-JP')
+    },
+    
+    saveSettings() {
+      // 設定保存の実装
+      console.log('設定を保存:', this.settings)
+    }
     
     const activeTab = ref('profile')
     const memberInfo = ref(null)
@@ -281,27 +404,6 @@ export default {
       // 会員情報を取得
       memberInfo.value = getMemberInfo()
       
-      // ダミーデータ（実際はAPIから取得）
-      downloadHistory.value = []
-      favoritePublications.value = []
-    })
-    
-    return {
-      activeTab,
-      memberInfo,
-      menuItems,
-      userInitial,
-      downloadHistory,
-      favoritePublications,
-      settings,
-      getMembershipLabel,
-      getMembershipFeatures,
-      formatDate,
-      handleLogout,
-      goToUpgrade,
-      redownload,
-      saveSettings
-    }
   }
 }
 </script>
