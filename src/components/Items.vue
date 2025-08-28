@@ -24,6 +24,12 @@
       src="/img/vector-1.svg"
       alt="Vector 4"
     />
+    <div class="text-6 valign-text-middle" @click="navigateTo('seminars')" style="cursor: pointer;">セミナー</div>
+    <img
+      class="vector-22"
+      src="/img/vector-1.svg"
+      alt="Vector 5"
+    />
     <div class="text-6 valign-text-middle" @click="navigateTo('faq')" style="cursor: pointer;">よくあるご質問</div>
   </div>
 </template>

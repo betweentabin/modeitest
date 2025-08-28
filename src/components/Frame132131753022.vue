@@ -18,7 +18,7 @@
       </router-link>
     </div>
     <div class="frame-1321317522">
-      <router-link to="/seminar" class="footer-link">
+      <router-link to="/seminars" class="footer-link">
         <frame13213175222 :text19="frame132131752221Props.text19" />
       </router-link>
       <router-link to="/publications" class="footer-link">
@@ -46,8 +46,14 @@
             />
             <div class="text-25 valign-text-middle inter-normal-black-16px">会員サービスのご案内</div>
           </router-link>
-          <frame132131752522 :text26="frame1321317525221Props.text26" />
-          <frame132131752522 :text26="frame1321317525222Props.text26" />
+          <router-link to="/glossary" class="frame-1321317524 footer-link">
+            <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+            <div class="text-25 valign-text-middle inter-normal-black-16px">用語集</div>
+          </router-link>
+          <router-link to="/statistics" class="frame-1321317524 footer-link">
+            <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+            <div class="text-25 valign-text-middle inter-normal-black-16px">経済・調査統計</div>
+          </router-link>
         </div>
         <div class="frame-1321317522-1">
           <img

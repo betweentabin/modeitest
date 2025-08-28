@@ -686,6 +686,47 @@ class MockAPIServer {
     
     return Promise.resolve(news)
   }
+
+  // セミナー関連メソッド
+  getSeminars() {
+    const seminars = [
+      {
+        id: 1,
+        title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+        description: '久留米リサーチ・パーク（国立研究機関都市開発）１ー１　２F　特別会議室',
+        date: '2025-06-15',
+        fee: '会員無料',
+        status: 'current',
+        image: '/img/image-1.png'
+      },
+      {
+        id: 2,
+        title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部 山根人一朗',
+        description: '時期',
+        date: '2025-06-20',
+        fee: '会員無料',
+        status: 'current',
+        image: '/img/image-1.png'
+      },
+      {
+        id: 3,
+        title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部',
+        description: 'バーソル・ビジネス・プロセス・アドバイシング（株）では、人材紹介事業をはじめ、多様な中途採用領域にご経験・実績がございます。',
+        date: '2025-06-25',
+        fee: '会員無料',
+        status: 'current',
+        image: '/img/image-1.png'
+      }
+    ]
+    
+    return Promise.resolve(seminars)
+  }
+
+  getSeminarById(id) {
+    return this.getSeminars().then(seminars => 
+      seminars.find(seminar => seminar.id == id)
+    )
+  }
 }
 
 // Export singleton instance

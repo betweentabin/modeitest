@@ -1,66 +1,16 @@
 <template>
-  <div class="contact-form-page">
-    <!-- Navigation -->
-    <header class="navigation">
-      <div class="company-logo">
-        <img src="/img/ico-logo-1-1.svg" alt="Company Logo" class="logo-icon" />
-        <div class="company-text">
-          <div class="company-group">筑邦銀行グループ</div>
-          <div class="company-name">株式会社ちくぎん地域経済研究所</div>
-        </div>
-      </div>
-      <div class="nav-right">
-        <div class="nav-top">
-          <button class="phone-btn">
-            <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.3333 0H2.66667C1.95942 0 1.28115 0.270918 0.781049 0.753154C0.280952 1.23539 0 1.88944 0 2.57143V21.4286C0 22.1106 0.280952 22.7646 0.781049 23.2468C1.28115 23.7291 1.95942 24 2.66667 24H13.3333C14.0406 24 14.7189 23.7291 15.219 23.2468C15.719 22.7646 16 22.1106 16 21.4286V2.57143C16 1.88944 15.719 1.23539 15.219 0.753154C14.7189 0.270918 14.0406 0 13.3333 0ZM2.66667 1.71429H13.3333C13.5691 1.71429 13.7952 1.80459 13.9619 1.96534C14.1286 2.12608 14.2222 2.3441 14.2222 2.57143V3.42857H1.77778V2.57143C1.77778 2.3441 1.87143 2.12608 2.03813 1.96534C2.20483 1.80459 2.43092 1.71429 2.66667 1.71429ZM13.3333 22.2857H2.66667C2.43092 22.2857 2.20483 22.1954 2.03813 22.0347C1.87143 21.8739 1.77778 21.6559 1.77778 21.4286V20.5714H14.2222V21.4286C14.2222 21.6559 14.1286 21.8739 13.9619 22.0347C13.7952 22.1954 13.5691 22.2857 13.3333 22.2857Z" fill="white"/>
-            </svg>
-            <div class="phone-info">
-              <div class="phone-number">0942-46-5081</div>
-              <div class="phone-hours">（平日 9:00～17:00）</div>
-            </div>
-          </button>
-          <button class="login-btn">ログイン</button>
-          <button class="menu-btn">
-            <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 2H24" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2 12H24" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2 22H24" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-        <nav class="nav-links">
-          <router-link to="/" class="nav-link">トップ</router-link>
-          <div class="nav-separator">|</div>
-          <router-link to="/services" class="nav-link">会員サービスのご案内</router-link>
-          <div class="nav-separator">|</div>
-          <router-link to="/about" class="nav-link">会社概要</router-link>
-          <div class="nav-separator">|</div>
-          <router-link to="/news" class="nav-link">お知らせ</router-link>
-          <div class="nav-separator">|</div>
-          <router-link to="/faq" class="nav-link">よくあるご質問</router-link>
-        </nav>
-      </div>
-    </header>
-
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-      <div class="breadcrumb-container">
-        <span class="breadcrumb-item">トップ</span>
-        <span class="breadcrumb-separator">></span>
-        <span class="breadcrumb-item">お問い合わせ</span>
-      </div>
-    </div>
-
+  <div class="page-container">
+    <Navigation />
+    
     <!-- Hero Section -->
-    <section class="hero-section">
+    <div class="hero-section">
       <div class="hero-overlay">
         <div class="hero-content">
-          <div class="hero-title-en">contact</div>
-          <div class="hero-title-jp">お問い合わせ</div>
+          <h1 class="hero-title">お問い合わせ</h1>
+          <p class="hero-subtitle">contact</p>
         </div>
       </div>
-    </section>
+    </div>
 
     <!-- Form Section -->
     <section class="form-section">
@@ -527,6 +477,10 @@ export default {
         // Navigate to confirmation page or show success message
         alert('お問い合わせを受け付けました。確認のメールをお送りします。');
       }
+    }
+    },
+    scrollToContact() {
+      this.$router.push('/contact');
     }
   }
 };

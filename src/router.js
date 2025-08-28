@@ -26,6 +26,10 @@ import NoticeEditForm from "./views/admin/NoticeEditForm";
 import MediaEditForm from "./views/admin/MediaEditForm";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
+import SeminarPage from "./components/SeminarPage";
+import SeminarDetailPage from "./components/SeminarDetailPage";
+import GlossaryPage from "./components/GlossaryPage";
+import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
 import TestPage from "./components/TestPage";
 import MemberLoginPage from "./views/MemberLoginPage";
 import MemberRegisterPage from "./views/MemberRegisterPage";
@@ -82,9 +86,33 @@ const router = new Router({
       component: PublicationDetailPage,
     },
     {
+      path: "/seminars",
+      name: "seminars",
+      component: SeminarPage,
+      meta: { title: "セミナー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/:id",
+      name: "seminarDetail",
+      component: SeminarDetailPage,
+      meta: { title: "セミナー詳細 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/apply",
       name: "apply",
       component: ApplicationFormPage,
+    },
+    {
+      path: "/glossary",
+      name: "glossary",
+      component: GlossaryPage,
+      meta: { title: "用語集 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/statistics",
+      name: "statistics",
+      component: EconomicStatisticsPage,
+      meta: { title: "経済・調査統計 - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminar-registration",

@@ -1,158 +1,110 @@
 <template>
   <div class="page-container">
     <Navigation />
-    <div class="page-content">
-      <div class="page-header">
-        <h1>セミナー情報</h1>
-        <p class="subtitle">SEMINAR</p>
-      </div>
-
-      <div class="seminar-intro">
-        <p class="lead-text">
-          ちくぎん地域経済研究所では、地域企業の皆様のスキルアップと<br />
-          ビジネス成長を支援する各種セミナーを開催しています。
-        </p>
-      </div>
-
-      <div class="seminar-categories">
-        <button class="category-btn active">すべて</button>
-        <button class="category-btn">経営戦略</button>
-        <button class="category-btn">人事・労務</button>
-        <button class="category-btn">マーケティング</button>
-        <button class="category-btn">DX・IT</button>
-        <button class="category-btn">財務・会計</button>
-      </div>
-
-      <div class="seminar-list">
-        <div class="seminar-card upcoming">
-          <div class="seminar-date">
-            <div class="month">4月</div>
-            <div class="day">28</div>
-            <div class="year">2025</div>
-          </div>
-          <div class="seminar-image">
-            <img src="/img/-----2-2.png" alt="事業継承セミナー" />
-            <div class="seminar-badge">開催予定</div>
-          </div>
-          <div class="seminar-content">
-            <h3>事業継承から描く九州の未来</h3>
-            <p class="seminar-description">
-              中小企業の事業承継における課題と解決策を、実際の成功事例を交えながら解説します。
-              後継者育成のポイントや、スムーズな承継のための準備について学べます。
-            </p>
-            <div class="seminar-info">
-              <div class="info-item">
-                <span class="label">時間：</span>
-                <span>14:00～17:00</span>
-              </div>
-              <div class="info-item">
-                <span class="label">会場：</span>
-                <span>久留米リサーチセンター</span>
-              </div>
-              <div class="info-item">
-                <span class="label">定員：</span>
-                <span>50名</span>
-              </div>
-              <div class="info-item">
-                <span class="label">参加費：</span>
-                <span>会員無料 / 一般3,000円</span>
-              </div>
-            </div>
-            <button class="apply-btn">申し込む</button>
-          </div>
-        </div>
-
-        <div class="seminar-card">
-          <div class="seminar-date">
-            <div class="month">5月</div>
-            <div class="day">12</div>
-            <div class="year">2025</div>
-          </div>
-          <div class="seminar-content full-width">
-            <h3>採用力強化！経営・人事向け　面接官トレーニングセミナー</h3>
-            <p class="seminar-description">
-              優秀な人材を見極め、獲得するための面接技術を習得できるセミナーです。
-              実践的なロールプレイングを通じて、面接スキルを向上させます。
-            </p>
-            <div class="seminar-info">
-              <div class="info-item">
-                <span class="label">時間：</span>
-                <span>13:30～16:30</span>
-              </div>
-              <div class="info-item">
-                <span class="label">会場：</span>
-                <span>オンライン（Zoom）</span>
-              </div>
-              <div class="info-item">
-                <span class="label">定員：</span>
-                <span>30名</span>
-              </div>
-              <div class="info-item">
-                <span class="label">参加費：</span>
-                <span>会員2,000円 / 一般5,000円</span>
-              </div>
-            </div>
-            <button class="apply-btn">申し込む</button>
-          </div>
-        </div>
-
-        <div class="seminar-card">
-          <div class="seminar-date">
-            <div class="month">5月</div>
-            <div class="day">25</div>
-            <div class="year">2025</div>
-          </div>
-          <div class="seminar-content full-width">
-            <h3>DX推進セミナー ～中小企業のデジタル変革～</h3>
-            <p class="seminar-description">
-              デジタル技術を活用した業務改善と新たなビジネスモデルの構築方法を学びます。
-              実際の導入事例を通じて、自社に適したDX戦略を考えます。
-            </p>
-            <div class="seminar-info">
-              <div class="info-item">
-                <span class="label">時間：</span>
-                <span>14:00～17:00</span>
-              </div>
-              <div class="info-item">
-                <span class="label">会場：</span>
-                <span>ハイブリッド開催</span>
-              </div>
-              <div class="info-item">
-                <span class="label">定員：</span>
-                <span>会場30名 / オンライン100名</span>
-              </div>
-              <div class="info-item">
-                <span class="label">参加費：</span>
-                <span>会員無料 / 一般3,000円</span>
-              </div>
-            </div>
-            <button class="apply-btn">申し込む</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="past-seminars">
-        <h2>過去のセミナー・アーカイブ</h2>
-        <p>会員の方は過去のセミナー資料・動画をご覧いただけます</p>
-        <div class="archive-grid">
-          <div class="archive-item">
-            <div class="archive-date">2025.03.15</div>
-            <h4>地域経済の未来を考える</h4>
-            <a href="#" class="archive-link">資料を見る</a>
-          </div>
-          <div class="archive-item">
-            <div class="archive-date">2025.02.28</div>
-            <h4>経営戦略立案ワークショップ</h4>
-            <a href="#" class="archive-link">動画を見る</a>
-          </div>
-          <div class="archive-item">
-            <div class="archive-date">2025.02.10</div>
-            <h4>補助金・助成金活用セミナー</h4>
-            <a href="#" class="archive-link">資料を見る</a>
-          </div>
+    
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <h1 class="hero-title">セミナー</h1>
+          <p class="hero-subtitle">seminar</p>
         </div>
       </div>
     </div>
+
+    <div class="page-content">
+      <!-- Introduction Section -->
+      <section class="intro-section">
+        <p class="intro-text">
+          ちくぎん地域経済研究所では地域企業の皆様にとって有益な情報を提供し、
+          セミナーやイベントの開催を通じて、経営者および従業員の皆様の知識向上とスキルアップを
+          支援させていただいております。
+        </p>
+        
+        <div class="action-buttons">
+          <button class="action-btn seminar-btn" @click="scrollToSeminars">開催予定のセミナー</button>
+          <button class="action-btn registration-btn" @click="goToRegistration">過去のセミナー申込みはこちら</button>
+        </div>
+      </section>
+
+      <!-- Current Seminars Section -->
+      <section class="current-seminars" id="seminars">
+        <div class="section-header">
+          <h2 class="section-title">現在予約受付中のセミナー</h2>
+        </div>
+
+        <div class="seminars-list" v-if="!loading">
+          <div 
+            v-for="seminar in currentSeminars" 
+            :key="seminar.id"
+            class="seminar-card"
+            @click="goToSeminarDetail(seminar.id)"
+          >
+            <div class="seminar-image">
+              <img :src="seminar.image || '/img/image-1.png'" :alt="seminar.title" />
+            </div>
+            <div class="seminar-info">
+              <div class="seminar-meta">
+                <span class="seminar-date">{{ formatDate(seminar.date) }}</span>
+                <span class="seminar-status current">申込受付中</span>
+                <span class="seminar-fee">{{ seminar.fee }}</span>
+              </div>
+              <h3 class="seminar-title">{{ seminar.title }}</h3>
+              <p class="seminar-description">{{ seminar.description }}</p>
+              <button class="seminar-detail-btn">セミナー詳細を見る</button>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="loading" class="loading">
+          読み込み中...
+        </div>
+
+        <div class="load-more">
+          <button class="load-more-btn">もっと見る</button>
+        </div>
+      </section>
+
+      <!-- Past Seminars Section -->
+      <section class="past-seminars">
+        <div class="section-header">
+          <h2 class="section-title">過去のセミナー</h2>
+        </div>
+
+        <div class="past-seminars-list">
+          <div 
+            v-for="seminar in pastSeminars" 
+            :key="seminar.id"
+            class="past-seminar-item"
+          >
+            <div class="past-seminar-meta">
+              <span class="past-seminar-date">{{ formatDate(seminar.date) }}</span>
+              <span class="past-seminar-status">終了</span>
+            </div>
+            <div class="past-seminar-content">
+              <h4 class="past-seminar-title">{{ seminar.title }}</h4>
+              <p class="past-seminar-description">{{ seminar.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="load-more">
+          <button class="load-more-btn">もっと見る</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Company CTA Section -->
+    <section class="company-cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>株式会社ちくぎん地域経済研究所</h2>
+          <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
+          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
+        </div>
+      </div>
+    </section>
+
     <FooterComplete />
   </div>
 </template>
@@ -166,131 +118,283 @@ export default {
   components: {
     Navigation,
     FooterComplete
+  },
+  data() {
+    return {
+      loading: false,
+      currentSeminars: [
+        {
+          id: 1,
+          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+          description: '久留米リサーチ・パーク（国立研究機関都市開発）１ー１　２F　特別会議室',
+          date: '2025-06-15',
+          fee: '会員無料',
+          status: 'current',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 2,
+          title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部 山根人一朗',
+          description: '時期',
+          date: '2025-06-20',
+          fee: '会員無料',
+          status: 'current',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 3,
+          title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部',
+          description: 'バーソル・ビジネス・プロセス・アドバイシング（株）では、人材紹介事業をはじめ、多様な中途採用領域にご経験・実績がございます。今回は、人材紹介業界の現状と転職者、求職者の特徴をお伝えし、今回は人材業界のトレンドを踏まえ、現在の転職業界の実情をプロジェクト視点で、中小企業の採用コンサルティングをはじめとして、皆様の採用を支援してまいります。',
+          date: '2025-06-25',
+          fee: '会員無料',
+          status: 'current',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 4,
+          title: '個別',
+          description: '個別トレーニングセミナー',
+          date: '2025-07-01',
+          fee: '会員無料',
+          status: 'current',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 5,
+          title: '時期',
+          description: '事務員強化改善　体系立てるようにする',
+          date: '2025-07-05',
+          fee: '会員無料',
+          status: 'current',
+          image: '/img/image-1.png'
+        }
+      ],
+      pastSeminars: [
+        {
+          id: 101,
+          title: '第１回経営講座',
+          description: '九州経済の現況について考える。',
+          date: '2024-12-15',
+          status: 'past'
+        },
+        {
+          id: 102,
+          title: '九州経済の現況について考える。講演会',
+          description: 'セミナー：事業承継・M&A講演会',
+          date: '2024-11-20',
+          status: 'past'
+        },
+        {
+          id: 103,
+          title: 'セミナー：事業承継・M&A講演会',
+          description: 'チャレンジ企業・第三者事業承継等における諸問題等について、解決に向けた支援方法を説明いたします。',
+          date: '2024-10-25',
+          status: 'past'
+        },
+        {
+          id: 104,
+          title: '第２回経営講座',
+          description: 'ＡＩの活用法と今後の課題について。',
+          date: '2024-09-30',
+          status: 'past'
+        },
+        {
+          id: 105,
+          title: '九州地域の経済見通しセミナー',
+          description: '地域経済の動向と今後の展望について。',
+          date: '2024-08-15',
+          status: 'past'
+        }
+      ]
+    };
+  },
+  methods: {
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}.${month}.${day}`;
+    },
+    goToSeminarDetail(seminarId) {
+      this.$router.push(`/seminars/${seminarId}`);
+    },
+    scrollToSeminars() {
+      const element = document.getElementById('seminars');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    },
+    goToRegistration() {
+      this.$router.push('/seminar-registration');
+    },
+    scrollToContact() {
+      this.$router.push('/contact');
+    }
   }
 };
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .page-container {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
-.page-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+/* Hero Section */
+.hero-section {
+  height: 300px;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+              url('/img/hero-image.png') center/cover;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.page-header {
+.hero-overlay {
   text-align: center;
-  margin-bottom: 40px;
+  color: white;
 }
 
-.page-header h1 {
+.hero-title {
   font-size: 2.5rem;
-  color: #333;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
-.subtitle {
-  color: #dc3545;
-  font-size: 1.2rem;
-  font-weight: 600;
+.hero-subtitle {
+  font-size: 1rem;
   letter-spacing: 2px;
+  color: #da5761;
 }
 
-.seminar-intro {
+/* Page Content */
+.page-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+/* Introduction Section */
+.intro-section {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 40px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+
+.intro-text {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  min-width: 200px;
+}
+
+.seminar-btn {
+  background: #333;
+  color: white;
+}
+
+.seminar-btn:hover {
+  background: #555;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.registration-btn {
+  background: #da5761;
+  color: white;
+}
+
+.registration-btn:hover {
+  background: #c44853;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+}
+
+/* Section Headers */
+.section-header {
   text-align: center;
   margin-bottom: 40px;
 }
 
-.lead-text {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #666;
+.section-title {
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: bold;
+  position: relative;
+  padding-bottom: 15px;
 }
 
-.seminar-categories {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: #da5761;
 }
 
-.category-btn {
-  padding: 10px 20px;
-  background: white;
-  border: 2px solid #dee2e6;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.95rem;
-}
-
-.category-btn:hover,
-.category-btn.active {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.seminar-list {
-  display: grid;
-  gap: 30px;
+/* Current Seminars */
+.current-seminars {
   margin-bottom: 60px;
 }
 
-.seminar-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+.seminars-list {
   display: flex;
-  transition: transform 0.3s;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.seminar-card {
+  display: flex;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
 .seminar-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
-.seminar-card.upcoming {
-  border: 2px solid #dc3545;
-}
-
-.seminar-date {
-  background: #dc3545;
-  color: white;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 120px;
-}
-
-.seminar-date .month {
-  font-size: 1rem;
-  margin-bottom: 5px;
-}
-
-.seminar-date .day {
-  font-size: 2.5rem;
-  font-weight: bold;
-  line-height: 1;
-}
-
-.seminar-date .year {
-  font-size: 0.9rem;
-  margin-top: 5px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .seminar-image {
-  position: relative;
-  width: 300px;
-  flex-shrink: 0;
+  flex: 0 0 200px;
+  height: 150px;
 }
 
 .seminar-image img {
@@ -299,150 +403,264 @@ export default {
   object-fit: cover;
 }
 
-.seminar-badge {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+.seminar-info {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.seminar-meta {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.seminar-date {
   background: #28a745;
   color: white;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
-.seminar-content {
-  flex: 1;
-  padding: 30px;
+.seminar-status.current {
+  background: #da5761;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
-.seminar-content.full-width {
-  flex: 1;
+.seminar-fee {
+  background: #007bff;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
-.seminar-content h3 {
+.seminar-title {
+  font-size: 1.1rem;
   color: #333;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .seminar-description {
+  font-size: 0.9rem;
   color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  flex-grow: 1;
 }
 
-.seminar-info {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 25px;
+.seminar-detail-btn {
+  background: #da5761;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  align-self: flex-start;
+  transition: all 0.3s;
+  font-weight: 500;
 }
 
-.info-item {
+.seminar-detail-btn:hover {
+  background: #c44853;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
   color: #666;
-  font-size: 0.95rem;
 }
 
-.info-item .label {
-  font-weight: 600;
-  color: #333;
+/* Load More */
+.load-more {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.apply-btn {
-  background: #dc3545;
+.load-more-btn {
+  background: #333;
   color: white;
   border: none;
   padding: 12px 30px;
   border-radius: 25px;
-  font-size: 1rem;
   cursor: pointer;
+  font-size: 0.9rem;
   transition: all 0.3s;
+  font-weight: 500;
 }
 
-.apply-btn:hover {
-  background: #c82333;
-  transform: scale(1.05);
+.load-more-btn:hover {
+  background: #555;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
+/* Past Seminars */
 .past-seminars {
+  margin-bottom: 60px;
+}
+
+.past-seminars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.past-seminar-item {
   background: white;
-  padding: 50px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.past-seminars h2 {
-  color: #dc3545;
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.past-seminars p {
-  color: #666;
-  margin-bottom: 30px;
-}
-
-.archive-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 30px;
-}
-
-.archive-item {
-  padding: 25px;
   border: 1px solid #dee2e6;
   border-radius: 10px;
-  text-align: left;
+  padding: 20px;
   transition: all 0.3s;
 }
 
-.archive-item:hover {
-  border-color: #dc3545;
-  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.2);
+.past-seminar-item:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.archive-date {
-  color: #dc3545;
-  font-size: 0.9rem;
+.past-seminar-meta {
+  display: flex;
+  gap: 15px;
   margin-bottom: 10px;
+  align-items: center;
 }
 
-.archive-item h4 {
-  color: #333;
-  margin-bottom: 15px;
-}
-
-.archive-link {
-  color: #dc3545;
-  text-decoration: none;
+.past-seminar-date {
+  color: #666;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: color 0.3s;
 }
 
-.archive-link:hover {
-  color: #c82333;
-  text-decoration: underline;
+.past-seminar-status {
+  background: #6c757d;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
+.past-seminar-title {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.past-seminar-description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Company CTA Section */
+.company-cta-section {
+  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
+  color: white;
+  text-align: center;
+  padding: 80px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cta-content h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.cta-description {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: rgba(255,255,255,0.9);
+}
+
+.cta-button {
+  background: white;
+  color: #da5761;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-weight: bold;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .page-content {
+    padding: 40px 15px;
+  }
+  
   .seminar-card {
     flex-direction: column;
   }
   
   .seminar-image {
-    width: 100%;
+    flex: none;
     height: 200px;
   }
   
-  .seminar-info {
-    grid-template-columns: 1fr;
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
   }
   
-  .archive-grid {
-    grid-template-columns: 1fr;
+  .action-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .intro-section {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seminar-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .seminar-title {
+    font-size: 1rem;
+  }
+  
+  .seminar-description {
+    font-size: 0.85rem;
+  }
+  
+  .past-seminar-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
 </style>
