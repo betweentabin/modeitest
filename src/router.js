@@ -30,6 +30,12 @@ import SeminarPage from "./components/SeminarPage";
 import SeminarDetailPage from "./components/SeminarDetailPage";
 import GlossaryPage from "./components/GlossaryPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
+import TransactionLawPage from "./components/TransactionLawPage";
+import PrivacyPolicyPage from "./components/PrivacyPolicyPage";
+import TermsOfServicePage from "./components/TermsOfServicePage";
+import CRIConsultingPage from "./components/CRIConsultingPage";
+import SitemapPage from "./components/SitemapPage";
+import FinancialReportPage from "./components/FinancialReportPage";
 import TestPage from "./components/TestPage";
 import MemberLoginPage from "./views/MemberLoginPage";
 import MemberRegisterPage from "./views/MemberRegisterPage";
@@ -113,6 +119,42 @@ const router = new Router({
       name: "statistics",
       component: EconomicStatisticsPage,
       meta: { title: "経済・調査統計 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/transaction-law",
+      name: "transactionLaw",
+      component: TransactionLawPage,
+      meta: { title: "特定商取引法に関する表記 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/privacy",
+      name: "privacy",
+      component: PrivacyPolicyPage,
+      meta: { title: "プライバシーポリシー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/terms",
+      name: "terms",
+      component: TermsOfServicePage,
+      meta: { title: "利用規約 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/cri-consulting",
+      name: "criConsulting",
+      component: CRIConsultingPage,
+      meta: { title: "CRI経営コンサルティング - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/sitemap",
+      name: "sitemap",
+      component: SitemapPage,
+      meta: { title: "サイトマップ - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/financial-report",
+      name: "financialReport",
+      component: FinancialReportPage,
+      meta: { title: "決算報告 - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminar-registration",

@@ -24,16 +24,32 @@
       <router-link to="/publications" class="footer-link">
         <frame13213175222 :text19="frame132131752222Props.text19" />
       </router-link>
-      <frame13213175273
-        :frame13213175222Props="frame132131752731Props.frame13213175222Props"
-        :frame13213175251Props="frame132131752731Props.frame13213175251Props"
-        :frame13213175252Props="frame132131752731Props.frame13213175252Props"
-      />
-      <frame13213175273
-        :frame13213175222Props="frame132131752732Props.frame13213175222Props"
-        :frame13213175251Props="frame132131752732Props.frame13213175251Props"
-        :frame13213175252Props="frame132131752732Props.frame13213175252Props"
-      />
+      <div class="frame-132131752-2">
+        <div class="footer-item">
+          <span class="footer-text">各種情報</span>
+        </div>
+        <router-link to="/statistics" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">経済指標一覧</span>
+        </router-link>
+        <router-link to="/statistics" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">経済調査統計一覧</span>
+        </router-link>
+      </div>
+      <div class="frame-132131752-2">
+        <div class="footer-item">
+          <span class="footer-text">会員PR</span>
+        </div>
+        <router-link to="/register" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">会員PRどっとコム</span>
+        </router-link>
+        <router-link to="/services" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">入会案内</span>
+        </router-link>
+      </div>
     </div>
     <div class="frame-1321317523">
       <div class="frame-container">
@@ -55,31 +71,45 @@
             <div class="text-25 valign-text-middle inter-normal-black-16px">経済・調査統計</div>
           </router-link>
         </div>
-        <div class="frame-1321317522-1">
+        <router-link to="/cri-consulting" class="frame-1321317522-1 footer-link">
           <img
             class="vector-27"
             src="/img/vector.svg"
             alt="Vector"
           />
           <div class="cri valign-text-middle inter-normal-black-16px">CRI 経営コンサルティング</div>
-        </div>
-        <div class="frame-1321317523-1">
+        </router-link>
+        <router-link to="/financial-report" class="frame-1321317523-1 footer-link">
           <img
             class="vector-27"
             src="/img/vector.svg"
             alt="Vector"
           />
           <div class="text-28 valign-text-middle inter-normal-black-16px">決算報告</div>
-        </div>
+        </router-link>
       </div>
     </div>
     <div class="frame-1321317524-1">
       <div class="frame-container-1">
-        <frame13213175223 :text29="frame132131752231Props.text29" />
-        <frame13213175223 :text29="frame132131752232Props.text29" :className="frame132131752232Props.className" />
-        <frame13213175223 :text29="frame132131752233Props.text29" :className="frame132131752233Props.className" />
-        <frame13213175223 :text29="frame132131752234Props.text29" :className="frame132131752234Props.className" />
-        <frame13213175223 :text29="frame132131752235Props.text29" />
+        <div class="footer-item">
+          <span class="footer-text">会員ログイン</span>
+        </div>
+        <router-link to="/transaction-law" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">特定商取引法に関する表記</span>
+        </router-link>
+        <router-link to="/privacy" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">プライバシーポリシー</span>
+        </router-link>
+        <router-link to="/terms" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">利用規約</span>
+        </router-link>
+        <router-link to="/sitemap" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+          <span class="footer-text">サイトマップ</span>
+        </router-link>
       </div>
     </div>
   </div>
@@ -124,52 +154,55 @@ export default {
 <style>
 .frame-1321317530 {
   align-items: flex-start;
-  display: inline-flex;
+  display: flex;
   flex: 0 0 auto;
-  gap: 60px;
+  gap: 40px;
   position: relative;
+  width: 100%;
+  max-width: 1000px;
+  justify-content: space-between;
 }
 
 .frame-1321317521 {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   position: relative;
-  width: 151px;
+  width: 140px;
+  flex-shrink: 0;
 }
 
 .frame-1321317522 {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 8px;
   position: relative;
-  width: 171px;
+  width: 160px;
+  flex-shrink: 0;
 }
 
 .frame-1321317523 {
-  height: 134px;
   position: relative;
-  width: 210px;
+  width: 220px;
+  flex-shrink: 0;
 }
 
 .frame-container {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-height: 134px;
+  gap: 10px;
 }
 
 .frame-1321317527 {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  height: 58px;
+  gap: 8px;
   position: relative;
-  width: 191px;
+  width: 200px;
 }
 
 .frame-1321317524 {
@@ -232,17 +265,16 @@ export default {
 }
 
 .frame-1321317524-1 {
-  height: 170px;
   position: relative;
-  width: 212px;
+  width: 200px;
+  flex-shrink: 0;
 }
 
 .frame-container-1 {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-height: 170px;
+  gap: 10px;
   position: relative;
 }
 .footer-link {
@@ -254,6 +286,61 @@ export default {
 
 .footer-link:hover {
   opacity: 0.7;
+}
+
+.frame-132131752-2 {
+  align-items: flex-start;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  width: 160px;
+}
+
+.frame-132131752-4-1 {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  height: 18px;
+  width: 212px;
+}
+
+.vector-32 {
+  height: 17px;
+  width: 10px;
+}
+
+.text-9 {
+  align-self: center;
+  height: 12px;
+  letter-spacing: 0;
+  line-height: 32px;
+  margin-bottom: 2.75px;
+  min-width: 96px;
+  white-space: nowrap;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  min-height: 18px;
+}
+
+.footer-text {
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.4;
+}
+
+.footer-item img.vector-27 {
+  width: 10px;
+  height: 17px;
+  flex-shrink: 0;
 }
 
 </style>
