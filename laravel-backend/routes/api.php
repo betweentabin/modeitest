@@ -50,12 +50,31 @@ Route::get('/debug-routes', function () {
     return response()->json(['api_routes' => $routes]);
 });
 
+// ヘルスチェックエンドポイント
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'healthy',
+        'timestamp' => now(),
+        'service' => 'chikugin-api'
+    ]);
+});
+
+// 認証エンドポイント
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
+// 後方互換性のための旧エンドポイント（非推奨）
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    
+    // auth prefix内のログアウト
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
 Route::prefix('economic-statistics')->group(function () {

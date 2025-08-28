@@ -439,6 +439,7 @@ import Frame1321317475 from "./Frame1321317475";
 import Group10 from "./Group10";
 import Footer from "./Footer";
 import Group27 from "./Group27";
+import FixedActionButtons from "./FixedActionButtons";
 import { homePageData } from "../data.js";
 import mockServer from "@/mockServer";
 import vector35 from "../../public/img/vector-35.svg";
@@ -471,6 +472,7 @@ export default {
     Group10,
     Footer,
     Group27,
+    FixedActionButtons,
   },
   data() {
     return {

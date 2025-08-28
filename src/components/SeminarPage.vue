@@ -111,6 +111,9 @@
       <div class="vector-7-1"></div>
       <Group27 />
     </div>
+
+    <!-- Fixed Action Buttons -->
+    <FixedActionButtons />
   </div>
 </template>
 
@@ -118,6 +121,7 @@
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
+import FixedActionButtons from "./FixedActionButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
 
@@ -126,7 +130,8 @@ export default {
   components: {
     Navigation,
     Footer,
-    Group27
+    Group27,
+    FixedActionButtons
   },
   data() {
     return {
