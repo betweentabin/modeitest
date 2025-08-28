@@ -1,21 +1,21 @@
 <template>
   <div class="page-container">
     <Navigation />
-    <div class="page-content">
-      <div class="page-header">
-        <h1>よくあるご質問</h1>
-        <p class="subtitle">FAQ</p>
-        <p class="description">お客様からよくいただくご質問をまとめました</p>
+    
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <h1 class="hero-title">よくあるご質問</h1>
+          <p class="hero-subtitle">FAQ</p>
+        </div>
       </div>
-      
-      <div class="faq-search">
-        <input 
-          type="text" 
-          v-model="searchQuery" 
-          placeholder="質問を検索..." 
-          class="search-input"
-        />
-        <button class="search-btn">検索</button>
+    </div>
+
+    <div class="page-content">
+      <div class="faq-header">
+        <h2 class="section-title">よくあるご質問</h2>
+        <p class="section-subtitle">FAQ</p>
       </div>
       
       <div class="faq-categories">
@@ -25,15 +25,16 @@
           :class="['category-btn', { active: selectedCategory === category.id }]"
           @click="selectedCategory = category.id"
         >
-          <span class="category-icon">{{ category.icon }}</span>
-          <span>{{ category.name }}</span>
+          {{ category.name }}
         </button>
       </div>
       
       <div class="faq-list">
         <div v-for="(item, index) in filteredFaqs" :key="index" class="faq-item">
           <div class="faq-question" @click="toggleAnswer(index)">
-            <span class="q-mark">Q</span>
+            <div class="q-circle">
+              <span class="q-mark">Q</span>
+            </div>
             <span class="question-text">{{ item.question }}</span>
             <span class="toggle-icon" :class="{ open: openItems.includes(index) }">
               <svg width="20" height="20" viewBox="0 0 20 20">
@@ -43,44 +44,32 @@
           </div>
           <transition name="slide">
             <div v-if="openItems.includes(index)" class="faq-answer">
-              <span class="a-mark">A</span>
-              <span class="answer-text" v-html="item.answer"></span>
+              <div class="a-circle">
+                <span class="a-mark">A</span>
+              </div>
+              <div class="answer-content">
+                <div v-if="item.tags && item.tags.length" class="answer-tags">
+                  <span v-for="tag in item.tags" :key="tag" class="tag">{{ tag }}</span>
+                </div>
+                <div class="answer-text" v-html="item.answer"></div>
+              </div>
             </div>
           </transition>
         </div>
-        
-        <div v-if="filteredFaqs.length === 0" class="no-results">
-          <p>該当する質問が見つかりませんでした。</p>
-          <p>お探しの情報が見つからない場合は、お問い合わせください。</p>
-        </div>
-      </div>
-      
-      <div class="contact-section">
-        <h2>お探しの答えが見つかりませんか？</h2>
-        <p>その他のご質問については、お気軽にお問い合わせください</p>
-        <div class="contact-methods">
-          <div class="contact-card">
-            <div class="contact-icon">📞</div>
-            <h3>お電話でのお問い合わせ</h3>
-            <p class="contact-info">0942-46-5081</p>
-            <p class="contact-hours">平日 9:00～17:00</p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">✉️</div>
-            <h3>メールでのお問い合わせ</h3>
-            <p class="contact-info">info@chikugin-ri.co.jp</p>
-            <p class="contact-hours">24時間受付</p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">📝</div>
-            <h3>お問い合わせフォーム</h3>
-            <button class="form-btn" @click="$router.push('/contact')">
-              フォームへ進む
-            </button>
-          </div>
-        </div>
       </div>
     </div>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>株式会社ちくぎん地域経済研究所</h2>
+          <p>様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
+          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
+        </div>
+      </div>
+    </section>
+
     <FooterComplete />
   </div>
 </template>
@@ -97,251 +86,265 @@ export default {
   },
   data() {
     return {
-      searchQuery: "",
-      selectedCategory: "all",
+      searchQuery: '',
+      selectedCategory: 'all',
       openItems: [],
       categories: [
-        { id: "all", name: "すべて", icon: "📋" },
-        { id: "membership", name: "会員登録", icon: "👤" },
-        { id: "service", name: "サービス内容", icon: "💼" },
-        { id: "payment", name: "料金・支払い", icon: "💳" },
-        { id: "seminar", name: "セミナー", icon: "🎓" },
-        { id: "publication", name: "刊行物", icon: "📚" },
-        { id: "other", name: "その他", icon: "❓" }
+        { id: 'all', name: '全て' },
+        { id: 'service', name: '各種サービスについて' },
+        { id: 'membership', name: '会員について' },
+        { id: 'research', name: '調査研究について' }
       ],
       faqs: [
         {
-          category: "membership",
-          question: "会員登録の方法を教えてください。",
-          answer: "会員登録は以下の方法で行えます：<br/>1. オンラインフォームからのお申し込み<br/>2. 申込書を郵送でのお申し込み<br/>3. 当研究所窓口での直接お申し込み<br/><br/>必要書類をご提出後、審査を経て会員登録が完了します。審査には通常3～5営業日かかります。"
+          category: 'service',
+          question: '貴社にとってどんなサービスが提供されますか？',
+          answer: `私たちは以下のようなサービスを提供しています：
+            <ul>
+              <li>地域経済に関するリサーチ・分析とレポートの作成をします</li>
+              <li>経営戦略立案支援・事業計画策定・プロジェクト管理・経営指導等を実施しています</li>
+            </ul>`,
+          tags: []
         },
         {
-          category: "membership",
-          question: "入会金や年会費はいくらですか？",
-          answer: "会員種別により以下の料金となります：<br/><br/><strong>プレミアム会員</strong><br/>年会費：360,000円<br/><br/><strong>スタンダード会員</strong><br/>年会費：120,000円<br/><br/>※初年度は入会金は無料です。"
+          category: 'membership',
+          question: '資料費どのくらいの会費を支払っているのですか？',
+          answer: `
+            <div class="answer-section">
+              <div class="price-info">
+                <strong>スタンダード会員</strong><br>
+                年会費：12,000円（税別）月額1,000円程度
+              </div>
+              <div class="benefits">
+                <strong>サービス内容：</strong>
+                <ul>
+                  <li>経済指標・市場分析・企業分析・業界動向・資産・投資・金融等専門経営指導プログラム（入会金別途要）</li>
+                </ul>
+              </div>
+              <div class="price-info premium">
+                <strong>プレミアム会員（推奨会員）</strong><br>
+                ・ビジネスマッチング：最新の市場分析、事業承継等の支援<br>
+                ・M&A（事業承継関連）
+              </div>
+            </div>`,
+          tags: ['スタンダード会員', 'プレミアム会員']
         },
         {
-          category: "membership",
-          question: "会員の種類と特典の違いを教えてください。",
-          answer: "スタンダード会員は基本的なサービスをご利用いただけます。プレミアム会員は、全てのスタンダード会員特典に加え、専門コンサルタントによる個別相談（無制限）、オーダーメイド調査（年1回）、社内研修の企画・実施（年2回）などの特典があります。"
+          category: 'research',
+          question: '研究会の開催はありますか？',
+          answer: '定期的な研究会や勉強会を開催しており、会員の皆様にご参加いただけます。',
+          tags: []
         },
         {
-          category: "service",
-          question: "どのようなレポートが閲覧できますか？",
-          answer: "以下のレポートをご覧いただけます：<br/>• HOT Information（月刊）<br/>• 経営参考BOOK（季刊）<br/>• 地域経済動向レポート（月次）<br/>• 業界別市場分析レポート（四半期）<br/>• 年次経済白書<br/><br/>会員様は過去のアーカイブも含めて全て無料で閲覧可能です。"
+          category: 'membership',
+          question: '会費減額、減額はどうしたら良いですか？',
+          answer: '会費の減額や変更については、お気軽にお問い合わせください。',
+          tags: []
         },
         {
-          category: "service",
-          question: "コンサルティングサービスの内容を教えてください。",
-          answer: "経営戦略立案、事業計画策定、業務改善、人材育成、事業承継、M&Aアドバイザリーなど、幅広い分野でコンサルティングサービスを提供しています。初回相談は無料で承っております。"
+          category: 'service',
+          question: '経営診断をしたい場合どうすればいいの、態度を教えてほしい？',
+          answer: '経営診断をご希望の場合は、まずはお問い合わせフォームよりご連絡ください。',
+          tags: []
         },
         {
-          category: "seminar",
-          question: "セミナーの開催頻度と参加方法を教えてください。",
-          answer: "毎月2～3回のペースで各種セミナーを開催しています。開催情報は会員様にメールでご案内するほか、ホームページでも公開しています。会員様は優先的にご参加いただけ、参加費も割引となります。"
+          category: 'service',
+          question: '料金体系を教えて？',
+          answer: 'サービスごとに料金体系が異なります。詳しくはお問い合わせください。',
+          tags: []
         },
         {
-          category: "seminar",
-          question: "オンラインセミナーは実施していますか？",
-          answer: "はい、実施しています。現在、対面セミナーとオンラインセミナーのハイブリッド形式で開催しており、遠方の会員様にもご参加いただけるようになっています。録画配信も行っており、後日視聴も可能です。"
+          category: 'service',
+          question: '入会は法人・個人でも申込める？',
+          answer: '法人・個人を問わずご入会いただけます。',
+          tags: []
         },
         {
-          category: "payment",
-          question: "支払い方法を教えてください。",
-          answer: "以下のお支払い方法をご利用いただけます：<br/>• 銀行振込<br/>• 口座振替（自動引き落とし）<br/>• クレジットカード（VISA、MasterCard、JCB、AMEX）<br/><br/>年払い・半年払い・月払いからお選びいただけます。年払いの場合は5%の割引が適用されます。"
+          category: 'service',
+          question: '入会したい場合の手続きはどうしたらいい？',
+          answer: '入会手続きについては、お問い合わせフォームよりご連絡いただくか、直接お電話でお問い合わせください。',
+          tags: []
         },
         {
-          category: "payment",
-          question: "領収書や請求書は発行してもらえますか？",
-          answer: "はい、発行可能です。マイページから電子領収書・請求書をダウンロードいただけます。郵送での発行をご希望の場合は、事務局までご連絡ください。"
+          category: 'service',
+          question: '会費はどうやって払う？',
+          answer: '会費のお支払い方法は、銀行振込、口座振替等をご利用いただけます。',
+          tags: []
         },
         {
-          category: "payment",
-          question: "途中解約や返金は可能ですか？",
-          answer: "途中解約は可能です。月払いの場合は翌月から課金停止となります。年払いで既にお支払いいただいた分については、残期間に応じて日割り計算で返金いたします（手数料を除く）。"
-        },
-        {
-          category: "publication",
-          question: "刊行物の購入方法を教えてください。",
-          answer: "会員様はマイページから無料でダウンロード可能です。非会員の方は、個別購入も可能です。オンラインショップまたは電話・FAXでご注文ください。"
-        },
-        {
-          category: "publication",
-          question: "過去の刊行物は入手できますか？",
-          answer: "過去5年分の刊行物はアーカイブとして保管しており、会員様は無料で閲覧・ダウンロード可能です。それ以前のものについては、個別にお問い合わせください。"
-        },
-        {
-          category: "other",
-          question: "パスワードを忘れてしまいました。",
-          answer: "ログイン画面の「パスワードを忘れた方」リンクをクリックし、登録メールアドレスを入力してください。パスワード再設定用のリンクをメールでお送りします。メールが届かない場合は、迷惑メールフォルダをご確認ください。"
-        },
-        {
-          category: "other",
-          question: "登録情報の変更方法を教えてください。",
-          answer: "マイページにログイン後、「会員情報編集」から変更可能です。会社名、部署名、住所、電話番号、メールアドレスなどの基本情報を更新できます。変更は即座に反映されます。"
-        },
-        {
-          category: "other",
-          question: "退会手続きの方法を教えてください。",
-          answer: "マイページの「退会手続き」から申請いただくか、お電話（0942-46-5081）にてご連絡ください。退会処理完了まで約1週間かかります。なお、退会後も過去のご利用履歴は一定期間保管されます。"
+          category: 'service',
+          question: '会費の支払いはいつする？',
+          answer: '会費のお支払いタイミングについては、入会時にご案内いたします。',
+          tags: []
         }
       ]
     };
   },
   computed: {
     filteredFaqs() {
-      let faqs = this.faqs;
+      let filtered = this.faqs;
       
-      if (this.selectedCategory !== "all") {
-        faqs = faqs.filter(faq => faq.category === this.selectedCategory);
+      if (this.selectedCategory !== 'all') {
+        filtered = filtered.filter(faq => faq.category === this.selectedCategory);
       }
       
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
-        faqs = faqs.filter(faq => 
-          faq.question.toLowerCase().includes(query) || 
+        filtered = filtered.filter(faq => 
+          faq.question.toLowerCase().includes(query) ||
           faq.answer.toLowerCase().includes(query)
         );
       }
       
-      return faqs;
+      return filtered;
     }
   },
   methods: {
     toggleAnswer(index) {
-      const position = this.openItems.indexOf(index);
-      if (position > -1) {
-        this.openItems.splice(position, 1);
+      const itemIndex = this.openItems.indexOf(index);
+      if (itemIndex > -1) {
+        this.openItems.splice(itemIndex, 1);
       } else {
         this.openItems.push(index);
       }
+    },
+    scrollToContact() {
+      this.$router.push('/contact');
     }
   }
 };
 </script>
 
 <style scoped>
-.page-container {
-  min-height: 100vh;
-  background-color: #f8f9fa;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+.page-container {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Hero Section */
+.hero-section {
+  height: 300px;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+              url('/img/hero-image.png') center/cover;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-overlay {
+  text-align: center;
+  color: white;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: #da5761;
+}
+
+/* Page Content */
 .page-content {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 60px 20px;
 }
 
-.page-header {
+.faq-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
-.page-header h1 {
-  font-size: 2.5rem;
+.section-title {
+  font-size: 2rem;
   color: #333;
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
-.subtitle {
-  color: #dc3545;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-}
-
-.description {
-  color: #666;
-  font-size: 1.1rem;
-}
-
-.faq-search {
-  display: flex;
-  max-width: 600px;
-  margin: 0 auto 40px;
-  gap: 10px;
-}
-
-.search-input {
-  flex: 1;
-  padding: 12px 20px;
-  border: 2px solid #dee2e6;
-  border-radius: 50px;
+.section-subtitle {
+  color: #da5761;
   font-size: 1rem;
+  letter-spacing: 2px;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 20px;
 }
 
-.search-btn {
-  padding: 12px 30px;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: background 0.3s;
+.section-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: #da5761;
 }
 
-.search-btn:hover {
-  background: #c82333;
-}
-
+/* Categories */
 .faq-categories {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 0;
   margin-bottom: 40px;
-  flex-wrap: wrap;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .category-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 20px;
-  background: white;
-  border: 2px solid #dee2e6;
-  border-radius: 25px;
+  background: #f8f9fa;
+  border: none;
+  padding: 15px 25px;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  color: #666;
+  border-right: 1px solid #dee2e6;
 }
 
-.category-icon {
-  font-size: 1.2rem;
+.category-btn:last-child {
+  border-right: none;
 }
 
+.category-btn.active,
 .category-btn:hover {
-  background: #f8f9fa;
-}
-
-.category-btn.active {
-  background: #dc3545;
+  background: #da5761;
   color: white;
-  border-color: #dc3545;
 }
 
+/* FAQ Items */
 .faq-list {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 60px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .faq-item {
-  border-bottom: 1px solid #e9ecef;
-}
-
-.faq-item:last-child {
-  border-bottom: none;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
 .faq-question {
-  padding: 25px;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 15px;
+  padding: 20px;
+  cursor: pointer;
   transition: background-color 0.3s;
 }
 
@@ -349,33 +352,29 @@ export default {
   background-color: #f8f9fa;
 }
 
-.q-mark, .a-mark {
-  width: 35px;
-  height: 35px;
+.q-circle {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: #da5761;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  flex-shrink: 0;
-  font-size: 1.1rem;
+  margin-right: 15px;
 }
 
 .q-mark {
-  background: #dc3545;
   color: white;
-}
-
-.a-mark {
-  background: #28a745;
-  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .question-text {
   flex: 1;
-  font-weight: 500;
+  font-size: 1rem;
   color: #333;
-  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .toggle-icon {
@@ -388,126 +387,194 @@ export default {
 }
 
 .faq-answer {
-  padding: 25px;
-  padding-top: 0;
-  background: #fff;
   display: flex;
-  gap: 15px;
   align-items: flex-start;
-  border-top: 1px solid #f0f0f0;
+  padding: 0 20px 20px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
 }
 
-.answer-text {
-  flex: 1;
-  line-height: 1.8;
-  color: #555;
+.a-circle {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  margin-top: 5px;
 }
 
-.no-results {
-  padding: 60px;
-  text-align: center;
-  color: #666;
-}
-
-.no-results p {
-  margin: 10px 0;
-}
-
-.contact-section {
-  background: white;
-  padding: 60px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.contact-section h2 {
-  color: #dc3545;
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.contact-section > p {
-  color: #666;
-  font-size: 1.1rem;
-  margin-bottom: 40px;
-}
-
-.contact-methods {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.contact-card {
-  padding: 30px;
-  border: 2px solid #dee2e6;
-  border-radius: 10px;
-  transition: all 0.3s;
-}
-
-.contact-card:hover {
-  border-color: #dc3545;
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
-}
-
-.contact-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
-
-.contact-card h3 {
-  color: #333;
+.a-mark {
+  color: white;
+  font-weight: bold;
   font-size: 1.2rem;
+}
+
+.answer-content {
+  flex: 1;
+  padding-top: 5px;
+}
+
+.answer-tags {
   margin-bottom: 15px;
 }
 
-.contact-info {
-  color: #dc3545;
-  font-size: 1.1rem;
-  font-weight: 600;
+.tag {
+  display: inline-block;
+  background: #da5761;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-right: 8px;
   margin-bottom: 5px;
 }
 
-.contact-hours {
+.answer-text {
   color: #666;
-  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
-.form-btn {
-  margin-top: 15px;
-  padding: 10px 30px;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: all 0.3s;
+.answer-text ul {
+  margin: 10px 0;
+  padding-left: 20px;
 }
 
-.form-btn:hover {
-  background: #c82333;
-  transform: scale(1.05);
+.answer-text li {
+  margin-bottom: 5px;
 }
 
-.slide-enter-active, .slide-leave-active {
+.answer-section {
+  margin: 15px 0;
+}
+
+.price-info {
+  background: #e8f4f8;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid #da5761;
+}
+
+.price-info.premium {
+  background: #fff2e8;
+  border-left-color: #ff8c00;
+}
+
+.benefits {
+  background: #f0f8f0;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid #28a745;
+}
+
+/* Slide Animation */
+.slide-enter-active,
+.slide-leave-active {
   transition: all 0.3s ease;
 }
 
-.slide-enter, .slide-leave-to {
+.slide-enter-from,
+.slide-leave-to {
   opacity: 0;
   max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
+  max-height: 500px;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
+  color: white;
+  text-align: center;
+  padding: 80px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cta-content h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  background: white;
+  color: #da5761;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-weight: bold;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .faq-search {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .page-content {
+    padding: 40px 15px;
+  }
+  
+  .faq-categories {
     flex-direction: column;
   }
   
-  .contact-methods {
-    grid-template-columns: 1fr;
+  .category-btn {
+    border-right: none;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .category-btn:last-child {
+    border-bottom: none;
+  }
+  
+  .faq-question {
+    padding: 15px;
+  }
+  
+  .question-text {
+    font-size: 0.9rem;
+  }
+  
+  .q-circle,
+  .a-circle {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+  }
+  
+  .q-mark,
+  .a-mark {
+    font-size: 1rem;
   }
 }
 </style>
