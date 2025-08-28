@@ -1,431 +1,1238 @@
 <template>
-  <div class="page-container">
-    <Navigation />
+  <div class="transaction-law-page">
+    <!-- Navigation -->
+    <navigation />
     
     <!-- Hero Section -->
     <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">特定商取引法に関する表記</h1>
-          <p class="hero-subtitle">transaction law</p>
+        <div class="hero-overlay">
+          <div class="hero-content">
+            <div class="hero-subtitle">transaction law</div>
+            <h1 class="hero-title">特定商取引法に関する表記</h1>
         </div>
       </div>
     </div>
 
-    <div class="page-content">
-      <!-- Header -->
-      <div class="page-header">
-        <h2 class="section-title">特定商取引法に関する表記</h2>
-        <p class="section-subtitle">transaction law</p>
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+      <router-link to="/" class="breadcrumb-item">トップ</router-link>
+        <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-item current">特定商取引法に関する表記</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="content-header">
+        <h2 class="page-title">特定商取引法に関する表記</h2>
+        <div class="title-decoration">
+          <div class="decoration-line"></div>
+          <span class="decoration-text">transaction law</span>
+          <div class="decoration-line"></div>
+        </div>
       </div>
 
-      <!-- Company Information Table -->
-      <div class="company-info-table">
-        <table class="info-table">
-          <tr>
-            <th>販売業者</th>
-            <td>株式会社ちくぎん地域経済研究所</td>
-          </tr>
-          <tr>
-            <th>代表者氏名</th>
-            <td>代表取締役社長　宮崎　豊彦</td>
-          </tr>
-          <tr>
-            <th>住所</th>
-            <td>〒839-0864<br>福岡県久留米市百年公園1番1号　久留米リサーチセンタービル6階</td>
-          </tr>
-          <tr>
-            <th>電話番号</th>
-            <td>0942-46-5081 | 平日9:00-17:00</td>
-          </tr>
-          <tr>
-            <th>FAX番号</th>
-            <td>0942-38-7931</td>
-          </tr>
-          <tr>
-            <th>メール</th>
-            <td class="email-row">
-              info@chikugin-cri.co.jp
-              <button class="contact-btn">お問い合わせはコチラ</button>
-            </td>
-          </tr>
-          <tr>
-            <th>料金</th>
-            <td>
-              下記料金で業務を承ります。<br>
-              （詳細金額につきましては別途見積もりの対象）<br>
-              ■ちくぎん地域経済レポート<br><br>
-              
-              <div class="fee-section">
-                <strong>スタンダード会員</strong>　　月額　1,000円（消費税別）<br><br>
-                
-                <strong>プレミアムサービス会員</strong>　　月額　3,000円（消費税別）
+      <div class="transaction-law-table">
+        <div class="table-row">
+          <div class="table-label">販売業者</div>
+          <div class="table-value">株式会社 ちくぎん地域経済研究所</div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">代表者名</div>
+          <div class="table-value">代表取締役社長　空閑 重信</div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">住所</div>
+          <div class="table-value">
+            〒839-0864<br>
+            福岡県久留米市百年公園1番1号<br>
+            久留米リサーチセンタービル6階
+          </div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">電話番号</div>
+          <div class="table-value">0942-46-5081 (平日9:00～17:00)</div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">FAX番号</div>
+          <div class="table-value">0942-38-7631</div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">メール</div>
+          <div class="table-value-with-button">
+            <span>info@chikugin-ri.co.jp</span>
+            <button class="contact-button">
+              お問い合わせはコチラ
+              <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
+                <path d="M13.7193 9.84548L10.2194 13.4453C10.1464 13.5203 10.0475 13.5625 9.94427 13.5625C9.84107 13.5625 9.74211 13.5203 9.66914 13.4453C9.59617 13.3702 9.55517 13.2684 9.55517 13.1623C9.55517 13.0562 9.59617 12.9544 9.66914 12.8793L12.5055 9.96248L4.88888 9.96248C4.78574 9.96248 4.68683 9.92034 4.6139 9.84533C4.54097 9.77032 4.5 9.66858 4.5 9.5625C4.5 9.45642 4.54097 9.35468 4.6139 9.27967C4.68683 9.20466 4.78574 9.16252 4.88888 9.16252L12.5055 9.16252L9.66914 6.24568C9.59617 6.17063 9.55517 6.06884 9.55517 5.9627C9.55517 5.85656 9.59617 5.75477 9.66914 5.67972C9.74211 5.60466 9.84107 5.5625 9.94427 5.5625C10.0475 5.5625 10.1464 5.60466 10.2194 5.67972L13.7193 9.27952C13.7554 9.31666 13.7841 9.36078 13.8037 9.40933C13.8233 9.45789 13.8333 9.50994 13.8333 9.5625C13.8333 9.61506 13.8233 9.66711 13.8037 9.71567C13.7841 9.76422 13.7554 9.80834 13.7193 9.84548Z" fill="#DA5761"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">料金</div>
+          <div class="table-value">
+            <div class="fee-description">
+              会費は下記に定める金額とします。<br>
+              （法人会員については個人の登録１名あたりの金額��
+            </div>
+            <div class="fee-section-title">■ ちくぎん地域経済クラブ</div>
+            <div class="fee-table">
+              <div class="fee-row">
+                <div class="fee-type">スタンダード会員</div>
+                <div class="fee-amount">月額　1,000円（消費税別）</div>
               </div>
-            </td>
-          </tr>
-          <tr>
-            <th>お支払い方法及び時期</th>
-            <td>
-              お客様からお申込みのお手続きが完了した際に、領収期日（毎月20日頃迄の場合は翌月末日、それ以降にお申込みの場合は翌々月末日）までにお振込みをいただきます。<br>
-              口座振替を希望されるお客様は、毎月26日（銀行営業日でない場合は翌営業日）をもって、「無料お申込」（毎月第4金曜日の21時頃）をもって決済させていただきます。
-            </td>
-          </tr>
-          <tr>
-            <th>その他条件</th>
-            <td>口座開設・振込み手数料</td>
-          </tr>
-          <tr>
-            <th>返品期間</th>
-            <td>商品の性質上で資料、返品には応じられません。</td>
-          </tr>
-          <tr>
-            <th>返品について</th>
-            <td>ご質問の場合、返品について、連絡承諾制の詳細指定また、申込後お急ぎの場合は申込後に弊社事務にお連絡ください。</td>
-          </tr>
-          <tr>
-            <th>連絡について</th>
-            <td>
-              お支払い手続き完了されていない場合はご連絡させていただく場合があります。<br>
-              また、サービス中のお連絡・解約等される場合も、お客様の了解を承諾後、返金等基本対応をさせていただきます。
-            </td>
-          </tr>
-        </table>
-      </div>
-
-      <!-- Additional Information -->
-      <div class="additional-info">
-        <p>商品サービスについて詳しい、連絡実行される場合でご相談ください。</p>
-      </div>
-
-      <!-- Terms Sections -->
-      <div class="terms-sections">
-        <div class="terms-section">
-          <h3>第1条（目的）</h3>
-          <p>「ちくぎん地域経済レポート」（以下、「本サービス」という）は、株式会社ちくぎん地域経済研究所（以下、「当社」という）が運営するサービス・プラットフォームとして、お客様に以下のサービスを通じお申込みいただき、ちくぎん地域・調査等実現に関する機能をご提供させて いただきます。</p>
+              <div class="fee-row">
+                <div class="fee-type">プレミアムネット会員</div>
+                <div class="fee-amount">月額　3,000円（消費税別）</div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="terms-section">
-          <h3>第2条（当社）</h3>
-          <ol>
-            <li>当社により本サービスを利用する際に関する第3者版等は、設定更新手段とちくぎん必要に対する義務事項を明示したものです。当社お客様を対象とちくぎん経営調査・研究等を行い、新たな理数算出等の発行、業界分析はもとより当該・部署期目等を対象と致します。</li>
-            <li>お客様が本規約の内容を確認された上で、サーバー・調査機関におきまして必要です。当社確認業務についてお客様に個人情報・経営（書等・企業分析・特注体事項等を通じ ちくぎん地域・調査等の実現をサポートをさせていただきます。</li>
-            <li>お客様より「経営情報」とご入力、分析、企業各分類致します。</li>
-          </ol>
+        
+        <div class="table-row">
+          <div class="table-label">支払い時期および方法</div>
+          <div class="table-value">
+            会費の納入は入会月の翌月から口座振替によって、毎月20日（休日の場合は翌営業日）に会員種別ごとの月額会費を納入することとします。<br>
+            口座振替を利用しない場合は、毎年4月20日（休日の場合は翌営業日）までに年会費（毎年4月1日～翌年3月31日分）を一括納入することとします。
+          </div>
         </div>
-
-        <div class="terms-section">
-          <h3>第3条（お客様登録及び退会のサービス）</h3>
-          <p>本規約をご記入の上ご確認頂き、次のページから分析・コンサルティング部門にお申し込み戴きお客様登録手続きを行います。</p>
+        
+        <div class="table-row">
+          <div class="table-label">その他料金</div>
+          <div class="table-value">口座振込：振込手数料</div>
         </div>
-
-        <div class="terms-section">
-          <h3>【スタンダード会員】</h3>
-          <p>HOT Information（当社経営調査とする）を、当社の構築対象とする検索トレンド・レポート、経営から関わる課程、査定、企業参照、企業分析による自由分析活動</p>
+        
+        <div class="table-row">
+          <div class="table-label">提供時間</div>
+          <div class="table-value">所定の手続きの終了後、直ちにご利用いただけます。</div>
         </div>
-
-        <div class="terms-section">
-          <h3>【プレミアム会員】</h3>
-          <p>スタンダード、プレミアム企業の所要するコンサルビングサービスに該当します。</p>
-          <ul>
-            <li>当社に標準のコンサルティングサービス経営戦略（経営基盤等を除きグループマネジング・サービス等を含む）にお客様詳細分析・参照・構築面と研究</li>
-            <li>　ちくぎん地域経済研究</li>
-            <li>当社関係「経営・サプライヤー」のお客様、詳細お詳しく「経営・サプライヤー検索セミナー」のお客様</li>
-          </ul>
+        
+        <div class="table-row">
+          <div class="table-label">退会について</div>
+          <div class="table-value">ご利用の停止、退会については、退会希望月の前月末までに、お電話または筑邦銀行窓口に直接お申し出ください。</div>
+        </div>
+        
+        <div class="table-row">
+          <div class="table-label">返金について</div>
+          <div class="table-value">
+            退会または除名された会員がすでに納入した会費は返還しないものとします。<br>
+            ただし、会員規約の変更に伴い退会する会員で、退会月の翌月以降の先払分会費がある場合は、当該会費を返還することとします。
         </div>
       </div>
 
-      <!-- Contact Button -->
-      <div class="contact-section">
-        <button class="main-contact-btn" @click="goToContact">お問い合わせはコチラ</button>
+      <!-- Member Terms Section -->
+      <div class="member-terms-section">
+        <div class="terms-notice">
+          会員サービスについては、会員規約も合わせてご確認ください。
+        </div>
+        
+        <div class="terms-content">
+          <div class="terms-article">
+            <h3 class="terms-title">第1条(目的）</h3>
+            <p class="terms-text">
+              「ちくぎん地域経済クラブ」（以下、「本会」という）は、株式会社ちくぎん地域経済研究所（以下、「当社」という）が運営するサービスであり、産・官・学・金（金融機関）のネットワーク構築や会員相互の交流等を通じて、企業経営等に役立つ様々な情報や機会提供により、会員企業等がともに発展し、ひいては地域の振興・発展に寄与することを目的とします。
+            </p>
+          </div>
+          
+          <div class="terms-article">
+            <h3 class="terms-title">第2条(会員）</h3>
+            <p class="terms-text">
+              本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人の方を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。<br>
+              会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。
+            </p>
+          </div>
+          
+          <div class="terms-article">
+            <h3 class="terms-title">第3条(会員種別および会員サービス）</h3>
+            <p class="terms-text">
+              本会の会員は、スタンダード会員とプレミアムネット会員の2種類とし、その会員種別に応じた次のサービス（以下、「会員サービス」という）を利用できるものとします。
+            </p>
+            
+            <div class="service-section">
+              <h4 class="service-title">【スタンダード会員】</h4>
+              <div class="service-item">
+                <span class="service-number">①</span>
+                <span class="service-text">機関誌「ちくぎん地域経済レポート」等、当社が発行する刊行物並びにダイレクトメール、E-Mail等による経済、産業、企業動向等、企業経営に役立つ情報サービス</span>
+              </div>
+              <div class="service-item">
+                <span class="service-number">②</span>
+                <span class="service-text">各種の経営相談に対する課題解決���向けた提案（相談の内容によっては有料）</span>
+              </div>
+              <div class="service-item">
+                <span class="service-number">③</span>
+                <span class="service-text">当社主催の各種セミナー、企画、イベント等の割引料金による案内</span>
+              </div>
+              <div class="service-item">
+                <span class="service-number">④</span>
+                <span class="service-text">当社が運営するインターネットサイト（スタンダード会員サイト）の利用</span>
+              </div>
+              
+              <h4 class="service-title">【プレミアムネット会員】</h4>
+              <p class="service-subtitle">スタンダード会員が利用できる上記①から④までのサービスに加えて</p>
+              <div class="service-item">
+                <span class="service-number">⑤</span>
+                <span class="service-text">プレミアムネット会員専用インターネットサイト（販路拡大等を目的としたビジネスマッチングサービスを含む）による企業経営に役立つ各種ビジネス情報の提供</span>
+              </div>
+              <div class="service-item">
+                <span class="service-number">⑥</span>
+                <span class="service-text">会員企業PR情報掲載サービス</span>
+              </div>
+              <div class="service-item">
+                <span class="service-number">⑦</span>
+                <span class="service-text">日経BP発刊「日経トップリーダー」の送付。同社主催の「日経トップリーダー 経営セミナー」の案内</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="pdf-download">
+          <span>会員規約をPDFでダウンロード</span>
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 2.8125C12.5895 2.8125 10.2332 3.52728 8.22899 4.86646C6.22477 6.20564 4.66267 8.10907 3.74022 10.336C2.81778 12.563 2.57643 15.0135 3.04668 17.3777C3.51694 19.7418 4.67769 21.9134 6.38214 23.6179C8.08659 25.3223 10.2582 26.4831 12.6223 26.9533C14.9865 27.4236 17.437 27.1822 19.664 26.2598C21.8909 25.3373 23.7944 23.7752 25.1335 21.771C26.4727 19.7668 27.1875 17.4105 27.1875 15C27.1841 11.7687 25.899 8.67076 23.6141 6.3859C21.3292 4.10104 18.2313 2.81591 15 2.8125ZM18.4758 15.6633L13.7883 20.3508C13.7012 20.4379 13.5978 20.507 13.484 20.5541C13.3702 20.6013 13.2482 20.6255 13.125 20.6255C13.0018 20.6255 12.8798 20.6013 12.766 20.5541C12.6522 20.507 12.5488 20.4379 12.4617 20.3508C12.3746 20.2637 12.3055 20.1603 12.2584 20.0465C12.2112 19.9327 12.187 19.8107 12.187 19.6875C12.187 19.5643 12.2112 19.4423 12.2584 19.3285C12.3055 19.2147 12.3746 19.1113 12.4617 19.0242L16.4871 15L12.4617 10.9758C12.2858 10.7999 12.187 10.5613 12.187 10.3125C12.187 10.0637 12.2858 9.82513 12.4617 9.64922C12.6376 9.47331 12.8762 9.37448 13.125 9.37448C13.3738 9.37448 13.6124 9.47331 13.7883 9.64922L18.4758 14.3367C18.563 14.4238 18.6321 14.5272 18.6793 14.641C18.7265 14.7548 18.7507 14.8768 18.7507 15C18.7507 15.1232 18.7265 15.2452 18.6793 15.359C18.6321 15.4728 18.563 15.5762 18.4758 15.6633Z" fill="#DA5761"/>
+          </svg>
+          </div>
+        </div>
       </div>
     </div>
 
-    <FooterComplete />
+    <!-- Access Section -->
+    <div class="content-view-2">
+      <div class="frame-1321317467-2">
+        <group10 />
+        <div class="frame-1321317467-1">
+          <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
+          <div class="frame-1321317466">
+            <div class="group-container">
+              <div class="group-12">
+                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
+                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
+                <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
+                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
+                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
+        </div>
+              <div class="group-12">
+                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
+                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
+                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
+                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
+      </div>
+              <div class="group-12">
+                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
+                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
+                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
+                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
+        </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Navigation -->
+    <div class="navigation-footer">
+      <Footer v-bind="frame132131753022Props" />
+      <div class="vector-7-1"></div>
+      <group27 />
+    </div>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-buttons">
+      <button class="floating-btn login-btn">
+        <svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M25.8666 24.5001C25.7789 24.6521 25.6526 24.7783 25.5005 24.8661C25.3484 24.9539 25.1759 25 25.0003 25H0.99903C0.82357 24.9998 0.651246 24.9535 0.499362 24.8657C0.347477 24.7778 0.221377 24.6516 0.133726 24.4996C0.0460738 24.3477 -4.50128e-05 24.1753 3.29665e-08 23.9999C4.50787e-05 23.8245 0.0462524 23.6521 0.133982 23.5002C2.03784 20.2094 4.97175 17.8497 8.39569 16.7311C6.70205 15.7231 5.3862 14.1871 4.65021 12.359C3.91422 10.5309 3.79879 8.51174 4.32164 6.6117C4.84448 4.71165 5.9767 3.03573 7.54442 1.84131C9.11214 0.646882 11.0287 0 12.9997 0C14.9707 0 16.8872 0.646882 18.455 1.84131C20.0227 3.03573 21.1549 4.71165 21.6777 6.6117C22.2006 8.51174 22.0852 10.5309 21.3492 12.359C20.6132 14.1871 19.2973 15.7231 17.6037 16.7311C21.0276 17.8497 23.9615 20.2094 25.8654 23.5002C25.9534 23.6521 25.9998 23.8245 26 24C26.0002 24.1755 25.9542 24.348 25.8666 24.5001Z" fill="white"/>
+        </svg>
+        <span>ログイン</span>
+      </button>
+      
+      <button class="floating-btn contact-btn">
+        <svg width="18" height="28" viewBox="0 0 18 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 0H3C2.20435 0 1.44129 0.316071 0.87868 0.87868C0.316071 1.44129 0 2.20435 0 3V25C0 25.7956 0.316071 26.5587 0.87868 27.1213C1.44129 27.6839 2.20435 28 3 28H15C15.7956 28 16.5587 27.6839 17.1213 27.1213C17.6839 26.5587 18 25.7956 18 25V3C18 2.20435 17.6839 1.44129 17.1213 0.87868C16.5587 0.316071 15.7956 0 15 0ZM3 2H15C15.2652 2 15.5196 2.10536 15.7071 2.29289C15.8946 2.48043 16 2.73478 16 3V4H2V3C2 2.73478 2.10536 2.48043 2.29289 2.29289C2.48043 2.10536 2.73478 2 3 2ZM15 26H3C2.73478 26 2.48043 25.8946 2.29289 25.7071C2.10536 25.5196 2 25.2652 2 25V24H16V25C16 25.2652 15.8946 25.5196 15.7071 25.7071C15.5196 25.8946 15.2652 26 15 26Z" fill="white"/>
+        </svg>
+        <span>お問い合わせ</span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-import Navigation from "./Navigation.vue";
-import FooterComplete from "./FooterComplete.vue";
+import Navigation from "./Navigation";
+import Footer from "./Footer";
+import Group27 from "./Group27";
+import Group10 from "./Group10";
+import vector7 from "../../public/img/vector-7.svg";
+import { frame132131753022Data } from "../data";
+import { homePageData } from "../data";
 
 export default {
   name: "TransactionLawPage",
   components: {
     Navigation,
-    FooterComplete
+    Footer,
+    Group27,
+    Group10,
   },
-  methods: {
-    goToContact() {
-      this.$router.push('/contact');
-    }
-  }
+  data() {
+    return {
+      vector7: vector7,
+      frame132131753022Props: frame132131753022Data,
+      // content-view-2に必要なデータ
+      rectangle3: homePageData.rectangle3,
+      text75: homePageData.text75,
+      text77: homePageData.text77,
+      text76: homePageData.text76,
+      phone: homePageData.phone,
+      x900: homePageData.x900,
+      text74: homePageData.text74,
+      x12Km141: homePageData.x12Km141,
+      x12Km142: homePageData.x12Km142,
+      x19Km23: homePageData.x19Km23,
+      text78: homePageData.text78,
+      x497M6: homePageData.x497M6,
+      x811M10: homePageData.x811M10,
+      d1830M10: homePageData.d1830M10,
+    };
+  },
 };
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.page-container {
+.transaction-law-page {
+  background-color: #ECECEC;
+  width: 100%;
   min-height: 100vh;
-  background-color: #ffffff;
 }
 
 /* Hero Section */
 .hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
+  width: 100%;
+  height: 400px;
+  background: url('https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880') lightgray center/cover no-repeat;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .hero-overlay {
-  text-align: center;
-  color: white;
+  width: 100%;
+  height: 100%;
+  background: rgba(77, 77, 77, 0.70);
+  display: flex;
+  align-items: flex-end;
+  padding: 50px 30px;
 }
 
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+.hero-content {
+  color: white;
 }
 
 .hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
+  color: #FFF;
+  font-family: var(--font-family-inter);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 60px;
+  letter-spacing: -0.48px;
 }
 
-/* Page Content */
-.page-content {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 60px 20px;
+.hero-title {
+  color: #FFF;
+  font-family: var(--font-family-inter);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 60px;
+  letter-spacing: -0.8px;
+  margin: 0;
 }
 
-.page-header {
-  text-align: center;
-  margin-bottom: 50px;
+/* Breadcrumbs */
+.breadcrumbs {
+  padding: 24px 46px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.section-title {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 10px;
-  font-weight: bold;
+.breadcrumb-item {
+  color: #3F3F3F;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 5;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
+.breadcrumb-item:hover {
+  color: #DA5761;
+  text-decoration: underline;
+}
+
+.breadcrumb-item.current {
+  color: #1A1A1A;
   font-weight: 500;
-  position: relative;
-  padding-bottom: 20px;
+  cursor: default;
 }
 
-.section-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background-color: #da5761;
+.breadcrumb-item.current:hover {
+  color: #1A1A1A;
+  text-decoration: none;
 }
 
-/* Company Information Table */
-.company-info-table {
-  background: white;
-  border-radius: 15px;
-  padding: 30px;
-  margin-bottom: 40px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+.breadcrumb-separator {
+  color: #3F3F3F;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 5;
 }
 
-.info-table {
+/* Main Content */
+.main-content {
   width: 100%;
-  border-collapse: collapse;
+  padding: 70px 50px 80px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
 }
 
-.info-table th {
-  background-color: #f8f9fa;
-  padding: 15px 20px;
-  text-align: left;
-  font-weight: 600;
-  color: #333;
-  border: 1px solid #dee2e6;
-  width: 150px;
-  vertical-align: top;
+.content-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
 }
 
-.info-table td {
-  padding: 15px 20px;
-  border: 1px solid #dee2e6;
-  color: #666;
-  line-height: 1.6;
-  vertical-align: top;
+.page-title {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.72px;
+  margin: 0;
 }
 
-.email-row {
+.title-decoration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  width: 320px;
+  height: 30px;
+}
+
+.decoration-line {
+  width: 69px;
+  height: 2px;
+  background: #DA5761;
+}
+
+.decoration-text {
+  color: #DA5761;
+  font-family: var(--font-family-inter);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Transaction Law Table */
+.transaction-law-table {
+  width: 100%;
+  max-width: 2000px;
+  background: #FFF;
+  border-radius: 20px;
+  padding: 50px;
+}
+
+.table-row {
+  display: flex;
+  width: 100%;
+  padding: 20px 0;
+  border-bottom: 1px dashed #DA5761;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.table-row:first-child {
+  border-top: 1px dashed #DA5761;
+}
+
+.table-label {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 150%;
+  width: 250px;
+}
+
+.table-value {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  flex: 1;
+  width: 100%;
+}
+
+.table-value-with-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex: 1;
+  width: 100%;
 }
 
-.contact-btn {
-  background: #da5761;
-  color: white;
+.table-value-with-button span {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.contact-button {
+  display: flex;
+  padding: 10px 54px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: #DA5761;
   border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  color: #FFF;
+  font-family: var(--font-family-inter);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-  font-weight: 500;
 }
 
-.contact-btn:hover {
-  background: #c44853;
+.contact-button:hover {
+  background: #c54a54;
 }
 
-.fee-section {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
-/* Additional Information */
-.additional-info {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-}
-
-.additional-info p {
-  color: #666;
-  font-size: 1rem;
-}
-
-/* Terms Sections */
-.terms-sections {
-  margin-bottom: 40px;
-}
-
-.terms-section {
-  background: white;
-  border-radius: 10px;
-  padding: 25px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.terms-section h3 {
-  font-size: 1.2rem;
-  color: #333;
+.fee-description {
   margin-bottom: 15px;
-  font-weight: bold;
 }
 
-.terms-section p {
-  color: #666;
-  line-height: 1.7;
+.fee-section-title {
+  margin: 15px 0;
+  font-weight: 400;
+}
+
+.fee-table {
+  display: flex;
+  flex-direction: column;
+  background: #ECECEC;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.fee-row {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #B6B5B5;
+}
+
+.fee-row:last-child {
+  border-bottom: none;
+}
+
+.fee-type {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  width: 250px;
+}
+
+.fee-amount {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  width: auto;
+}
+
+/* Member Terms Section */
+.member-terms-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.terms-notice {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 150%;
+  padding: 5px 0;
+  margin-top: 50px;
+}
+
+.terms-content {
+  padding: 30px;
+  background: #ECECEC;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.terms-article {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.terms-title {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+}
+
+.terms-text {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+}
+
+.service-section {
+  margin-top: 20px;
+}
+
+.service-title {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 15px 0 10px 0;
+}
+
+.service-subtitle {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 10px 0;
+}
+
+.service-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
   margin-bottom: 10px;
 }
 
-.terms-section ol {
-  color: #666;
-  line-height: 1.7;
-  padding-left: 20px;
+.service-number {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  min-width: 21px;
+  margin-top: 2px;
 }
 
-.terms-section ul {
-  color: #666;
-  line-height: 1.7;
-  padding-left: 20px;
-  margin-top: 10px;
+.service-text {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  flex: 1;
 }
 
-.terms-section li {
-  margin-bottom: 8px;
-}
-
-/* Contact Section */
-.contact-section {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.main-contact-btn {
-  background: #da5761;
-  color: white;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 50px;
+.pdf-download {
+  display: flex;
+    width: fit-content;
+  padding: 30px 0 5px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 1px solid #DA5761;
   cursor: pointer;
-  transition: all 0.3s;
-  font-weight: bold;
 }
 
-.main-contact-btn:hover {
-  background: #c44853;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+.pdf-download span {
+  color: #3F3F3F;
+  font-family: var(--font-family-inter);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.pdf-download:hover {
+  opacity: 0.8;
+}
+
+/* Access Section */
+.access-section {
+  width: 100%;
+  padding: 80px 50px;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.access-header {
+  position: relative;
+  width: 209px;
+  height: 126px;
+}
+
+.access-title-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.access-en-title {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 150%;
+  position: absolute;
+  left: 0;
+  top: 54px;
+  width: 199px;
+  height: 72px;
+}
+
+.access-line {
+  width: 91px;
+  height: 1px;
+  background: #DA5761;
+  position: absolute;
+  left: 0;
+  top: 18px;
+}
+
+.access-jp-title {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 150%;
+  position: absolute;
+  left: 114px;
+  top: 0;
+  width: 95px;
+  height: 36px;
+}
+
+.access-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.map-container {
+  flex: 1;
+  max-width: 692px;
+}
+
+.map-image {
+  width: 100%;
+  height: 398px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.access-info {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+  max-width: 524px;
+}
+
+.info-title {
+  color: #DA5761;
+  font-family: var(--font-family-inter);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 200%;
+  margin: 0 0 10px 0;
+}
+
+.info-item {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 200%;
+  margin-bottom: 5px;
+}
+
+/* Floating Buttons */
+.floating-buttons {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.floating-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  background: #DA5761;
+}
+
+.login-btn:hover {
+  background: #c54a54;
+}
+
+.contact-btn {
+  background: #9C3940;
+}
+
+.contact-btn:hover {
+  background: #7f2e34;
+}
+
+.floating-btn span {
+  color: #FFF;
+  font-family: var(--font-family-inter);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+.floating-btn svg {
+  fill: #FFF;
+}
+
+/* Footer Section */
+.footer-section {
+  width: 100%;
+  padding: 50px 100px;
+  background: #CFCFCF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+.footer-content {
+  width: 100%;
+  max-width: 1240px;
+}
+
+.footer-navigation {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  margin-bottom: 50px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 151px;
+}
+
+.footer-column:nth-child(2) {
+  width: 171px;
+}
+
+.footer-column:nth-child(3) {
+  width: 210px;
+}
+
+.footer-column:nth-child(4) {
+  width: 212px;
+}
+
+.footer-link-item {
+  display: flex;
+  height: 18px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  cursor: pointer;
+}
+
+.footer-link-item span {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 200%;
+}
+
+.footer-link-item:hover span {
+  color: #DA5761;
+}
+
+.footer-sub-items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+}
+
+.footer-sub-item {
+  display: flex;
+  height: 15px;
+  padding-left: 20px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  cursor: pointer;
+}
+
+.footer-sub-item span {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 200%;
+}
+
+.footer-sub-item:hover span {
+  color: #DA5761;
+}
+
+.footer-service-items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.footer-divider {
+  width: 100%;
+  height: 1px;
+  background: #B2B2B2;
+}
+
+.footer-bottom {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.company-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.company-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: -5px;
+}
+
+.company-name {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+.company-group {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+.company-address {
+  color: #1A1A1A;
+  text-align: center;
+  font-family: var(--font-family-inter);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
+}
+
+.copyright {
+  color: #1A1A1A;
+  font-family: var(--font-family-inter);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+/* Content View 2 */
+.content-view-2 {
+  align-items: center;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 80px 50px;
+  position: relative;
+  width: 100%;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.frame-1321317467-2 {
+  align-items: flex-start;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  width: 100%;
+  max-width: 2000px;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.frame-1321317467-1 {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 40px;
+  position: relative;
+  width: 100%;
+  min-height: auto;
+}
+
+.rectangle-3 {
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  width: 45%;
+  max-width: 692px;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+.frame-1321317466 {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  width: auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: auto;
+}
+
+.group-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  height: fit-content;
+  position: relative;
+  width: fit-content;
+}
+
+.group-12 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  width: fit-content;
+}
+
+.text-3 {
+  letter-spacing: 0;
+  line-height: 40px;
+  margin-bottom: 3px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.x12km-14,
+.x12km-14-1,
+.x19km-23 {
+  letter-spacing: 0;
+  line-height: 20px;
+  margin-bottom: 2px;
+  margin-top: 3px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.text-11 {
+  letter-spacing: 0;
+  line-height: 18px;
+  margin-top: 3px;
+  margin-bottom: 2px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Footer Navigation */
+.navigation-footer {
+  background: #CFCFCF;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.navigation-footer .frame132131753022 {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.navigation-footer .vector-7-1 {
+  height: 1px;
+  background-color: #B2B2B2;
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+}
+
+.navigation-footer .group27 {
+  width: 100%;
+  max-width: 1000px;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  
-  .page-content {
-    padding: 40px 15px;
-  }
-  
-  .company-info-table {
-    padding: 20px;
-  }
-  
-  .info-table th,
-  .info-table td {
-    padding: 10px 15px;
-  }
-  
-  .info-table th {
-    width: 120px;
-  }
-  
-  .email-row {
+@media (max-width: 1150px) {
+  .frame-1321317467-1 {
     flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+    gap: 20px;
   }
   
-  .terms-section {
-    padding: 20px;
+  .rectangle-3 {
+    width: 100%;
+    max-width: none;
+    order: 2;
+  }
+  
+  .frame-1321317466 {
+    order: 1;
   }
 }
 
-@media (max-width: 480px) {
-  .info-table th {
-    width: 100px;
-    font-size: 0.9rem;
+@media (max-width: 768px) {
+  .main-content {
+    padding: 40px 20px;
   }
   
-  .info-table td {
-    font-size: 0.9rem;
+  .transaction-law-table {
+    padding: 30px 20px;
+  }
+  
+  .table-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .table-label {
+    min-width: auto;
+  }
+  
+  .table-value {
+    max-width: none;
+  }
+  
+  .table-value-with-button {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .access-content {
+    flex-direction: column;
+  }
+  
+  .access-section {
+    padding: 40px 20px;
+  }
+  
+  .hero-title {
+    font-size: 28px;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px;
+  }
+  
+  .floating-buttons {
+    right: 10px;
+    bottom: 10px;
+  }
+  
+  .floating-btn {
+    width: 80px;
+    height: 80px;
+  }
+
+  .footer-section {
+    padding: 30px 20px;
+  }
+
+  .footer-navigation {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer-column {
+    width: 100%;
+  }
+
+  .company-logo-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .company-address {
+    font-size: 16px;
   }
 }
 </style>

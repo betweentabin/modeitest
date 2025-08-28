@@ -1,720 +1,1422 @@
 <template>
-  <div class="page-container">
+  <div class="cri-consulting-page">
     <Navigation />
     
     <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-overlay">
         <div class="hero-content">
-          <h1 class="hero-title">CRI経営コンサルティング</h1>
-          <p class="hero-subtitle">consulting</p>
+          <div class="hero-subtitle">consulting</div>
+          <h1 class="hero-title">CRI 経営コンサルティング</h1>
         </div>
       </div>
     </div>
-
-    <div class="page-content">
-      <!-- What's CRI Section -->
-      <section class="whats-cri-section">
-        <div class="cri-content">
-          <div class="cri-image">
-            <img src="/img/image-1.png" alt="CRI経営コンサルティング" />
-          </div>
-          <div class="cri-info">
-            <h2 class="cri-title">CRI経営コンサルティングとは？</h2>
-            <div class="whats-cri">
-              <h3>What's CRI<br><span class="sub-title">Management Consulting</span></h3>
-              <p>
-                CRI経営コンサルティングでは、経営革新により企業体質改革～
-                レ・アドバイス、サポートをトータルにサポート！
-              </p>
-              <p>
-                経営者様や、お客様のビジネス推進の内容に応じて高度で適正なコンサルティングを実施しており、
-                多様なニーズ・幅広いワーニングをご利用いただけるよう、専門チームが継続的に研鑽を積んでおり、
-                アドバイザリーサービスをご提供しております。
-              </p>
-            </div>
+    
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-section" aria-label="パンくずリスト">
+      <ol class="breadcrumb-container">
+        <li class="breadcrumb-item">
+          <a href="/" class="breadcrumb-link">トップ</a>
+        </li>
+        <li class="breadcrumb-separator" aria-hidden="true">></li>
+        <li class="breadcrumb-item" aria-current="page">
+          <span class="breadcrumb-current">CRI 経営コンサルティング</span>
+        </li>
+      </ol>
+    </nav>
+    
+    <!-- What is CRI Consulting Section -->
+    <div class="what-is-section">
+      <div class="section-header">
+        <h2 class="section-title">CRI 経営コンサルティングとは？</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">consulting</span>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+      
+      <div class="content-container">
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940" alt="Consulting Image" class="content-image" />
+        <div class="content-text">
+          <h3 class="content-subtitle">What's CRI Management Consulting</h3>
+          <h4 class="content-heading">CRI経営コンサルティングとは、事業でお悩みの皆様に対し、アドバイス、サポートするサービスです</h4>
+          <p class="content-description">
+            日常の企業活動の中で、まず自社が抱える様々な問題や課題・顧客ニーズなどに気付き、それらを整理して対応策を講じることができれば、改善に向けて新たなスタートを切ったと言えましょう。
+            しかし、「何か変だ。」と思いながらもとりあえず一日の業務を無事���終えたことに安心していては、身近に存在する重要なことに気付くのが遅れることもあります。
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Duties Section -->
+    <div class="main-duties-section">
+      <div class="section-header">
+        <h2 class="section-title">CRI経営コンサルティングの主な業務</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">main duties</span>
+          <div class="divider-line"></div>
+        </div>
+        <p class="section-subtitle">事業にまつわる様々をサポート行います。<br>当研究所のネットワークを活かし、御社の実情に合う専門家もご紹介できます。</p>
+      </div>
+      
+      <div class="duties-container">
+        <div class="duties-content">
+          <h3 class="duties-title">MAIN DUTIES</h3>
+          <h4 class="duties-heading">事業にまつわる様々な悩みを一緒に解決します</h4>
+          <div class="duties-list">
+            <p>経営戦略策定のサポート</p>
+            <p>ビジネスマッチィングの支援</p>
+            <p>事業継承の支援（後継者育成支援）</p>
+            <p>社員研修、経営計画策定のための人材育成</p>
+            <p>税務、財務、事務など各業務の課題解決力の育成</p>
+            <p>事務省力化のサポート</p>
+            <p>人事制度の策定</p>
+            <p>ワンストップのよろず差相談</p>
           </div>
         </div>
-      </section>
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304" alt="Main Duties Image" class="duties-image" />
+      </div>
+      
+      <p class="duties-description">
+        当研究所だけで対応できないことは、CRIのもつネットワークを活用し、相談者の実情に合う専門家をご紹介いたします。その上で一緒に課題解決に向けて動いていきます。専門家が加わることで、状況に応じたよりよい解決方法を導き出すことができます。
+      </p>
+    </div>
 
-      <!-- Main Duties Section -->
-      <section class="main-duties-section">
-        <div class="duties-header">
-          <h2 class="section-title">CRI経営コンサルティングの主な業務</h2>
+    <!-- Company Intro Section -->
+    <Frame1321317483 />
+    
+    <!-- Support Content and Costs Section -->
+    <div class="support-section">
+      <div class="section-header">
+        <h2 class="section-title">サポート内容と費用に関して</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">contents and costs</span>
+          <div class="divider-line"></div>
+        </div>
+        <p class="section-subtitle">経営改善とは会社の中の「人」が変わることです。<br>ご相談と問題点・課題の整理は無料です。まずは、お気軽にご相談ください。</p>
+      </div>
+      
+      <div class="support-content">
+        <div class="support-category">
+          <h3 class="category-title">無料 -FREE-</h3>
+          <div class="service-grid">
+            <div class="service-card">
+              <img src="https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590" alt="Consultation" class="service-image" />
+              <div class="service-info">
+                <span class="service-label">consultation</span>
+                <h4 class="service-title">ご相談</h4>
+              </div>
+              <div class="service-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M13.125 2.25V21.75C13.125 22.0484 13.0065 22.3345 12.7955 22.5455C12.5845 22.7565 12.2984 22.875 12 22.875C11.7016 22.875 11.4155 22.7565 11.2045 22.5455C10.9935 22.3345 10.875 22.0484 10.875 21.75V2.25C10.875 1.95163 10.9935 1.66548 11.2045 1.4545C11.4155 1.24353 11.7016 1.125 12 1.125C12.2984 1.125 12.5845 1.24353 12.7955 1.4545C13.0065 1.66548 13.125 1.95163 13.125 2.25Z" fill="#1A1A1A"/>
+                </svg>
+              </div>
+            </div>
+            <div class="service-card">
+              <img src="https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590" alt="Problem Analysis" class="service-image" />
+              <div class="service-info">
+                <span class="service-label">problem</span>
+                <h4 class="service-title">問題点・課題の整理</h4>
+              </div>
+            </div>
+          </div>
         </div>
         
-        <div class="duties-content">
-          <div class="duties-text">
-            <h3 class="duties-title">MAIN DUTIES</h3>
-            <p class="duties-description">
-              幅広いエリアから企業体質を総合的に一括にサポート
-            </p>
-            <ul class="duties-list">
-              <li>・事業企画・事業戦略立案</li>
-              <li>・企業活性化・組織改革</li>
-              <li>・マーケティング戦略</li>
-              <li>・人事制度設計・人材開発</li>
-              <li>・財務・資金調達</li>
-              <li>・営業力強化</li>
-              <li>・新規事業開発</li>
-              <li>・経営診断・企業再生</li>
-            </ul>
-          </div>
-          <div class="duties-image">
-            <img src="/img/image-2.png" alt="経営コンサルティング業務" />
-          </div>
-        </div>
-      </section>
-
-      <!-- Company CTA Section -->
-      <section class="company-cta">
-        <div class="cta-content">
-          <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p>様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
-          <button class="cta-button" @click="goToContact">お問い合わせはこちら</button>
-        </div>
-      </section>
-
-      <!-- Support Content Section -->
-      <section class="support-section">
-        <div class="support-header">
-          <h2 class="section-title">サポート内容を費用に応じて</h2>
-          <p class="section-subtitle">support</p>
-          <p class="support-description">
-            ～研修会、コンサルティング（企業研修・人事）等お客様にサービスのご利用をいただけるよう努めております。～
-          </p>
-        </div>
-
-        <!-- Free Services -->
-        <div class="service-category">
-          <h3 class="category-title">無料 - FREE -</h3>
+        <div class="support-divider"></div>
+        
+        <div class="support-category">
+          <h3 class="category-title">有料 -PAID-</h3>
           <div class="service-grid">
             <div class="service-card">
-              <div class="service-image">
-                <img src="/img/image-1.png" alt="無料サービス1" />
-              </div>
+              <img src="https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590" alt="Strategy Planning" class="service-image" />
               <div class="service-info">
-                <h4>企業診断</h4>
-                <p>企業・経営に関する課題</p>
+                <span class="service-label">consultation</span>
+                <h4 class="service-title">対応策の立案</h4>
               </div>
             </div>
             <div class="service-card">
-              <div class="service-image">
-                <img src="/img/image-2.png" alt="無料サービス2" />
-              </div>
+              <img src="https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590" alt="Improvement Activities" class="service-image" />
               <div class="service-info">
-                <h4>事業承継</h4>
-                <p>M&A・事業戦略</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Paid Services -->
-        <div class="service-category">
-          <h3 class="category-title">有料 - PAID -</h3>
-          <div class="service-grid">
-            <div class="service-card">
-              <div class="service-image">
-                <img src="/img/image-1.png" alt="有料サービス1" />
-              </div>
-              <div class="service-info">
-                <h4>企業経営改善</h4>
+                <span class="service-label">problem</span>
+                <h4 class="service-title">改善に向けた活動</h4>
               </div>
             </div>
             <div class="service-card">
-              <div class="service-image">
-                <img src="/img/image-2.png" alt="有料サービス2" />
-              </div>
+              <img src="https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590" alt="Analysis" class="service-image" />
               <div class="service-info">
-                <h4>企業経営戦略</h4>
+                <span class="service-label">problem</span>
+                <h4 class="service-title">分析（新たな課題認識）</h4>
               </div>
             </div>
             <div class="service-card">
-              <div class="service-image">
-                <img src="/img/image.png" alt="有料サービス3" />
-              </div>
+              <img src="https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590" alt="New Business Activities" class="service-image" />
               <div class="service-info">
-                <h4>経営戦略の構築</h4>
-              </div>
-            </div>
-            <div class="service-card">
-              <div class="service-image">
-                <img src="/img/image-1.png" alt="有料サービス4" />
-              </div>
-              <div class="service-info">
-                <h4>経営・財務戦略</h4>
+                <span class="service-label">problem</span>
+                <h4 class="service-title">新たな事業活動</h4>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="service-note">
-          <p>
-            ※研修取得、無料・有料の総合的な実現には、総合企業様にスティ（以下、「当社」という）主要料金体系となります。<br>
-            ※バイ企業経営戦略等、有効活用による総合のため、サービス承諾・長期利用等の価格等につきまして、<br>
-            総合分析（「キュータ」含む）。
-          </p>
-          <button class="service-contact-btn" @click="goToContact">お問い合わせはこちら</button>
+        
+        <div class="support-divider"></div>
+        
+        <div class="support-description">
+          <p>「経営改善」とは、会社（ハード）が変わるのではなく、会社の中にいる「人」（ソフト）が変わることです。 ち���ぎん地域経済研究所は、事業のお悩み解決のために、あなたにぴったりの解決策をご提案いたします。<br>どうぞお気軽にご相談ください。</p>
+          <button class="contact-btn">
+            <span>お問い合わせはコチラ</span>
+            <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
+              <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
+              <path d="M13.2193 10.2752L9.7194 13.875C9.64643 13.95 9.54746 13.9922 9.44427 13.9922C9.34107 13.9922 9.24211 13.95 9.16914 13.875C9.09617 13.7999 9.05517 13.6981 9.05517 13.592C9.05517 13.4858 9.09617 13.3841 9.16914 13.309L12.0055 10.3922L4.38888 10.3922C4.28574 10.3922 4.18683 10.35 4.1139 10.275C4.04097 10.2 4 10.0983 4 9.99219C4 9.88611 4.04097 9.78437 4.1139 9.70936C4.18683 9.63435 4.28574 9.59221 4.38888 9.59221L12.0055 9.59221L9.16914 6.67537C9.09617 6.60032 9.05517 6.49853 9.05517 6.39239C9.05517 6.28625 9.09617 6.18446 9.16914 6.1094C9.24211 6.03435 9.34107 5.99219 9.44427 5.99219C9.54746 5.99219 9.64643 6.03435 9.7194 6.1094L13.2193 9.7092C13.2554 9.74635 13.2841 9.79046 13.3037 9.83902C13.3233 9.88758 13.3333 9.93962 13.3333 9.99219C13.3333 10.0448 13.3233 10.0968 13.3037 10.1454C13.2841 10.1939 13.2554 10.238 13.2193 10.2752Z" fill="#1A1A1A"/>
+            </svg>
+          </button>
         </div>
-      </section>
-
-      <!-- Consulting Cases Section -->
-      <section class="cases-section">
-        <div class="cases-header">
-          <h2 class="section-title">CRI経営コンサルティングの実績紹介</h2>
-          <p class="section-subtitle">achievements</p>
-        </div>
-
-        <div class="cases-grid">
-          <div class="case-card">
-            <div class="case-image">
-              <img src="/img/image-1.png" alt="実績1" />
-            </div>
-            <div class="case-info">
-              <h4>企業・地域活性化業</h4>
-              <p>
-                経営戦略および改革にかかる問題認識、現場確認（マーケット・リサーチ等）からステップアップ等まで、
-                まさに企業の成長にかかる経営・コンサルティングを実施いたします。
-              </p>
-            </div>
-          </div>
-          
-          <div class="case-card">
-            <div class="case-image">
-              <img src="/img/image-2.png" alt="実績2" />
-            </div>
-            <div class="case-info">
-              <h4>企業・地域活性化事業</h4>
-              <p>
-                地域に密着した企業様に対する経営コンサルティングを担当しており、
-                業界の営業支援メニューから地域限定含み・設定から幅広い戦略経営等をアドバイスいたします。
-              </p>
-            </div>
-          </div>
-          
-          <div class="case-card">
-            <div class="case-image">
-              <img src="/img/image.png" alt="実績3" />
-            </div>
-            <div class="case-info">
-              <h4>M&A・企業の成長戦略</h4>
-              <p>
-                中小企業のM&A等について、戦略立案から実行まで幅広くサポートしており、
-                企業価値の向上とM&A進行プランの策定など、実績豊富なアドバイザーチームにより実施いたします。
-              </p>
-            </div>
-          </div>
-          
-          <div class="case-card">
-            <div class="case-image">
-              <img src="/img/image-1.png" alt="実績4" />
-            </div>
-            <div class="case-info">
-              <h4>企業・地域活性化事業</h4>
-              <p>
-                地域密着型に企業様にご利用いただき、かつ地域の活性化をサポートする取り組みを進めております。
-                成長戦略・地域経済等への活用にも積極的に取り組んでいます。
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="cases-note">
-          <p>
-            ちくぎん地域経済研究所は総合的な経営戦略立案・地域活性化等を経営コンサルティングとして展開をしております。
-          </p>
-        </div>
-      </section>
-
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <button class="action-btn contact-btn" @click="goToContact">お問い合わせはコチラ</button>
-        <button class="action-btn member-btn" @click="goToMember">入会はコチラ</button>
       </div>
     </div>
+    
+    <!-- Achievements Section -->
+    <div class="achievements-section">
+      <div class="section-header">
+        <h2 class="section-title">CRI経営コンサルティングの実績紹介</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">achievements</span>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+      
+      <div class="achievements-content">
+        <div class="achievements-grid">
+          <div class="achievement-card">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/ec6122758f12e1bfbe99ee61905a31ea4d49a78c?width=574" alt="Achievement 1" class="achievement-image" />
+            <div class="achievement-info">
+              <div class="achievement-meta">
+                <span class="achievement-date">2025.6.27</span>
+                <span class="achievement-category">カテゴリー</span>
+              </div>
+              <h4 class="achievement-title">分析（新たな課題認識）</h4>
+              <p class="achievement-description">
+                有限会社AliveCast 中村理氏による「誰もおしえてくれない、プロと一緒に考えるインターネットを使った"売れる仕組みづくり"」セミナーを開催。 ホームページの作成や運営に様々な疑問を抱えていた参加者様が多く、「非常に参考になった」「インターネットだけではなく自社の今後の戦略にも役立った」との声もあり、大変ご好評いただいたセミナーでした。
+              </p>
+            </div>
+          </div>
+          
+          <div class="achievement-card">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/95f39033c1a29bc732f48805d8362c58b24c766c?width=574" alt="Achievement 2" class="achievement-image" />
+            <div class="achievement-info">
+              <div class="achievement-meta">
+                <span class="achievement-date">2025.6.27</span>
+                <span class="achievement-category">カテゴリー</span>
+              </div>
+              <h4 class="achievement-title">分析（新たな課題認識）</h4>
+              <p class="achievement-description">
+                在上海中国ビジネスウォッチャー姫田小夏氏による「当世上海事情」講演会を開催しました。 自らも上海に居住し、独自の目線で中国ビジネスをとらえる姫田氏は「中国中小企業の貪欲さ、すさまじい競争がある限り、中国はまだまだ発展の余地はある」と講演され、聴講者は���モを取りながら聞き入っていました。
+              </p>
+            </div>
+          </div>
+          
+          <div class="achievement-card">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/9c17e76e3ac6cf114e40472b8f2ce93b5bfa00f3?width=574" alt="Achievement 3" class="achievement-image" />
+            <div class="achievement-info">
+              <div class="achievement-meta">
+                <span class="achievement-date">2025.6.27</span>
+                <span class="achievement-category">カテゴリー</span>
+              </div>
+              <h4 class="achievement-title">分析（新たな課題認識）</h4>
+              <p class="achievement-description">
+                Excel 2010 講座を開催。今回の講座は知っておくと実務が効率化できるような、中級者?上級者向けの講座でしたが、受講者の理解度・満足度は高く、次回の講座の要望もありました。 今やパソコンスキルは企業では必須とされてい��す。CRIでは今後も実務に役立つ講座を実施していく予定です。
+              </p>
+            </div>
+          </div>
+          
+          <div class="achievement-card">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/5dabcf000de42e14f9010cb47622d830cacdf698?width=574" alt="Achievement 4" class="achievement-image" />
+            <div class="achievement-info">
+              <div class="achievement-meta">
+                <span class="achievement-date">2025.6.27</span>
+                <span class="achievement-category">カテゴリー</span>
+              </div>
+              <h4 class="achievement-title">分析（新たな課題認識）</h4>
+              <p class="achievement-description">
+                上海経済事情視察ツアーを実施。「上海開拓の糸口を探る」と題したこのツアーには、様々な業種の方々にご参加いただきました。 ツアー参加者様からは「今後のビジネスの参考にしたい」「中国から得るものは大きい」と、大変満足度の高いツアーとなりました。
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="achievements-divider"></div>
+        
+        <p class="achievements-note">
+          このほか「Hot Information」の配信や「経営参考BOOK」の配布も定期的に行っております。調査・研究の受託にも応じますので、お気軽にお問い合わせください。
+        </p>
+      </div>
+    </div>
+    
+    <!-- button Section -->
+    <div class="button-section">
+      <div class="button-container">
+        <button class="cta-button primary">
+          <span class="button-text">お問い合わせはコチラ</span>
+          <div class="arrow-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
+              <path d="M9.5 6L15.5 12L9.5 18" stroke="#DA5761" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </button>
+        <button class="cta-button secondary">
+          <span class="button-text">入会はコチラ</span>
+          <div class="arrow-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
+              <path d="M9.5 6L15.5 12L9.5 18" stroke="#9C3940" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Access Section -->
+    <div class="content-view-2">
+      <div class="frame-1321317467-2">
+        <group10 />
+        <div class="frame-1321317467-1">
+          <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
+          <div class="frame-1321317466">
+            <div class="group-container">
+              <div class="group-12">
+                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
+                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
+                <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
+                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
+                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
+            </div>
+              <div class="group-12">
+                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
+                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
+                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
+                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
+            </div>
+              <div class="group-12">
+                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
+                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
+                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
+                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
+          </div>
+          </div>
+        </div>
+      </div>
+          </div>
+        </div>
 
-    <FooterComplete />
+    <!-- Footer Navigation -->
+    <div class="navigation-footer">
+      <Footer v-bind="frame132131753022Props" />
+      <div class="vector-7-1"></div>
+      <group27 />
+      </div>
+    
+    <!-- Fixed Action Buttons -->
+    <div class="fixed-actions">
+      <button class="fixed-btn login-btn">
+        <svg width="26" height="25" viewBox="0 0 26 25" fill="none">
+          <path d="M25.8666 24.5001C25.7789 24.6521 25.6526 24.7783 25.5005 24.8661C25.3484 24.9539 25.1759 25 25.0003 25H0.99903C0.82357 24.9998 0.651246 24.9535 0.499362 24.8657C0.347477 24.7778 0.221377 24.6516 0.133726 24.4996C0.0460738 24.3477 -4.50128e-05 24.1753 3.29665e-08 23.9999C4.50787e-05 23.8245 0.0462524 23.6521 0.133982 23.5002C2.03784 20.2094 4.97175 17.8497 8.39569 16.7311C6.70205 15.7231 5.3862 14.1871 4.65021 12.359C3.91422 10.5309 3.79879 8.51174 4.32164 6.6117C4.84448 4.71165 5.9767 3.03573 7.54442 1.84131C9.11214 0.646882 11.0287 0 12.9997 0C14.9707 0 16.8872 0.646882 18.455 1.84131C20.0227 3.03573 21.1549 4.71165 21.6777 6.6117C22.2006 8.51174 22.0852 10.5309 21.3492 12.359C20.6132 14.1871 19.2973 15.7231 17.6037 16.7311C21.0276 17.8497 23.9615 20.2094 25.8654 23.5002C25.9534 23.6521 25.9998 23.8245 26 24C26.0002 24.1755 25.9542 24.348 25.8666 24.5001Z" fill="white"/>
+        </svg>
+        <span>ログイン</span>
+      </button>
+      <button class="fixed-btn contact-btn">
+        <svg width="18" height="28" viewBox="0 0 18 28" fill="none">
+          <path d="M15 0H3C2.20435 0 1.44129 0.316071 0.87868 0.87868C0.316071 1.44129 0 2.20435 0 3V25C0 25.7956 0.316071 26.5587 0.87868 27.1213C1.44129 27.6839 2.20435 28 3 28H15C15.7956 28 16.5587 27.6839 17.1213 27.1213C17.6839 26.5587 18 25.7956 18 25V3C18 2.20435 17.6839 1.44129 17.1213 0.87868C16.5587 0.316071 15.7956 0 15 0ZM3 2H15C15.2652 2 15.5196 2.10536 15.7071 2.29289C15.8946 2.48043 16 2.73478 16 3V4H2V3C2 2.73478 2.10536 2.48043 2.29289 2.29289C2.48043 2.10536 2.73478 2 3 2ZM15 26H3C2.73478 26 2.48043 25.8946 2.29289 25.7071C2.10536 25.5196 2 25.2652 2 25V24H16V25C16 25.2652 15.8946 25.5196 15.7071 25.7071C15.5196 25.8946 15.2652 26 15 26Z" fill="white"/>
+        </svg>
+        <span>お問い合わせ</span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-import Navigation from "./Navigation.vue";
-import FooterComplete from "./FooterComplete.vue";
+import Navigation from "./Navigation";
+import Footer from "./Footer";
+import Frame1321317483 from "./Frame1321317483";
+import Group10 from "./Group10";
+import Group27 from "./Group27";
+import { homePageData } from "../data";
 
 export default {
-  name: "CRIConsultingPage",
+  name: "CriConsultingPage",
   components: {
     Navigation,
-    FooterComplete
+    Footer,
+    Frame1321317483,
+    Group10,
+    Group27,
+  },
+  data() {
+    return {
+      // Access section data
+      rectangle3: homePageData.rectangle3,
+      text75: homePageData.text75,
+      text77: homePageData.text77,
+      text76: homePageData.text76,
+      phone: homePageData.phone,
+      x900: homePageData.x900,
+      text74: homePageData.text74,
+      x12Km141: homePageData.x12Km141,
+      x12Km142: homePageData.x12Km142,
+      x19Km23: homePageData.x19Km23,
+      text78: homePageData.text78,
+      x497M6: homePageData.x497M6,
+      x811M10: homePageData.x811M10,
+      d1830M10: homePageData.d1830M10,
+      // Footer data
+      frame132131753022Props: homePageData.frame132131753022Props,
+    };
+  },
+  mounted() {
+    this.adjustImageHeight();
+    this.adjustRectangleHeight();
+    window.addEventListener('resize', this.adjustImageHeight);
+    window.addEventListener('resize', this.adjustRectangleHeight);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.adjustImageHeight);
+    window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
-    goToContact() {
-      this.$router.push('/contact');
+    adjustImageHeight() {
+      this.$nextTick(() => {
+        const contentText = this.$el.querySelector('.content-text');
+        const contentImage = this.$el.querySelector('.content-image');
+        
+        if (contentText && contentImage) {
+          const textHeight = contentText.offsetHeight;
+          contentImage.style.height = textHeight + 'px';
+        }
+        
+        const dutiesContent = this.$el.querySelector('.duties-content');
+        const dutiesImage = this.$el.querySelector('.duties-image');
+        
+        if (dutiesContent && dutiesImage) {
+          const dutiesHeight = dutiesContent.offsetHeight;
+          dutiesImage.style.height = dutiesHeight + 'px';
+        }
+      });
     },
-    goToMember() {
-      this.$router.push('/register');
+    adjustRectangleHeight() {
+      this.$nextTick(() => {
+        const frame1321317466 = this.$el.querySelector('.frame-1321317466');
+        const rectangle3 = this.$el.querySelector('.rectangle-3');
+        
+        if (frame1321317466 && rectangle3) {
+          const frameHeight = frame1321317466.offsetHeight;
+          rectangle3.style.height = frameHeight + 'px';
+        }
+      });
     }
   }
 };
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.page-container {
+.cri-consulting-page {
+  background-color: #ECECEC;
   min-height: 100vh;
-  background-color: #ffffff;
+  width: 100%;
 }
 
 /* Hero Section */
 .hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
+  width: 100%;
+  height: 400px;
+  background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/db22880ee1d73553a2fa432da82e4e20fe5c43c9?width=2880');
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .hero-overlay {
-  text-align: center;
-  color: white;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+  background: rgba(77, 77, 77, 0.70);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 50px 30px;
+  box-sizing: border-box;
 }
 
 .hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
+  color: white;
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 700;
+  text-align: center;
+  line-height: 2.5;
+  letter-spacing: -0.48px;
 }
 
-/* Page Content */
-.page-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 20px;
+.hero-title {
+  color: white;
+  font-size: clamp(28px, 6vw, 40px);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5;
+  letter-spacing: -0.8px;
 }
 
-/* What's CRI Section */
-.whats-cri-section {
-  margin-bottom: 80px;
-}
-
-.cri-content {
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-.cri-image {
-  flex: 0 0 300px;
-}
-
-.cri-image img {
+/* Breadcrumb */
+.breadcrumb-section {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 15px;
+  padding: 24px 46px;
 }
 
-.cri-info {
-  flex: 1;
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.cri-title {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 20px;
-  font-weight: bold;
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
 }
 
-.whats-cri h3 {
-  color: #da5761;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 15px;
+.breadcrumb-link {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 60px;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.sub-title {
-  display: block;
-  font-size: 1rem;
-  color: #da5761;
+.breadcrumb-link:hover {
+  color: #DA5761;
+  text-decoration: underline;
+}
+
+.breadcrumb-current {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 60px;
+}
+
+.breadcrumb-separator {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  margin: 0 4px;
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-bottom: 40px;
+}
+
+.section-title {
+  color: #1A1A1A;
+  text-align: center;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.72px;
+  margin: 0;
+}
+
+.section-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.divider-line {
+  width: 69px;
+  height: 2px;
+  background: #DA5761;
+}
+
+.divider-text {
+  color: #DA5761;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.section-subtitle {
+  color: #1A1A1A;
+  text-align: center;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
   font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  max-width: 1014px;
 }
 
-.whats-cri p {
-  color: #666;
-  line-height: 1.7;
-  margin-bottom: 15px;
+/* What is CRI Section */
+.what-is-section {
+  width: 100%;
+  padding: 70px 50px 50px;
+}
+
+.content-container {
+  background-color: #FFF;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 2000px;
+  margin: 0 auto;
+}
+
+.content-image {
+  width: 50%;
+  border-radius: 20px 0 0 20px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.content-text {
+  flex: 1;
+  padding: 50px;
+  background: #FFF;
+  border-radius: 0 20px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.content-subtitle {
+  color: #DA5761;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 110%;
+  margin: 0;
+}
+
+.content-heading {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 150%;
+  margin: 0;
+}
+
+.content-description {
+  color: #3F3F3F;
+  font-family: Noto Sans JP, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
 }
 
 /* Main Duties Section */
 .main-duties-section {
-  margin-bottom: 80px;
+  width: 100%;
+  padding: 50px 50px 80px;
 }
 
-.duties-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.section-title {
-  font-size: 2rem;
-  color: #333;
-  font-weight: bold;
-  margin-bottom: 30px;
+.duties-container {
+  background: #FFF;
+  border-radius: 20px;
+  display: flex;
+  align-items: flex-start;
+  max-width: 2000px;
+  margin: 0 auto;
 }
 
 .duties-content {
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-.duties-text {
   flex: 1;
+  padding: 50px;
+  background: #FFF;
+  border-radius: 20px 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .duties-title {
-  color: #da5761;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 15px;
+  color: #DA5761;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 150%;
+  margin: 0;
 }
 
-.duties-description {
-  color: #333;
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-  font-weight: 600;
+.duties-heading {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 150%;
+  margin: 0;
 }
 
 .duties-list {
-  list-style: none;
-  color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.duties-list li {
-  margin-bottom: 8px;
-  line-height: 1.6;
+.duties-list p {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
 }
 
 .duties-image {
-  flex: 0 0 300px;
-}
-
-.duties-image img {
-  width: 100%;
-  height: 200px;
+  width: 50%;
+  border-radius: 0 20px 20px 0;
   object-fit: cover;
-  border-radius: 15px;
+  object-position: center;
 }
 
-/* Company CTA */
-.company-cta {
-  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
-  color: white;
+.duties-description {
+  color: #1A1A1A;
   text-align: center;
-  padding: 60px 40px;
-  border-radius: 20px;
-  margin-bottom: 80px;
-}
-
-.cta-content h2 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-.cta-content p {
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-}
-
-.cta-button {
-  background: white;
-  color: #da5761;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-weight: bold;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  max-width: 1140px;
+  margin: 0 auto;
+  margin-top: 50px;
 }
 
 /* Support Section */
 .support-section {
-  margin-bottom: 80px;
+  width: 100%;
+  padding: 80px 50px 50px;
 }
 
-.support-header {
-  text-align: center;
-  margin-bottom: 50px;
+.support-content {
+  padding: 50px;
+  border-radius: 20px;
+  background: #FFF;
+  max-width: 2000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-}
-
-.support-description {
-  color: #666;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.service-category {
-  margin-bottom: 50px;
+.support-category {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .category-title {
-  font-size: 1.5rem;
-  color: #333;
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: bold;
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
 }
 
 .service-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 .service-card {
-  background: white;
-  border-radius: 15px;
+  position: relative;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
+  background: #FFF;
 }
 
 .service-image {
-  height: 150px;
-}
-
-.service-image img {
   width: 100%;
-  height: 100%;
+  height: 294px;
   object-fit: cover;
+  border-radius: 20px;
 }
 
 .service-info {
-  padding: 20px;
-  text-align: center;
-}
-
-.service-info h4 {
-  color: #333;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.service-info p {
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.service-note {
-  background: #f8f9fa;
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-.service-note p {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.service-contact-btn {
-  background: #da5761;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s;
-  font-weight: 500;
-}
-
-.service-contact-btn:hover {
-  background: #c44853;
-}
-
-/* Cases Section */
-.cases-section {
-  margin-bottom: 60px;
-}
-
-.cases-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.cases-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-.case-card {
-  background: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.case-image {
-  height: 180px;
-}
-
-.case-image img {
+  position: absolute;
+  bottom: 0;
+  left: 83px;
+  background: #FFF;
+  padding: 13px;
+  border-radius: 10px 0 0 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
-.case-info {
-  padding: 25px;
+.service-label {
+  color: #DA5761;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  display: block;
+  margin-bottom: 5px;
 }
 
-.case-info h4 {
-  color: #333;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  font-weight: 600;
+.service-title {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
 }
 
-.case-info p {
-  color: #666;
-  line-height: 1.6;
-  font-size: 0.95rem;
+.service-icon {
+  position: absolute;
+  bottom: 28px;
+  left: 55px;
+  width: 24px;
+  height: 24px;
 }
 
-.cases-note {
-  text-align: center;
-  padding: 20px;
+.support-divider {
+  width: 100%;
+  height: 1px;
+  background: #CFCFCF;
 }
 
-.cases-note p {
-  color: #666;
-  line-height: 1.6;
-}
-
-/* Action Buttons */
-.action-buttons {
+.support-description {
   display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-bottom: 40px;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
 }
 
-.action-btn {
-  border: none;
-  padding: 15px 40px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: all 0.3s;
-  min-width: 200px;
+.support-description p {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  text-align: center;
+  margin: 0;
 }
 
 .contact-btn {
-  background: #da5761;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 380px;
+  padding: 10px 0;
+  border-radius: 10px;
+  background: #1A1A1A;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.contact-btn:hover {
-  background: #c44853;
+.contact-btn span {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+/* Achievements Section */
+.achievements-section {
+  width: 100%;
+  padding: 50px;
+}
+
+.achievements-content {
+  padding: 50px;
+  border-radius: 20px;
+  background: #FFF;
+  max-width: 2000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.achievement-card {
+  background: #FFF;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.achievement-image {
+  width: 100%;
+  height: 186px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.achievement-info {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.achievement-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.achievement-date {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.achievement-category {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 5px 38px 6px;
+  border-radius: 100px;
+  background: #DA5761;
+}
+
+.achievement-title {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+}
+
+.achievement-description {
+  color: #3F3F3F;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+}
+
+.achievements-divider {
+  width: 100%;
+  height: 1px;
+  background: #CFCFCF;
+}
+
+.achievements-note {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  text-align: center;
+  margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+  width: 100%;
+  padding: 50px 50px 80px;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 1340px;
+  padding: 20px 100px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.cta-btn.primary {
+  background: #DA5761;
+}
+
+.cta-btn.secondary {
+  background: #9C3940;
+}
+
+.cta-btn span {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+/* Company Intro Section */
+.company-intro-section {
+  width: 100%;
+  height: 351px;
+  background: #FF6B6B;
+  position: relative;
+  background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/42f6878f33350b96e3bbff6f048c352a254e8e2e?width=2882');
+  background-size: cover;
+  background-position: center;
+}
+
+.company-intro-overlay {
+  background: rgba(77, 77, 77, 0.70);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.company-intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  max-width: 600px;
+  text-align: center;
+}
+
+.company-intro-title {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 150%;
+  margin: 0;
+}
+
+.company-intro-subtitle {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 150%;
+  margin: 0;
+}
+
+.company-intro-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 380px;
+  padding: 10px 0;
+  border-radius: 10px;
+  background: #DA5761;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.company-intro-btn span {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+/* Button Section */
+.button-section {
+  background: #ECECEC;
+  padding: 70px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  max-width: 2000px;
+}
+
+.cta-button {
+  width: 300px;
+  padding: 20px 40px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.button-text {
+  width: auto;
+  text-align: center;
+}
+
+.arrow-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-button.primary {
+  background-color: #DA5761;
+  color: #FFFFFF;
+  width: 100%;
+}
+
+.cta-button.primary:hover {
+  background-color: #c44a54;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+  box-shadow: 0 4px 12px rgba(218, 87, 97, 0.3);
 }
 
-.member-btn {
-  background: #8B0000;
-  color: white;
+.cta-button.secondary {
+  background-color: #9C3940;
+  color: #FFFFFF;
+  width: 100%;
 }
 
-.member-btn:hover {
-  background: #660000;
+.cta-button.secondary:hover {
+  background-color: #8a3238;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(156, 57, 64, 0.3);
+}
+
+/* Access Section */
+.content-view-2 {
+  background: white;
+  padding: 80px 50px;
+  width: 100%;
+}
+
+.frame-1321317467-2 {
+  align-items: flex-start;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  width: 100%;
+  max-width: 2000px;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.frame-1321317467-1 {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 40px;
+  position: relative;
+  width: 100%;
+  min-height: auto;
+}
+
+.rectangle-3 {
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  width: 45%;
+  max-width: 692px;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+.frame-1321317466 {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  width: auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: auto;
+}
+
+.group-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.group-12 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  width: fit-content;
+}
+
+.text-3 {
+  color: #DA5761;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.x12km-14, .x12km-14-1, .x19km-23 {
+  color: #3F3F3F;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-11 {
+  color: #3F3F3F;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Footer Navigation */
+.navigation-footer {
+  background: var(--celeste);
+  width: 100%;
+  position: relative;
+}
+
+.vector-7-1 {
+  width: 100%;
+  height: 1px;
+  background: #CFCFCF;
+  margin: 0;
+}
+
+/* Access Section */
+.access-section {
+  width: 100%;
+  padding: 80px 50px;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.access-header {
+  width: 209px;
+  height: 126px;
+  position: relative;
+}
+
+.access-title-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.access-title-container svg {
+  position: absolute;
+  left: 0;
+  top: 18px;
+}
+
+.access-main-title {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 150%;
+  position: absolute;
+  left: 0;
+  top: 54px;
+  margin: 0;
+}
+
+.access-subtitle {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 150%;
+  position: absolute;
+  left: 114px;
+  top: 0;
+}
+
+.access-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.access-map {
+  width: 692px;
+  height: 398px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.access-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 2px 84px 4.552px 0;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-title {
+  color: #DA5761;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 200%;
+  margin: 0;
+}
+
+.info-item {
+  color: #1A1A1A;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 200%;
+  margin: 0;
+}
+
+/* Fixed Action Buttons */
+.fixed-actions {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.fixed-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.fixed-btn.login-btn {
+  background: #DA5761;
+}
+
+.fixed-btn.contact-btn {
+  background: #9C3940;
+}
+
+.fixed-btn span {
+  color: #FFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 150%;
+  text-align: center;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  
-  .page-content {
-    padding: 40px 15px;
-  }
-  
-  .cri-content,
-  .duties-content {
+@media (max-width: 1200px) {
+  .content-container,
+  .duties-container {
     flex-direction: column;
-    text-align: center;
   }
   
-  .cri-image,
+  .content-image,
   .duties-image {
-    flex: none;
-    max-width: 100%;
+    width: 100%;
+    border-radius: 20px;
   }
   
   .service-grid,
-  .cases-grid {
+  .achievements-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .access-content {
+    flex-direction: column;
+  }
+  
+  .access-map {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 28px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .content-subtitle,
+  .duties-title {
+    font-size: 48px;
+  }
+  
+  .service-grid,
+  .achievements-grid {
     grid-template-columns: 1fr;
   }
   
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
+  .cta-btn {
+    width: 100%;
+    padding: 15px 20px;
   }
   
-  .action-btn {
-    width: 100%;
-    max-width: 300px;
+  .fixed-actions {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+    transform: none;
   }
 }
 </style>

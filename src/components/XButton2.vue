@@ -13,7 +13,7 @@ export default {
 <style>
 .button-2 {
   align-items: center;
-  background-color: var(--black);
+  background-color: #1a1a1a;
   border-radius: 8px;
   box-shadow: 0px 1px 2px #0000000d;
   display: inline-flex;
@@ -29,7 +29,7 @@ export default {
 }
 
 .button-2:hover {
-  background-color: var(--mandy);
+  background-color: #da5761;
   transform: translateY(-2px);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }

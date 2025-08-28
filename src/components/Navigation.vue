@@ -1,34 +1,20 @@
 <template>
   <div class="navigation">
-    <div class="frame-1321317497">
-      <view />
+    <div class="logo-section">
+      <view-component />
       <group1 />
     </div>
-    <div class="frame-1321317498">
-      <div class="group-2">
-        <div class="items">
-          <x-button />
-          <x-button2 />
-          <div class="text-align-justify">
-            <div class="vector-container-1">
-              <img
-                class="vector-20"
-                src="/img/vector-2.svg"
-                alt="Vector"
-              />
-              <img
-                class="vector-20"
-                src="/img/vector-2.svg"
-                alt="Vector"
-              />
-              <img
-                class="vector-20"
-                src="/img/vector-2.svg"
-                alt="Vector"
-              />
-            </div>
-          </div>
-        </div>
+    <div class="nav-controls">
+      <div class="main-nav">
+        <x-button />
+        <x-button2 />
+        <button class="hamburger-menu" @click="toggleMenu">
+          <div class="hamburger-line"></div>
+          <div class="hamburger-line"></div>
+          <div class="hamburger-line"></div>
+        </button>
+      </div>
+      <div class="sub-nav">
         <items />
       </div>
     </div>
@@ -36,86 +22,99 @@
 </template>
 
 <script>
-import View from "./View";
+import ViewComponent from "./ViewComponent";
 import Group1 from "./Group1";
-import XButton from "./XButton";
+import XButton from "./XButtonPhone";
 import XButton2 from "./XButton2";
-import Items from "./Items";
+import Items from "./ItemsNav";
 export default {
   name: "Navigation",
   components: {
-    View,
+    ViewComponent,
     Group1,
-    XButton,
+    XButton: XButton,
     XButton2,
     Items,
   },
+  data() {
+    return {
+      isMenuOpen: false
+    };
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+      console.log('Menu toggled:', this.isMenuOpen);
+      // ここでメニューの開閉処理を追加できます
+    }
+  }
 };
 </script>
 
 <style>
 .navigation {
   align-items: center;
-  background-color: var(--cararra);
+  background-color: #ffffff;
   box-shadow: 0px 3px 20px #00000026;
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
   position: relative;
-  width: 1440px;
+  width: 100%;
   z-index: 9;
 }
 
-.frame-1321317497 {
+.logo-section {
+  display: flex;
   align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
   gap: 20px;
-  overflow: hidden;
-  position: relative;
 }
 
-.frame-1321317498 {
-  align-items: flex-start;
+.nav-controls {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: relative;
-  width: 541px;
+  width: auto;
+  min-width: 0;
 }
 
-.group-2 {
-  height: 68px;
-  position: relative;
-  width: 540px;
-}
-
-.items {
+.main-nav {
+  display: flex;
   align-items: center;
-  display: inline-flex;
   gap: 15px;
-  left: 220px;
-  position: absolute;
-  top: 0;
+  justify-content: flex-end;
+  min-width: 300px;
 }
 
-.text-align-justify {
-  height: 24px;
-  position: relative;
-  width: 26px;
+.sub-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: flex-start;
 }
 
-.vector-container-1 {
-  align-items: flex-start;
+.hamburger-menu {
+  background: transparent;
+  border: none;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  min-height: 23px;
-  width: 25px;
+  gap: 4px;
+  padding: 4px;
+  width: 26px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
 }
 
-.vector-20 {
-  height: 3px;
-  width: 25px;
+.hamburger-line {
+  width: 18px;
+  height: 2px;
+  background-color: #1A1A1A;
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu:hover .hamburger-line {
+  background-color: #DA5761;
 }
 </style>

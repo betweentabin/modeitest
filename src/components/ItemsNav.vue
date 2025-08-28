@@ -1,0 +1,71 @@
+<template>
+  <div class="items-1 inter-bold-black-15px">
+    <div class="text-6 valign-text-middle" @click="navigateTo('')" style="cursor: pointer;">トップ</div>
+    <img
+      class="vector-22"
+      src="/img/vector-1.svg"
+      alt="Vector 1"
+    />
+    <div class="text-6 valign-text-middle" @click="navigateTo('services')" style="cursor: pointer;">会員サービスのご案内</div>
+    <img
+      class="vector-22"
+      src="/img/vector-1.svg"
+      alt="Vector 2"
+    />
+    <div class="text-6 valign-text-middle" @click="navigateTo('company-profile')" style="cursor: pointer;">会社概要</div>
+    <img
+      class="vector-22"
+      src="/img/vector-1.svg"
+      alt="Vector 3"
+    />
+    <div class="text-6 valign-text-middle" @click="navigateTo('news')" style="cursor: pointer;">お知らせ</div>
+    <img
+      class="vector-22"
+      src="/img/vector-1.svg"
+      alt="Vector 4"
+    />
+    <div class="text-6 valign-text-middle" @click="navigateTo('faq')" style="cursor: pointer;">よくあるご質問</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ItemsNav",
+  methods: {
+    navigateTo(route) {
+      console.log('Navigating to:', route);
+      // トップの場合はルートパス（/）に遷移
+      if (route === '') {
+        this.$router.push('/');
+      } else {
+        // その他の場合は通常のルーティング
+        this.$router.push('/' + route);
+      }
+    }
+  }
+};
+</script>
+
+<style>
+.items-1 {
+  align-items: center;
+  display: inline-flex;
+  gap: 15px;
+  position: relative;
+}
+
+.text-6 {
+  letter-spacing: 0;
+  line-height: 22.5px;
+  margin-top: -1px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.vector-22 {
+  height: 10px;
+  position: relative;
+  width: 1px;
+}
+</style>

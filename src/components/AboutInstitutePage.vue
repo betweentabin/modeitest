@@ -1,14 +1,13 @@
 <template>
-  <div class="sitemap-page">
-    <!-- Navigation -->
+  <div class="about-institute-page">
     <navigation />
-    
+
     <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-overlay">
         <div class="hero-content">
-          <div class="hero-subtitle">sitemap</div>
-          <h1 class="hero-title">サイトマップ</h1>
+          <div class="hero-subtitle">for you</div>
+          <div class="hero-title">ちくぎん地域経済研究所について</div>
         </div>
       </div>
     </div>
@@ -16,85 +15,90 @@
     <!-- Breadcrumbs -->
     <div class="breadcrumbs">
       <router-link to="/" class="breadcrumb-item">トップ</router-link>
-      <span class="breadcrumb-separator">></span>
-      <span class="breadcrumb-item current">サイトマップ</span>
+        <span class="breadcrumb-separator">></span>
+        <span class="breadcrumb-item current">ちくぎん地域経済研究所について</span>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <div class="content-header">
-        <h2 class="page-title">サイトマップ</h2>
-        <div class="title-decoration">
-          <div class="line-left"></div>
-          <span class="title-english">sitemap</span>
-          <div class="line-right"></div>
+    <!-- About Section -->
+    <div class="about-section">
+      <div class="section-header">
+        <h2 class="section-title">ちくぎん地域経済研究所について</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">FOR YOU</span>
+          <div class="divider-line"></div>
         </div>
       </div>
+      
+      <div class="about-content">
+        <img class="about-image" src="https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340" alt="会社画像" />
+        <div class="about-text">
+          <div class="about-headline">
+            <h3 class="main-headline">産 官 学 金 を<br>繋ぐ架け橋へ</h3>
+          </div>
+          <div class="about-description">
+            当研究所は、産・官・学・金(金融)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>
+            経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。<br>
+            今後とも地元企業や地域の皆様をはじめ行政等との連携を緊密にし、様々な事業展開を図り地域の発展に寄与してまいりたいと考えております。
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <div class="content-container">
-                 <!-- Sitemap Content -->
-         <div class="sitemap-section">
-           <div class="sitemap-content">
-            <p class="section-content">
-              当サイトの構造をご案内いたします。
-            </p>
-            
-            <!-- Sitemap Links -->
-            <div class="sitemap-links">
-              <div class="sitemap-category">
-                <h4 class="category-title">メインページ</h4>
-                <ul class="link-list">
-                  <li><router-link to="/" class="sitemap-link">トップページ</router-link></li>
-                  <li><router-link to="/company-profile" class="sitemap-link">会社概要</router-link></li>
-                  <li><router-link to="/about-institute" class="sitemap-link">研究所について</router-link></li>
-                </ul>
-              </div>
-              
-              <div class="sitemap-category">
-                <h4 class="category-title">サービス</h4>
-                <ul class="link-list">
-                  <li><router-link to="/seminar" class="sitemap-link">セミナー</router-link></li>
-                  <li><router-link to="/publications" class="sitemap-link">刊行物</router-link></li>
-                  <li><router-link to="/consulting" class="sitemap-link">経営コンサルティング</router-link></li>
-                  <li><router-link to="/research" class="sitemap-link">調査・研究</router-link></li>
-                  <li><router-link to="/training" class="sitemap-link">人材育成</router-link></li>
-                </ul>
-              </div>
-              
-              <div class="sitemap-category">
-                <h4 class="category-title">会員サービス</h4>
-                <ul class="link-list">
-                  <li><router-link to="/member-pr" class="sitemap-link">会員PR</router-link></li>
-                  <li><router-link to="/member-pr-dotcom" class="sitemap-link">会員PRどっとコム</router-link></li>
-                  <li><router-link to="/membership" class="sitemap-link">入会案内</router-link></li>
-                </ul>
-              </div>
-              
-              <div class="sitemap-category">
-                <h4 class="category-title">各種情報</h4>
-                <ul class="link-list">
-                  <li><router-link to="/economic-indicators" class="sitemap-link">経済指標一覧</router-link></li>
-                  <li><router-link to="/economic-surveys" class="sitemap-link">経済調査統計一覧</router-link></li>
-                </ul>
-              </div>
-              
-              <div class="sitemap-category">
-                <h4 class="category-title">お知らせ・サポート</h4>
-                <ul class="link-list">
-                  <li><router-link to="/news" class="sitemap-link">お知らせ</router-link></li>
-                  <li><router-link to="/faq" class="sitemap-link">よくあるご質問</router-link></li>
-                  <li><router-link to="/contact" class="sitemap-link">お問い合わせ</router-link></li>
-                </ul>
-              </div>
-              
-              <div class="sitemap-category">
-                <h4 class="category-title">法的情報</h4>
-                <ul class="link-list">
-                  <li><router-link to="/privacy-policy" class="sitemap-link">プライバシーポリシー</router-link></li>
-                  <li><router-link to="/terms-of-service" class="sitemap-link">利用規約</router-link></li>
-                  <li><router-link to="/transaction-law" class="sitemap-link">特定商取引法に関する表記</router-link></li>
-                </ul>
-              </div>
+    <!-- Service Overview Section -->
+    <div class="service-section">
+      <div class="section-header">
+        <h2 class="section-title">サービス概要</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">service</span>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+      
+      <div class="service-cards">
+        <div class="service-card">
+          <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870" alt="開発・研究" />
+          <div class="service-content">
+            <h3 class="service-title">開発・研究</h3>
+            <p class="service-description">ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。</p>
+            <div class="service-details">
+              主な定期刊行物<br>
+              ちくぎん地域経済レポート（四半期毎）<br>
+              Hot Information（1ヶ月に2回）<br>
+              メールマガジン（毎週2回）
+            </div>
+          </div>
+        </div>
+        
+        <div class="service-card">
+          <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870" alt="人材開発、セミナー" />
+          <div class="service-content">
+            <h3 class="service-title">人材開発、セミナー</h3>
+            <p class="service-description">企業幹部、従業員または後継者(次世代育成)にマッチする効果的な研修を行います。ご要望に合わせて各種講演会、セミナー等の企画・運営を行うほか、様々なニーズに合わせて、外部専門家等の紹介・斡旋をいたします。</p>
+            <div class="service-details">
+              人材紹介、斡旋<br>
+              外部専門家の紹介、斡旋<br>
+              教育・研修<br>
+              社員研修<br>
+              講演会<br>
+              セミナー
+            </div>
+          </div>
+        </div>
+        
+        <div class="service-card">
+          <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870" alt="経営支援" />
+          <div class="service-content">
+            <h3 class="service-title">経営支援(経営サポート)</h3>
+            <p class="service-description">企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。</p>
+            <div class="service-details">
+              コンサルティング<br>
+              経営課題解決サポート<br>
+              ビジネスマッチング<br>
+              国内外企業の紹介<br>
+              新ビジネスモデルの発展<br>
+              業務提携等の支援
             </div>
           </div>
         </div>
@@ -125,6 +129,9 @@
       </div>
     </div>
 
+    <!-- Contact CTA Section -->
+    <frame1321317483 />
+
     <!-- Access Section -->
     <div class="content-view-2">
       <div class="frame-1321317467-2">
@@ -139,31 +146,31 @@
                 <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
                 <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
                 <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
-              </div>
+      </div>
               <div class="group-12">
                 <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
                 <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
                 <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
                 <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
-              </div>
+          </div>
               <div class="group-12">
                 <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
                 <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
                 <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
                 <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
-              </div>
-            </div>
+          </div>
           </div>
         </div>
       </div>
-    </div>
+          </div>
+        </div>
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
       <Footer v-bind="frame132131753022Props" />
       <div class="vector-7-1"></div>
       <group27 />
-    </div>
+        </div>
 
     <!-- Fixed Side Buttons -->
     <div class="fixed-side-buttons">
@@ -185,6 +192,7 @@
 
 <script>
 import Navigation from "./Navigation";
+import Frame1321317483 from "./Frame1321317483";
 import Footer from "./Footer";
 import Group27 from "./Group27";
 import Group10 from "./Group10";
@@ -193,9 +201,10 @@ import { frame132131753022Data } from "../data";
 import { homePageData } from "../data";
 
 export default {
-  name: "SitemapPage",
+  name: "AboutInstitutePage",
   components: {
     Navigation,
+    Frame1321317483,
     Footer,
     Group27,
     Group10,
@@ -223,10 +232,16 @@ export default {
   },
   mounted() {
     this.adjustRectangleHeight();
+    this.adjustAboutImageHeight();
+    this.adjustServiceImageHeight();
     window.addEventListener('resize', this.adjustRectangleHeight);
+    window.addEventListener('resize', this.adjustAboutImageHeight);
+    window.addEventListener('resize', this.adjustServiceImageHeight);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
+    window.removeEventListener('resize', this.adjustAboutImageHeight);
+    window.removeEventListener('resize', this.adjustServiceImageHeight);
   },
   methods: {
     adjustRectangleHeight() {
@@ -239,56 +254,106 @@ export default {
           rectangle3.style.height = frameHeight + 'px';
         }
       });
+    },
+    adjustAboutImageHeight() {
+      this.$nextTick(() => {
+        const aboutText = this.$el.querySelector('.about-text');
+        const aboutImage = this.$el.querySelector('.about-image');
+        
+        if (aboutText && aboutImage) {
+          const textHeight = aboutText.offsetHeight;
+          aboutImage.style.height = textHeight + 'px';
+        }
+      });
+    },
+    adjustServiceImageHeight() {
+      this.$nextTick(() => {
+        const serviceCards = this.$el.querySelectorAll('.service-card');
+        
+        serviceCards.forEach(card => {
+          const serviceContent = card.querySelector('.service-content');
+          const serviceImage = card.querySelector('.service-image');
+          
+          if (serviceContent && serviceImage) {
+            const contentHeight = serviceContent.offsetHeight;
+            serviceImage.style.height = contentHeight + 'px';
+          }
+        });
+      });
     }
   }
 };
 </script>
 
 <style scoped>
-.sitemap-page {
-  background: #ECECEC;
-  min-height: 100vh;
+.about-institute-page {
+  background-color: #ECECEC;
+  font-family: 'Inter', Helvetica, sans-serif;
+  position: relative;
   width: 100%;
+  overflow-x: auto;
 }
 
 /* Hero Section */
 .hero-section {
   width: 100%;
   height: 400px;
-  background: url('https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880') lightgray center/cover no-repeat;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  background: url('https://api.builder.io/api/v1/image/assets/TEMP/df7ca8cd2f554040b151c3c0f960f06d9826cc19?width=2880') lightgray center / cover no-repeat;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   position: relative;
 }
 
 .hero-overlay {
+  background: rgba(77, 77, 77, 0.70);
   width: 100%;
   height: 100%;
-  background: rgba(77, 77, 77, 0.70);
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
   padding: 50px 30px;
-}
-
-.hero-content {
-  color: white;
+  box-sizing: border-box;
 }
 
 .hero-subtitle {
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 24px;
+  color: white;
+  font-size: clamp(18px, 4vw, 24px);
   font-weight: 700;
-  line-height: 150%;
+  text-align: center;
+  line-height: 2.5;
   letter-spacing: -0.48px;
-  margin-bottom: 10px;
 }
 
 .hero-title {
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 40px;
+  color: white;
+  font-size: clamp(28px, 6vw, 40px);
   font-weight: 700;
-  line-height: 150%;
+  text-align: center;
+  line-height: 1.5;
   letter-spacing: -0.8px;
-  margin: 0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 300px;
+    height: 40vh;
+  }
+  
+  .hero-overlay {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    min-height: 250px;
+    height: 35vh;
+  }
+  
+  .hero-overlay {
+    padding: 20px 15px;
+  }
 }
 
 /* Breadcrumbs */
@@ -331,278 +396,170 @@ export default {
   line-height: 5;
 }
 
-/* Main Content */
-.main-content {
-  width: 100%;
-  padding: 70px 50px 80px 50px;
+/* Section Styling */
+.about-section, .service-section {
+  padding: 70px 50px 0 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 40px;
 }
 
-.content-header {
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 29px;
 }
 
-.page-title {
+.section-title {
   color: #1A1A1A;
-  font-family: var(--font-family-inter);
   font-size: 36px;
   font-weight: 700;
-  line-height: 150%;
-  margin: 0;
+  text-align: center;
+  letter-spacing: -0.72px;
 }
 
-.title-decoration {
+.section-divider {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
-.line-left,
-.line-right {
-  width: 60px;
+.divider-line {
+  width: 69px;
   height: 2px;
   background: #DA5761;
 }
 
-.title-english {
+.divider-text {
   color: #DA5761;
-  font-family: var(--font-family-inter);
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 150%;
-  text-transform: uppercase;
-}
-
-.content-container {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-/* Sitemap Section */
-.sitemap-section {
-  background: white;
-  border-radius: 20px;
-  padding: 50px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.section-title {
-  color: #1A1A1A;
-  font-family: var(--font-family-inter);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 150%;
-  margin: 0 0 30px 0;
 }
 
-.section-content {
-  color: #3F3F3F;
-  font-family: var(--font-family-inter);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 150%;
-  margin-bottom: 30px;
+/* About Section */
+.about-section {
+  background: #ECECEC;
 }
 
-.sitemap-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-}
-
-.sitemap-category {
+.about-content {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.category-title {
-  color: #DA5761;
-  font-family: var(--font-family-inter);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 150%;
-  margin: 0;
-  border-bottom: 2px solid #DA5761;
-  padding-bottom: 5px;
-}
-
-.link-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sitemap-link {
-  color: #3F3F3F;
-  font-family: var(--font-family-inter);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 150%;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  padding: 5px 0;
-}
-
-.sitemap-link:hover {
-  color: #DA5761;
-  text-decoration: underline;
-}
-
-/* Content View 2 */
-.content-view-2 {
-  align-items: center;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 80px 50px;
-  position: relative;
-  width: 100%;
-  z-index: 3;
-  box-sizing: border-box;
-}
-
-.frame-1321317467-2 {
   align-items: flex-start;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
   width: 100%;
   max-width: 2000px;
-  z-index: 3;
-  box-sizing: border-box;
-}
-
-.frame-1321317467-1 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 40px;
-  position: relative;
-  width: 100%;
-  min-height: auto;
-}
-
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-  border-radius: 10px;
-}
-
-.frame-1321317466 {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  width: auto;
-  flex-shrink: 0;
-  box-sizing: border-box;
   height: auto;
 }
 
-.group-container {
+.about-image {
+  width: 50%;
+  height: auto;
+  border-radius: 20px 0 0 20px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.about-text {
+  width: 50%;
+  height: auto;
+  padding: 50px;
+  background: white;
+  border-radius: 0 20px 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+.about-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-headline {
+  color: #DA5761;
+  font-size: 55px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.about-description {
+  color: #3F3F3F;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Service Section */
+.service-section {
+  background: #ECECEC;
+  width: 100%;
+}
+
+.service-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  max-width: 2000px;
+}
+
+.service-card {
+  display: flex;
   align-items: flex-start;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.service-image {
+  width: 40%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+.service-content {
+  width: 60%;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  height: fit-content;
-  position: relative;
-  width: fit-content;
+  gap: 20px;
 }
 
-.group-12 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
+.service-title {
+  color: #1A1A1A;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
-.text-3 {
-  letter-spacing: 0;
-  line-height: 40px;
-  margin-bottom: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+.service-description {
+  color: #3F3F3F;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
-.x12km-14,
-.x12km-14-1,
-.x19km-23 {
-  letter-spacing: 0;
-  line-height: 20px;
-  margin-bottom: 2px;
-  margin-top: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.text-11 {
-  letter-spacing: 0;
-  line-height: 18px;
-  margin-top: 3px;
-  margin-bottom: 2px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-.navigation-footer .frame132131753022 {
-  width: 100%;
-  max-width: 1000px;
-}
-
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
-
-.navigation-footer .group27 {
-  width: 100%;
-  max-width: 1000px;
+.service-details {
+  color: #3F3F3F;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.8;
+  background: #F5F5F5;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 /* Button Section */
 .button-section {
   background: #ECECEC;
-  padding: 50px 50px 70px 50px;
+  padding: 70px 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -615,7 +572,7 @@ export default {
   gap: 20px;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 2000px;
 }
 
 .cta-button {
@@ -674,7 +631,7 @@ export default {
 /* Access Section */
 .content-view-2 {
   background: white;
-  padding: 50px 0;
+  padding: 80px 50px;
   width: 100%;
 }
 
@@ -757,111 +714,122 @@ export default {
   line-height: 1.6;
 }
 
+/* Footer Navigation */
+.navigation-footer {
+  background: #CFCFCF;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.navigation-footer .frame132131753022 {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.navigation-footer .vector-7-1 {
+  height: 1px;
+  background-color: #B2B2B2;
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+}
+
+.navigation-footer .group27 {
+  width: 100%;
+  max-width: 1000px;
+}
+
 /* Fixed Side Buttons */
 .fixed-side-buttons {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 1000;
+  z-index: 20;
 }
 
 .side-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
   width: 100px;
   height: 100px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.side-button:hover {
-  transform: scale(1.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
 }
 
 .login-side {
   background: #DA5761;
-  color: white;
 }
 
 .contact-side {
-  background: #4A90E2;
-  color: white;
+  background: #9C3940;
 }
 
-.side-button span {
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
+.side-button svg {
+  width: 26px;
+  height: 25px;
 }
 
- /* Responsive Design */
- @media (max-width: 1150px) {
-   .frame-1321317467-1 {
-     flex-direction: column;
-     gap: 20px;
-   }
-   
-   .rectangle-3 {
-     width: 100%;
-     max-width: none;
-     order: 2;
-   }
-   
-   .frame-1321317466 {
-     order: 1;
-   }
- }
- 
- @media (max-width: 768px) {
-   .main-content {
-     padding: 40px 20px;
-   }
-   
-   .sitemap-section {
-     padding: 30px 20px;
-   }
-   
-   .sitemap-links {
-     grid-template-columns: 1fr;
-     gap: 30px;
-   }
-   
-   .hero-title {
-     font-size: 28px;
-   }
-   
-   .hero-subtitle {
-     font-size: 18px;
-   }
-   
-   .page-title {
-     font-size: 28px;
-   }
-   
-   .content-view-2 {
-     padding: 40px 20px;
-   }
-   
-   .navigation-footer {
-     padding: 50px 20px;
-   }
-   
-   .fixed-side-buttons {
-     right: 10px;
-     bottom: 10px;
-   }
-   
-   .side-button {
-     width: 80px;
-     height: 80px;
-   }
- }
+.contact-side svg {
+  width: 18px;
+  height: 28px;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .about-institute-page {
+    overflow-x: auto;
+  }
+  
+  .about-section, .service-section, .content-view-2, .navigation-footer {
+    min-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fixed-side-buttons {
+    display: none;
+  }
+  
+  .about-content {
+    flex-direction: column;
+  }
+  
+  .about-image, .about-text {
+    width: 100%;
+  }
+  
+  .service-card {
+    flex-direction: column;
+  }
+  
+  .service-image, .service-content {
+    width: 100%;
+  }
+  
+  .frame-1321317467-1 {
+    flex-direction: column;
+  }
+  
+  .rectangle-3, .frame-1321317466 {
+    width: 100%;
+  }
+}
 </style>

@@ -1,7 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 import HomePage from "./components/HomePage";
-import AboutPage from "./components/AboutPage";
+import CompanyProfile from "./components/CompanyProfile";
+import AboutInstitutePage from "./components/AboutInstitutePage";
 import ServicesPage from "./components/ServicesPage";
 import NewsPage from "./components/NewsPage";
 import FaqPage from "./components/FaqPage";
@@ -33,7 +34,7 @@ import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
 import TransactionLawPage from "./components/TransactionLawPage";
 import PrivacyPolicyPage from "./components/PrivacyPolicyPage";
 import TermsOfServicePage from "./components/TermsOfServicePage";
-import CRIConsultingPage from "./components/CRIConsultingPage";
+import CriConsultingPage from "./components/CriConsultingPage";
 import SitemapPage from "./components/SitemapPage";
 import FinancialReportPage from "./components/FinancialReportPage";
 import TestPage from "./components/TestPage";
@@ -56,7 +57,19 @@ const router = new Router({
     {
       path: "/about",
       name: "about",
-      component: AboutPage,
+      component: CompanyProfile,
+      meta: { title: "会社概要 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/about-institute",
+      name: "aboutInstitute",
+      component: AboutInstitutePage,
+      meta: { title: "ちくぎん地域経済研究所について - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/company-profile",
+      name: "companyProfile",
+      component: CompanyProfile,
       meta: { title: "会社概要 - ちくぎん地域経済研究所" }
     },
     {
@@ -133,15 +146,27 @@ const router = new Router({
       meta: { title: "プライバシーポリシー - ちくぎん地域経済研究所" }
     },
     {
+      path: "/privacy-policy",
+      name: "privacyPolicy",
+      component: PrivacyPolicyPage,
+      meta: { title: "プライバシーポリシー - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/terms",
       name: "terms",
       component: TermsOfServicePage,
       meta: { title: "利用規約 - ちくぎん地域経済研究所" }
     },
     {
+      path: "/terms-of-service",
+      name: "termsOfService",
+      component: TermsOfServicePage,
+      meta: { title: "利用規約 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/cri-consulting",
       name: "criConsulting",
-      component: CRIConsultingPage,
+      component: CriConsultingPage,
       meta: { title: "CRI経営コンサルティング - ちくぎん地域経済研究所" }
     },
     {
@@ -153,6 +178,12 @@ const router = new Router({
     {
       path: "/financial-report",
       name: "financialReport",
+      component: FinancialReportPage,
+      meta: { title: "決算報告 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/financial-reports",
+      name: "financialReports",
       component: FinancialReportPage,
       meta: { title: "決算報告 - ちくぎん地域経済研究所" }
     },
@@ -280,6 +311,18 @@ const router = new Router({
       name: "memberRegister",
       component: MemberRegisterPage,
       meta: { title: "会員登録 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/membership/standard",
+      name: "standardMembership",
+      component: ServicesPage,
+      meta: { title: "スタンダード会員のご案内 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/membership/premium",
+      name: "premiumMembership",
+      component: ServicesPage,
+      meta: { title: "プレミアム会員のご案内 - ちくぎん地域経済研究所" }
     },
     {
       path: "/my-account",

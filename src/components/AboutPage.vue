@@ -260,13 +260,20 @@
       </div>
     </section>
 
-    <FooterComplete />
+    <!-- Footer Navigation -->
+    <div class="navigation-footer">
+      <Footer v-bind="frame132131753022Props" />
+      <div class="vector-7-1"></div>
+      <Group27 />
+    </div>
   </div>
 </template>
 
 <script>
 import Navigation from "./Navigation.vue";
-import FooterComplete from "./FooterComplete.vue";
+import Footer from "./Footer.vue";
+import Group27 from "./Group27.vue";
+import { frame132131753022Data } from "../data.js";
 import axios from 'axios';
 import { getApiUrl } from '@/config/api';
 
@@ -274,7 +281,8 @@ export default {
   name: "AboutPage",
   components: {
     Navigation,
-    FooterComplete
+    Footer,
+    Group27
   },
   data() {
     return {
@@ -293,6 +301,11 @@ export default {
       this.error = 'ページデータの取得に失敗しました';
       this.loading = false;
     }
+  },
+  data() {
+    return {
+      frame132131753022Props: frame132131753022Data,
+    };
   },
   methods: {
     scrollToContact() {
@@ -794,5 +807,26 @@ export default {
   .container {
     padding: 0 15px;
   }
+}
+
+/* Footer Navigation */
+.navigation-footer {
+  background: #CFCFCF;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.navigation-footer .vector-7-1 {
+  height: 1px;
+  background-color: #B2B2B2;
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
 }
 </style>
