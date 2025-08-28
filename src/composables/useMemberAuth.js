@@ -1,10 +1,30 @@
-// 会員認証とアクセス制御のコンポジション関数
-import { ref, computed } from 'vue'
-import mockServer from '@/mockServer'
+// 会員認証とアクセス制御のユーティリティ
+import mockServer from '../mockServer'
 
-// グローバルな状態管理
-const currentMember = ref(null)
-const memberToken = ref(null)
+// グローバルな状態管理（Vue 2互換のシンプルなストア）
+const store = {
+  state: {
+    currentMember: null,
+    memberToken: null
+  },
+  
+  setMember(member, token) {
+    this.state.currentMember = member
+    this.state.memberToken = token
+    
+    if (member && token) {
+      localStorage.setItem('memberToken', token)
+      localStorage.setItem('memberUser', JSON.stringify(member))
+    }
+  },
+  
+  clearMember() {
+    this.state.currentMember = null
+    this.state.memberToken = null
+    localStorage.removeItem('memberToken')
+    localStorage.removeItem('memberUser')
+  }
+}
 
 // 初期化時にlocalStorageから会員情報を復元
 const initializeMember = () => {
@@ -13,170 +33,126 @@ const initializeMember = () => {
   
   if (storedToken && storedUser) {
     try {
-      memberToken.value = storedToken
-      currentMember.value = JSON.parse(storedUser)
+      store.state.memberToken = storedToken
+      store.state.currentMember = JSON.parse(storedUser)
     } catch (error) {
       console.error('Failed to parse stored user data:', error)
-      clearMemberData()
+      store.clearMember()
     }
   }
-}
-
-// 会員データをクリア
-const clearMemberData = () => {
-  currentMember.value = null
-  memberToken.value = null
-  localStorage.removeItem('memberToken')
-  localStorage.removeItem('memberUser')
 }
 
 // 初期化実行
 initializeMember()
 
 export function useMemberAuth() {
-  // 会員情報の取得（互換性のため残す）
+  // 会員情報の取得
   const getMemberInfo = () => {
-    return currentMember.value
+    return store.state.currentMember
   }
 
-  // ログイン状態の確認（互換性のため残す）
+  // ログイン状態の確認
   const isLoggedIn = () => {
-    return !!currentMember.value && !!memberToken.value
+    return !!store.state.currentMember && !!store.state.memberToken
   }
 
-  // 会員ランクの取得（互換性のため残す）
+  // 会員ランクの取得
   const getMembershipType = () => {
-    return currentMember.value?.membershipType || 'guest'
+    return store.state.currentMember?.membershipType || 'guest'
   }
 
-  // コンテンツへのアクセス権限チェック（拡張版）
-  const canAccessContent = (requiredLevel, userMembershipType = null) => {
-    const userLevel = userMembershipType || getMembershipType()
-    
-    const levels = {
-      'free': 0,
-      'guest': 0,
-      'basic': 1,
-      'standard': 2,
-      'premium': 3
-    }
-    
-    const userAccessLevel = levels[userLevel] || 0
-    const contentLevel = levels[requiredLevel] || 0
-    
-    return userAccessLevel >= contentLevel
-  }
-
-  // 会員ランクの表示名
+  // 会員ランクのラベル取得
   const getMembershipLabel = (type) => {
+    const memberType = type || getMembershipType()
     const labels = {
-      'free': '無料',
-      'guest': 'ゲスト',
-      'basic': 'ベーシック会員',
-      'standard': 'スタンダード会員',
-      'premium': 'プレミアム会員'
+      basic: 'ベーシック会員',
+      standard: 'スタンダード会員', 
+      premium: 'プレミアム会員',
+      guest: 'ゲスト'
     }
-    return labels[type] || 'ゲスト'
+    return labels[memberType] || 'ゲスト'
   }
 
-  // 必要な会員ランクのメッセージ（拡張版）
-  const getAccessMessage = (requiredLevel) => {
-    const currentLevel = getMembershipType()
-    
-    if (currentLevel === 'guest' || !isLoggedIn()) {
-      return `この刊行物を閲覧するには会員登録が必要です`
-    }
-    
-    const requiredLabel = getMembershipLabel(requiredLevel)
-    return `この刊行物は${requiredLabel}以上の方限定です`
-  }
-  
-  // アクセス制限メッセージの取得（新規追加）
-  const getRestrictionMessage = (contentLevel, userMembershipType = null) => {
-    const userLevel = userMembershipType || getMembershipType()
-    
-    if (!userLevel || userLevel === 'guest') {
-      return '会員登録してアクセス'
-    }
-    
-    const messages = {
-      'basic': 'ベーシック会員以上で閲覧可能',
-      'standard': 'スタンダード会員以上で閲覧可能',
-      'premium': 'プレミアム会員限定コンテンツ'
-    }
-    
-    return messages[contentLevel] || 'アップグレードが必要です'
-  }
-
-  // ログアウト
-  const logout = () => {
-    clearMemberData()
-  }
-  
-  // ログイン処理（新規追加）
+  // ログイン処理
   const login = async (email, password) => {
     try {
-      const response = await mockServer.memberLogin(email, password)
-      
-      if (response.success) {
-        currentMember.value = response.user
-        memberToken.value = response.token
-        
-        localStorage.setItem('memberToken', response.token)
-        localStorage.setItem('memberUser', JSON.stringify(response.user))
-        
-        return { success: true, user: response.user }
+      const result = await mockServer.memberLogin(email, password)
+      if (result.success) {
+        store.setMember(result.member, result.token)
+        return { success: true }
       }
+      return { success: false, error: result.error || 'ログインに失敗しました' }
     } catch (error) {
-      console.error('Login failed:', error)
-      return { success: false, error: error.message }
-    }
-  }
-  
-  // 会員情報の更新（新規追加）
-  const updateMemberInfo = (newInfo) => {
-    if (currentMember.value) {
-      currentMember.value = { ...currentMember.value, ...newInfo }
-      localStorage.setItem('memberUser', JSON.stringify(currentMember.value))
-    }
-  }
-  
-  // 会員ランクのアップグレード（新規追加）
-  const upgradeMembership = async (newMembershipType) => {
-    if (!currentMember.value) {
-      return { success: false, error: '未ログインです' }
-    }
-    
-    try {
-      const updatedMember = await mockServer.updateMember(currentMember.value.id, {
-        membershipType: newMembershipType
-      })
-      
-      currentMember.value = { ...currentMember.value, membershipType: newMembershipType }
-      localStorage.setItem('memberUser', JSON.stringify(currentMember.value))
-      
-      return { success: true, member: updatedMember }
-    } catch (error) {
-      console.error('Upgrade failed:', error)
-      return { success: false, error: error.message }
+      console.error('Login error:', error)
+      return { success: false, error: 'ログインに失敗しました' }
     }
   }
 
+  // ログアウト処理
+  const logout = () => {
+    store.clearMember()
+  }
+
+  // コンテンツへのアクセス可否確認
+  const canAccessContent = (requiredType) => {
+    const currentType = getMembershipType()
+    
+    if (currentType === 'guest') return false
+    if (!requiredType || requiredType === 'basic') return true
+    
+    const ranks = {
+      basic: 1,
+      standard: 2,
+      premium: 3
+    }
+    
+    const currentRank = ranks[currentType] || 0
+    const requiredRank = ranks[requiredType] || 0
+    
+    return currentRank >= requiredRank
+  }
+
+  // アップグレード処理
+  const upgradeMembership = async (newType) => {
+    try {
+      // 実際のAPIコールをここに実装
+      // 今はモック実装
+      const currentMember = store.state.currentMember
+      if (currentMember) {
+        const updatedMember = {
+          ...currentMember,
+          membershipType: newType
+        }
+        store.setMember(updatedMember, store.state.memberToken)
+        return { success: true }
+      }
+      return { success: false, error: 'ログインが必要です' }
+    } catch (error) {
+      console.error('Upgrade error:', error)
+      return { success: false, error: 'アップグレードに失敗しました' }
+    }
+  }
+
+  // 公開API
   return {
-    // 互換性のため既存の関数を維持
+    // State getters
     getMemberInfo,
     isLoggedIn,
     getMembershipType,
-    canAccessContent,
     getMembershipLabel,
-    getAccessMessage,
-    logout,
     
-    // 新規追加機能
-    currentMember: computed(() => currentMember.value),
-    getRestrictionMessage,
+    // Actions
     login,
-    updateMemberInfo,
-    upgradeMembership
+    logout,
+    canAccessContent,
+    upgradeMembership,
+    
+    // Direct state access for reactivity in Vue 2 components
+    get currentMember() {
+      return store.state.currentMember
+    },
+    get memberToken() {
+      return store.state.memberToken
+    }
   }
 }

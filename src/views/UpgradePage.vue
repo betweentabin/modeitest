@@ -223,11 +223,9 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import Navigation from '@/components/Navigation.vue'
-import FooterComplete from '@/components/FooterComplete.vue'
-import { useMemberAuth } from '@/composables/useMemberAuth'
+import Navigation from '../components/Navigation.vue'
+import FooterComplete from '../components/FooterComplete.vue'
+import { useMemberAuth } from '../composables/useMemberAuth'
 
 export default {
   name: 'UpgradePage',
@@ -235,67 +233,70 @@ export default {
     Navigation,
     FooterComplete
   },
-  setup() {
-    const router = useRouter()
-    const { getMembershipType, getMembershipLabel, upgradeMembership } = useMemberAuth()
-    
-    const currentMembershipType = ref(getMembershipType())
-    const openFaq = ref(null)
-    
-    const faqs = [
-      {
-        question: 'プランはいつでも変更できますか？',
-        answer: 'はい、いつでもアップグレードが可能です。アップグレード後は即座に新しいコンテンツにアクセスできます。ダウングレードは次回の更新日から適用されます。'
-      },
-      {
-        question: '支払い方法は何が使えますか？',
-        answer: 'クレジットカード（VISA、MasterCard、JCB、AMEX）および銀行振込がご利用いただけます。'
-      },
-      {
-        question: '法人契約は可能ですか？',
-        answer: 'はい、法人契約も承っております。複数アカウントの一括契約など、お得なプランもございます。詳しくはお問い合わせください。'
-      },
-      {
-        question: '無料トライアルはありますか？',
-        answer: 'スタンダードプランとプレミアムプランには14日間の無料トライアルがございます。トライアル期間中はいつでもキャンセル可能です。'
-      },
-      {
-        question: '解約はどのようにすればよいですか？',
-        answer: 'マイアカウントページから簡単に解約手続きができます。解約後も契約期間終了まではサービスをご利用いただけます。'
+  data() {
+    return {
+      currentMembershipType: null,
+      openFaq: null,
+      faqs: [
+        {
+          question: 'プランはいつでも変更できますか？',
+          answer: 'はい、いつでもアップグレードが可能です。アップグレード後は即座に新しいコンテンツにアクセスできます。ダウングレードは次回の更新日から適用されます。'
+        },
+        {
+          question: '支払い方法は何が使えますか？',
+          answer: 'クレジットカード（VISA、MasterCard、JCB、AMEX）および銀行振込がご利用いただけます。'
+        },
+        {
+          question: '法人契約は可能ですか？',
+          answer: 'はい、法人契約も承っております。複数アカウントの一括契約など、お得なプランもございます。詳しくはお問い合わせください。'
+        },
+        {
+          question: '無料トライアルはありますか？',
+          answer: 'スタンダードプランとプレミアムプランには14日間の無料トライアルがございます。トライアル期間中はいつでもキャンセル可能です。'
+        },
+        {
+          question: '解約はどのようにすればよいですか？',
+          answer: 'マイアカウントページから簡単に解約手続きができます。解約後も契約期間終了まではサービスをご利用いただけます。'
+        }
+      ]
+    }
+  },
+  created() {
+    const auth = useMemberAuth()
+    this.currentMembershipType = auth.getMembershipType()
+  },
+  methods: {
+    getMembershipLabel(type) {
+      const labels = {
+        basic: 'ベーシック会員',
+        standard: 'スタンダード会員',
+        premium: 'プレミアム会員'
       }
-    ]
+      return labels[type] || 'ゲスト'
+    },
     
-    const isHigherPlan = (planType) => {
+    isHigherPlan(planType) {
       const levels = { basic: 1, standard: 2, premium: 3 }
-      const currentLevel = levels[currentMembershipType.value] || 0
+      const currentLevel = levels[this.currentMembershipType] || 0
       const planLevel = levels[planType] || 0
       return planLevel < currentLevel
-    }
+    },
     
-    const selectPlan = async (planType) => {
-      if (confirm(`${getMembershipLabel(planType)}にアップグレードしますか？`)) {
-        const result = await upgradeMembership(planType)
+    async selectPlan(planType) {
+      if (confirm(`${this.getMembershipLabel(planType)}にアップグレードしますか？`)) {
+        const auth = useMemberAuth()
+        const result = await auth.upgradeMembership(planType)
         if (result.success) {
           alert('プランをアップグレードしました！')
-          currentMembershipType.value = planType
+          this.currentMembershipType = planType
         } else {
           alert('アップグレードに失敗しました: ' + result.error)
         }
       }
-    }
+    },
     
-    const toggleFaq = (index) => {
-      openFaq.value = openFaq.value === index ? null : index
-    }
-    
-    return {
-      currentMembershipType,
-      openFaq,
-      faqs,
-      getMembershipLabel,
-      isHigherPlan,
-      selectPlan,
-      toggleFaq
+    toggleFaq(index) {
+      this.openFaq = this.openFaq === index ? null : index
     }
   }
 }

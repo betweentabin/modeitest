@@ -39,6 +39,7 @@ import CriConsultingPage from "./components/CriConsultingPage";
 import SitemapPage from "./components/SitemapPage";
 import FinancialReportPage from "./components/FinancialReportPage";
 import TestPage from "./components/TestPage";
+import ContactFormPage from "./components/ContactFormPage";
 import MemberLoginPage from "./views/MemberLoginPage";
 import MemberRegisterPage from "./views/MemberRegisterPage";
 import MyAccountPage from "./views/MyAccountPage";
@@ -169,6 +170,12 @@ const router = new Router({
       name: "criConsulting",
       component: CriConsultingPage,
       meta: { title: "CRI経営コンサルティング - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      component: ContactFormPage,
+      meta: { title: "お問い合わせ - ちくぎん地域経済研究所" }
     },
     {
       path: "/sitemap",
