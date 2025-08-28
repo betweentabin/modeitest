@@ -169,7 +169,7 @@
 
               <div class="terms-article">
                 <h3 class="terms-title">第2条(会員）</h3>
-                <p class="terms-text">本規約を了承のうえ当社所定の形��により人会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事生の方を「法人会員！、会入会を承認した人を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。</p>
+                <p class="terms-text">本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。</p>
               </div>
 
               <div class="terms-article">
@@ -179,11 +179,11 @@
                 <h4 class="service-title">【スタンダード会員】</h4>
                 <div class="service-item">
                   <span class="service-number">①</span>
-                  <span class="service-text">校関誌「ちくさん地域経済レポート」等、当��が発行する刊行物並びにダイレクトメール、E-Mai1等による経済、産業、企業動向等、企業経営に役立つ情報サービス</span>
+                  <span class="service-text">機関誌「ちくぎん地域経済レポート」等、当社が発行する刊行物並びにダイレクトメール、E-Mail等による経済、産業、企業動向等、企業経営に役立つ情報サービス</span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">②</span>
-                  <span class="service-text">各種の糸営相談に対する課題解決に向けた提案（相談の内容によっては有料）</span>
+                  <span class="service-text">各種の経営相談に対する課題解決に向けた提案（相談の内容によっては有料）</span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">③</span>
@@ -283,7 +283,7 @@
             <div class="info-section">
               <h3 class="info-title">電車でお越しの場合</h3>
               <div class="info-text">宮の陣：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
-              <div class="info-text">��原：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
+              <div class="info-text">西鉄久留米：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
               <div class="info-text">五郎丸：約1.9km 徒歩で約23分 乗換案内 | 徒歩ルート</div>
             </div>
             <div class="info-section">

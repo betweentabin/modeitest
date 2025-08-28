@@ -38,6 +38,7 @@ export default {
   position: absolute;
   top: 1490px;
   width: 1440px;
+  opacity: 0;
 }
 
 .overlap-group6 {

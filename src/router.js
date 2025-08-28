@@ -18,6 +18,7 @@ import MemberManagement from "./views/admin/MemberManagement";
 import SeminarManagement from "./views/admin/SeminarManagement";
 import PublicationManagement from "./views/admin/PublicationManagement";
 import NoticeManagement from "./views/admin/NoticeManagement";
+import InquiryManagement from "./views/admin/InquiryManagement";
 import MediaManagement from "./views/admin/MediaManagement";
 import PageEditForm from "./views/admin/PageEditForm";
 import NewPageEditForm from "./views/admin/NewPageEditForm";
@@ -263,6 +264,12 @@ const router = new Router({
       name: "noticeEdit",
       component: NoticeEditForm,
       meta: { title: "お知らせ編集 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/inquiries",
+      name: "inquiryManagement",
+      component: InquiryManagement,
+      meta: { title: "お問い合わせ管理 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/media",

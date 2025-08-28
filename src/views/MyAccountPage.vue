@@ -203,10 +203,10 @@ export default {
     
     const menuItems = [
       { id: 'profile', label: 'アカウント情報', icon: '👤' },
-      { id: 'membership', label: '会員プラン', icon: '⭐' },
-      { id: 'downloads', label: 'ダウンロード履歴', icon: '📥' },
-      { id: 'favorites', label: 'お気に入り', icon: '❤️' },
-      { id: 'settings', label: '設定', icon: '⚙️' }
+      { id: 'membership', label: '会員プラン', icon: '★' },
+      { id: 'downloads', label: 'ダウンロード履歴', icon: '↓' },
+      { id: 'favorites', label: 'お気に入り', icon: '♥' },
+      { id: 'settings', label: '設定', icon: '⚙' }
     ]
     
     const userInitial = computed(() => {

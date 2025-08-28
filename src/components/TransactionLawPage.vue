@@ -80,7 +80,7 @@
           <div class="table-value">
             <div class="fee-description">
               会費は下記に定める金額とします。<br>
-              （法人会員については個人の登録１名あたりの金額��
+              （法人会員については個人の登録１名あたりの金額）
             </div>
             <div class="fee-section-title">■ ちくぎん地域経済クラブ</div>
             <div class="fee-table">
@@ -163,7 +163,7 @@
               </div>
               <div class="service-item">
                 <span class="service-number">②</span>
-                <span class="service-text">各種の経営相談に対する課題解決���向けた提案（相談の内容によっては有料）</span>
+                <span class="service-text">各種の経営相談に対する課題解決に向けた提案（相談の内容によっては有料）</span>
               </div>
               <div class="service-item">
                 <span class="service-number">③</span>

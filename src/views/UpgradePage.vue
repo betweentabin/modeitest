@@ -59,7 +59,7 @@
           <div class="plan-header">
             <h2>スタンダード会員</h2>
             <div class="plan-price">
-              <span class="currency">¥</span>
+              <span class="currency">&yen;</span>
               <span class="price">3,000</span>
               <span class="period">/月</span>
             </div>
@@ -101,7 +101,7 @@
           <div class="plan-header">
             <h2>プレミアム会員</h2>
             <div class="plan-price">
-              <span class="currency">¥</span>
+              <span class="currency">&yen;</span>
               <span class="price">10,000</span>
               <span class="period">/月</span>
             </div>

@@ -37,6 +37,11 @@
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/inquiries" class="nav-item" :class="{ active: isActive('/admin/inquiries') }">
+              お問い合わせ管理
+            </router-link>
+          </li>
+          <li>
             <router-link to="/admin/media" class="nav-item" :class="{ active: isActive('/admin/media') }">
               メディア管理
             </router-link>

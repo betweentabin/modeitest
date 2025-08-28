@@ -6,7 +6,7 @@
         <div class="publication-image blurred">
           <img :src="publication.image_url || defaultImage" :alt="publication.title" />
           <div class="restriction-overlay">
-            <div class="lock-icon">🔒</div>
+            <div class="lock-icon">&#x1F512;</div>
             <p class="restriction-message">{{ restrictionMessage }}</p>
             <button class="upgrade-btn" @click.stop="handleUpgrade">
               {{ isLoggedIn ? 'プランをアップグレード' : '会員登録して閲覧' }}

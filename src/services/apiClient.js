@@ -197,6 +197,24 @@ class ApiClient {
     })
   }
 
+  async getAdminInquiries(params = {}, token) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/admin/inquiries-v2?${queryString}` : '/api/admin/inquiries-v2'
+    return this.get(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async deleteInquiry(id, token) {
+    return this.delete(`/api/admin/inquiries-v2/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
   // Auth API methods (to be implemented)
   async login(credentials) {
     return this.post('/api/auth/login', credentials)
