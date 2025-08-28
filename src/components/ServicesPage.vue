@@ -6,42 +6,122 @@
     <div class="hero-section">
       <div class="hero-overlay">
         <div class="hero-content">
-          <h1 class="hero-title">プレミアム会員</h1>
-          <p class="hero-subtitle">benefits</p>
+          <h1 class="hero-title">入会案内</h1>
+          <p class="hero-subtitle">membership</p>
         </div>
       </div>
     </div>
 
     <div class="page-content">
-      <!-- Premium Member Introduction -->
-      <section class="premium-intro">
+      <!-- Membership Introduction -->
+      <section class="membership-intro">
         <div class="intro-content">
-          <h2 class="intro-title">プレミアム会員の特典に関して</h2>
+          <h2 class="intro-title">ご入会について</h2>
           <p class="intro-description">
-            ちくぎん地域経済研究所のプレミアム会員になることで、より多くの調査資料やサポートが受けられるようになります。
+            ちくぎん地域経済研究所は、地域企業の発展に貢献し、地域社会の未来を展望する活動を実施しています。<br>
+            また、広域ネットワークとシンクタンク機能を活用し、多様な業務を通じて皆様の経営をサポートしております。<br>
+            多くの経営者にとって有意義なサービスとなるよう努力してまいりますので、ぜひご入会をご検討下さい。
           </p>
         </div>
       </section>
 
-      <!-- Benefits Section -->
-      <section class="benefits-section">
+      <!-- Services Overview -->
+      <section class="services-overview">
         <div class="section-header">
-          <h2 class="section-title">諸題の特典</h2>
-          <p class="section-subtitle">benefits</p>
+          <h2 class="section-title">主な会員が受けられるサービス内容</h2>
+          <p class="section-subtitle">service</p>
         </div>
 
-        <div class="benefit-card">
-          <div class="benefit-image">
-            <img src="/img/image-1.png" alt="日経トップリーダー" />
+        <!-- Premium Service -->
+        <div class="service-card premium-service">
+          <h3 class="service-title">プレミアサービス</h3>
+          <div class="service-image">
+            <img src="/img/image-1.png" alt="経営セミナー" />
+            <p class="image-caption">経営セミナー</p>
           </div>
-          <div class="benefit-content">
-            <h3 class="benefit-title">日経トップリーダービジネスで勝ち抜くヒント集</h3>
-            <p class="benefit-subtitle">毎月、日経トップリーダーをお届けします。</p>
-            <p class="benefit-description">
-              経営トップに役立つ実践的な経営論を厳選し、深谷の時代を勝ち抜く企業づくりのヒントを毎号、
-              情報源にするお手伝いで、企業の競争力向上にご利用します。
-            </p>
-            <button class="benefit-button">日経トップリーダーを確認する</button>
+        </div>
+
+        <!-- Standard & Premium Services Grid -->
+        <div class="services-grid">
+          <h3 class="grid-title">スタンダード ＆ プレミアサービス</h3>
+          
+          <div class="service-items">
+            <div class="service-item">
+              <img src="/img/image-1.png" alt="セミナー・研修" />
+              <p class="service-name">セミナー・研修</p>
+            </div>
+            <div class="service-item">
+              <img src="/img/image-2.png" alt="マーケティング" />
+              <p class="service-name">マーケティング</p>
+            </div>
+            <div class="service-item">
+              <img src="/img/image.png" alt="経営戦略の構築" />
+              <p class="service-name">経営戦略の構築</p>
+            </div>
+            <div class="service-item">
+              <img src="/img/image-1.png" alt="資金調達計画とキャッシュフロー" />
+              <p class="service-name">資金調達計画とキャッシュフロー</p>
+            </div>
+            <div class="service-item">
+              <img src="/img/image-2.png" alt="経営診断" />
+              <p class="service-name">経営診断</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Membership Details -->
+      <section class="membership-details">
+        <h3 class="details-title">会員サービスについて</h3>
+        <p class="details-description">
+          私たちの会員サービスは、地域企業の経営課題に対するソリューションを提供します。経営戦略の策定から、マーケティング支援、資金調達計画まで、幅広いサポートを行っています。
+        </p>
+        <p class="details-description">
+          また、定期的な経営セミナーや勉強会を通じて、最新の経営手法や業界動向をお伝えし、会員企業の競争力強化をお手伝いします。経営診断サービスでは、客観的な視点から企業の現状を分析し、改善点を明確にしてまいります。
+        </p>
+        <div class="details-button">
+          <button class="service-detail-button">サービス詳細を確認する</button>
+        </div>
+      </section>
+
+      <!-- Membership Process -->
+      <section class="membership-process">
+        <div class="section-header">
+          <h2 class="section-title">入会までの流れ</h2>
+          <p class="section-subtitle">Flow of joining</p>
+        </div>
+
+        <div class="process-steps">
+          <div class="step">
+            <div class="step-number">STEP1</div>
+            <div class="step-content">
+              <h4>お問い合わせ</h4>
+              <p>まずは、お気軽にお問い合わせください。お電話またはWebサイトのお問い合わせフォームよりご連絡ください。ご不明な点などお気軽にお尋ねください。</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">STEP2</div>
+            <div class="step-content">
+              <h4>入会のご案内・会員種別のご確認</h4>
+              <p>入会手続きや会員種別について詳しくご案内いたします。</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">STEP3</div>
+            <div class="step-content">
+              <h4>申込み</h4>
+              <p>申込用紙にご記入いただき、必要書類とともにご提出ください。</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">STEP4</div>
+            <div class="step-content">
+              <h4>会費のお支払い</h4>
+              <p>入会金の入金確認後、各種サービスのご利用が可能になります。年会費、月会費については別途ご案内いたします。ご不明な点はメールまたはお電話でお問い合わせください。</p>
+            </div>
           </div>
         </div>
       </section>
@@ -60,7 +140,6 @@
       <div class="container">
         <div class="cta-content">
           <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p class="cta-subtitle">About us</p>
           <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
           <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
         </div>
@@ -74,32 +153,12 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
-import axios from 'axios';
-import { getApiUrl } from '@/config/api';
 
 export default {
   name: "ServicesPage",
   components: {
     Navigation,
     FooterComplete
-  },
-  data() {
-    return {
-      pageData: null,
-      loading: true,
-      error: null
-    };
-  },
-  async mounted() {
-    try {
-      const response = await axios.get(getApiUrl('/api/pages/services'));
-      this.pageData = response.data;
-      this.loading = false;
-    } catch (err) {
-      console.error('Failed to fetch page data:', err);
-      this.error = 'ページデータの取得に失敗しました';
-      this.loading = false;
-    }
   },
   methods: {
     scrollToContact() {
@@ -162,8 +221,8 @@ export default {
   padding: 60px 20px;
 }
 
-/* Premium Introduction */
-.premium-intro {
+/* Membership Introduction */
+.membership-intro {
   text-align: center;
   margin-bottom: 60px;
   padding: 40px;
@@ -174,20 +233,20 @@ export default {
 .intro-title {
   font-size: 1.8rem;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-weight: bold;
 }
 
 .intro-description {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #666;
   line-height: 1.8;
   max-width: 800px;
   margin: 0 auto;
 }
 
-/* Benefits Section */
-.benefits-section {
+/* Services Overview */
+.services-overview {
   margin-bottom: 60px;
 }
 
@@ -197,7 +256,7 @@ export default {
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #333;
   margin-bottom: 10px;
   font-weight: bold;
@@ -223,70 +282,177 @@ export default {
   background-color: #da5761;
 }
 
-/* Benefit Card */
-.benefit-card {
+/* Premium Service */
+.premium-service {
   background: white;
   border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center;
-  margin-bottom: 40px;
-}
-
-.benefit-image {
-  flex: 0 0 40%;
   padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.benefit-image img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-
-.benefit-content {
-  flex: 1;
-  padding: 40px;
-}
-
-.benefit-title {
+.service-title {
   font-size: 1.5rem;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
-.benefit-subtitle {
-  font-size: 1.1rem;
-  color: #da5761;
-  margin-bottom: 20px;
+.service-image {
+  text-align: center;
+}
+
+.service-image img {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.image-caption {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Services Grid */
+.services-grid {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+}
+
+.grid-title {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.service-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.service-item {
+  text-align: center;
+  padding: 15px;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.service-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.service-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.service-name {
+  font-size: 0.9rem;
+  color: #333;
   font-weight: 500;
 }
 
-.benefit-description {
+/* Membership Details */
+.membership-details {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.details-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.details-description {
   font-size: 1rem;
   color: #666;
   line-height: 1.8;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
-.benefit-button {
+.details-button {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.service-detail-button {
   background: #da5761;
   color: white;
   border: none;
   padding: 12px 30px;
   border-radius: 25px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   transition: all 0.3s;
   font-weight: 500;
 }
 
-.benefit-button:hover {
+.service-detail-button:hover {
   background: #c44853;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+}
+
+/* Membership Process */
+.membership-process {
+  margin-bottom: 60px;
+}
+
+.process-steps {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.step-number {
+  flex: 0 0 80px;
+  background: #da5761;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-right: 20px;
+}
+
+.step-content h4 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.step-content p {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
 }
 
 /* Action Section */
@@ -349,15 +515,8 @@ export default {
 
 .cta-content h2 {
   font-size: 2rem;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.cta-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
   margin-bottom: 20px;
-  color: rgba(255,255,255,0.8);
+  font-weight: bold;
 }
 
 .cta-description {
@@ -393,18 +552,9 @@ export default {
     padding: 40px 15px;
   }
   
-  .benefit-card {
-    flex-direction: column;
-  }
-  
-  .benefit-image {
-    flex: none;
-    width: 100%;
-    padding: 20px;
-  }
-  
-  .benefit-content {
-    padding: 20px;
+  .service-items {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
   }
   
   .action-buttons {
@@ -417,22 +567,41 @@ export default {
     max-width: 300px;
   }
   
-  .premium-intro {
+  .step {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .step-number {
+    margin-right: 0;
+    margin-bottom: 15px;
+    align-self: center;
+  }
+  
+  .membership-intro,
+  .premium-service,
+  .services-grid,
+  .membership-details {
     padding: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .benefit-title {
-    font-size: 1.3rem;
+  .service-item img {
+    width: 60px;
+    height: 60px;
   }
   
-  .benefit-subtitle {
+  .service-name {
+    font-size: 0.8rem;
+  }
+  
+  .step-content h4 {
     font-size: 1rem;
   }
   
-  .benefit-description {
-    font-size: 0.9rem;
+  .step-content p {
+    font-size: 0.85rem;
   }
 }
 </style>

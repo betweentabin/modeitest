@@ -1,169 +1,118 @@
 <template>
   <div class="page-container">
     <Navigation />
-    <div class="page-content">
-      <div class="page-header">
-        <h1>刊行物</h1>
-        <p class="subtitle">PUBLICATIONS</p>
-      </div>
-
-      <div class="publications-intro">
-        <p class="lead-text">
-          地域経済の最新動向や経営に役立つ情報を<br />
-          定期刊行物として発行しています
-        </p>
-      </div>
-
-      <div class="featured-publications">
-        <h2>最新刊行物</h2>
-        <div v-if="loading" class="loading-message">読み込み中...</div>
-        <div v-else-if="error" class="error-message">{{ error }}</div>
-        <div v-else class="publication-grid">
-          <PublicationCard 
-            v-if="featuredPublication"
-            :publication="featuredPublication"
-            :is-new="true"
-            class="featured-card"
-          />
-          
-          <PublicationCard 
-            v-for="(publication, index) in otherPublications"
-            :key="publication.id"
-            :publication="publication"
-            :default-image="getDefaultImage(index + 1)"
-          />
-        </div>
-      </div>
-
-      <div class="publication-types">
-        <h2>定期刊行物のご紹介</h2>
-        <div class="types-grid">
-          <div class="type-card">
-            <div class="type-icon">📊</div>
-            <h3>HOT Information</h3>
-            <p class="type-frequency">月刊</p>
-            <p class="type-description">
-              地域経済の最新動向と今後の展望を分析。
-              業界別の詳細データと専門家による解説を掲載。
-            </p>
-            <ul class="type-features">
-              <li>経済指標の分析</li>
-              <li>業界動向レポート</li>
-              <li>政策解説</li>
-              <li>経営トピックス</li>
-            </ul>
-          </div>
-
-          <div class="type-card">
-            <div class="type-icon">📚</div>
-            <h3>経営参考BOOK</h3>
-            <p class="type-frequency">季刊</p>
-            <p class="type-description">
-              経営課題の解決に役立つ実践的な情報を提供。
-              成功事例と専門家のアドバイスを収録。
-            </p>
-            <ul class="type-features">
-              <li>経営戦略事例</li>
-              <li>人材育成ノウハウ</li>
-              <li>マーケティング手法</li>
-              <li>財務改善のポイント</li>
-            </ul>
-          </div>
-
-          <div class="type-card">
-            <div class="type-icon">📈</div>
-            <h3>地域経済白書</h3>
-            <p class="type-frequency">年刊</p>
-            <p class="type-description">
-              年間の地域経済を総括し、次年度の展望を提示。
-              詳細な統計データと分析を収録。
-            </p>
-            <ul class="type-features">
-              <li>年間経済総括</li>
-              <li>産業別分析</li>
-              <li>地域比較データ</li>
-              <li>将来予測</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="archive-section">
-        <h2>バックナンバー</h2>
-        <div class="archive-search">
-          <input type="text" placeholder="キーワードで検索..." class="search-input" />
-          <select class="year-select">
-            <option>2025年</option>
-            <option>2024年</option>
-            <option>2023年</option>
-            <option>2022年</option>
-            <option>2021年</option>
-          </select>
-          <button class="search-btn">検索</button>
-        </div>
-        
-        <div class="archive-list">
-          <div class="archive-item">
-            <div class="archive-info">
-              <span class="archive-date">2025.03</span>
-              <span class="archive-title">Hot Information Vol.322</span>
-            </div>
-            <button class="archive-download">ダウンロード</button>
-          </div>
-          <div class="archive-item">
-            <div class="archive-info">
-              <span class="archive-date">2025.02</span>
-              <span class="archive-title">Hot Information Vol.321</span>
-            </div>
-            <button class="archive-download">ダウンロード</button>
-          </div>
-          <div class="archive-item">
-            <div class="archive-info">
-              <span class="archive-date">2025.01</span>
-              <span class="archive-title">経営参考BOOK vol.51</span>
-            </div>
-            <button class="archive-download">ダウンロード</button>
-          </div>
-          <div class="archive-item">
-            <div class="archive-info">
-              <span class="archive-date">2025.01</span>
-              <span class="archive-title">Hot Information Vol.320</span>
-            </div>
-            <button class="archive-download">ダウンロード</button>
-          </div>
-        </div>
-        
-        <div class="pagination">
-          <button class="page-btn">前へ</button>
-          <span class="page-numbers">
-            <span class="page-num active">1</span>
-            <span class="page-num">2</span>
-            <span class="page-num">3</span>
-            <span class="page-num">4</span>
-            <span class="page-num">5</span>
-          </span>
-          <button class="page-btn">次へ</button>
-        </div>
-      </div>
-
-      <div class="member-notice">
-        <h3 v-if="!isLoggedIn()">会員の皆様へ</h3>
-        <h3 v-else>{{ getMembershipLabel(getMembershipType()) }}の皆様へ</h3>
-        <p v-if="!isLoggedIn()">
-          会員の方は、会員ランクに応じた刊行物をダウンロードいただけます。<br />
-          まずはログインまたは会員登録をお願いします。
-        </p>
-        <p v-else>
-          現在、{{ getMembershipLabel(getMembershipType()) }}としてログインしています。<br />
-          会員ランクに応じた刊行物をダウンロードいただけます。
-        </p>
-        <button v-if="!isLoggedIn()" class="login-btn" @click="goToLogin">会員ログイン</button>
-        <div v-else class="member-actions">
-          <button class="account-btn" @click="goToMyAccount">マイアカウント</button>
-          <button class="upgrade-btn" @click="goToUpgrade">プランアップグレード</button>
+    
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <h1 class="hero-title">刊行物</h1>
+          <p class="hero-subtitle">publications</p>
         </div>
       </div>
     </div>
+
+    <div class="page-content">
+      <!-- Publications Header -->
+      <div class="publications-header">
+        <h2 class="section-title">刊行物</h2>
+        <p class="section-subtitle">publications</p>
+      </div>
+
+      <!-- Year Filter -->
+      <div class="year-filter">
+        <button 
+          v-for="year in years" 
+          :key="year"
+          :class="['year-btn', { active: selectedYear === year }]"
+          @click="selectYear(year)"
+        >
+          {{ year }}年
+        </button>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="category-filter">
+        <button 
+          v-for="category in categories" 
+          :key="category.id"
+          :class="['category-btn', { active: selectedCategory === category.id }]"
+          @click="selectCategory(category.id)"
+        >
+          {{ category.name }}
+        </button>
+      </div>
+
+      <!-- Featured Publication -->
+      <div class="featured-publication" v-if="featuredPublication">
+        <div class="featured-content">
+          <div class="featured-image">
+            <img src="/img/image-1.png" alt="経営戦略に関する書籍" />
+          </div>
+          <div class="featured-info">
+            <div class="featured-meta">
+              <span class="featured-year">2024年</span>
+              <span class="featured-category">経営戦略支援の会員限定</span>
+            </div>
+            <h3 class="featured-title">経営戦略に関する書籍</h3>
+            <div class="featured-details">
+              <p><strong>【著者】</strong> ちくぎん地域経済研究所</p>
+              <p><strong>【発行】</strong> 株式会社ちくぎん地域経済研究所</p>
+              <p><strong>【詳細】</strong> 2024年度版 ちくぎん地域経済レポート</p>
+              <p><strong>【キーワード】</strong> 経営戦略、地域経済、企業分析について</p>
+            </div>
+            <button class="download-btn">入会してダウンロード</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Publications Grid -->
+      <div class="publications-grid" v-if="!loading">
+        <div 
+          v-for="publication in filteredPublications" 
+          :key="publication.id"
+          class="publication-card"
+          @click="goToPublicationDetail(publication.id)"
+        >
+          <div class="publication-image">
+            <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
+          </div>
+          <div class="publication-info">
+            <div class="publication-meta">
+              <span class="publication-year">{{ publication.year }}年</span>
+              <span class="publication-category">{{ getCategoryName(publication.category) }}</span>
+            </div>
+            <h3 class="publication-title">{{ publication.title }}</h3>
+            <button class="publication-download">入会してダウンロード</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="loading" class="loading">
+        読み込み中...
+      </div>
+
+      <!-- Action Buttons -->
+      <section class="action-section">
+        <div class="action-buttons">
+          <button class="action-btn contact-btn" @click="goToContact">お問い合わせはコチラ</button>
+          <button class="action-btn register-btn" @click="goToRegister">入会はコチラ</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Company CTA Section -->
+    <section class="company-cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>株式会社ちくぎん地域経済研究所</h2>
+          <p class="cta-subtitle">About us</p>
+          <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
+          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
+        </div>
+      </div>
+    </section>
+
     <FooterComplete />
   </div>
 </template>
@@ -171,568 +120,638 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
-import PublicationCard from "./PublicationCard.vue";
-import mockServer from "@/mockServer";
-import { useMemberAuth } from '@/composables/useMemberAuth';
 
 export default {
   name: "PublicationsPage",
   components: {
     Navigation,
-    FooterComplete,
-    PublicationCard
-  },
-  setup() {
-    const { isLoggedIn, getMembershipLabel, getMembershipType } = useMemberAuth();
-    
-    return {
-      isLoggedIn,
-      getMembershipLabel,
-      getMembershipType
-    };
+    FooterComplete
   },
   data() {
     return {
-      loading: true,
-      error: '',
-      publications: [],
-      featuredPublication: null,
-      otherPublications: []
+      loading: false,
+      selectedYear: 2024,
+      selectedCategory: 'all',
+      years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
+      categories: [
+        { id: 'all', name: '全て' },
+        { id: 'economics', name: 'ちくぎん地域経済レポート' },
+        { id: 'quarterly', name: 'ちくぎん地域経済レポート' },
+        { id: 'special', name: 'ちくぎん地域経済レポート' },
+        { id: 'free', name: 'ちくぎん地域経済レポート' }
+      ],
+      featuredPublication: {
+        id: 1,
+        title: '経営戦略に関する書籍',
+        year: 2024,
+        category: 'economics',
+        author: 'ちくぎん地域経済研究所',
+        publisher: '株式会社ちくぎん地域経済研究所',
+        description: '2024年度版 ちくぎん地域経済レポート',
+        keywords: '経営戦略、地域経済、企業分析について',
+        image: '/img/image-1.png'
+      },
+      publications: [
+        {
+          id: 2,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2024,
+          category: 'economics',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 3,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2024,
+          category: 'quarterly',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 4,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2024,
+          category: 'special',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 5,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2024,
+          category: 'free',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 6,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2023,
+          category: 'economics',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 7,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2023,
+          category: 'quarterly',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 8,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2023,
+          category: 'special',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 9,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2023,
+          category: 'free',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 10,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2022,
+          category: 'economics',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 11,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2022,
+          category: 'quarterly',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 12,
+          title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
+          year: 2022,
+          category: 'special',
+          image: '/img/image-1.png'
+        }
+      ]
     };
   },
-  async mounted() {
-    await this.loadPublications();
+  computed: {
+    filteredPublications() {
+      return this.publications.filter(pub => {
+        const yearMatch = pub.year === this.selectedYear;
+        const categoryMatch = this.selectedCategory === 'all' || pub.category === this.selectedCategory;
+        return yearMatch && categoryMatch;
+      });
+    }
   },
   methods: {
-    async loadPublications() {
-      try {
-        this.loading = true;
-        this.error = '';
-        
-        const publications = await mockServer.getPublications();
-        this.publications = publications;
-        
-        // 最新の刊行物をフィーチャーとして設定
-        this.featuredPublication = publications[0] || null;
-        
-        // 残りの刊行物をその他として設定（最大3件）
-        this.otherPublications = publications.slice(1, 4);
-        
-      } catch (err) {
-        this.error = '刊行物データの取得に失敗しました';
-        console.error('Publications loading error:', err);
-      } finally {
-        this.loading = false;
-      }
+    selectYear(year) {
+      this.selectedYear = year;
     },
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
+    selectCategory(categoryId) {
+      this.selectedCategory = categoryId;
     },
-    downloadPDF(publication) {
-      // PDFダウンロード機能
-      if (publication.file_url) {
-        window.open(publication.file_url, '_blank');
-      } else {
-        alert('PDFファイルが見つかりません');
-      }
+    getCategoryName(categoryId) {
+      const category = this.categories.find(cat => cat.id === categoryId);
+      return category ? category.name : 'ちくぎん地域経済レポート';
     },
-    getDefaultImage(index) {
-      // インデックスに応じてデフォルト画像を返す
-      const defaultImages = [
-        '/img/-----2-2-1.png', // 1番目
-        '/img/-----2-2-2.png', // 2番目
-        '/img/-----2-2-4.png'  // 3番目
-      ];
-      return defaultImages[index] || '/img/-----2-2-1.png';
-    },
-    goToPublication(publicationId) {
-      // 刊行物詳細ページに遷移
+    goToPublicationDetail(publicationId) {
       this.$router.push(`/publications/${publicationId}`);
     },
-    goToLogin() {
-      this.$router.push('/login');
+    scrollToContact() {
+      this.$router.push('/contact');
     },
-    goToMyAccount() {
-      this.$router.push('/my-account');
+    goToContact() {
+      this.$router.push('/contact');
     },
-    goToUpgrade() {
-      this.$router.push('/upgrade');
+    goToRegister() {
+      this.$router.push('/register');
     }
   }
 };
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .page-container {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
-.page-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
-.page-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.page-header h1 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.subtitle {
-  color: #dc3545;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-}
-
-.publications-intro {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.lead-text {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #666;
-}
-
-.featured-publications {
-  margin-bottom: 60px;
-}
-
-.featured-publications h2 {
-  color: #dc3545;
-  font-size: 2rem;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.publication-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-}
-
-.featured-card {
-  grid-column: span 2;
-}
-
-.publication-image {
-  position: relative;
+/* Hero Section */
+.hero-section {
   height: 300px;
-  background: #f5f5f5;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+              url('/img/hero-image.png') center/cover;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.publication-image img {
-  max-width: 80%;
-  max-height: 80%;
-  object-fit: contain;
-}
-
-.publication-badge {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #dc3545;
+.hero-overlay {
+  text-align: center;
   color: white;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
 }
 
-.publication-content {
-  padding: 25px;
-}
-
-.publication-date {
-  color: #dc3545;
-  font-size: 0.9rem;
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
-.publication-content h3 {
-  color: #333;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
+.hero-subtitle {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: #da5761;
 }
 
-.publication-description {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
+/* Page Content */
+.page-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 20px;
 }
 
-.publication-actions {
-  display: flex;
-  gap: 10px;
+.publications-header {
+  text-align: center;
+  margin-bottom: 50px;
 }
 
-.view-btn,
-.download-btn {
-  flex: 1;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.9rem;
-}
-
-.view-btn {
-  background: white;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-}
-
-.view-btn:hover {
-  background: #dc3545;
-  color: white;
-}
-
-.download-btn {
-  background: #dc3545;
-  color: white;
-}
-
-.download-btn:hover {
-  background: #c82333;
-}
-
-.publication-types {
-  background: white;
-  padding: 50px;
-  border-radius: 10px;
-  margin-bottom: 60px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.publication-types h2 {
-  color: #dc3545;
+.section-title {
   font-size: 2rem;
-  margin-bottom: 40px;
-  text-align: center;
-}
-
-.types-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-}
-
-.type-card {
-  text-align: center;
-  padding: 30px;
-  border: 1px solid #dee2e6;
-  border-radius: 10px;
-  transition: all 0.3s;
-}
-
-.type-card:hover {
-  border-color: #dc3545;
-  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
-}
-
-.type-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
-
-.type-card h3 {
   color: #333;
-  font-size: 1.5rem;
   margin-bottom: 10px;
-}
-
-.type-frequency {
-  color: #dc3545;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-.type-description {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.type-features {
-  list-style: none;
-  padding: 0;
-  text-align: left;
-}
-
-.type-features li {
-  padding: 8px 0;
-  padding-left: 25px;
-  position: relative;
-  color: #666;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.type-features li:before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #28a745;
   font-weight: bold;
 }
 
-.archive-section {
-  background: white;
-  padding: 50px;
-  border-radius: 10px;
-  margin-bottom: 60px;
+.section-subtitle {
+  color: #da5761;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.section-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: #da5761;
+}
+
+/* Year Filter */
+.year-filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.year-btn {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.year-btn.active,
+.year-btn:hover {
+  background: #da5761;
+  color: white;
+  border-color: #da5761;
+}
+
+/* Category Filter */
+.category-filter {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 40px;
+  border-radius: 8px;
+  overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.archive-section h2 {
-  color: #dc3545;
-  font-size: 2rem;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.archive-search {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.search-input {
-  flex: 1;
-  padding: 10px 15px;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.year-select {
-  padding: 10px 15px;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  font-size: 1rem;
-  background: white;
-}
-
-.search-btn {
-  padding: 10px 30px;
-  background: #dc3545;
-  color: white;
+.category-btn {
+  background: #f8f9fa;
   border: none;
-  border-radius: 5px;
+  padding: 15px 20px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  font-size: 0.8rem;
+  color: #666;
+  border-right: 1px solid #dee2e6;
+  white-space: nowrap;
 }
 
-.search-btn:hover {
-  background: #c82333;
+.category-btn:last-child {
+  border-right: none;
 }
 
-.archive-list {
-  margin-bottom: 30px;
+.category-btn.active,
+.category-btn:hover {
+  background: #da5761;
+  color: white;
 }
 
-.archive-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #dee2e6;
-  transition: background 0.3s;
-}
-
-.archive-item:hover {
-  background: #f8f9fa;
-}
-
-.archive-info {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.archive-date {
-  color: #dc3545;
-  font-weight: 600;
-}
-
-.archive-title {
-  color: #333;
-}
-
-.archive-download {
-  padding: 8px 20px;
+/* Featured Publication */
+.featured-publication {
   background: white;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-.archive-download:hover {
-  background: #dc3545;
-  color: white;
-}
-
-.pagination {
+.featured-content {
   display: flex;
-  justify-content: center;
+  gap: 30px;
   align-items: center;
-  gap: 20px;
-  margin-top: 30px;
 }
 
-.page-btn {
-  padding: 10px 20px;
-  background: white;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
+.featured-image {
+  flex: 0 0 200px;
 }
 
-.page-btn:hover {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.page-numbers {
-  display: flex;
-  gap: 10px;
-}
-
-.page-num {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.page-num:hover {
-  background: #f8f9fa;
-}
-
-.page-num.active {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.member-notice {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-  color: white;
-  padding: 50px;
+.featured-image img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
   border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.member-notice h3 {
-  font-size: 1.8rem;
+.featured-info {
+  flex: 1;
+}
+
+.featured-meta {
+  display: flex;
+  gap: 15px;
   margin-bottom: 15px;
 }
 
-.member-notice p {
-  font-size: 1.1rem;
+.featured-year {
+  background: #28a745;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.featured-category {
+  background: #da5761;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.featured-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.featured-details {
   margin-bottom: 25px;
-  line-height: 1.6;
 }
 
-.login-btn {
-  padding: 12px 40px;
-  background: white;
-  color: #dc3545;
+.featured-details p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.download-btn {
+  background: #333;
+  color: white;
   border: none;
+  padding: 12px 25px;
   border-radius: 25px;
-  font-size: 1.1rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.login-btn:hover {
-  transform: scale(1.05);
-}
-
-.member-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-.account-btn,
-.upgrade-btn {
-  padding: 12px 30px;
-  background: white;
-  color: #dc3545;
-  border: none;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
+  font-size: 0.9rem;
   transition: all 0.3s;
+  font-weight: 500;
 }
 
-.account-btn:hover,
-.upgrade-btn:hover {
-  transform: scale(1.05);
+.download-btn:hover {
+  background: #555;
+  transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.upgrade-btn {
-  background: rgba(255,255,255,0.2);
-  color: white;
-  border: 2px solid white;
+/* Publications Grid */
+.publications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 60px;
 }
 
-.upgrade-btn:hover {
+.publication-card {
   background: white;
-  color: #dc3545;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
+.publication-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.publication-image {
+  height: 180px;
+  overflow: hidden;
+}
+
+.publication-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.publication-info {
+  padding: 20px;
+}
+
+.publication-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.publication-year {
+  background: #28a745;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.publication-category {
+  background: #da5761;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.publication-title {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.publication-download {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.publication-download:hover {
+  background: #555;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+/* Action Section */
+.action-section {
+  margin-bottom: 60px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.action-btn {
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s;
+  min-width: 200px;
+}
+
+.contact-btn {
+  background: #da5761;
+  color: white;
+}
+
+.contact-btn:hover {
+  background: #c44853;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+}
+
+.register-btn {
+  background: #8B0000;
+  color: white;
+}
+
+.register-btn:hover {
+  background: #660000;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+}
+
+/* Company CTA Section */
+.company-cta-section {
+  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
+  color: white;
+  text-align: center;
+  padding: 80px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cta-content h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.cta-subtitle {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  color: rgba(255,255,255,0.8);
+}
+
+.cta-description {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: rgba(255,255,255,0.9);
+}
+
+.cta-button {
+  background: white;
+  color: #da5761;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-weight: bold;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .publication-grid {
-    grid-template-columns: 1fr;
+  .hero-title {
+    font-size: 2rem;
   }
   
-  .types-grid {
-    grid-template-columns: 1fr;
+  .page-content {
+    padding: 40px 15px;
   }
   
-  .archive-search {
+  .year-filter {
+    justify-content: center;
+  }
+  
+  .category-filter {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .category-btn {
+    padding: 10px 15px;
+    font-size: 0.7rem;
+    border-right: none;
+    border-radius: 15px;
+    margin-bottom: 5px;
+  }
+  
+  .featured-content {
     flex-direction: column;
-  }
-  
-  .archive-item {
-    flex-direction: column;
-    gap: 10px;
     text-align: center;
+  }
+  
+  .featured-image {
+    flex: none;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .publications-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .publications-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .featured-image img {
+    height: 200px;
+  }
+  
+  .publication-image {
+    height: 150px;
+  }
+  
+  .year-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
 </style>
