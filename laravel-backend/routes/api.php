@@ -15,6 +15,9 @@ use App\Http\Controllers\Api\SeminarController;
 use App\Http\Controllers\Api\NewsV2Controller;
 use App\Http\Controllers\Api\PublicationController;
 use App\Http\Controllers\Api\InquiryController;
+use App\Http\Controllers\Api\MemberController;
+use App\Http\Controllers\Api\NoticeController;
+use App\Http\Controllers\Api\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +180,40 @@ Route::prefix('admin')->group(function () {
             Route::put('/{id}', [InquiryController::class, 'update']);
             Route::delete('/{id}', [InquiryController::class, 'destroy']);
             Route::post('/{id}/respond', [InquiryController::class, 'markAsResponded']);
+        });
+        
+        // 会員管理API
+        Route::prefix('members')->group(function () {
+            Route::get('/', [MemberController::class, 'index']);
+            Route::post('/', [MemberController::class, 'store']);
+            Route::get('/stats', [MemberController::class, 'stats']);
+            Route::get('/{id}', [MemberController::class, 'show']);
+            Route::put('/{id}', [MemberController::class, 'update']);
+            Route::delete('/{id}', [MemberController::class, 'destroy']);
+            Route::patch('/{id}/status', [MemberController::class, 'updateStatus']);
+        });
+        
+        // お知らせ管理API
+        Route::prefix('notices')->group(function () {
+            Route::get('/', [NoticeController::class, 'index']);
+            Route::post('/', [NoticeController::class, 'store']);
+            Route::get('/stats', [NoticeController::class, 'stats']);
+            Route::get('/categories', [NoticeController::class, 'categories']);
+            Route::get('/{id}', [NoticeController::class, 'show']);
+            Route::put('/{id}', [NoticeController::class, 'update']);
+            Route::delete('/{id}', [NoticeController::class, 'destroy']);
+            Route::patch('/{id}/status', [NoticeController::class, 'updateStatus']);
+        });
+        
+        // メディア管理API
+        Route::prefix('media')->group(function () {
+            Route::get('/', [MediaController::class, 'index']);
+            Route::post('/upload', [MediaController::class, 'upload']);
+            Route::delete('/delete', [MediaController::class, 'destroy']);
+            Route::put('/rename', [MediaController::class, 'update']);
+            Route::get('/directories', [MediaController::class, 'directories']);
+            Route::post('/directories', [MediaController::class, 'createDirectory']);
+            Route::get('/stats', [MediaController::class, 'stats']);
         });
     });
 });
