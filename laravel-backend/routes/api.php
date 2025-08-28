@@ -11,6 +11,10 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\PageContentController;
 use App\Http\Controllers\Api\PublicationsController;
+use App\Http\Controllers\Api\SeminarController;
+use App\Http\Controllers\Api\NewsV2Controller;
+use App\Http\Controllers\Api\PublicationController;
+use App\Http\Controllers\Api\InquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +72,13 @@ Route::prefix('services')->group(function () {
 
 Route::post('/inquiries', [InquiriesController::class, 'store']);
 
+// セミナー関連API
+Route::prefix('seminars')->group(function () {
+    Route::get('/', [SeminarController::class, 'index']);
+    Route::get('/{id}', [SeminarController::class, 'show']);
+    Route::post('/{id}/register', [SeminarController::class, 'register']);
+});
+
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login']);
     
@@ -90,10 +101,63 @@ Route::prefix('admin')->group(function () {
             Route::put('/{id}', [PublicationsController::class, 'update']);
             Route::delete('/{id}', [PublicationsController::class, 'destroy']);
         });
+        
+        Route::prefix('seminars')->group(function () {
+            Route::get('/', [SeminarController::class, 'index']);
+            Route::post('/', [SeminarController::class, 'store']);
+            Route::get('/{id}', [SeminarController::class, 'show']);
+            Route::put('/{id}', [SeminarController::class, 'update']);
+            Route::delete('/{id}', [SeminarController::class, 'destroy']);
+        });
+        
+        // 管理者用ニュースAPI
+        Route::prefix('news-v2')->group(function () {
+            Route::get('/', [NewsV2Controller::class, 'index']);
+            Route::post('/', [NewsV2Controller::class, 'store']);
+            Route::get('/{id}', [NewsV2Controller::class, 'show']);
+            Route::put('/{id}', [NewsV2Controller::class, 'update']);
+            Route::delete('/{id}', [NewsV2Controller::class, 'destroy']);
+        });
+        
+        // 管理者用刊行物API
+        Route::prefix('publications-v2')->group(function () {
+            Route::get('/', [PublicationController::class, 'index']);
+            Route::post('/', [PublicationController::class, 'store']);
+            Route::get('/{id}', [PublicationController::class, 'show']);
+            Route::put('/{id}', [PublicationController::class, 'update']);
+            Route::delete('/{id}', [PublicationController::class, 'destroy']);
+        });
+        
+        // 管理者用お問い合わせAPI
+        Route::prefix('inquiries-v2')->group(function () {
+            Route::get('/', [InquiryController::class, 'index']);
+            Route::get('/{id}', [InquiryController::class, 'show']);
+            Route::put('/{id}', [InquiryController::class, 'update']);
+            Route::delete('/{id}', [InquiryController::class, 'destroy']);
+            Route::post('/{id}/respond', [InquiryController::class, 'markAsResponded']);
+        });
     });
 });
 
 Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
+
+// 新しいニュースAPI（v2）
+Route::prefix('news-v2')->group(function () {
+    Route::get('/', [NewsV2Controller::class, 'index']);
+    Route::get('/{id}', [NewsV2Controller::class, 'show']);
+});
+
+// 新しい刊行物API
+Route::prefix('publications-v2')->group(function () {
+    Route::get('/', [PublicationController::class, 'index']);
+    Route::get('/{id}', [PublicationController::class, 'show']);
+    Route::get('/{id}/download', [PublicationController::class, 'download']);
+});
+
+// お問い合わせAPI
+Route::prefix('inquiries-v2')->group(function () {
+    Route::post('/', [InquiryController::class, 'store']); // 公開：お問い合わせ送信
+});
 
 Route::prefix('publications')->group(function () {
     Route::get('/', [PublicationsController::class, 'index']);

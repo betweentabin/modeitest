@@ -118,6 +118,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import apiClient from '../../services/apiClient.js'
 
 export default {
   name: 'PublicationManagement',
@@ -126,7 +127,90 @@ export default {
   },
   data() {
     return {
-      publications: [
+      publications: [],
+      loading: false,
+      error: '',
+      searchKeyword: '',
+      selectedPublications: [],
+      filters: {
+        year: '',
+        month: '',
+        category: ''
+      },
+      currentPage: 1,
+      totalPages: 1,
+      authToken: null
+    }
+  },
+  async mounted() {
+    await this.loadPublications()
+  },
+  computed: {
+    filteredPublications() {
+      let result = this.publications
+      
+      if (this.searchKeyword) {
+        const keyword = this.searchKeyword.toLowerCase()
+        result = result.filter(pub => 
+          pub.title.toLowerCase().includes(keyword) ||
+          pub.description.toLowerCase().includes(keyword)
+        )
+      }
+      
+      if (this.filters.year) {
+        result = result.filter(pub => new Date(pub.date).getFullYear().toString() === this.filters.year)
+      }
+      
+      if (this.filters.month) {
+        result = result.filter(pub => (new Date(pub.date).getMonth() + 1).toString() === this.filters.month)
+      }
+      
+      if (this.filters.category) {
+        result = result.filter(pub => pub.category === this.filters.category)
+      }
+      
+      return result
+    }
+  },
+  methods: {
+    async loadPublications() {
+      this.loading = true
+      try {
+        this.authToken = localStorage.getItem('admin_token')
+        
+        if (!this.authToken) {
+          throw new Error('管理者認証が必要です')
+        }
+        
+        const params = {
+          page: this.currentPage,
+          per_page: 20
+        }
+        
+        const response = await apiClient.getPublications(params)
+        
+        if (response.success && response.data) {
+          this.publications = response.data.publications.map(pub => ({
+            id: pub.id,
+            title: pub.title,
+            date: pub.publication_date,
+            category: this.getCategoryText(pub.category),
+            userType: this.getUserTypeText(pub.members_only),
+            description: pub.description,
+            author: pub.author,
+            is_published: pub.is_published,
+            is_downloadable: pub.is_downloadable
+          }))
+          
+          this.totalPages = response.data.pagination.total_pages
+        } else {
+          throw new Error('刊行物データの取得に失敗しました')
+        }
+      } catch (err) {
+        this.error = err.message || '刊行物データの読み込みに失敗しました'
+        console.error('刊行物読み込みエラー:', err)
+        // フォールバック: デフォルトデータ
+        this.publications = [
         {
           id: 1,
           title: 'Hot Information Vol.325',
@@ -162,16 +246,24 @@ export default {
           category: '経営参考BOOK',
           userType: 'プレミアム'
         }
-      ],
-      loading: false,
-      error: '',
-      searchKeyword: '',
-      selectedPublications: [],
-      filters: {
-        year: '',
-        month: '',
-        category: ''
+      ]
+      } finally {
+        this.loading = false
       }
+    },
+    
+    getCategoryText(category) {
+      switch (category) {
+        case 'research': return 'ちくぎん地域経済レポート'
+        case 'quarterly': return 'Hot Information'
+        case 'special': return '経営参考BOOK'
+        case 'annual': return '年次レポート'
+        default: return 'その他'
+      }
+    },
+    
+    getUserTypeText(membersOnly) {
+      return membersOnly ? 'プレミアム' : 'スタンダード、プレミアム'
     }
   },
   computed: {
@@ -212,11 +304,55 @@ export default {
     createNewPublication() {
       this.$router.push('/admin/publications/new')
     },
-    applyFilters() {
+    async applyFilters() {
       console.log('Applying filters:', this.filters)
+      this.currentPage = 1
+      await this.loadPublications()
     },
-    performSearch() {
+    
+    async performSearch() {
       console.log('Searching for:', this.searchKeyword)
+      this.currentPage = 1
+      await this.loadPublications()
+    },
+    
+    async deleteSelectedPublications() {
+      if (this.selectedPublications.length === 0) {
+        alert('削除する刊行物を選択してください。')
+        return
+      }
+      
+      if (!confirm(`選択した${this.selectedPublications.length}件の刊行物を削除しますか？`)) {
+        return
+      }
+      
+      try {
+        for (const publicationId of this.selectedPublications) {
+          await apiClient.deletePublication(publicationId, this.authToken)
+        }
+        
+        alert('選択した刊行物を削除しました。')
+        this.selectedPublications = []
+        await this.loadPublications()
+      } catch (err) {
+        console.error('刊行物削除エラー:', err)
+        alert('刊行物の削除に失敗しました。')
+      }
+    },
+    
+    toggleSelectAll() {
+      if (this.selectedPublications.length === this.publications.length) {
+        this.selectedPublications = []
+      } else {
+        this.selectedPublications = this.publications.map(p => p.id)
+      }
+    },
+    
+    async changePage(page) {
+      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+        this.currentPage = page
+        await this.loadPublications()
+      }
     }
   }
 }

@@ -120,6 +120,7 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "PublicationsPage",
@@ -129,9 +130,12 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       selectedYear: 2024,
       selectedCategory: 'all',
+      error: null,
+      currentPage: 1,
+      totalPages: 1,
       years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
       categories: [
         { id: 'all', name: '全て' },
@@ -232,6 +236,9 @@ export default {
       ]
     };
   },
+  async mounted() {
+    await this.loadPublications();
+  },
   computed: {
     filteredPublications() {
       return this.publications.filter(pub => {
@@ -242,6 +249,63 @@ export default {
     }
   },
   methods: {
+    async loadPublications() {
+      this.loading = true;
+      try {
+        const params = {
+          page: this.currentPage,
+          per_page: 12
+        };
+        
+        if (this.selectedCategory && this.selectedCategory !== 'all') {
+          params.category = this.selectedCategory;
+        }
+        
+        const response = await apiClient.getPublications(params);
+        
+        if (response.success && response.data) {
+          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
+          this.totalPages = response.data.pagination.total_pages;
+        } else {
+          // フォールバック: 既存データを使用
+          console.log('APIからデータを取得できませんでした。フォールバックデータを使用します。');
+        }
+      } catch (err) {
+        console.error('刊行物の読み込みに失敗しました:', err);
+        this.error = '刊行物の読み込みに失敗しました。';
+        // フォールバック: 既存データを使用
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    formatPublicationItem(item) {
+      return {
+        id: item.id,
+        title: item.title,
+        year: new Date(item.publication_date).getFullYear(),
+        category: item.category,
+        image: item.cover_image || '/img/image-1.png',
+        description: item.description,
+        author: item.author,
+        pages: item.pages,
+        is_downloadable: item.is_downloadable,
+        members_only: item.members_only
+      };
+    },
+    
+    async downloadPublication(publicationId) {
+      try {
+        const response = await apiClient.downloadPublication(publicationId);
+        if (response.success && response.data.download_url) {
+          // ダウンロードリンクを開く
+          window.open(response.data.download_url, '_blank');
+        }
+      } catch (err) {
+        console.error('ダウンロードに失敗しました:', err);
+        alert('ダウンロードに失敗しました。');
+      }
+    },
     selectYear(year) {
       this.selectedYear = year;
     },

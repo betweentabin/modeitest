@@ -440,6 +440,8 @@
 </template>
 
 <script>
+import apiClient from '../services/apiClient.js';
+
 export default {
   name: 'ContactFormPage',
   data() {
@@ -456,7 +458,11 @@ export default {
         email: '',
         content: '',
         privacyAgreement: false
-      }
+      },
+      isSubmitting: false,
+      submitSuccess: false,
+      submitError: null,
+      inquiryNumber: null
     };
   },
   computed: {
@@ -466,21 +472,63 @@ export default {
              this.formData.firstName &&
              this.formData.email &&
              this.formData.content &&
-             this.formData.privacyAgreement;
+             this.formData.privacyAgreement &&
+             !this.isSubmitting;
     }
   },
   methods: {
-    submitForm() {
-      if (this.canSubmit) {
-        // Handle form submission
-        console.log('Form submitted:', this.formData);
-        // Navigate to confirmation page or show success message
-        alert('お問い合わせを受け付けました。確認のメールをお送りします。');
+    async submitForm() {
+      if (!this.canSubmit) return;
+      
+      this.isSubmitting = true;
+      this.submitError = null;
+      
+      try {
+        const inquiryData = {
+          name: `${this.formData.lastName} ${this.formData.firstName}`,
+          email: this.formData.email,
+          phone: this.formData.phone,
+          company: this.formData.companyName || null,
+          subject: this.formData.subject,
+          message: this.formData.content,
+          inquiry_type: 'general'
+        };
+        
+        const response = await apiClient.submitInquiry(inquiryData);
+        
+        if (response.success) {
+          this.submitSuccess = true;
+          this.inquiryNumber = response.data.inquiry_number;
+          this.resetForm();
+          
+          // 成功メッセージ表示
+          alert(`お問い合わせを受け付けました。\nお問い合わせ番号: ${this.inquiryNumber}\n確認のメールをお送りします。`);
+        } else {
+          throw new Error(response.message || 'お問い合わせの送信に失敗しました。');
+        }
+      } catch (err) {
+        console.error('お問い合わせ送信エラー:', err);
+        this.submitError = err.message || 'お問い合わせの送信に失敗しました。しばらく時間をおいて再度お試しください。';
+        alert(this.submitError);
+      } finally {
+        this.isSubmitting = false;
       }
-    }
     },
-    scrollToContact() {
-      this.$router.push('/contact');
+    
+    resetForm() {
+      this.formData = {
+        subject: '',
+        lastName: '',
+        firstName: '',
+        lastNameKana: '',
+        firstNameKana: '',
+        companyName: '',
+        position: '',
+        phone: '',
+        email: '',
+        content: '',
+        privacyAgreement: false
+      };
     }
   }
 };

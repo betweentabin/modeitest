@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <Navigation />
-    
+
     <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-overlay">
@@ -18,7 +18,7 @@
         <h2 class="section-title">用語集</h2>
         <p class="section-subtitle">glossary</p>
         <p class="description">経済用語を分かりやすく解説いたします。</p>
-      </div>
+    </div>
 
       <!-- Search and Filter -->
       <div class="search-section">
@@ -43,7 +43,7 @@
         >
           {{ letter }}
         </button>
-      </div>
+    </div>
 
       <!-- Glossary List -->
       <div class="glossary-list" v-if="!loading">
@@ -63,18 +63,18 @@
                   <span class="toggle-icon" :class="{ open: openTerms.includes(term.id) }">
                     <svg width="16" height="16" viewBox="0 0 16 16">
                       <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
+              </svg>
                   </span>
-                </div>
+            </div>
                 <transition name="slide">
                   <div v-if="openTerms.includes(term.id)" class="term-definition">
                     <p>{{ term.definition }}</p>
                     <div v-if="term.example" class="term-example">
                       <strong>例：</strong>{{ term.example }}
-                    </div>
-                  </div>
+            </div>
+            </div>
                 </transition>
-              </div>
+            </div>
             </div>
           </div>
 
@@ -93,16 +93,16 @@
                   <span class="toggle-icon" :class="{ open: openTerms.includes(term.id) }">
                     <svg width="16" height="16" viewBox="0 0 16 16">
                       <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
+              </svg>
                   </span>
-                </div>
+            </div>
                 <transition name="slide">
                   <div v-if="openTerms.includes(term.id)" class="term-definition">
                     <p>{{ term.definition }}</p>
                     <div v-if="term.example" class="term-example">
                       <strong>例：</strong>{{ term.example }}
-                    </div>
-                  </div>
+            </div>
+              </div>
                 </transition>
               </div>
             </div>
@@ -123,27 +123,27 @@
                   <span class="toggle-icon" :class="{ open: openTerms.includes(term.id) }">
                     <svg width="16" height="16" viewBox="0 0 16 16">
                       <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
+              </svg>
                   </span>
-                </div>
+            </div>
                 <transition name="slide">
                   <div v-if="openTerms.includes(term.id)" class="term-definition">
                     <p>{{ term.definition }}</p>
                     <div v-if="term.example" class="term-example">
                       <strong>例：</strong>{{ term.example }}
-                    </div>
-                  </div>
+            </div>
+            </div>
                 </transition>
-              </div>
+          </div>
+            </div>
+            </div>
             </div>
           </div>
-        </div>
-      </div>
 
       <div v-if="loading" class="loading">
         読み込み中...
-      </div>
-    </div>
+          </div>
+        </div>
 
     <!-- Company CTA Section -->
     <section class="company-cta-section">
@@ -152,8 +152,8 @@
           <h2>株式会社ちくぎん地域経済研究所</h2>
           <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
           <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
-        </div>
-      </div>
+            </div>
+          </div>
     </section>
 
     <FooterComplete />
@@ -606,13 +606,13 @@ export default {
   }
   
   .search-box {
-    flex-direction: column;
+  flex-direction: column;
   }
   
   .alphabetical-index {
-    gap: 5px;
-  }
-  
+  gap: 5px;
+}
+
   .letter-btn {
     padding: 6px 12px;
     font-size: 0.8rem;
@@ -624,9 +624,9 @@ export default {
   }
   
   .term-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
   }
 }
 

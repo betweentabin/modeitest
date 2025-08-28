@@ -1,0 +1,263 @@
+// API Client for Laravel Backend
+import { getApiUrl } from '../config/api.js'
+
+class ApiClient {
+  constructor() {
+    this.baseURL = getApiUrl('')
+  }
+
+  // Generic request method
+  async request(endpoint, options = {}) {
+    const url = getApiUrl(endpoint)
+    
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...options.headers
+      },
+      ...options
+    }
+
+    try {
+      const response = await fetch(url, config)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('API request failed:', error)
+      throw error
+    }
+  }
+
+  // GET request
+  async get(endpoint, options = {}) {
+    return this.request(endpoint, {
+      method: 'GET',
+      ...options
+    })
+  }
+
+  // POST request
+  async post(endpoint, data = null, options = {}) {
+    return this.request(endpoint, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : null,
+      ...options
+    })
+  }
+
+  // PUT request
+  async put(endpoint, data = null, options = {}) {
+    return this.request(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : null,
+      ...options
+    })
+  }
+
+  // DELETE request
+  async delete(endpoint, options = {}) {
+    return this.request(endpoint, {
+      method: 'DELETE',
+      ...options
+    })
+  }
+
+  // Seminar API methods
+  async getSeminars(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/seminars?${queryString}` : '/api/seminars'
+    return this.get(endpoint)
+  }
+
+  async getSeminar(id) {
+    return this.get(`/api/seminars/${id}`)
+  }
+
+  async registerForSeminar(seminarId, registrationData) {
+    return this.post(`/api/seminars/${seminarId}/register`, registrationData)
+  }
+
+  // Admin Seminar API methods (requires authentication)
+  async createSeminar(seminarData, token) {
+    return this.post('/api/admin/seminars', seminarData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async updateSeminar(id, seminarData, token) {
+    return this.put(`/api/admin/seminars/${id}`, seminarData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async deleteSeminar(id, token) {
+    return this.delete(`/api/admin/seminars/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  // News API methods
+  async getNews(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/news-v2?${queryString}` : '/api/news-v2'
+    return this.get(endpoint)
+  }
+
+  async getNewsItem(id) {
+    return this.get(`/api/news-v2/${id}`)
+  }
+
+  async createNews(newsData, token) {
+    return this.post('/api/admin/news-v2', newsData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  // Publications API methods
+  async getPublications(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/publications-v2?${queryString}` : '/api/publications-v2'
+    return this.get(endpoint)
+  }
+
+  async getPublication(id) {
+    return this.get(`/api/publications-v2/${id}`)
+  }
+
+  async downloadPublication(id) {
+    return this.get(`/api/publications-v2/${id}/download`)
+  }
+
+  async createPublication(publicationData, token) {
+    return this.post('/api/admin/publications-v2', publicationData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async updatePublication(id, publicationData, token) {
+    return this.put(`/api/admin/publications-v2/${id}`, publicationData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async deletePublication(id, token) {
+    return this.delete(`/api/admin/publications-v2/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  // Inquiry API methods
+  async submitInquiry(inquiryData) {
+    return this.post('/api/inquiries-v2', inquiryData)
+  }
+
+  async getInquiries(params = {}, token) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/admin/inquiries-v2?${queryString}` : '/api/admin/inquiries-v2'
+    return this.get(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async getInquiry(id, token) {
+    return this.get(`/api/admin/inquiries-v2/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async markInquiryAsResponded(id, token) {
+    return this.post(`/api/admin/inquiries-v2/${id}/respond`, null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  // Auth API methods (to be implemented)
+  async login(credentials) {
+    return this.post('/api/auth/login', credentials)
+  }
+
+  async logout(token) {
+    return this.post('/api/auth/logout', null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async register(userData) {
+    return this.post('/api/auth/register', userData)
+  }
+
+  // Admin Auth API methods (to be implemented)
+  async adminLogin(credentials) {
+    return this.post('/api/admin/login', credentials)
+  }
+
+  async adminLogout(token) {
+    return this.post('/api/admin/logout', null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  // Admin-specific methods with token
+  async getAdminSeminars(params = {}, token) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/admin/seminars?${queryString}` : '/api/admin/seminars'
+    return this.get(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async getAdminNews(params = {}, token) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'
+    return this.get(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async getAdminPublications(params = {}, token) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/admin/publications-v2?${queryString}` : '/api/admin/publications-v2'
+    return this.get(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+}
+
+// Export a singleton instance
+export default new ApiClient()

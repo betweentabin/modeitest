@@ -127,7 +127,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import mockServer from '@/mockServer'
+import apiClient from '../../services/apiClient.js'
 
 export default {
   name: 'SeminarManagement',
@@ -145,7 +145,10 @@ export default {
         year: '',
         month: '',
         status: ''
-      }
+      },
+      currentPage: 1,
+      totalPages: 1,
+      authToken: null
     }
   },
   async mounted() {
@@ -174,19 +177,50 @@ export default {
     async loadSeminars() {
       this.loading = true
       try {
-        const data = await mockServer.getSeminars()
-        // データ形式を既存のテンプレートに合わせて調整
-        this.seminars = data.map(seminar => ({
-          ...seminar,
-          time: `${seminar.start_time || '16:00'}～ ${seminar.end_time || '17:00'}`,
-          venue: seminar.location || 'ZOOM（福岡県）',
-          membership: '一般'
-        }))
+        // 管理者認証トークンを取得（ローカルストレージから）
+        this.authToken = localStorage.getItem('admin_token')
+        
+        if (!this.authToken) {
+          throw new Error('管理者認証が必要です')
+        }
+        
+        const params = {
+          page: this.currentPage,
+          per_page: 20
+        }
+        
+        const response = await apiClient.getAdminSeminars(params, this.authToken)
+        
+        if (response.success && response.data) {
+          // データ形式を既存のテンプレートに合わせて調整
+          this.seminars = response.data.seminars.map(seminar => ({
+            ...seminar,
+            time: `${seminar.start_time || '16:00'}～ ${seminar.end_time || '17:00'}`,
+            venue: seminar.location || 'ZOOM（福岡県）',
+            membership: this.getMembershipText(seminar.membership_requirement)
+          }))
+          
+          this.totalPages = response.data.pagination.total_pages
+        } else {
+          throw new Error('セミナーデータの取得に失敗しました')
+        }
       } catch (err) {
-        this.error = 'セミナーデータの読み込みに失敗しました'
-        console.error(err)
+        this.error = err.message || 'セミナーデータの読み込みに失敗しました'
+        console.error('セミナー読み込みエラー:', err)
+        // フォールバック: 空データ
+        this.seminars = []
       } finally {
         this.loading = false
+      }
+    },
+    
+    getMembershipText(requirement) {
+      switch (requirement) {
+        case 'none': return '一般'
+        case 'basic': return 'ベーシック会員以上'
+        case 'standard': return 'スタンダード会員以上'
+        case 'premium': return 'プレミアム会員限定'
+        default: return '一般'
       }
     },
     formatDate(dateString) {
@@ -223,11 +257,55 @@ export default {
     createNewSeminar() {
       this.$router.push('/admin/seminars/new')
     },
-    applyFilters() {
+    async applyFilters() {
       console.log('Applying filters:', this.filters)
+      this.currentPage = 1
+      await this.loadSeminars()
     },
-    performSearch() {
+    
+    async performSearch() {
       console.log('Searching for:', this.searchKeyword)
+      this.currentPage = 1
+      await this.loadSeminars()
+    },
+    
+    async deleteSelectedSeminars() {
+      if (this.selectedSeminars.length === 0) {
+        alert('削除するセミナーを選択してください。')
+        return
+      }
+      
+      if (!confirm(`選択した${this.selectedSeminars.length}件のセミナーを削除しますか？`)) {
+        return
+      }
+      
+      try {
+        for (const seminarId of this.selectedSeminars) {
+          await apiClient.deleteSeminar(seminarId, this.authToken)
+        }
+        
+        alert('選択したセミナーを削除しました。')
+        this.selectedSeminars = []
+        await this.loadSeminars()
+      } catch (err) {
+        console.error('セミナー削除エラー:', err)
+        alert('セミナーの削除に失敗しました。')
+      }
+    },
+    
+    toggleSelectAll() {
+      if (this.selectedSeminars.length === this.seminars.length) {
+        this.selectedSeminars = []
+      } else {
+        this.selectedSeminars = this.seminars.map(s => s.id)
+      }
+    },
+    
+    async changePage(page) {
+      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+        this.currentPage = page
+        await this.loadSeminars()
+      }
     }
   }
 }

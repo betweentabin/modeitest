@@ -109,6 +109,7 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "SeminarDetailPage",
@@ -119,7 +120,8 @@ export default {
   data() {
     return {
       seminar: null,
-      loading: true
+      loading: true,
+      error: null
     };
   },
   async mounted() {
@@ -127,9 +129,71 @@ export default {
   },
   methods: {
     async loadSeminar() {
-      const seminarId = this.$route.params.id;
+      try {
+        this.loading = true;
+        const seminarId = this.$route.params.id;
+        
+        const response = await apiClient.getSeminar(seminarId);
+        
+        if (response.success && response.data && response.data.seminar) {
+          this.seminar = this.formatSeminarData(response.data.seminar);
+        } else {
+          throw new Error('セミナーが見つかりませんでした');
+        }
+      } catch (error) {
+        console.error('セミナー詳細の読み込みに失敗しました:', error);
+        this.error = 'セミナー詳細の読み込みに失敗しました。';
+        // フォールバック: モックデータを使用
+        await this.loadFallbackData();
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    formatSeminarData(seminar) {
+      return {
+        id: seminar.id,
+        title: seminar.title,
+        description: seminar.description,
+        fullDescription: seminar.detailed_description || seminar.description,
+        date: seminar.date,
+        fee: this.formatFee(seminar.fee, seminar.membership_requirement),
+        status: seminar.status === 'scheduled' ? 'current' : 'past',
+        instructor: seminar.instructor || 'ちくぎん地域経済研究所',
+        venue: seminar.location,
+        target: this.formatTarget(seminar.membership_requirement),
+        image: seminar.featured_image || '/img/image-1.png',
+        start_time: seminar.start_time,
+        end_time: seminar.end_time,
+        capacity: seminar.capacity,
+        current_participants: seminar.current_participants,
+        application_deadline: seminar.application_deadline,
+        contact_email: seminar.contact_email,
+        contact_phone: seminar.contact_phone
+      };
+    },
+    
+    formatFee(fee, membershipRequirement) {
+      if (fee === '0.00' || fee === 0) {
+        return membershipRequirement === 'none' ? '無料' : '会員無料';
+      }
+      return `¥${parseFloat(fee).toLocaleString()}`;
+    },
+    
+    formatTarget(membershipRequirement) {
+      switch(membershipRequirement) {
+        case 'none': return '一般参加可能';
+        case 'basic': return 'ベーシック会員以上';
+        case 'standard': return 'スタンダード会員以上';
+        case 'premium': return 'プレミアム会員限定';
+        default: return '経営者・管理職';
+      }
+    },
+    
+    async loadFallbackData() {
+      const seminarId = parseInt(this.$route.params.id);
       
-      // Mock data - 実際のAPIに置き換え可能
+      // フォールバック用のモックデータ
       const seminars = [
         {
           id: 1,

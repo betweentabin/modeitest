@@ -1,7 +1,7 @@
 // API設定
 const API_CONFIG = {
   development: {
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://localhost:8001',
   },
   production: {
     baseURL: 'https://heroic-celebration-production.up.railway.app',

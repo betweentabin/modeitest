@@ -112,6 +112,7 @@
 <script>
 import Navigation from "./Navigation.vue";
 import FooterComplete from "./FooterComplete.vue";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "SeminarPage",
@@ -121,8 +122,72 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      currentSeminars: [
+      loading: true,
+      currentSeminars: [],
+      pastSeminars: [],
+      error: null
+    }
+  },
+  async mounted() {
+    await this.loadSeminars();
+  },
+  methods: {
+    async loadSeminars() {
+      try {
+        this.loading = true;
+        const response = await apiClient.getSeminars();
+        
+        if (response.success && response.data && response.data.seminars) {
+          const allSeminars = response.data.seminars;
+          const currentDate = new Date();
+          
+          // セミナーを現在と過去に分類
+          this.currentSeminars = allSeminars.filter(seminar => {
+            const seminarDate = new Date(seminar.date);
+            return seminarDate >= currentDate && seminar.status === 'scheduled';
+          }).map(seminar => this.formatSeminarData(seminar));
+          
+          this.pastSeminars = allSeminars.filter(seminar => {
+            const seminarDate = new Date(seminar.date);
+            return seminarDate < currentDate || seminar.status === 'completed';
+          }).map(seminar => this.formatSeminarData(seminar));
+        }
+      } catch (error) {
+        console.error('セミナーデータの読み込みに失敗しました:', error);
+        this.error = 'セミナーデータの読み込みに失敗しました。';
+        // フォールバック: 元のハードコードされたデータを使用
+        this.loadFallbackData();
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    formatSeminarData(seminar) {
+      return {
+        id: seminar.id,
+        title: seminar.title,
+        description: seminar.description,
+        date: seminar.date,
+        fee: this.formatFee(seminar.fee, seminar.membership_requirement),
+        status: seminar.status === 'scheduled' ? 'current' : 'past',
+        image: seminar.featured_image || '/img/image-1.png',
+        start_time: seminar.start_time,
+        end_time: seminar.end_time,
+        location: seminar.location,
+        capacity: seminar.capacity,
+        current_participants: seminar.current_participants
+      };
+    },
+    
+    formatFee(fee, membershipRequirement) {
+      if (fee === '0.00' || fee === 0) {
+        return membershipRequirement === 'none' ? '無料' : '会員無料';
+      }
+      return `¥${parseFloat(fee).toLocaleString()}`;
+    },
+    
+    loadFallbackData() {
+      this.currentSeminars = [
         {
           id: 1,
           title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
@@ -168,47 +233,9 @@ export default {
           status: 'current',
           image: '/img/image-1.png'
         }
-      ],
-      pastSeminars: [
-        {
-          id: 101,
-          title: '第１回経営講座',
-          description: '九州経済の現況について考える。',
-          date: '2024-12-15',
-          status: 'past'
-        },
-        {
-          id: 102,
-          title: '九州経済の現況について考える。講演会',
-          description: 'セミナー：事業承継・M&A講演会',
-          date: '2024-11-20',
-          status: 'past'
-        },
-        {
-          id: 103,
-          title: 'セミナー：事業承継・M&A講演会',
-          description: 'チャレンジ企業・第三者事業承継等における諸問題等について、解決に向けた支援方法を説明いたします。',
-          date: '2024-10-25',
-          status: 'past'
-        },
-        {
-          id: 104,
-          title: '第２回経営講座',
-          description: 'ＡＩの活用法と今後の課題について。',
-          date: '2024-09-30',
-          status: 'past'
-        },
-        {
-          id: 105,
-          title: '九州地域の経済見通しセミナー',
-          description: '地域経済の動向と今後の展望について。',
-          date: '2024-08-15',
-          status: 'past'
-        }
-      ]
-    };
-  },
-  methods: {
+      ];
+    },
+    
     formatDate(dateString) {
       const date = new Date(dateString);
       const year = date.getFullYear();
@@ -216,18 +243,22 @@ export default {
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}.${month}.${day}`;
     },
+    
     goToSeminarDetail(seminarId) {
       this.$router.push(`/seminars/${seminarId}`);
     },
+    
     scrollToSeminars() {
       const element = document.getElementById('seminars');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     },
+    
     goToRegistration() {
       this.$router.push('/seminar-registration');
     },
+    
     scrollToContact() {
       this.$router.push('/contact');
     }

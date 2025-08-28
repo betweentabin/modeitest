@@ -117,6 +117,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import apiClient from '../../services/apiClient.js'
 
 export default {
   name: 'NoticeManagement',
@@ -125,38 +126,7 @@ export default {
   },
   data() {
     return {
-      notices: [
-        {
-          id: 1,
-          title: 'Hot Information Vol.325掲載しました！',
-          date: '2025-04-23',
-          category: 'XXXXXXXX'
-        },
-        {
-          id: 2,
-          title: 'Hot Information Vol.325掲載しました！',
-          date: '2025-04-23',
-          category: 'XXXXXXXX'
-        },
-        {
-          id: 3,
-          title: 'Hot Information Vol.325掲載しました！',
-          date: '2025-04-23',
-          category: 'XXXXXXXX'
-        },
-        {
-          id: 4,
-          title: 'Hot Information Vol.325掲載しました！',
-          date: '2025-04-23',
-          category: 'XXXXXXXX'
-        },
-        {
-          id: 5,
-          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-          date: '2025-04-23',
-          category: 'XXXXXXXX'
-        }
-      ],
+      notices: [],
       loading: false,
       error: '',
       searchKeyword: '',
@@ -165,8 +135,97 @@ export default {
         year: '',
         month: '',
         category: ''
-      }
+      },
+      currentPage: 1,
+      totalPages: 1,
+      authToken: null
     }
+  },
+  async mounted() {
+    await this.loadNotices()
+  },
+  computed: {
+    filteredNotices() {
+      let result = this.notices
+      
+      if (this.searchKeyword) {
+        const keyword = this.searchKeyword.toLowerCase()
+        result = result.filter(notice => 
+          notice.title.toLowerCase().includes(keyword) ||
+          notice.description.toLowerCase().includes(keyword)
+        )
+      }
+      
+      if (this.filters.year) {
+        result = result.filter(notice => new Date(notice.date).getFullYear().toString() === this.filters.year)
+      }
+      
+      if (this.filters.month) {
+        result = result.filter(notice => (new Date(notice.date).getMonth() + 1).toString() === this.filters.month)
+      }
+      
+      if (this.filters.category) {
+        result = result.filter(notice => notice.category === this.filters.category)
+      }
+      
+      return result
+    }
+  },
+  methods: {
+    async loadNotices() {
+      this.loading = true
+      try {
+        // 管理者認証トークンを取得
+        this.authToken = localStorage.getItem('admin_token')
+        
+        if (!this.authToken) {
+          throw new Error('管理者認証が必要です')
+        }
+        
+        const params = {
+          page: this.currentPage,
+          per_page: 20
+        }
+        
+        const response = await apiClient.getAdminNews(params, this.authToken)
+        
+        if (response.success && response.data) {
+          this.notices = response.data.news.map(news => ({
+            id: news.id,
+            title: news.title,
+            date: news.published_date,
+            category: this.getCategoryText(news.category),
+            description: news.description,
+            status: news.status,
+            is_featured: news.is_featured
+          }))
+          
+          this.totalPages = response.data.pagination.total_pages
+        } else {
+          throw new Error('ニュースデータの取得に失敗しました')
+        }
+      } catch (err) {
+        this.error = err.message || 'ニュースデータの読み込みに失敗しました'
+        console.error('ニュース読み込みエラー:', err)
+        // フォールバック: デフォルトデータ
+        this.notices = [
+          {
+            id: 1,
+            title: 'Hot Information Vol.325掲載しました！',
+            date: '2025-04-23',
+            category: 'お知らせ'
+        },
+        {
+          id: 5,
+          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+          date: '2025-04-23',
+          category: 'XXXXXXXX'
+        }
+      ]
+      } finally {
+        this.loading = false
+      }
+    },
   },
   computed: {
     filteredNotices() {
