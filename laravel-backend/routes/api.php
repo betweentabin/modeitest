@@ -27,6 +27,29 @@ use App\Http\Controllers\Api\InquiryController;
 |
 */
 
+// デバッグ用シンプルエンドポイント
+Route::get('/test', function () {
+    return response()->json([
+        'message' => 'API is working!',
+        'timestamp' => now(),
+        'routes_loaded' => true
+    ]);
+});
+
+Route::get('/debug-routes', function () {
+    $routes = [];
+    foreach (\Illuminate\Support\Facades\Route::getRoutes() as $route) {
+        if (str_starts_with($route->uri(), 'api/')) {
+            $routes[] = [
+                'method' => implode('|', $route->methods()),
+                'uri' => $route->uri(),
+                'name' => $route->getName(),
+            ];
+        }
+    }
+    return response()->json(['api_routes' => $routes]);
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
