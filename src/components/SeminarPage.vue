@@ -108,7 +108,7 @@
             </div>
           </div>
 
-          <button class="show-more-btn">
+          <button class="show-more-btn" @click="goToCurrentSeminars">
             <span>さらに表示</span>
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
               <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -156,7 +156,7 @@
               </div>
             </div>
 
-          <button class="show-more-btn past-show-more">
+          <button class="show-more-btn past-show-more" @click="goToPastSeminars">
             <span>さらに表示</span>
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
               <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -277,6 +277,14 @@ export default {
       ]
     };
   },
+  methods: {
+    goToCurrentSeminars() {
+      this.$router.push('/seminars/current');
+    },
+    goToPastSeminars() {
+      this.$router.push('/seminars/past');
+    }
+  }
 };
 </script>
 

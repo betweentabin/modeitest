@@ -29,6 +29,8 @@ import MediaEditForm from "./views/admin/MediaEditForm";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
 import SeminarPage from "./components/SeminarPage";
+import CurrentSeminarsPage from "./components/CurrentSeminarsPage";
+import PastSeminarsPage from "./components/PastSeminarsPage";
 import SeminarDetailPage from "./components/SeminarDetailPage";
 import GlossaryPage from "./components/GlossaryPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
@@ -111,6 +113,18 @@ const router = new Router({
       name: "seminars",
       component: SeminarPage,
       meta: { title: "セミナー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/current",
+      name: "currentSeminars",
+      component: CurrentSeminarsPage,
+      meta: { title: "受付中のセミナー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/past",
+      name: "pastSeminars",
+      component: PastSeminarsPage,
+      meta: { title: "過去のセミナー - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminars/:id",

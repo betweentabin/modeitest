@@ -1,15 +1,16 @@
 <template>
   <div class="breadcrumbs" v-if="breadcrumbs && breadcrumbs.length > 0">
     <router-link to="/" class="breadcrumb-item">トップ</router-link>
-    <span class="breadcrumb-separator" v-for="(item, index) in breadcrumbs" :key="index">></span>
-    <span 
-      v-for="(item, index) in breadcrumbs" 
-      :key="`breadcrumb-${index}`"
-      class="breadcrumb-item"
-      :class="{ current: index === breadcrumbs.length - 1 }"
-    >
-      {{ item }}
-    </span>
+    <template v-for="(item, index) in breadcrumbs">
+      <span :key="`separator-${index}`" class="breadcrumb-separator">></span>
+      <span 
+        :key="`item-${index}`"
+        class="breadcrumb-item"
+        :class="{ current: index === breadcrumbs.length - 1 }"
+      >
+        {{ item }}
+      </span>
+    </template>
   </div>
 </template>
 
