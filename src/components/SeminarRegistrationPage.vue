@@ -435,6 +435,7 @@
 </template>
 
 <script>
+import AccessSection from './AccessSection.vue';
 export default {
   name: "SeminarRegistrationPage"
 };

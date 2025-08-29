@@ -4,21 +4,14 @@
     <navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="hero-overlay">
-          <div class="hero-content">
-            <div class="hero-subtitle">transaction law</div>
-            <h1 class="hero-title">特定商取引法に関する表記</h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="特定商取引法に関する表記"
+      subtitle="transaction law"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
+    />
 
     <!-- Breadcrumbs -->
-    <div class="breadcrumbs">
-      <router-link to="/" class="breadcrumb-item">トップ</router-link>
-        <span class="breadcrumb-separator">></span>
-      <span class="breadcrumb-item current">特定商取引法に関する表記</span>
-    </div>
+    <Breadcrumbs :breadcrumbs="['特定商取引法に関する表記']" />
 
     <!-- Main Content -->
     <div class="main-content">
@@ -202,38 +195,8 @@
       </div>
     </div>
 
-    <!-- Access Section -->
-    <div class="content-view-2">
-      <div class="frame-1321317467-2">
-        <group10 />
-        <div class="frame-1321317467-1">
-          <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
-          <div class="frame-1321317466">
-            <div class="group-container">
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
-                <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
-        </div>
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
-      </div>
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
-        </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <!-- Access Section -->
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -242,22 +205,22 @@
       <group27 />
     </div>
 
-
-
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
 <script>
+import AccessSection from './AccessSection.vue';
 import Navigation from "./Navigation";
 import Footer from "./Footer";
 import Group27 from "./Group27";
-import Group10 from "./Group10";
-import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
+
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
-import { homePageData } from "../data";
 
 export default {
   name: "TransactionLawPage",
@@ -265,28 +228,16 @@ export default {
     Navigation,
     Footer,
     Group27,
-    Group10,
-    FixedActionButtons,
+    AccessSection,
+    HeroSection,
+    Breadcrumbs,
+    FixedSideButtons,
   },
   data() {
     return {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      // content-view-2に必要なデータ
-      rectangle3: homePageData.rectangle3,
-      text75: homePageData.text75,
-      text77: homePageData.text77,
-      text76: homePageData.text76,
-      phone: homePageData.phone,
-      x900: homePageData.x900,
-      text74: homePageData.text74,
-      x12Km141: homePageData.x12Km141,
-      x12Km142: homePageData.x12Km142,
-      x19Km23: homePageData.x19Km23,
-      text78: homePageData.text78,
-      x497M6: homePageData.x497M6,
-      x811M10: homePageData.x811M10,
-      d1830M10: homePageData.d1830M10,
+      
     };
   },
 };
@@ -299,86 +250,9 @@ export default {
   min-height: 100vh;
 }
 
-/* Hero Section */
-.hero-section {
-  width: 100%;
-  height: 400px;
-  background: url('https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880') lightgray center/cover no-repeat;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  position: relative;
-}
 
-.hero-overlay {
-  width: 100%;
-  height: 100%;
-  background: rgba(77, 77, 77, 0.70);
-  display: flex;
-  align-items: flex-end;
-  padding: 50px 30px;
-}
 
-.hero-content {
-  color: white;
-}
 
-.hero-subtitle {
-  color: #FFF;
-  font-family: var(--font-family-inter);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 60px;
-  letter-spacing: -0.48px;
-}
-
-.hero-title {
-  color: #FFF;
-  font-family: var(--font-family-inter);
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 60px;
-  letter-spacing: -0.8px;
-  margin: 0;
-}
-
-/* Breadcrumbs */
-.breadcrumbs {
-  padding: 24px 46px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.breadcrumb-item {
-  color: #3F3F3F;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 5;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.breadcrumb-item:hover {
-  color: #DA5761;
-  text-decoration: underline;
-}
-
-.breadcrumb-item.current {
-  color: #1A1A1A;
-  font-weight: 500;
-  cursor: default;
-}
-
-.breadcrumb-item.current:hover {
-  color: #1A1A1A;
-  text-decoration: none;
-}
-
-.breadcrumb-separator {
-  color: #3F3F3F;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 5;
-}
 
 /* Main Content */
 .main-content {
@@ -677,159 +551,9 @@ export default {
   opacity: 0.8;
 }
 
-/* Access Section */
-.access-section {
-  width: 100%;
-  padding: 80px 50px;
-  background: #FFF;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
 
-.access-header {
-  position: relative;
-  width: 209px;
-  height: 126px;
-}
 
-.access-title-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
 
-.access-en-title {
-  color: #1A1A1A;
-  font-family: var(--font-family-inter);
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 150%;
-  position: absolute;
-  left: 0;
-  top: 54px;
-  width: 199px;
-  height: 72px;
-}
-
-.access-line {
-  width: 91px;
-  height: 1px;
-  background: #DA5761;
-  position: absolute;
-  left: 0;
-  top: 18px;
-}
-
-.access-jp-title {
-  color: #1A1A1A;
-  font-family: var(--font-family-inter);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 150%;
-  position: absolute;
-  left: 114px;
-  top: 0;
-  width: 95px;
-  height: 36px;
-}
-
-.access-content {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-}
-
-.map-container {
-  flex: 1;
-  max-width: 692px;
-}
-
-.map-image {
-  width: 100%;
-  height: 398px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.access-info {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  flex: 1;
-  max-width: 524px;
-}
-
-.info-title {
-  color: #DA5761;
-  font-family: var(--font-family-inter);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 200%;
-  margin: 0 0 10px 0;
-}
-
-.info-item {
-  color: #1A1A1A;
-  font-family: var(--font-family-inter);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 200%;
-  margin-bottom: 5px;
-}
-
-/* Floating Buttons */
-.floating-buttons {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
-}
-
-.floating-btn {
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.login-btn {
-  background: #DA5761;
-}
-
-.login-btn:hover {
-  background: #c54a54;
-}
-
-.contact-btn {
-  background: #9C3940;
-}
-
-.contact-btn:hover {
-  background: #7f2e34;
-}
-
-.floating-btn span {
-  color: #FFF;
-  font-family: var(--font-family-inter);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 150%;
-}
-
-.floating-btn svg {
-  fill: #FFF;
-}
 
 /* Footer Section */
 .footer-section {
@@ -993,112 +717,7 @@ export default {
   line-height: 150%;
 }
 
-/* Content View 2 */
-.content-view-2 {
-  align-items: center;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 80px 50px;
-  position: relative;
-  width: 100%;
-  z-index: 3;
-  box-sizing: border-box;
-}
 
-.frame-1321317467-2 {
-  align-items: flex-start;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
-  width: 100%;
-  max-width: 2000px;
-  z-index: 3;
-  box-sizing: border-box;
-}
-
-.frame-1321317467-1 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 40px;
-  position: relative;
-  width: 100%;
-  min-height: auto;
-}
-
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-  border-radius: 10px;
-}
-
-.frame-1321317466 {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  width: auto;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  height: auto;
-}
-
-.group-container {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  height: fit-content;
-  position: relative;
-  width: fit-content;
-}
-
-.group-12 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
-
-.text-3 {
-  letter-spacing: 0;
-  line-height: 40px;
-  margin-bottom: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.x12km-14,
-.x12km-14-1,
-.x19km-23 {
-  letter-spacing: 0;
-  line-height: 20px;
-  margin-bottom: 2px;
-  margin-top: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.text-11 {
-  letter-spacing: 0;
-  line-height: 18px;
-  margin-top: 3px;
-  margin-bottom: 2px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
 
 /* Footer Navigation */
 .navigation-footer {
@@ -1176,15 +795,7 @@ export default {
     gap: 15px;
     width: 100%;
   }
-  
-  .access-content {
-    flex-direction: column;
-  }
-  
-  .access-section {
-    padding: 40px 20px;
-  }
-  
+
   .hero-title {
     font-size: 28px;
   }
@@ -1193,15 +804,7 @@ export default {
     font-size: 18px;
   }
   
-  .floating-buttons {
-    right: 10px;
-    bottom: 10px;
-  }
-  
-  .floating-btn {
-    width: 80px;
-    height: 80px;
-  }
+
 
   .footer-section {
     padding: 30px 20px;

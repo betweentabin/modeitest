@@ -18,6 +18,9 @@
         <items />
       </div>
     </div>
+    
+    <!-- PC Menu Modal -->
+    <pc-menu-modal :isOpen="isMenuOpen" @close="closeMenu" />
   </div>
 </template>
 
@@ -27,6 +30,8 @@ import Group1 from "./Group1";
 import XButton from "./XButtonPhone";
 import XButton2 from "./XButton2";
 import Items from "./ItemsNav";
+import PcMenuModal from "./PcMenuModal.vue";
+
 export default {
   name: "Navigation",
   components: {
@@ -35,6 +40,7 @@ export default {
     XButton: XButton,
     XButton2,
     Items,
+    PcMenuModal,
   },
   data() {
     return {
@@ -45,7 +51,9 @@ export default {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
       console.log('Menu toggled:', this.isMenuOpen);
-      // ここでメニューの開閉処理を追加できます
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
     }
   }
 };

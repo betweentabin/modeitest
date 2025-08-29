@@ -1,32 +1,33 @@
 <template>
-  <div class="container-center-horizontal">
-    <div class="u12488u12483u12501u12442-1 screen">
-      <navigation />
-      
-      <div class="overlap-group7">
-        <div class="hero-image" :style="{ 'background-image': 'url(' + heroImage + ')' }">
-          <div class="frame-1321317489">
-            <div class="frame-1321317608">
-              <div class="frame-1321317610">
-                <h1 class="text valign-text-middle inter-bold-black-48px">{{ text66 }}</h1>
-              </div>
-              <div class="frame-1321317609">
-                <div class="text valign-text-middle inter-bold-black-48px">{{ text67 }}</div>
-              </div>
-              <div class="frame-1321317611">
-                <div class="text-3-1 valign-text-middle inter-bold-white-20px">{{ text68 }}</div>
-                <div class="frame-1321317612">
-                  <img
-                    class="vector-2"
-                    :src="vector35"
-                    alt="Vector"
-                  />
-                </div>
+  <div class="home-page">
+    <!-- Navigation -->
+    <navigation />
+    
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-image" :style="{ 'background-image': 'url(' + heroImage + ')' }">
+        <div class="hero-overlay">
+          <div class="hero-content">
+            <div class="hero-title-wrapper">
+              <h1 class="hero-title">{{ text66 }}</h1>
+            </div>
+            <div class="hero-subtitle-wrapper">
+              <div class="hero-subtitle">{{ text67 }}</div>
+            </div>
+            <div class="hero-button-wrapper">
+              <div class="hero-button-text">{{ text68 }}</div>
+              <div class="hero-button-icon">
+                <img
+                  class="vector-2"
+                  :src="vector35"
+                  alt="Vector"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
       <div class="frame-1321317457">
           <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }">
@@ -55,8 +56,8 @@
           </div>
         </div>
       
-      <frame1321317493 />
       
+    
       <svg class="vector-13" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
         <path d="M-8.02699e-08 120L-3.89972e-06 44.6076C413.287 -99.5267 685.476 162.131 1440 44.6077L1440 120L-8.02699e-08 120Z" fill="#ECECEC"/>
       </svg>
@@ -90,11 +91,10 @@
                   :className="card2Props.className"
                   :frame1321317481Props="card2Props.frame1321317481Props"
                 />
-                <div class="card">
-                  <div class="image" :style="{ 'background-image': 'url(' + image1 + ')' }">
-                    <frame1321317481 :text49="frame1321317481Props.text49" :text50="frame1321317481Props.text50" />
-                  </div>
-                </div>
+                <card
+                  :image="image1"
+                  :frame1321317481Props="frame1321317481Props"
+                />
               </div>
               <div class="button" @click="$router.push('/about-institute')" style="cursor: pointer;">
                 <div class="text-55 valign-text-middle inter-bold-white-15px">{{ text120 }}</div>
@@ -206,7 +206,9 @@
             </div>
           </div>
         </div>
-        <frame1321317483 />
+        
+        <!-- Contact CTA Section -->
+        <ContactSection />
         
         <div class="frame-1321317484">
         <div class="content-view">
@@ -371,37 +373,11 @@
       <svg class="vector-14-1" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
         <path d="M1440 0.0001297L1440 75.3924C1026.71 219.527 754.524 -42.1312 3.89972e-06 75.3923L1.04907e-05 8.77342e-05L1440 0.0001297Z" fill="#ECECEC"/>
       </svg>
-      <div class="content-view-2">
-        <div class="frame-1321317467-2">
-          <group10 />
-          <div class="frame-1321317467-1">
-            <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
-            <div class="frame-1321317466">
-              <div class="group-container">
-                <div class="group-12">
-                  <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
-                  <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
-                  <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
-                  <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
-                  <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
-                </div>
-                <div class="group-12">
-                  <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
-                  <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
-                  <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
-                  <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
-                </div>
-                <div class="group-12">
-                  <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
-                  <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
-                  <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
-                  <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
+      <!-- Access Section -->
+      <AccessSection />
+      
+      <!-- Partner Companies Section -->
       <div class="content-view-3">
         <div class="frame-1321317457-1">
           <img class="image-1" :src="image2" alt="image" /><img class="image-2" :src="image3" alt="image" /><img
@@ -416,19 +392,22 @@
           alt="Vector 5"
         />
       </div>
+      
+      <!-- Footer Navigation -->
       <div class="navigation-footer">
         <Footer v-bind="frame132131753022Props" />
         <div class="vector-7-1"></div>
         <group27 />
       </div>
+      
+      <!-- Fixed Side Buttons -->
+      <FixedSideButtons position="bottom" />
     </div>
-  </div>
 </template>
 
 <script>
 import Navigation from "./Navigation";
-import Frame1321317493 from "./Frame1321317493";
-import Frame1321317483 from "./Frame1321317483";
+import ContactSection from "./ContactSection.vue";
 import Card from "./Card";
 import Frame1321317481 from "./Frame1321317481";
 import Frame13213176122 from "./Frame13213176122";
@@ -439,7 +418,8 @@ import Frame1321317475 from "./Frame1321317475";
 import Group10 from "./Group10";
 import Footer from "./Footer";
 import Group27 from "./Group27";
-import FixedActionButtons from "./FixedActionButtons";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
 import { homePageData } from "../data.js";
 import mockServer from "@/mockServer";
 import vector35 from "../../public/img/vector-35.svg";
@@ -460,8 +440,7 @@ export default {
   name: "HomePage",
   components: {
     Navigation,
-    Frame1321317493,
-    Frame1321317483,
+    ContactSection,
     Card,
     Frame1321317481,
     Frame13213176122,
@@ -472,7 +451,8 @@ export default {
     Group10,
     Footer,
     Group27,
-    FixedActionButtons,
+    AccessSection,
+    FixedSideButtons,
   },
   data() {
     return {
@@ -534,20 +514,8 @@ export default {
       text107: homePageData.text107,
       viweMore4: homePageData.viweMore4,
       vector21: homePageData.vector21,
-      rectangle3: homePageData.rectangle3,
-      text75: homePageData.text75,
-      text77: homePageData.text77,
-      text76: homePageData.text76,
-      phone: homePageData.phone,
-      x900: homePageData.x900,
-      text74: homePageData.text74,
-      x12Km141: homePageData.x12Km141,
-      x12Km142: homePageData.x12Km142,
-      x19Km23: homePageData.x19Km23,
-      text78: homePageData.text78,
-      x497M6: homePageData.x497M6,
-      x811M10: homePageData.x811M10,
-      d1830M10: homePageData.d1830M10,
+
+
       image2: homePageData.image2,
       image3: homePageData.image3,
       image4: homePageData.image4,
@@ -584,13 +552,8 @@ export default {
     };
   },
   async mounted() {
-    this.adjustRectangleHeight();
-    window.addEventListener('resize', this.adjustRectangleHeight);
     // CMSから最新データを取得
     await this.loadLatestData();
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
     async loadLatestData() {
@@ -691,17 +654,6 @@ export default {
       const day = date.getDate();
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
-    adjustRectangleHeight() {
-      this.$nextTick(() => {
-        const frame1321317466 = this.$el.querySelector('.frame-1321317466');
-        const rectangle3 = this.$el.querySelector('.rectangle-3');
-        
-        if (frame1321317466 && rectangle3) {
-          const frameHeight = frame1321317466.offsetHeight;
-          rectangle3.style.height = frameHeight + 'px';
-        }
-      });
-    },
     goToMainPublication() {
       // メイン刊行物（最新）の詳細ページに遷移
       if (this.allPublications.length > 0) {
@@ -757,100 +709,131 @@ export default {
 };
 </script>
 
-<style>
-.u12488u12483u12501u12442-1 {
-  align-items: flex-start; /* 左寄せ（右寄せしたくないなら） */
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  position: relative;
+<style scoped>
+.home-page {
+  background: #ffffff;
+  min-height: 100vh;
   width: 100%;
-  max-width: 100vw;
 }
 
-.overlap-group7 {
-  align-self: center; /* 中央寄せするならcenter、左ならflex-start */
-  height: 900px;
-  padding: 50px 50px 0 50px; /* 左右100pxずつ余白 */
-  position: relative;
+/* Hero Section */
+.hero-section {
   width: 100%;
-  max-width: 100vw;
-  z-index: 1;
-  box-sizing: border-box; /* パディングを含めて計算 */
+  height: 900px;
+  padding: 50px;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .hero-image {
-  align-items: flex-start;
   background-position: 50% 50%;
   background-size: cover;
   border-radius: 20px;
-  display: flex;
+  height: 100%;
+  width: 100%;
+  position: relative;
   overflow: hidden;
-  position: absolute;
-  top: 50px; /* 上パディング分 */
-  left: 50px; /* 左パディング分 */
-  width: calc(100% - 100px); /* パディング分を引いた幅 */
-  height: calc(100% - 50px); /* 必要に応じて調整 */
 }
 
-.frame-1321317489 {
-  display: flex;
-  flex-direction: column;    /* 縦並び */
-  justify-content: flex-end; /* 下揃え */
-  align-items: flex-start;   /* 左揃え */
-  background-color: #4d4d4d33;
+.hero-overlay {
+  background-color: rgba(77, 77, 77, 0.2);
   border-radius: 10px;
   height: 100%;
-  overflow: hidden;
-  padding: 170px 70px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 170px 70px;
 }
 
-
-.frame-1321317608 {
-  align-items: flex-start;
+.hero-content {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: relative;
   width: 100%;
   max-width: 911px;
 }
 
-.frame-1321317610 {
+.hero-title-wrapper {
   align-items: center;
   background-color: var(--white);
   border-radius: 15px;
   display: inline-flex;
-  flex: 0 0 auto;
   gap: 10px;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 15px 25px;
-  position: relative;
-}
-
-.text {
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: -1px;
-  position: relative;
   width: fit-content;
 }
 
-.frame-1321317609 {
+.hero-title {
+  font-family: var(--font-family-inter);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: 0;
+  line-height: normal;
+  margin: 0;
+}
+
+.hero-subtitle-wrapper {
   align-items: center;
   background-color: var(--white);
   border-radius: 15px;
   display: inline-flex;
-  flex: 0 0 auto;
   gap: 10px;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
   padding: 15px 25px;
+  width: fit-content;
+}
+
+.hero-subtitle {
+  font-family: var(--font-family-inter);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: 0;
+  line-height: normal;
+  margin: 0;
+}
+
+.hero-button-wrapper {
+  align-items: center;
+  background-color: var(--mandy);
+  border-radius: 10px;
+  display: inline-flex;
+  gap: 20px;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: 15px 25px;
+  width: fit-content;
+}
+
+.hero-button-text {
+  font-family: var(--font-family-inter);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0;
+  line-height: normal;
+  margin: 0;
+}
+
+.hero-button-icon {
+  background-color: var(--white);
+  border-radius: 8px;
+  height: 27px;
+  width: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+}
+
+.vector-2 {
+  height: 12px;
+  width: 14px;
 }
 
 .frame-1321317611 {
@@ -1166,41 +1149,40 @@ export default {
   align-items: center;
   align-self: center;
   display: flex;
-  flex: 0 0 auto;
   flex-direction: column;
   gap: 10px;
   position: relative;
   width: 100%;
   max-width: 100%;
+  overflow: hidden;
 }
 
 .frame-1321317456 {
   align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
+  display: flex;
   flex-direction: column;
   gap: 40px;
-  margin-right: -2px;
   position: relative;
   width: 100%;
   max-width: 2000px;
+  box-sizing: border-box;
 }
 
 .frame-1321317482 {
   display: flex;
-  flex: 0 0 auto;
-  gap: 20px;               /* 子要素間の間隔はそのまま */
+  gap: 20px;
   overflow: hidden;
   position: relative;
   width: 100%;
-  justify-content: center;  /* 横方向中央揃え */
-  align-items: flex-start;  /* 縦方向の揃え方（必要に応じて変更） */
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
 }
 
 
 .card {
   position: relative;
-  width: calc(33.333% - 13.33px);
+  width: calc((100% - 40px) / 3);
   flex-shrink: 0;
   aspect-ratio: 434 / 330;
 }
@@ -1222,12 +1204,14 @@ export default {
   background-color: #1A1A1A;
   border-radius: 10px;
   box-shadow: 0px 1px 2px #0000000d;
-  display: inline-flex;
-  flex: 0 0 auto;
+  display: flex;
   gap: 10px;
   justify-content: center;
-  padding: 10px 100px;
+  padding: 10px 50px;
   position: relative;
+  min-width: 200px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .text-55 {
@@ -1866,143 +1850,9 @@ export default {
   box-sizing: border-box;
 }
 
-.content-view-2 {
-  align-items: center;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 80px 50px;
-  position: relative;
-  width: 100%;
-  z-index: 3;
-  box-sizing: border-box;
-}
 
-.frame-1321317467-2 {
-  align-items: flex-start;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 50px;
-  position: relative;
-  width: 100%;
-  max-width: 2000px;
-  z-index: 3;
-  box-sizing: border-box;
-}
 
-.frame-1321317467-1 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 40px;
-  position: relative;
-  width: 100%;
-  min-height: auto;
-}
 
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-  border-radius: 10px;
-}
-
-.frame-1321317466 {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  width: auto;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  height: auto;
-}
-
-.group-container {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  height: fit-content;
-  position: relative;
-  width: fit-content;
-}
-
-.text-3 {
-  letter-spacing: 0;
-  line-height: 40px;
-  margin-bottom: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.text-12,
-.phone,
-.x900,
-.x12km-14,
-.x12km-14-1,
-.x19km-23 {
-  letter-spacing: 0;
-  line-height: 20px;
-  margin-bottom: 2px;
-  margin-top: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.x497m-6,
-.x811m-10,
-.d1-830m-10 {
-  letter-spacing: 0;
-  line-height: 20px;
-  margin-bottom: 2px;
-  margin-top: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.text-11 {
-  letter-spacing: 0;
-  line-height: 18px;
-  margin-top: 3px;
-  margin-bottom: 2px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.group-14 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
-
-.group-12 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
-
-.group-13 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
 
 .content-view-3 {
   align-items: center;
@@ -2078,7 +1928,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 50px;
-  padding: 0px 100px 50px;
+  padding: 100px;
   position: relative;
   width: 100%;
   max-width: 100vw;
@@ -2096,22 +1946,9 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 1700px) {
-  .content-view,
-  .content-view-2 {
+  .content-view {
     max-width: 100%;
     padding: 50px 30px;
-  }
-  
-  .frame-1321317467-1 {
-    gap: 30px;
-  }
-  
-  .rectangle-3 {
-    width: 40%;
-  }
-  
-  .frame-1321317466 {
-    width: 60%;
   }
   
   .main {
@@ -2143,6 +1980,14 @@ export default {
     width: 100%;
     max-width: 100%;
   }
+  
+  .frame-1321317482 {
+    gap: 15px;
+  }
+  
+  .card {
+    width: calc((100% - 30px) / 3);
+  }
 }
 
 @media (max-width: 900px) {
@@ -2150,20 +1995,19 @@ export default {
     overflow-x: auto;
   }
   
-  .navigation,
   .hero-section,
   .main,
   .content-view,
-  .content-view-2,
   .content-view-3,
   .navigation-footer,
   .frame-1321317457,
-  .frame-1321317493,
   .overlap-group7,
   .overlap-group8 {
     min-width: 900px;
   }
 }
+
+
 
 @media (max-width: 768px) {
   .hero-section {
@@ -2182,26 +2026,14 @@ export default {
     box-sizing: border-box;
   }
   
-  .frame-1321317467-1 {
+  .frame-1321317482 {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
   }
   
-  .rectangle-3,
-  .frame-1321317466 {
+  .card {
     width: 100%;
-    max-width: none;
-  }
-  
-  .group-container {
-    width: 100%;
-  }
-  
-  .group-14,
-  .group-12,
-  .group-13 {
-    width: 100%;
-    max-width: none;
+    max-width: 400px;
   }
   
   .frame-1321317457-1 {
@@ -2217,19 +2049,50 @@ export default {
     height: auto;
   }
   
-  .navigation-footer {
-    padding: 0px 50px 50px;
+
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 600px;
+    padding: 30px 20px;
+  }
+  
+  .hero-overlay {
+    padding: 100px 40px;
+  }
+  
+  .hero-title,
+  .hero-subtitle {
+    font-size: 32px;
+  }
+  
+  .hero-button-text {
+    font-size: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .hero-section {
-    min-height: 250px;
-    height: 35vh;
+    height: 500px;
+    padding: 20px 15px;
   }
   
   .hero-overlay {
-    padding: 20px 15px;
+    padding: 80px 30px;
+  }
+  
+  .hero-title,
+  .hero-subtitle {
+    font-size: 24px;
+  }
+  
+  .hero-button-wrapper {
+    padding: 12px 20px;
+  }
+  
+  .hero-button-text {
+    font-size: 14px;
   }
   
   .main {
@@ -2237,7 +2100,6 @@ export default {
   }
   
   .content-view,
-  .content-view-2,
   .content-view-3 {
     padding: 0px 30px 50px;
   }
@@ -2252,10 +2114,6 @@ export default {
   .image-4 {
     width: 100%;
     height: auto;
-  }
-  
-  .navigation-footer {
-    padding: 0px 30px 50px;
   }
 }
 

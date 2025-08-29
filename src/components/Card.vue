@@ -28,7 +28,9 @@ export default {
 .card-1-1 {
   height: 330px;
   position: relative;
-  width: 434px;
+  width: calc((100% - 40px) / 3);
+  flex-shrink: 0;
+  aspect-ratio: 434 / 330;
 }
 
 .image-5 {
@@ -37,9 +39,23 @@ export default {
   background-size: cover;
   border-radius: 10px;
   display: flex;
-  height: 330px;
+  height: 100%;
   overflow: hidden;
   position: relative;
-  width: 434px;
+  width: 100%;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1700px) {
+  .card-1-1 {
+    width: calc((100% - 30px) / 3);
+  }
+}
+
+@media (max-width: 768px) {
+  .card-1-1 {
+    width: 100%;
+    max-width: 400px;
+  }
 }
 </style>

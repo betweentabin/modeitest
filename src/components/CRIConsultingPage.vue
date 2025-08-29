@@ -3,27 +3,14 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <div class="hero-subtitle">consulting</div>
-          <h1 class="hero-title">CRI 経営コンサルティング</h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="CRI 経営コンサルティング"
+      subtitle="consulting"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/db22880ee1d73553a2fa432da82e4e20fe5c43c9?width=2880"
+    />
     
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb-section" aria-label="パンくずリスト">
-      <ol class="breadcrumb-container">
-        <li class="breadcrumb-item">
-          <a href="/" class="breadcrumb-link">トップ</a>
-        </li>
-        <li class="breadcrumb-separator" aria-hidden="true">></li>
-        <li class="breadcrumb-item" aria-current="page">
-          <span class="breadcrumb-current">CRI 経営コンサルティング</span>
-        </li>
-      </ol>
-    </nav>
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['CRI 経営コンサルティング']" />
     
     <!-- What is CRI Consulting Section -->
     <div class="what-is-section">
@@ -84,8 +71,8 @@
       </p>
     </div>
 
-    <!-- Company Intro Section -->
-    <Frame1321317483 />
+    <!-- Contact CTA Section -->
+    <ContactSection />
     
     <!-- Support Content and Costs Section -->
     <div class="support-section">
@@ -279,37 +266,7 @@
     </div>
     
     <!-- Access Section -->
-    <div class="content-view-2">
-      <div class="frame-1321317467-2">
-        <group10 />
-        <div class="frame-1321317467-1">
-          <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
-          <div class="frame-1321317466">
-            <div class="group-container">
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
-                <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
-            </div>
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
-            </div>
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
-          </div>
-          </div>
-        </div>
-      </div>
-          </div>
-        </div>
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -318,29 +275,20 @@
       <group27 />
       </div>
     
-    <!-- Fixed Action Buttons -->
-    <div class="fixed-actions">
-      <button class="fixed-btn login-btn">
-        <svg width="26" height="25" viewBox="0 0 26 25" fill="none">
-          <path d="M25.8666 24.5001C25.7789 24.6521 25.6526 24.7783 25.5005 24.8661C25.3484 24.9539 25.1759 25 25.0003 25H0.99903C0.82357 24.9998 0.651246 24.9535 0.499362 24.8657C0.347477 24.7778 0.221377 24.6516 0.133726 24.4996C0.0460738 24.3477 -4.50128e-05 24.1753 3.29665e-08 23.9999C4.50787e-05 23.8245 0.0462524 23.6521 0.133982 23.5002C2.03784 20.2094 4.97175 17.8497 8.39569 16.7311C6.70205 15.7231 5.3862 14.1871 4.65021 12.359C3.91422 10.5309 3.79879 8.51174 4.32164 6.6117C4.84448 4.71165 5.9767 3.03573 7.54442 1.84131C9.11214 0.646882 11.0287 0 12.9997 0C14.9707 0 16.8872 0.646882 18.455 1.84131C20.0227 3.03573 21.1549 4.71165 21.6777 6.6117C22.2006 8.51174 22.0852 10.5309 21.3492 12.359C20.6132 14.1871 19.2973 15.7231 17.6037 16.7311C21.0276 17.8497 23.9615 20.2094 25.8654 23.5002C25.9534 23.6521 25.9998 23.8245 26 24C26.0002 24.1755 25.9542 24.348 25.8666 24.5001Z" fill="white"/>
-        </svg>
-        <span>ログイン</span>
-      </button>
-      <button class="fixed-btn contact-btn">
-        <svg width="18" height="28" viewBox="0 0 18 28" fill="none">
-          <path d="M15 0H3C2.20435 0 1.44129 0.316071 0.87868 0.87868C0.316071 1.44129 0 2.20435 0 3V25C0 25.7956 0.316071 26.5587 0.87868 27.1213C1.44129 27.6839 2.20435 28 3 28H15C15.7956 28 16.5587 27.6839 17.1213 27.1213C17.6839 26.5587 18 25.7956 18 25V3C18 2.20435 17.6839 1.44129 17.1213 0.87868C16.5587 0.316071 15.7956 0 15 0ZM3 2H15C15.2652 2 15.5196 2.10536 15.7071 2.29289C15.8946 2.48043 16 2.73478 16 3V4H2V3C2 2.73478 2.10536 2.48043 2.29289 2.29289C2.48043 2.10536 2.73478 2 3 2ZM15 26H3C2.73478 26 2.48043 25.8946 2.29289 25.7071C2.10536 25.5196 2 25.2652 2 25V24H16V25C16 25.2652 15.8946 25.5196 15.7071 25.7071C15.5196 25.8946 15.2652 26 15 26Z" fill="white"/>
-        </svg>
-        <span>お問い合わせ</span>
-      </button>
-    </div>
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
 <script>
+import AccessSection from './AccessSection.vue';
 import Navigation from "./Navigation";
 import Footer from "./Footer";
-import Frame1321317483 from "./Frame1321317483";
-import Group10 from "./Group10";
+import ContactSection from "./ContactSection.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
+
 import Group27 from "./Group27";
 import { homePageData, frame132131753022Data } from "../data";
 
@@ -349,27 +297,17 @@ export default {
   components: {
     Navigation,
     Footer,
-    Frame1321317483,
-    Group10,
+    ContactSection,
+    AccessSection,
     Group27,
+    HeroSection,
+    Breadcrumbs,
+    FixedSideButtons,
   },
   data() {
     return {
       // Access section data
-      rectangle3: homePageData.rectangle3,
-      text75: homePageData.text75,
-      text77: homePageData.text77,
-      text76: homePageData.text76,
-      phone: homePageData.phone,
-      x900: homePageData.x900,
-      text74: homePageData.text74,
-      x12Km141: homePageData.x12Km141,
-      x12Km142: homePageData.x12Km142,
-      x19Km23: homePageData.x19Km23,
-      text78: homePageData.text78,
-      x497M6: homePageData.x497M6,
-      x811M10: homePageData.x811M10,
-      d1830M10: homePageData.d1830M10,
+      
       // Footer data
       frame132131753022Props: homePageData.frame132131753022Props,
     };
@@ -426,95 +364,9 @@ export default {
   width: 100%;
 }
 
-/* Hero Section */
-.hero-section {
-  width: 100%;
-  height: 400px;
-  background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/db22880ee1d73553a2fa432da82e4e20fe5c43c9?width=2880');
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  position: relative;
-}
 
-.hero-overlay {
-  background: rgba(77, 77, 77, 0.70);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 50px 30px;
-  box-sizing: border-box;
-}
 
-.hero-subtitle {
-  color: white;
-  font-size: clamp(18px, 4vw, 24px);
-  font-weight: 700;
-  text-align: center;
-  line-height: 2.5;
-  letter-spacing: -0.48px;
-}
 
-.hero-title {
-  color: white;
-  font-size: clamp(28px, 6vw, 40px);
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.5;
-  letter-spacing: -0.8px;
-}
-
-/* Breadcrumb */
-.breadcrumb-section {
-  width: 100%;
-  padding: 24px 46px;
-}
-
-.breadcrumb-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb-link {
-  color: #3F3F3F;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 60px;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.breadcrumb-link:hover {
-  color: #DA5761;
-  text-decoration: underline;
-}
-
-.breadcrumb-current {
-  color: #3F3F3F;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 60px;
-}
-
-.breadcrumb-separator {
-  color: #3F3F3F;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  margin: 0 4px;
-}
 
 /* Section Headers */
 .section-header {
@@ -1122,91 +974,7 @@ export default {
   box-shadow: 0 4px 12px rgba(156, 57, 64, 0.3);
 }
 
-/* Access Section */
-.content-view-2 {
-  background: white;
-  padding: 80px 50px;
-  width: 100%;
-}
 
-.frame-1321317467-2 {
-  align-items: flex-start;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
-  width: 100%;
-  max-width: 2000px;
-  z-index: 3;
-  box-sizing: border-box;
-}
-
-.frame-1321317467-1 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 40px;
-  position: relative;
-  width: 100%;
-  min-height: auto;
-}
-
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-  border-radius: 10px;
-}
-
-.frame-1321317466 {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  width: auto;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  height: auto;
-}
-
-.group-container {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.group-12 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
-
-.text-3 {
-  color: #DA5761;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.x12km-14, .x12km-14-1, .x19km-23 {
-  color: #3F3F3F;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.text-11 {
-  color: #3F3F3F;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.6;
-}
 
 /* Responsive Design */
 @media (max-width: 1150px) {
@@ -1228,39 +996,28 @@ export default {
 
 /* Footer Navigation */
 .navigation-footer {
-  background: var(--celeste);
-  width: 100%;
+  align-items: center;
+  background-color: var(--celeste);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding: 100px;
   position: relative;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 4;
+  box-sizing: border-box;
 }
 
 .vector-7-1 {
-  width: 100%;
   height: 1px;
-  background: #CFCFCF;
-  margin: 0;
+  background-color: #B2B2B2;
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
 }
 
 /* Access Section */
-.access-section {
-  width: 100%;
-  padding: 80px 50px;
-  background: #FFF;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.access-header {
-  width: 209px;
-  height: 126px;
-  position: relative;
-}
-
-.access-title-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
 
 .access-title-container svg {
   position: absolute;
@@ -1291,25 +1048,11 @@ export default {
   top: 0;
 }
 
-.access-content {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-}
-
 .access-map {
   width: 692px;
   height: 398px;
   border-radius: 10px;
   object-fit: cover;
-}
-
-.access-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  padding: 2px 84px 4.552px 0;
 }
 
 .info-section {
@@ -1336,47 +1079,7 @@ export default {
   margin: 0;
 }
 
-/* Fixed Action Buttons */
-.fixed-actions {
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
-}
 
-.fixed-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  gap: 8px;
-}
-
-.fixed-btn.login-btn {
-  background: #DA5761;
-}
-
-.fixed-btn.contact-btn {
-  background: #9C3940;
-}
-
-.fixed-btn span {
-  color: #FFF;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 150%;
-  text-align: center;
-}
 
 /* Responsive Design */
 @media (max-width: 1200px) {
@@ -1395,11 +1098,7 @@ export default {
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .access-content {
-    flex-direction: column;
-  }
-  
+
   .access-map {
     width: 100%;
   }
@@ -1429,12 +1128,6 @@ export default {
     padding: 15px 20px;
   }
   
-  .fixed-actions {
-    position: static;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 20px;
-    transform: none;
-  }
+
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="frame-1321317483">
+  <div class="contact-section">
     <div class="overlap-group6">
       <div class="rectangle-9"></div>
       <div class="button-3">
@@ -7,48 +7,55 @@
         <frame13213176122 />
       </div>
       <div class="text-45 valign-text-middle">株式会社ちくぎん地域経済研究所</div>
+      <div class="group-30-1">
+        <img
+          class="vector-16-1"
+          src="/img/vector-15-1.svg"
+          alt="Vector 16"
+        />
+        <div class="about-us valign-text-middle inter-bold-white-20px">About us</div>
+        <img
+          class="vector-15-1"
+          src="/img/vector-15-1.svg"
+          alt="Vector 15"
+        />
+      </div>
       <div class="text-46 valign-text-middle inter-bold-white-20px">
         様々な分野の調査研究を通じ、企業活動などをサポートします。
       </div>
-      <group30 />
     </div>
   </div>
 </template>
 
 <script>
 import Frame13213176122 from "./Frame13213176122";
-import Group30 from "./Group30";
 export default {
-  name: "Frame1321317483",
+  name: "ContactSection",
   components: {
     Frame13213176122,
-    Group30,
   },
 };
 </script>
 
 <style>
-.frame-1321317483 {
+.contact-section {
   align-items: flex-start;
   background-color: #ff6a6a;
   display: flex;
   height: 351px;
-  left: 0;
+  width: 100%;
   overflow: hidden;
-  position: absolute;
-  top: 1490px;
-  width: 1440px;
-  opacity: 0;
+  position: relative;
+  opacity: 1;
 }
 
 .overlap-group6 {
   background-image: url(/img/-----1-1.png);
   background-position: 50% 50%;
   background-size: cover;
-  height: 706px;
-  margin-top: -225px;
+  height: 351px;
+  width: 100%;
   position: relative;
-  width: 1441px;
 }
 
 .rectangle-9 {
@@ -56,8 +63,8 @@ export default {
   height: 351px;
   left: 0;
   position: absolute;
-  top: 225px;
-  width: 1440px;
+  top: 0;
+  width: 100%;
 }
 
 .button-3 {
@@ -68,10 +75,11 @@ export default {
   display: flex;
   gap: 10px;
   justify-content: center;
-  left: 530px;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 10px 0px;
   position: absolute;
-  top: 479px;
+  top: 244px;
   width: 380px;
 }
 
@@ -90,21 +98,56 @@ export default {
   font-size: 40px;
   font-weight: 700;
   height: 60px;
-  left: 420px;
+  left: 50%;
+  transform: translateX(-50%);
   letter-spacing: 0;
   line-height: 60px;
   position: absolute;
-  top: 284px;
+  top: 59px;
   white-space: nowrap;
+  text-align: center;
 }
 
 .text-46 {
   height: 30px;
-  left: 431px;
+  left: 50%;
+  transform: translateX(-50%);
   letter-spacing: 0;
   line-height: 30px;
   position: absolute;
-  top: 415px;
+  top: 190px;
   white-space: nowrap;
+  text-align: center;
+}
+
+.group-30-1 {
+  align-items: center;
+  display: flex;
+  height: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 270px;
+  position: absolute;
+  top: 130px;
+}
+
+.vector-16-1 {
+  height: 2px;
+  width: 69px;
+}
+
+.about-us {
+  height: 30px;
+  letter-spacing: 0;
+  line-height: 30px;
+  margin-left: 21px;
+  min-width: 89px;
+  white-space: nowrap;
+}
+
+.vector-15-1 {
+  height: 2px;
+  margin-left: 20px;
+  width: 69px;
 }
 </style>

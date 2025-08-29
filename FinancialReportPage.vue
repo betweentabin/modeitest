@@ -214,45 +214,7 @@
     </div>
 
     <!-- Access Section -->
-    <div class="access-section">
-      <div class="access-container">
-        <div class="access-header">
-          <div class="access-title-wrapper">
-            <div class="access-title-jp">アクセス</div>
-            <svg width="91" height="2" viewBox="0 0 91 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 1L91 1.00001" stroke="#DA5761"/>
-            </svg>
-            <div class="access-title-en">ACCESS</div>
-          </div>
-        </div>
-        <div class="access-content">
-          <div class="access-map">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/a4288a92803ef8ca06ea5a18b9e2bd186451ecd1?width=1384" alt="アクセス地図" />
-          </div>
-          <div class="access-info">
-            <div class="company-info">
-              <h3 class="info-title">会社情報</h3>
-              <div class="company-name">会社名：株式会社ちくぎん地域経済研究所</div>
-              <div class="company-address">住所：〒839-0864<br>　　　福岡県久留米市百年公園1番1号久留米リサーチセンタービル6階</div>
-              <div class="company-phone">電話番号：0942-46-5081</div>
-              <div class="company-hours">営業時間：平日9:00-17:00</div>
-            </div>
-            <div class="transportation-info">
-              <h3 class="info-title">電車でお越しの場合</h3>
-              <div class="transport-detail">宮の陣：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
-              <div class="transport-detail">櫛原：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
-              <div class="transport-detail">五郎丸：約1.9km 徒歩で約23分 乗換案内 | 徒歩ルート</div>
-            </div>
-            <div class="parking-info">
-              <h3 class="info-title">お車でお越しの場合</h3>
-              <div class="parking-detail">【予約制】軒先パーキング 合川スタンド跡駐車場 | 約497m 徒歩で約6分</div>
-              <div class="parking-detail">タイムズ合川町混 | 約811m 徒歩で約10分</div>
-              <div class="parking-detail">Dパーキング諏訪野町第1 | 約830m 徒歩で約10分</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="footer-navigation">
@@ -448,8 +410,13 @@
 </template>
 
 <script>
+import AccessSection from './src/components/AccessSection.vue';
+
 export default {
-  name: "FinancialReportPage"
+  name: "FinancialReportPage",
+  components: {
+    AccessSection
+  }
 }
 </script>
 
@@ -903,96 +870,7 @@ export default {
   background: var(--accent-color);
 }
 
-/* Access Section */
-.access-section {
-  display: flex;
-  width: 100%;
-  padding: 80px 50px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 24px;
-  background: #FFF;
-}
 
-.access-container {
-  width: 100%;
-}
-
-.access-header {
-  margin-bottom: 40px;
-}
-
-.access-title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.access-title-jp {
-  color: var(--black-text);
-  font-family: Inter;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 150%;
-}
-
-.access-title-en {
-  color: var(--black-text);
-  font-family: Inter;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 150%;
-}
-
-.access-content {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  width: 100%;
-}
-
-.access-map {
-  width: 692px;
-  height: 398px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.access-map img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.access-info {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  flex: 1;
-}
-
-.info-title {
-  color: #DA5761;
-  font-family: Inter;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 200%;
-  margin: 0 0 10px 0;
-}
-
-.company-name,
-.company-address,
-.company-phone,
-.company-hours,
-.transport-detail,
-.parking-detail {
-  color: var(--black-text);
-  font-family: Inter;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 200%;
-  margin: 5px 0;
-}
 
 /* Footer Navigation */
 .footer-navigation {
@@ -1148,10 +1026,6 @@ export default {
   .cta-button {
     width: 100%;
     padding: 15px 20px;
-  }
-
-  .access-content {
-    flex-direction: column;
   }
 
   .access-map {
