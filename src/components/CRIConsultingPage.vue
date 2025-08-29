@@ -366,8 +366,6 @@ export default {
 
 
 
-
-
 /* Section Headers */
 .section-header {
   display: flex;

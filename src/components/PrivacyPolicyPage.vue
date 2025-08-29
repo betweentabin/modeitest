@@ -1,7 +1,7 @@
 <template>
   <div class="privacy-policy-page">
     <!-- Navigation -->
-    <navigation />
+    <Navigation />
     
     <!-- Hero Section -->
     <HeroSection 

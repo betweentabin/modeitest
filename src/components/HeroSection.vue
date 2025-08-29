@@ -67,7 +67,7 @@ export default {
   color: white;
   font-size: clamp(18px, 4vw, 24px);
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   line-height: 2.5;
   letter-spacing: -0.48px;
 }
@@ -76,7 +76,7 @@ export default {
   color: white;
   font-size: clamp(28px, 6vw, 40px);
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   line-height: 1.5;
   letter-spacing: -0.8px;
 }
