@@ -35,7 +35,7 @@ import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
 import TransactionLawPage from "./components/TransactionLawPage";
 import PrivacyPolicyPage from "./components/PrivacyPolicyPage";
 import TermsOfServicePage from "./components/TermsOfServicePage";
-import CriConsultingPage from "./components/CriConsultingPage";
+import CriConsultingPage from "./components/CRIConsultingPage";
 import SitemapPage from "./components/SitemapPage";
 import FinancialReportPage from "./components/FinancialReportPage";
 import TestPage from "./components/TestPage";
