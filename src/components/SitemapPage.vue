@@ -4,21 +4,14 @@
     <navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <div class="hero-subtitle">sitemap</div>
-          <h1 class="hero-title">サイトマップ</h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="サイトマップ"
+      subtitle="sitemap"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
+    />
 
     <!-- Breadcrumbs -->
-    <div class="breadcrumbs">
-      <router-link to="/" class="breadcrumb-item">トップ</router-link>
-      <span class="breadcrumb-separator">></span>
-      <span class="breadcrumb-item current">サイトマップ</span>
-    </div>
+    <Breadcrumbs :breadcrumbs="['サイトマップ']" />
 
     <!-- Main Content -->
     <div class="main-content">
@@ -126,37 +119,7 @@
     </div>
 
     <!-- Access Section -->
-    <div class="content-view-2">
-      <div class="frame-1321317467-2">
-        <group10 />
-        <div class="frame-1321317467-1">
-          <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
-          <div class="frame-1321317466">
-            <div class="group-container">
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
-                <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
-              </div>
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
-              </div>
-              <div class="group-12">
-                <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
-                <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
-                <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
-                <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -165,22 +128,22 @@
       <group27 />
     </div>
 
-
-
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
 <script>
+import AccessSection from './AccessSection.vue';
 import Navigation from "./Navigation";
 import Footer from "./Footer";
 import Group27 from "./Group27";
-import Group10 from "./Group10";
-import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
+
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
-import { homePageData } from "../data";
 
 export default {
   name: "SitemapPage",
@@ -188,50 +151,19 @@ export default {
     Navigation,
     Footer,
     Group27,
-    Group10,
-    FixedActionButtons,
+    AccessSection,
+    HeroSection,
+    Breadcrumbs,
+    FixedSideButtons,
   },
   data() {
     return {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      // content-view-2に必要なデータ
-      rectangle3: homePageData.rectangle3,
-      text75: homePageData.text75,
-      text77: homePageData.text77,
-      text76: homePageData.text76,
-      phone: homePageData.phone,
-      x900: homePageData.x900,
-      text74: homePageData.text74,
-      x12Km141: homePageData.x12Km141,
-      x12Km142: homePageData.x12Km142,
-      x19Km23: homePageData.x19Km23,
-      text78: homePageData.text78,
-      x497M6: homePageData.x497M6,
-      x811M10: homePageData.x811M10,
-      d1830M10: homePageData.d1830M10,
+      
     };
   },
-  mounted() {
-    this.adjustRectangleHeight();
-    window.addEventListener('resize', this.adjustRectangleHeight);
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.adjustRectangleHeight);
-  },
-  methods: {
-    adjustRectangleHeight() {
-      this.$nextTick(() => {
-        const frame1321317466 = this.$el.querySelector('.frame-1321317466');
-        const rectangle3 = this.$el.querySelector('.rectangle-3');
-        
-        if (frame1321317466 && rectangle3) {
-          const frameHeight = frame1321317466.offsetHeight;
-          rectangle3.style.height = frameHeight + 'px';
-        }
-      });
-    }
-  }
+
 };
 </script>
 
@@ -242,85 +174,9 @@ export default {
   width: 100%;
 }
 
-/* Hero Section */
-.hero-section {
-  width: 100%;
-  height: 400px;
-  background: url('https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880') lightgray center/cover no-repeat;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  position: relative;
-}
 
-.hero-overlay {
-  width: 100%;
-  height: 100%;
-  background: rgba(77, 77, 77, 0.70);
-  display: flex;
-  align-items: flex-end;
-  padding: 50px 30px;
-}
 
-.hero-content {
-  color: white;
-}
 
-.hero-subtitle {
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 150%;
-  letter-spacing: -0.48px;
-  margin-bottom: 10px;
-}
-
-.hero-title {
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 150%;
-  letter-spacing: -0.8px;
-  margin: 0;
-}
-
-/* Breadcrumbs */
-.breadcrumbs {
-  padding: 24px 46px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.breadcrumb-item {
-  color: #3F3F3F;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 5;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.breadcrumb-item:hover {
-  color: #DA5761;
-  text-decoration: underline;
-}
-
-.breadcrumb-item.current {
-  color: #1A1A1A;
-  font-weight: 500;
-  cursor: default;
-}
-
-.breadcrumb-item.current:hover {
-  color: #1A1A1A;
-  text-decoration: none;
-}
-
-.breadcrumb-separator {
-  color: #3F3F3F;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 5;
-}
 
 /* Main Content */
 .main-content {
@@ -452,112 +308,7 @@ export default {
   text-decoration: underline;
 }
 
-/* Content View 2 */
-.content-view-2 {
-  align-items: center;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 80px 50px;
-  position: relative;
-  width: 100%;
-  z-index: 3;
-  box-sizing: border-box;
-}
 
-.frame-1321317467-2 {
-  align-items: flex-start;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
-  width: 100%;
-  max-width: 2000px;
-  z-index: 3;
-  box-sizing: border-box;
-}
-
-.frame-1321317467-1 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 40px;
-  position: relative;
-  width: 100%;
-  min-height: auto;
-}
-
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-  border-radius: 10px;
-}
-
-.frame-1321317466 {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  width: auto;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  height: auto;
-}
-
-.group-container {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  height: fit-content;
-  position: relative;
-  width: fit-content;
-}
-
-.group-12 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
-
-.text-3 {
-  letter-spacing: 0;
-  line-height: 40px;
-  margin-bottom: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.x12km-14,
-.x12km-14-1,
-.x19km-23 {
-  letter-spacing: 0;
-  line-height: 20px;
-  margin-bottom: 2px;
-  margin-top: 3px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.text-11 {
-  letter-spacing: 0;
-  line-height: 18px;
-  margin-top: 3px;
-  margin-bottom: 2px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
 
 /* Footer Navigation */
 .navigation-footer {
@@ -663,153 +414,10 @@ export default {
 }
 
 /* Access Section */
-.content-view-2 {
-  background: white;
-  padding: 50px 0;
-  width: 100%;
-}
 
-.frame-1321317467-2 {
-  align-items: flex-start;
-  background-color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
-  width: 100%;
-  max-width: 2000px;
-  z-index: 3;
-  box-sizing: border-box;
-}
 
-.frame-1321317467-1 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  gap: 40px;
-  position: relative;
-  width: 100%;
-  min-height: auto;
-}
-
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-  border-radius: 10px;
-}
-
-.frame-1321317466 {
-  display: flex;
-  align-items: flex-start;
-  position: relative;
-  width: auto;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  height: auto;
-}
-
-.group-container {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.group-12 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  width: fit-content;
-}
-
-.text-3 {
-  color: #DA5761;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.x12km-14, .x12km-14-1, .x19km-23 {
-  color: #3F3F3F;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.text-11 {
-  color: #3F3F3F;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-/* Fixed Side Buttons */
-.fixed-side-buttons {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
-}
-
-.side-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.side-button:hover {
-  transform: scale(1.1);
-}
-
-.login-side {
-  background: #DA5761;
-  color: white;
-}
-
-.contact-side {
-  background: #4A90E2;
-  color: white;
-}
-
-.side-button span {
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-}
 
  /* Responsive Design */
- @media (max-width: 1150px) {
-   .frame-1321317467-1 {
-     flex-direction: column;
-     gap: 20px;
-   }
-   
-   .rectangle-3 {
-     width: 100%;
-     max-width: none;
-     order: 2;
-   }
-   
-   .frame-1321317466 {
-     order: 1;
-   }
- }
  
  @media (max-width: 768px) {
    .main-content {
@@ -845,14 +453,6 @@ export default {
      padding: 50px 20px;
    }
    
-   .fixed-side-buttons {
-     right: 10px;
-     bottom: 10px;
-   }
-   
-   .side-button {
-     width: 80px;
-     height: 80px;
-   }
+
  }
 </style>

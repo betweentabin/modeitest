@@ -29,7 +29,7 @@ export default {
   overflow: hidden;
   padding: 10px 20px;
   position: relative;
-  width: 434px;
+  width: 100%;
 }
 
 .copy {

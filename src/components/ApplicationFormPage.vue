@@ -259,43 +259,7 @@
     </div>
 
     <!-- Access Section -->
-    <section class="access-section">
-      <div class="access-container">
-        <div class="access-header">
-          <div class="access-title-container">
-            <div class="access-title-en">ACCESS</div>
-            <div class="access-title-jp">アクセス</div>
-            <div class="access-line"></div>
-          </div>
-        </div>
-        <div class="access-content">
-          <div class="access-map">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/a4288a92803ef8ca06ea5a18b9e2bd186451ecd1?width=1384" alt="Map" class="map-image" />
-          </div>
-          <div class="access-info">
-            <div class="info-section">
-              <h3 class="info-title">会社情報</h3>
-              <div class="info-text">会社名：株式会社ちくぎん地域経済研究所</div>
-              <div class="info-text">住所：〒839-0864<br />　　　福岡県久留米市百年公園1番1号久留米リサーチセンタービル6階</div>
-              <div class="info-text">電話番号：0942-46-5081</div>
-              <div class="info-text">営業時間：平日9:00-17:00</div>
-            </div>
-            <div class="info-section">
-              <h3 class="info-title">電車でお越しの場合</h3>
-              <div class="info-text">宮の陣：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
-              <div class="info-text">西鉄久留米：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</div>
-              <div class="info-text">五郎丸：約1.9km 徒歩で約23分 乗換案内 | 徒歩ルート</div>
-            </div>
-            <div class="info-section">
-              <h3 class="info-title">お車でお越しの場合</h3>
-              <div class="info-text">【予約制】軒先パーキング 合川スタンド跡駐車場 | 約497m 徒歩で約6分</div>
-              <div class="info-text">タイムズ合川町混 | 約811m 徒歩で約10分</div>
-              <div class="info-text">Dパーキング諏訪野町第1 | 約830m 徒歩で約10分</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <AccessSection />
 
     <!-- Footer -->
     <footer class="footer">
@@ -360,8 +324,13 @@
 </template>
 
 <script>
+import AccessSection from './AccessSection.vue';
+
 export default {
   name: 'ApplicationFormPage',
+  components: {
+    AccessSection
+  },
   data() {
     return {
       formData: {
@@ -904,11 +873,6 @@ export default {
 }
 
 /* Access Section */
-.access-section {
-  padding: 80px 50px;
-  background: #FFF;
-  margin-top: 80px;
-}
 
 .access-container {
   display: flex;
@@ -916,34 +880,6 @@ export default {
   gap: 24px;
   max-width: 1340px;
   margin: 0 auto;
-}
-
-.access-header {
-  position: relative;
-}
-
-.access-title-container {
-  position: relative;
-  width: 209px;
-  height: 126px;
-}
-
-.access-title-en {
-  position: absolute;
-  left: 0;
-  top: 54px;
-  font-size: 48px;
-  font-weight: 700;
-  color: #1A1A1A;
-}
-
-.access-title-jp {
-  position: absolute;
-  left: 114px;
-  top: 0;
-  font-size: 24px;
-  font-weight: 700;
-  color: #1A1A1A;
 }
 
 .access-line {
@@ -955,29 +891,8 @@ export default {
   background: #DA5761;
 }
 
-.access-content {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-}
-
 .access-map {
   flex: 1;
-}
-
-.map-image {
-  width: 100%;
-  max-width: 692px;
-  height: 398px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.access-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
 }
 
 .info-section {
@@ -1122,11 +1037,7 @@ export default {
   .field-label {
     min-width: 200px;
   }
-  
-  .access-content {
-    flex-direction: column;
-  }
-  
+
   .footer {
     padding: 50px 50px;
   }
@@ -1180,11 +1091,7 @@ export default {
     height: 80px;
     font-size: 11px;
   }
-  
-  .access-section {
-    padding: 50px 20px;
-  }
-  
+
   .footer {
     padding: 30px 20px;
   }

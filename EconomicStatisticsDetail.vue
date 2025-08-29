@@ -200,50 +200,19 @@
       </div>
 
       <!-- Access Section -->
-      <div class="access-section">
-        <div class="access-header">
-          <div class="access-title-container">
-            <h2 class="access-title">ACCESS</h2>
-            <div class="access-line"></div>
-            <div class="access-subtitle">アクセス</div>
-          </div>
-        </div>
-        
-        <div class="access-content">
-          <img src="https://api.builder.io/api/v1/image/assets/TEMP/a4288a92803ef8ca06ea5a18b9e2bd186451ecd1?width=1384" alt="アクセスマップ" class="access-map" />
-          
-          <div class="access-info">
-            <div class="company-info">
-              <h3 class="info-section-title">会社情報</h3>
-              <p>会社名：株式会社ちくぎん地域経済研究所</p>
-              <p>住所：〒839-0864<br>　　　福岡県久留米市百年公園1番1号久留米リサーチセンタービル6階</p>
-              <p>電話番号：0942-46-5081</p>
-              <p>営業時間：平日9:00-17:00</p>
-            </div>
-            
-            <div class="train-info">
-              <h3 class="info-section-title">電車でお越しの場合</h3>
-              <p>宮の陣：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</p>
-              <p>櫛原：約1.2km 徒歩で約14分 乗換案内 | 徒歩ルート</p>
-              <p>五郎丸：約1.9km 徒歩で約23分 乗換案内 | 徒歩ルート</p>
-            </div>
-            
-            <div class="car-info">
-              <h3 class="info-section-title">お車でお越しの場合</h3>
-              <p>【予約制】軒先パーキング 合川スタンド跡駐車場 | 約497m 徒歩で約6分</p>
-              <p>タイムズ合川町混 | 約811m 徒歩で約10分</p>
-              <p>Dパーキング諏訪野町第1 | 約830m 徒歩で約10分</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AccessSection />
     </div>
   </div>
 </template>
 
 <script>
+import AccessSection from './src/components/AccessSection.vue';
+
 export default {
   name: "EconomicStatisticsDetail",
+  components: {
+    AccessSection
+  },
   data() {
     return {
       // Component data can be added here if needed
@@ -693,114 +662,7 @@ export default {
   background: var(--color-accent);
 }
 
-/* Access Section */
-.access-section {
-  display: flex;
-  width: 100%;
-  padding: 80px 50px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 24px;
-  background: var(--color-white);
-  height: 708px;
-}
 
-.access-header {
-  width: 209px;
-  height: 126px;
-  position: relative;
-}
-
-.access-title-container {
-  width: 209px;
-  height: 126px;
-  position: relative;
-}
-
-.access-title {
-  color: var(--color-dark);
-  font-family: Inter;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 150%;
-  position: absolute;
-  left: 0;
-  top: 54px;
-  width: 199px;
-  height: 72px;
-}
-
-.access-line {
-  width: 91px;
-  height: 1px;
-  background: var(--color-primary);
-  position: absolute;
-  left: 0;
-  top: 18px;
-}
-
-.access-subtitle {
-  color: var(--color-dark);
-  font-family: Inter;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 150%;
-  position: absolute;
-  left: 114px;
-  top: 0;
-  width: 95px;
-  height: 36px;
-}
-
-.access-content {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  align-self: stretch;
-}
-
-.access-map {
-  width: 692px;
-  height: 398px;
-  border-radius: 10px;
-}
-
-.access-info {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  padding: 2px 84px 4.552px 0;
-}
-
-.info-section-title {
-  color: var(--color-primary);
-  font-family: Inter;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 200%;
-  margin-bottom: 15px;
-}
-
-.access-info p {
-  color: var(--color-dark);
-  font-family: Inter;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 200%;
-  margin: 0 0 5px 0;
-}
-
-.company-info {
-  margin-bottom: 30px;
-}
-
-.train-info {
-  margin-bottom: 30px;
-}
-
-.car-info {
-  margin-bottom: 30px;
-}
 
 @media (max-width: 767px) {
   .economic-statistics-detail {
@@ -854,18 +716,11 @@ export default {
   .floating-buttons {
     display: none;
   }
-  
-  .access-content {
-    flex-direction: column;
-  }
-  
+
   .access-map {
     width: 100%;
     height: 250px;
   }
-  
-  .access-info {
-    padding: 0;
-  }
+
 }
 </style>

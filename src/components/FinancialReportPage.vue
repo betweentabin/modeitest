@@ -115,48 +115,10 @@
           </div>
         </div>
       </section>
-
-      <!-- Access Section -->
-      <section class="access-section">
-        <div class="access-header">
-          <h2>アクセス</h2>
-          <h3 class="access-title">ACCESS</h3>
-        </div>
-        
-        <div class="access-content">
-          <div class="map-container">
-            <div class="map-placeholder">
-              <img src="/img/hero-image.png" alt="アクセスマップ" class="map-image" />
-            </div>
-          </div>
-          
-          <div class="access-info">
-            <div class="access-item">
-              <h4>会社情報</h4>
-              <p>会社名：株式会社ちくぎん地域経済研究所</p>
-              <p>住所：〒839-0864</p>
-              <p>福岡県久留米市百年公園2番地1号久留米リサーチ・パーク内6階</p>
-              <p>電話番号：0942-46-5091</p>
-              <p>営業時間：平日9:00-17:00</p>
-            </div>
-            
-            <div class="access-item">
-              <h4>電車でお越しの場合</h4>
-              <p>西鉄久留米線・JR久留米駅より徒歩14分 県営住宅前バス停より徒歩1分</p>
-              <p>所要時間約11分（平日）徒歩時間 所要時間約10分</p>
-              <p>平日のみ運行・徒歩で約30分 久留米シティプラザまで徒歩15分</p>
-            </div>
-            
-            <div class="access-item">
-              <h4>お車でお越しの場合</h4>
-              <p>【九州自動車道】九州自動車道・久留米インター線経由約4分（平日早朝平日のみ）</p>
-              <p>メインの久留米市・ポートタウン約8分（平日のみ）</p>
-              <p>ローバー金融機構約8分・久留米発着約8分（平日8:00-18:00）</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
+
+    <!-- Access Section -->
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -164,17 +126,14 @@
       <div class="vector-7-1"></div>
       <Group27 />
     </div>
-
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
   </div>
 </template>
 
 <script>
+import AccessSection from './AccessSection.vue';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
-import FixedActionButtons from "./FixedActionButtons.vue";
 import { frame132131753022Data } from "../data.js";
 
 export default {
@@ -183,7 +142,7 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    AccessSection
   },
   data() {
     return {
@@ -447,61 +406,10 @@ export default {
 }
 
 /* Access Section */
-.access-section {
-  margin-bottom: 40px;
-}
-
-.access-header {
-  margin-bottom: 40px;
-}
 
 .access-header h2 {
   font-size: 1.2rem;
   color: #666;
-  margin-bottom: 5px;
-}
-
-.access-title {
-  font-size: 2rem;
-  color: #333;
-  font-weight: bold;
-}
-
-.access-content {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-}
-
-.map-container {
-  flex: 1;
-}
-
-.map-image {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 15px;
-}
-
-.access-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.access-item h4 {
-  color: #333;
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.access-item p {
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.6;
   margin-bottom: 5px;
 }
 
@@ -532,11 +440,7 @@ export default {
     width: 100%;
     max-width: 300px;
   }
-  
-  .access-content {
-    flex-direction: column;
-  }
-  
+
   .company-section {
     padding: 50px 20px;
   }
@@ -546,10 +450,7 @@ export default {
   .report-title {
     font-size: 0.85rem;
   }
-  
-  .access-item p {
-    font-size: 0.85rem;
-  }
+
 }
 
 /* Footer Navigation */

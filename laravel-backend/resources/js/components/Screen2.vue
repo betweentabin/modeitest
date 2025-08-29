@@ -1773,7 +1773,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 50px;
-  padding: 0px 100px 50px;
+  padding: 100px;
   position: relative;
   width: 1450px;
   z-index: 4;

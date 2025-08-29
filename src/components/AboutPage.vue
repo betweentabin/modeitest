@@ -223,42 +223,7 @@
     </section>
 
     <!-- Access Section -->
-    <section class="section access-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">アクセス</h2>
-          <p class="section-subtitle">ACCESS</p>
-        </div>
-        
-        <div class="access-content">
-          <div class="access-map">
-            <img src="/img/rectangle-3.png" alt="アクセスマップ" />
-          </div>
-          <div class="access-info">
-            <div class="access-details">
-              <h4>所在地</h4>
-              <p>〒839-0864<br />
-                福岡県久留米市百年公園1番1号<br />
-                久留米リサーチセンタービル6階</p>
-              
-              <h4>電車でお越しの場合</h4>
-              <ul>
-                <li>宮の陣：約1.2km 徒歩で約14分 <a href="#">乗換案内</a> | <a href="#">徒歩ルート</a></li>
-                <li>櫛原：約1.2km 徒歩で約14分 <a href="#">乗換案内</a> | <a href="#">徒歩ルート</a></li>
-                <li>五郎丸：約1.9km 徒歩で約23分 <a href="#">乗換案内</a> | <a href="#">徒歩ルート</a></li>
-              </ul>
-              
-              <h4>お車でお越しの場合</h4>
-              <ul>
-                <li>【予約制】軒先パーキング 合川スタンド跡駐車場 | 約497m 徒歩で約6分</li>
-                <li>タイムズ合川町混 | 約811m 徒歩で約10分</li>
-                <li>Dパーキング諏訪野町第1 | 約830m 徒歩で約10分</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -266,9 +231,6 @@
       <div class="vector-7-1"></div>
       <Group27 />
     </div>
-
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
   </div>
 </template>
 
@@ -276,7 +238,7 @@
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
-import FixedActionButtons from "./FixedActionButtons.vue";
+import AccessSection from "./AccessSection.vue";
 import { frame132131753022Data } from "../data.js";
 import axios from 'axios';
 import { getApiUrl } from '@/config/api';
@@ -287,7 +249,7 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    AccessSection
   },
   data() {
     return {
@@ -686,15 +648,6 @@ export default {
 }
 
 /* Access Section */
-.access-section {
-  background-color: #ffffff;
-}
-
-.access-content {
-  display: flex;
-  gap: 60px;
-  align-items: flex-start;
-}
 
 .access-map {
   flex: 0 0 45%;
@@ -704,10 +657,6 @@ export default {
   width: 100%;
   height: auto;
   border-radius: 10px;
-}
-
-.access-info {
-  flex: 1;
 }
 
 .access-details h4 {
@@ -765,11 +714,7 @@ export default {
   
   .mission-content,
   .message-content,
-  .access-content {
-    flex-direction: column;
-    gap: 40px;
-  }
-  
+
   .mission-image,
   .message-image,
   .access-map {
