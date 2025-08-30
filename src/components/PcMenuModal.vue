@@ -160,7 +160,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  z-index: 10;
+  z-index: 2147483647;
 }
 
 .modal-container {
@@ -174,6 +174,7 @@ export default {
   padding-bottom: 50px;
   margin-top: 0;
   align-self: flex-start;
+  z-index: 2147483647;
 }
 
 .modal-header {

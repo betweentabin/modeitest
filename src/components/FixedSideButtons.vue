@@ -53,7 +53,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 5;
+  z-index: 9999;
 }
 
 .fixed-side-buttons[data-position="center"] {

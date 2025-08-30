@@ -125,4 +125,11 @@ export default {
 .hamburger-menu:hover .hamburger-line {
   background-color: #DA5761;
 }
+
+/* サブナビのレスポンシブ対応 */
+@media (max-width: 1150px) {
+  .sub-nav {
+    display: none;
+  }
+}
 </style>

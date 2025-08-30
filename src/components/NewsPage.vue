@@ -401,6 +401,9 @@ export default {
   border-right: 1px solid #DA5761;
   white-space: nowrap;
   flex: 1;
+  box-sizing: border-box;
+  width: 0;
+  min-width: 0;
 }
 
 .category-btn:last-child {
@@ -586,17 +589,21 @@ export default {
   }
   
   .news-categories {
-    flex-wrap: wrap;
-    gap: 5px;
+    flex-wrap: nowrap;
+    gap: 0;
   }
   
   .category-btn {
-    padding: 10px 15px;
-    font-size: 0.7rem;
-    border-right: none;
-    border-radius: 15px;
-    margin-bottom: 5px;
+    padding: 8px 10px;
+    font-size: 0.6rem;
+    border-right: 1px solid #DA5761;
+    border-radius: 0;
+    margin-bottom: 0;
+    min-width: 0;
+    flex: 1;
   }
+  
+
   
   .news-content {
     flex-direction: column;
@@ -627,6 +634,13 @@ export default {
   .news-content {
     padding: 10px 15px;
   }
+  
+  .category-btn {
+    padding: 6px 8px;
+    font-size: 0.5rem;
+  }
+  
+
 }
 
 /* Footer Navigation */

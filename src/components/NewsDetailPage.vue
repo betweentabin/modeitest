@@ -26,6 +26,11 @@
          <!-- メインコンテンツ -->
         <div class="detail-content">
           <div class="detail-header">
+              <!-- ニュース画像 -->
+              <div v-if="newsItem.image" class="news-image">
+                <img :src="newsItem.image" :alt="newsItem.title" />
+              </div>
+              
               <div class="news-meta">
                <span class="news-date">{{ formatDate(newsItem.date) }}</span>
                <span :class="getCategoryClass(newsItem.type)" class="category-badge">
@@ -35,7 +40,7 @@
             
               <h1 class="news-title">{{ newsItem.title }}</h1>
              
-                             <!-- 詳細説明 -->
+                <!-- 詳細説明 -->
                <div class="description-section">
                  <p class="description-text">{{ newsItem.description }}</p>
                  
@@ -131,33 +136,36 @@ export default {
         
         const newsId = parseInt(this.$route.params.id);
         
-        // フォールバックデータを使用（NewsPage.vueと同じデータ）
-        const fallbackNews = [
-          {
-            id: 1,
-            date: '2025-05-12',
-            category: 'seminar',
-            title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-            description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
-            type: 'seminar'
-          },
-          {
-            id: 2,
-            date: '2025-05-12',
-            category: 'publication',
-            title: 'HOT infomation Vol.319掲載しました！',
-            description: '最新の経済動向と地域企業の動きをまとめました。',
-            type: 'publication'
-          },
-          {
-            id: 3,
-            date: '2025-05-12',
-            category: 'publication',
-            title: 'Hot Information Vol.318掲載しました！',
-            description: '地域経済の最新情報をお届けします。',
-            type: 'publication'
-          }
-        ];
+                 // フォールバックデータを使用（NewsPage.vueと同じデータ）
+         const fallbackNews = [
+           {
+             id: 1,
+             date: '2025-05-12',
+             category: 'seminar',
+             title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+             description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
+             type: 'seminar',
+             image: '/img/hero-image.png'
+           },
+           {
+             id: 2,
+             date: '2025-05-12',
+             category: 'publication',
+             title: 'HOT infomation Vol.319掲載しました！',
+             description: '最新の経済動向と地域企業の動きをまとめました。',
+             type: 'publication',
+             image: '/img/image-1@2x.png'
+           },
+           {
+             id: 3,
+             date: '2025-05-12',
+             category: 'publication',
+             title: 'Hot Information Vol.318掲載しました！',
+             description: '地域経済の最新情報をお届けします。',
+             type: 'publication',
+             image: '/img/image-2@2x.png'
+           }
+         ];
         
         // 指定されたニュースを検索
         this.newsItem = fallbackNews.find(news => news.id === newsId);
@@ -345,6 +353,18 @@ export default {
 
 .detail-header {
   padding: 40px;
+}
+
+.news-image {
+  margin-bottom: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.news-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .news-meta {
