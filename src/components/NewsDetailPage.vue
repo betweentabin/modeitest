@@ -1,6 +1,17 @@
 <template>
   <div class="page-container">
     <Navigation />
+    
+    <!-- Hero Section -->
+    <HeroSection 
+      title="ニュース詳細"
+      subtitle="news detail"
+      heroImage="/img/hero-image.png"
+    />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['ニュース', newsItem ? newsItem.title : '詳細']" />
+
     <div class="page-content">
       <div v-if="loading" class="loading-container">
         <div class="loading-message">読み込み中...</div>
@@ -11,145 +22,60 @@
         <button @click="$router.push('/news')" class="back-btn">ニュース一覧に戻る</button>
       </div>
       
-      <div v-else-if="newsItem" class="detail-container">
-        <!-- パンくずナビ -->
-        <nav class="breadcrumb">
-          <router-link to="/" class="breadcrumb-link">ホーム</router-link>
-          <span class="breadcrumb-separator">></span>
-          <router-link to="/news" class="breadcrumb-link">ニュース</router-link>
-          <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{ newsItem.title }}</span>
-        </nav>
-
-        <!-- メインコンテンツ -->
+             <div v-else-if="newsItem" class="detail-container">
+         <!-- メインコンテンツ -->
         <div class="detail-content">
           <div class="detail-header">
-            <div class="news-meta">
-              <span :class="getCategoryClass(newsItem.type)" class="category-badge">
-                {{ getCategoryLabel(newsItem.type) }}
-              </span>
-              <span class="news-date">{{ formatDate(newsItem.date) }}</span>
-            </div>
+              <div class="news-meta">
+               <span class="news-date">{{ formatDate(newsItem.date) }}</span>
+               <span :class="getCategoryClass(newsItem.type)" class="category-badge">
+                 {{ getCategoryLabel(newsItem.type) }}
+               </span>
+             </div>
             
-            <h1 class="news-title">{{ newsItem.title }}</h1>
-            
-            <!-- 種類別の詳細情報 -->
-            <div v-if="newsItem.type === 'seminar'" class="type-specific-info">
-              <div class="seminar-info">
-                <div class="info-item" v-if="originalItem.location">
-                  <span class="info-label">開催場所:</span>
-                  <span class="info-value">{{ originalItem.location }}</span>
-                </div>
-                <div class="info-item" v-if="originalItem.capacity">
-                  <span class="info-label">定員:</span>
-                  <span class="info-value">{{ originalItem.capacity }}名</span>
-                </div>
-                <div class="info-item" v-if="originalItem.fee">
-                  <span class="info-label">参加費:</span>
-                  <span class="info-value">{{ originalItem.fee }}円</span>
-                </div>
-                <div class="info-item" v-if="originalItem.status">
-                  <span class="info-label">ステータス:</span>
-                  <span class="info-value status" :class="originalItem.status">{{ getStatusText(originalItem.status) }}</span>
-                </div>
-              </div>
-            </div>
-            
-            <div v-else-if="newsItem.type === 'publication'" class="type-specific-info">
-              <div class="publication-info">
-                <div class="info-item" v-if="originalItem.author">
-                  <span class="info-label">著者・編集者:</span>
-                  <span class="info-value">{{ originalItem.author }}</span>
-                </div>
-                <div class="info-item" v-if="originalItem.pages">
-                  <span class="info-label">ページ数:</span>
-                  <span class="info-value">{{ originalItem.pages }}ページ</span>
-                </div>
-                <div class="info-item" v-if="originalItem.file_size">
-                  <span class="info-label">ファイルサイズ:</span>
-                  <span class="info-value">{{ originalItem.file_size }}MB</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- アクションボタン -->
-            <div class="action-buttons">
-              <button 
-                v-if="newsItem.type === 'seminar' && originalItem.status === 'recruiting'" 
-                @click="registerSeminar" 
-                class="register-btn"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                </svg>
-                セミナーに申し込む
-              </button>
-              
-              <button 
-                v-if="newsItem.type === 'publication' && originalItem.file_url" 
-                @click="downloadPDF" 
-                class="download-btn"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                </svg>
-                PDFダウンロード
-              </button>
-              
-              <button @click="sharePage" class="share-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.19C16.5,7.69 17.21,8 18,8A3,3 0 0,0 21,5A3,3 0 0,0 18,2A3,3 0 0,0 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.81C7.5,9.31 6.79,9 6,9A3,3 0 0,0 3,12A3,3 0 0,0 6,15C6.79,15 7.5,14.69 8.04,14.19L15.16,18.34C15.11,18.55 15.08,18.77 15.08,19C15.08,20.61 16.39,21.91 18,21.91C19.61,21.91 20.92,20.61 20.92,19A2.92,2.92 0 0,0 18,16.08Z"/>
-                </svg>
-                シェア
-              </button>
-            </div>
-          </div>
-          
-          <!-- 詳細説明 -->
-          <div class="description-section">
-            <h2>詳細</h2>
-            <p class="description-text">{{ newsItem.description }}</p>
-            
-            <!-- 追加コンテンツ（originalItemから） -->
-            <div v-if="originalItem.content && originalItem.content !== newsItem.description" class="additional-content">
-              <p>{{ originalItem.content }}</p>
-            </div>
-          </div>
-          
-          <!-- 関連ニュース -->
-          <div v-if="relatedNews.length > 0" class="related-section">
-            <h2>関連ニュース</h2>
-            <div class="related-grid">
-              <div 
-                v-for="related in relatedNews" 
-                :key="related.id"
-                class="related-item"
-                @click="goToNews(related.id)"
-              >
-                <div class="related-meta">
-                  <span :class="getCategoryClass(related.type)" class="related-category">
-                    {{ getCategoryLabel(related.type) }}
-                  </span>
-                  <span class="related-date">{{ formatDate(related.date) }}</span>
-                </div>
-                <h3 class="related-title">{{ related.title }}</h3>
-                <p class="related-description">{{ related.description.substring(0, 100) }}...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+              <h1 class="news-title">{{ newsItem.title }}</h1>
+             
+                             <!-- 詳細説明 -->
+               <div class="description-section">
+                 <p class="description-text">{{ newsItem.description }}</p>
+                 
+                 <!-- 追加コンテンツ（originalItemから） -->
+                 <div v-if="originalItem.content && originalItem.content !== newsItem.description" class="additional-content">
+                   <p>{{ originalItem.content }}</p>
+                 </div>
+               </div>
 
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
-  </div>
+             <!-- 一覧に戻るボタン -->
+             <button @click="$router.push('/news')" class="filter-download-btn">一覧に戻る
+                <div class="icon-box">
+                  <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="23" height="23" rx="5" fill="white"/>
+                    <path d="M17.5302 11.9415L13.0581 16.5412C12.9649 16.6371 12.8384 16.691 12.7066 16.691C12.5747 16.691 12.4482 16.6371 12.355 16.5412C12.2618 16.4453 12.2094 16.3152 12.2094 16.1796C12.2094 16.044 12.2618 15.9139 12.355 15.818L15.9793 12.0909L6.2469 12.0909C6.11511 12.0909 5.98872 12.0371 5.89554 11.9413C5.80235 11.8454 5.75 11.7154 5.75 11.5799C5.75 11.4443 5.80235 11.3143 5.89554 11.2185C5.98872 11.1226 6.11511 11.0688 6.2469 11.0688L15.9793 11.0688L12.355 7.34171C12.2618 7.24581 12.2094 7.11574 12.2094 6.98012C12.2094 6.84449 12.2618 6.71443 12.355 6.61853C12.4482 6.52263 12.5747 6.46875 12.7066 6.46875C12.8384 6.46875 12.9649 6.52263 13.0581 6.61853L17.5302 11.2183C17.5764 11.2657 17.613 11.3221 17.638 11.3841C17.6631 11.4462 17.6759 11.5127 17.6759 11.5799C17.6759 11.647 17.6631 11.7135 17.638 11.7756C17.613 11.8376 17.5764 11.894 17.5302 11.9415Z" fill="#1A1A1A"/>
+                  </svg>
+                </div>
+              </button>
+             
+           </div>
+        </div>
+             </div>
+     </div>
+
+     <!-- Contact CTA Section -->
+     <ContactSection />
+
+     <!-- Access Section -->
+     <AccessSection />
+
+     <!-- Footer Navigation -->
+     <div class="navigation-footer">
+       <Footer v-bind="frame132131753022Props" />
+       <div class="vector-7-1"></div>
+       <Group27 />
+     </div>
+
+     <!-- Fixed Side Buttons -->
+     <FixedSideButtons position="bottom" />
+   </div>
 </template>
 
 <script>
@@ -157,6 +83,11 @@ import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
 import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import ContactSection from "./ContactSection.vue";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import mockServer from "@/mockServer";
 
@@ -166,7 +97,12 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    FixedActionButtons,
+    HeroSection,
+    Breadcrumbs,
+    ContactSection,
+    AccessSection,
+    FixedSideButtons
   },
   data() {
     return {
@@ -193,11 +129,38 @@ export default {
         this.loading = true;
         this.error = '';
         
-        const newsId = this.$route.params.id;
+        const newsId = parseInt(this.$route.params.id);
         
-        // 全ニュースから指定されたニュースを検索
-        const allNews = await mockServer.getAllNews();
-        this.newsItem = allNews.find(news => news.id === newsId);
+        // フォールバックデータを使用（NewsPage.vueと同じデータ）
+        const fallbackNews = [
+          {
+            id: 1,
+            date: '2025-05-12',
+            category: 'seminar',
+            title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+            description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
+            type: 'seminar'
+          },
+          {
+            id: 2,
+            date: '2025-05-12',
+            category: 'publication',
+            title: 'HOT infomation Vol.319掲載しました！',
+            description: '最新の経済動向と地域企業の動きをまとめました。',
+            type: 'publication'
+          },
+          {
+            id: 3,
+            date: '2025-05-12',
+            category: 'publication',
+            title: 'Hot Information Vol.318掲載しました！',
+            description: '地域経済の最新情報をお届けします。',
+            type: 'publication'
+          }
+        ];
+        
+        // 指定されたニュースを検索
+        this.newsItem = fallbackNews.find(news => news.id === newsId);
         
         if (!this.newsItem) {
           this.error = 'ニュースが見つかりませんでした';
@@ -208,7 +171,7 @@ export default {
         await this.loadOriginalItem();
         
         // 関連ニュースを取得（同じカテゴリーの他のニュース）
-        this.relatedNews = allNews
+        this.relatedNews = fallbackNews
           .filter(news => news.id !== newsId && news.type === this.newsItem.type)
           .slice(0, 3);
         
@@ -221,21 +184,33 @@ export default {
     },
     async loadOriginalItem() {
       try {
-        const itemId = parseInt(this.newsItem.id.split('-')[1]);
+                 // フォールバックデータの詳細情報
+         const fallbackDetails = {
+           seminar: {
+             id: 1,
+             location: 'ちくぎん本店 会議室',
+             capacity: 30,
+             fee: 5000,
+             status: 'recruiting',
+             heading: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
+             content: '面接官として必要なスキルを習得し、優秀な人材を採用できるようになります。'
+           },
+           publication: {
+             id: 2,
+             author: 'ちくぎん地域経済研究所',
+             pages: 24,
+             file_size: 2.5,
+             file_url: '#',
+             heading: 'HOT infomation Vol.319掲載しました！',
+             content: '地域経済の最新動向と企業の取り組みを詳しく解説しています。'
+           }
+         };
         
-        switch (this.newsItem.type) {
-          case 'seminar':
-            const seminars = await mockServer.getSeminars();
-            this.originalItem = seminars.find(s => s.id === itemId);
-            break;
-          case 'publication':
-            const publications = await mockServer.getPublications();
-            this.originalItem = publications.find(p => p.id === itemId);
-            break;
-          case 'notice':
-            const notices = await mockServer.getNotices();
-            this.originalItem = notices.find(n => n.id === itemId);
-            break;
+        // ニュースタイプに応じて詳細情報を設定
+        if (fallbackDetails[this.newsItem.type]) {
+          this.originalItem = fallbackDetails[this.newsItem.type];
+        } else {
+          this.originalItem = {};
         }
       } catch (err) {
         console.warn('元データの取得に失敗:', err);
@@ -322,9 +297,9 @@ export default {
 }
 
 .page-content {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 70px 50px;
 }
 
 .loading-container,
@@ -355,39 +330,17 @@ export default {
   display: inline-block;
 }
 
-.back-btn:hover {
-  background-color: #5a6268;
-}
+ .back-btn:hover {
+   background-color: #5a6268;
+ }
 
-.breadcrumb {
-  margin-bottom: 30px;
-  font-size: 14px;
-}
-
-.breadcrumb-link {
-  color: #0066cc;
-  text-decoration: none;
-}
-
-.breadcrumb-link:hover {
-  text-decoration: underline;
-}
-
-.breadcrumb-separator {
-  margin: 0 10px;
-  color: #6c757d;
-}
-
-.breadcrumb-current {
-  color: #1A1A1A;
-  font-weight: 500;
-}
-
-.detail-content {
+ .detail-content {
   background: white;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .detail-header {
@@ -411,17 +364,17 @@ export default {
   white-space: nowrap;
 }
 
-.news-category {
-  background-color: #da5761;
-}
-
-.seminar-category {
-  background-color: #28a745;
-}
-
-.publication-category {
-  background-color: #007bff;
-}
+ .news-category {
+   background-color: #da5761;
+ }
+ 
+ .seminar-category {
+   background-color: #da5761;
+ }
+ 
+ .publication-category {
+   background-color: #da5761;
+ }
 
 .news-date {
   color: #6c757d;
@@ -504,9 +457,41 @@ export default {
   color: white;
 }
 
-.download-btn:hover {
-  background-color: #0056b3;
+ .download-btn:hover {
+   background-color: #0056b3;
+ }
+
+  /* Filter Download Button */
+ .filter-download-btn {
+   display: flex;
+   width: 300px;
+   padding: 10px 0;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+   border-radius: 10px;
+   background: #1A1A1A;
+   border: none;
+   cursor: pointer;
+   color: #ffffff;
+   font-family: 'Inter', sans-serif;
+   font-size: 15px;
+   font-weight: 700;
+   line-height: 150%;
+   transition: all 0.3s ease;
+   margin: 0 auto;
+ }
+
+ .filter-download-btn .icon-box {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+.filter-download-btn:hover {
+  background: var(--color-secondary);
 }
+
 
 .share-btn {
   background-color: #f8f9fa;
@@ -519,7 +504,7 @@ export default {
 }
 
 .description-section {
-  padding: 40px;
+  padding: 40px 0;
   border-top: 1px solid #eee;
 }
 

@@ -62,6 +62,7 @@
           :key="item.id"
           class="news-item"
           @click="goToNewsDetail(item.id)"
+          style="cursor: pointer;"
         >
                      <div class="news-meta">
              <span class="news-date">{{ formatDate(item.date) }}</span>
