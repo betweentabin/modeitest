@@ -454,7 +454,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  border-top: 1px dashed var(--color-gray);
+  border-top: 0.5px dashed var(--color-gray);
 }
 
 .info-item {
@@ -464,7 +464,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   gap: 15px;
-  border-bottom: 1px dashed var(--color-gray);
+  border-bottom: 0.5px dashed var(--color-gray);
 }
 
 .info-label {

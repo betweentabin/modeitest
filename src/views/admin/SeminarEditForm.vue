@@ -347,7 +347,7 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin: 0;
 }
 
@@ -357,7 +357,7 @@ export default {
 }
 
 .logout-btn {
-  background-color: #333;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -405,7 +405,7 @@ export default {
 .section-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 16px 0;
   padding-bottom: 8px;
   border-bottom: 2px solid #da5761;
@@ -425,7 +425,7 @@ export default {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 8px;
 }
 
@@ -484,7 +484,7 @@ export default {
 
 .btn-secondary {
   background-color: #f5f5f5;
-  color: #333;
+  color: #1A1A1A;
   border: 1px solid #d1d5db;
 }
 

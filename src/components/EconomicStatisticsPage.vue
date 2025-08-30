@@ -356,7 +356,7 @@ export default {
 
 .section-title {
   font-size: 2rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -410,7 +410,7 @@ export default {
 }
 
 .download-all-btn {
-  background: #333;
+  background: #1A1A1A;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -503,7 +503,7 @@ export default {
 
 .featured-title {
   font-size: 1.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 20px;
   font-weight: bold;
 }
@@ -600,7 +600,7 @@ export default {
 
 .report-title {
   font-size: 1.1rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: 600;
   line-height: 1.4;
@@ -618,7 +618,7 @@ export default {
 }
 
 .report-download {
-  background: #333;
+  background: #1A1A1A;
   color: white;
   border: none;
   padding: 8px 20px;

@@ -131,7 +131,7 @@ export default {
 
 .faq-header h1 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
 }
 
@@ -219,7 +219,7 @@ export default {
 .question-text {
   flex: 1;
   font-weight: 500;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .toggle-icon {

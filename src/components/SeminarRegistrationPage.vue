@@ -687,7 +687,7 @@ export default {
   display: flex;
   width: 775px;
   flex-direction: column;
-  border-top: 1px dashed var(--color-dark-gray);
+  border-top: 0.5px dashed var(--color-dark-gray);
 }
 
 .info-row {
@@ -696,7 +696,7 @@ export default {
   padding: 15px 0;
   align-items: flex-start;
   gap: 15px;
-  border-bottom: 1px dashed var(--color-dark-gray);
+  border-bottom: 0.5px dashed var(--color-dark-gray);
 }
 
 .info-label {
@@ -744,7 +744,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
-  border-top: 1px dashed var(--color-dark-gray);
+  border-top: 0.5px dashed var(--color-dark-gray);
 }
 
 .info-content-full {

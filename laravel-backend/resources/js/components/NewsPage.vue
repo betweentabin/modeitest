@@ -95,7 +95,7 @@ export default {
 
 .news-header h1 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .news-list {
@@ -124,7 +124,7 @@ export default {
 }
 
 .news-date {
-  color: #666;
+  color: #1A1A1A;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -139,7 +139,7 @@ export default {
 }
 
 .news-content h3 {
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-size: 1.2rem;
   cursor: pointer;

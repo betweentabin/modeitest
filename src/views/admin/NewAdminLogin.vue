@@ -178,7 +178,7 @@ export default {
 .form-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1AA1A;
   text-align: center;
   margin: 0 0 32px 0;
 }
@@ -195,7 +195,7 @@ export default {
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #1A1A1AA1A;
   margin-bottom: 8px;
 }
 
@@ -268,7 +268,7 @@ export default {
 .test-title {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1AA1A;
   margin: 0 0 8px 0;
 }
 

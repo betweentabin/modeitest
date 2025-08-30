@@ -356,7 +356,7 @@ export default {
 
 .section-title {
   font-size: 2rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -472,7 +472,7 @@ export default {
 
 .category-title {
   font-size: 1.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 25px;
   font-weight: bold;
   padding-bottom: 10px;
@@ -507,7 +507,7 @@ export default {
 
 .term-name {
   font-size: 1.1rem;
-  color: #333;
+  color: #1A1A1A;
   font-weight: 600;
 }
 

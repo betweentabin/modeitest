@@ -319,12 +319,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border-top: 1px dashed var(--color-secondary);
+  border-top: 0.5px dashed var(--color-secondary);
   width: 100%;
 }
 
 .past-seminar-info .info-row {
-  border-bottom: 1px dashed var(--color-secondary);
+  border-bottom: 0.5px dashed var(--color-secondary);
 }
 
 .past-info-row {
@@ -332,12 +332,12 @@ export default {
   padding: 15px 0;
   align-items: center;
   gap: 50px;
-  border-bottom: 1px dashed #B0B0B0;
+  border-bottom: 0.5px dashed #B0B0B0;
   width: 100%;
 }
 
 .past-info-row:first-child {
-  border-top: 1px dashed #B0B0B0;
+  border-top: 0.5px dashed #B0B0B0;
 }
 
 .content-row {
@@ -452,9 +452,9 @@ export default {
 }
 
 .pagination-btn.active {
-  background: var(--color-accent);
+  background: #1A1A1A;
   color: #FFFFFF;
-  border-color: var(--color-accent);
+  border-color: #1A1A1A;
 }
 
 .pagination-btn:disabled {

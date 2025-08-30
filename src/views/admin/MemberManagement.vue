@@ -201,7 +201,7 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin: 0;
 }
 
@@ -227,13 +227,13 @@ export default {
 }
 
 .region-tab.active {
-  color: #333;
+  color: #1A1A1A;
   border-bottom-color: #da5761;
   font-weight: 600;
 }
 
 .region-tab:hover {
-  color: #333;
+  color: #1A1A1A;
 }
 
 .industry-filter {
@@ -253,7 +253,7 @@ export default {
   border-radius: 4px;
   padding: 8px 12px;
   font-size: 12px;
-  color: #333;
+  color: #1A1A1A;
   cursor: pointer;
   transition: all 0.2s;
   text-align: center;
@@ -299,7 +299,7 @@ export default {
   text-align: left;
   font-weight: 600;
   font-size: 14px;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .data-table td {
@@ -309,7 +309,7 @@ export default {
 }
 
 .company-name {
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
 }
 
@@ -331,7 +331,7 @@ export default {
 }
 
 .detail-btn {
-  background-color: #333;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   padding: 6px 12px;

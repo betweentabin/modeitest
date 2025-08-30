@@ -283,7 +283,7 @@ export default {
 
 .section-title {
   font-size: 2rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -387,7 +387,7 @@ export default {
 .question-text {
   flex: 1;
   font-size: 1rem;
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
 }
 

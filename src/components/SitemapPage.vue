@@ -413,10 +413,6 @@ export default {
   box-shadow: 0 4px 12px rgba(156, 57, 64, 0.3);
 }
 
-/* Access Section */
-
-
-
  /* Responsive Design */
  
  @media (max-width: 768px) {

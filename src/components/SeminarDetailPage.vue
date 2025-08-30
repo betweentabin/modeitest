@@ -429,12 +429,12 @@ export default {
   flex-direction: column;
   margin-bottom: 15px;
   align-items: flex-start;
-  border-bottom: 1px dashed #D0D0D0;
+  border-bottom: 0.5px dashed #D0D0D0;
   padding-bottom: 15px;
 }
 
 .detail-row:first-child {
-  border-top: 1px dashed #D0D0D0;
+  border-top: 0.5px dashed #D0D0D0;
   padding-top: 15px;
 }
 

@@ -610,8 +610,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
-  border-top: 1px dashed #727272;
-  border-bottom: 1px dashed #727272;
+  border-top: 0.5px dashed #727272;
+  border-bottom: 0.5px dashed #727272;
 }
 
 .field-label {

@@ -523,7 +523,7 @@ export default {
 .page-title {
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin: 0;
 }
 
@@ -651,7 +651,7 @@ export default {
 .data-table th {
   background-color: #f8f9fa;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .table-row:hover {
@@ -796,7 +796,7 @@ export default {
 }
 
 .close-btn:hover {
-  color: #333;
+  color: #1A1A1A;
 }
 
 .modal-body {
@@ -817,7 +817,7 @@ export default {
 
 .detail-row label {
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   font-size: 14px;
 }
 
@@ -831,7 +831,7 @@ export default {
   border-radius: 4px;
   white-space: pre-wrap;
   line-height: 1.5;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .modal-footer {

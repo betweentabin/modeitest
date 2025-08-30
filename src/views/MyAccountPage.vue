@@ -367,7 +367,7 @@ export default {
 .user-name {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 4px 0;
 }
 
@@ -397,7 +397,7 @@ export default {
 
 .nav-item:hover {
   background: #f5f5f5;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .nav-item.active {
@@ -445,7 +445,7 @@ export default {
 
 .content-section h2 {
   font-size: 24px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 24px 0;
   padding-bottom: 12px;
   border-bottom: 2px solid #f0f0f0;
@@ -480,7 +480,7 @@ export default {
 .info-value {
   flex: 1;
   font-size: 15px;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .edit-button {
@@ -529,7 +529,7 @@ export default {
 
 .membership-header h3 {
   font-size: 20px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0;
 }
 
@@ -548,7 +548,7 @@ export default {
 
 .membership-features h4 {
   font-size: 16px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 12px 0;
 }
 
@@ -625,7 +625,7 @@ export default {
 
 .download-info h4 {
   font-size: 15px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 4px 0;
 }
 
@@ -668,7 +668,7 @@ export default {
 
 .settings-card h3 {
   font-size: 18px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 20px 0;
 }
 
@@ -682,7 +682,7 @@ export default {
   gap: 12px;
   cursor: pointer;
   font-size: 15px;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .setting-label input[type="checkbox"] {

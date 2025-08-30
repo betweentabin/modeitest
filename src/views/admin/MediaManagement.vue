@@ -211,7 +211,7 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin: 0;
 }
 
@@ -245,7 +245,7 @@ export default {
 
 .search-label {
   font-size: 14px;
-  color: #333;
+  color: #1A1A1A;
   white-space: nowrap;
 }
 
@@ -267,7 +267,7 @@ export default {
 }
 
 .search-btn:hover {
-  color: #333;
+  color: #1A1A1A;
 }
 
 .table-container {
@@ -296,7 +296,7 @@ export default {
   text-align: left;
   font-weight: 600;
   font-size: 14px;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .data-table td {
@@ -306,7 +306,7 @@ export default {
 }
 
 .file-name {
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
 }
 
@@ -331,7 +331,7 @@ export default {
 }
 
 .edit-btn {
-  background-color: #333;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   padding: 6px 12px;

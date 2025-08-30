@@ -295,7 +295,7 @@ export default {
 }
 
 .breadcrumb-current {
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
 }
 
@@ -350,7 +350,7 @@ export default {
 
 .publication-title {
   font-size: 2.2rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 30px;
   line-height: 1.3;
 }
@@ -366,7 +366,7 @@ export default {
 
 .detail-label {
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   min-width: 120px;
 }
 
@@ -408,7 +408,7 @@ export default {
 
 .share-btn {
   background-color: #f8f9fa;
-  color: #333;
+  color: #1A1A1A;
   border: 1px solid #dee2e6;
 }
 
@@ -423,7 +423,7 @@ export default {
 
 .description-section h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 20px;
 }
 
@@ -441,7 +441,7 @@ export default {
 
 .related-section h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 20px;
 }
 
@@ -486,7 +486,7 @@ export default {
 
 .related-title {
   font-size: 14px;
-  color: #333;
+  color: #1A1A1A;
   line-height: 1.4;
   margin: 0;
 }

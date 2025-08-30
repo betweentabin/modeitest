@@ -167,7 +167,7 @@ export default {
 }
 
 .restriction-message {
-  color: #333;
+  color: #1A1A1A;
   font-size: 14px;
   line-height: 1.5;
   margin-bottom: 16px;
@@ -255,7 +255,7 @@ export default {
 .publication-content h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 12px;
   line-height: 1.4;
 }

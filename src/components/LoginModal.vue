@@ -288,7 +288,7 @@ export default {
 }
 
 .modal-header h2 {
-  color: #333;
+  color: #1A1A1A;
   font-size: 24px;
   margin: 0;
 }
@@ -304,7 +304,7 @@ export default {
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
 }
 
@@ -395,7 +395,7 @@ export default {
 
 .membership-info h3 {
   font-size: 18px;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 15px;
 }
 

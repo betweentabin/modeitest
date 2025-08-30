@@ -3,99 +3,135 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">お知らせ</h1>
-          <p class="hero-subtitle">information</p>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="お知らせ"
+      subtitle="information"
+      heroImage="/img/hero-image.png"
+    />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['お知らせ']" />
 
     <div class="page-content">
       <div class="news-header">
         <h2 class="section-title">お知らせ</h2>
-        <p class="section-subtitle">information</p>
+        <div class="title-decoration">
+          <div class="line-left"></div>
+          <span class="title-english">information</span>
+          <div class="line-right"></div>
+        </div>
       </div>
 
-      <div class="news-categories">
-        <button 
-          :class="['category-btn', { active: selectedCategory === 'all' }]" 
-          @click="filterCategory('all')"
-        >
-          全て
-        </button>
-        <button 
-          :class="['category-btn', { active: selectedCategory === 'research' }]" 
-          @click="filterCategory('research')"
-        >
-          ちくぎん地域経済レポート
-        </button>
-        <button 
-          :class="['category-btn', { active: selectedCategory === 'quarterly' }]" 
-          @click="filterCategory('quarterly')"
-        >
-          ちくぎん地域経済レポート
-        </button>
-        <button 
-          :class="['category-btn', { active: selectedCategory === 'special' }]" 
-          @click="filterCategory('special')"
-        >
-          ちくぎん地域経済レポート
-        </button>
-        <button 
-          :class="['category-btn', { active: selectedCategory === 'free' }]" 
-          @click="filterCategory('free')"
-        >
-          ちくぎん地域経済レポート
-        </button>
-      </div>
+      <div class="news-container">
+        <div class="news-categories">
+          <button 
+            :class="['category-btn', { active: selectedCategory === 'all' }]" 
+            @click="filterCategory('all')"
+          >
+            全て
+          </button>
+          <button 
+            :class="['category-btn', { active: selectedCategory === 'research' }]" 
+            @click="filterCategory('research')"
+          >
+            ちくぎん地域経済レポート
+          </button>
+          <button 
+            :class="['category-btn', { active: selectedCategory === 'quarterly' }]" 
+            @click="filterCategory('quarterly')"
+          >
+            ちくぎん地域経済レポート
+          </button>
+          <button 
+            :class="['category-btn', { active: selectedCategory === 'special' }]" 
+            @click="filterCategory('special')"
+          >
+            ちくぎん地域経済レポート
+          </button>
+          <button 
+            :class="['category-btn', { active: selectedCategory === 'free' }]" 
+            @click="filterCategory('free')"
+          >
+            ちくぎん地域経済レポート
+          </button>
+        </div>
 
-      <div class="news-list" v-if="!loading">
+        <div class="news-list" v-if="!loading">
         <article 
           v-for="(item, index) in filteredNews" 
           :key="item.id"
           class="news-item"
           @click="goToNewsDetail(item.id)"
         >
-          <div class="news-meta">
-            <span class="news-date">{{ formatDate(item.date) }}</span>
-            <span :class="['news-category', getCategoryClass(item.category)]">
-              {{ getCategoryLabel(item.category) }}
-            </span>
-          </div>
-          <div class="news-content">
-            <h3>{{ item.title }}</h3>
-            <div class="news-arrow">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
+                     <div class="news-meta">
+             <span class="news-date">{{ formatDate(item.date) }}</span>
+             <span :class="['news-category', getCategoryClass(item.category)]">
+               {{ getCategoryLabel(item.category) }}
+             </span>
+             <h3 class="news-title">{{ item.title }}</h3>
+           </div>
+                       <div class="news-content">
+              <div class="news-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="11" fill="#DA5761"/>
+                  <path d="M9 7L15 12L9 17" stroke="white" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
             </div>
-          </div>
         </article>
       </div>
 
-      <div v-if="loading" class="loading">
-        読み込み中...
-      </div>
+               <div v-if="loading" class="loading">
+           読み込み中...
+         </div>
 
-      <!-- Pagination -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 10 最後</span>
-      </div>
-    </div>
+                   <!-- Pagination -->
+          <div class="pagination">
+            <button 
+              class="pagination-btn" 
+              :class="{ active: currentPage === 1 }"
+              @click="changePage(1)"
+            >
+              1
+            </button>
+            <button 
+              class="pagination-btn" 
+              :class="{ active: currentPage === 2 }"
+              @click="changePage(2)"
+            >
+              2
+            </button>
+            <button 
+              class="pagination-btn" 
+              :class="{ active: currentPage === 3 }"
+              @click="changePage(3)"
+            >
+              3
+            </button>
+            <span class="pagination-dots">...</span>
+            <button 
+              class="pagination-btn" 
+              :class="{ active: currentPage === 10 }"
+              @click="changePage(10)"
+            >
+              10
+            </button>
+            <button 
+              class="pagination-btn next-btn"
+              @click="changePage(currentPage + 1)"
+              :disabled="currentPage >= 10"
+            >
+              最後
+            </button>
+          </div>
+       </div>
+     </div>
 
-    <!-- Company CTA Section -->
-    <section class="company-cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p class="cta-subtitle">About us</p>
-          <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
-          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
-        </div>
-      </div>
-    </section>
+    <!-- Contact CTA Section -->
+    <ContactSection />
+
+    <!-- Access Section -->
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -104,8 +140,8 @@
       <Group27 />
     </div>
 
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
@@ -113,7 +149,11 @@
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
-import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import ContactSection from "./ContactSection.vue";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
 import apiClient from '../services/apiClient.js';
 import { frame132131753022Data } from "../data.js";
 
@@ -123,7 +163,11 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    HeroSection,
+    Breadcrumbs,
+    ContactSection,
+    AccessSection,
+    FixedSideButtons
   },
   data() {
     return {
@@ -241,23 +285,20 @@ export default {
       };
       return labels[category] || 'カテゴリ1';
     },
-    getCategoryClass(category) {
-      const classes = {
-        'seminar': 'seminar',
-        'publication': 'category1',
-        'notice': 'category1',
-        'research': 'category1',
-        'quarterly': 'category1',
-        'special': 'category1',
-        'free': 'category1'
-      };
-      return classes[category] || 'category1';
-    },
+         getCategoryClass(category) {
+       const classes = {
+         'seminar': 'seminar',
+         'publication': 'seminar',
+         'notice': 'seminar',
+         'research': 'seminar',
+         'quarterly': 'seminar',
+         'special': 'seminar',
+         'free': 'seminar'
+       };
+       return classes[category] || 'seminar';
+     },
     goToNewsDetail(newsId) {
       this.$router.push(`/news/${newsId}`);
-    },
-    scrollToContact() {
-      this.$router.push('/contact');
     }
   },
   computed: {
@@ -272,82 +313,68 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 .page-container {
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #ECECEC;
 }
 
-/* Hero Section */
-.hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.hero-overlay {
-  text-align: center;
-  color: white;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
-}
 
 /* Page Content */
 .page-content {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 70px 50px;
+  box-shadow: none;
 }
 
 .news-header {
-  text-align: center;
-  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-bottom: 40px;
 }
 
 .section-title {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 10px;
-  font-weight: bold;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: -0.72px;
+  text-align: center;
+  margin: 0;
 }
 
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  font-weight: 500;
-  position: relative;
-  padding-bottom: 20px;
+.title-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 306px;
 }
 
-.section-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
+.line-left, .line-right {
+  width: 69px;
   height: 2px;
-  background-color: #da5761;
+  background: #DA5761;
+}
+
+.title-english {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #DA5761;
+}
+
+/* News Container */
+.news-container {
+  background: white;
+  padding: 50px;
+  max-width: 1500px;
+  margin: 0 auto;
+  border-radius: 15px;
 }
 
 /* Categories */
@@ -358,19 +385,21 @@ export default {
   margin-bottom: 40px;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: none;
+  width: 100%;
 }
 
 .category-btn {
-  background: #f8f9fa;
+  background: #F6D5D8;
   border: none;
   padding: 15px 20px;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 0.8rem;
   color: #666;
-  border-right: 1px solid #dee2e6;
+  border-right: 1px solid #DA5761;
   white-space: nowrap;
+  flex: 1;
 }
 
 .category-btn:last-child {
@@ -385,18 +414,26 @@ export default {
 
 /* News List */
 .news-list {
-  max-width: 800px;
-  margin: 0 auto 40px;
+  margin-bottom: 40px;
 }
 
 .news-item {
-  background: white;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  overflow: hidden;
-  transition: all 0.3s;
+  display: flex;
+  padding: 20px 20px;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  transition: none;
   cursor: pointer;
+  border-bottom: 0.5px dashed #DA5761;
+}
+
+.news-item:first-child {
+  border-top: 0.5px dashed #DA5761;
 }
 
 .news-item:hover {
@@ -406,15 +443,20 @@ export default {
 
 .news-meta {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  gap: 15px;
-  padding: 15px 20px 0;
+  gap: 20px;
+  border-radius: 5px;
+  flex: 1;
 }
 
 .news-date {
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 500;
+  color: #1A1A1A;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
 }
 
 .news-category {
@@ -425,25 +467,37 @@ export default {
   color: white;
 }
 
-.news-category.category1 {
+.news-category.seminar {
   background: #da5761;
+  color: white;
+  padding: 5px 25px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
-.news-category.seminar {
-  background: #28a745;
+.news-title {
+  color: var(--color-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  flex: 1;
 }
 
 .news-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px 15px;
 }
 
 .news-content h3 {
-  font-size: 1rem;
-  color: #333;
-  font-weight: 500;
+  color: var(--color-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
   flex: 1;
 }
 
@@ -463,66 +517,62 @@ export default {
   color: #666;
 }
 
-/* Pagination */
+/* Pagination Styles */
 .pagination {
-  text-align: center;
-  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
 }
 
-.page-info {
-  color: #da5761;
-  font-size: 0.9rem;
-}
-
-/* Company CTA Section */
-.company-cta-section {
-  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
-  color: white;
-  text-align: center;
-  padding: 80px 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.cta-content h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.cta-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  color: rgba(255,255,255,0.8);
-}
-
-.cta-description {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  color: rgba(255,255,255,0.9);
-}
-
-.cta-button {
-  background: white;
-  color: #da5761;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 50px;
+.pagination-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  background: #FFFFFF;
+  border: 1px solid #CFCFCF;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-secondary);
+  transition: all 0.3s ease;
 }
 
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+.pagination-btn:hover {
+  background: var(--color-accent);
+  color: #FFFFFF;
+  border-color: var(--color-accent);
 }
+
+.pagination-btn.active {
+  background: #1A1A1A;
+  color: #FFFFFF;
+  border-color: #1A1A1A;
+}
+
+.pagination-btn:disabled {
+  background: #F6F6F6;
+  color: #B2B2B2;
+  cursor: not-allowed;
+  border-color: #E0E0E0;
+}
+
+.pagination-dots {
+  color: var(--color-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.next-btn {
+  width: 60px;
+}
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

@@ -1083,7 +1083,7 @@ export default {
 
 .frame-13 {
   align-items: center;
-  border-bottom-style: dashed;
+  border-bottom: 0.5px dashed;
   border-bottom-width: 1px;
   border-color: var(--mandy);
   display: flex;

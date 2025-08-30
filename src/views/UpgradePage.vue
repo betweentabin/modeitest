@@ -321,7 +321,7 @@ export default {
 
 .upgrade-header h1 {
   font-size: 36px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 12px 0;
 }
 
@@ -413,7 +413,7 @@ export default {
 
 .plan-header h2 {
   font-size: 24px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 16px 0;
 }
 
@@ -460,7 +460,7 @@ export default {
 .plan-features li {
   padding: 10px 0;
   font-size: 14px;
-  color: #333;
+  color: #1A1A1A;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -524,7 +524,7 @@ export default {
 
 .comparison-section h2 {
   font-size: 28px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 32px 0;
   text-align: center;
 }
@@ -544,7 +544,7 @@ export default {
 .comparison-table th {
   background: #f5f5f5;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .comparison-table th.highlighted {
@@ -555,7 +555,7 @@ export default {
 .comparison-table td:first-child {
   text-align: left;
   font-weight: 500;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .check {
@@ -583,7 +583,7 @@ export default {
 
 .faq-section h2 {
   font-size: 28px;
-  color: #333;
+  color: #1A1A1A;
   margin: 0 0 32px 0;
   text-align: center;
 }
@@ -604,7 +604,7 @@ export default {
   align-items: center;
   cursor: pointer;
   font-size: 16px;
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
   transition: color 0.3s ease;
 }

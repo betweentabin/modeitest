@@ -203,7 +203,7 @@ export default {
 
 .login-btn {
   background-color: transparent;
-  color: #333;
+  color: #1A1A1A;
   border: 1px solid #ddd;
 }
 
@@ -241,7 +241,7 @@ export default {
 
 .user-name {
   font-weight: 500;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .membership-badge {
@@ -263,7 +263,7 @@ export default {
 
 .membership-premium {
   background-color: #FFD700;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .dropdown-arrow {
@@ -298,7 +298,7 @@ export default {
 
 .membership-info {
   margin: 0;
-  color: #333;
+  color: #1A1A1A;
   font-size: 12px;
   font-weight: bold;
 }
@@ -316,7 +316,7 @@ export default {
   text-align: left;
   background: none;
   border: none;
-  color: #333;
+  color: #1A1A1A;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s;

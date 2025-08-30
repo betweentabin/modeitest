@@ -229,7 +229,7 @@ export default {
 
 .section-title {
   font-size: 2rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -269,7 +269,7 @@ export default {
 
 .report-year {
   font-size: 1.3rem;
-  color: #333;
+  color: #1A1A1A;
   font-weight: bold;
   margin-bottom: 15px;
 }

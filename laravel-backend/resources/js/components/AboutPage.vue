@@ -81,7 +81,7 @@ export default {
 
 .about-header h1 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .about-content {

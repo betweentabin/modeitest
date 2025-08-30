@@ -341,7 +341,7 @@ export default {
 
 .section-title {
   font-size: 2.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -432,7 +432,7 @@ export default {
 }
 
 .message-signature p {
-  color: #333;
+  color: #1A1A1A;
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -507,7 +507,7 @@ export default {
   width: 200px;
   border-bottom: 1px solid #dee2e6;
   font-weight: bold;
-  color: #333;
+  color: #1A1A1A;
 }
 
 .company-table td {
@@ -560,7 +560,7 @@ export default {
 }
 
 .timeline-content h4 {
-  color: #333;
+  color: #1A1A1A;
   font-size: 1.2rem;
   margin-bottom: 10px;
   font-weight: bold;
@@ -632,7 +632,7 @@ export default {
 }
 
 .staff-info h4 {
-  color: #333;
+  color: #1A1A1A;
   font-size: 0.9rem;
   margin-bottom: 5px;
   font-weight: bold;

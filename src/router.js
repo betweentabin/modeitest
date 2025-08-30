@@ -6,7 +6,8 @@ import AboutInstitutePage from "./components/AboutInstitutePage";
 import ServicesPage from "./components/ServicesPage";
 import NewsPage from "./components/NewsPage";
 import FaqPage from "./components/FaqPage";
-import PublicationsPage from "./components/PublicationsPage";
+import PublicationsMemberPage from "./components/PublicationsMemberPage";
+import PublicationsPublicPage from "./components/PublicationsPublicPage";
 import ApplicationFormPage from "./components/ApplicationFormPage";
 import SeminarRegistrationPage from "./components/SeminarRegistrationPage";
 import AdminLoginPage from "./views/admin/AdminLoginPage";
@@ -103,11 +104,23 @@ const router = new Router({
     {
       path: "/publications",
       name: "publications",
-      component: PublicationsPage,
+      component: PublicationsMemberPage,
+      meta: { title: "刊行物（会員） - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/publications-public",
+      name: "publicationsPublic",
+      component: PublicationsPublicPage,
+      meta: { title: "刊行物（一般） - ちくぎん地域経済研究所" }
     },
     {
       path: "/publications/:id",
       name: "publicationDetail",
+      component: PublicationDetailPage,
+    },
+    {
+      path: "/publications-public/:id",
+      name: "publicationPublicDetail",
       component: PublicationDetailPage,
     },
     {

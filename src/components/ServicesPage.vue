@@ -250,7 +250,7 @@ export default {
 
 .intro-title {
   font-size: 1.8rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 30px;
   font-weight: bold;
 }
@@ -275,7 +275,7 @@ export default {
 
 .section-title {
   font-size: 1.8rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -311,7 +311,7 @@ export default {
 
 .service-title {
   font-size: 1.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 20px;
   font-weight: bold;
 }
@@ -344,7 +344,7 @@ export default {
 
 .grid-title {
   font-size: 1.3rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 25px;
   font-weight: bold;
   text-align: center;
@@ -378,7 +378,7 @@ export default {
 
 .service-name {
   font-size: 0.9rem;
-  color: #333;
+  color: #1A1A1A;
   font-weight: 500;
 }
 
@@ -393,7 +393,7 @@ export default {
 
 .details-title {
   font-size: 1.5rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 20px;
   font-weight: bold;
 }
@@ -462,7 +462,7 @@ export default {
 
 .step-content h4 {
   font-size: 1.1rem;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 10px;
   font-weight: bold;
 }

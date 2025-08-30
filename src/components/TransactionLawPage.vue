@@ -316,13 +316,13 @@ export default {
   display: flex;
   width: 100%;
   padding: 20px 0;
-  border-bottom: 1px dashed #DA5761;
+  border-bottom: 0.5px dashed #DA5761;
   justify-content: flex-start;
   align-items: flex-start;
 }
 
 .table-row:first-child {
-  border-top: 1px dashed #DA5761;
+  border-top: 0.5px dashed #DA5761;
 }
 
 .table-label {

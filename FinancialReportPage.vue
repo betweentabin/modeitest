@@ -673,12 +673,12 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   gap: 15px;
-  border-bottom: 1px dashed var(--dark-text);
-  border-top: 1px dashed var(--dark-text);
+  border-bottom: 0.5px dashed var(--dark-text);
+  border-top: 0.5px dashed var(--dark-text);
 }
 
 .report-year-section:first-child {
-  border-top: 1px dashed var(--dark-text);
+  border-top: 0.5px dashed var(--dark-text);
 }
 
 .year-title {

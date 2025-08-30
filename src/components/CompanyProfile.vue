@@ -510,11 +510,11 @@ section {
   justify-content: flex-start;
   align-items: center;
   height: 80px;
-  border-bottom: 1px dashed #DA5761;
+  border-bottom: 0.5px dashed #DA5761;
 }
 
 .profile-row:first-child {
-  border-top: 1px dashed #DA5761;
+  border-top: 0.5px dashed #DA5761;
 }
 
 .profile-label {
@@ -553,11 +553,11 @@ section {
   padding: 30px 0;
   justify-content: flex-start;
   align-items: center;
-  border-bottom: 1px dashed #DA5761;
+  border-bottom: 0.5px dashed #DA5761;
 }
 
 .history-item:first-child {
-  border-top: 1px dashed #DA5761;
+  border-top: 0.5px dashed #DA5761;
 }
 
 .history-year {

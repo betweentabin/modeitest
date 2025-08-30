@@ -123,7 +123,7 @@ export default {
 .company-name {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1AA1A;
 }
 
 .company-url {
@@ -132,7 +132,7 @@ export default {
 }
 
 .logout-btn {
-  background-color: #333;
+  background-color: #1A1A1AA1A;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -187,7 +187,7 @@ export default {
 .nav-item {
   display: block;
   padding: 12px 24px;
-  color: #333;
+  color: #1A1A1AA1A;
   text-decoration: none;
   font-size: 14px;
   transition: background-color 0.2s;
@@ -195,7 +195,7 @@ export default {
 
 .nav-item:hover {
   background-color: #f8f8f8;
-  color: #333;
+  color: #1A1A1AA1A;
   text-decoration: none;
 }
 

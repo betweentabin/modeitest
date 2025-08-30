@@ -192,7 +192,7 @@ export default {
   flex-direction: column;
   gap: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px dashed var(--ship-gray);
+  border-bottom: 0.5px dashed var(--ship-gray);
 }
 
 .notice-date-mobile {
