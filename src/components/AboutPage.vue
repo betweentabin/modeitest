@@ -3,10 +3,10 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
+    <div class="hero-section" :style="heroBackgroundStyle">
       <div class="hero-overlay">
         <div class="hero-content">
-          <h1 class="hero-title">会社概要</h1>
+          <h1 class="hero-title">{{ pageTitle || '会社概要' }}</h1>
           <p class="hero-subtitle">ABOUT US</p>
         </div>
       </div>
@@ -22,14 +22,12 @@
         
         <div class="mission-content">
           <div class="mission-image">
-            <img src="/img/image-1.png" alt="ネットワークイメージ" />
+            <img :src="getImageUrl('content') || '/img/image-1.png'" alt="ネットワークイメージ" />
           </div>
           <div class="mission-text">
-            <h3>産学官金のネットワークを活かした地域創生</h3>
+            <h3>{{ missionTitle || '産学官金のネットワークを活かした地域創生' }}</h3>
             <p>
-              私たちは、産・官・学・金（金融機関）のネットワークを活用し、
-              地域経済の持続的な発展と地域企業の成長を支援することを使命としています。
-              1991年の設立以来、福岡県久留米市を拠点に、九州地域の経済発展に貢献してまいりました。
+              {{ missionText || '私たちは、産・官・学・金（金融機関）のネットワークを活用し、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。1991年の設立以来、福岡県久留米市を拠点に、九州地域の経済発展に貢献してまいりました。' }}
             </p>
           </div>
         </div>
@@ -255,8 +253,31 @@ export default {
     return {
       pageData: null,
       loading: true,
-      error: null
+      error: null,
+      frame132131753022Props: frame132131753022Data,
     };
+  },
+  computed: {
+    pageTitle() {
+      return this.pageData?.title || '';
+    },
+    missionTitle() {
+      return this.pageData?.content?.missionTitle || '';
+    },
+    missionText() {
+      return this.pageData?.content?.missionText || '';
+    },
+    heroBackgroundStyle() {
+      const heroImage = this.getImageUrl('hero');
+      if (heroImage) {
+        return {
+          background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${heroImage}') center/cover`
+        };
+      }
+      return {
+        background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/hero-image.png') center/cover`
+      };
+    }
   },
   async mounted() {
     try {
@@ -269,15 +290,16 @@ export default {
       this.loading = false;
     }
   },
-  data() {
-    return {
-      frame132131753022Props: frame132131753022Data,
-    };
-  },
   methods: {
     scrollToContact() {
       // お問い合わせページに遷移
       this.$router.push('/contact');
+    },
+    getImageUrl(type) {
+      if (this.pageData?.content?.images?.[type]?.url) {
+        return getApiUrl(this.pageData.content.images[type].url);
+      }
+      return null;
     }
   }
 };

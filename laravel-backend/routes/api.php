@@ -137,6 +137,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/{pageKey}', [PageContentController::class, 'show']);
             Route::put('/{pageKey}', [PageContentController::class, 'update']);
             Route::delete('/{pageKey}', [PageContentController::class, 'destroy']);
+            Route::post('/{pageKey}/upload-image', [PageContentController::class, 'uploadImage']);
+            Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
         });
         
         Route::prefix('publications')->group(function () {
