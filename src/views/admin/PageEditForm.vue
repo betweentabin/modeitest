@@ -56,6 +56,51 @@
           </div>
 
           <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              画像管理
+            </label>
+            <div class="space-y-4 p-4 border border-gray-300 rounded-md">
+              <div v-for="imageType in ['hero', 'content', 'gallery']" :key="imageType" class="border-b pb-4 last:border-b-0">
+                <h3 class="text-sm font-semibold mb-2">
+                  {{ imageType === 'hero' ? 'ヒーロー画像' : imageType === 'content' ? 'コンテンツ画像' : 'ギャラリー画像' }}
+                </h3>
+                
+                <div v-if="getImageUrl(imageType)" class="mb-2">
+                  <img 
+                    :src="getImageUrl(imageType)" 
+                    :alt="`${imageType} image`"
+                    class="w-full max-w-xs h-32 object-cover rounded border border-gray-300"
+                  />
+                  <button
+                    @click="deleteImage(imageType)"
+                    type="button"
+                    class="mt-2 px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-300 rounded hover:bg-red-50"
+                  >
+                    画像を削除
+                  </button>
+                </div>
+                
+                <div v-else>
+                  <input
+                    :ref="`imageInput_${imageType}`"
+                    type="file"
+                    accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp"
+                    @change="(e) => handleImageChange(e, imageType)"
+                    class="hidden"
+                  />
+                  <button
+                    @click="$refs[`imageInput_${imageType}`][0].click()"
+                    type="button"
+                    class="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    画像をアップロード
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
             <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
               コンテンツ (JSON形式)
             </label>
@@ -154,7 +199,8 @@ export default {
       jsonError: '',
       loading: false,
       error: '',
-      successMessage: ''
+      successMessage: '',
+      uploadingImage: false
     }
   },
   computed: {
@@ -239,6 +285,92 @@ export default {
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
       this.$router.push('/admin/login')
+    },
+    getImageUrl(type) {
+      if (this.formData.content?.images?.[type]?.url) {
+        return getApiUrl(this.formData.content.images[type].url)
+      }
+      return null
+    },
+    async handleImageChange(event, type) {
+      const file = event.target.files[0]
+      if (!file) return
+
+      if (file.size > 5 * 1024 * 1024) {
+        this.error = '画像は5MB以下にしてください'
+        return
+      }
+
+      this.uploadingImage = true
+      this.error = ''
+
+      const formData = new FormData()
+      formData.append('image', file)
+      formData.append('type', type)
+
+      try {
+        const response = await axios.post(
+          getApiUrl(`/api/admin/pages/${this.pageKey}/upload-image`),
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        )
+
+        // contentを更新
+        if (!this.formData.content) {
+          this.formData.content = {}
+        }
+        if (!this.formData.content.images) {
+          this.formData.content.images = {}
+        }
+        this.formData.content.images[type] = response.data.image
+        
+        // contentJsonも更新
+        this.contentJson = JSON.stringify(this.formData.content, null, 2)
+        
+        this.successMessage = '画像がアップロードされました'
+        setTimeout(() => {
+          this.successMessage = ''
+        }, 3000)
+      } catch (err) {
+        this.error = '画像のアップロードに失敗しました'
+        console.error(err)
+      } finally {
+        this.uploadingImage = false
+      }
+    },
+    async deleteImage(type) {
+      if (!confirm('この画像を削除してもよろしいですか？')) {
+        return
+      }
+
+      this.loading = true
+      this.error = ''
+
+      try {
+        await axios.delete(getApiUrl(`/api/admin/pages/${this.pageKey}/delete-image`), {
+          data: { type }
+        })
+
+        // contentから画像情報を削除
+        if (this.formData.content?.images?.[type]) {
+          delete this.formData.content.images[type]
+          this.contentJson = JSON.stringify(this.formData.content, null, 2)
+        }
+
+        this.successMessage = '画像が削除されました'
+        setTimeout(() => {
+          this.successMessage = ''
+        }, 3000)
+      } catch (err) {
+        this.error = '画像の削除に失敗しました'
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
