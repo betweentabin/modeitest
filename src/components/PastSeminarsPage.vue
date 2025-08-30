@@ -332,12 +332,12 @@ export default {
   padding: 15px 0;
   align-items: center;
   gap: 50px;
-  border-bottom: 1px dashed #727272;
+  border-bottom: 1px dashed #B0B0B0;
   width: 100%;
 }
 
 .past-info-row:first-child {
-  border-top: 1px dashed #727272;
+  border-top: 1px dashed #B0B0B0;
 }
 
 .content-row {

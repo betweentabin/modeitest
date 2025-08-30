@@ -10,7 +10,7 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細（予約受付中）']" />
+    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細（予約済み）']" />
 
     <!-- Seminar Detail Section -->
     <section class="seminar-detail-section" v-if="seminar">
@@ -88,35 +88,31 @@
         </div>
 
       </div>
-    </section>
-
-    <div v-else class="loading">
-      読み込み中...
-    </div>
+      </section>
 
 <!-- button Section -->
 <div class="button-section">
-      <div class="button-container">
-        <button class="cta-button primary">
-          <span class="button-text">お問い合わせはコチラ</span>
-          <div class="arrow-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
-              <path d="M9.5 6L15.5 12L9.5 18" stroke="#DA5761" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </button>
-        <button class="cta-button secondary">
-          <span class="button-text">メンバー登録はコチラ</span>
-          <div class="arrow-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
-              <path d="M9.5 6L15.5 12L9.5 18" stroke="#9C3940" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </button>
-      </div>
-    </div>
+       <div class="button-container">
+         <button class="cta-button primary">
+           <span class="button-text">お問い合わせはコチラ</span>
+           <div class="arrow-icon">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
+               <path d="M9.5 6L15.5 12L9.5 18" stroke="#DA5761" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+             </svg>
+           </div>
+         </button>
+         <button class="cta-button secondary">
+           <span class="button-text">メンバー登録はコチラ</span>
+           <div class="arrow-icon">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
+               <path d="M9.5 6L15.5 12L9.5 18" stroke="#9C3940" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+             </svg>
+           </div>
+         </button>
+       </div>
+     </div>
 
     <!-- Contact Section -->
     <ContactSection />
@@ -150,7 +146,7 @@ import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
 
 export default {
-  name: "SeminarDetailPage",
+  name: "SeminarDetailReservedPage",
   components: {
     Navigation,
     Footer,
@@ -184,147 +180,68 @@ export default {
         if (response.success && response.data && response.data.seminar) {
           this.seminar = this.formatSeminarData(response.data.seminar);
         } else {
-          throw new Error('セミナーが見つかりませんでした');
+          // Fallback to mock data
+          this.loadFallbackData();
         }
       } catch (error) {
-        console.error('セミナー詳細の読み込みに失敗しました:', error);
-        this.error = 'セミナー詳細の読み込みに失敗しました。';
-        // フォールバック: モックデータを使用
-        await this.loadFallbackData();
+        console.error('Error loading seminar:', error);
+        this.loadFallbackData();
       } finally {
         this.loading = false;
       }
     },
     
-    formatSeminarData(seminar) {
-      return {
-        id: seminar.id,
-        title: seminar.title,
-        description: seminar.description,
-        fullDescription: seminar.detailed_description || seminar.description,
-        date: seminar.date,
-        fee: this.formatFee(seminar.fee, seminar.membership_requirement),
-        status: seminar.status === 'scheduled' ? 'current' : 'past',
-        instructor: seminar.instructor || 'ちくぎん地域経済研究所',
-        venue: seminar.location,
-        target: this.formatTarget(seminar.membership_requirement),
-        image: seminar.featured_image || '/img/image-1.png',
-        start_time: seminar.start_time,
-        end_time: seminar.end_time,
-        capacity: seminar.capacity,
-        current_participants: seminar.current_participants,
-        application_deadline: seminar.application_deadline,
-        contact_email: seminar.contact_email,
-        contact_phone: seminar.contact_phone
+    loadFallbackData() {
+      // Mock data for demonstration
+      this.seminar = {
+        id: this.$route.params.id,
+        title: '手形・小切手の全面的な電子化セミナー',
+        instructor: 'ちくぎん地域経済研究所',
+        date: '2025年7月15日（火）14:00～16:00',
+        venue: '久留米リサーチ・パーク',
+        capacity: '30名',
+        fee: '会員無料',
+        description: '当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。',
+        fullDescription: '当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。',
+        image: '/img/image-1.png',
+        status: 'reserved' // 予約済みステータス
       };
     },
     
-    formatFee(fee, membershipRequirement) {
-      if (fee === '0.00' || fee === 0) {
-        return membershipRequirement === 'none' ? '無料' : '会員無料';
-      }
-      return `¥${parseFloat(fee).toLocaleString()}`;
+    formatSeminarData(seminarData) {
+      return {
+        ...seminarData,
+        status: 'reserved' // 予約済みステータスに設定
+      };
     },
     
-    formatTarget(membershipRequirement) {
-      switch(membershipRequirement) {
-        case 'none': return '一般参加可能';
-        case 'basic': return 'ベーシック会員以上';
-        case 'standard': return 'スタンダード会員以上';
-        case 'premium': return 'プレミアム会員限定';
-        default: return '経営者・管理職';
-      }
-    },
-    
-    async loadFallbackData() {
-      const seminarId = this.$route.params.id;
-      
-      // フォールバック用のモックデータ
-      const seminars = [
-        {
-          id: 1,
-          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-          description: '久留米リサーチ・パーク（国立研究機関都市開発）１ー１　２F　特別会議室',
-          fullDescription: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部では、人材紹介事業をはじめ、多様な中途採用領域にご経験・実績がございます。今回は、人材紹介業界の現状と転職者、求職者の特徴をお伝えし、今回は人材業界のトレンドを踏まえ、現在の転職業界の実情をプロジェクト視点で、中小企業の採用コンサルティングをはじめとして、皆様の採用を支援してまいります。また今回は、人材業界のトレンドを踏まえ、現在の転職業界の実情をプロジェクト視点で説明いたします。そして、中小企業の採用コンサルティングをはじめとして、皆様の採用プロジェクトを支援いたします。',
-          date: '2025-06-15',
-          fee: '会員無料',
-          status: 'current',
-          instructor: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部　山根人一朗',
-          venue: '久留米リサーチ・パーク（国立研究機関都市開発）１ー１　２F　特別会議室',
-          target: '経営者・人事担当者',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 2,
-          title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部 山根人一朗',
-          description: '時期',
-          fullDescription: 'バーソル・ビジネス・プロセス・アドバイシング（株）では、人材紹介事業をはじめとして、多様な中途採用領域において豊富な経験と実績を有しています。本セミナーでは、人材紹介業界の最新動向と転職者・求職者の特徴について詳しく解説いたします。',
-          date: '2025-06-20',
-          fee: '会員無料',
-          status: 'current',
-          instructor: '山根人一朗',
-          venue: '久留米リサーチ・パーク',
-          target: '経営者・人事担当者',
-          image: '/img/image-1.png'
-        },
-        {
-          id: '手形・小切手の全面的な電子化セミナー-2025年7月15日',
-          title: '手形・小切手の全面的な電子化セミナー',
-          description: '当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。',
-          fullDescription: '当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。手形の電子化は、企業の業務効率化とコスト削減に大きく貢献します。本セミナーでは、実践的な知識と具体的な導入ステップをご提供いたします。',
-          date: '2025-07-15',
-          fee: '会員無料',
-          status: 'current',
-          instructor: 'ちくぎん地域経済研究所',
-          venue: '久留米リサーチ・パーク',
-          target: '経営者・人事担当者',
-          image: '/img/image-1.png'
-        }
-      ];
-      
-      // 数値IDまたは文字列IDで検索
-      let foundSeminar = seminars.find(s => s.id == seminarId);
-      
-      // 文字列IDで見つからない場合は、タイトルと日付から生成されたIDを検索
-      if (!foundSeminar) {
-        foundSeminar = seminars.find(s => s.id === seminarId);
-      }
-      
-      // それでも見つからない場合は、デフォルトのセミナーを表示
-      if (!foundSeminar) {
-        foundSeminar = seminars[0];
-      }
-      
-      this.seminar = foundSeminar;
-      this.loading = false;
-    },
     formatDetailDate(dateString) {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-      const weekday = weekdays[date.getDay()];
-      return `${year}年${month}月${day}日（${weekday}）`;
+      if (!dateString) return '';
+      return dateString;
     },
+    
     registerSeminar() {
-      // セミナー予約処理
-      alert('セミナーの予約を受け付けました。詳細は後日ご連絡いたします。');
+      // 予約済みの場合は参加ページに遷移
+      this.$router.push(`/seminar-join/${this.seminar.id}`);
     },
+    
     goToContact() {
       this.$router.push('/contact');
     },
+    
     goToMember() {
-      this.$router.push('/register');
-    },
-    scrollToContact() {
-      this.$router.push('/contact');
+      this.$router.push('/member');
     }
   }
 };
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 .page-container {
   min-height: 100vh;
@@ -597,18 +514,43 @@ export default {
   font-size: 1.1rem;
 }
 
-
-
 /* Contact Banner styles are now handled by ContactSection component */
 
 /* Access Section styles are now handled by AccessSection component */
 
 /* Floating Action Buttons styles are now handled by FixedSideButtons component */
 
+/* Footer Navigation */
+.navigation-footer {
+  align-items: center;
+  background-color: var(--celeste);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding: 100px;
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 4;
+  box-sizing: border-box;
+}
+
+.vector-7-1 {
+  height: 1px;
+  background-color: #B2B2B2;
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .seminar-detail-section {
-    padding: 40px 20px;
+    padding: 30px 20px 0 20px;
+  }
+  
+  .seminar-detail-card {
+    padding: 30px 20px;
   }
   
   .seminar-content {
@@ -617,71 +559,23 @@ export default {
   
   .seminar-image {
     width: 100%;
-    height: 200px;
-    overflow: hidden;
+    height: 300px;
   }
   
   .seminar-info {
-    padding: 20px;
     width: 100%;
-  }
-  
-  
-  
-  .detail-row {
-    flex-direction: column;
   }
   
   .detail-label {
     width: 100%;
   }
   
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
+  .button-section {
+    padding: 50px 20px;
   }
   
-  .action-btn {
+  .cta-button {
     width: 100%;
-    max-width: 300px;
   }
-}
-
-@media (max-width: 480px) {
-  .seminar-image {
-    height: 200px;
-  }
-  
-  
-  
-  .detail-label,
-  .detail-value {
-    font-size: 0.85rem;
-  }
-  
-  .seminar-description p {
-    font-size: 0.9rem;
-  }
-}
-
-/* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
 }
 </style>

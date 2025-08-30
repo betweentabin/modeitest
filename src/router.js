@@ -32,6 +32,8 @@ import SeminarPage from "./components/SeminarPage";
 import CurrentSeminarsPage from "./components/CurrentSeminarsPage";
 import PastSeminarsPage from "./components/PastSeminarsPage";
 import SeminarDetailPage from "./components/SeminarDetailPage";
+import SeminarDetailReservedPage from "./components/SeminarDetailReservedPage";
+import SeminarDetailJoinPage from "./components/SeminarDetailJoinPage";
 import GlossaryPage from "./components/GlossaryPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
 import TransactionLawPage from "./components/TransactionLawPage";
@@ -130,7 +132,19 @@ const router = new Router({
       path: "/seminars/:id",
       name: "seminarDetail",
       component: SeminarDetailPage,
-      meta: { title: "セミナー詳細 - ちくぎん地域経済研究所" }
+      meta: { title: "セミナー詳細（予約受付中） - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/:id/reserved",
+      name: "seminarDetailReserved",
+      component: SeminarDetailReservedPage,
+      meta: { title: "セミナー詳細（予約済み） - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/:id/join",
+      name: "seminarDetailJoin",
+      component: SeminarDetailJoinPage,
+      meta: { title: "セミナー詳細（今すぐ参加） - ちくぎん地域経済研究所" }
     },
     {
       path: "/apply",
@@ -363,6 +377,18 @@ const router = new Router({
       name: "upgrade",
       component: UpgradePage,
       meta: { title: "プランアップグレード - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminar-join/:id",
+      name: "seminarJoin",
+      component: SeminarDetailJoinPage,
+      meta: { title: "セミナー参加 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminar-room/:id",
+      name: "seminarRoom",
+      component: SeminarDetailJoinPage,
+      meta: { title: "セミナールーム - ちくぎん地域経済研究所" }
     },
     {
       path: "*",

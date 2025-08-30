@@ -98,7 +98,7 @@
                   </div>
                 </div>
               </div>
-              <button class="reserve-btn">
+              <button class="reserve-btn" @click="goToSeminarDetail(seminar)">
                 <span>セミナーを予約する</span>
                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -283,6 +283,15 @@ export default {
     },
     goToPastSeminars() {
       this.$router.push('/seminars/past');
+    },
+    goToSeminarDetail(seminar) {
+      // セミナーのIDを生成（実際のアプリケーションではデータベースから取得）
+      const seminarId = this.generateSeminarId(seminar);
+      this.$router.push(`/seminars/${seminarId}`);
+    },
+    generateSeminarId(seminar) {
+      // セミナーのタイトルと日付からIDを生成
+      return encodeURIComponent(seminar.title + '-' + seminar.date);
     }
   }
 };
@@ -674,12 +683,12 @@ export default {
   padding: 15px 0;
   align-items: center;
   gap: 50px;
-  border-bottom: 1px dashed #727272;
+  border-bottom: 1px dashed #B0B0B0;
   width: 100%;
 }
 
 .past-info-row:first-child {
-  border-top: 1px dashed #727272;
+  border-top: 1px dashed #B0B0B0;
 }
 
 .past-show-more {

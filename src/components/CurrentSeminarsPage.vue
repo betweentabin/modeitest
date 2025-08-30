@@ -66,7 +66,7 @@
                   </div>
                 </div>
               </div>
-              <button class="reserve-btn">
+              <button class="reserve-btn" @click="goToSeminarDetail(seminar)">
                 <span>セミナーを予約する</span>
                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -254,6 +254,15 @@ export default {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
       }
+    },
+    goToSeminarDetail(seminar) {
+      // セミナーのIDを生成（実際のアプリケーションではデータベースから取得）
+      const seminarId = this.generateSeminarId(seminar);
+      this.$router.push(`/seminars/${seminarId}`);
+    },
+    generateSeminarId(seminar) {
+      // セミナーのタイトルと日付からIDを生成
+      return encodeURIComponent(seminar.title + '-' + seminar.date);
     }
   }
 };
