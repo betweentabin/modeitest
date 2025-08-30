@@ -100,6 +100,7 @@ const router = new Router({
       path: "/faq",
       name: "faq",
       component: FaqPage,
+      meta: { title: "よくある質問 - ちくぎん地域経済研究所" }
     },
     {
       path: "/publications",

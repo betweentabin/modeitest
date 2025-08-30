@@ -3,19 +3,23 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">よくあるご質問</h1>
-          <p class="hero-subtitle">FAQ</p>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="よくあるご質問"
+      subtitle="FAQ"
+      heroImage="/img/hero-image.png"
+    />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['よくあるご質問']" />
 
     <div class="page-content">
-      <div class="faq-header">
-        <h2 class="section-title">よくあるご質問</h2>
-        <p class="section-subtitle">FAQ</p>
+      <div class="content-header">
+        <h2 class="page-title">よくあるご質問</h2>
+        <div class="title-decoration">
+          <div class="line-left"></div>
+          <span class="title-english">FAQ</span>
+          <div class="line-right"></div>
+        </div>
       </div>
       
       <div class="faq-categories">
@@ -59,16 +63,11 @@
       </div>
     </div>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p>様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
-          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
-        </div>
-      </div>
-    </section>
+    <!-- Contact CTA Section -->
+    <ContactSection />
+
+    <!-- Access Section -->
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -77,8 +76,8 @@
       <Group27 />
     </div>
 
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
@@ -87,6 +86,11 @@ import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
 import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import ContactSection from "./ContactSection.vue";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 
 export default {
@@ -95,7 +99,12 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    FixedActionButtons,
+    HeroSection,
+    Breadcrumbs,
+    ContactSection,
+    AccessSection,
+    FixedSideButtons
   },
   data() {
     return {
@@ -222,90 +231,62 @@ export default {
         this.openItems.push(index);
       }
     },
-    scrollToContact() {
-      this.$router.push('/contact');
-    }
+
   }
 };
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 .page-container {
   min-height: 100vh;
-  background-color: #ffffff;
-}
-
-/* Hero Section */
-.hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-overlay {
-  text-align: center;
-  color: white;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
+  background-color: #ECECEC;
 }
 
 /* Page Content */
 .page-content {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 70px 50px;
 }
 
-.faq-header {
-  text-align: center;
-  margin-bottom: 50px;
+.content-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-bottom: 40px;
 }
 
-.section-title {
-  font-size: 2rem;
+.page-title {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
   color: #1A1A1A;
-  margin-bottom: 10px;
-  font-weight: bold;
+  letter-spacing: -0.72px;
+  text-align: center;
+  margin: 0;
 }
 
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  font-weight: 500;
-  position: relative;
-  padding-bottom: 20px;
+.title-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 306px;
 }
 
-.section-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
+.line-left, .line-right {
+  width: 69px;
   height: 2px;
-  background-color: #da5761;
+  background: #DA5761;
+}
+
+.title-english {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #DA5761;
 }
 
 /* Categories */
@@ -313,21 +294,27 @@ export default {
   display: flex;
   justify-content: center;
   gap: 0;
-  margin-bottom: 40px;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: none;
+  max-width: 1500px;
+  margin: 0 auto 40px;
 }
 
 .category-btn {
-  background: #f8f9fa;
+  background: #F6D5D8;
   border: none;
-  padding: 15px 25px;
+  padding: 15px 20px;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #666;
-  border-right: 1px solid #dee2e6;
+  border-right: 1px solid #DA5761;
+  white-space: nowrap;
+  flex: 1;
+  box-sizing: border-box;
+  width: 0;
+  min-width: 0;
 }
 
 .category-btn:last-child {
@@ -342,7 +329,7 @@ export default {
 
 /* FAQ Items */
 .faq-list {
-  max-width: 800px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
@@ -389,7 +376,13 @@ export default {
   font-size: 1rem;
   color: #1A1A1A;
   font-weight: 500;
+  font-family: "Noto Sans JP", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
 }
+
 
 .toggle-icon {
   color: #666;
@@ -403,8 +396,7 @@ export default {
 .faq-answer {
   display: flex;
   align-items: flex-start;
-  padding: 0 20px 20px 20px;
-  background-color: #f8f9fa;
+  padding: 20px;
   border-top: 1px solid #dee2e6;
 }
 
@@ -413,7 +405,8 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #28a745;
+  background: white;
+  border: 2px solid #da5761;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -422,7 +415,7 @@ export default {
 }
 
 .a-mark {
-  color: white;
+  color: #da5761;
   font-weight: bold;
   font-size: 1.2rem;
 }
@@ -506,69 +499,27 @@ export default {
   max-height: 500px;
 }
 
-/* CTA Section */
-.cta-section {
-  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
-  color: white;
-  text-align: center;
-  padding: 80px 0;
-}
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.cta-content h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.cta-content p {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-}
-
-.cta-button {
-  background: white;
-  color: #da5761;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-weight: bold;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  
   .page-content {
     padding: 40px 15px;
   }
   
   .faq-categories {
-    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
   }
   
   .category-btn {
-    border-right: none;
-    border-bottom: 1px solid #dee2e6;
-  }
-  
-  .category-btn:last-child {
-    border-bottom: none;
+    padding: 8px 10px;
+    font-size: 0.6rem;
+    border-right: 1px solid #DA5761;
+    border-radius: 0;
+    margin-bottom: 0;
+    min-width: 0;
+    flex: 1;
   }
   
   .faq-question {
@@ -589,6 +540,13 @@ export default {
   .q-mark,
   .a-mark {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-btn {
+    padding: 6px 8px;
+    font-size: 0.5rem;
   }
 }
 
