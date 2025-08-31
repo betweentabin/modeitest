@@ -290,6 +290,16 @@ class ApiClient {
       }
     })
   }
+
+  // News categories API methods
+  async getNewsCategories() {
+    return this.get('/api/news-categories')
+  }
+
+  // Publication categories API methods
+  async getPublicationCategories() {
+    return this.get('/api/publication-categories')
+  }
 }
 
 // Export a singleton instance

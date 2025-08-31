@@ -97,27 +97,78 @@ const mockData = {
   notices: [
     {
       id: 1,
-      title: 'GW休業のお知らせ',
-      content: '5月3日から5月6日まで休業いたします。',
-      date: '2025-06-20',
+      title: '2025年度経済展望セミナー開催のお知らせ',
+      content: '来る3月15日に、2025年度の九州地域経済展望についてのセミナーを開催いたします。詳細は後日お知らせいたします。',
+      excerpt: '3月15日にセミナーを開催',
       category: 'notice',
+      slug: 'seminar-2025-economic-outlook',
+      is_important: true,
+      is_published: true,
+      published_at: '2025-01-15 10:00:00',
+      created_at: '2025-01-15 10:00:00',
+      updated_at: '2025-01-15 10:00:00',
+      date: '2025-01-15',
       isImportant: true
     },
     {
       id: 2,
-      title: 'ホームページリニューアルのお知らせ',
-      content: 'より使いやすいホームページにリニューアルしました。',
-      date: '2025-06-15',
-      category: 'notice',
-      isImportant: false
+      title: 'GW休業のお知らせ',
+      content: '5月3日から5月6日まで休業いたします。ご不便をおかけしますが、よろしくお願いいたします。',
+      excerpt: 'GW期間中の休業について',
+      category: 'important',
+      slug: 'gw-holiday-notice',
+      is_important: true,
+      is_published: true,
+      published_at: '2025-01-10 09:00:00',
+      created_at: '2025-01-10 09:00:00',
+      updated_at: '2025-01-10 09:00:00',
+      date: '2025-01-10',
+      isImportant: true
     },
     {
       id: 3,
-      title: '新年度の経済展望について',
-      content: '2025年度の九州地域経済展望レポートを公開しました。',
-      date: '2025-05-12',
+      title: 'ホームページリニューアルのお知らせ',
+      content: 'より使いやすいホームページにリニューアルしました。新機能も追加されています。',
+      excerpt: 'ホームページをリニューアル',
       category: 'notice',
-      isImportant: true
+      slug: 'website-renewal',
+      is_important: false,
+      is_published: true,
+      published_at: '2025-01-08 14:00:00',
+      created_at: '2025-01-08 14:00:00',
+      updated_at: '2025-01-08 14:00:00',
+      date: '2025-01-08',
+      isImportant: false
+    },
+    {
+      id: 4,
+      title: '新年のご挨拶',
+      content: '明けましておめでとうございます。本年もどうぞよろしくお願いいたします。',
+      excerpt: '新年のご挨拶',
+      category: 'notice',
+      slug: 'new-year-greeting-2025',
+      is_important: false,
+      is_published: true,
+      published_at: '2025-01-01 00:00:00',
+      created_at: '2025-01-01 00:00:00',
+      updated_at: '2025-01-01 00:00:00',
+      date: '2025-01-01',
+      isImportant: false
+    },
+    {
+      id: 5,
+      title: 'オンラインセミナー配信開始',
+      content: 'オンラインでのセミナー配信サービスを開始しました。遠方の方もぜひご参加ください。',
+      excerpt: 'オンラインセミナー開始',
+      category: 'event',
+      slug: 'online-seminar-start',
+      is_important: false,
+      is_published: true,
+      published_at: '2024-12-15 11:00:00',
+      created_at: '2024-12-15 11:00:00',
+      updated_at: '2024-12-15 11:00:00',
+      date: '2024-12-15',
+      isImportant: false
     }
   ],
   media: [
@@ -647,6 +698,22 @@ class MockAPIServer {
   getAllNews() {
     const news = []
     
+    // Add notices as news items
+    this.data.notices.forEach(notice => {
+      news.push({
+        id: notice.id,
+        date: notice.published_at || notice.date,
+        category: notice.category,
+        title: notice.title,
+        description: notice.content,
+        excerpt: notice.excerpt,
+        type: 'notice',
+        is_important: notice.is_important || notice.isImportant,
+        is_published: notice.is_published,
+        slug: notice.slug
+      })
+    })
+    
     // Convert seminars to news items
     this.data.seminars.forEach(seminar => {
       news.push({
@@ -668,19 +735,6 @@ class MockAPIServer {
         title: publication.title,
         description: publication.description,
         type: 'publication'
-      })
-    })
-    
-    // Convert notices to news items
-    this.data.notices.forEach(notice => {
-      news.push({
-        id: `notice-${notice.id}`,
-        date: notice.date,
-        category: notice.category,
-        title: notice.title,
-        description: notice.content,
-        isImportant: notice.isImportant,
-        type: 'notice'
       })
     })
     
@@ -717,6 +771,28 @@ class MockAPIServer {
       })
     }
     return Promise.reject(new Error('Seminar not found'))
+  }
+
+  // News categories methods
+  getNewsCategories() {
+    const categories = [
+      { id: 1, name: 'お知らせ', slug: 'notice', color: '#da5761' },
+      { id: 2, name: '重要', slug: 'important', color: '#ff4444' },
+      { id: 3, name: 'イベント', slug: 'event', color: '#4CAF50' },
+      { id: 4, name: 'メディア', slug: 'media', color: '#2196F3' }
+    ]
+    return Promise.resolve(categories)
+  }
+
+  // Publication categories methods
+  getPublicationCategories() {
+    const categories = [
+      { id: 1, name: '調査研究', slug: 'research', sort_order: 1 },
+      { id: 2, name: '定期刊行物', slug: 'quarterly', sort_order: 2 },
+      { id: 3, name: '特別企画', slug: 'special', sort_order: 3 },
+      { id: 4, name: '統計資料', slug: 'statistics', sort_order: 4 }
+    ]
+    return Promise.resolve(categories)
   }
 }
 

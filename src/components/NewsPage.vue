@@ -189,6 +189,28 @@ export default {
     async loadNews() {
       this.loading = true
       try {
+        // まずmockServerから取得を試みる
+        try {
+          const allNews = await mockServer.getAllNews();
+          
+          if (allNews && allNews.length > 0) {
+            this.newsItems = allNews.map(item => ({
+              id: item.id,
+              date: item.date,
+              category: item.category || item.type || 'notice',
+              title: item.title,
+              description: item.description || item.content,
+              type: item.type || item.category || 'notice'
+            }));
+            this.totalPages = Math.ceil(this.newsItems.length / 10);
+            this.totalItems = this.newsItems.length;
+            return;
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API');
+        }
+        
+        // APIから取得
         const params = {
           page: this.currentPage,
           per_page: 10

@@ -134,6 +134,7 @@ import Frame13213176122 from "./Frame13213176122.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
+import mockServer from '@/mockServer';
 
 export default {
   name: "SeminarDetailPage",
@@ -166,6 +167,33 @@ export default {
         this.loading = true;
         const seminarId = this.$route.params.id;
         
+        // まずmockServerから取得を試みる
+        try {
+          const seminar = await mockServer.getSeminar(seminarId);
+          this.seminar = {
+            id: seminar.id,
+            title: seminar.title,
+            description: seminar.description,
+            fullDescription: seminar.detailed_description || seminar.description,
+            date: seminar.date,
+            start_time: seminar.start_time,
+            end_time: seminar.end_time,
+            venue: seminar.location,
+            location: seminar.location,
+            capacity: seminar.capacity ? `${seminar.capacity}名` : '30名',
+            fee: seminar.fee === 0 || seminar.fee === '0' ? '会員無料' : `${seminar.fee}円`,
+            status: seminar.status === 'scheduled' || seminar.status === 'ongoing' ? 'current' : seminar.status,
+            image: seminar.featured_image || '/img/image-1.png',
+            instructor: seminar.instructor || 'ちくぎん地域経済研究所',
+            notes: seminar.notes,
+            application_deadline: seminar.application_deadline
+          };
+          return;
+        } catch (mockError) {
+          console.log('MockServer failed, trying API');
+        }
+        
+        // APIからの取得
         const response = await apiClient.getSeminar(seminarId);
         
         if (response.success && response.data && response.data.seminar) {

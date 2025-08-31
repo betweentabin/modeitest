@@ -184,6 +184,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
+import mockServer from '@/mockServer';
 
 export default {
   name: "PublicationsMemberPage",
@@ -409,6 +410,33 @@ export default {
     async loadPublications() {
       this.loading = true;
       try {
+        // まずmockServerから取得を試みる
+        try {
+          const allPublications = await mockServer.getPublications();
+          
+          if (allPublications && allPublications.length > 0) {
+            this.publications = allPublications.map(item => ({
+              id: item.id,
+              title: item.title,
+              image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
+              description: item.description,
+              category: item.category || 'special',
+              publish_date: item.publication_date,
+              author: item.author || 'ちくぎん地域経済研究所',
+              pages: item.pages,
+              file_size: item.file_size,
+              download_count: item.download_count,
+              is_published: item.is_published,
+              membershipLevel: item.membership_level || item.membershipLevel || 'free'
+            }));
+            this.totalPages = Math.ceil(this.publications.length / 12);
+            return;
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API');
+        }
+        
+        // APIから取得
         const params = {
           page: this.currentPage,
           per_page: 12

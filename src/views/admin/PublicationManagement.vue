@@ -38,9 +38,9 @@
           <div class="filter-group">
             <select v-model="filters.category" class="filter-select">
               <option value="">カテゴリー</option>
-              <option value="hot-information">Hot Information</option>
-              <option value="research-report">ちくぎん地域経済レポート</option>
-              <option value="business-book">経営参考BOOK</option>
+              <option v-for="category in categories" :key="category.id" :value="category.slug">
+                {{ category.name }}
+              </option>
             </select>
           </div>
           <button @click="applyFilters" class="apply-btn">絞り込み</button>
@@ -109,8 +109,47 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 99 最後</span>
+      <div class="pagination" v-if="totalPages > 1">
+        <button 
+          @click="currentPage > 1 && (currentPage--)"
+          :disabled="currentPage === 1"
+          class="page-btn"
+        >
+          前へ
+        </button>
+        
+        <template v-for="page in totalPages">
+          <button 
+            v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
+            :key="'btn-' + page"
+            @click="currentPage = page"
+            :class="['page-number', { active: page === currentPage }]"
+          >
+            {{ page }}
+          </button>
+          <span 
+            v-else-if="page === 4 && currentPage > 5"
+            :key="'dots-start-' + page"
+            class="page-dots"
+          >
+            ...
+          </span>
+          <span 
+            v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
+            :key="'dots-end-' + page"
+            class="page-dots"
+          >
+            ...
+          </span>
+        </template>
+
+        <button 
+          @click="currentPage < totalPages && (currentPage++)"
+          :disabled="currentPage === totalPages"
+          class="page-btn"
+        >
+          次へ
+        </button>
       </div>
     </div>
   </AdminLayout>
@@ -119,6 +158,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'PublicationManagement',
@@ -137,13 +177,18 @@ export default {
         month: '',
         category: ''
       },
+      categories: [],
       currentPage: 1,
       totalPages: 1,
+      itemsPerPage: 20,
       authToken: null
     }
   },
   async mounted() {
-    await this.loadPublications()
+    await Promise.all([
+      this.loadCategories(),
+      this.loadPublications()
+    ])
   },
   computed: {
     filteredPublications() {
@@ -173,33 +218,91 @@ export default {
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        // まずmockServerから取得を試みる
+        try {
+          const categories = await mockServer.getPublicationCategories()
+          if (categories && categories.length > 0) {
+            this.categories = categories
+            return
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API')
+        }
+
+        // APIから取得
+        const response = await apiClient.getPublicationCategories()
+        if (response.success && response.data) {
+          this.categories = response.data.categories
+        } else {
+          throw new Error('カテゴリーデータの取得に失敗しました')
+        }
+      } catch (err) {
+        console.error('カテゴリー読み込みエラー:', err)
+        // フォールバック: デフォルトカテゴリー
+        this.categories = [
+          { id: 1, name: '調査研究', slug: 'research', sort_order: 1 },
+          { id: 2, name: '定期刊行物', slug: 'quarterly', sort_order: 2 },
+          { id: 3, name: '特別企画', slug: 'special', sort_order: 3 },
+          { id: 4, name: '統計資料', slug: 'statistics', sort_order: 4 }
+        ]
+      }
+    },
+
     async loadPublications() {
       this.loading = true
       try {
+        // まずmockServerから取得を試みる
+        try {
+          const allPublications = await mockServer.getPublications()
+          if (allPublications && allPublications.length > 0) {
+            const start = (this.currentPage - 1) * this.itemsPerPage
+            const end = start + this.itemsPerPage
+            
+            this.publications = allPublications.map(pub => ({
+              id: pub.id,
+              title: pub.title,
+              date: pub.publication_date,
+              category: this.getCategoryText(pub.category),
+              userType: this.getUserTypeText(pub.membership_level),
+              description: pub.description,
+              author: pub.author,
+              is_published: pub.is_published,
+              is_downloadable: pub.file_url ? true : false
+            }))
+            
+            this.totalPages = Math.ceil(this.publications.length / this.itemsPerPage)
+            return
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API')
+        }
+
+        // APIから取得
         this.authToken = localStorage.getItem('admin_token')
-        
         if (!this.authToken) {
           throw new Error('管理者認証が必要です')
         }
         
         const params = {
           page: this.currentPage,
-          per_page: 20
+          per_page: this.itemsPerPage,
+          ...this.filters
         }
         
-        const response = await apiClient.getPublications(params)
-        
+        const response = await apiClient.getAdminPublications(params, this.authToken)
         if (response.success && response.data) {
           this.publications = response.data.publications.map(pub => ({
             id: pub.id,
             title: pub.title,
             date: pub.publication_date,
             category: this.getCategoryText(pub.category),
-            userType: this.getUserTypeText(pub.members_only),
+            userType: this.getUserTypeText(pub.membership_level),
             description: pub.description,
             author: pub.author,
             is_published: pub.is_published,
-            is_downloadable: pub.is_downloadable
+            is_downloadable: pub.file_url ? true : false
           }))
           
           this.totalPages = response.data.pagination.total_pages
@@ -209,44 +312,6 @@ export default {
       } catch (err) {
         this.error = err.message || '刊行物データの読み込みに失敗しました'
         console.error('刊行物読み込みエラー:', err)
-        // フォールバック: デフォルトデータ
-        this.publications = [
-        {
-          id: 1,
-          title: 'Hot Information Vol.325',
-          date: '2025-04-23',
-          category: 'Hot Information',
-          userType: 'スタンダード、プレミアム'
-        },
-        {
-          id: 2,
-          title: 'ちくぎん地域経済レポート No.55',
-          date: '2025-04-23',
-          category: 'ちくぎん地域経済レポート',
-          userType: 'スタンダード、プレミアム'
-        },
-        {
-          id: 3,
-          title: 'Hot Information Vol.324',
-          date: '2025-04-23',
-          category: 'Hot Information',
-          userType: 'スタンダード、プレミアム'
-        },
-        {
-          id: 4,
-          title: 'Hot Information Vol.323',
-          date: '2025-04-23',
-          category: 'Hot Information',
-          userType: 'スタンダード、プレミアム'
-        },
-        {
-          id: 5,
-          title: '経営参考BOOK vol.5.2',
-          date: '2025-04-23',
-          category: '経営参考BOOK',
-          userType: 'プレミアム'
-        }
-      ]
       } finally {
         this.loading = false
       }
@@ -262,32 +327,15 @@ export default {
       }
     },
     
-    getUserTypeText(membersOnly) {
-      return membersOnly ? 'プレミアム' : 'スタンダード、プレミアム'
-    }
-  },
-  computed: {
-    filteredPublications() {
-      let result = this.publications
-      
-      if (this.searchKeyword) {
-        const keyword = this.searchKeyword.toLowerCase()
-        result = result.filter(publication => 
-          publication.title.toLowerCase().includes(keyword) ||
-          publication.category.toLowerCase().includes(keyword)
-        )
+    getUserTypeText(membershipLevel) {
+      switch (membershipLevel) {
+        case 'free': return '無料公開'
+        case 'basic': return 'ベーシック会員以上'
+        case 'standard': return 'スタンダード会員以上'
+        case 'premium': return 'プレミアム会員限定'
+        default: return '無料公開'
       }
-      
-      if (this.filters.category) {
-        result = result.filter(publication => 
-          publication.category.toLowerCase().includes(this.filters.category.toLowerCase())
-        )
-      }
-      
-      return result
-    }
-  },
-  methods: {
+    },
     formatDate(dateString) {
       const date = new Date(dateString)
       const year = date.getFullYear()
@@ -562,8 +610,52 @@ export default {
   border-top: 1px solid #e5e5e5;
 }
 
-.page-info {
+.page-btn {
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  padding: 6px 12px;
+  border-radius: 4px;
   font-size: 14px;
-  color: #da5761;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: #f8f8f8;
+  border-color: #1A1A1A;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-number {
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  padding: 6px 12px;
+  margin: 0 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-number:hover {
+  background-color: #f8f8f8;
+  border-color: #1A1A1A;
+}
+
+.page-number.active {
+  background-color: #da5761;
+  border-color: #da5761;
+  color: white;
+}
+
+.page-dots {
+  padding: 6px 8px;
+  color: #666;
 }
 </style>

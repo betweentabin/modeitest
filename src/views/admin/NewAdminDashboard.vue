@@ -121,23 +121,26 @@
           前へ
         </button>
         
-        <template v-for="page in totalPages" :key="page">
+        <template v-for="page in totalPages">
           <button 
             v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
             @click="currentPage = page"
             :class="['page-number', { active: page === currentPage }]"
+            :key="`btn-${page}`"
           >
             {{ page }}
           </button>
           <span 
             v-else-if="page === 4 && currentPage > 5"
             class="page-dots"
+            :key="`dots-${page}-start`"
           >
             ...
           </span>
           <span 
             v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
             class="page-dots"
+            :key="`dots-${page}-end`"
           >
             ...
           </span>

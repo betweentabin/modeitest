@@ -118,8 +118,47 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 99 最後</span>
+      <div class="pagination" v-if="totalPages > 1">
+        <button 
+          @click="currentPage > 1 && (currentPage--)"
+          :disabled="currentPage === 1"
+          class="page-btn"
+        >
+          前へ
+        </button>
+        
+        <template v-for="page in totalPages">
+          <button 
+            v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
+            :key="'btn-' + page"
+            @click="currentPage = page"
+            :class="['page-number', { active: page === currentPage }]"
+          >
+            {{ page }}
+          </button>
+          <span 
+            v-else-if="page === 4 && currentPage > 5"
+            :key="'dots-start-' + page"
+            class="page-dots"
+          >
+            ...
+          </span>
+          <span 
+            v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
+            :key="'dots-end-' + page"
+            class="page-dots"
+          >
+            ...
+          </span>
+        </template>
+
+        <button 
+          @click="currentPage < totalPages && (currentPage++)"
+          :disabled="currentPage === totalPages"
+          class="page-btn"
+        >
+          次へ
+        </button>
       </div>
     </div>
   </AdminLayout>
@@ -128,6 +167,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'SeminarManagement',
@@ -148,6 +188,7 @@ export default {
       },
       currentPage: 1,
       totalPages: 1,
+      itemsPerPage: 20,
       authToken: null
     }
   },
@@ -177,27 +218,62 @@ export default {
     async loadSeminars() {
       this.loading = true
       try {
-        // 管理者認証トークンを取得（ローカルストレージから）
+        // まずmockServerから取得を試みる
+        try {
+          const allSeminars = await mockServer.getSeminars()
+          if (allSeminars && allSeminars.length > 0) {
+            const start = (this.currentPage - 1) * this.itemsPerPage
+            const end = start + this.itemsPerPage
+            
+            this.seminars = allSeminars.map(seminar => ({
+              id: seminar.id,
+              title: seminar.title,
+              date: seminar.date,
+              time: `${seminar.start_time || '16:00'}～${seminar.end_time || '17:00'}`,
+              venue: seminar.location || 'ZOOM（福岡県）',
+              status: seminar.status || 'scheduled',
+              membership: this.getMembershipText(seminar.membership_requirement),
+              capacity: seminar.capacity || 30,
+              current_participants: seminar.current_participants || 0,
+              description: seminar.description,
+              detailed_description: seminar.detailed_description,
+              featured_image: seminar.featured_image
+            }))
+            
+            this.totalPages = Math.ceil(this.seminars.length / this.itemsPerPage)
+            return
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API')
+        }
+
+        // APIから取得
         this.authToken = localStorage.getItem('admin_token')
-        
         if (!this.authToken) {
           throw new Error('管理者認証が必要です')
         }
         
         const params = {
           page: this.currentPage,
-          per_page: 20
+          per_page: this.itemsPerPage,
+          ...this.filters
         }
         
         const response = await apiClient.getAdminSeminars(params, this.authToken)
-        
         if (response.success && response.data) {
-          // データ形式を既存のテンプレートに合わせて調整
           this.seminars = response.data.seminars.map(seminar => ({
-            ...seminar,
-            time: `${seminar.start_time || '16:00'}～ ${seminar.end_time || '17:00'}`,
+            id: seminar.id,
+            title: seminar.title,
+            date: seminar.date,
+            time: `${seminar.start_time || '16:00'}～${seminar.end_time || '17:00'}`,
             venue: seminar.location || 'ZOOM（福岡県）',
-            membership: this.getMembershipText(seminar.membership_requirement)
+            status: seminar.status || 'scheduled',
+            membership: this.getMembershipText(seminar.membership_requirement),
+            capacity: seminar.capacity || 30,
+            current_participants: seminar.current_participants || 0,
+            description: seminar.description,
+            detailed_description: seminar.detailed_description,
+            featured_image: seminar.featured_image
           }))
           
           this.totalPages = response.data.pagination.total_pages
@@ -207,8 +283,6 @@ export default {
       } catch (err) {
         this.error = err.message || 'セミナーデータの読み込みに失敗しました'
         console.error('セミナー読み込みエラー:', err)
-        // フォールバック: 空データ
-        this.seminars = []
       } finally {
         this.loading = false
       }
@@ -550,8 +624,52 @@ export default {
   border-top: 1px solid #e5e5e5;
 }
 
-.page-info {
+.page-btn {
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  padding: 6px 12px;
+  border-radius: 4px;
   font-size: 14px;
-  color: #da5761;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: #f8f8f8;
+  border-color: #1A1A1A;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-number {
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  padding: 6px 12px;
+  margin: 0 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-number:hover {
+  background-color: #f8f8f8;
+  border-color: #1A1A1A;
+}
+
+.page-number.active {
+  background-color: #da5761;
+  border-color: #da5761;
+  color: white;
+}
+
+.page-dots {
+  padding: 6px 8px;
+  color: #666;
 }
 </style>
