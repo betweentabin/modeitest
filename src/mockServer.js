@@ -11,7 +11,8 @@ const mockData = {
       location: 'ちくぎん地域経済研究所 会議室A',
       capacity: 30,
       fee: 5000,
-      status: 'ongoing'
+      status: 'ongoing',
+      featured_image: '/img/image-1.png' // デフォルト画像
     },
     {
       id: 2,
@@ -23,7 +24,8 @@ const mockData = {
       location: 'オンライン開催',
       capacity: 100,
       fee: 3000,
-      status: 'scheduled'
+      status: 'scheduled',
+      featured_image: '/img/image-1.png' // デフォルト画像
     }
   ],
   publications: [
@@ -329,6 +331,7 @@ class MockAPIServer {
   updateSeminar(id, data) {
     const index = this.data.seminars.findIndex(s => s.id === parseInt(id))
     if (index !== -1) {
+      // 画像URLも含めて更新
       this.data.seminars[index] = { ...this.data.seminars[index], ...data }
       this.saveData()
       return Promise.resolve(this.data.seminars[index])
@@ -687,45 +690,33 @@ class MockAPIServer {
     return Promise.resolve(news)
   }
 
-  // セミナー関連メソッド
+  // セミナー関連メソッド（互換性のため残す）
+  // 注意: このメソッドはthis.data.seminarsを使用するように更新
   getSeminars() {
-    const seminars = [
-      {
-        id: 1,
-        title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-        description: '久留米リサーチ・パーク（国立研究機関都市開発）１ー１　２F　特別会議室',
-        date: '2025-06-15',
-        fee: '会員無料',
-        status: 'current',
-        image: '/img/image-1.png'
-      },
-      {
-        id: 2,
-        title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部 山根人一朗',
-        description: '時期',
-        date: '2025-06-20',
-        fee: '会員無料',
-        status: 'current',
-        image: '/img/image-1.png'
-      },
-      {
-        id: 3,
-        title: 'バーソル・ビジネス・プロセス・アドバイシング（株）コンサルティング部門経営部',
-        description: 'バーソル・ビジネス・プロセス・アドバイシング（株）では、人材紹介事業をはじめ、多様な中途採用領域にご経験・実績がございます。',
-        date: '2025-06-25',
-        fee: '会員無料',
-        status: 'current',
-        image: '/img/image-1.png'
-      }
-    ]
+    // this.data.seminarsに保存されたデータを返す
+    // imageフィールドをfeatured_imageにマッピング
+    const seminars = this.data.seminars.map(s => ({
+      ...s,
+      image: s.featured_image || '/img/image-1.png',
+      fee: s.fee ? `${s.fee}円` : '会員無料',
+      status: s.status === 'ongoing' ? 'current' : s.status
+    }))
     
     return Promise.resolve(seminars)
   }
 
   getSeminarById(id) {
-    return this.getSeminars().then(seminars => 
-      seminars.find(seminar => seminar.id == id)
-    )
+    const seminar = this.data.seminars.find(s => s.id === parseInt(id))
+    if (seminar) {
+      // imageフィールドをfeatured_imageにマッピング
+      return Promise.resolve({
+        ...seminar,
+        image: seminar.featured_image || '/img/image-1.png',
+        fee: seminar.fee ? `${seminar.fee}円` : '会員無料',
+        status: seminar.status === 'ongoing' ? 'current' : seminar.status
+      })
+    }
+    return Promise.reject(new Error('Seminar not found'))
   }
 }
 

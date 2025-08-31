@@ -147,6 +147,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
+import mockServer from '@/mockServer'
 
 export default {
   name: "CurrentSeminarsPage",
@@ -236,20 +237,54 @@ export default {
           title: "新規事業開発とイノベーションセミナー",
           content: "新規事業の立ち上げから成長戦略まで、イノベーションを生み出す組織づくりについて解説します。"
         }
-      ]
+      ],
+      seminarsFromServer: []
     };
+  },
+  async mounted() {
+    await this.loadSeminars()
   },
   computed: {
     currentSeminars() {
+      // mockServerから取得したデータがあればそれを使用、なければデフォルトデータを使用
+      const seminarsToShow = this.seminarsFromServer.length > 0 ? this.seminarsFromServer : this.allCurrentSeminars
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.allCurrentSeminars.slice(start, end);
+      return seminarsToShow.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.allCurrentSeminars.length / this.itemsPerPage);
+      const seminarsToShow = this.seminarsFromServer.length > 0 ? this.seminarsFromServer : this.allCurrentSeminars
+      return Math.ceil(seminarsToShow.length / this.itemsPerPage);
     }
   },
   methods: {
+    async loadSeminars() {
+      try {
+        const seminars = await mockServer.getSeminars()
+        // ongoingまたはcurrentステータスのセミナーのみフィルタリング
+        const currentSeminars = seminars.filter(s => s.status === 'current' || s.status === 'ongoing')
+        
+        // データ形式をコンポーネントの形式に変換
+        this.seminarsFromServer = currentSeminars.map(s => ({
+          id: s.id,
+          image: s.image || s.featured_image || '/img/image-1.png',
+          reservationPeriod: `${s.start_time || '10:00'}〜${s.end_time || '12:00'}`,
+          date: this.formatDate(s.date),
+          title: s.title,
+          content: s.description
+        }))
+      } catch (error) {
+        console.error('セミナーデータの取得に失敗:', error)
+        // エラー時はデフォルトデータを使用
+      }
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      return `${year}年${month}月${day}日`
+    },
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
