@@ -150,6 +150,35 @@
               </div>
             </div>
 
+            <!-- 画像設定 -->
+            <div class="form-section">
+              <h3 class="section-title">画像設定</h3>
+              
+              <div class="form-group">
+                <label for="featured_image" class="form-label">
+                  セミナー画像
+                </label>
+                <div v-if="formData.featured_image" class="image-preview-container">
+                  <img :src="formData.featured_image" alt="セミナー画像" class="image-preview" />
+                  <button type="button" @click="removeImage" class="remove-image-btn">画像を削除</button>
+                </div>
+                <div class="image-upload-container">
+                  <input
+                    id="featured_image"
+                    type="file"
+                    @change="handleImageUpload"
+                    accept="image/*"
+                    class="file-input"
+                    ref="imageInput"
+                  />
+                  <label for="featured_image" class="file-input-label">
+                    画像を選択
+                  </label>
+                </div>
+                <p class="help-text">推奨サイズ: 800×450px（16:9）、最大5MB</p>
+              </div>
+            </div>
+
             <!-- ステータス -->
             <div class="form-section">
               <div class="form-group">
@@ -224,7 +253,8 @@ export default {
         location: '',
         capacity: null,
         fee: null,
-        status: ''
+        status: '',
+        featured_image: ''
       },
       loading: false,
       submitLoading: false,
@@ -301,6 +331,35 @@ export default {
       localStorage.removeItem('adminToken')
       localStorage.removeItem('adminUser')
       this.$router.push('/admin/login')
+    },
+    handleImageUpload(event) {
+      const file = event.target.files[0]
+      if (!file) return
+
+      // ファイルサイズチェック（5MB以下）
+      if (file.size > 5 * 1024 * 1024) {
+        alert('画像ファイルは5MB以下にしてください')
+        return
+      }
+
+      // 画像タイプチェック
+      if (!file.type.startsWith('image/')) {
+        alert('画像ファイルを選択してください')
+        return
+      }
+
+      // FileReaderで画像をData URLに変換
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.formData.featured_image = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    removeImage() {
+      this.formData.featured_image = ''
+      if (this.$refs.imageInput) {
+        this.$refs.imageInput.value = ''
+      }
     }
   }
 }
@@ -557,5 +616,71 @@ export default {
   .form-section {
     margin-bottom: 24px;
   }
+}
+
+/* 画像アップロード関連のスタイル */
+.image-preview-container {
+  margin-bottom: 16px;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  border: 2px solid #e5e5e5;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.remove-image-btn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.remove-image-btn:hover {
+  background-color: #b91c1c;
+}
+
+.image-upload-container {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.file-input-label {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #f5f5f5;
+  color: #1A1A1A;
+  border: 2px dashed #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-input-label:hover {
+  background-color: #e5e5e5;
+  border-color: #da5761;
+}
+
+.help-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
 }
 </style>
