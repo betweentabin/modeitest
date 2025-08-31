@@ -81,7 +81,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="page in filteredPages" :key="page.pageKey">
+              <tr v-for="page in paginatedPages" :key="page.pageKey">
                 <td class="page-name">{{ page.title || page.pageKey }}</td>
                 <td class="upload-date">
                   {{ formatDate(page.lastUpdated) }}<br>
@@ -105,8 +105,60 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 99 最後</span>
+      <div class="pagination" v-if="totalPages > 1">
+        <button 
+          @click="currentPage = 1" 
+          :disabled="currentPage === 1"
+          class="page-btn"
+        >
+          最初
+        </button>
+        <button 
+          @click="currentPage--" 
+          :disabled="currentPage === 1"
+          class="page-btn"
+        >
+          前へ
+        </button>
+        
+        <template v-for="page in totalPages" :key="page">
+          <button 
+            v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
+            @click="currentPage = page"
+            :class="['page-number', { active: page === currentPage }]"
+          >
+            {{ page }}
+          </button>
+          <span 
+            v-else-if="page === 4 && currentPage > 5"
+            class="page-dots"
+          >
+            ...
+          </span>
+          <span 
+            v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
+            class="page-dots"
+          >
+            ...
+          </span>
+        </template>
+        
+        <button 
+          @click="currentPage++" 
+          :disabled="currentPage === totalPages"
+          class="page-btn"
+        >
+          次へ
+        </button>
+        <button 
+          @click="currentPage = totalPages" 
+          :disabled="currentPage === totalPages"
+          class="page-btn"
+        >
+          最後
+        </button>
+        
+        <span class="page-info">{{ filteredPages.length }}件中 {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage * itemsPerPage, filteredPages.length) }}件を表示</span>
       </div>
     </div>
   </AdminLayout>
@@ -132,7 +184,9 @@ export default {
         year: '',
         month: '',
         category: ''
-      }
+      },
+      currentPage: 1,
+      itemsPerPage: 10
     }
   },
   computed: {
@@ -147,7 +201,38 @@ export default {
         )
       }
       
+      if (this.filters.year) {
+        result = result.filter(page => {
+          const date = new Date(page.lastUpdated)
+          return date.getFullYear().toString() === this.filters.year
+        })
+      }
+      
+      if (this.filters.month) {
+        result = result.filter(page => {
+          const date = new Date(page.lastUpdated)
+          return (date.getMonth() + 1).toString() === this.filters.month
+        })
+      }
+      
+      if (this.filters.category) {
+        result = result.filter(page => {
+          if (this.filters.category === 'news' && page.pageKey.includes('news')) return true
+          if (this.filters.category === 'research' && page.pageKey.includes('publication')) return true
+          if (this.filters.category === 'seminar' && page.pageKey.includes('seminar')) return true
+          return false
+        })
+      }
+      
       return result
+    },
+    paginatedPages() {
+      const start = (this.currentPage - 1) * this.itemsPerPage
+      const end = start + this.itemsPerPage
+      return this.filteredPages.slice(start, end)
+    },
+    totalPages() {
+      return Math.ceil(this.filteredPages.length / this.itemsPerPage)
     }
   },
   async mounted() {
@@ -195,7 +280,7 @@ export default {
       this.$router.push('/admin/pages/new')
     },
     applyFilters() {
-      // フィルター処理をここに実装
+      this.currentPage = 1
       console.log('Applying filters:', this.filters)
     },
     performSearch() {
@@ -397,13 +482,67 @@ export default {
 
 .pagination {
   padding: 16px 24px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   border-top: 1px solid #e5e5e5;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #1A1A1A;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: #f8f8f8;
+  border-color: #da5761;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-number {
+  padding: 6px 10px;
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #1A1A1A;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 32px;
+  transition: all 0.2s;
+}
+
+.page-number:hover {
+  background-color: #f8f8f8;
+  border-color: #da5761;
+}
+
+.page-number.active {
+  background-color: #da5761;
+  color: white;
+  border-color: #da5761;
+}
+
+.page-dots {
+  padding: 0 4px;
+  color: #666;
 }
 
 .page-info {
+  margin-left: 16px;
   font-size: 14px;
-  color: #da5761;
+  color: #666;
 }
 
 /* レスポンシブ対応 */

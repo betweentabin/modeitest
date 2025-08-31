@@ -16,21 +16,36 @@ class ApiClient {
         'Accept': 'application/json',
         ...options.headers
       },
+      mode: 'cors', // CORSモードを明示的に指定
       ...options
     }
 
     try {
       const response = await fetch(url, config)
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      // レスポンスが空の場合のハンドリング
+      const text = await response.text()
+      let data = {}
+      
+      if (text) {
+        try {
+          data = JSON.parse(text)
+        } catch (e) {
+          console.error('JSON parse error:', e)
+          data = { success: false, error: 'Invalid JSON response' }
+        }
       }
       
-      const data = await response.json()
+      if (!response.ok) {
+        console.error(`API Error: ${response.status} ${response.statusText}`, data)
+        return { success: false, error: data.message || `HTTP error! status: ${response.status}` }
+      }
+      
       return data
     } catch (error) {
       console.error('API request failed:', error)
-      throw error
+      // ネットワークエラーの場合はフォールバックを返す
+      return { success: false, error: error.message }
     }
   }
 
