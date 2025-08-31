@@ -222,6 +222,12 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
 
+// 公開ページコンテンツAPI（認証不要）
+Route::prefix('public')->group(function () {
+    Route::get('/pages', [PageContentController::class, 'index']);
+    Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
+});
+
 // 新しいニュースAPI（v2）
 Route::prefix('news-v2')->group(function () {
     Route::get('/', [NewsV2Controller::class, 'index']);
