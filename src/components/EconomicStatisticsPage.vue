@@ -3,89 +3,125 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">経済・調査統計</h1>
-          <p class="hero-subtitle">economic and statistical reports</p>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="経済・調査統計"
+      subtitle="economic statistics"
+      heroImage="/img/hero-image.png"
+    />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['経済・調査統計']" />
 
     <div class="page-content">
-      <!-- Statistics Header -->
-      <div class="statistics-header">
-        <h2 class="section-title">経済・調査統計</h2>
-        <p class="section-subtitle">economic and statistical reports</p>
+      <!-- Publications Header -->
+      <div class="publications-header">
+        <h2 class="page-title">経済・調査統計</h2>
+        <div class="title-decoration">
+          <div class="line-left"></div>
+          <span class="title-english">economic statistics</span>
+          <div class="line-right"></div>
+        </div>
       </div>
 
-      <!-- Year Filter -->
-      <div class="year-filter">
-        <button 
-          v-for="year in years" 
-          :key="year"
-          :class="['year-btn', { active: selectedYear === year }]"
-          @click="selectYear(year)"
-        >
-          {{ year }}年
+      <!-- Filter Container -->
+      <div class="filter-container">
+        <!-- Year Filter -->
+        <div class="year-filter">
+          <button 
+            v-for="year in years" 
+            :key="year"
+            :class="['year-btn', { active: selectedYear === year }]"
+            @click="selectYear(year)"
+          >
+            {{ year }}年
+          </button>
+        </div>
+
+        <!-- Download Button -->
+        <button class="filter-download-btn">さらに表示
+          <div class="icon-box">
+            <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="23" height="23" rx="5" fill="white"/>
+              <path d="M17.5302 11.9415L13.0581 16.5412C12.9649 16.6371 12.8384 16.691 12.7066 16.691C12.5747 16.691 12.4482 16.6371 12.355 16.5412C12.2618 16.4453 12.2094 16.3152 12.2094 16.1796C12.2094 16.044 12.2618 15.9139 12.355 15.818L15.9793 12.0909L6.2469 12.0909C6.11511 12.0909 5.98872 12.0371 5.89554 11.9413C5.80235 11.8454 5.75 11.7154 5.75 11.5799C5.75 11.4443 5.80235 11.3143 5.89554 11.2185C5.98872 11.1226 6.11511 11.0688 6.2469 11.0688L15.9793 11.0688L12.355 7.34171C12.2618 7.24581 12.2094 7.11574 12.2094 6.98012C12.2094 6.84449 12.2618 6.71443 12.355 6.61853C12.4482 6.52263 12.5747 6.46875 12.7066 6.46875C12.8384 6.46875 12.9649 6.52263 13.0581 6.61853L17.5302 11.2183C17.5764 11.2657 17.613 11.3221 17.638 11.3841C17.6631 11.4462 17.6759 11.5127 17.6759 11.5799C17.6759 11.647 17.6631 11.7135 17.638 11.7756C17.613 11.8376 17.5764 11.894 17.5302 11.9415Z" fill="#1A1A1A"/>
+            </svg>
+          </div>
         </button>
-        <button class="download-all-btn">一括ダウンロード</button>
+
+        <!-- Divider Line -->
+        <div class="filter-divider"></div>
+
+        <!-- Category Filter -->
+        <div class="category-filter">
+          <select 
+            v-model="selectedCategory"
+            @change="selectCategory(selectedCategory)"
+            class="category-select"
+          >
+            <option 
+              v-for="category in categories" 
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <!-- Category Dropdown -->
-      <div class="category-dropdown">
-        <select v-model="selectedCategory" class="category-select">
-          <option value="all">全て</option>
-          <option value="monthly">月次レポート</option>
-          <option value="quarterly">四半期レポート</option>
-          <option value="annual">年次レポート</option>
-          <option value="special">特別調査</option>
-        </select>
-      </div>
-
-      <!-- Featured Report -->
-      <div class="featured-report" v-if="featuredReport">
+      <!-- Featured Publication -->
+      <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
           <div class="featured-image">
-            <img :src="featuredReport.image || '/img/image-1.png'" :alt="featuredReport.title" />
+            <img src="/img/image-1.png" alt="経済統計レポート" />
           </div>
           <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">{{ featuredReport.year }}年</span>
-              <span class="featured-category">{{ getCategoryName(featuredReport.category) }}</span>
+              <span class="featured-year">2025.4.28</span>
+              <span class="featured-category">経済・調査統計の会員限定</span>
             </div>
-            <h3 class="featured-title">{{ featuredReport.title }}</h3>
-            <div class="featured-details">
-              <p><strong>発行：</strong>{{ featuredReport.publisher }}</p>
-              <p><strong>概要：</strong>{{ featuredReport.description }}</p>
-              <p><strong>ページ数：</strong>{{ featuredReport.pages }}ページ</p>
-              <p><strong>形式：</strong>PDF</p>
-            </div>
-            <button class="download-btn">詳細を見る</button>
+                         <div class="featured-details">
+               <div class="content-title">雇用（有効求人倍率、パート有効求人数）</div>
+               <div class="content-text">雇用（有効求人倍率、パート有効求人数）を更新しました。2025年3月の福岡県の有効求人倍率は前月を0.02ポイント上回り1.20倍、パートタイム有効求人数は前年同月比1.6%減の45,783人となりました。雇用関連の先行き指標である2025年2月の福岡県所定外労働時間は、前年同月比3.5％減の8.5時間となりました。</div>
+             </div>
+
+            <button class="download-btn">詳細を見る
+              <div class="icon-box">
+                <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="23" height="23" rx="5" fill="white"/>
+                  <path d="M17.5302 11.9415L13.0581 16.5412C12.9649 16.6371 12.8384 16.691 12.7066 16.691C12.5747 16.691 12.4482 16.6371 12.355 16.5412C12.2618 16.4453 12.2094 16.3152 12.2094 16.1796C12.2094 16.044 12.2618 15.9139 12.355 15.818L15.9793 12.0909L6.2469 12.0909C6.11511 12.0909 5.98872 12.0371 5.89554 11.9413C5.80235 11.8454 5.75 11.7154 5.75 11.5799C5.75 11.4443 5.80235 11.3143 5.89554 11.2185C5.98872 11.1226 6.11511 11.0688 6.2469 11.0688L15.9793 11.0688L12.355 7.34171C12.2618 7.24581 12.2094 7.11574 12.2094 6.98012C12.2094 6.84449 12.2618 6.71443 12.355 6.61853C12.4482 6.52263 12.5747 6.46875 12.7066 6.46875C12.8384 6.46875 12.9649 6.52263 13.0581 6.61853L17.5302 11.2183C17.5764 11.2657 17.613 11.3221 17.638 11.3841C17.6631 11.4462 17.6759 11.5127 17.6759 11.5799C17.6759 11.647 17.6631 11.7135 17.638 11.7756C17.613 11.8376 17.5764 11.894 17.5302 11.9415Z" fill="#1A1A1A"/>
+                </svg>
+              </div>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Reports Grid -->
-      <div class="reports-grid" v-if="!loading">
-        <div 
-          v-for="report in filteredReports" 
-          :key="report.id"
-          class="report-card"
-          @click="goToReportDetail(report.id)"
-        >
-          <div class="report-image">
-            <img :src="report.image || '/img/image-1.png'" :alt="report.title" />
-          </div>
-          <div class="report-info">
-            <div class="report-meta">
-              <span class="report-year">{{ report.year }}年</span>
-              <span class="report-category">{{ getCategoryName(report.category) }}</span>
+      <!-- Publications Grid -->
+      <div class="publications-container" v-if="!loading">
+        <div class="publications-grid">
+          <div 
+            v-for="publication in filteredPublications" 
+            :key="publication.id"
+            class="publication-card"
+            @click="goToPublicationDetail(publication.id)"
+          >
+            <div class="publication-image">
+              <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
             </div>
-            <h4 class="report-title">{{ report.title }}</h4>
-            <p class="report-description">{{ report.shortDescription }}</p>
-            <div class="report-actions">
-              <button class="report-download">PDFダウンロード</button>
+            <div class="publication-info">
+              <div class="publication-meta">
+                <span class="featured-category">経済・調査統計の会員限定</span>
+                <span class="featured-year">{{ publication.year }}.4.28</span>
+              </div>
+              <h3 class="publication-title">{{ publication.title }}</h3>
+              <button class="publication-download">PDFダウンロード
+              <div class="icon-box">
+                <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="23" height="23" rx="5" fill="white"/>
+                  <path d="M17.5302 11.9415L13.0581 16.5412C12.9649 16.6371 12.8384 16.691 12.7066 16.691C12.5747 16.691 12.4482 16.6371 12.355 16.5412C12.2618 16.4453 12.2094 16.3152 12.2094 16.1796C12.2094 16.044 12.2618 15.9139 12.355 15.818L15.9793 12.0909L6.2469 12.0909C6.11511 12.0909 5.98872 12.0371 5.89554 11.9413C5.80235 11.8454 5.75 11.7154 5.75 11.5799C5.75 11.4443 5.80235 11.3143 5.89554 11.2185C5.98872 11.1226 6.11511 11.0688 6.2469 11.0688L15.9793 11.0688L12.355 7.34171C12.2618 7.24581 12.2094 7.11574 12.2094 6.98012C12.2094 6.84449 12.2618 6.71443 12.355 6.61853C12.4482 6.52263 12.5747 6.46875 12.7066 6.46875C12.8384 6.46875 12.9649 6.52263 13.0581 6.61853L17.5302 11.2183C17.5764 11.2657 17.613 11.3221 17.638 11.3841C17.6631 11.4462 17.6759 11.5127 17.6759 11.5799C17.6759 11.647 17.6631 11.7135 17.638 11.7756C17.613 11.8376 17.5764 11.894 17.5302 11.9415Z" fill="#1A1A1A"/>
+                </svg>
+              </div>
+            </button>
             </div>
           </div>
         </div>
@@ -94,27 +130,21 @@
       <div v-if="loading" class="loading">
         読み込み中...
       </div>
-
-      <!-- Action Buttons -->
-      <section class="action-section">
-        <div class="action-buttons">
-          <button class="action-btn contact-btn" @click="goToContact">お問い合わせはコチラ</button>
-          <button class="action-btn member-btn" @click="goToMember">入会はコチラ</button>
-        </div>
-      </section>
     </div>
 
-    <!-- Company CTA Section -->
-    <section class="company-cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p class="cta-subtitle">About us</p>
-          <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
-          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
-        </div>
-      </div>
-    </section>
+    <!-- Action Button Section -->
+    <ActionButton 
+      primary-text="お問い合わせはコチラ"
+      secondary-text="入会はコチラ"
+      @primary-click="handleContactClick"
+      @secondary-click="handleJoinClick"
+    />
+
+    <!-- Contact CTA Section -->
+    <ContactSection />
+
+    <!-- Access Section -->
+    <AccessSection />
 
     <!-- Footer Navigation -->
     <div class="navigation-footer">
@@ -123,8 +153,8 @@
       <Group27 />
     </div>
 
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
@@ -132,8 +162,14 @@
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
-import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import ContactSection from "./ContactSection.vue";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
+import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "EconomicStatisticsPage",
@@ -141,253 +177,379 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    HeroSection,
+    Breadcrumbs,
+    ContactSection,
+    AccessSection,
+    FixedSideButtons,
+    ActionButton
   },
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
-      loading: false,
-      selectedYear: 2024,
+      loading: true,
+      selectedYear: 'all',
       selectedCategory: 'all',
+      error: null,
+      currentPage: 1,
+      totalPages: 1,
       years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
-      featuredReport: {
+      categories: [
+        { id: 'all', name: '全て' },
+        { id: 'quarterly', name: '四半期経済レポート' },
+        { id: 'annual', name: '年次経済統計' },
+        { id: 'regional', name: '地域経済調査' },
+        { id: 'industry', name: '産業別統計' }
+      ],
+      featuredPublication: {
         id: 1,
-        title: '九州地域の経済動向（2024年第4四半期）',
+        title: '地域経済統計レポート',
         year: 2024,
         category: 'quarterly',
-        publisher: 'ちくぎん地域経済研究所',
-        description: '九州地域の最新の経済動向と今後の見通しについて詳細に分析したレポートです。製造業、サービス業、建設業等の業界別動向も掲載。',
-        pages: 45,
+        author: 'ちくぎん地域経済研究所',
+        publisher: '株式会社ちくぎん地域経済研究所',
+        description: '2024年度版 地域経済動向調査レポート',
+        keywords: '地域経済、統計データ、産業分析について',
         image: '/img/image-1.png'
       },
-      reports: [
+      publications: [
         {
           id: 2,
-          title: '九州地域経済月次レポート（2024年12月）',
-          shortDescription: '九州地域の月次経済指標と動向分析',
+          title: '四半期経済動向調査レポート（約７）ページ',
           year: 2024,
-          category: 'monthly',
-          pages: 20,
+          category: 'quarterly',
           image: '/img/image-1.png'
         },
         {
           id: 3,
-          title: '地方銀行の経営動向調査（2024年版）',
-          shortDescription: '九州・沖縄地区地方銀行の経営状況分析',
+          title: '年次経済統計データ集（約７）ページ',
           year: 2024,
           category: 'annual',
-          pages: 65,
           image: '/img/image-1.png'
         },
         {
           id: 4,
-          title: '中小企業の設備投資動向（2024年上半期）',
-          shortDescription: '中小企業の設備投資計画と実績調査',
+          title: '地域経済調査結果報告書（約７）ページ',
           year: 2024,
-          category: 'special',
-          pages: 32,
+          category: 'regional',
           image: '/img/image-1.png'
         },
         {
           id: 5,
-          title: '九州地域の人口動態と経済への影響（2024年）',
-          shortDescription: '人口減少が地域経済に与える影響分析',
+          title: '産業別統計分析レポート（約７）ページ',
           year: 2024,
-          category: 'special',
-          pages: 58,
+          category: 'industry',
           image: '/img/image-1.png'
         },
         {
           id: 6,
-          title: '九州地域経済年次レポート（2023年版）',
-          shortDescription: '2023年の九州地域経済の総括と2024年の展望',
+          title: '四半期経済動向調査レポート（約７）ページ',
           year: 2023,
-          category: 'annual',
-          pages: 120,
+          category: 'quarterly',
           image: '/img/image-1.png'
         },
         {
           id: 7,
-          title: '製造業の海外展開動向調査（2023年）',
-          shortDescription: '九州地域製造業の海外進出状況と課題',
+          title: '年次経済統計データ集（約７）ページ',
           year: 2023,
-          category: 'special',
-          pages: 42,
+          category: 'annual',
           image: '/img/image-1.png'
         },
         {
           id: 8,
-          title: '観光産業の回復状況調査（2023年）',
-          shortDescription: 'コロナ後の観光産業回復状況分析',
+          title: '地域経済調査結果報告書（約７）ページ',
           year: 2023,
-          category: 'special',
-          pages: 35,
+          category: 'regional',
           image: '/img/image-1.png'
         },
         {
           id: 9,
-          title: '九州地域金融機関の貸出動向（2023年）',
-          shortDescription: '地域金融機関の融資状況と中小企業への影響',
+          title: '産業別統計分析レポート（約７）ページ',
           year: 2023,
-          category: 'annual',
-          pages: 48,
+          category: 'industry',
           image: '/img/image-1.png'
         },
         {
           id: 10,
-          title: 'IT産業の成長可能性調査（2022年）',
-          shortDescription: '九州地域IT産業の現状と将来性分析',
+          title: '四半期経済動向調査レポート（約７）ページ',
           year: 2022,
-          category: 'special',
-          pages: 55,
+          category: 'quarterly',
           image: '/img/image-1.png'
         },
         {
           id: 11,
-          title: '農業・食品産業の競争力調査（2022年）',
-          shortDescription: '九州地域の農業・食品産業の競争力分析',
+          title: '年次経済統計データ集（約７）ページ',
           year: 2022,
           category: 'annual',
-          pages: 72,
           image: '/img/image-1.png'
         },
         {
           id: 12,
-          title: '地域創生の取り組み効果検証（2022年）',
-          shortDescription: '地方創生政策の効果測定と今後の課題',
+          title: '地域経済調査結果報告書（約７）ページ',
           year: 2022,
-          category: 'special',
-          pages: 38,
+          category: 'regional',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 13,
+          title: '産業別統計分析レポート（約７）ページ',
+          year: 2022,
+          category: 'industry',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 14,
+          title: '四半期経済動向調査レポート（約７）ページ',
+          year: 2021,
+          category: 'quarterly',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 15,
+          title: '年次経済統計データ集（約７）ページ',
+          year: 2021,
+          category: 'annual',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 16,
+          title: '地域経済調査結果報告書（約７）ページ',
+          year: 2021,
+          category: 'regional',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 17,
+          title: '産業別統計分析レポート（約７）ページ',
+          year: 2021,
+          category: 'industry',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 18,
+          title: '四半期経済動向調査レポート（約７）ページ',
+          year: 2020,
+          category: 'quarterly',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 19,
+          title: '年次経済統計データ集（約７）ページ',
+          year: 2020,
+          category: 'annual',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 20,
+          title: '地域経済調査結果報告書（約７）ページ',
+          year: 2020,
+          category: 'regional',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 21,
+          title: '産業別統計分析レポート（約７）ページ',
+          year: 2020,
+          category: 'industry',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 22,
+          title: '四半期経済動向調査レポート（約７）ページ',
+          year: 2019,
+          category: 'quarterly',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 23,
+          title: '年次経済統計データ集（約７）ページ',
+          year: 2019,
+          category: 'annual',
+          image: '/img/image-1.png'
+        },
+        {
+          id: 24,
+          title: '地域経済調査結果報告書（約７）ページ',
+          year: 2019,
+          category: 'regional',
           image: '/img/image-1.png'
         }
       ]
     };
   },
+  async mounted() {
+    await this.loadPublications();
+  },
   computed: {
-    filteredReports() {
-      return this.reports.filter(report => {
-        const yearMatch = report.year === this.selectedYear;
-        const categoryMatch = this.selectedCategory === 'all' || report.category === this.selectedCategory;
+    filteredPublications() {
+      const filtered = this.publications.filter(pub => {
+        const yearMatch = this.selectedYear === 'all' || pub.year === this.selectedYear;
+        const categoryMatch = this.selectedCategory === 'all' || pub.category === this.selectedCategory;
         return yearMatch && categoryMatch;
       });
+      // 4列×3行=12個のレイアウトに合わせて最初の12個を返す
+      return filtered.slice(0, 12);
     }
   },
   methods: {
+    async loadPublications() {
+      this.loading = true;
+      try {
+        const params = {
+          page: this.currentPage,
+          per_page: 12
+        };
+        
+        if (this.selectedCategory && this.selectedCategory !== 'all') {
+          params.category = this.selectedCategory;
+        }
+        
+        const response = await apiClient.getPublications(params);
+        
+        if (response.success && response.data) {
+          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
+          this.totalPages = response.data.pagination.total_pages;
+        } else {
+          // フォールバック: 既存データを使用
+          console.log('APIからデータを取得できませんでした。フォールバックデータを使用します。');
+        }
+      } catch (err) {
+        console.error('経済統計の読み込みに失敗しました:', err);
+        this.error = '経済統計の読み込みに失敗しました。';
+        // フォールバック: 既存データを使用
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    formatPublicationItem(item) {
+      return {
+        id: item.id,
+        title: item.title,
+        year: new Date(item.publication_date).getFullYear(),
+        category: item.category,
+        image: item.cover_image || '/img/image-1.png',
+        description: item.description,
+        author: item.author,
+        pages: item.pages,
+        is_downloadable: item.is_downloadable,
+        members_only: item.members_only
+      };
+    },
+    
+    async downloadPublication(publicationId) {
+      try {
+        const response = await apiClient.downloadPublication(publicationId);
+        if (response.success && response.data.download_url) {
+          // ダウンロードリンクを開く
+          window.open(response.data.download_url, '_blank');
+        }
+      } catch (err) {
+        console.error('ダウンロードに失敗しました:', err);
+        alert('ダウンロードに失敗しました。');
+      }
+    },
     selectYear(year) {
       this.selectedYear = year;
     },
-    getCategoryName(category) {
-      const names = {
-        'monthly': '月次レポート',
-        'quarterly': '四半期レポート',
-        'annual': '年次レポート',
-        'special': '特別調査'
-      };
-      return names[category] || 'レポート';
+    selectCategory(categoryId) {
+      this.selectedCategory = categoryId;
     },
-    goToReportDetail(reportId) {
-      // PDFダウンロードまたは詳細ページへの遷移
-      alert(`レポート${reportId}の詳細ページまたはダウンロードを開始します。`);
+    getCategoryName(categoryId) {
+      const category = this.categories.find(cat => cat.id === categoryId);
+      return category ? category.name : '経済統計';
+    },
+    goToPublicationDetail(publicationId) {
+      this.$router.push(`/economic-statistics/${publicationId}`);
     },
     goToContact() {
       this.$router.push('/contact');
     },
-    goToMember() {
+    goToRegister() {
       this.$router.push('/register');
     },
-    scrollToContact() {
+    handleContactClick() {
       this.$router.push('/contact');
+    },
+    handleJoinClick() {
+      this.$router.push('/join');
     }
   }
 };
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .page-container {
   min-height: 100vh;
-  background-color: #ffffff;
-}
-
-/* Hero Section */
-.hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-overlay {
-  text-align: center;
-  color: white;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
+  background-color: #ECECEC;
 }
 
 /* Page Content */
 .page-content {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 70px 50px 50px 50px;
 }
 
-.statistics-header {
-  text-align: center;
-  margin-bottom: 50px;
+.publications-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-bottom: 40px;
 }
 
-.section-title {
-  font-size: 2rem;
+.page-title {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
   color: #1A1A1A;
-  margin-bottom: 10px;
-  font-weight: bold;
+  letter-spacing: -0.72px;
+  text-align: center;
+  margin: 0;
 }
 
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  font-weight: 500;
-  position: relative;
-  padding-bottom: 20px;
+.title-decoration {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: auto;
+  min-width: 306px;
 }
 
-.section-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
+.line-left, .line-right {
+  width: 80px;
   height: 2px;
-  background-color: #da5761;
+  background: #DA5761;
+  flex-shrink: 0;
+}
+
+.title-english {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #DA5761;
+  white-space: nowrap;
+}
+
+/* Filter Container */
+.filter-container {
+  background: white;
+  padding: 50px;
+  border-radius: 15px;
+  margin-bottom: 40px;
+  max-width: 2000px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Year Filter */
 .year-filter {
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 10px;
-  margin-bottom: 30px;
   flex-wrap: wrap;
 }
 
@@ -409,228 +571,338 @@ export default {
   border-color: #da5761;
 }
 
-.download-all-btn {
+/* Filter Download Button */
+.filter-download-btn {
+  display: flex;
+  width: auto;
+  padding: 10px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
   background: #1A1A1A;
-  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-  margin-left: 20px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+  transition: all 0.3s ease;
+  margin: 0 auto 0;
 }
 
-.download-all-btn:hover {
-  background: #555;
+.filter-download-btn:hover {
+  background: var(--color-secondary);
 }
 
-/* Category Dropdown */
-.category-dropdown {
-  text-align: center;
-  margin-bottom: 40px;
+/* Filter Divider */
+.filter-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #E0E0E0;
+  margin: 10px 0;
+}
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Category Filter */
+.category-filter {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .category-select {
-  padding: 12px 20px;
-  border: 2px solid #dee2e6;
-  border-radius: 25px;
-  font-size: 1rem;
-  background: white;
+  background: #F6D5D8;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  color: #1A1A1A;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  min-width: 300px;
   outline: none;
-  transition: border-color 0.3s;
-  min-width: 200px;
+}
+
+.category-select:hover {
+  background: #da5761;
+  color: white;
 }
 
 .category-select:focus {
-  border-color: #da5761;
+  box-shadow: none;
 }
 
-/* Featured Report */
-.featured-report {
+.category-select option {
+  background: white;
+  color: #1A1A1A;
+  padding: 10px;
+}
+
+/* Featured Publication */
+.featured-publication {
   background: white;
   border-radius: 15px;
-  padding: 30px;
+  padding: 50px;
   margin-bottom: 40px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  max-width: 2000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .featured-content {
   display: flex;
+  width: 100%;
+  align-items: stretch;
   gap: 30px;
-  align-items: center;
 }
 
 .featured-image {
-  flex: 0 0 250px;
+  width: 30%;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
 }
 
 .featured-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
   border-radius: 10px;
 }
 
 .featured-info {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  flex-shrink: 0;
 }
 
 .featured-meta {
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 }
 
 .featured-year {
-  background: #28a745;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 15px;
+  color:#3F3F3F;
   font-size: 0.8rem;
   font-weight: 500;
 }
 
 .featured-category {
-  background: #da5761;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 15px;
+  background: #F6D5D8;
+  color: #1A1A1A;
+  padding: 10px 15px;
+  border-radius: 5px;
   font-size: 0.8rem;
   font-weight: 500;
-}
-
-.featured-title {
-  font-size: 1.5rem;
-  color: #1A1A1A;
-  margin-bottom: 20px;
-  font-weight: bold;
+  width: auto;
+  align-self: flex-start;
 }
 
 .featured-details {
-  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  border-top: 0.5px dashed #B0B0B0;
+  border-bottom: 0.5px dashed #B0B0B0;
+  padding: 20px 0;
 }
 
-.featured-details p {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 8px;
-  line-height: 1.5;
+.content-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 1.4;
 }
+
+.content-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.6;
+}
+
+.past-info-row {
+  display: flex;
+  padding: 15px 0;
+  align-items: center;
+  gap: 50px;
+  border-bottom: 0.5px dashed #B0B0B0;
+  width: 100%;
+}
+
+.past-info-row:first-child {
+  border-top: 0.5px dashed #B0B0B0;
+}
+
+.info-label {
+  display: flex;
+  padding: 10px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: #727272;
+  white-space: nowrap;
+  width: 250px;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  margin: 0;
+}
+
+.info-value {
+  color: var(--color-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+
 
 .download-btn {
-  background: #da5761;
-  color: white;
+  display: flex;
+  width: auto;
+  padding: 10px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: #1A1A1A;
   border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s;
-  font-weight: 500;
+
+  color: #ffffff;
+  margin-top: 20px;
+  margin-left: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+  transition: all 0.3s ease;
 }
 
 .download-btn:hover {
-  background: #c44853;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+  background: var(--color-secondary);
 }
 
-/* Reports Grid */
-.reports-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  margin-bottom: 60px;
-}
-
-.report-card {
+/* Publications Container */
+.publications-container {
   background: white;
+  padding: 50px;
   border-radius: 15px;
+  max-width: 2000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Publications Grid */
+.publications-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.publication-card {
+  background: white;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   transition: all 0.3s;
   cursor: pointer;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
-.report-card:hover {
+.publication-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
 }
 
-.report-image {
+.publication-image {
   height: 180px;
   overflow: hidden;
 }
 
-.report-image img {
+.publication-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.report-info {
-  padding: 20px;
+.publication-info {
+  padding: 20px 0 0 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.report-meta {
+.publication-meta {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 15px;
   margin-bottom: 15px;
 }
 
-.report-year {
-  background: #28a745;
-  color: white;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
 
-.report-category {
-  background: #da5761;
-  color: white;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
 
-.report-title {
-  font-size: 1.1rem;
+.publication-title {
+  font-size: 1rem;
   color: #1A1A1A;
-  margin-bottom: 10px;
-  font-weight: 600;
+  margin-bottom: 15px;
+  font-weight: 500;
   line-height: 1.4;
 }
 
-.report-description {
-  font-size: 0.9rem;
-  color: #666;
-  line-height: 1.5;
-  margin-bottom: 15px;
-}
-
-.report-actions {
-  text-align: center;
-}
-
-.report-download {
+.publication-download {
+  display: flex;
+  width: 100%;
+  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
   background: #1A1A1A;
-  color: white;
   border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-  font-weight: 500;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+  transition: all 0.3s ease;
 }
 
-.report-download:hover {
-  background: #555;
+.publication-download:hover {
+  background: var(--color-secondary);
 }
 
 .loading {
@@ -639,106 +911,16 @@ export default {
   color: #666;
 }
 
-/* Action Section */
-.action-section {
-  margin-bottom: 60px;
-}
 
-.action-buttons {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-.action-btn {
-  border: none;
-  padding: 15px 40px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: all 0.3s;
-  min-width: 200px;
-}
-
-.contact-btn {
-  background: #da5761;
-  color: white;
-}
-
-.contact-btn:hover {
-  background: #c44853;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
-}
-
-.member-btn {
-  background: #8B0000;
-  color: white;
-}
-
-.member-btn:hover {
-  background: #660000;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
-}
-
-/* Company CTA Section */
-.company-cta-section {
-  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
-  color: white;
-  text-align: center;
-  padding: 80px 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.cta-content h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.cta-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  color: rgba(255,255,255,0.8);
-}
-
-.cta-description {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  color: rgba(255,255,255,0.9);
-}
-
-.cta-button {
-  background: white;
-  color: #da5761;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-weight: bold;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
+@media (max-width: 1300px) {
+  .publications-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-  
+}
+
+@media (max-width: 768px) {
   .page-content {
     padding: 40px 15px;
   }
@@ -747,9 +929,17 @@ export default {
     justify-content: center;
   }
   
-  .download-all-btn {
-    margin-left: 0;
-    margin-top: 10px;
+  .category-filter {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .category-btn {
+    padding: 10px 15px;
+    font-size: 0.7rem;
+    border-right: none;
+    border-radius: 15px;
+    margin-bottom: 5px;
   }
   
   .featured-content {
@@ -763,32 +953,24 @@ export default {
     margin: 0 auto;
   }
   
-  .reports-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+  .publications-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
   }
   
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .action-btn {
-    width: 100%;
-    max-width: 300px;
-  }
+
 }
 
 @media (max-width: 480px) {
-  .reports-grid {
+  .publications-grid {
     grid-template-columns: 1fr;
   }
   
   .featured-image img {
-    height: 160px;
+    height: 200px;
   }
   
-  .report-image {
+  .publication-image {
     height: 150px;
   }
   

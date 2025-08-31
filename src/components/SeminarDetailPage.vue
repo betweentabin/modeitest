@@ -94,29 +94,14 @@
       読み込み中...
     </div>
 
-<!-- button Section -->
-<div class="button-section">
-      <div class="button-container">
-        <button class="cta-button primary">
-          <span class="button-text">お問い合わせはコチラ</span>
-          <div class="arrow-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
-              <path d="M9.5 6L15.5 12L9.5 18" stroke="#DA5761" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </button>
-        <button class="cta-button secondary">
-          <span class="button-text">メンバー登録はコチラ</span>
-          <div class="arrow-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
-              <path d="M9.5 6L15.5 12L9.5 18" stroke="#9C3940" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </button>
-      </div>
-    </div>
+<!-- Action Button Section -->
+<ActionButton 
+  primary-text="お問い合わせはコチラ"
+  secondary-text="メンバー登録はコチラ"
+  max-width="1500px"
+  @primary-click="handleContactClick"
+  @secondary-click="handleJoinClick"
+/>
 
     <!-- Contact Section -->
     <ContactSection />
@@ -146,6 +131,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import Frame13213176122 from "./Frame13213176122.vue";
+import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
 
@@ -161,6 +147,7 @@ export default {
     FixedSideButtons,
     ContactSection,
     Frame13213176122,
+    ActionButton
   },
   data() {
     return {
@@ -319,6 +306,12 @@ export default {
     },
     scrollToContact() {
       this.$router.push('/contact');
+    },
+    handleContactClick() {
+      this.$router.push('/contact');
+    },
+    handleJoinClick() {
+      this.$router.push('/register');
     }
   }
 };
@@ -335,7 +328,7 @@ export default {
 
 /* Seminar Detail Section */
 .seminar-detail-section {
-  padding: 70px 50px 0 50px;
+  padding: 70px 50px 50px 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -458,77 +451,7 @@ export default {
   padding-left: 10px;
 }
 
-/* Button Section */
-.button-section {
-  background: #ECECEC;
-  padding: 70px 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
 
-.button-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  width: 100%;
-  max-width: 1500px;
-}
-
-.cta-button {
-  width: 300px;
-  padding: 20px 40px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Inter', Helvetica, sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-
-.button-text {
-  width: auto;
-  text-align: center;
-}
-
-.arrow-icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cta-button.primary {
-  background-color: #DA5761;
-  color: #FFFFFF;
-  width: 100%;
-}
-
-.cta-button.primary:hover {
-  background-color: #c44a54;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(218, 87, 97, 0.3);
-}
-
-.cta-button.secondary {
-  background-color: #9C3940;
-  color: #FFFFFF;
-  width: 100%;
-}
-
-.cta-button.secondary:hover {
-  background-color: #8a3238;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(156, 57, 64, 0.3);
-}
 
 /* Registration Section */
 .registration-section {

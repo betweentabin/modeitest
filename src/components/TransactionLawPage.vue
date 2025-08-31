@@ -286,14 +286,16 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 15px;
-  width: 320px;
+  width: auto;
+  min-width: 320px;
   height: 30px;
 }
 
 .decoration-line {
-  width: 69px;
+  width: 80px;
   height: 2px;
   background: #DA5761;
+  flex-shrink: 0;
 }
 
 .decoration-text {

@@ -1,16 +1,16 @@
 <template>
-  <div class="page-container">
+  <div class="contact-form-page">
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">お問い合わせ</h1>
-          <p class="hero-subtitle">contact</p>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="お問い合わせ"
+      subtitle="contact"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
+    />
+
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['お問い合わせ']" />
 
     <!-- Form Section -->
     <section class="form-section">
@@ -18,18 +18,9 @@
         <div class="form-header">
           <h1 class="form-title">お問い合わせ</h1>
           <div class="form-divider">
-            <svg width="244" height="30" viewBox="0 0 244 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clip-path="url(#clip0_486_257)">
-                <path d="M0 15H69" stroke="#DA5761" stroke-width="2"/>
-                <text fill="#DA5761" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="20" font-weight="bold" letter-spacing="0em"><tspan x="84" y="22.2727">contact</tspan></text>
-                <path d="M175 15H244" stroke="#DA5761" stroke-width="2"/>
-              </g>
-              <defs>
-                <clipPath id="clip0_486_257">
-                  <rect width="244" height="30" fill="white"/>
-                </clipPath>
-              </defs>
-            </svg>
+            <div class="divider-line"></div>
+            <span class="divider-text">contact</span>
+            <div class="divider-line"></div>
           </div>
           <div class="form-steps">
             <span class="step-active">①お客様情報の入力</span>
@@ -201,216 +192,37 @@
       </div>
     </section>
 
-    <!-- Floating Action Buttons -->
-    <div class="floating-buttons">
-      <button class="floating-btn login-floating">
-        <svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M25.8666 24.5001C25.7789 24.6521 25.6526 24.7783 25.5005 24.8661C25.3484 24.9539 25.1759 25 25.0003 25H0.99903C0.82357 24.9998 0.651246 24.9535 0.499362 24.8657C0.347477 24.7778 0.221377 24.6516 0.133726 24.4996C0.0460738 24.3477 -4.50128e-05 24.1753 3.29665e-08 23.9999C4.50787e-05 23.8245 0.0462524 23.6521 0.133982 23.5002C2.03784 20.2094 4.97175 17.8497 8.39569 16.7311C6.70205 15.7231 5.3862 14.1871 4.65021 12.359C3.91422 10.5309 3.79879 8.51174 4.32164 6.6117C4.84448 4.71165 5.9767 3.03573 7.54442 1.84131C9.11214 0.646882 11.0287 0 12.9997 0C14.9707 0 16.8872 0.646882 18.455 1.84131C20.0227 3.03573 21.1549 4.71165 21.6777 6.6117C22.2006 8.51174 22.0852 10.5309 21.3492 12.359C20.6132 14.1871 19.2973 15.7231 17.6037 16.7311C21.0276 17.8497 23.9615 20.2094 25.8654 23.5002C25.9534 23.6521 25.9998 23.8245 26 24C26.0002 24.1755 25.9542 24.348 25.8666 24.5001Z" fill="white"/>
-        </svg>
-        <span>ログイン</span>
-      </button>
-      <button class="floating-btn contact-floating">
-        <svg width="18" height="28" viewBox="0 0 18 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 0H3C2.20435 0 1.44129 0.316071 0.87868 0.87868C0.316071 1.44129 0 2.20435 0 3V25C0 25.7956 0.316071 26.5587 0.87868 27.1213C1.44129 27.6839 2.20435 28 3 28H15C15.7956 28 16.5587 27.6839 17.1213 27.1213C17.6839 26.5587 18 25.7956 18 25V3C18 2.20435 17.6839 1.44129 17.1213 0.87868C16.5587 0.316071 15.7956 0 15 0ZM3 2H15C15.2652 2 15.5196 2.10536 15.7071 2.29289C15.8946 2.48043 16 2.73478 16 3V4H2V3C2 2.73478 2.10536 2.48043 2.29289 2.29289C2.48043 2.10536 2.73478 2 3 2ZM15 26H3C2.73478 26 2.48043 25.8946 2.29289 25.7071C2.10536 25.5196 2 25.2652 2 25V24H16V25C16 25.2652 15.8946 25.5196 15.7071 25.7071C15.5196 25.8946 15.2652 26 15 26Z" fill="white"/>
-        </svg>
-        <span>お問い合わせ</span>
-      </button>
-    </div>
-
     <!-- Access Section -->
     <AccessSection />
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-nav">
-          <div class="footer-column">
-            <a href="/" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              トップ
-            </a>
-            <a href="/about" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              会社概要
-            </a>
-            <a href="/news" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              お知らせ
-            </a>
-            <a href="/faq" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              よくあるご質問
-            </a>
-            <a href="/contact" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              お問い合わせ
-            </a>
-          </div>
-
-          <div class="footer-column">
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              セミナー
-            </a>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              刊行物
-            </a>
-            <div class="sub-links">
-              <a href="#" class="footer-sublink">
-                <svg width="10" height="3" viewBox="0 0 10 3" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(90deg);">
-                  <path d="M9.48276 2.5H0.517241C0.38006 2.5 0.248499 2.39464 0.151497 2.20711C0.0544949 2.01957 0 1.76522 0 1.5C0 1.23478 0.0544949 0.98043 0.151497 0.792893C0.248499 0.605357 0.38006 0.5 0.517241 0.5H9.48276C9.61994 0.5 9.7515 0.605357 9.8485 0.792893C9.94551 0.98043 10 1.23478 10 1.5C10 1.76522 9.94551 2.01957 9.8485 2.20711C9.7515 2.39464 9.61994 2.5 9.48276 2.5Z" fill="#DA5761"/>
-                </svg>
-                経済指標一覧
-              </a>
-              <a href="#" class="footer-sublink">
-                <svg width="10" height="3" viewBox="0 0 10 3" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(90deg);">
-                  <path d="M9.48276 2.5H0.517241C0.38006 2.5 0.248499 2.39464 0.151497 2.20711C0.0544949 2.01957 0 1.76522 0 1.5C0 1.23478 0.0544949 0.98043 0.151497 0.792893C0.248499 0.605357 0.38006 0.5 0.517241 0.5H9.48276C9.61994 0.5 9.7515 0.605357 9.8485 0.792893C9.94551 0.98043 10 1.23478 10 1.5C10 1.76522 9.94551 2.01957 9.8485 2.20711C9.7515 2.39464 9.61994 2.5 9.48276 2.5Z" fill="#DA5761"/>
-                </svg>
-                経済調査統計一覧
-              </a>
-            </div>
-          </div>
-
-          <div class="footer-column">
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              会員PR
-            </a>
-            <div class="sub-links">
-              <a href="#" class="footer-sublink">
-                <svg width="10" height="3" viewBox="0 0 10 3" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(90deg);">
-                  <path d="M9.48276 2.5H0.517241C0.38006 2.5 0.248499 2.39464 0.151497 2.20711C0.0544949 2.01957 0 1.76522 0 1.5C0 1.23478 0.0544949 0.98043 0.151497 0.792893C0.248499 0.605357 0.38006 0.5 0.517241 0.5H9.48276C9.61994 0.5 9.7515 0.605357 9.8485 0.792893C9.94551 0.98043 10 1.23478 10 1.5C10 1.76522 9.94551 2.01957 9.8485 2.20711C9.7515 2.39464 9.61994 2.5 9.48276 2.5Z" fill="#DA5761"/>
-                </svg>
-                会員PRどっとコム
-              </a>
-              <a href="#" class="footer-sublink">
-                <svg width="10" height="3" viewBox="0 0 10 3" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(90deg);">
-                  <path d="M9.48276 2.5H0.517241C0.38006 2.5 0.248499 2.39464 0.151497 2.20711C0.0544949 2.01957 0 1.76522 0 1.5C0 1.23478 0.0544949 0.98043 0.151497 0.792893C0.248499 0.605357 0.38006 0.5 0.517241 0.5H9.48276C9.61994 0.5 9.7515 0.605357 9.8485 0.792893C9.94551 0.98043 10 1.23478 10 1.5C10 1.76522 9.94551 2.01957 9.8485 2.20711C9.7515 2.39464 9.61994 2.5 9.48276 2.5Z" fill="#DA5761"/>
-                </svg>
-                入会案内
-              </a>
-            </div>
-          </div>
-
-          <div class="footer-column">
-            <a href="/services" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              会員サービスのご案内
-            </a>
-            <div class="sub-links">
-              <a href="#" class="footer-sublink">
-                <svg width="10" height="3" viewBox="0 0 10 3" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(90deg);">
-                  <path d="M9.48276 2.5H0.517241C0.38006 2.5 0.248499 2.39464 0.151497 2.20711C0.0544949 2.01957 0 1.76522 0 1.5C0 1.23478 0.0544949 0.98043 0.151497 0.792893C0.248499 0.605357 0.38006 0.5 0.517241 0.5H9.48276C9.61994 0.5 9.7515 0.605357 9.8485 0.792893C9.94551 0.98043 10 1.23478 10 1.5C10 1.76522 9.94551 2.01957 9.8485 2.20711C9.7515 2.39464 9.61994 2.5 9.48276 2.5Z" fill="#DA5761"/>
-                </svg>
-                スタンダード（紹介）
-              </a>
-              <a href="#" class="footer-sublink">
-                <svg width="10" height="3" viewBox="0 0 10 3" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(90deg);">
-                  <path d="M9.48276 2.5H0.517241C0.38006 2.5 0.248499 2.39464 0.151497 2.20711C0.0544949 2.01957 0 1.76522 0 1.5C0 1.23478 0.0544949 0.98043 0.151497 0.792893C0.248499 0.605357 0.38006 0.5 0.517241 0.5H9.48276C9.61994 0.5 9.7515 0.605357 9.8485 0.792893C9.94551 0.98043 10 1.23478 10 1.5C10 1.76522 9.94551 2.01957 9.8485 2.20711C9.7515 2.39464 9.61994 2.5 9.48276 2.5Z" fill="#DA5761"/>
-                </svg>
-                プレミアム（紹介）
-              </a>
-            </div>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              CRI 経営コンサルティング
-            </a>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              決算報告
-            </a>
-          </div>
-
-          <div class="footer-column">
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              会員ログイン
-            </a>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              特定商取引法に関する表記
-            </a>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              プライバシーポリシー
-            </a>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              利用規約
-            </a>
-            <a href="#" class="footer-link">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
-              </svg>
-              サイトマップ
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-divider"></div>
-
-        <div class="footer-bottom">
-          <div class="company-info">
-            <div class="company-logo-footer">
-              <img src="/img/ico-logo-1-1.svg" alt="Company Logo" class="logo-icon-footer" />
-              <div class="company-text-footer">
-                <div class="company-name-footer">株式会社ちくぎん地域経済研究所</div>
-                <div class="company-group-footer">筑邦銀行グループ</div>
-              </div>
-            </div>
-            <div class="company-details">
-              <div>〒839-0864　福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階</div>
-              <div>電話番号. 0942-46-5081　営業時間. 平日9:00-17:00</div>
-            </div>
-          </div>
-          <div class="copyright">
-            Copyright (C) The Chikugin Reserch Institute For Regional Economy Co.,Ltd All rights reserved.
-          </div>
-        </div>
-      </div>
-    </footer>
+    <!-- Footer Navigation -->
+    <div class="navigation-footer">
+      <Footer v-bind="frame132131753022Props" />
+      <div class="vector-7-1"></div>
+      <Group27 />
+    </div>
   </div>
 </template>
 
 <script>
 import apiClient from '../services/apiClient.js';
+import Navigation from "./Navigation.vue";
+import Footer from "./Footer.vue";
+import Group27 from "./Group27.vue";
 import AccessSection from './AccessSection.vue';
+import HeroSection from './HeroSection.vue';
+import Breadcrumbs from './Breadcrumbs.vue';
+import { frame132131753022Data } from "../data.js";
 
 export default {
   name: 'ContactFormPage',
   components: {
-    AccessSection
+    Navigation,
+    Footer,
+    Group27,
+    AccessSection,
+    HeroSection,
+    Breadcrumbs
   },
   data() {
     return {
@@ -430,8 +242,20 @@ export default {
       isSubmitting: false,
       submitSuccess: false,
       submitError: null,
-      inquiryNumber: null
+      inquiryNumber: null,
+      frame132131753022Props: frame132131753022Data
     };
+  },
+  mounted() {
+    // URLパラメータからフォームデータを復元
+    const params = new URLSearchParams(this.$route.query);
+    if (params.get('formData')) {
+      try {
+        this.formData = JSON.parse(decodeURIComponent(params.get('formData')));
+      } catch (e) {
+        console.error('フォームデータの復元に失敗しました:', e);
+      }
+    }
   },
   computed: {
     canSubmit() {
@@ -448,39 +272,9 @@ export default {
     async submitForm() {
       if (!this.canSubmit) return;
       
-      this.isSubmitting = true;
-      this.submitError = null;
-      
-      try {
-        const inquiryData = {
-          name: `${this.formData.lastName} ${this.formData.firstName}`,
-          email: this.formData.email,
-          phone: this.formData.phone,
-          company: this.formData.companyName || null,
-          subject: this.formData.subject,
-          message: this.formData.content,
-          inquiry_type: 'general'
-        };
-        
-        const response = await apiClient.submitInquiry(inquiryData);
-        
-        if (response.success) {
-          this.submitSuccess = true;
-          this.inquiryNumber = response.data.inquiry_number;
-          this.resetForm();
-          
-          // 成功メッセージ表示
-          alert(`お問い合わせを受け付けました。\nお問い合わせ番号: ${this.inquiryNumber}\n確認のメールをお送りします。`);
-        } else {
-          throw new Error(response.message || 'お問い合わせの送信に失敗しました。');
-        }
-      } catch (err) {
-        console.error('お問い合わせ送信エラー:', err);
-        this.submitError = err.message || 'お問い合わせの送信に失敗しました。しばらく時間をおいて再度お試しください。';
-        alert(this.submitError);
-      } finally {
-        this.isSubmitting = false;
-      }
+      // 確認ページに遷移（フォームデータをURLパラメータで渡す）
+      const formDataParam = encodeURIComponent(JSON.stringify(this.formData));
+      this.$router.push(`/contact/confirm?formData=${formDataParam}`);
     },
     
     resetForm() {
@@ -511,185 +305,90 @@ export default {
 
 /* Navigation */
 .navigation {
+  align-items: center;
+  background-color: #ffffff;
+  box-shadow: 0px 3px 20px #00000026;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 10px 20px;
-  background: #FFF;
-  box-shadow: 0 3px 20px rgba(0, 0, 0, 0.15);
-  height: 88px;
+  position: relative;
+  width: 100%;
+  z-index: 9;
 }
 
-.company-logo {
+.logo-section {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.logo-icon {
-  width: 54px;
-  height: 42px;
-}
-
-.company-text {
-  display: flex;
-  flex-direction: column;
-  gap: -5px;
-}
-
-.company-group {
-  font-size: 15px;
-  font-weight: 700;
-  color: #1A1A1A;
-}
-
-.company-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1A1A1A;
-}
-
-.nav-right {
+.nav-controls {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 541px;
+  width: auto;
+  min-width: 0;
 }
 
-.nav-top {
+.main-nav {
   display: flex;
   align-items: center;
   gap: 15px;
   justify-content: flex-end;
+  min-width: 300px;
 }
 
-.phone-btn, .login-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0 20px;
-  height: 40px;
-  border-radius: 8px;
-  background: #1A1A1A;
-  color: #FFF;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.phone-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.phone-number {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.phone-hours {
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.menu-btn {
-  width: 26px;
-  height: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.nav-links {
+.sub-nav {
   display: flex;
   align-items: center;
   gap: 15px;
+  justify-content: flex-start;
 }
 
-.nav-link {
-  font-size: 15px;
-  font-weight: 700;
-  color: #1A1A1A;
-  text-decoration: none;
-}
-
-.nav-separator {
-  color: #1A1A1A;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  padding: 24px 46px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.breadcrumb-item {
-  font-size: 12px;
-  font-weight: 400;
-  color: #3F3F3F;
-}
-
-.breadcrumb-separator {
-  font-size: 12px;
-  color: #3F3F3F;
-}
-
-/* Hero Section */
-.hero-section {
-  height: 396px;
-  background: url('https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880') lightgray 0px -131.583px / 100% 242.424% no-repeat;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  position: relative;
-}
-
-.hero-overlay {
-  width: 100%;
-  height: 100%;
-  background: rgba(77, 77, 77, 0.70);
-  display: flex;
-  align-items: flex-end;
-  padding: 50px 30px;
-}
-
-.hero-content {
+.hamburger-menu {
+  background: transparent;
+  border: none;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
+  padding: 4px;
+  width: 26px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
 }
 
-.hero-title-en {
-  font-size: 24px;
-  font-weight: 700;
-  color: #FFF;
-  letter-spacing: -0.48px;
+.hamburger-line {
+  width: 18px;
+  height: 2px;
+  background-color: #1A1A1A;
+  transition: all 0.3s ease;
 }
 
-.hero-title-jp {
-  font-size: 40px;
-  font-weight: 700;
-  color: #FFF;
-  letter-spacing: -0.8px;
+.hamburger-menu:hover .hamburger-line {
+  background-color: #DA5761;
 }
+
+/* サブナビのレスポンシブ対応 */
+@media (max-width: 1150px) {
+  .sub-nav {
+    display: none;
+  }
+}
+
+
 
 /* Form Section */
 .form-section {
-  padding: 70px 50px 0;
+  padding: 70px 50px 70px;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
   gap: 40px;
-  max-width: 1340px;
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -713,6 +412,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 15px;
+}
+
+.divider-line {
+  width: 69px;
+  height: 2px;
+  background: #DA5761;
+}
+
+.divider-text {
+  color: #DA5761;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .form-steps {
@@ -736,7 +448,6 @@ export default {
 .contact-form {
   padding: 50px;
   border-radius: 20px;
-  background: #FFF;
 }
 
 .form-field {
@@ -744,9 +455,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
-  border-top: 0.5px dashed #727272;
-  border-bottom: 0.5px dashed #727272;
+  border-bottom: 0.5px dashed #B0B0B0;
   width: 100%;
+}
+
+.form-field:first-child {
+  border-top: 0.5px dashed #B0B0B0;
 }
 
 .field-label {
@@ -896,12 +610,15 @@ export default {
   font-weight: 400;
   color: #1A1A1A;
   flex: 1;
+  line-height: 1.6;
 }
 
 .terms-download {
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .download-link {
@@ -919,8 +636,8 @@ export default {
 .privacy-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 10px;
   width: 100%;
 }
@@ -929,7 +646,7 @@ export default {
   font-size: 18px;
   font-weight: 400;
   color: #1A1A1A;
-  text-align: center;
+  text-align: left;
   margin: 0;
 }
 
@@ -980,214 +697,94 @@ export default {
   cursor: not-allowed;
 }
 
-/* Floating Action Buttons */
-.floating-buttons {
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
-}
-
-.floating-btn {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #FFF;
-}
-
-.login-floating {
-  background: #DA5761;
-}
-
-.contact-floating {
-  background: #9C3940;
-}
-
-/* Access Section */
-
-.access-container {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 1340px;
-  margin: 0 auto;
-}
-
-.access-line {
-  position: absolute;
-  left: 0;
-  top: 18px;
-  width: 91px;
-  height: 1px;
-  background: #DA5761;
-}
-
-.access-map {
-  flex: 1;
-}
-
-.info-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.info-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #DA5761;
-}
-
-.info-text {
-  font-size: 16px;
-  font-weight: 400;
-  color: #1A1A1A;
-  line-height: 200%;
-}
-
-/* Footer */
-.footer {
+/* Footer Navigation */
+.navigation-footer {
   background: #CFCFCF;
-  padding: 50px 100px;
-}
-
-.footer-content {
+  padding: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 50px;
-  max-width: 1240px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
-.footer-nav {
+.navigation-footer .frame132131753022 {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.navigation-footer .vector-7-1 {
+  height: 1px;
+  background-color: #B2B2B2;
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+}
+
+.navigation-footer .group27 {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.footer-navigation {
+  background: #CFCFCF;
+  padding: 50px 100px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+.footer-links {
+  display: flex;
+  align-items: flex-start;
   gap: 60px;
-  flex-wrap: wrap;
 }
 
 .footer-column {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 20px;
-  min-width: 150px;
+  width: 171px;
 }
 
-.footer-link {
+.footer-item {
   display: flex;
+  height: 18px;
   align-items: center;
   gap: 10px;
-  color: #1A1A1A;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 0.746px 0;
+  align-self: stretch;
 }
 
-.sub-links {
+.footer-sub-item {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-left: 20px;
-}
-
-.footer-sublink {
-  display: flex;
+  height: 15px;
+  padding-left: 20px;
   align-items: center;
   gap: 10px;
-  color: #1A1A1A;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 7.5px 0;
+  align-self: stretch;
 }
 
-.footer-divider {
-  width: 100%;
-  height: 1px;
-  background: #B2B2B2;
+.arrow-icon {
+  width: 10px;
+  height: 17px;
+  fill: #DA5761;
 }
 
-.footer-bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-}
-
-.company-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.company-logo-footer {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.logo-icon-footer {
-  width: 54px;
-  height: 42px;
-}
-
-.company-text-footer {
-  display: flex;
-  flex-direction: column;
-  gap: -5px;
-}
-
-.company-name-footer {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1A1A1A;
-}
-
-.company-group-footer {
-  font-size: 15px;
-  font-weight: 700;
-  color: #1A1A1A;
-}
-
-.company-details {
-  text-align: center;
-  font-size: 20px;
-  font-weight: 400;
-  color: #1A1A1A;
-  line-height: 120%;
-}
-
-.copyright {
-  font-size: 15px;
-  font-weight: 400;
-  color: #1A1A1A;
-  text-align: center;
+.dash-icon {
+  width: 2px;
+  height: 10px;
+  transform: rotate(90deg);
+  fill: #DA5761;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .navigation {
-    padding: 10px;
-  }
-  
   .form-section {
-    padding: 50px 30px 0;
+    padding: 50px 30px 50px;
   }
   
   .contact-form {
@@ -1202,31 +799,12 @@ export default {
     min-width: 200px;
   }
 
-  .footer {
+  .navigation-footer {
     padding: 50px 50px;
-  }
-
-  .footer-nav {
-    gap: 40px;
   }
 }
 
 @media (max-width: 768px) {
-  .navigation {
-    flex-direction: column;
-    gap: 10px;
-    height: auto;
-    padding: 15px;
-  }
-  
-  .nav-right {
-    width: 100%;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-  }
-  
   .form-section {
     padding: 30px 20px 0;
   }
@@ -1244,29 +822,9 @@ export default {
   .submit-btn {
     width: 100%;
   }
-  
-  .floating-buttons {
-    bottom: 20px;
-    top: auto;
-    transform: none;
-    flex-direction: row;
-    right: 50%;
-    transform: translateX(50%);
-  }
-  
-  .floating-btn {
-    width: 80px;
-    height: 80px;
-    font-size: 11px;
-  }
 
-  .footer {
+  .navigation-footer {
     padding: 30px 20px;
-  }
-  
-  .footer-nav {
-    flex-direction: column;
-    gap: 30px;
   }
 }
 </style>

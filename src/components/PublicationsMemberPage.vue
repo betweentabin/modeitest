@@ -4,18 +4,18 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="刊行物（会員）"
-      subtitle="publications member"
+      title="刊行物"
+      subtitle="publications"
       heroImage="/img/hero-image.png"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['刊行物（会員）']" />
+    <Breadcrumbs :breadcrumbs="['刊行物']" />
 
     <div class="page-content">
       <!-- Publications Header -->
       <div class="publications-header">
-        <h2 class="page-title">刊行物（会員）</h2>
+        <h2 class="page-title">刊行物</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
           <span class="title-english">publications member</span>
@@ -146,29 +146,13 @@
       </div>
     </div>
 
-    <!-- button Section -->
-    <div class="button-section">
-        <div class="button-container">
-          <button class="cta-button primary">
-            <span class="button-text">お問い合わせはコチラ</span>
-            <div class="arrow-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
-                <path d="M9.5 6L15.5 12L9.5 18" stroke="#DA5761" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </button>
-          <button class="cta-button secondary">
-            <span class="button-text">入会はコチラ</span>
-            <div class="arrow-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
-                <path d="M9.5 6L15.5 12L9.5 18" stroke="#9C3940" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </button>
-        </div>
-      </div>
+    <!-- Action Button Section -->
+    <ActionButton 
+      primary-text="お問い合わせはコチラ"
+      secondary-text="入会はコチラ"
+      @primary-click="handleContactClick"
+      @secondary-click="handleJoinClick"
+    />
 
     <!-- Contact CTA Section -->
     <ContactSection />
@@ -197,6 +181,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
+import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
 
@@ -210,7 +195,8 @@ export default {
     Breadcrumbs,
     ContactSection,
     AccessSection,
-    FixedSideButtons
+    FixedSideButtons,
+    ActionButton
   },
   data() {
     return {
@@ -495,6 +481,12 @@ export default {
     },
     goToRegister() {
       this.$router.push('/register');
+    },
+    handleContactClick() {
+      this.$router.push('/contact');
+    },
+    handleJoinClick() {
+      this.$router.push('/join');
     }
   }
 };
@@ -509,7 +501,7 @@ export default {
 /* Page Content */
 .page-content {
   margin: 0 auto;
-  padding: 70px 50px 0 50px;
+  padding: 70px 50px 50px 50px;
 }
 
 .publications-header {
@@ -534,13 +526,15 @@ export default {
   display: flex;
   align-items: center;
   gap: 15px;
-  width: 306px;
+  width: auto;
+  min-width: 306px;
 }
 
 .line-left, .line-right {
-  width: 69px;
+  width: 80px;
   height: 2px;
   background: #DA5761;
+  flex-shrink: 0;
 }
 
 .title-english {
@@ -548,6 +542,7 @@ export default {
   font-size: 20px;
   font-weight: 700;
   color: #DA5761;
+  white-space: nowrap;
 }
 
 /* Filter Container */
@@ -593,8 +588,8 @@ export default {
 /* Filter Download Button */
 .filter-download-btn {
   display: flex;
-  width: 300px;
-  padding: 10px 0;
+  width: auto;
+  padding: 10px 50px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -613,6 +608,18 @@ export default {
 
 .filter-download-btn:hover {
   background: var(--color-secondary);
+}
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Category Filter */
@@ -765,8 +772,8 @@ export default {
 
 .download-btn {
   display: flex;
-  width: 300px;
-  padding: 10px 0;
+  width: auto;
+  padding: 10px 50px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -887,77 +894,7 @@ export default {
   color: #666;
 }
 
-/* Button Section */
-.button-section {
-  background: #ECECEC;
-  padding: 50px 50px 70px 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
 
-.button-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  width: 100%;
-  max-width: 2000px;
-}
-
-.cta-button {
-  width: 300px;
-  padding: 20px 40px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Inter', Helvetica, sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-
-.button-text {
-  width: auto;
-  text-align: center;
-}
-
-.arrow-icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cta-button.primary {
-  background-color: #DA5761;
-  color: #FFFFFF;
-  width: 100%;
-}
-
-.cta-button.primary:hover {
-  background-color: #c44a54;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(218, 87, 97, 0.3);
-}
-
-.cta-button.secondary {
-  background-color: #9C3940;
-  color: #FFFFFF;
-  width: 100%;
-}
-
-.cta-button.secondary:hover {
-  background-color: #8a3238;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(156, 57, 64, 0.3);
-}
 
 /* Responsive Design */
 @media (max-width: 1300px) {

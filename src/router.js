@@ -3,7 +3,7 @@ import Router from "vue-router";
 import HomePage from "./components/HomePage";
 import CompanyProfile from "./components/CompanyProfile";
 import AboutInstitutePage from "./components/AboutInstitutePage";
-import ServicesPage from "./components/ServicesPage";
+// ServicesPage import removed - replaced with MembershipPage
 import NewsPage from "./components/NewsPage";
 import FaqPage from "./components/FaqPage";
 import PublicationsMemberPage from "./components/PublicationsMemberPage";
@@ -45,10 +45,14 @@ import SitemapPage from "./components/SitemapPage";
 import FinancialReportPage from "./components/FinancialReportPage";
 import TestPage from "./components/TestPage";
 import ContactFormPage from "./components/ContactFormPage";
+import ContactConfirmPage from "./components/ContactConfirmPage";
+import ContactCompletePage from "./components/ContactCompletePage";
 import MemberLoginPage from "./views/MemberLoginPage";
 import MemberRegisterPage from "./views/MemberRegisterPage";
 import MyAccountPage from "./views/MyAccountPage";
 import UpgradePage from "./views/UpgradePage";
+import MembershipPage from "./components/MembershipPage";
+import PremiumMembershipPage from "./components/PremiumMembershipPage.vue";
 
 Vue.use(Router);
 
@@ -82,7 +86,7 @@ const router = new Router({
     {
       path: "/services",
       name: "services",
-      component: ServicesPage,
+      component: MembershipPage,
       meta: { title: "サービス案内 - ちくぎん地域経済研究所" }
     },
     {
@@ -134,7 +138,7 @@ const router = new Router({
       path: "/seminars/current",
       name: "currentSeminars",
       component: CurrentSeminarsPage,
-      meta: { title: "受付中のセミナー - ちくぎん地域経済研究所" }
+      meta: { title: "受付中のセミナー - ��くぎん地域経済研究所" }
     },
     {
       path: "/seminars/past",
@@ -211,13 +215,25 @@ const router = new Router({
       path: "/cri-consulting",
       name: "criConsulting",
       component: CriConsultingPage,
-      meta: { title: "CRI経営コンサルティング - ちくぎん地域経済研究所" }
+      meta: { title: "CRI経営コンサルティング - ちくぎん地域経���研究所" }
     },
     {
       path: "/contact",
       name: "contact",
       component: ContactFormPage,
       meta: { title: "お問い合わせ - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/contact/confirm",
+      name: "contactConfirm",
+      component: ContactConfirmPage,
+      meta: { title: "お問い合わせ確認 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/contact/complete",
+      name: "contactComplete",
+      component: ContactCompletePage,
+      meta: { title: "お問い合わせ完了 - ちくぎん地域経済研究所" }
     },
     {
       path: "/sitemap",
@@ -252,7 +268,7 @@ const router = new Router({
       path: "/admin/dashboard",
       name: "adminDashboard",
       component: MemberManagement,
-      meta: { title: "管理ダッシュボード - ちくぎん地域経済研究所" }
+      meta: { title: "管理ダッシュボード - ちくぎん地��経済研究所" }
     },
     {
       path: "/admin/members",
@@ -360,7 +376,7 @@ const router = new Router({
       path: "/login",
       name: "memberLogin",
       component: MemberLoginPage,
-      meta: { title: "会員ログイン - ちくぎん地域経済研究所" }
+      meta: { title: "会員ログイ�� - ちくぎん地域経済研究所" }
     },
     {
       path: "/register",
@@ -369,16 +385,22 @@ const router = new Router({
       meta: { title: "会員登録 - ちくぎん地域経済研究所" }
     },
     {
+      path: "/membership",
+      name: "membership",
+      component: MembershipPage,
+      meta: { title: "入会案内 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/membership/standard",
       name: "standardMembership",
-      component: ServicesPage,
+      component: MembershipPage,
       meta: { title: "スタンダード会員のご案内 - ちくぎん地域経済研究所" }
     },
     {
       path: "/membership/premium",
       name: "premiumMembership",
-      component: ServicesPage,
-      meta: { title: "プレミアム会員のご案内 - ちくぎん地域経済研究所" }
+      component: PremiumMembershipPage,
+      meta: { title: "プレミアム会員の特典 - ちくぎん地域経済研究所" }
     },
     {
       path: "/my-account",

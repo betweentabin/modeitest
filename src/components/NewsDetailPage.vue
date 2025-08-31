@@ -503,10 +503,16 @@ export default {
  }
 
  .filter-download-btn .icon-box {
-   display: flex;
-   align-items: center;
-   justify-content: center;
- }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .filter-download-btn:hover {
   background: var(--color-secondary);

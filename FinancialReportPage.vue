@@ -645,6 +645,8 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 15px;
+  width: auto;
+  min-width: 306px;
 }
 
 /* Report Content */

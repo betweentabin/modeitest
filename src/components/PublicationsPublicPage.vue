@@ -4,18 +4,18 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="刊行物（一般）"
-      subtitle="publications public"
+      title="刊行物"
+      subtitle="publications"
       heroImage="/img/hero-image.png"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['刊行物（一般）']" />
+    <Breadcrumbs :breadcrumbs="['刊行物']" />
 
     <div class="page-content">
       <!-- Publications Header -->
       <div class="publications-header">
-        <h2 class="page-title">刊行物（一般）</h2>
+        <h2 class="page-title">刊行物</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
           <span class="title-english">publications public</span>
@@ -512,7 +512,7 @@ export default {
 /* Page Content */
 .page-content {
   margin: 0 auto;
-  padding: 70px 50px 0 50px;
+  padding: 70px 50px 50px 50px;
 }
 
 .publications-header {
@@ -537,13 +537,15 @@ export default {
   display: flex;
   align-items: center;
   gap: 15px;
-  width: 306px;
+  width: auto;
+  min-width: 306px;
 }
 
 .line-left, .line-right {
-  width: 69px;
+  width: 80px;
   height: 2px;
   background: #DA5761;
+  flex-shrink: 0;
 }
 
 .title-english {
@@ -551,6 +553,7 @@ export default {
   font-size: 20px;
   font-weight: 700;
   color: #DA5761;
+  white-space: nowrap;
 }
 
 /* Filter Container */
@@ -597,8 +600,8 @@ export default {
 /* Filter Download Button */
 .filter-download-btn {
   display: flex;
-  width: 300px;
-  padding: 10px 0;
+  width: auto;
+  padding: 10px 50px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -617,6 +620,18 @@ export default {
 
 .filter-download-btn:hover {
   background: var(--color-secondary);
+}
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Category Filter */
@@ -768,8 +783,8 @@ export default {
 
 .download-btn {
   display: flex;
-  width: 300px;
-  padding: 10px 0;
+  width: auto;
+  padding: 10px 50px;
   justify-content: center;
   align-items: center;
   gap: 10px;

@@ -353,13 +353,15 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 15px;
-  width: 306px;
+  width: auto;
+  min-width: 306px;
 }
 
 .line-left, .line-right {
-  width: 69px;
+  width: 80px;
   height: 2px;
   background: #DA5761;
+  flex-shrink: 0;
 }
 
 .title-english {
