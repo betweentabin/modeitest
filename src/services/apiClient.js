@@ -111,16 +111,16 @@ class ApiClient {
   // News API methods
   async getNews(params = {}) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/news-v2?${queryString}` : '/api/news-v2'
+    const endpoint = queryString ? `/api/news?${queryString}` : '/api/news'
     return this.get(endpoint)
   }
 
   async getNewsItem(id) {
-    return this.get(`/api/news-v2/${id}`)
+    return this.get(`/api/news/${id}`)
   }
 
   async createNews(newsData, token) {
-    return this.post('/api/admin/news-v2', newsData, {
+    return this.post('/api/admin/news', newsData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -130,20 +130,20 @@ class ApiClient {
   // Publications API methods
   async getPublications(params = {}) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/publications-v2?${queryString}` : '/api/publications-v2'
+    const endpoint = queryString ? `/api/publications?${queryString}` : '/api/publications'
     return this.get(endpoint)
   }
 
   async getPublication(id) {
-    return this.get(`/api/publications-v2/${id}`)
+    return this.get(`/api/publications/${id}`)
   }
 
   async downloadPublication(id) {
-    return this.get(`/api/publications-v2/${id}/download`)
+    return this.get(`/api/publications/${id}/download`)
   }
 
   async createPublication(publicationData, token) {
-    return this.post('/api/admin/publications-v2', publicationData, {
+    return this.post('/api/admin/publications', publicationData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -151,7 +151,7 @@ class ApiClient {
   }
 
   async updatePublication(id, publicationData, token) {
-    return this.put(`/api/admin/publications-v2/${id}`, publicationData, {
+    return this.put(`/api/admin/publications/${id}`, publicationData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -159,7 +159,7 @@ class ApiClient {
   }
 
   async deletePublication(id, token) {
-    return this.delete(`/api/admin/publications-v2/${id}`, {
+    return this.delete(`/api/admin/publications/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -168,12 +168,12 @@ class ApiClient {
 
   // Inquiry API methods
   async submitInquiry(inquiryData) {
-    return this.post('/api/inquiries-v2', inquiryData)
+    return this.post('/api/inquiries', inquiryData)
   }
 
   async getInquiries(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/inquiries-v2?${queryString}` : '/api/admin/inquiries-v2'
+    const endpoint = queryString ? `/api/admin/inquiries?${queryString}` : '/api/admin/inquiries'
     return this.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -182,7 +182,7 @@ class ApiClient {
   }
 
   async getInquiry(id, token) {
-    return this.get(`/api/admin/inquiries-v2/${id}`, {
+    return this.get(`/api/admin/inquiries/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -190,7 +190,7 @@ class ApiClient {
   }
 
   async markInquiryAsResponded(id, token) {
-    return this.post(`/api/admin/inquiries-v2/${id}/respond`, null, {
+    return this.post(`/api/admin/inquiries/${id}/respond`, null, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -199,7 +199,7 @@ class ApiClient {
 
   async getAdminInquiries(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/inquiries-v2?${queryString}` : '/api/admin/inquiries-v2'
+    const endpoint = queryString ? `/api/admin/inquiries?${queryString}` : '/api/admin/inquiries'
     return this.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -208,7 +208,7 @@ class ApiClient {
   }
 
   async deleteInquiry(id, token) {
-    return this.delete(`/api/admin/inquiries-v2/${id}`, {
+    return this.delete(`/api/admin/inquiries/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -258,7 +258,7 @@ class ApiClient {
 
   async getAdminNews(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'
+    const endpoint = queryString ? `/api/admin/news?${queryString}` : '/api/admin/news'
     return this.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -268,7 +268,7 @@ class ApiClient {
 
   async getAdminPublications(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/publications-v2?${queryString}` : '/api/admin/publications-v2'
+    const endpoint = queryString ? `/api/admin/publications?${queryString}` : '/api/admin/publications'
     return this.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`
