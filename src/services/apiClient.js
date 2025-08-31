@@ -300,6 +300,15 @@ class ApiClient {
   async getPublicationCategories() {
     return this.get('/api/publication-categories')
   }
+  
+  // Page content API methods
+  async getPageContents() {
+    return this.get('/api/pages')
+  }
+  
+  async getPageContent(pageKey) {
+    return this.get(`/api/pages/${pageKey}`)
+  }
 }
 
 // Export a singleton instance

@@ -61,8 +61,125 @@
               </div>
             </div>
 
+            <!-- 画像管理 -->
+            <div class="form-section">
+              <h3 class="section-title">画像管理</h3>
+              <div class="image-management">
+                <div v-if="!isNew && formData.images && formData.images.length > 0" class="image-list">
+                  <div v-for="(image, index) in formData.images" :key="index" class="image-item">
+                    <div class="image-preview">
+                      <img :src="image.url" :alt="image.alt || '画像'" class="preview-img" />
+                    </div>
+                    <div class="image-details">
+                      <div class="image-info">
+                        <div class="image-name">{{ image.alt || `画像 ${index + 1}` }}</div>
+                        <div class="image-path">{{ image.url }}</div>
+                      </div>
+                      <div class="image-actions">
+                        <button 
+                          type="button" 
+                          @click="editImage(index)" 
+                          class="image-btn edit-image-btn"
+                        >
+                          編集
+                        </button>
+                        <button 
+                          type="button" 
+                          @click="deleteImage(index)" 
+                          class="image-btn delete-image-btn"
+                        >
+                          削除
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div v-else class="no-images">
+                  <p>画像がまだ追加されていません</p>
+                </div>
+                
+                <div class="add-image-section">
+                  <button 
+                    type="button" 
+                    @click="showImageUploadModal = true" 
+                    class="add-image-btn"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                    </svg>
+                    画像を追加
+                  </button>
+                </div>
+                
+                <!-- 画像アップロードモーダル -->
+                <div v-if="showImageUploadModal" class="modal-overlay">
+                  <div class="modal-container">
+                    <div class="modal-header">
+                      <h3>画像を追加</h3>
+                      <button @click="showImageUploadModal = false" class="close-modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label class="form-label">画像を選択</label>
+                        <input 
+                          type="file" 
+                          @change="handleImageSelect" 
+                          accept="image/*" 
+                          class="file-input"
+                          ref="fileInput"
+                        />
+                      </div>
+                      
+                      <div v-if="selectedImage" class="image-preview-container">
+                        <img :src="selectedImagePreview" alt="プレビュー" class="image-preview-large" />
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="image-alt" class="form-label">代替テキスト</label>
+                        <input 
+                          id="image-alt" 
+                          v-model="newImage.alt" 
+                          type="text" 
+                          class="form-input" 
+                          placeholder="画像の説明"
+                        />
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="image-description" class="form-label">説明</label>
+                        <textarea 
+                          id="image-description" 
+                          v-model="newImage.description" 
+                          class="form-input" 
+                          rows="3" 
+                          placeholder="画像の詳細な説明"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button 
+                        @click="showImageUploadModal = false" 
+                        class="btn btn-secondary"
+                      >
+                        キャンセル
+                      </button>
+                      <button 
+                        @click="addImage" 
+                        class="btn btn-primary"
+                        :disabled="!selectedImage"
+                      >
+                        追加
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- コンテンツ -->
             <div class="form-section">
+              <h3 class="section-title">コンテンツ</h3>
               <div class="form-group">
                 <label for="content" class="form-label">
                   コンテンツ (JSON形式) <span class="required">*</span>
@@ -197,7 +314,8 @@ export default {
         content: {},
         meta_description: '',
         meta_keywords: '',
-        is_published: false
+        is_published: false,
+        images: []
       },
       contentJson: '',
       jsonError: '',
@@ -205,7 +323,16 @@ export default {
       submitLoading: false,
       error: '',
       submitError: '',
-      successMessage: ''
+      successMessage: '',
+      showImageUploadModal: false,
+      selectedImage: null,
+      selectedImagePreview: '',
+      newImage: {
+        alt: '',
+        description: '',
+        url: ''
+      },
+      editingImageIndex: -1
     }
   },
   computed: {
@@ -250,7 +377,10 @@ export default {
 
       try {
         const data = await mockServer.getPage(this.pageKey)
-        this.formData = data
+        this.formData = {
+          ...data,
+          images: data.images || []
+        }
         this.contentJson = JSON.stringify(data.content || data, null, 2)
       } catch (err) {
         this.error = 'ページデータの取得に失敗しました'
@@ -259,18 +389,153 @@ export default {
         this.loading = false
       }
     },
+    
+    handleImageSelect(event) {
+      const file = event.target.files[0]
+      if (!file) return
+      
+      if (file.size > 5 * 1024 * 1024) {
+        this.submitError = '画像サイズは5MB以下にしてください'
+        return
+      }
+      
+      this.selectedImage = file
+      
+      // プレビュー用のURLを作成
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.selectedImagePreview = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    
+    addImage() {
+      if (!this.selectedImage) return
+      
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const newImageData = {
+          id: Date.now(),
+          url: e.target.result,
+          alt: this.newImage.alt || this.selectedImage.name,
+          description: this.newImage.description || ''
+        }
+        
+        if (this.editingImageIndex >= 0) {
+          // 既存の画像を更新
+          this.formData.images.splice(this.editingImageIndex, 1, newImageData)
+          this.editingImageIndex = -1
+        } else {
+          // 新しい画像を追加
+          if (!this.formData.images) {
+            this.formData.images = []
+          }
+          this.formData.images.push(newImageData)
+        }
+        
+        // モーダルをリセット
+        this.resetImageModal()
+        
+        // 成功メッセージ
+        this.successMessage = '画像が追加されました'
+        setTimeout(() => {
+          this.successMessage = ''
+        }, 3000)
+      }
+      reader.readAsDataURL(this.selectedImage)
+    },
+    
+    editImage(index) {
+      const image = this.formData.images[index]
+      this.editingImageIndex = index
+      this.newImage = {
+        alt: image.alt,
+        description: image.description
+      }
+      this.selectedImagePreview = image.url
+      this.selectedImage = true // 画像が既に選択されている状態
+      this.showImageUploadModal = true
+    },
+    
+    deleteImage(index) {
+      if (!confirm('この画像を削除してもよろしいですか？')) {
+        return
+      }
+      
+      this.formData.images.splice(index, 1)
+      this.successMessage = '画像が削除されました'
+      setTimeout(() => {
+        this.successMessage = ''
+      }, 3000)
+    },
+    
+    resetImageModal() {
+      this.showImageUploadModal = false
+      this.selectedImage = null
+      this.selectedImagePreview = ''
+      this.newImage = {
+        alt: '',
+        description: '',
+        url: ''
+      }
+      this.editingImageIndex = -1
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = ''
+      }
+    },
     async handleSubmit() {
       this.submitLoading = true
       this.submitError = ''
       this.successMessage = ''
 
       try {
+        // JSONデータの更新
+        try {
+          this.formData.content = JSON.parse(this.contentJson)
+        } catch (e) {
+          this.submitError = 'JSONの形式が正しくありません: ' + e.message
+          this.submitLoading = false
+          return
+        }
+        
+        // 送信データの準備
+        const submitData = {
+          ...this.formData,
+          // 画像データも含める
+          images: this.formData.images || []
+        }
+        
         if (this.isNew) {
-          // 新規作成機能は未実装
-          this.submitError = '新規ページ作成機能は未実装です'
+          // 新規作成機能
+          if (!submitData.page_key) {
+            this.submitError = 'ページキーは必須です'
+            this.submitLoading = false
+            return
+          }
+          
+          try {
+            await mockServer.createPage(submitData.page_key, submitData)
+            this.successMessage = 'ページを作成しました'
+            setTimeout(() => {
+              this.$router.push('/admin/pages')
+            }, 1500)
+          } catch (e) {
+            this.submitError = '新規ページ作成に失敗しました: ' + e.message
+          }
         } else {
-          await mockServer.updatePage(this.pageKey, this.formData)
+          // 既存ページの更新
+          await mockServer.updatePage(this.pageKey, submitData)
           this.successMessage = 'ページを更新しました'
+          
+          // 画像が含まれる場合、成功メッセージを拡張
+          if (submitData.images && submitData.images.length > 0) {
+            this.successMessage += `（${submitData.images.length}枚の画像を含む）`
+          }
+          
+          // 更新後に最新データを再取得
+          setTimeout(() => {
+            this.fetchPageData()
+          }, 1000)
         }
       } catch (err) {
         if (err.response?.data?.errors) {
@@ -606,6 +871,219 @@ export default {
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* 画像管理スタイル */
+.image-management {
+  margin-top: 16px;
+}
+
+.image-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.image-item {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: white;
+}
+
+.image-preview {
+  height: 160px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-details {
+  padding: 12px;
+}
+
+.image-info {
+  margin-bottom: 12px;
+}
+
+.image-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: #1A1A1A;
+  margin-bottom: 4px;
+}
+
+.image-path {
+  font-size: 12px;
+  color: #666;
+  word-break: break-all;
+}
+
+.image-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.image-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.edit-image-btn {
+  background-color: #f5f5f5;
+  color: #1A1A1A;
+  border: 1px solid #d1d5db;
+}
+
+.edit-image-btn:hover {
+  background-color: #e5e5e5;
+}
+
+.delete-image-btn {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.delete-image-btn:hover {
+  background-color: #fecaca;
+}
+
+.no-images {
+  padding: 32px;
+  text-align: center;
+  background-color: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.add-image-section {
+  margin-bottom: 24px;
+}
+
+.add-image-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #1A1A1A;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.add-image-btn:hover {
+  background-color: #f3f4f6;
+  border-color: #da5761;
+  color: #da5761;
+}
+
+.add-image-btn svg {
+  transition: all 0.2s;
+}
+
+.add-image-btn:hover svg {
+  color: #da5761;
+}
+
+/* モーダル */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.file-input {
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  width: 100%;
+  background-color: #f9fafb;
+}
+
+.image-preview-container {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.image-preview-large {
+  max-width: 100%;
+  max-height: 300px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
 }
 
 /* レスポンシブ対応 */

@@ -212,17 +212,57 @@ const mockData = {
     home: {
       title: 'トップページ',
       content: 'ちくぎん地域経済研究所のメインページ',
-      lastUpdated: '2025-05-01'
+      lastUpdated: '2025-05-01',
+      images: [
+        { id: 1, url: '/img/hero-image.png', alt: 'ヒーロー画像', description: 'トップページのメイン画像' },
+        { id: 2, url: '/img/image-1.png', alt: 'サービス画像1', description: 'サービス紹介用画像' },
+        { id: 3, url: '/img/image-2.png', alt: 'サービス画像2', description: 'サービス紹介用画像' }
+      ]
     },
     about: {
       title: 'ちくぎん地域経済研究所について',
       content: '地域経済の発展に貢献する研究機関です。',
-      lastUpdated: '2025-05-01'
+      lastUpdated: '2025-05-01',
+      images: [
+        { id: 1, url: '/img/-----2-2.png', alt: '会社概要画像', description: '会社概要ページのメイン画像' },
+        { id: 2, url: '/img/-----2-3.png', alt: '企業理念画像', description: '企業理念を表す画像' }
+      ]
     },
     services: {
       title: 'サービス一覧',
-      content: '経済調査、コンサルティング、セミナー開催など',
-      lastUpdated: '2025-04-28'
+      content: '当研究所が提供するサービスの一覧です。',
+      lastUpdated: '2025-04-20',
+      images: [
+        { id: 1, url: '/img/-----2-4.png', alt: 'サービス概要画像', description: 'サービス概要のメイン画像' },
+        { id: 2, url: '/img/---1.png', alt: 'コンサルティング画像', description: 'コンサルティングサービスの画像' },
+        { id: 3, url: '/img/---2.png', alt: 'セミナー画像', description: 'セミナーサービスの画像' }
+      ]
+    },
+    contact: {
+      title: 'お問い合わせ',
+      content: 'お問い合わせフォームや連絡先情報を掲載しています。',
+      lastUpdated: '2025-04-15',
+      images: [
+        { id: 1, url: '/img/---3.png', alt: 'お問い合わせ画像', description: 'お問い合わせページのメイン画像' }
+      ]
+    },
+    faq: {
+      title: 'よくある質問',
+      content: 'よくいただくご質問とその回答をまとめています。',
+      lastUpdated: '2025-04-10',
+      images: []
+    },
+    privacy: {
+      title: 'プライバシーポリシー',
+      content: '個人情報の取り扱いについて説明しています。',
+      lastUpdated: '2025-03-25',
+      images: []
+    },
+    terms: {
+      title: '利用規約',
+      content: '当サイトをご利用いただく際の規約です。',
+      lastUpdated: '2025-03-25',
+      images: []
     },
     // ニュース・お知らせ関連
     news: {
@@ -661,33 +701,172 @@ class MockAPIServer {
   }
 
   // Pages
-  getPages() {
-    // ページオブジェクトを配列形式で返す
+  async getPages() {
     console.log('MockServer getPages called')
-    console.log('Current pages data:', this.data.pages)
+    
+    try {
+      // まずAPIからデータを取得してみる
+      const apiClient = await import('./services/apiClient').then(m => m.default)
+      const response = await apiClient.getPageContents()
+      
+      if (response.success && response.data && response.data.pages && response.data.pages.length > 0) {
+        console.log('Pages loaded from API:', response.data.pages.length)
+        
+        // APIから取得したデータを整形
+        const pagesArray = response.data.pages.map(page => ({
+          pageKey: page.page_key,
+          title: page.title,
+          content: page.content,
+          meta_description: page.meta_description,
+          meta_keywords: page.meta_keywords,
+          is_published: page.is_published,
+          lastUpdated: page.updated_at,
+          images: page.content.images || []
+        }))
+        
+        // ローカルデータも更新
+        pagesArray.forEach(page => {
+          this.data.pages[page.pageKey] = {
+            title: page.title,
+            content: page.content,
+            lastUpdated: page.lastUpdated,
+            images: page.images
+          }
+        })
+        
+        this.saveData()
+        console.log('Returning API pages array:', pagesArray)
+        return Promise.resolve(pagesArray)
+      }
+    } catch (error) {
+      console.warn('Failed to load pages from API, falling back to local data:', error)
+    }
+    
+    // APIからのデータ取得に失敗した場合、ローカルデータを返す
+    console.log('Current local pages data:', this.data.pages)
     const pagesArray = Object.entries(this.data.pages).map(([key, value]) => ({
       pageKey: key,
       ...value
     }))
-    console.log('Returning pages array:', pagesArray)
+    console.log('Returning local pages array:', pagesArray)
     return Promise.resolve(pagesArray)
   }
 
-  getPage(pageKey) {
+  async getPage(pageKey) {
+    try {
+      // まずAPIからデータを取得してみる
+      const apiClient = await import('./services/apiClient').then(m => m.default)
+      const response = await apiClient.getPageContent(pageKey)
+      
+      if (response.success && response.data && response.data.page) {
+        console.log(`Page ${pageKey} loaded from API`)
+        
+        // APIから取得したデータを整形
+        const page = {
+          pageKey: response.data.page.page_key,
+          title: response.data.page.title,
+          content: response.data.page.content,
+          meta_description: response.data.page.meta_description,
+          meta_keywords: response.data.page.meta_keywords,
+          is_published: response.data.page.is_published,
+          lastUpdated: response.data.page.updated_at,
+          images: response.data.page.content.images || []
+        }
+        
+        // ローカルデータも更新
+        this.data.pages[pageKey] = {
+          title: page.title,
+          content: page.content,
+          lastUpdated: page.lastUpdated,
+          images: page.images
+        }
+        
+        this.saveData()
+        return Promise.resolve(page)
+      }
+    } catch (error) {
+      console.warn(`Failed to load page ${pageKey} from API, falling back to local data:`, error)
+    }
+    
+    // APIからのデータ取得に失敗した場合、ローカルデータを返す
     const page = this.data.pages[pageKey]
     if (page) {
       return Promise.resolve({ pageKey, ...page })
     }
     return Promise.reject(new Error('Page not found'))
   }
+  
+  createPage(pageKey, data) {
+    if (this.data.pages[pageKey]) {
+      return Promise.reject(new Error('Page already exists'))
+    }
+    
+    // 画像データを特別に処理
+    if (data.images && Array.isArray(data.images)) {
+      // Base64データURLを処理
+      const processedImages = data.images.map(img => {
+        // すでに処理済みの画像はそのまま返す
+        if (!img.url.startsWith('data:')) {
+          return img;
+        }
+        
+        // Base64データURLの場合は、仮のURLに変換
+        const randomId = Math.floor(Math.random() * 1000000);
+        return {
+          ...img,
+          url: `/img/uploaded-${randomId}.png` // 仮のURL
+        };
+      });
+      
+      data.images = processedImages;
+    }
+    
+    this.data.pages[pageKey] = {
+      title: data.title || 'New Page',
+      content: data.content || {},
+      meta_description: data.meta_description || '',
+      meta_keywords: data.meta_keywords || '',
+      is_published: data.is_published || false,
+      images: data.images || [],
+      lastUpdated: new Date().toISOString(),
+      createdAt: new Date().toISOString()
+    }
+    
+    console.log(`New page ${pageKey} created with images:`, this.data.pages[pageKey].images);
+    this.saveData()
+    return Promise.resolve({ pageKey, ...this.data.pages[pageKey] })
+  }
 
   updatePage(pageKey, data) {
     if (this.data.pages[pageKey]) {
+      // 画像データを特別に処理
+      if (data.images && Array.isArray(data.images)) {
+        // Base64データURLを処理（実際の実装では保存やアップロード処理が必要）
+        const processedImages = data.images.map(img => {
+          // すでに処理済みの画像はそのまま返す
+          if (!img.url.startsWith('data:')) {
+            return img;
+          }
+          
+          // Base64データURLの場合は、仮のURLに変換（実際の実装ではアップロード処理が必要）
+          // 実際のプロダクション環境では、Base64をファイルに変換してサーバーにアップロードする
+          const randomId = Math.floor(Math.random() * 1000000);
+          return {
+            ...img,
+            url: `/img/uploaded-${randomId}.png` // 仮のURL
+          };
+        });
+        
+        data.images = processedImages;
+      }
+      
       this.data.pages[pageKey] = {
         ...this.data.pages[pageKey],
         ...data,
         lastUpdated: new Date().toISOString()
       }
+      
+      console.log(`Page ${pageKey} updated with images:`, this.data.pages[pageKey].images);
       this.saveData()
       return Promise.resolve({ pageKey, ...this.data.pages[pageKey] })
     }
