@@ -27,9 +27,19 @@
         </div>
 
         <div class="seminars-content">
-          <div class="seminar-card" v-for="(seminar, index) in currentSeminars" :key="index">
+          <div 
+            class="seminar-card" 
+            v-for="(seminar, index) in currentSeminars" 
+            :key="index"
+            v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }"
+          >
             <div class="seminar-image">
               <img :src="seminar.image" :alt="seminar.title" />
+              <MembershipBadge 
+                v-if="seminar.membershipRequirement && seminar.membershipRequirement !== 'free'" 
+                :level="seminar.membershipRequirement" 
+                class="seminar-badge"
+              />
             </div>
             <div class="seminar-details">
               <div class="seminar-info">
@@ -66,8 +76,12 @@
                   </div>
                 </div>
               </div>
-              <button class="reserve-btn" @click="goToSeminarDetail(seminar)">
-                <span>セミナーを予約する</span>
+              <button 
+                class="reserve-btn" 
+                @click="handleReservation(seminar)"
+                :disabled="!canAccessSeminar(seminar)"
+              >
+                <span>{{ getReservationButtonText(seminar) }}</span>
                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
                   <path d="M13.7193 9.84548L10.2194 13.4453C10.1464 13.5203 10.0475 13.5625 9.94427 13.5625C9.84107 13.5625 9.74211 13.5203 9.66914 13.4453C9.59617 13.3702 9.55517 13.2684 9.55517 13.1623C9.55517 13.0562 9.59617 12.9544 9.66914 12.8793L12.5055 9.96248L4.88888 9.96248C4.78574 9.96248 4.68683 9.92034 4.6139 9.84533C4.54097 9.77032 4.5 9.66858 4.5 9.5625C4.5 9.45642 4.54097 9.35468 4.6139 9.27967C4.68683 9.20466 4.78574 9.16252 4.88888 9.16252L12.5055 9.16252L9.66914 6.24568C9.59617 6.17063 9.55517 6.06884 9.55517 5.9627C9.55517 5.85656 9.59617 5.75477 9.66914 5.67972C9.74211 5.60466 9.84107 5.5625 9.94427 5.5625C10.0475 5.5625 10.1464 5.60466 10.2194 5.67972L13.7193 9.27951C13.7554 9.31666 13.7841 9.36078 13.8037 9.40933C13.8233 9.45789 13.8333 9.50994 13.8333 9.5625C13.8333 9.61506 13.8233 9.66711 13.8037 9.71567C13.7841 9.76422 13.7554 9.80834 13.7193 9.84548Z" fill="#9C3940"/>
@@ -148,6 +162,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
 import mockServer from '@/mockServer'
+import MembershipBadge from './MembershipBadge.vue'
 
 export default {
   name: "CurrentSeminarsPage",
@@ -160,6 +175,7 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ContactSection,
+    MembershipBadge
   },
   data() {
     return {
@@ -172,35 +188,40 @@ export default {
           reservationPeriod: "10:00～12:00",
           date: "2025年7月15日",
           title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
+          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。",
+          membershipRequirement: 'free'
         },
         {
           image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
           reservationPeriod: "10:00～12:00",
           date: "2025年7月16日",
           title: "デジタル変革時代の経営戦略セミナー",
-          content: "デジタル技術を活用した経営戦略の立案と実行について、最新の事例を交えて詳しく解説します。"
+          content: "デジタル技術を活用した経営戦略の立案と実行について、最新の事例を交えて詳しく解説します。",
+          membershipRequirement: 'standard'
         },
         {
           image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
           reservationPeriod: "14:00～16:00",
           date: "2025年7月17日",
           title: "ESG投資とサステナブル経営セミナー",
-          content: "環境・社会・ガバナンスを考慮した投資と経営について、実践的なアプローチをご紹介します。"
+          content: "環境・社会・ガバナンスを考慮した投資と経営について、実践的なアプローチをご紹介します。",
+          membershipRequirement: 'premium'
         },
         {
           image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
           reservationPeriod: "13:00～15:00",
           date: "2025年7月18日",
           title: "中小企業の資金調達戦略セミナー",
-          content: "中小企業が直面する資金調達の課題と解決策について、具体的な事例を交えて解説します。"
+          content: "中小企業が直面する資金調達の課題と解決策について、具体的な事例を交えて解説します。",
+          membershipRequirement: 'free'
         },
         {
           image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
           reservationPeriod: "10:00～12:00",
           date: "2025年7月19日",
           title: "リモートワーク時代の人材マネジメントセミナー",
-          content: "テレワーク環境での効果的な人材管理とチーム運営について、実践的なノウハウをご紹介します。"
+          content: "テレワーク環境での効果的な人材管理とチーム運営について、実践的なノウハウをご紹介します。",
+          membershipRequirement: 'standard'
         },
         {
           image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
@@ -298,6 +319,46 @@ export default {
     generateSeminarId(seminar) {
       // セミナーのタイトルと日付からIDを生成
       return encodeURIComponent(seminar.title + '-' + seminar.date);
+    },
+    canAccessSeminar(seminar) {
+      const requiredLevel = seminar.membershipRequirement || 'free';
+      return this.$store.getters['auth/canAccess'](requiredLevel);
+    },
+    getReservationButtonText(seminar) {
+      const requiredLevel = seminar.membershipRequirement || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
+      
+      if (canAccess) {
+        return 'セミナーを予約する';
+      } else if (isRestricted) {
+        return `${this.getMembershipText(requiredLevel)}会員限定`;
+      } else {
+        return 'ログインが必要';
+      }
+    },
+    getMembershipText(level) {
+      switch (level) {
+        case 'standard':
+          return 'スタンダード';
+        case 'premium':
+          return 'プレミアム';
+        default:
+          return '会員';
+      }
+    },
+    handleReservation(seminar) {
+      const requiredLevel = seminar.membershipRequirement || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      if (canAccess) {
+        this.goToSeminarDetail(seminar);
+      } else if (!this.$store.getters['auth/isAuthenticated']) {
+        this.$router.push('/login');
+      } else {
+        alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
+        this.$router.push('/membership');
+      }
     }
   }
 };
@@ -572,6 +633,60 @@ export default {
 
 .show-more-btn:hover {
   background: var(--color-secondary);
+}
+
+/* Membership Badge Styles */
+.seminar-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* Restricted Content Styles */
+.restricted-content {
+  position: relative;
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.restriction-overlay-inline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.lock-icon {
+  font-size: 16px;
+}
+
+/* Disabled Button Styles */
+.reserve-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+}
+
+.seminar-card {
+  position: relative;
+}
+
+.seminar-image {
+  position: relative;
 }
 
 /* Pagination Styles */

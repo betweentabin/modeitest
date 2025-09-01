@@ -239,13 +239,10 @@ export default {
     }
   },
   async mounted() {
-    const token = localStorage.getItem('adminToken')
-    
-    if (!token) {
-      this.$router.push('/admin/login')
-      return
-    }
-
+    console.log('NewAdminDashboard mounted')
+    console.log('localStorage keys:', Object.keys(localStorage))
+    console.log('admin_token:', localStorage.getItem('admin_token'))
+    console.log('adminToken:', localStorage.getItem('adminToken'))
     await this.fetchPages()
   },
   methods: {
@@ -260,6 +257,11 @@ export default {
         this.pages = data
         console.log('Pages set to component:', this.pages)
       } catch (err) {
+        if (err.message === 'Admin token not found') {
+          console.log('Redirecting to login page...')
+          this.$router.push('/admin/login')
+          return
+        }
         this.error = 'ページの取得に失敗しました'
         console.error('Error fetching pages:', err)
       } finally {

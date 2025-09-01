@@ -7,7 +7,7 @@ export function useAdminAuth() {
   const adminUser = ref(null);
 
   const checkAuth = () => {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('admin_token');
     const userStr = localStorage.getItem('adminUser');
     
     if (token && userStr) {
@@ -29,7 +29,7 @@ export function useAdminAuth() {
         password
       });
 
-      localStorage.setItem('adminToken', response.data.token);
+      localStorage.setItem('admin_token', response.data.token);
       localStorage.setItem('adminUser', JSON.stringify(response.data.user));
       
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
@@ -47,7 +47,7 @@ export function useAdminAuth() {
   };
 
   const logout = () => {
-    localStorage.removeItem('adminToken');
+    localStorage.removeItem('admin_token');
     localStorage.removeItem('adminUser');
     delete axios.defaults.headers.common['Authorization'];
     

@@ -707,6 +707,12 @@ class MockAPIServer {
     try {
       // まずAPIからデータを取得してみる
       const apiClient = await import('./services/apiClient').then(m => m.default)
+      // 互換性のために両方のキーを確認
+      const token = localStorage.getItem('admin_token') || localStorage.getItem('adminToken')
+      if (!token) {
+        throw new Error('Admin token not found')
+      }
+      apiClient.setToken(token)
       const response = await apiClient.getPageContents()
       
       if (response.success && response.data && response.data.pages && response.data.pages.length > 0) {
@@ -756,6 +762,11 @@ class MockAPIServer {
     try {
       // まずAPIからデータを取得してみる
       const apiClient = await import('./services/apiClient').then(m => m.default)
+      // 互換性のために両方のキーを確認
+      const token = localStorage.getItem('admin_token') || localStorage.getItem('adminToken')
+      if (token) {
+        apiClient.setToken(token)
+      }
       const response = await apiClient.getPageContent(pageKey)
       
       if (response.success && response.data && response.data.page) {

@@ -24,11 +24,16 @@
         <!-- メインコンテンツ -->
         <div class="detail-content">
           <div class="detail-header">
-            <div class="publication-image-large">
+            <div class="publication-image-large" v-restricted="{ requiredLevel: publication.membership_level || 'free' }">
               <img 
                 :src="publication.image_url || '/img/-----2-2-5.png'" 
                 :alt="publication.title"
                 class="main-image"
+              />
+              <MembershipBadge 
+                v-if="publication.membership_level && publication.membership_level !== 'free'" 
+                :level="publication.membership_level" 
+                class="detail-badge"
               />
             </div>
             
@@ -64,14 +69,14 @@
               
               <div class="action-buttons">
                 <button 
-                  @click="downloadPDF" 
+                  @click="handleDownload" 
                   class="download-btn"
-                  :disabled="!publication.file_url"
+                  :disabled="!canDownload"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                   </svg>
-                  PDFダウンロード
+                  {{ downloadButtonText }}
                 </button>
                 
                 <button @click="sharePage" class="share-btn">
@@ -85,7 +90,7 @@
           </div>
           
           <!-- 詳細説明 -->
-          <div class="description-section">
+          <div class="description-section" v-restricted="{ requiredLevel: publication.membership_level || 'free', blurLevel: 2 }">
             <h2>概要</h2>
             <p class="description-text">{{ publication.description }}</p>
           </div>
@@ -134,6 +139,7 @@ import Group27 from "./Group27.vue";
 import FixedActionButtons from "./FixedActionButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import mockServer from "@/mockServer";
+import MembershipBadge from "./MembershipBadge.vue";
 
 export default {
   name: "PublicationDetailPage",
@@ -141,7 +147,8 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    FixedActionButtons,
+    MembershipBadge
   },
   data() {
     return {
@@ -154,6 +161,31 @@ export default {
   },
   async mounted() {
     await this.loadPublication();
+  },
+  computed: {
+    canDownload() {
+      if (!this.publication) return false;
+      const requiredLevel = this.publication.membership_level || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      return canAccess && this.publication.file_url;
+    },
+    downloadButtonText() {
+      if (!this.publication) return 'PDFダウンロード';
+      
+      const requiredLevel = this.publication.membership_level || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
+      
+      if (!this.publication.file_url) {
+        return 'ファイルなし';
+      } else if (canAccess) {
+        return 'PDFダウンロード';
+      } else if (isRestricted) {
+        return `${this.getMembershipText(requiredLevel)}会員限定`;
+      } else {
+        return 'ログインが必要';
+      }
+    }
   },
   watch: {
     '$route'() {
@@ -200,6 +232,31 @@ export default {
         'survey': '調査資料'
       };
       return categories[category] || 'その他';
+    },
+    getMembershipText(level) {
+      switch (level) {
+        case 'standard':
+          return 'スタンダード';
+        case 'premium':
+          return 'プレミアム';
+        default:
+          return '会員';
+      }
+    },
+    handleDownload() {
+      if (!this.publication) return;
+      
+      const requiredLevel = this.publication.membership_level || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      if (canAccess && this.publication.file_url) {
+        this.downloadPDF();
+      } else if (!this.$store.getters['auth/isAuthenticated']) {
+        this.$router.push('/login');
+      } else {
+        alert(`この刊行物は${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
+        this.$router.push('/membership');
+      }
     },
     downloadPDF() {
       if (this.publication.file_url) {
@@ -489,6 +546,24 @@ export default {
   color: #1A1A1A;
   line-height: 1.4;
   margin: 0;
+}
+
+/* 会員制限スタイル */
+.detail-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 2;
+}
+
+.publication-image-large {
+  position: relative;
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
 }
 
 /* レスポンシブ対応 */

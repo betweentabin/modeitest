@@ -88,7 +88,7 @@ export default {
           password: this.password
         })
 
-        localStorage.setItem('adminToken', response.data.token)
+        localStorage.setItem('admin_token', response.data.token)
         localStorage.setItem('adminUser', JSON.stringify(response.data.user))
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`

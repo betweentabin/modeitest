@@ -24,7 +24,7 @@
       </div>
 
       <!-- Seminar Details Card -->
-      <div class="seminar-detail-card">
+      <div class="seminar-detail-card" v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }">
           <div class="seminar-content">
                          <div class="seminar-info">
               <div class="seminar-details">
@@ -62,6 +62,11 @@
            
            <div class="seminar-image">
              <img :src="seminar.image || '/img/image-1.png'" :alt="seminar.title" />
+             <MembershipBadge 
+               v-if="seminar.membershipRequirement && seminar.membershipRequirement !== 'free'" 
+               :level="seminar.membershipRequirement" 
+               class="detail-badge"
+             />
            </div>
          </div>
 
@@ -77,8 +82,12 @@
 
         <!-- Registration Button -->
         <div class="registration-section" v-if="seminar.status === 'current'">
-          <div class="registration-btn" @click="registerSeminar">
-            <div class="text-44 valign-text-middle inter-bold-white-15px">セミナーを予約する</div>
+          <div 
+            class="registration-btn" 
+            @click="handleRegistration"
+            :class="{ disabled: !canRegister }"
+          >
+            <div class="text-44 valign-text-middle inter-bold-white-15px">{{ registrationButtonText }}</div>
             <frame13213176122 />
           </div>
         </div>
@@ -135,6 +144,7 @@ import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
 import mockServer from '@/mockServer';
+import MembershipBadge from './MembershipBadge.vue';
 
 export default {
   name: "SeminarDetailPage",
@@ -148,7 +158,8 @@ export default {
     FixedSideButtons,
     ContactSection,
     Frame13213176122,
-    ActionButton
+    ActionButton,
+    MembershipBadge
   },
   data() {
     return {
@@ -186,7 +197,8 @@ export default {
             image: seminar.featured_image || '/img/image-1.png',
             instructor: seminar.instructor || 'ちくぎん地域経済研究所',
             notes: seminar.notes,
-            application_deadline: seminar.application_deadline
+            application_deadline: seminar.application_deadline,
+            membershipRequirement: seminar.membership_requirement || 'free'
           };
           return;
         } catch (mockError) {

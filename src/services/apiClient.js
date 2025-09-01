@@ -4,6 +4,11 @@ import { getApiUrl } from '../config/api.js'
 class ApiClient {
   constructor() {
     this.baseURL = getApiUrl('')
+    this.token = null
+  }
+
+  setToken(token) {
+    this.token = token
   }
 
   // Generic request method
@@ -14,6 +19,7 @@ class ApiClient {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
         ...options.headers
       },
       mode: 'cors', // CORSモードを明示的に指定
@@ -303,11 +309,11 @@ class ApiClient {
   
   // Page content API methods
   async getPageContents() {
-    return this.get('/api/pages')
+    return this.get('/api/public/pages')
   }
   
   async getPageContent(pageKey) {
-    return this.get(`/api/pages/${pageKey}`)
+    return this.get(`/api/public/pages/${pageKey}`)
   }
 }
 
