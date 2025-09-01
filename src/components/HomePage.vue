@@ -560,7 +560,7 @@ export default {
     async loadLatestData() {
       try {
         // MockServerが有効な場合はそれを使用する（開発時など）
-        if (mockServer.isEnabled()) {
+        if (mockServer.isEnabled) {
             console.log("Fetching data from MockServer...");
             const allNews = await mockServer.getAllNews();
             const seminars = await mockServer.getSeminars();
