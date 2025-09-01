@@ -306,6 +306,41 @@ class ApiClient {
   async getPublicationCategories() {
     return this.get('/api/publication-categories')
   }
+
+  // Notices API methods
+  async getNotices(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/notices?${queryString}` : '/api/notices'
+    return this.get(endpoint)
+  }
+
+  async getNotice(id) {
+    return this.get(`/api/notices/${id}`)
+  }
+
+  async createNotice(noticeData, token) {
+    return this.post('/api/admin/notices', noticeData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async updateNotice(id, noticeData, token) {
+    return this.put(`/api/admin/notices/${id}`, noticeData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
+  async deleteNotice(id, token) {
+    return this.delete(`/api/admin/notices/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
   
   // Page content API methods
   async getPageContents() {
