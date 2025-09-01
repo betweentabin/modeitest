@@ -290,6 +290,41 @@ Route::get('/debug/admins', function() {
     }
 });
 
+// デバッグ用: 管理者作成エンドポイント（一時的）
+Route::post('/debug/create-admin', function() {
+    try {
+        // 既存の admin@example.com があれば削除
+        \App\Models\Admin::where('email', 'admin@example.com')->delete();
+        
+        $admin = \App\Models\Admin::create([
+            'username' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => 'password123', // Admin モデルで自動的にハッシュ化される
+            'full_name' => 'システム管理者',
+            'role' => 'super_admin',
+            'is_active' => true,
+        ]);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Admin created successfully',
+            'admin' => [
+                'id' => $admin->id,
+                'email' => $admin->email,
+                'username' => $admin->username,
+                'role' => $admin->role
+            ],
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ]);
+    }
+});
+
 // デバッグ用: データベース接続確認エンドポイント
 Route::get('/debug/database', function() {
     try {
