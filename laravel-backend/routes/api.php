@@ -267,7 +267,7 @@ Route::get('/debug/database', function() {
     try {
         $members = DB::table('members')->select('id', 'email', 'membership_type')->take(3)->get();
         $publications = DB::table('publications')->select('id', 'title', 'membership_level')->take(3)->get();
-        $seminars = DB::table('seminars')->select('id', 'title', 'membership_requirement')->take(3)->get();
+        $seminars = DB::table('seminars')->select('id', 'title', 'status', 'membership_requirement')->take(5)->get();
         
         return response()->json([
             'status' => 'success',
@@ -277,6 +277,36 @@ Route::get('/debug/database', function() {
                 'publications' => $publications,
                 'seminars' => $seminars
             ],
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ], 500);
+    }
+});
+
+// デバッグ用: セミナーステータス詳細確認
+Route::get('/debug/seminars', function() {
+    try {
+        $allSeminars = DB::table('seminars')
+            ->select('id', 'title', 'status', 'date', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+            
+        $statusCounts = DB::table('seminars')
+            ->select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'recent_seminars' => $allSeminars,
+            'status_counts' => $statusCounts,
+            'published_scope_filter' => "status IN ('scheduled', 'ongoing')",
             'timestamp' => now()
         ]);
     } catch (\Exception $e) {

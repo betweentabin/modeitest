@@ -37,9 +37,13 @@ class SeminarController extends Controller
         }
 
         // 公開されているセミナーのみ（一般向け）
-        if (!$request->user() || !$request->user()->isAdmin()) {
+        // 管理者または認証済みユーザー以外には公開セミナーのみ表示
+        if (!$request->user()) {
+            $query->published();
+        } elseif ($request->user() && !$request->user()->isAdmin()) {
             $query->published();
         }
+        // 管理者の場合は全てのステータスのセミナーを表示
 
         // ソート
         $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
@@ -126,6 +130,7 @@ class SeminarController extends Controller
         $seminar = Seminar::create(array_merge($validator->validated(), [
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
+            'status' => $request->input('status', 'scheduled'), // デフォルトをscheduledに変更
         ]));
 
         return response()->json([
