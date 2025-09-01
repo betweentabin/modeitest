@@ -325,6 +325,35 @@ Route::post('/debug/create-admin', function() {
     }
 });
 
+// デバッグ用: ログインテストエンドポイント
+Route::post('/debug/login-test', function(Request $request) {
+    try {
+        $admin = \App\Models\Admin::where('email', 'admin@chikugin-cri.co.jp')->first();
+        
+        if (!$admin) {
+            return response()->json(['status' => 'error', 'message' => 'Admin not found']);
+        }
+        
+        $passwordCheck = \Illuminate\Support\Facades\Hash::check('admin123', $admin->password);
+        
+        return response()->json([
+            'status' => 'success',
+            'admin_found' => true,
+            'password_check' => $passwordCheck,
+            'admin_email' => $admin->email,
+            'is_active' => $admin->is_active
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+    }
+});
+
 // デバッグ用: データベース接続確認エンドポイント
 Route::get('/debug/database', function() {
     try {
