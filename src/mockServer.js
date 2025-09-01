@@ -374,7 +374,15 @@ const STORAGE_KEY = 'cms_mock_data'
 
 class MockAPIServer {
   constructor() {
-    this.loadData()
+    // 本番環境ではmockServerを無効化
+    this.isEnabled = process.env.NODE_ENV !== 'production' && !window.location.host.includes('.railway.app') && !window.location.host.includes('vercel.app')
+    
+    if (this.isEnabled) {
+      this.loadData()
+    } else {
+      console.log('MockServer disabled in production environment')
+      this.data = { seminars: [], publications: [], news: [], pages: {} }
+    }
   }
 
   loadData() {
@@ -393,11 +401,23 @@ class MockAPIServer {
   }
 
   saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data))
+    if (this.isEnabled) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data))
+    }
+  }
+
+  // デバッグ用: localStorageデータをクリア
+  clearStorageData() {
+    localStorage.removeItem(STORAGE_KEY)
+    console.log('MockServer localStorage data cleared')
+    return 'MockServer localStorage cleared'
   }
 
   // Seminars
   getSeminars() {
+    if (!this.isEnabled) {
+      return Promise.reject(new Error('MockServer disabled'))
+    }
     return Promise.resolve(this.data.seminars)
   }
 
@@ -442,6 +462,9 @@ class MockAPIServer {
 
   // Publications
   getPublications() {
+    if (!this.isEnabled) {
+      return Promise.reject(new Error('MockServer disabled'))
+    }
     return Promise.resolve(this.data.publications)
   }
   
@@ -886,6 +909,9 @@ class MockAPIServer {
 
   // Get all news items for NewsPage
   getAllNews() {
+    if (!this.isEnabled) {
+      return Promise.reject(new Error('MockServer disabled'))
+    }
     const news = []
     
     // Add notices as news items
@@ -987,4 +1013,23 @@ class MockAPIServer {
 }
 
 // Export singleton instance
-export default new MockAPIServer()
+const mockServer = new MockAPIServer()
+
+// デバッグ用: グローバル関数としてlocalStorageクリア機能を提供
+window.clearMockData = () => {
+  return mockServer.clearStorageData()
+}
+
+// デバッグ用: mockServerの状態確認
+window.checkMockServer = () => {
+  console.log('MockServer enabled:', mockServer.isEnabled)
+  console.log('Current environment:', process.env.NODE_ENV)
+  console.log('Current host:', window.location.host)
+  return {
+    enabled: mockServer.isEnabled,
+    environment: process.env.NODE_ENV,
+    host: window.location.host
+  }
+}
+
+export default mockServer
