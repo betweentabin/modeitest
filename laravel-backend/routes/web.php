@@ -24,3 +24,12 @@ Route::get('/', function () {
 Route::get('/health', function () {
     return response()->json(['status' => 'ok']);
 });
+
+// Laravel認証ミドルウェア用のloginルート（ダミー）
+Route::get('/login', function () {
+    return response()->json([
+        'error' => 'Unauthorized',
+        'message' => 'Authentication required. Please use API endpoints for authentication.',
+        'login_endpoint' => '/api/admin/login'
+    ], 401);
+})->name('login');
