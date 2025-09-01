@@ -422,6 +422,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { homePageData } from "../data.js";
 import mockServer from "@/mockServer";
+import apiClient from "@/services/apiClient"; // apiClientをインポート
 import vector35 from "../../public/img/vector-35.svg";
 import vector152 from "../../public/img/vector-15-2.svg";
 import vector63 from "../../public/img/vector-6-3.svg";
@@ -558,93 +559,117 @@ export default {
   methods: {
     async loadLatestData() {
       try {
-        // 最新のニュースデータを取得
-        const allNews = await mockServer.getAllNews();
-        
-        // 最新の5件を取得
-        const latestNews = allNews.slice(0, 5);
-        this.dynamicNewsItems = latestNews; // ニュースデータを保存
-        
-        // 既存のデータ変数に最新情報をマッピング
-        if (latestNews.length > 0) {
-          // 1件目
-          const news1 = latestNews[0];
-          this.date1 = this.formatDate(news1.date);
-          this.hotInfomationVol319 = news1.title;
-          
-          // 2件目
-          if (latestNews[1]) {
-            const news2 = latestNews[1];
-            this.date2 = this.formatDate(news2.date);
-            this.text123 = news2.title;
-          }
-          
-          // 3件目
-          if (latestNews[2]) {
-            const news3 = latestNews[2];
-            this.date3 = this.formatDate(news3.date);
-            this.hotInformationVol318 = news3.title;
-          }
-          
-          // 4件目
-          if (latestNews[3]) {
-            const news4 = latestNews[3];
-            this.date4 = this.formatDate(news4.date);
-            this.hotInformationVol3161 = news4.title;
-          }
-          
-          // 5件目
-          if (latestNews[4]) {
-            const news5 = latestNews[4];
-            this.date5 = this.formatDate(news5.date);
-            this.hotInformationVol3162 = news5.title;
-          }
+        // MockServerが有効な場合はそれを使用する（開発時など）
+        if (mockServer.isEnabled()) {
+            console.log("Fetching data from MockServer...");
+            const allNews = await mockServer.getAllNews();
+            const seminars = await mockServer.getSeminars();
+            const publications = await mockServer.getPublications();
+            const notices = await mockServer.getNotices();
+            this.updatePageData(allNews, seminars, publications, notices);
+            return;
         }
-        
-        // 最新のセミナー数を更新
-        const seminars = await mockServer.getSeminars();
-        const upcomingSeminars = seminars.filter(s => s.status === 'ongoing' || s.status === 'scheduled');
-        if (upcomingSeminars.length > 0) {
-          this.seminar = `セミナー(${upcomingSeminars.length}件)`;
-        }
-        
-        // 最新の刊行物数を更新
-        const publications = await mockServer.getPublications();
-        if (publications.length > 0) {
-          this.publications1 = `刊行物(${publications.length}件)`;
-          this.allPublications = publications; // 全データを保存
-          
-          // メイン刊行物（最新）のデータを設定
-          const mainPublication = publications[0];
-          if (mainPublication) {
-            this.dynamicMainPublication = {
-              x22: mainPublication.image_url || this.frame13213174741Props.x22 // デフォルト画像を使用
-            };
-          }
-          
-          // 右側の刊行物リスト（最大4件）用のデータを設定
-          const defaultImages = [
-            this.frame13213174751Props.x22, // 1番目のデフォルト画像
-            this.frame13213174752Props.x22, // 2番目のデフォルト画像  
-            this.frame13213174752Props.x22, // 3番目のデフォルト画像
-            this.frame13213174752Props.x22  // 4番目のデフォルト画像
-          ];
-          
-          this.dynamicPublications = publications.slice(0, 4).map((pub, index) => ({
-            x22: pub.image_url || defaultImages[index], // CMSの画像がなければデフォルト画像
-            hotInformationVol324: pub.title
-          }));
-        }
-        
-        // お知らせ数を更新
-        const notices = await mockServer.getNotices();
-        const importantNotices = notices.filter(n => n.isImportant);
-        if (notices.length > 0) {
-          this.infomation1 = `お知らせ(${importantNotices.length > 0 ? importantNotices.length : notices.length}件)`;
-        }
+
+        console.log("Fetching data from API...");
+        // APIからデータを取得
+        const [newsResponse, seminarsResponse, publicationsResponse, noticesResponse] = await Promise.all([
+          apiClient.getNews({ per_page: 5 }), // 最新5件
+          apiClient.getSeminars(),
+          apiClient.getPublications(),
+          apiClient.getNotices()
+        ]);
+
+        const allNews = newsResponse.data || [];
+        const seminars = seminarsResponse.data || [];
+        const publications = publicationsResponse.data || [];
+        const notices = noticesResponse.data || [];
+
+        this.updatePageData(allNews, seminars, publications, notices);
+
       } catch (error) {
         console.error('CMSデータの取得に失敗:', error);
-        // エラー時はデフォルトデータを維持
+        // エラー時は何もしない（デフォルトデータが既に表示されているため）
+      }
+    },
+
+    updatePageData(allNews, seminars, publications, notices) {
+      // 最新の5件を取得
+      const latestNews = allNews.slice(0, 5);
+      this.dynamicNewsItems = latestNews; // ニュースデータを保存
+      
+      // 既存のデータ変数に最新情報をマッピング
+      if (latestNews.length > 0) {
+        // 1件目
+        const news1 = latestNews[0];
+        this.date1 = this.formatDate(news1.date);
+        this.hotInfomationVol319 = news1.title;
+        
+        // 2件目
+        if (latestNews[1]) {
+          const news2 = latestNews[1];
+          this.date2 = this.formatDate(news2.date);
+          this.text123 = news2.title;
+        }
+        
+        // 3件目
+        if (latestNews[2]) {
+          const news3 = latestNews[2];
+          this.date3 = this.formatDate(news3.date);
+          this.hotInformationVol318 = news3.title;
+        }
+        
+        // 4件目
+        if (latestNews[3]) {
+          const news4 = latestNews[3];
+          this.date4 = this.formatDate(news4.date);
+          this.hotInformationVol3161 = news4.title;
+        }
+        
+        // 5件目
+        if (latestNews[4]) {
+          const news5 = latestNews[4];
+          this.date5 = this.formatDate(news5.date);
+          this.hotInformationVol3162 = news5.title;
+        }
+      }
+      
+      // 最新のセミナー数を更新
+      const upcomingSeminars = seminars.filter(s => s.status === 'ongoing' || s.status === 'scheduled');
+      if (upcomingSeminars.length > 0) {
+        this.seminar = `セミナー(${upcomingSeminars.length}件)`;
+      }
+      
+      // 最新の刊行物数を更新
+      if (publications.length > 0) {
+        this.publications1 = `刊行物(${publications.length}件)`;
+        this.allPublications = publications; // 全データを保存
+        
+        // メイン刊行物（最新）のデータを設定
+        const mainPublication = publications[0];
+        if (mainPublication) {
+          this.dynamicMainPublication = {
+            x22: mainPublication.image_url || this.frame13213174741Props.x22 // デフォルト画像を使用
+          };
+        }
+        
+        // 右側の刊行物リスト（最大4件）用のデータを設定
+        const defaultImages = [
+          this.frame13213174751Props.x22, // 1番目のデフォルト画像
+          this.frame13213174752Props.x22, // 2番目のデフォルト画像  
+          this.frame13213174752Props.x22, // 3番目のデフォルト画像
+          this.frame13213174752Props.x22  // 4番目のデフォルト画像
+        ];
+        
+        this.dynamicPublications = publications.slice(0, 4).map((pub, index) => ({
+          x22: pub.image_url || defaultImages[index], // CMSの画像がなければデフォルト画像
+          hotInformationVol324: pub.title
+        }));
+      }
+      
+      // お知らせ数を更新
+      const importantNotices = notices.filter(n => n.isImportant);
+      if (notices.length > 0) {
+        this.infomation1 = `お知らせ(${importantNotices.length > 0 ? importantNotices.length : notices.length}件)`;
       }
     },
     formatDate(dateString) {
