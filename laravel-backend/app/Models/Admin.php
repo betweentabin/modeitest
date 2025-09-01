@@ -74,10 +74,7 @@ class Admin extends Authenticatable
     }
 
     // アクセサー・ミューテーター
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = \Illuminate\Support\Facades\Hash::make($value);
-    }
+    // パスワードの自動ハッシュ化は AdminSeeder で Hash::make() を使用するため不要
 
     // スコープ
     public function scopeActive($query)
