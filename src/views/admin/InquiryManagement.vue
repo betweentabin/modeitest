@@ -285,7 +285,7 @@ export default {
       this.error = ''
       
       try {
-        this.authToken = localStorage.getItem('admin_token')
+        this.authToken = localStorage.getItem('adminToken')
         if (!this.authToken) {
           throw new Error('管理者認証が必要です')
         }

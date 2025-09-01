@@ -241,7 +241,7 @@ export default {
   async mounted() {
     console.log('NewAdminDashboard mounted')
     console.log('localStorage keys:', Object.keys(localStorage))
-    console.log('admin_token:', localStorage.getItem('admin_token'))
+    console.log('admin_token:', localStorage.getItem('adminToken'))
     console.log('adminToken:', localStorage.getItem('adminToken'))
     await this.fetchPages()
   },
