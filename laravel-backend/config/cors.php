@@ -23,7 +23,8 @@ return [
         'http://localhost:3000', 
         'http://localhost:8080', 
         'http://localhost:5173',
-        'https://heroic-celebration-production.up.railway.app'
+        'https://heroic-celebration-production.up.railway.app',
+        'https://modeitest.vercel.app'
     ],
 
     'allowed_origins_patterns' => [
