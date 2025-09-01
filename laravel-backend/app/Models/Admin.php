@@ -76,7 +76,7 @@ class Admin extends Authenticatable
     // アクセサー・ミューテーター
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = bcrypt($value);
+        $this->attributes['password'] = \Illuminate\Support\Facades\Hash::make($value);
     }
 
     // スコープ
