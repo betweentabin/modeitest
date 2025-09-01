@@ -2,18 +2,17 @@
 
 echo "🚀 Laravel API Starting..."
 
-# APP_KEYが設定されていない場合は生成
+# APP_KEYの確認（Railway環境変数を使用）
 if [ -z "$APP_KEY" ]; then
-  echo "APP_KEYが設定されていません。生成中..."
-  php artisan key:generate --force
+  echo "⚠️  APP_KEYが設定されていません。Railway環境変数を確認してください。"
+  # Railway環境ではAPP_KEYが自動設定されるはず
 else
-  echo "APP_KEY設定済み"
+  echo "✅ APP_KEY設定済み"
 fi
 
-# データベースディレクトリを作成
-mkdir -p database
-touch database/database.sqlite
-chmod 664 database/database.sqlite
+# PostgreSQL接続確認
+echo "📊 データベース接続確認中..."
+php artisan migrate:status || echo "⚠️  データベース接続に問題があります"
 
 # ストレージディレクトリの権限設定
 mkdir -p storage/logs
