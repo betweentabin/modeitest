@@ -132,12 +132,12 @@ class ApiClient {
   // News API methods
   async getNews(params = {}) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/news?${queryString}` : '/api/news'
+    const endpoint = queryString ? `/api/news-v2?${queryString}` : '/api/news-v2'
     return this.get(endpoint)
   }
 
   async getNewsItem(id) {
-    return this.get(`/api/news/${id}`)
+    return this.get(`/api/news-v2/${id}`)
   }
 
   async createNews(newsData, token) {
@@ -151,16 +151,43 @@ class ApiClient {
   // Publications API methods
   async getPublications(params = {}) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/publications?${queryString}` : '/api/publications'
+    const endpoint = queryString ? `/api/publications-v2?${queryString}` : '/api/publications-v2'
     return this.get(endpoint)
   }
 
   async getPublication(id) {
-    return this.get(`/api/publications/${id}`)
+    return this.get(`/api/publications-v2/${id}`)
   }
 
   async downloadPublication(id) {
-    return this.get(`/api/publications/${id}/download`)
+    return this.get(`/api/publications-v2/${id}/download`)
+  }
+
+  // 経済統計レポート関連のメソッド
+  async getEconomicReports(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/economic-reports?${queryString}` : '/api/economic-reports'
+    return this.get(endpoint)
+  }
+
+  async getEconomicReport(id) {
+    return this.get(`/api/economic-reports/${id}`)
+  }
+
+  async getFeaturedEconomicReport() {
+    return this.get('/api/economic-reports/featured')
+  }
+
+  async getEconomicReportCategories() {
+    return this.get('/api/economic-reports/categories')
+  }
+
+  async getEconomicReportYears() {
+    return this.get('/api/economic-reports/years')
+  }
+
+  async downloadEconomicReport(id) {
+    return this.post(`/api/economic-reports/${id}/download`)
   }
 
   async createPublication(publicationData, token) {

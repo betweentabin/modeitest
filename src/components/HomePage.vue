@@ -593,8 +593,8 @@ export default {
     },
 
     updatePageData(allNews, seminars, publications, notices) {
-      // 最新の5件を取得
-      const latestNews = allNews.slice(0, 5);
+      // 最新の5件を取得 - 配列チェックを追加
+      const latestNews = Array.isArray(allNews) ? allNews.slice(0, 5) : [];
       this.dynamicNewsItems = latestNews; // ニュースデータを保存
       
       // 既存のデータ変数に最新情報をマッピング
@@ -633,19 +633,21 @@ export default {
         }
       }
       
-      // 最新のセミナー数を更新
-      const upcomingSeminars = seminars.filter(s => s.status === 'ongoing' || s.status === 'scheduled');
+      // 最新のセミナー数を更新 - 配列チェックを追加
+      const seminarArray = Array.isArray(seminars) ? seminars : [];
+      const upcomingSeminars = seminarArray.filter(s => s.status === 'ongoing' || s.status === 'scheduled');
       if (upcomingSeminars.length > 0) {
         this.seminar = `セミナー(${upcomingSeminars.length}件)`;
       }
       
-      // 最新の刊行物数を更新
-      if (publications.length > 0) {
-        this.publications1 = `刊行物(${publications.length}件)`;
-        this.allPublications = publications; // 全データを保存
+      // 最新の刊行物数を更新 - 配列チェックを追加
+      const publicationArray = Array.isArray(publications) ? publications : [];
+      if (publicationArray.length > 0) {
+        this.publications1 = `刊行物(${publicationArray.length}件)`;
+        this.allPublications = publicationArray; // 全データを保存
         
         // メイン刊行物（最新）のデータを設定
-        const mainPublication = publications[0];
+        const mainPublication = publicationArray[0];
         if (mainPublication) {
           this.dynamicMainPublication = {
             x22: mainPublication.image_url || this.frame13213174741Props.x22 // デフォルト画像を使用

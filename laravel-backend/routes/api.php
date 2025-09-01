@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\EconomicStatisticsController;
+use App\Http\Controllers\Api\EconomicReportsController;
+use App\Http\Controllers\Admin\EconomicReportManagementController;
 use App\Http\Controllers\Api\FinancialReportsController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\ServicesController;
@@ -91,6 +93,16 @@ Route::prefix('economic-statistics')->group(function () {
     });
 });
 
+// 経済統計レポート関連のルート（パブリック）
+Route::prefix('economic-reports')->name('economic-reports.')->group(function () {
+    Route::get('/', [EconomicReportsController::class, 'index'])->name('index');
+    Route::get('/featured', [EconomicReportsController::class, 'featured'])->name('featured');
+    Route::get('/years', [EconomicReportsController::class, 'availableYears'])->name('years');
+    Route::get('/categories', [EconomicReportsController::class, 'categories'])->name('categories');
+    Route::get('/{id}', [EconomicReportsController::class, 'show'])->name('show');
+    Route::post('/{id}/download', [EconomicReportsController::class, 'download'])->name('download');
+});
+
 Route::prefix('financial-reports')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [FinancialReportsController::class, 'index'])->middleware('membership:standard,premium');
@@ -108,6 +120,13 @@ Route::prefix('news')->group(function () {
     Route::get('/popular', [NewsController::class, 'popular']);
     Route::get('/{slug}', [NewsController::class, 'show']);
     Route::get('/{slug}/related', [NewsController::class, 'related']);
+});
+
+// お知らせ関連API（パブリック）
+Route::prefix('notices')->group(function () {
+    Route::get('/', [NoticeController::class, 'index']);
+    Route::get('/categories', [NoticeController::class, 'categories']);
+    Route::get('/{id}', [NoticeController::class, 'show']);
 });
 
 Route::prefix('services')->group(function () {
@@ -157,6 +176,22 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [PublicationsController::class, 'show']);
             Route::put('/{id}', [PublicationsController::class, 'update']);
             Route::delete('/{id}', [PublicationsController::class, 'destroy']);
+        });
+
+        // 経済統計レポート管理関連のルート
+        Route::prefix('economic-reports')->group(function () {
+            Route::get('/', [EconomicReportManagementController::class, 'index']);
+            Route::get('/{id}', [EconomicReportManagementController::class, 'show']);
+            Route::post('/', [EconomicReportManagementController::class, 'store']);
+            Route::put('/{id}', [EconomicReportManagementController::class, 'update']);
+            Route::delete('/{id}', [EconomicReportManagementController::class, 'destroy']);
+            
+            // 公開状態の変更
+            Route::patch('/{id}/toggle-publish', [EconomicReportManagementController::class, 'togglePublishStatus']);
+            Route::patch('/{id}/toggle-feature', [EconomicReportManagementController::class, 'toggleFeaturedStatus']);
+            
+            // 統計情報
+            Route::get('/stats/overview', [EconomicReportManagementController::class, 'statistics']);
         });
         
         Route::prefix('seminars')->group(function () {

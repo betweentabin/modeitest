@@ -32,6 +32,11 @@
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/economic-reports" class="nav-item" :class="{ active: isActive('/admin/economic-reports') }">
+              経済統計レポート管理
+            </router-link>
+          </li>
+          <li>
             <router-link to="/admin/notices" class="nav-item" :class="{ active: isActive('/admin/notices') }">
               お知らせ管理
             </router-link>

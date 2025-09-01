@@ -41,7 +41,7 @@ class MemberAccessController extends Controller
         $canAccess = $this->checkAccess($user, $requiredLevel);
         
         // アクセスログを記録
-        $this->logAccess($user, $contentType, $id, $canAccess, $requiredLevel);
+        $this->logAccessInternal($user, $contentType, $id, $canAccess, $requiredLevel);
         
         return response()->json([
             'success' => true,
@@ -188,7 +188,7 @@ class MemberAccessController extends Controller
     /**
      * アクセスログを記録（内部用）
      */
-    private function logAccess($user, $contentType, $contentId, $canAccess, $requiredLevel)
+    private function logAccessInternal($user, $contentType, $contentId, $canAccess, $requiredLevel)
     {
         // テーブルが存在する場合のみログを記録
         if (Schema::hasTable('content_access_logs')) {
