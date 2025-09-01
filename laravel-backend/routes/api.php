@@ -290,31 +290,26 @@ Route::get('/debug/admins', function() {
     }
 });
 
-// デバッグ用: 管理者作成エンドポイント（一時的）
-Route::post('/debug/create-admin', function() {
+// デバッグ用: 管理者パスワード修正エンドポイント
+Route::post('/debug/fix-admin-password', function() {
     try {
-        // 既存の admin@example.com があれば削除
-        \App\Models\Admin::where('email', 'admin@example.com')->delete();
+        $admin = \App\Models\Admin::where('email', 'admin@chikugin-cri.co.jp')->first();
         
-        $admin = \App\Models\Admin::create([
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => 'password123', // Admin モデルで自動的にハッシュ化される
-            'full_name' => 'システム管理者',
-            'role' => 'super_admin',
-            'is_active' => true,
-        ]);
+        if (!$admin) {
+            return response()->json(['status' => 'error', 'message' => 'Admin not found']);
+        }
+        
+        // パスワードを直接更新（Admin モデルのミューテーターを回避）
+        $admin->forceFill(['password' => \Illuminate\Support\Facades\Hash::make('admin123')])->save();
+        
+        // 検証
+        $passwordCheck = \Illuminate\Support\Facades\Hash::check('admin123', $admin->fresh()->password);
         
         return response()->json([
             'status' => 'success',
-            'message' => 'Admin created successfully',
-            'admin' => [
-                'id' => $admin->id,
-                'email' => $admin->email,
-                'username' => $admin->username,
-                'role' => $admin->role
-            ],
-            'timestamp' => now()
+            'message' => 'Admin password updated successfully',
+            'password_check' => $passwordCheck,
+            'admin_email' => $admin->email
         ]);
     } catch (\Exception $e) {
         return response()->json([
