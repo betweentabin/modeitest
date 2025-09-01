@@ -172,6 +172,28 @@ export default {
   async mounted() {
     await this.loadSeminar();
   },
+  computed: {
+    canRegister() {
+      if (!this.seminar) return false;
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      return this.$store.getters['auth/canAccess'](requiredLevel);
+    },
+    registrationButtonText() {
+      if (!this.seminar) return 'セミナーを予約する';
+      
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
+      
+      if (canAccess) {
+        return 'セミナーを予約する';
+      } else if (isRestricted) {
+        return `${this.getMembershipText(requiredLevel)}会員限定`;
+      } else {
+        return 'ログインが必要';
+      }
+    }
+  },
   methods: {
     async loadSeminar() {
       try {
@@ -238,6 +260,7 @@ export default {
         image: seminar.featured_image || '/img/image-1.png',
         start_time: seminar.start_time,
         end_time: seminar.end_time,
+        membershipRequirement: seminar.membership_requirement || 'free',
         capacity: seminar.capacity,
         current_participants: seminar.current_participants,
         application_deadline: seminar.application_deadline,
@@ -333,6 +356,31 @@ export default {
       const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
       const weekday = weekdays[date.getDay()];
       return `${year}年${month}月${day}日（${weekday}）`;
+    },
+    getMembershipText(level) {
+      switch (level) {
+        case 'standard':
+          return 'スタンダード';
+        case 'premium':
+          return 'プレミアム';
+        default:
+          return '会員';
+      }
+    },
+    handleRegistration() {
+      if (!this.seminar) return;
+      
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      if (canAccess) {
+        this.registerSeminar();
+      } else if (!this.$store.getters['auth/isAuthenticated']) {
+        this.$router.push('/login');
+      } else {
+        alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
+        this.$router.push('/membership');
+      }
     },
     registerSeminar() {
       // セミナー予約処理
@@ -560,7 +608,27 @@ export default {
   font-size: 1.1rem;
 }
 
+/* 会員制限スタイル */
+.detail-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 2;
+}
 
+.seminar-image {
+  position: relative;
+}
+
+.registration-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+}
+
+.seminar-detail-card {
+  position: relative;
+}
 
 /* Contact Banner styles are now handled by ContactSection component */
 
