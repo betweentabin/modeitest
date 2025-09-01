@@ -355,6 +355,9 @@ Route::post('/debug/fix-admin-password', function() {
     }
 });
 
+// デバッグ用: 管理者自動ログイン
+Route::post('/debug/admin-login', [App\Http\Controllers\Api\AdminAuthController::class, 'debugLogin']);
+
 // デバッグ用: AdminSeederを再実行するエンドポイント
 Route::post('/debug/run-admin-seeder', function() {
     try {

@@ -248,7 +248,7 @@ export default {
         }
 
         // APIから取得
-        this.authToken = localStorage.getItem('adminToken')
+        this.authToken = localStorage.getItem('admin_token')
         if (!this.authToken) {
           throw new Error('管理者認証が必要です')
         }

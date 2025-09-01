@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\NewsArticle;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +16,7 @@ class NoticeController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = NewsArticle::where('type', 'notice');
+        $query = News::where('type', 'notice');
 
         // 検索フィルター
         if ($request->has('search') && $request->search) {
@@ -24,7 +24,7 @@ class NoticeController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
                   ->orWhere('content', 'LIKE', "%{$search}%")
-                  ->orWhere('excerpt', 'LIKE', "%{$search}%");
+                  ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
 
@@ -55,7 +55,7 @@ class NoticeController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $notice = NewsArticle::where('type', 'notice')->findOrFail($id);
+        $notice = News::where('type', 'notice')->findOrFail($id);
         return response()->json($notice);
     }
 
@@ -67,13 +67,13 @@ class NoticeController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'excerpt' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:500',
             'category' => 'required|string|max:100',
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
             'featured' => 'boolean',
-            'priority' => 'integer|min:0|max:10',
-            'tags' => 'nullable|string',
+
+
             'featured_image' => 'nullable|string|max:500',
         ]);
 
@@ -84,20 +84,20 @@ class NoticeController extends Controller
             ], 422);
         }
 
-        $notice = NewsArticle::create([
+        $notice = News::create([
             'title' => $request->title,
-            'slug' => Str::slug($request->title),
+
             'content' => $request->content,
-            'excerpt' => $request->excerpt,
+            'description' => $request->description,
             'category' => $request->category,
             'status' => $request->status,
             'type' => 'notice',
-            'published_at' => $request->published_at ?? ($request->status === 'published' ? now() : null),
-            'featured' => $request->featured ?? false,
-            'priority' => $request->priority ?? 0,
-            'tags' => $request->tags,
+            'published_date' => $request->published_at ?? ($request->status === 'published' ? now()->format('Y-m-d') : now()->format('Y-m-d')),
+            'is_featured' => $request->featured ?? false,
+
+
             'featured_image' => $request->featured_image,
-            'author_id' => auth()->id(),
+            'created_by' => auth()->id(),
         ]);
 
         return response()->json([
@@ -111,18 +111,18 @@ class NoticeController extends Controller
      */
     public function update(Request $request, $id): JsonResponse
     {
-        $notice = NewsArticle::where('type', 'notice')->findOrFail($id);
+        $notice = News::where('type', 'notice')->findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'excerpt' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:500',
             'category' => 'required|string|max:100',
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
             'featured' => 'boolean',
-            'priority' => 'integer|min:0|max:10',
-            'tags' => 'nullable|string',
+
+
             'featured_image' => 'nullable|string|max:500',
         ]);
 
@@ -135,21 +135,21 @@ class NoticeController extends Controller
 
         $updateData = [
             'title' => $request->title,
-            'slug' => Str::slug($request->title),
+
             'content' => $request->content,
-            'excerpt' => $request->excerpt,
+            'description' => $request->description,
             'category' => $request->category,
             'status' => $request->status,
-            'published_at' => $request->published_at,
-            'featured' => $request->featured ?? false,
-            'priority' => $request->priority ?? 0,
-            'tags' => $request->tags,
+            'published_date' => $request->published_at,
+            'is_featured' => $request->featured ?? false,
+
+
             'featured_image' => $request->featured_image,
         ];
 
         // 公開状態に変更された場合は公開日時を設定
-        if ($request->status === 'published' && !$notice->published_at) {
-            $updateData['published_at'] = now();
+        if ($request->status === 'published' && !$notice->published_date) {
+            $updateData['published_date'] = now()->format('Y-m-d');
         }
 
         $notice->update($updateData);
@@ -165,7 +165,7 @@ class NoticeController extends Controller
      */
     public function destroy($id): JsonResponse
     {
-        $notice = NewsArticle::where('type', 'notice')->findOrFail($id);
+        $notice = News::where('type', 'notice')->findOrFail($id);
         $notice->delete();
 
         return response()->json([
@@ -179,11 +179,11 @@ class NoticeController extends Controller
     public function stats(): JsonResponse
     {
         $stats = [
-            'total_notices' => NewsArticle::where('type', 'notice')->count(),
-            'published_notices' => NewsArticle::where('type', 'notice')->where('status', 'published')->count(),
-            'draft_notices' => NewsArticle::where('type', 'notice')->where('status', 'draft')->count(),
-            'featured_notices' => NewsArticle::where('type', 'notice')->where('featured', true)->count(),
-            'recent_notices' => NewsArticle::where('type', 'notice')->where('created_at', '>=', now()->subDays(30))->count(),
+            'total_notices' => News::where('type', 'notice')->count(),
+            'published_notices' => News::where('type', 'notice')->where('status', 'published')->count(),
+            'draft_notices' => News::where('type', 'notice')->where('status', 'draft')->count(),
+            'featured_notices' => News::where('type', 'notice')->where('featured', true)->count(),
+            'recent_notices' => News::where('type', 'notice')->where('created_at', '>=', now()->subDays(30))->count(),
         ];
 
         return response()->json($stats);
@@ -205,13 +205,13 @@ class NoticeController extends Controller
             ], 422);
         }
 
-        $notice = NewsArticle::where('type', 'notice')->findOrFail($id);
+        $notice = News::where('type', 'notice')->findOrFail($id);
         
         $updateData = ['status' => $request->status];
         
         // 公開状態に変更された場合は公開日時を設定
-        if ($request->status === 'published' && !$notice->published_at) {
-            $updateData['published_at'] = now();
+        if ($request->status === 'published' && !$notice->published_date) {
+            $updateData['published_date'] = now()->format('Y-m-d');
         }
         
         $notice->update($updateData);
@@ -227,7 +227,7 @@ class NoticeController extends Controller
      */
     public function categories(): JsonResponse
     {
-        $categories = NewsArticle::where('type', 'notice')
+        $categories = News::where('type', 'notice')
             ->distinct()
             ->pluck('category')
             ->filter()

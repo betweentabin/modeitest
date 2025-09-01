@@ -100,7 +100,7 @@ export default {
             }
           }
 
-          localStorage.setItem('adminToken', mockAdminData.token)
+          localStorage.setItem('admin_token', mockAdminData.token)
           localStorage.setItem('adminUser', JSON.stringify(mockAdminData.user))
           
           this.$router.push('/admin/dashboard')

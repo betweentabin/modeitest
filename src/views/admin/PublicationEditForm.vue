@@ -296,7 +296,7 @@ export default {
     }
   },
   async mounted() {
-    const token = localStorage.getItem('adminToken')
+    const token = localStorage.getItem('admin_token')
     
     if (!token) {
       this.$router.push('/admin/login')
@@ -360,7 +360,7 @@ export default {
       this.$router.push('/admin/publications')
     },
     handleLogout() {
-      localStorage.removeItem('adminToken')
+      localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       // モックサーバーを使用するため、認証ヘッダーの削除は不要
       this.$router.push('/admin/login')

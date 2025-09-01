@@ -77,7 +77,7 @@ export default {
       return this.$route.path === path || this.$route.path.startsWith(path + '/')
     },
     handleLogout() {
-      localStorage.removeItem('adminToken')
+      localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
       this.$router.push('/admin/login')

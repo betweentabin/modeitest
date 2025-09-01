@@ -278,7 +278,7 @@ export default {
     }
   },
   async mounted() {
-    const token = localStorage.getItem('adminToken')
+    const token = localStorage.getItem('admin_token')
     
     if (!token) {
       this.$router.push('/admin/login')
@@ -362,7 +362,7 @@ export default {
       this.$router.push('/admin/notices')
     },
     handleLogout() {
-      localStorage.removeItem('adminToken')
+      localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
       this.$router.push('/admin/login')

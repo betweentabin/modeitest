@@ -50,4 +50,33 @@ class AdminAuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    /**
+     * デバッグ用: 管理者でログインしてトークンを取得
+     */
+    public function debugLogin(Request $request): JsonResponse
+    {
+        $admin = Admin::where('email', 'admin@chikugin-cri.co.jp')
+                     ->where('is_active', true)
+                     ->first();
+
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin account not found'
+            ], 404);
+        }
+
+        // 最終ログイン時刻を更新
+        $admin->update(['last_login_at' => now()]);
+
+        $token = $admin->createToken('debug-admin-token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'user' => $admin,
+            'token' => $token,
+            'message' => 'Debug admin login successful'
+        ]);
+    }
 }

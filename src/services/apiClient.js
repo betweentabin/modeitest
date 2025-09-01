@@ -11,15 +11,34 @@ class ApiClient {
     this.token = token
   }
 
+  // adminトークンを取得
+  getAdminToken() {
+    return localStorage.getItem('admin_token')
+  }
+
+  // 現在のトークンを取得（設定されたトークンまたはadminトークン）
+  getCurrentToken() {
+    return this.token || this.getAdminToken()
+  }
+
+  // adminとして認証されているかチェック
+  isAdminAuthenticated() {
+    return !!this.getAdminToken()
+  }
+
   // Generic request method
   async request(endpoint, options = {}) {
     const url = getApiUrl(endpoint)
+    
+    // adminトークンまたは設定されたトークンを自動取得
+    const adminToken = localStorage.getItem('admin_token')
+    const authToken = this.token || adminToken
     
     const config = {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
         ...options.headers
       },
       mode: 'cors', // CORSモードを明示的に指定
@@ -376,6 +395,23 @@ class ApiClient {
   
   async getPageContent(pageKey) {
     return this.get(`/api/public/pages/${pageKey}`)
+  }
+
+  // デバッグ用: 管理者トークンを自動取得
+  async getDebugAdminToken() {
+    try {
+      const response = await this.post('/api/debug/admin-login')
+      if (response.success && response.token) {
+        // localStorageに保存して次回以降も使用可能に
+        localStorage.setItem('admin_token', response.token)
+        localStorage.setItem('adminUser', JSON.stringify(response.user))
+        return response.token
+      }
+      return null
+    } catch (error) {
+      console.error('Failed to get debug admin token:', error)
+      return null
+    }
   }
 }
 

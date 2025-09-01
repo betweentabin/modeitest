@@ -107,7 +107,7 @@ export default {
         const response = await axios.post(getApiUrl('/api/admin/login'), payload);
         console.log('API response received:', response); // デバッグ用ログ
 
-        localStorage.setItem('adminToken', response.data.token)
+        localStorage.setItem('admin_token', response.data.token)
         localStorage.setItem('adminUser', JSON.stringify(response.data.user))
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
