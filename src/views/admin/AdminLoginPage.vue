@@ -79,14 +79,19 @@ export default {
   },
   methods: {
     async handleLogin() {
+      console.log('handleLogin method triggered.'); // デバッグ用ログ
       this.loading = true
       this.error = ''
 
+      const payload = {
+        email: this.email,
+        password: this.password
+      };
+      console.log('Sending payload to API:', payload); // デバッグ用ログ
+
       try {
-        const response = await axios.post(getApiUrl('/api/admin/login'), {
-          email: this.email,
-          password: this.password
-        })
+        const response = await axios.post(getApiUrl('/api/admin/login'), payload);
+        console.log('API response received:', response); // デバッグ用ログ
 
         localStorage.setItem('adminToken', response.data.token)
         localStorage.setItem('adminUser', JSON.stringify(response.data.user))
@@ -95,6 +100,12 @@ export default {
         
         this.$router.push('/admin/dashboard')
       } catch (err) {
+        console.error('Login API error:', err); // デバッグ用エラーログ
+        if (err.response) {
+          console.error('Error response data:', err.response.data);
+          console.error('Error response status:', err.response.status);
+        }
+        
         if (err.response?.status === 403) {
           this.error = '管理者権限がありません'
         } else if (err.response?.data?.message) {
