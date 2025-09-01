@@ -51,6 +51,7 @@ php artisan route:clear || echo "ルートキャッシュクリア失敗"
 # php artisan route:cache || echo "ルートキャッシュ失敗" # 一時的に無効化
 
 # Laravel 起動
-# Railway の PORT 環境変数を使用（通常は 8080）
-echo "✅ Starting Laravel server on port 8080"
-php artisan serve --host=0.0.0.0 --port=8080
+# ポート環境変数を強制的に8080に設定
+export PORT=8080
+echo "✅ Starting Laravel server on port $PORT"
+php artisan serve --host=0.0.0.0 --port=$PORT
