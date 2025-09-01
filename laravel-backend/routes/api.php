@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\MemberAccessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -246,10 +247,43 @@ Route::prefix('inquiries-v2')->group(function () {
     Route::post('/', [InquiryController::class, 'store']); // 公開：お問い合わせ送信
 });
 
+// 会員アクセス権限API
+Route::prefix('member')->middleware('auth:sanctum')->group(function () {
+    Route::get('/can-access/{type}/{id}', [MemberAccessController::class, 'canAccess']);
+    Route::post('/log-access', [MemberAccessController::class, 'logAccess']);
+    Route::get('/upgrade-history', [MemberAccessController::class, 'getUpgradeHistory']);
+});
+
 Route::prefix('publications')->group(function () {
     Route::get('/', [PublicationsController::class, 'index']);
     Route::get('/featured', [PublicationsController::class, 'featured']);
     Route::get('/latest', [PublicationsController::class, 'latest']);
     Route::get('/{id}', [PublicationsController::class, 'show']);
     Route::get('/{id}/download', [PublicationsController::class, 'download'])->middleware('auth:sanctum');
+});
+
+// デバッグ用: データベース接続確認エンドポイント
+Route::get('/debug/database', function() {
+    try {
+        $members = DB::table('members')->select('id', 'email', 'membership_type')->take(3)->get();
+        $publications = DB::table('publications')->select('id', 'title', 'membership_level')->take(3)->get();
+        $seminars = DB::table('seminars')->select('id', 'title', 'membership_requirement')->take(3)->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'database_connection' => 'OK',
+            'sample_data' => [
+                'members' => $members,
+                'publications' => $publications,
+                'seminars' => $seminars
+            ],
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ], 500);
+    }
 });
