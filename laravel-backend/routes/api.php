@@ -271,6 +271,25 @@ Route::prefix('publications')->group(function () {
     Route::get('/{id}/download', [PublicationsController::class, 'download'])->middleware('auth:sanctum');
 });
 
+// デバッグ用: Admin テーブル確認エンドポイント
+Route::get('/debug/admins', function() {
+    try {
+        $admins = \App\Models\Admin::select('id', 'username', 'email', 'full_name', 'role', 'is_active')->get();
+        return response()->json([
+            'status' => 'success',
+            'admin_count' => $admins->count(),
+            'admins' => $admins,
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ]);
+    }
+});
+
 // デバッグ用: データベース接続確認エンドポイント
 Route::get('/debug/database', function() {
     try {
