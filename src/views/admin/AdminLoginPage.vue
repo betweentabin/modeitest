@@ -77,6 +77,20 @@ export default {
       error: ''
     }
   },
+  mounted() {
+    // Vueのイベントシステムが機能しない場合のフォールバック
+    const form = this.$el.querySelector('.login-form');
+    if (form) {
+      console.log('Manually adding submit event listener to form.');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('Manual form submission triggered.');
+        this.handleLogin();
+      });
+    } else {
+      console.error('Login form not found in mounted hook.');
+    }
+  },
   methods: {
     async handleLogin() {
       console.log('handleLogin method triggered.'); // デバッグ用ログ
