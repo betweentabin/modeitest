@@ -128,6 +128,15 @@ Route::prefix('seminars')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login']);
     
+    // テスト用: 認証なしエンドポイント
+    Route::get('/test', function() {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Admin API is working!',
+            'timestamp' => now()
+        ]);
+    });
+    
     Route::middleware(['auth:sanctum', 'is.admin'])->group(function () {
         Route::get('/me', [AdminAuthController::class, 'me']);
         Route::post('/logout', [AdminAuthController::class, 'logout']);
