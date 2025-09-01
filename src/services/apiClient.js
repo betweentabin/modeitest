@@ -279,7 +279,7 @@ class ApiClient {
 
   async getAdminNews(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/news?${queryString}` : '/api/admin/news'
+    const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'
     return this.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -289,7 +289,7 @@ class ApiClient {
 
   async getAdminPublications(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/publications?${queryString}` : '/api/admin/publications'
+    const endpoint = queryString ? `/api/admin/publications-v2?${queryString}` : '/api/admin/publications-v2'
     return this.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`
