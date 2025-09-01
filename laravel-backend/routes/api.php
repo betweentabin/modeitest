@@ -320,6 +320,25 @@ Route::post('/debug/fix-admin-password', function() {
     }
 });
 
+// デバッグ用: AdminSeederを再実行するエンドポイント
+Route::post('/debug/run-admin-seeder', function() {
+    try {
+        Artisan::call('db:seed', ['--class' => 'AdminSeeder', '--force' => true]);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'AdminSeeder executed successfully.',
+            'output' => Artisan::output(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
+
 // デバッグ用: ログインテストエンドポイント
 Route::post('/debug/login-test', function(Request $request) {
     try {
