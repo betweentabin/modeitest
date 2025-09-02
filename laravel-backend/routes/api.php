@@ -358,6 +358,52 @@ Route::post('/debug/fix-admin-password', function() {
 // デバッグ用: 管理者自動ログイン
 Route::post('/debug/admin-login', [App\Http\Controllers\Api\AdminAuthController::class, 'debugLogin']);
 
+// デバッグ用: テーブル構造確認
+Route::get('/debug/tables', function() {
+    try {
+        $tables = [];
+        
+        // Newsテーブルの存在確認と構造
+        if (Schema::hasTable('news')) {
+            $columns = Schema::getColumnListing('news');
+            $count = \App\Models\News::count();
+            $tables['news'] = [
+                'exists' => true,
+                'columns' => $columns,
+                'count' => $count,
+                'sample' => \App\Models\News::first()
+            ];
+        } else {
+            $tables['news'] = ['exists' => false];
+        }
+        
+        // NewsArticlesテーブルの存在確認
+        if (Schema::hasTable('news_articles')) {
+            $columns = Schema::getColumnListing('news_articles');
+            $count = \App\Models\NewsArticle::count();
+            $tables['news_articles'] = [
+                'exists' => true,
+                'columns' => $columns,
+                'count' => $count
+            ];
+        } else {
+            $tables['news_articles'] = ['exists' => false];
+        }
+        
+        return response()->json([
+            'status' => 'success',
+            'tables' => $tables,
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ]);
+    }
+});
+
 // デバッグ用: AdminSeederを再実行するエンドポイント
 Route::post('/debug/run-admin-seeder', function() {
     try {

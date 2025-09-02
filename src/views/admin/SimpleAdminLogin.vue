@@ -48,9 +48,8 @@
 
       <div style="margin-top: 1rem; padding: 0.75rem; background-color: #f3f4f6; border-radius: 6px;">
         <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">
-          テスト用アカウント:<br>
-          Email: admin@example.com<br>
-          Password: password123
+          デバッグ用自動ログイン機能付き<br>
+          ログインボタンを押すと自動的にデータベースの管理者でログインします
         </p>
       </div>
     </div>
@@ -60,16 +59,24 @@
 <script>
 import axios from 'axios'
 import { getApiUrl } from '@/config/api'
+import apiClient from '@/services/apiClient'
 
 export default {
   name: 'SimpleAdminLogin',
   data() {
     return {
-      email: 'admin@example.com',
-      password: 'password123',
+      email: 'admin@chikugin-cri.co.jp',
+      password: 'admin123',
       loading: false,
       error: ''
     }
+  },
+  mounted() {
+    // デバッグ用：既存のトークンをクリア
+    console.log('Clearing old tokens...')
+    localStorage.removeItem('admin_token')
+    localStorage.removeItem('adminUser')
+    localStorage.removeItem('adminToken') // 古いキーも削除
   },
   methods: {
     async handleLogin() {
@@ -77,27 +84,56 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.post(getApiUrl('/api/admin/login'), {
-          email: this.email,
-          password: this.password
-        })
-
-        localStorage.setItem('admin_token', response.data.token)
-        localStorage.setItem('adminUser', JSON.stringify(response.data.user))
+        // まずデバッグエンドポイントで自動ログインを試みる
+        console.log('Trying debug login first...')
+        const debugResponse = await axios.post(getApiUrl('/api/debug/admin-login'))
         
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
-        
-        alert('ログイン成功！ダッシュボードに遷移します。')
-        this.$router.push('/admin/dashboard')
-      } catch (err) {
-        if (err.response?.status === 403) {
-          this.error = '管理者権限がありません'
-        } else if (err.response?.data?.message) {
-          this.error = err.response.data.message
-        } else {
-          this.error = 'ログインに失敗しました: ' + (err.message || '不明なエラー')
+        if (debugResponse.data.success) {
+          console.log('Debug login successful!')
+          localStorage.setItem('admin_token', debugResponse.data.token)
+          localStorage.setItem('adminUser', JSON.stringify(debugResponse.data.user))
+          
+          // apiClientにもトークンを設定
+          apiClient.setToken(debugResponse.data.token)
+          
+          axios.defaults.headers.common['Authorization'] = `Bearer ${debugResponse.data.token}`
+          
+          alert('ログイン成功！ダッシュボードに遷移します。')
+          this.$router.push('/admin/dashboard')
+          return
         }
-        console.error('Login error:', err)
+      } catch (debugErr) {
+        console.log('Debug login failed, trying normal login...', debugErr.message)
+        
+        // デバッグログインが失敗した場合、通常のログインを試みる
+        try {
+          const response = await axios.post(getApiUrl('/api/admin/login'), {
+            email: this.email,
+            password: this.password
+          })
+
+          localStorage.setItem('admin_token', response.data.token)
+          localStorage.setItem('adminUser', JSON.stringify(response.data.user))
+          
+          // apiClientにもトークンを設定
+          apiClient.setToken(response.data.token)
+          
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
+          
+          alert('ログイン成功！ダッシュボードに遷移します。')
+          this.$router.push('/admin/dashboard')
+        } catch (err) {
+          if (err.response?.status === 422) {
+            this.error = 'メールアドレスまたはパスワードが正しくありません'
+          } else if (err.response?.status === 403) {
+            this.error = '管理者権限がありません'
+          } else if (err.response?.data?.message) {
+            this.error = err.response.data.message
+          } else {
+            this.error = 'ログインに失敗しました。データベースの管理者アカウントを確認してください。'
+          }
+          console.error('Login error:', err)
+        }
       } finally {
         this.loading = false
       }
