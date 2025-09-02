@@ -415,6 +415,11 @@ export default {
     await this.loadPublications();
   },
   computed: {
+    ...mapGetters([
+      'isAuthenticated',
+      'canAccess',
+      'canViewButRestricted'
+    ]),
     filteredPublications() {
       const filtered = this.publications.filter(pub => {
         const yearMatch = this.selectedYear === 'all' || pub.year === this.selectedYear;
@@ -537,12 +542,12 @@ export default {
     },
     canAccessPublication(publication) {
       const requiredLevel = publication.membershipLevel || 'free';
-      return this.$store.getters['auth/canAccess'](requiredLevel);
+      return this.canAccess(requiredLevel);
     },
     getDownloadButtonText(publication) {
       const requiredLevel = publication.membershipLevel || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
-      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
+      const canAccess = this.canAccess(requiredLevel);
+      const isRestricted = this.canViewButRestricted(requiredLevel);
       
       if (canAccess) {
         return 'PDFダウンロード';
@@ -564,11 +569,11 @@ export default {
     },
     handleDownload(publication) {
       const requiredLevel = publication.membershipLevel || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const canAccess = this.canAccess(requiredLevel);
       
       if (canAccess) {
         this.downloadPublication(publication.id);
-      } else if (!this.$store.getters['auth/isAuthenticated']) {
+      } else if (!this.isAuthenticated) {
         this.$router.push('/login');
       } else {
         alert(`この刊行物は${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);

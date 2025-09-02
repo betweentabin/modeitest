@@ -102,50 +102,51 @@
               </div>
             </div>
           </div>
-          <div class="content-view">
-            <div class="frame-1321317480">
-              <div class="group-10">
-                <div class="infomation-1 valign-text-middle inter-bold-black-48px">{{ infomation2 }}</div>
-                <div class="flex-row">
-                  <img
-                    class="vector-6"
-                    :src="vector63"
-                    alt="Vector 6"
-                  />
-                  <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
-                </div>
-              </div>
-              <x-button3 />
-            </div>
-            <div class="frame-1321317467">
-                             <article 
-                 v-for="(item, index) in dynamicNewsItems.slice(0, 5)" 
-                 :key="index"
-                 class="news-item"
-                 @click="goToNewsDetail(index)"
-                 style="cursor: pointer;"
-               >
-                 <div class="news-meta">
-                   <div class="news-date-category-row">
-                     <span class="news-date">{{ formatDate(item.date) }}</span>
-                     <span :class="['news-category', getCategoryClass(item)]">
-                       {{ getCategoryLabel(item) }}
-                     </span>
-                   </div>
-                   <h3 class="news-title">{{ item.title }}</h3>
+                     <div class="content-view">
+             <div class="frame-1321317480">
+               <div class="group-10">
+                 <div class="infomation-1 valign-text-middle inter-bold-black-48px">{{ infomation2 }}</div>
+                 <div class="flex-row">
+                   <img
+                     class="vector-6"
+                     :src="vector63"
+                     alt="Vector 6"
+                   />
+                   <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
                  </div>
-                 <div class="news-content">
-                   <div class="news-arrow">
-                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                       <circle cx="12" cy="12" r="11" fill="#DA5761"/>
-                       <path d="M9 7L15 12L9 17" stroke="white" stroke-width="2" fill="none"/>
-                     </svg>
-                   </div>
-                 </div>
-               </article>
-            </div>
-          </div>
-        </div>
+               </div>
+               <x-button3 class="desktop-button" />
+             </div>
+             <div class="frame-1321317467">
+                              <article 
+                  v-for="(item, index) in dynamicNewsItems.slice(0, 5)" 
+                  :key="index"
+                  class="news-item"
+                  @click="goToNewsDetail(index)"
+                  style="cursor: pointer;"
+                >
+                  <div class="news-meta">
+                    <div class="news-date-category-row">
+                      <span class="news-date">{{ formatDate(item.date) }}</span>
+                      <span :class="['news-category', getCategoryClass(item)]">
+                        {{ getCategoryLabel(item) }}
+                      </span>
+                    </div>
+                    <h3 class="news-title">{{ item.title }}</h3>
+                  </div>
+                  <div class="news-content">
+                    <div class="news-arrow">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="11" fill="#DA5761"/>
+                        <path d="M9 7L15 12L9 17" stroke="white" stroke-width="2" fill="none"/>
+                      </svg>
+                    </div>
+                  </div>
+                                </article>
+               </div>
+               <x-button3 class="mobile-button" />
+             </div>
+           </div>
         
         <!-- Contact CTA Section -->
         <ContactSection />
@@ -1867,6 +1868,7 @@ export default {
   height: 123px;
   position: relative;
   width: 100%;
+  aspect-ratio: 318 / 123;
 }
 
 .overlap-group-2 {
@@ -2297,7 +2299,7 @@ export default {
   
   .hero-title,
   .hero-subtitle {
-    font-size: 32px;
+    font-size: 28px;
   }
   
   .hero-button-text {
@@ -2309,6 +2311,8 @@ export default {
     flex-wrap: wrap;
     gap: 15px;
     margin: -200px auto 0;
+    display: flex;
+    flex-direction: row;
   }
   
   .frame-1321317490,
@@ -2384,6 +2388,12 @@ export default {
     width: 100%;
   }
   
+  /* 768px以下でoverlap-group-1の縦横比を維持 */
+  .overlap-group-1 {
+    aspect-ratio: 318 / 123;
+    height: auto;
+  }
+  
   .overlap-group-container {
     align-items: center;
   }
@@ -2411,6 +2421,36 @@ export default {
     gap: 0;
     margin-bottom: 0;
   }
+  
+  /* 900px以下でボタンの表示制御 */
+  .desktop-button {
+    display: none;
+  }
+  
+  .mobile-button {
+    display: block;
+  }
+  
+  /* 900px以下でmobile-buttonのテキストとアイコンを横並びに */
+  .mobile-button.button-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  
+  .frame-1321317467 {
+    margin-bottom: 0px;
+  }
+  
+  /* 900px以下でoverlap-group-1の縦横比を維持 */
+  .overlap-group-1 {
+    aspect-ratio: 318 / 123;
+    height: auto;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -2425,7 +2465,7 @@ export default {
   
   .hero-title,
   .hero-subtitle {
-    font-size: 24px;
+    font-size: 22px;
   }
   
   .hero-button-wrapper {
@@ -2452,6 +2492,29 @@ export default {
     flex-wrap: wrap;
     gap: 10px;
     margin: -120px auto 0;
+  }
+  
+  /* 768px以下でcontent-view-3を2列に */
+  .content-view-3 {
+    padding: 30px 20px;
+    gap: 30px;
+  }
+  
+  .frame-1321317457-1 {
+    display: flex !important;
+    gap: 15px;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .image-1,
+  .image-2,
+  .image-3,
+  .image-4 {
+    width: calc(50% - 7.5px) !important;
+    height: auto;
+    flex-shrink: 0;
   }
   
   .frame-1321317490,
@@ -2750,7 +2813,7 @@ export default {
   
   .hero-title,
   .hero-subtitle {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   .hero-button-wrapper {
@@ -2772,11 +2835,46 @@ export default {
     width: 10px;
   }
   
+  /* 480px以下でボタンの表示制御 */
+  .desktop-button {
+    display: none !important;
+  }
+  
+  .mobile-button {
+    display: block !important;
+  }
+  
   .frame-1321317457 {
     padding: 10px;
     margin-top: -80px;
     flex-wrap: wrap;
     gap: 8px;
+  }
+  
+  /* 480px以下でoverlap-group-1の縦横比を維持 */
+  .overlap-group-1 {
+    aspect-ratio: 318 / 123;
+    height: auto;
+  }
+  
+  /* 480px以下でcontent-view-3の画像を100%幅に */
+  .content-view-3 {
+    padding: 20px 10px;
+    gap: 20px;
+  }
+  
+  .frame-1321317457-1 {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .image-1,
+  .image-2,
+  .image-3,
+  .image-4 {
+    width: 100%;
+    height: auto;
   }
   
   .frame-1321317490,
@@ -3007,6 +3105,15 @@ export default {
     gap: 10px !important;
   }
   
+  /* 900px以上でボタンの表示制御 */
+  .desktop-button {
+    display: block;
+  }
+  
+  .mobile-button {
+    display: none;
+  }
+  
      /* News List Responsive for 480px */
    .news-item {
      padding: 10px 10px;
@@ -3050,6 +3157,31 @@ export default {
    .news-category {
      margin-bottom: 0;
    }
+
+   .vector-13, 
+  .vector-14-1 {
+    height: 40px;
+    margin-top: 20px;
+  }
+}
+
+/* 900px以上でボタンの表示制御 */
+@media (min-width: 900px) {
+  .desktop-button {
+    display: block;
+  }
+  
+  .mobile-button {
+    display: none;
+  }
+  
+  /* 900px以上でdesktop-buttonのテキストとアイコンを横並びに */
+  .desktop-button.button-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 /* タッチデバイス用のホバー効果 */
