@@ -2285,6 +2285,10 @@ export default {
     scrollbar-width: thin;
     -webkit-overflow-scrolling: touch;
   }
+
+  .frame-1321317487 {
+    height: auto;
+  }
 }
 
 @media (max-width: 900px) {
@@ -2445,12 +2449,22 @@ export default {
     margin-bottom: 0px;
   }
   
-  /* 900px以下でoverlap-group-1の縦横比を維持 */
+  /* 900px以下でoverlap-group-1の高さをoverlap-group3-1に合わせる */
   .overlap-group-1 {
-    aspect-ratio: 318 / 123;
+    height: 122px !important;
+    width: 100% !important;
+    aspect-ratio: auto;
+  }
+  
+  .overlap-group-1 img {
+    height: 122px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  .frame-1321317487 {
     height: auto;
   }
-
 }
 
 @media (max-width: 768px) {
@@ -2579,6 +2593,19 @@ export default {
   .group-30 {
     min-width: 200px;
     margin-top: 20px;
+  }
+  
+  /* 768px以下でoverlap-group-1の高さをoverlap-group3-1に合わせる */
+  .overlap-group-1 {
+    height: 122px !important;
+    width: 100% !important;
+    aspect-ratio: auto;
+  }
+  
+  .overlap-group-1 img {
+    height: 122px !important;
+    width: 100% !important;
+    object-fit: cover !important;
   }
   
   /* News List Responsive for 768px */
@@ -2745,6 +2772,19 @@ export default {
   .overlap-group3-1,
   .overlap-group-1 {
     min-height: 100px;
+  }
+  
+  /* 480px以下でoverlap-group-1の高さをoverlap-group3-1に合わせる */
+  .overlap-group-1 {
+    height: 122px !important;
+    width: 100% !important;
+    aspect-ratio: auto;
+  }
+  
+  .overlap-group-1 img {
+    height: 122px !important;
+    width: 100% !important;
+    object-fit: cover !important;
   }
   
   .overlap-group2,
@@ -3161,6 +3201,9 @@ export default {
    .vector-13, 
   .vector-14-1 {
     height: 40px;
+  }
+
+  .vector-13 {
     margin-top: 20px;
   }
 }

@@ -131,6 +131,7 @@ export default {
   max-width: 692px;
   flex-shrink: 0;
   border-radius: 10px;
+  aspect-ratio: 692 / 400;
 }
 
 .frame-1321317466 {
@@ -199,6 +200,8 @@ export default {
     width: 100% !important;
     max-width: none !important;
     order: 2 !important;
+    height: auto !important;
+    aspect-ratio: 692 / 400 !important;
   }
   
   .frame-1321317466 {
@@ -234,6 +237,11 @@ export default {
     gap: 25px !important;
   }
   
+  .rectangle-3 {
+    height: auto !important;
+    aspect-ratio: 692 / 400 !important;
+  }
+  
   .group-container {
     gap: 22px !important;
   }
@@ -262,6 +270,11 @@ export default {
     gap: 20px !important;
   }
   
+  .rectangle-3 {
+    height: auto !important;
+    aspect-ratio: 692 / 400 !important;
+  }
+  
   .group-container {
     gap: 20px !important;
   }
@@ -288,6 +301,11 @@ export default {
   
   .frame-1321317467-1 {
     gap: 18px !important;
+  }
+  
+  .rectangle-3 {
+    height: auto !important;
+    aspect-ratio: 692 / 400 !important;
   }
   
   .group-container {
