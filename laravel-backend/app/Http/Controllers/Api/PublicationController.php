@@ -74,8 +74,14 @@ class PublicationController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $publication = Publication::where('is_published', true)
-                ->findOrFail($id);
+            $isAdminContext = request() && (
+                str_starts_with(request()->path(), 'api/admin/') ||
+                (request()->user() && method_exists(request()->user(), 'isAdmin') && request()->user()->isAdmin())
+            );
+
+            $publication = $isAdminContext
+                ? Publication::findOrFail($id)
+                : Publication::where('is_published', true)->findOrFail($id);
 
             // ビュー数をインクリメント
             $publication->increment('view_count');
@@ -84,7 +90,7 @@ class PublicationController extends Controller
                 'success' => true,
                 'data' => [
                     'publication' => $publication,
-                    'formatted_date' => $publication->publication_date->format('Y.m.d'),
+                    'formatted_date' => $publication->publication_date?->format('Y.m.d'),
                     'formatted_price' => $publication->price ? '¥' . number_format($publication->price) : '無料',
                     'can_download' => $publication->is_downloadable && $publication->file_url
                 ]

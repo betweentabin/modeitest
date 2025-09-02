@@ -337,6 +337,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import { getApiUrl } from '@/config/api'
 import { useAdminAuth } from '../../composables/useAdminAuth'
 import apiClient from '../../services/apiClient'
 
@@ -514,9 +515,10 @@ export default {
           formData.append('file', this.reportFile)
         }
         
-        const url = this.editingReport 
+        const endpoint = this.editingReport 
           ? `/api/admin/economic-reports/${this.editingReport.id}`
           : '/api/admin/economic-reports'
+        const url = getApiUrl(endpoint)
         
         const method = this.editingReport ? 'PUT' : 'POST'
         
@@ -553,7 +555,7 @@ export default {
       }
       
       try {
-        const response = await fetch(`/api/admin/economic-reports/${report.id}`, {
+        const response = await fetch(getApiUrl(`/api/admin/economic-reports/${report.id}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${this.token}`,
@@ -578,7 +580,7 @@ export default {
 
     async togglePublished(report) {
       try {
-        const response = await fetch(`/api/admin/economic-reports/${report.id}/toggle-publish`, {
+        const response = await fetch(getApiUrl(`/api/admin/economic-reports/${report.id}/toggle-publish`), {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${this.token}`,
@@ -602,7 +604,7 @@ export default {
 
     async toggleFeatured(report) {
       try {
-        const response = await fetch(`/api/admin/economic-reports/${report.id}/toggle-feature`, {
+        const response = await fetch(getApiUrl(`/api/admin/economic-reports/${report.id}/toggle-feature`), {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${this.token}`,
