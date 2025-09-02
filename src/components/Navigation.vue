@@ -203,7 +203,7 @@ export default {
   }
   
   .main-nav {
-    min-width: 180px;
+    min-width: auto;
     gap: 8px;
   }
 }

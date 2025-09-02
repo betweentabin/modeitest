@@ -153,56 +153,13 @@ export default {
     };
   },
   mounted() {
-    this.adjustRectangleHeight();
-    this.adjustAboutImageHeight();
-    this.adjustServiceImageHeight();
-    window.addEventListener('resize', this.adjustRectangleHeight);
-    window.addEventListener('resize', this.adjustAboutImageHeight);
-    window.addEventListener('resize', this.adjustServiceImageHeight);
+    // JavaScriptによる画像の高さ調整を削除
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.adjustRectangleHeight);
-    window.removeEventListener('resize', this.adjustAboutImageHeight);
-    window.removeEventListener('resize', this.adjustServiceImageHeight);
+    // JavaScriptによる画像の高さ調整を削除
   },
   methods: {
-    adjustRectangleHeight() {
-      this.$nextTick(() => {
-        const frame1321317466 = this.$el.querySelector('.frame-1321317466');
-        const rectangle3 = this.$el.querySelector('.rectangle-3');
-        
-        if (frame1321317466 && rectangle3) {
-          const frameHeight = frame1321317466.offsetHeight;
-          rectangle3.style.height = frameHeight + 'px';
-        }
-      });
-    },
-    adjustAboutImageHeight() {
-      this.$nextTick(() => {
-        const aboutText = this.$el.querySelector('.about-text');
-        const aboutImage = this.$el.querySelector('.about-image');
-        
-        if (aboutText && aboutImage) {
-          const textHeight = aboutText.offsetHeight;
-          aboutImage.style.height = textHeight + 'px';
-        }
-      });
-    },
-    adjustServiceImageHeight() {
-      this.$nextTick(() => {
-        const serviceCards = this.$el.querySelectorAll('.service-card');
-        
-        serviceCards.forEach(card => {
-          const serviceContent = card.querySelector('.service-content');
-          const serviceImage = card.querySelector('.service-image');
-          
-          if (serviceContent && serviceImage) {
-            const contentHeight = serviceContent.offsetHeight;
-            serviceImage.style.height = contentHeight + 'px';
-          }
-        });
-      });
-    },
+    // JavaScriptによる画像の高さ調整を削除
     handleContactClick() {
       this.$router.push('/contact');
     },
@@ -406,35 +363,255 @@ export default {
 
 
 /* Responsive Design */
-@media (max-width: 900px) {
-  .about-institute-page {
-    overflow-x: auto;
+@media (max-width: 1200px) {
+  .about-section, .service-section {
+    padding: 60px 40px 40px 40px;
+    gap: 30px;
   }
   
-  .about-section, .service-section {
-    min-width: 900px;
+  .section-title {
+    font-size: 32px;
+  }
+  
+  .main-headline {
+    font-size: 48px;
+  }
+  
+  .about-description {
+    font-size: 18px;
+  }
+  
+  .about-text {
+    padding: 40px;
+    gap: 30px;
+  }
+  
+  .service-content {
+    padding: 30px;
+    gap: 15px;
+  }
+  
+  .service-title {
+    font-size: 22px;
   }
 }
 
-@media (max-width: 768px) {
-
+@media (max-width: 900px) {
+  .about-section, .service-section {
+    padding: 50px 30px 30px 30px;
+    gap: 25px;
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .section-header {
+    gap: 20px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .divider-line {
+    width: 50px;
+  }
+  
+  .divider-text {
+    font-size: 18px;
+  }
   
   .about-content {
     flex-direction: column;
+    gap: 0;
   }
   
-  .about-image, .about-text {
+  .about-image {
     width: 100%;
+    border-radius: 20px 20px 0 0;
+    height: 300px;
+  }
+  
+  .about-text {
+    width: 100%;
+    padding: 30px;
+    gap: 25px;
+    border-radius: 0 0 20px 20px;
+  }
+  
+  .main-headline {
+    font-size: 36px;
+    text-align: center;
+  }
+  
+  .about-description {
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .service-cards {
+    gap: 30px;
   }
   
   .service-card {
     flex-direction: column;
   }
   
-  .service-image, .service-content {
+  .service-image {
     width: 100%;
+    height: 250px;
   }
   
+  .service-content {
+    width: 100%;
+    padding: 25px;
+    gap: 15px;
+  }
+  
+  .service-title {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .service-description {
+    font-size: 15px;
+    text-align: center;
+  }
+  
+  .service-details {
+    font-size: 13px;
+    padding: 15px;
+  }
+}
 
+@media (max-width: 768px) {
+  .about-section, .service-section {
+    padding: 40px 20px 20px 20px;
+    gap: 20px;
+  }
+  
+  .section-header {
+    gap: 15px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+  }
+  
+  .divider-line {
+    width: 40px;
+  }
+  
+  .divider-text {
+    font-size: 16px;
+  }
+  
+  .about-image {
+    height: 250px;
+  }
+  
+  .about-text {
+    padding: 25px 20px;
+    gap: 20px;
+  }
+  
+  .main-headline {
+    font-size: 28px;
+  }
+  
+  .about-description {
+    font-size: 14px;
+  }
+  
+  .service-cards {
+    gap: 25px;
+  }
+  
+  .service-image {
+    height: 200px;
+  }
+  
+  .service-content {
+    padding: 20px;
+    gap: 12px;
+  }
+  
+  .service-title {
+    font-size: 18px;
+  }
+  
+  .service-description {
+    font-size: 14px;
+  }
+  
+  .service-details {
+    font-size: 12px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section, .service-section {
+    padding: 30px 15px 15px 15px;
+    gap: 15px;
+  }
+  
+  .section-header {
+    gap: 12px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .divider-line {
+    width: 30px;
+  }
+  
+  .divider-text {
+    font-size: 14px;
+  }
+  
+  .about-image {
+    height: 200px;
+  }
+  
+  .about-text {
+    padding: 20px 15px;
+    gap: 15px;
+  }
+  
+  .main-headline {
+    font-size: 22px;
+  }
+  
+  .about-description {
+    font-size: 13px;
+  }
+  
+  .service-cards {
+    gap: 20px;
+  }
+  
+  .service-image {
+    height: 180px;
+  }
+  
+  .service-content {
+    padding: 15px;
+    gap: 10px;
+  }
+  
+  .service-title {
+    font-size: 16px;
+  }
+  
+  .service-description {
+    font-size: 13px;
+  }
+  
+  .service-details {
+    font-size: 11px;
+    padding: 10px;
+  }
 }
 </style>

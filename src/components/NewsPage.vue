@@ -55,6 +55,21 @@
             ちくぎん地域経済レポート
           </button>
         </div>
+        
+        <!-- モバイル用プルダウンメニュー -->
+        <div class="news-categories-mobile">
+          <select 
+            v-model="selectedCategory" 
+            @change="filterCategory(selectedCategory)"
+            class="category-select"
+          >
+            <option value="all">全て</option>
+            <option value="research">ちくぎん地域経済レポート</option>
+            <option value="quarterly">ちくぎん地域経済レポート</option>
+            <option value="special">ちくぎん地域経済レポート</option>
+            <option value="free">ちくぎん地域経済レポート</option>
+          </select>
+        </div>
 
         <div class="news-list" v-if="!loading">
         <article 
@@ -410,6 +425,37 @@ export default {
   width: 100%;
 }
 
+.news-categories-mobile {
+  display: none;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.category-select {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px 20px;
+  border: 2px solid #F6D5D8;
+  border-radius: 8px;
+  background: #F6D5D8;
+  font-size: 16px;
+  color: #1A1A1A;
+  cursor: pointer;
+  outline: none;
+  margin: 0 0 0 auto;
+  display: block;
+}
+
+.category-select:focus {
+  border-color: #da5761;
+  box-shadow: 0 0 0 2px rgba(218, 87, 97, 0.2);
+}
+
+.category-select option {
+  background: white;
+  color: #1A1A1A;
+}
+
 .category-btn {
   background: #F6D5D8;
   border: none;
@@ -599,6 +645,79 @@ export default {
 
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .page-content {
+    padding: 40px 30px;
+  }
+  
+  .news-categories {
+    display: none;
+  }
+  
+  .news-categories-mobile {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .company-profile {
+    overflow-x: hidden;
+  }
+
+  .news-container {
+    padding: 20px 20px !important;
+  }
+  
+  .page-content {
+    padding: 30px 20px;
+  }
+  
+  .news-categories {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .category-btn {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #DA5761;
+  }
+  
+  .category-btn:last-child {
+    border-bottom: none;
+  }
+  
+  .news-item {
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    padding: 30px 0px;
+  }
+  
+  .news-meta {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .news-title {
+    font-size: 18px !important;
+  }
+  
+  .news-date {
+    font-size: 16px !important;
+  }
+  
+  .news-category {
+    font-size: 12px !important;
+  }
+
+  .news-categories-mobile {
+    margin-bottom: 30px;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-title {
     font-size: 2rem;
@@ -623,8 +742,6 @@ export default {
     flex: 1;
   }
   
-
-  
   .news-content {
     flex-direction: column;
     align-items: flex-start;
@@ -643,24 +760,61 @@ export default {
 }
 
 @media (max-width: 480px) {
-  .news-content h3 {
-    font-size: 0.9rem;
+  .page-content {
+    padding: 20px 15px;
   }
   
-  .news-meta {
-    padding: 10px 15px 0;
+  .news-categories {
+    padding: 20px 15px;
   }
-  
-  .news-content {
-    padding: 10px 15px;
+
+  .category-select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .news-container {
+    padding: 20px 20px !important;
   }
   
   .category-btn {
-    padding: 6px 8px;
-    font-size: 0.5rem;
+    padding: 15px 20px;
+    font-size: 14px !important;
+  }
+
+  .news-content {
+    padding: 0;
+    gap: 10px;
   }
   
+  .news-item {
+    padding: 10px 0;
+    gap: 10px;
+  }
+  
+  .news-meta {
+    padding: 15px 0;
+  }
+  
+  .news-title {
+    font-size: 16px !important;
+  }
+  
+  .news-date {
+    font-size: 14px !important;
+  }
+  
+  .news-category {
+    font-size: 11px !important;
+  }
+  
+  .news-content h3 {
+    font-size: 0.9rem;
+  }
 
+  .news-categories-mobile {
+    margin-bottom: 20px;
+  }
 }
 
 

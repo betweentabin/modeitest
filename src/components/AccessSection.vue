@@ -295,7 +295,7 @@ export default {
   }
   
   .frame-1321317467-2 {
-    padding: 0 20px !important;
+    padding: 0 !important;
     gap: 14px !important;
   }
   
@@ -328,7 +328,7 @@ export default {
   }
   
   .frame-1321317467-2 {
-    padding: 0 15px !important;
+    padding: 0 !important;
     gap: 12px !important;
   }
   

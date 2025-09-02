@@ -102,13 +102,13 @@ export default {
 
 @media (max-width: 800px) {
   .hero-section {
-    min-height: 300px;
-    height: 40vh;
+    min-height: 250px;
+    height: 280px;
     background-position: center 30%;
   }
   
   .hero-overlay {
-    padding: 30px 20px;
+    padding: 25px 20px;
   }
   
   .hero-subtitle {
@@ -124,13 +124,13 @@ export default {
 
 @media (max-width: 600px) {
   .hero-section {
-    min-height: 280px;
-    height: 35vh;
+    min-height: 220px;
+    height: 240px;
     background-position: center 25%;
   }
   
   .hero-overlay {
-    padding: 25px 18px;
+    padding: 20px 15px;
   }
   
   .hero-subtitle {
@@ -146,13 +146,13 @@ export default {
 
 @media (max-width: 480px) {
   .hero-section {
-    min-height: 250px;
-    height: 30vh;
+    min-height: 200px;
+    height: 220px;
     background-position: center 20%;
   }
   
   .hero-overlay {
-    padding: 20px 15px;
+    padding: 15px 12px;
   }
   
   .hero-subtitle {
