@@ -522,12 +522,15 @@ export default {
         
         const method = this.editingReport ? 'PUT' : 'POST'
         
+        const authToken = apiClient.getCurrentToken()
+        const headers = {
+          'Accept': 'application/json'
+        }
+        if (authToken) headers['Authorization'] = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`
+
         const response = await fetch(url, {
           method,
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-            'Accept': 'application/json'
-          },
+          headers,
           body: formData
         })
         
@@ -555,12 +558,12 @@ export default {
       }
       
       try {
+        const authToken2 = apiClient.getCurrentToken()
+        const headers2 = { 'Accept': 'application/json' }
+        if (authToken2) headers2['Authorization'] = authToken2.startsWith('Bearer ') ? authToken2 : `Bearer ${authToken2}`
         const response = await fetch(getApiUrl(`/api/admin/economic-reports/${report.id}`), {
           method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-            'Accept': 'application/json'
-          }
+          headers: headers2
         })
         
         const data = await response.json()
@@ -580,12 +583,12 @@ export default {
 
     async togglePublished(report) {
       try {
+        const authToken3 = apiClient.getCurrentToken()
+        const headers3 = { 'Accept': 'application/json' }
+        if (authToken3) headers3['Authorization'] = authToken3.startsWith('Bearer ') ? authToken3 : `Bearer ${authToken3}`
         const response = await fetch(getApiUrl(`/api/admin/economic-reports/${report.id}/toggle-publish`), {
           method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-            'Accept': 'application/json'
-          }
+          headers: headers3
         })
         
         const data = await response.json()
@@ -604,12 +607,12 @@ export default {
 
     async toggleFeatured(report) {
       try {
+        const authToken4 = apiClient.getCurrentToken()
+        const headers4 = { 'Accept': 'application/json' }
+        if (authToken4) headers4['Authorization'] = authToken4.startsWith('Bearer ') ? authToken4 : `Bearer ${authToken4}`
         const response = await fetch(getApiUrl(`/api/admin/economic-reports/${report.id}/toggle-feature`), {
           method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-            'Accept': 'application/json'
-          }
+          headers: headers4
         })
         
         const data = await response.json()

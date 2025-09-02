@@ -235,7 +235,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import mockServer from '@/mockServer'
+import apiClient from '../../services/apiClient'
 
 export default {
   name: 'SeminarEditForm',
@@ -279,8 +279,6 @@ export default {
       return
     }
 
-    // モックサーバーを使用するため、認証ヘッダーは不要
-    
     // 新規作成の場合はデータ取得をスキップ
     if (!this.isNew) {
       await this.fetchSeminarData()
@@ -292,8 +290,12 @@ export default {
       this.error = ''
 
       try {
-        const data = await mockServer.getSeminar(this.seminarId)
-        this.formData = data
+        const res = await apiClient.get(`/api/admin/seminars/${this.seminarId}`)
+        if (res.success && res.data && res.data.seminar) {
+          this.formData = res.data.seminar
+        } else {
+          throw new Error('Seminar not found')
+        }
       } catch (err) {
         this.error = 'セミナーデータの取得に失敗しました'
         console.error(err)
@@ -308,13 +310,13 @@ export default {
 
       try {
         if (this.isNew) {
-          await mockServer.createSeminar(this.formData)
+          const res = await apiClient.post('/api/admin/seminars', this.formData)
+          if (!res.success) throw new Error(res.message || '作成に失敗')
           this.successMessage = 'セミナーを作成しました'
-          setTimeout(() => {
-            this.$router.push('/admin/seminars')
-          }, 1500)
+          setTimeout(() => { this.$router.push('/admin/seminars') }, 1200)
         } else {
-          await mockServer.updateSeminar(this.seminarId, this.formData)
+          const res = await apiClient.put(`/api/admin/seminars/${this.seminarId}`, this.formData)
+          if (!res.success) throw new Error(res.message || '更新に失敗')
           this.successMessage = 'セミナーを更新しました'
         }
       } catch (err) {
