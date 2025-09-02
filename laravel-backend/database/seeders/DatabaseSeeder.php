@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             AdminUserSeeder::class,
             EconomicStatisticsSeeder::class,
+            // コンテンツ系シード（一覧が空にならないように含める）
+            NewsArticlesSeeder::class,
+            SeminarSeeder::class,
             EconomicReportsSeeder::class,
             FinancialReportsSeeder::class,
             ServicesSeeder::class,

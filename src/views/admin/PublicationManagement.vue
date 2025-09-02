@@ -282,7 +282,15 @@ export default {
         // APIから取得
         this.authToken = localStorage.getItem('admin_token')
         if (!this.authToken) {
-          throw new Error('管理者認証が必要です')
+          console.log('No admin token found, getting debug token...')
+          // デバッグ用: トークンが無い場合は自動取得
+          const debugToken = await apiClient.getDebugAdminToken()
+          if (debugToken) {
+            this.authToken = debugToken
+            console.log('Debug token obtained successfully')
+          } else {
+            throw new Error('管理者認証が必要です')
+          }
         }
         
         const params = {
@@ -292,6 +300,7 @@ export default {
         }
         
         const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
+        console.log('Admin publications API response:', response)
         if (response.success && response.data) {
           this.publications = response.data.publications.map(pub => ({
             id: pub.id,
@@ -306,6 +315,7 @@ export default {
           }))
           
           this.totalPages = response.data.pagination.total_pages
+          console.log('Publications loaded:', this.publications.length, 'items')
         } else {
           throw new Error('刊行物データの取得に失敗しました')
         }

@@ -1,6 +1,13 @@
 #!/bin/bash
 
-echo "🚀 Laravel API Starting..."
+# Always run from this script's directory (laravel-backend)
+cd "$(cd "$(dirname "$0")" && pwd)" || exit 1
+
+echo "🚀 Laravel API Starting in $(pwd) ..."
+
+# Basic env info
+php -v || echo "⚠️  PHP not available in PATH"
+echo "Artisan path check: $(ls -1 artisan 2>/dev/null || echo 'artisan not found')"
 
 # APP_KEYの確認（Railway環境変数を使用）
 if [ -z "$APP_KEY" ]; then
@@ -52,6 +59,6 @@ php artisan route:clear || echo "ルートキャッシュクリア失敗"
 
 # Laravel 起動
 # ポート環境変数を強制的に8080に設定
-export PORT=8080
+export PORT=${PORT:-8080}
 echo "✅ Starting Laravel server on port $PORT"
 php artisan serve --host=0.0.0.0 --port=$PORT
