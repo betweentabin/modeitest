@@ -36,7 +36,10 @@ import SeminarDetailPage from "./components/SeminarDetailPage";
 import SeminarDetailReservedPage from "./components/SeminarDetailReservedPage";
 import SeminarDetailJoinPage from "./components/SeminarDetailJoinPage";
 import GlossaryPage from "./components/GlossaryPage";
+import EconomicIndicatorsPage from "./components/EconomicIndicatorsPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
+import EconomicStatisticsDetailPage from "./components/EconomicStatisticsDetailPage";
+import EconomicStatisticsDetailPageGuest from "./components/EconomicStatisticsDetailPageGuest";
 import TransactionLawPage from "./components/TransactionLawPage";
 import PrivacyPolicyPage from "./components/PrivacyPolicyPage";
 import TermsOfServicePage from "./components/TermsOfServicePage";
@@ -48,7 +51,7 @@ import ContactFormPage from "./components/ContactFormPage";
 import ContactConfirmPage from "./components/ContactConfirmPage";
 import ContactCompletePage from "./components/ContactCompletePage";
 import MemberLoginPage from "./views/MemberLoginPage";
-import MemberRegisterPage from "./views/MemberRegisterPage";
+
 import MyAccountPage from "./views/MyAccountPage";
 import UpgradePage from "./views/UpgradePage";
 import MembershipPage from "./components/MembershipPage";
@@ -176,10 +179,28 @@ const router = new Router({
       meta: { title: "用語集 - ちくぎん地域経済研究所" }
     },
     {
+      path: "/economic-indicators",
+      name: "economicIndicators",
+      component: EconomicIndicatorsPage,
+      meta: { title: "経済指標一覧 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/statistics",
       name: "statistics",
       component: EconomicStatisticsPage,
       meta: { title: "経済・調査統計 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/economic-statistics/:id/detail",
+      name: "economicStatisticsDetail",
+      component: EconomicStatisticsDetailPage,
+      meta: { title: "経済・調査統計詳細 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/economic-statistics/:id/detail-guest",
+      name: "economicStatisticsDetailGuest",
+      component: EconomicStatisticsDetailPageGuest,
+      meta: { title: "経済・調査統計詳細 - ちくぎん地域経済研究所" }
     },
     {
       path: "/transaction-law",
@@ -188,22 +209,10 @@ const router = new Router({
       meta: { title: "特定商取引法に関する表記 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/privacy",
-      name: "privacy",
-      component: PrivacyPolicyPage,
-      meta: { title: "プライバシーポリシー - ちくぎん地域経済研究所" }
-    },
-    {
       path: "/privacy-policy",
       name: "privacyPolicy",
       component: PrivacyPolicyPage,
       meta: { title: "プライバシーポリシー - ちくぎん地域経済研究所" }
-    },
-    {
-      path: "/terms",
-      name: "terms",
-      component: TermsOfServicePage,
-      meta: { title: "利用規約 - ちくぎん地域経済研究所" }
     },
     {
       path: "/terms-of-service",
@@ -240,12 +249,6 @@ const router = new Router({
       name: "sitemap",
       component: SitemapPage,
       meta: { title: "サイトマップ - ちくぎん地域経済研究所" }
-    },
-    {
-      path: "/financial-report",
-      name: "financialReport",
-      component: FinancialReportPage,
-      meta: { title: "決算報告 - ちくぎん地域経済研究所" }
     },
     {
       path: "/financial-reports",
@@ -376,13 +379,13 @@ const router = new Router({
       path: "/login",
       name: "memberLogin",
       component: MemberLoginPage,
-      meta: { title: "会員ログイ�� - ちくぎん地域経済研究所" }
+      meta: { title: "会員ログイン - ちくぎん地域経済研究所" }
     },
     {
       path: "/register",
       name: "memberRegister",
-      component: MemberRegisterPage,
-      meta: { title: "会員登録 - ちくぎん地域経済研究所" }
+      component: MembershipPage,
+      meta: { title: "入会案内 - ちくぎん地域経済研究所" }
     },
     {
       path: "/membership",

@@ -4,87 +4,72 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="セミナー詳細"
-      subtitle="seminar"
+      title="経済・調査統計"
+      subtitle="economic statistics"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/ab5db9916398054424d59236a434310786cb8146?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細（今すぐ参加）']" />
+    <Breadcrumbs :breadcrumbs="['経済・調査統計']" />
 
-    <!-- Seminar Detail Section -->
-    <section class="seminar-detail-section" v-if="seminar">
+    <!-- Economic Statistics Detail Section -->
+    <section class="statistics-detail-section" v-if="statistics">
       <div class="section-header">
-        <h2 class="section-title">セミナー詳細</h2>
+        <h2 class="section-title">経済・調査統計</h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">seminar</span>
+          <span class="divider-text">economic statistics</span>
           <div class="divider-line"></div>
         </div>
       </div>
 
-      <!-- Seminar Details Card -->
-      <div class="seminar-detail-card">
-          <div class="seminar-content">
-                         <div class="seminar-info">
-              <div class="seminar-details">
-              <div class="detail-row">
-                 <span class="detail-label">セミナー名</span>
-                 <span class="detail-value">{{ seminar.title || 'セミナー名' }}</span>
-               </div>
+      <!-- Statistics Details Card -->
+      <div class="statistics-detail-card">
+          <div class="statistics-content">
+                         <div class="statistics-info">
+              <div class="statistics-details">
+                             <div class="detail-row">
+                  <span class="detail-label">タイトル</span>
+                  <span class="detail-value">{{ statistics.title || '経済統計レポート' }}</span>
+                </div>
 
-               <div class="detail-row">
-                 <span class="detail-label">講師</span>
-                 <span class="detail-value">{{ seminar.instructor || 'ちくぎん地域経済研究所' }}</span>
-               </div>
-               
-               <div class="detail-row">
-                 <span class="detail-label">セミナー日時</span>
-                 <span class="detail-value">{{ formatDetailDate(seminar.date) }}</span>
-               </div>
-               
-               <div class="detail-row">
-                 <span class="detail-label">開催場所</span>
-                 <span class="detail-value">{{ seminar.venue || '久留米リサーチ・パーク' }}</span>
-               </div>
-               
-                               <div class="detail-row">
-                  <span class="detail-label">定員</span>
-                  <span class="detail-value">{{ seminar.capacity || '30名' }}</span>
+                <div class="detail-row">
+                  <span class="detail-label">カテゴリー</span>
+                  <span class="detail-value">{{ statistics.category || '四半期経済レポート' }}</span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="detail-label">詳細</span>
+                  <span class="detail-value">{{ statistics.description || '詳細情報がここに表示されます。' }}</span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="detail-label">備考</span>
+                  <span class="detail-value">{{ statistics.notes || '備考情報がここに表示されます。' }}</span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="detail-label">CHECK</span>
+                  <span class="detail-value">{{ statistics.check || 'チェック項目がここに表示されます。' }}</span>
                 </div>
                
-               <div class="detail-row">
-                 <span class="detail-label">参加費</span>
-                 <span class="detail-value">{{ seminar.fee || '会員無料' }}</span>
-               </div>
+               
              </div>
            </div>
            
-           <div class="seminar-image">
-             <img :src="seminar.image || '/img/image-1.png'" :alt="seminar.title" />
+           <div class="statistics-image">
+             <img :src="statistics.image || '/img/image-1.png'" :alt="statistics.title" />
            </div>
          </div>
 
-        <div class="detail-row">
-          <span class="detail-label">講師紹介</span>
-          <span class="detail-value">{{ seminar.fullDescription || seminar.description }}</span>
-        </div>
 
-        <div class="detail-row">
-          <span class="detail-label">プログラム</span>
-          <span class="detail-value">{{ seminar.fullDescription || seminar.description }}</span>
-        </div>
 
-        <!-- Join Button -->
-        <div class="registration-section" v-if="seminar.status === 'join'">
-          <div class="registration-btn" @click="joinSeminar">
-            <div class="text-44 valign-text-middle inter-bold-white-15px">今すぐ参加</div>
+        <!-- Login Button -->
+        <div class="login-section">
+          <div class="login-btn" @click="goToLogin">
+            <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
             <frame13213176122 />
           </div>
-        </div>
-        
-        <div class="ended-section" v-else>
-          <p class="ended-notice">このセミナーは終了しました</p>
         </div>
 
       </div>
@@ -128,7 +113,7 @@ import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
 
 export default {
-  name: "SeminarDetailJoinPage",
+  name: "EconomicStatisticsDetailPageGuest",
   components: {
     Navigation,
     Footer,
@@ -144,30 +129,30 @@ export default {
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
-      seminar: null,
+      statistics: null,
       loading: true,
       error: null
     };
   },
   async mounted() {
-    await this.loadSeminar();
+    await this.loadStatistics();
   },
   methods: {
-    async loadSeminar() {
+    async loadStatistics() {
       try {
         this.loading = true;
-        const seminarId = this.$route.params.id;
+        const statisticsId = this.$route.params.id;
         
-        const response = await apiClient.getSeminar(seminarId);
+        const response = await apiClient.getPublication(statisticsId);
         
-        if (response.success && response.data && response.data.seminar) {
-          this.seminar = this.formatSeminarData(response.data.seminar);
+        if (response.success && response.data && response.data.publication) {
+          this.statistics = this.formatStatisticsData(response.data.publication);
         } else {
           // Fallback to mock data
           this.loadFallbackData();
         }
       } catch (error) {
-        console.error('Error loading seminar:', error);
+        console.error('Error loading statistics:', error);
         this.loadFallbackData();
       } finally {
         this.loading = false;
@@ -176,25 +161,24 @@ export default {
     
     loadFallbackData() {
       // Mock data for demonstration
-      this.seminar = {
-        id: this.$route.params.id,
-        title: '手形・小切手の全面的な電子化セミナー',
-        instructor: 'ちくぎん地域経済研究所',
-        date: '2025年7月15日（火）14:00～16:00',
-        venue: '久留米リサーチ・パーク',
-        capacity: '30名',
-        fee: '会員無料',
-        description: '当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。',
-        fullDescription: '当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。',
-        image: '/img/image-1.png',
-        status: 'join' // 今すぐ参加ステータス
-      };
+             this.statistics = {
+         id: this.$route.params.id,
+         title: '雇用（有効求人倍率、パート有効求人数）',
+         category: '四半期経済レポート',
+         description: '雇用（有効求人倍率、パート有効求人数）を更新しました。2025年3月の福岡県の有効求人倍率は前月を0.02ポイント上回り1.20倍、パートタイム有効求人数は前年同月比1.6%減の45,783人となりました。',
+         notes: 'この統計は毎月更新されます。最新の雇用動向を把握するためにご活用ください。',
+         check: 'データの正確性を確認済み。公開可能な状態です。',
+         membersOnly: true,
+         image: '/img/image-1.png',
+         isDownloadable: true
+       };
     },
     
-    formatSeminarData(seminarData) {
+    formatStatisticsData(statisticsData) {
       return {
-        ...seminarData,
-        status: 'join' // 今すぐ参加ステータスに設定
+        ...statisticsData,
+        isDownloadable: statisticsData.is_downloadable || false,
+        membersOnly: statisticsData.members_only || false
       };
     },
     
@@ -203,9 +187,8 @@ export default {
       return dateString;
     },
     
-    joinSeminar() {
-      // 今すぐ参加の場合はセミナー参加ページに遷移
-      this.$router.push(`/seminar-room/${this.seminar.id}`);
+    goToLogin() {
+      this.$router.push('/login');
     },
     
     goToContact() {
@@ -226,11 +209,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 .page-container {
   min-height: 100vh;
@@ -239,8 +217,8 @@ export default {
 
 /* Hero Section and Breadcrumb styles are now handled by components */
 
-/* Seminar Detail Section */
-.seminar-detail-section {
+/* Statistics Detail Section */
+.statistics-detail-section {
   padding: 70px 50px 50px 50px;
   display: flex;
   flex-direction: column;
@@ -283,8 +261,8 @@ export default {
   font-weight: 700;
 }
 
-/* Seminar Detail Card */
-.seminar-detail-card {
+/* Statistics Detail Card */
+.statistics-detail-card {
   background: white;
   border-radius: 20px;
   overflow: hidden;
@@ -294,7 +272,7 @@ export default {
   padding: 50px;
 }
 
-.seminar-content {
+.statistics-content {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -302,7 +280,7 @@ export default {
   height: auto;
 }
 
-.seminar-image {
+.statistics-image {
   width: 40%;
   height: auto;
   overflow: hidden;
@@ -310,20 +288,20 @@ export default {
   align-self: stretch;
 }
 
-.seminar-image img {
+.statistics-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   min-height: 400px;
 }
 
-.seminar-info {
+.statistics-info {
   width: 60%;
   flex: 1;
   height: 100%;
 }
 
-.seminar-details {
+.statistics-details {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -339,12 +317,17 @@ export default {
   padding-bottom: 15px;
 }
 
-.detail-row:first-child {
-  border-top: 0.5px dashed #D0D0D0;
-  padding-top: 15px;
-}
+ .detail-row:first-child {
+   border-top: 0.5px dashed #D0D0D0;
+   padding-top: 15px;
+ }
 
-.detail-label {
+ .detail-row:last-child {
+   padding-bottom: 0;
+   margin-bottom: 0;
+ }
+
+ .detail-label {
   width: 200px;
   font-weight: normal;
   color: white;
@@ -364,15 +347,13 @@ export default {
   padding-left: 10px;
 }
 
-
-
-/* Registration Section */
-.registration-section {
+/* Login Section */
+.login-section {
   text-align: center;
   margin-top: 30px;
 }
 
-.registration-btn {
+.login-btn {
   align-items: center;
   background-color: var(--mandy);
   border-radius: 10px;
@@ -392,7 +373,7 @@ export default {
   margin: 0 auto;
 }
 
-.registration-btn:hover {
+.login-btn:hover {
   background: #c44853;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
@@ -413,19 +394,6 @@ export default {
   font-weight: 700;
 }
 
-.ended-section {
-  text-align: center;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-}
-
-.ended-notice {
-  color: #666;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
 .loading {
   text-align: center;
   padding: 60px;
@@ -443,24 +411,24 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .seminar-detail-section {
+  .statistics-detail-section {
     padding: 30px 20px 0 20px;
   }
   
-  .seminar-detail-card {
+  .statistics-detail-card {
     padding: 30px 20px;
   }
   
-  .seminar-content {
+  .statistics-content {
     flex-direction: column;
   }
   
-  .seminar-image {
+  .statistics-image {
     width: 100%;
     height: 300px;
   }
   
-  .seminar-info {
+  .statistics-info {
     width: 100%;
   }
   

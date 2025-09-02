@@ -79,12 +79,12 @@
               <span class="featured-year">2025.4.28</span>
               <span class="featured-category">経済・調査統計の会員限定</span>
             </div>
-                         <div class="featured-details">
+            <div class="featured-details">
                <div class="content-title">雇用（有効求人倍率、パート有効求人数）</div>
                <div class="content-text">雇用（有効求人倍率、パート有効求人数）を更新しました。2025年3月の福岡県の有効求人倍率は前月を0.02ポイント上回り1.20倍、パートタイム有効求人数は前年同月比1.6%減の45,783人となりました。雇用関連の先行き指標である2025年2月の福岡県所定外労働時間は、前年同月比3.5％減の8.5時間となりました。</div>
              </div>
 
-            <button class="download-btn">詳細を見る
+            <button class="download-btn" @click="goToStatisticsDetail(featuredPublication.id)">詳細を見る
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -114,7 +114,7 @@
                 <span class="featured-year">{{ publication.year }}.4.28</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
-              <button class="publication-download">PDFダウンロード
+              <button class="publication-download" @click.stop="goToStatisticsDetail(publication.id)">PDFダウンロード
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -147,11 +147,7 @@
     <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
 
     <!-- Fixed Side Buttons -->
     <FixedSideButtons position="bottom" />
@@ -170,6 +166,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
+import { navigateToPublication, navigateToStatistics } from '../utils/navigation.js';
 
 export default {
   name: "EconomicStatisticsPage",
@@ -460,7 +457,10 @@ export default {
       return category ? category.name : '経済統計';
     },
     goToPublicationDetail(publicationId) {
-      this.$router.push(`/economic-statistics/${publicationId}`);
+      this.$router.push(navigateToPublication(publicationId));
+    },
+    goToStatisticsDetail(statisticsId) {
+      this.$router.push(navigateToStatistics(statisticsId));
     },
     goToContact() {
       this.$router.push('/contact');
@@ -981,23 +981,4 @@ export default {
 }
 
 /* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
 </style>

@@ -1,122 +1,124 @@
 <template>
   <div class="member-login-page">
-    <div class="login-container">
-      <div class="login-card">
-        <div class="logo-section">
-          <img
-            class="logo"
-            src="/img/ico-logo-2.svg"
-            alt="Logo"
-          />
-          <h1 class="title inter-bold-black-24px">会員ログイン</h1>
-          <p class="subtitle inter-normal-ship-gray-16px">会員限定コンテンツへアクセス</p>
+    <!-- Navigation -->
+    <Navigation />
+    
+    <!-- Hero Section -->
+    <HeroSection 
+      title="会員ログインページ"
+      subtitle="login page"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
+    />
+
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['会員ログイン']" />
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="content-header">
+        <h2 class="page-title">会員ログインページ</h2>
+        <div class="title-decoration">
+          <div class="line-left"></div>
+          <span class="title-english">login page</span>
+          <div class="line-right"></div>
         </div>
-        
-        <form @submit.prevent="handleLogin" class="login-form">
-          <div class="form-group">
-            <label for="email" class="form-label inter-semi-bold-ship-gray-12px">
-              メールアドレス
-            </label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              class="form-input inter-normal-ship-gray-16px"
-              placeholder="member@example.com"
-            />
-          </div>
+      </div>
 
-          <div class="form-group">
-            <label for="password" class="form-label inter-semi-bold-ship-gray-12px">
-              パスワード
-            </label>
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              class="form-input inter-normal-ship-gray-16px"
-              placeholder="••••••••"
-            />
-          </div>
-
-          <div class="form-options">
-            <label class="remember-me">
-              <input
-                type="checkbox"
-                v-model="rememberMe"
-                class="checkbox"
-              />
-              <span class="inter-normal-ship-gray-15px">ログイン情報を記憶する</span>
-            </label>
-            <a href="#" class="forgot-link inter-normal-ship-gray-15px" @click.prevent="showForgotPassword">
-              パスワードを忘れた方
-            </a>
-          </div>
-
-          <div v-if="error" class="error-message inter-normal-ship-gray-15px">
-            <img src="/img/vector-28.svg" alt="Error" class="error-icon" />
-            {{ error }}
-          </div>
-
-          <button
-            type="submit"
-            :disabled="loading"
-            class="login-button inter-bold-white-15px"
-          >
-            {{ loading ? 'ログイン中...' : 'ログイン' }}
-          </button>
-
-          <div class="divider">
-            <span class="divider-text inter-normal-ship-gray-10px">または</span>
-          </div>
-
-          <router-link
-            to="/register"
-            class="register-button inter-bold-mandy-15px"
-          >
-            新規会員登録
-          </router-link>
-        </form>
-
-        <div class="membership-info">
-          <div class="membership-types">
-            <div class="membership-type">
-              <img src="/img/vector-70.svg" alt="Basic" class="membership-icon" />
-              <span class="inter-semi-bold-ship-gray-11px">ベーシック会員</span>
-            </div>
-            <div class="membership-type">
-              <img src="/img/vector-71.svg" alt="Standard" class="membership-icon" />
-              <span class="inter-semi-bold-ship-gray-11px">スタンダード会員</span>
-            </div>
-            <div class="membership-type">
-              <img src="/img/vector-73.svg" alt="Premium" class="membership-icon" />
-              <span class="inter-semi-bold-ship-gray-11px">プレミアム会員</span>
-            </div>
-          </div>
+      <div class="content-container">
+        <!-- Login Description -->
+        <div class="intro-section">
+          <p class="intro-text">
+            メールアドレスおよびパスワードを入力のうえ「ログイン」ボタンを押してください。<br>
+            ※ログイン情報は、各会員様の窓口ご担当宛にメールまたは郵送にてご案内しております。
+          </p>
         </div>
 
-        <div class="footer-text inter-normal-ship-gray-10px">
-          セキュアな接続で保護されています
+        <!-- Login Form -->
+        <div class="login-form-wrapper">
+          <form @submit.prevent="handleLogin" class="login-form">
+            <div class="form-inputs">
+              <div class="input-field">
+                <input
+                  v-model="email"
+                  type="email"
+                  required
+                  class="form-input"
+                  placeholder="| ID"
+                />
+              </div>
+              
+              <div class="input-field">
+                <input
+                  v-model="password"
+                  type="password"
+                  required
+                  class="form-input"
+                  placeholder="| PW"
+                />
+              </div>
+            </div>
+            
+            <button
+              type="submit"
+              :disabled="loading"
+              class="login-button"
+            >
+              <span>{{ loading ? 'ログイン中...' : 'ログインをする' }}</span>
+              <svg class="login-icon" width="19" height="19" viewBox="0 0 19 19" fill="none">
+                <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
+                <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
+              </svg>
+            </button>
+            
+            <div v-if="error" class="error-message">
+              {{ error }}
+            </div>
+            
+            <p class="password-reset-text">
+              パスワードを忘れた方はこちらから再設定してください
+            </p>
+          </form>
         </div>
       </div>
     </div>
+
+    <!-- Access Section -->
+    <AccessSection />
+
+    <!-- Footer Navigation -->
+    <Footer v-bind="frame132131753022Props" />
+    
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
 <script>
-import mockServer from '@/mockServer'
+import Navigation from '@/components/Navigation.vue'
+import HeroSection from '@/components/HeroSection.vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import AccessSection from '@/components/AccessSection.vue'
+import Footer from '@/components/Footer.vue'
+import FixedSideButtons from '@/components/FixedSideButtons.vue'
+import { frame132131753022Data } from '@/data'
 
 export default {
   name: 'MemberLoginPage',
+  components: {
+    Navigation,
+    HeroSection,
+    Breadcrumbs,
+    AccessSection,
+    Footer,
+    FixedSideButtons
+  },
   data() {
     return {
       email: '',
       password: '',
-      rememberMe: false,
       loading: false,
-      error: ''
+      error: '',
+      frame132131753022Props: frame132131753022Data
     }
   },
   methods: {
@@ -125,35 +127,16 @@ export default {
       this.error = ''
 
       try {
-        const response = await mockServer.memberLogin(this.email, this.password)
-
-        localStorage.setItem('memberToken', response.token)
-        localStorage.setItem('memberUser', JSON.stringify(response.user))
+        // ログイン処理をここに実装
+        // 例: await this.$store.dispatch('auth/login', { email: this.email, password: this.password })
         
-        if (this.rememberMe) {
-          localStorage.setItem('rememberEmail', this.email)
-        } else {
-          localStorage.removeItem('rememberEmail')
-        }
-        
-        // 前のページまたはホームページへリダイレクト
-        const redirectTo = this.$route.query.redirect || '/'
-        this.$router.push(redirectTo)
-      } catch (err) {
-        this.error = 'ログインに失敗しました'
+        // 成功時の処理
+        this.$router.push('/my-account')
+      } catch (error) {
+        this.error = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。'
       } finally {
         this.loading = false
       }
-    },
-    showForgotPassword() {
-      this.$router.push('/forgot-password')
-    }
-  },
-  mounted() {
-    const rememberedEmail = localStorage.getItem('rememberEmail')
-    if (rememberedEmail) {
-      this.email = rememberedEmail
-      this.rememberMe = true
     }
   }
 }
@@ -161,281 +144,248 @@ export default {
 
 <style scoped>
 .member-login-page {
+  background: #ECECEC;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.login-container {
   width: 100%;
-  max-width: 480px;
 }
 
-.login-card {
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  padding: 48px 40px;
-  position: relative;
-  overflow: hidden;
-}
-
-.login-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--mandy) 0%, var(--hot-pink) 100%);
-}
-
-.logo-section {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.logo {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 20px;
-}
-
-.title {
-  margin: 0 0 8px 0;
-  color: var(--black);
-}
-
-.subtitle {
-  margin: 0;
-  color: var(--ship-gray);
-  opacity: 0.8;
-}
-
-.login-form {
-  margin-top: 32px;
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--ship-gray);
-}
-
-.form-input {
+/* Main Content */
+.main-content {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--celeste);
-  border-radius: 8px;
-  background: var(--white);
-  transition: all 0.3s ease;
-  color: var(--ship-gray);
+  padding: 70px 50px;
+  background: #ECECEC;
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: var(--mandy);
-  box-shadow: 0 0 0 3px rgba(218, 87, 97, 0.1);
-}
-
-.form-input::placeholder {
-  color: var(--celeste);
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.checkbox {
-  margin-right: 8px;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--mandy);
-}
-
-.forgot-link {
-  color: var(--mandy);
-  text-decoration: none;
-  transition: opacity 0.3s;
-}
-
-.forgot-link:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
-.error-message {
-  background: rgba(218, 87, 97, 0.08);
-  border: 1px solid rgba(218, 87, 97, 0.2);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 24px;
-  color: var(--mandy);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.error-icon {
-  width: 16px;
-  height: 16px;
-  filter: brightness(0) saturate(100%) invert(40%) sepia(81%) saturate(479%) hue-rotate(315deg) brightness(91%) contrast(89%);
-}
-
-.login-button {
-  width: 100%;
-  padding: 14px 24px;
-  background: linear-gradient(135deg, var(--mandy) 0%, var(--hot-pink) 100%);
-  border: none;
-  border-radius: 8px;
-  color: var(--white);
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.login-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.3);
-}
-
-.login-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.login-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.divider {
-  position: relative;
-  text-align: center;
-  margin: 24px 0;
-}
-
-.divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--celeste);
-}
-
-.divider-text {
-  position: relative;
-  background: var(--white);
-  padding: 0 16px;
-  color: var(--sonic-silver);
-}
-
-.register-button {
-  display: block;
-  width: 100%;
-  padding: 14px 24px;
-  background: var(--white);
-  border: 2px solid var(--mandy);
-  border-radius: 8px;
-  color: var(--mandy);
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  text-decoration: none;
-}
-
-.register-button:hover {
-  background: var(--mandy);
-  color: var(--white);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.2);
-}
-
-.membership-info {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid var(--cararra);
-}
-
-.membership-types {
-  display: flex;
-  justify-content: space-around;
-  gap: 16px;
-}
-
-.membership-type {
+.content-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 29px;
+  margin-bottom: 40px;
 }
 
-.membership-icon {
-  width: 24px;
-  height: 24px;
-  opacity: 0.6;
-}
-
-.footer-text {
+.page-title {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: -0.72px;
   text-align: center;
-  margin-top: 24px;
-  color: var(--sonic-silver);
+  margin: 0;
+}
+
+.title-decoration {
   display: flex;
   align-items: center;
+  gap: 15px;
+  width: auto;
+  min-width: 306px;
+}
+
+.line-left, .line-right {
+  width: 80px;
+  height: 2px;
+  background: #DA5761;
+  flex-shrink: 0;
+}
+
+.title-english {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #DA5761;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.intro-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  width: 100%;
+}
+
+.intro-text {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1A1A1A;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  text-align: center;
+  margin: 0;
+  max-width: 1014px;
+}
+
+/* Login Form */
+.login-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 50px 50px 50px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 622px;
+}
+
+.login-form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
   justify-content: center;
-  gap: 4px;
+  align-items: center;
+  gap: 40px;
 }
 
-.footer-text::before {
-  content: '\1F512';
-  font-size: 12px;
+.form-inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
 }
 
-@media (max-width: 640px) {
-  .login-card {
-    padding: 32px 24px;
+.input-field {
+  width: 100%;
+}
+
+.form-input {
+  display: flex;
+  height: 55px;
+  padding: 10px 20px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: none;
+  color: #727272;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: 2px solid #DA5761;
+  outline-offset: -2px;
+}
+
+.form-input::placeholder {
+  color: #727272;
+}
+
+.login-button {
+  display: flex;
+  width: 300px;
+  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: #1A1A1A;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.login-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-button span {
+  color: #FFFFFF;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.login-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.error-message {
+  color: #DA5761;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  padding: 10px;
+  background: rgba(218, 87, 97, 0.1);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.password-reset-text {
+  color: #3F3F3F;
+  text-align: center;
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.password-reset-text a {
+  color: #DA5761;
+  text-decoration: none;
+}
+
+.password-reset-text a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 40px 20px;
   }
   
-  .title {
-    font-size: 20px;
+  .content-container {
+    padding: 30px 20px;
   }
   
-  .subtitle {
-    font-size: 14px;
+  .page-title {
+    font-size: 28px;
   }
   
-  .membership-types {
-    flex-direction: column;
-    gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 30px 15px;
   }
   
-  .membership-type {
-    flex-direction: row;
-    justify-content: center;
+  .content-container {
+    padding: 20px 15px;
+  }
+  
+  .page-title {
+    font-size: 24px;
   }
 }
 </style>

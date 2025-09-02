@@ -78,7 +78,9 @@ export default {
   letter-spacing: 0;
   line-height: 24px;
   margin-top: 6px;
-  width: 361px;
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .viwe-more-2 {
@@ -101,5 +103,36 @@ export default {
 .frame-1321317474.frame-1321317472-1 .frame-1321317473-2 {
   border-radius: unset;
   overflow: unset;
+}
+
+/* 768px以下の画面用のレスポンシブスタイル */
+@media (max-width: 768px) {
+  .frame-1321317474 {
+    width: 100%;
+    max-width: 583px;
+  }
+  
+  .frame-1321317473-2 {
+    width: 100%;
+    max-width: 583px;
+  }
+  
+  .overlap-group1 {
+    width: 100%;
+    max-width: 583px;
+  }
+  
+  .x2-2-2 {
+    width: 100%;
+    max-width: 583px;
+  }
+  
+  .overlap-group-6 {
+    width: 75%;
+    max-width: 507px;
+    right: 0px;
+    left: auto;
+    padding: 15px 20px;
+  }
 }
 </style>

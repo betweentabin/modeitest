@@ -68,15 +68,54 @@ export default {
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .breadcrumbs {
-    padding: 20px 20px;
+    padding: 22px 35px;
+    gap: 6px;
+  }
+  
+  .breadcrumb-item,
+  .breadcrumb-separator {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 800px) {
+  .breadcrumbs {
+    padding: 20px 25px;
+    gap: 5px;
+  }
+  
+  .breadcrumb-item,
+  .breadcrumb-separator {
+    font-size: 10px;
+    line-height: 4;
+  }
+}
+
+@media (max-width: 600px) {
+  .breadcrumbs {
+    padding: 18px 20px;
+    gap: 4px;
+  }
+  
+  .breadcrumb-item,
+  .breadcrumb-separator {
+    font-size: 9px;
+    line-height: 3.5;
   }
 }
 
 @media (max-width: 480px) {
   .breadcrumbs {
     padding: 15px 15px;
+    gap: 3px;
+  }
+  
+  .breadcrumb-item,
+  .breadcrumb-separator {
+    font-size: 8px;
+    line-height: 3;
   }
 }
 </style>

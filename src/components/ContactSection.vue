@@ -2,10 +2,6 @@
   <div class="contact-section">
     <div class="overlap-group6">
       <div class="rectangle-9"></div>
-      <div class="button-3">
-        <div class="text-44 valign-text-middle inter-bold-white-15px">お問い合わせはコチラ</div>
-        <frame13213176122 />
-      </div>
       <div class="text-45 valign-text-middle">株式会社ちくぎん地域経済研究所</div>
       <div class="group-30-1">
         <img
@@ -23,6 +19,10 @@
       <div class="text-46 valign-text-middle inter-bold-white-20px">
         様々な分野の調査研究を通じ、企業活動などをサポートします。
       </div>
+      <div class="button-3">
+        <div class="text-44 valign-text-middle inter-bold-white-15px">お問い合わせはコチラ</div>
+        <frame13213176122 />
+      </div>
     </div>
   </div>
 </template>
@@ -38,33 +38,31 @@ export default {
 </script>
 
 <style>
-.contact-section {
-  align-items: flex-start;
-  background-color: #ff6a6a;
-  display: flex;
-  height: 351px;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  opacity: 1;
-}
-
 .overlap-group6 {
   background-image: url(/img/-----1-1.png);
   background-position: 50% 50%;
   background-size: cover;
-  height: 351px;
+  height: auto;
+  min-height: 351px;
   width: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 100px;
+  box-sizing: border-box;
 }
 
 .rectangle-9 {
   background-color: #4d4d4db2;
-  height: 351px;
+  height: 100%;
   left: 0;
   position: absolute;
   top: 0;
   width: 100%;
+  z-index: 1;
 }
 
 .button-3 {
@@ -75,12 +73,10 @@ export default {
   display: flex;
   gap: 10px;
   justify-content: center;
-  left: 50%;
-  transform: translateX(-50%);
   padding: 10px 0px;
-  position: absolute;
-  top: 244px;
   width: 380px;
+  position: relative;
+  z-index: 2;
 }
 
 .text-44 {
@@ -98,37 +94,31 @@ export default {
   font-size: 40px;
   font-weight: 700;
   height: 60px;
-  left: 50%;
-  transform: translateX(-50%);
   letter-spacing: 0;
   line-height: 60px;
-  position: absolute;
-  top: 59px;
   white-space: nowrap;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .text-46 {
   height: 30px;
-  left: 50%;
-  transform: translateX(-50%);
   letter-spacing: 0;
   line-height: 30px;
-  position: absolute;
-  top: 190px;
   white-space: nowrap;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .group-30-1 {
   align-items: center;
   display: flex;
   height: 30px;
-  left: 50%;
-  transform: translateX(-50%);
   min-width: 270px;
-  position: absolute;
-  top: 130px;
+  position: relative;
+  z-index: 2;
 }
 
 .vector-16-1 {
@@ -149,5 +139,315 @@ export default {
   height: 2px;
   margin-left: 20px;
   width: 69px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1150px) {
+  .overlap-group6 {
+    height: auto !important;
+    min-height: 300px !important;
+    padding: 40px !important;
+    gap: 18px !important;
+  }
+  
+  .rectangle-9 {
+    height: 100% !important;
+  }
+  
+  .text-45 {
+    font-size: 32px !important;
+    height: auto !important;
+    min-height: 48px !important;
+    line-height: 48px !important;
+    white-space: normal !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  .text-46 {
+    white-space: nowrap !important;
+    padding: 0 30px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    color: var(--white) !important;
+  }
+  
+  .button-3 {
+    width: 320px !important;
+  }
+  
+  .group-30-1 {
+    min-width: 240px !important;
+    justify-content: center !important;
+  }
+  
+  .vector-16-1,
+  .vector-15-1 {
+    width: 60px !important;
+  }
+  
+  .about-us {
+    font-size: 18px !important;
+    min-width: 80px !important;
+    color: var(--white) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .overlap-group6 {
+    height: auto !important;
+    min-height: 300px !important;
+    padding: 60px 30px !important;
+    gap: 16px !important;
+  }
+  
+  .rectangle-9 {
+    height: 100% !important;
+  }
+  
+  .text-45 {
+    font-size: 28px !important;
+    height: auto !important;
+    min-height: 42px !important;
+    line-height: 42px !important;
+    white-space: normal !important;
+    padding: 0 25px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  .group-30-1 {
+    min-width: 220px !important;
+    justify-content: center !important;
+  }
+  
+  .vector-16-1,
+  .vector-15-1 {
+    width: 55px !important;
+  }
+  
+  .about-us {
+    font-size: 16px !important;
+    height: auto !important;
+    min-height: 24px !important;
+    line-height: 24px !important;
+    min-width: 70px !important;
+    margin-left: 18px !important;
+    color: var(--white) !important;
+  }
+  
+  .text-46 {
+    font-size: 16px !important;
+    height: auto !important;
+    min-height: 24px !important;
+    line-height: 24px !important;
+    white-space: nowrap !important;
+    padding: 0 40px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    color: var(--white) !important;
+  }
+  
+  .button-3 {
+    width: 300px !important;
+    padding: 12px 0px !important;
+  }
+  
+  .text-44 {
+    font-size: 13px !important;
+    line-height: 19.5px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .overlap-group6 {
+    height: auto !important;
+    min-height: 280px !important;
+    padding: 50px 25px !important;
+    gap: 14px !important;
+  }
+  
+  .rectangle-9 {
+    height: 100% !important;
+  }
+  
+  .text-45 {
+    font-size: 24px !important;
+    height: auto !important;
+    min-height: 36px !important;
+    line-height: 36px !important;
+    white-space: normal !important;
+    padding: 0 30px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  .group-30-1 {
+    min-width: 200px !important;
+    justify-content: center !important;
+  }
+  
+  .vector-16-1,
+  .vector-15-1 {
+    width: 45px !important;
+  }
+  
+  .about-us {
+    font-size: 15px !important;
+    height: auto !important;
+    min-height: 22px !important;
+    line-height: 22px !important;
+    min-width: 65px !important;
+    margin-left: 15px !important;
+    color: var(--white) !important;
+  }
+  
+  .text-46 {
+    font-size: 14px !important;
+    height: auto !important;
+    min-height: 20px !important;
+    line-height: 20px !important;
+    white-space: nowrap !important;
+    padding: 0 50px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    color: var(--white) !important;
+  }
+  
+  .button-3 {
+    width: 260px !important;
+    padding: 10px 0px !important;
+  }
+  
+  .text-44 {
+    font-size: 12px !important;
+    line-height: 18px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlap-group6 {
+    height: auto !important;
+    min-height: 250px !important;
+    padding: 40px 20px !important;
+    gap: 12px !important;
+  }
+  
+  .rectangle-9 {
+    height: 100% !important;
+  }
+  
+  .text-45 {
+    font-size: 20px !important;
+    height: auto !important;
+    min-height: 30px !important;
+    line-height: 30px !important;
+    white-space: normal !important;
+    padding: 0 25px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  .group-30-1 {
+    min-width: 180px !important;
+    justify-content: center !important;
+  }
+  
+  .vector-16-1,
+  .vector-15-1 {
+    width: 35px !important;
+  }
+  
+  .about-us {
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 20px !important;
+    line-height: 20px !important;
+    color: var(--white) !important;
+  }
+  
+  .text-46 {
+    font-size: 12px !important;
+    height: auto !important;
+    min-height: 18px !important;
+    line-height: 18px !important;
+    white-space: nowrap !important;
+    padding: 0 40px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    color: var(--white) !important;
+  }
+  
+  .button-3 {
+    width: 220px !important;
+    padding: 8px 0px !important;
+  }
+  
+  .text-44 {
+    font-size: 11px !important;
+    line-height: 16.5px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .overlap-group6 {
+    height: auto !important;
+    min-height: 220px !important;
+    padding: 30px 15px !important;
+    gap: 10px !important;
+  }
+  
+  .rectangle-9 {
+    height: 220px !important;
+  }
+  
+  .text-45 {
+    font-size: 18px !important;
+    height: auto !important;
+    min-height: 27px !important;
+    line-height: 27px !important;
+    padding: 0 20px !important;
+    width: 100% !important;
+  }
+  
+  .group-30-1 {
+    min-width: 160px !important;
+    justify-content: center !important;
+  }
+  
+  .vector-16-1,
+  .vector-15-1 {
+    width: 30px !important;
+  }
+  
+  .about-us {
+    font-size: 12px !important;
+    height: auto !important;
+    min-height: 18px !important;
+    line-height: 18px !important;
+    color: var(--white) !important;
+  }
+  
+  .text-46 {
+    font-size: 11px !important;
+    height: auto !important;
+    min-height: 16px !important;
+    line-height: 16px !important;
+    white-space: nowrap !important;
+    padding: 0 30px !important;
+    width: 100% !important;
+    color: var(--white) !important;
+  }
+  
+  .button-3 {
+    width: 200px !important;
+    padding: 6px 0px !important;
+  }
+  
+  .text-44 {
+    font-size: 10px !important;
+    line-height: 15px !important;
+  }
 }
 </style>

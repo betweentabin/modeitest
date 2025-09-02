@@ -66,6 +66,10 @@
             <img class="vector-27" src="/img/vector.svg" alt="Vector" />
             <div class="text-25 valign-text-middle inter-normal-black-16px">用語集</div>
           </router-link>
+          <router-link to="/economic-indicators" class="frame-1321317524 footer-link">
+            <img class="vector-27" src="/img/vector.svg" alt="Vector" />
+            <div class="text-25 valign-text-middle inter-normal-black-16px">経済指標一覧</div>
+          </router-link>
           <router-link to="/statistics" class="frame-1321317524 footer-link">
             <img class="vector-27" src="/img/vector.svg" alt="Vector" />
             <div class="text-25 valign-text-middle inter-normal-black-16px">経済・調査統計</div>

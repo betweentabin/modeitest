@@ -52,10 +52,21 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1300px) {
+  .card-1-1 {
+    height: 250px;
+  }
+}
+
+@media (max-width: 1100px) {
   .card-1-1 {
     width: 100%;
-    max-width: 400px;
+  }
+}
+
+@media (max-width: 900px) {
+  .card-1-1 {
+    width: 100%;
   }
 }
 </style>

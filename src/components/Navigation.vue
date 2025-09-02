@@ -6,8 +6,8 @@
     </div>
     <div class="nav-controls">
       <div class="main-nav">
-        <x-button />
-        <x-button2 />
+        <x-button v-if="!isMobile" />
+        <x-button2 v-if="!isMobile" />
         <button class="hamburger-menu" @click="toggleMenu">
           <div class="hamburger-line"></div>
           <div class="hamburger-line"></div>
@@ -44,8 +44,16 @@ export default {
   },
   data() {
     return {
-      isMenuOpen: false
+      isMenuOpen: false,
+      isMobile: false
     };
+  },
+  mounted() {
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkScreenSize);
   },
   methods: {
     toggleMenu() {
@@ -54,6 +62,9 @@ export default {
     },
     closeMenu() {
       this.isMenuOpen = false;
+    },
+    checkScreenSize() {
+      this.isMobile = window.innerWidth <= 800;
     }
   }
 };
@@ -76,6 +87,11 @@ export default {
   display: flex;
   align-items: center;
   gap: 20px;
+  min-width: 0;
+  flex-shrink: 1;
+  transition: gap 0.3s ease;
+  height: auto;
+  min-height: auto;
 }
 
 .nav-controls {
@@ -130,6 +146,65 @@ export default {
 @media (max-width: 1150px) {
   .sub-nav {
     display: none;
+  }
+}
+
+/* モバイルでボタンを非表示 */
+@media (max-width: 800px) {
+  .x-button,
+  .x-button2 {
+    display: none;
+  }
+}
+
+/* 小さい画面でのレイアウト調整 */
+@media (max-width: 800px) {
+  .navigation {
+    padding: 12px 15px;
+  }
+  
+  .logo-section {
+    gap: 12px;
+    height: auto;
+    min-height: auto;
+  }
+  
+  .main-nav {
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navigation {
+    padding: 10px 10px;
+  }
+  
+  .logo-section {
+    gap: 8px;
+    height: auto;
+    min-height: auto;
+  }
+  
+  .main-nav {
+    min-width: 200px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation {
+    padding: 8px 8px;
+  }
+  
+  .logo-section {
+    gap: 6px;
+    height: auto;
+    min-height: auto;
+  }
+  
+  .main-nav {
+    min-width: 180px;
+    gap: 8px;
   }
 }
 </style>

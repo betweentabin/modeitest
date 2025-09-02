@@ -1,170 +1,104 @@
 <template>
   <div class="page-container">
     <Navigation />
-
+    
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">用語集</h1>
-          <p class="hero-subtitle">glossary</p>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="用語集"
+      subtitle="Glossary"
+      heroImage="/img/hero-image.png"
+    />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['用語集']" />
 
     <div class="page-content">
-      <!-- Glossary Header -->
-      <div class="glossary-header">
-        <h2 class="section-title">用語集</h2>
-        <p class="section-subtitle">glossary</p>
-        <p class="description">経済用語を分かりやすく解説いたします。</p>
-    </div>
-
-      <!-- Search and Filter -->
-      <div class="search-section">
-        <div class="search-box">
-          <input 
-            type="text" 
-            v-model="searchQuery" 
-            placeholder="用語を検索..." 
-            class="search-input"
-          />
-          <button class="search-btn">検索</button>
+      <div class="content-header">
+        <h2 class="page-title">用語集</h2>
+        <div class="title-decoration">
+          <div class="line-left"></div>
+          <span class="title-english">Glossary</span>
+          <div class="line-right"></div>
         </div>
       </div>
-
-      <!-- Alphabetical Index -->
-      <div class="alphabetical-index">
+      
+      <div class="glossary-description">
+        <p>経済をより深く知るために必要な用語集となります。</p>
+      </div>
+      
+      <div class="glossary-list">
+        <div v-for="(item, index) in paginatedGlossary" :key="index" class="glossary-item">
+          <div class="glossary-term" @click="toggleDefinition(index)">
+            <div class="term-line"></div>
+            <span class="term-text">{{ item.term }}</span>
+            <span class="toggle-icon" :class="{ open: openItems.includes(index) }">
+              <svg width="20" height="20" viewBox="0 0 20 20">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </span>
+          </div>
+          <transition name="slide">
+            <div v-if="openItems.includes(index)" class="glossary-definition">
+              <div class="definition-content">
+                <div class="definition-text" v-html="item.definition"></div>
+              </div>
+            </div>
+          </transition>
+        </div>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="pagination">
         <button 
-          v-for="letter in alphabet" 
-          :key="letter"
-          :class="['letter-btn', { active: selectedLetter === letter }]"
-          @click="selectLetter(letter)"
+          class="pagination-btn" 
+          :class="{ active: currentPage === 1 }"
+          @click="goToPage(1)"
         >
-          {{ letter }}
+          1
         </button>
+        <button 
+          class="pagination-btn" 
+          :class="{ active: currentPage === 2 }"
+          @click="goToPage(2)"
+        >
+          2
+        </button>
+        <button 
+          class="pagination-btn" 
+          :class="{ active: currentPage === 3 }"
+          @click="goToPage(3)"
+        >
+          3
+        </button>
+        <span class="pagination-dots">...</span>
+        <button 
+          class="pagination-btn" 
+          :class="{ active: currentPage === totalPages }"
+          @click="goToPage(totalPages)"
+        >
+          {{ totalPages }}
+        </button>
+        <button 
+          class="pagination-btn next-btn"
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage >= totalPages"
+        >
+          最後
+        </button>
+      </div>
     </div>
 
-      <!-- Glossary List -->
-      <div class="glossary-list" v-if="!loading">
-        <div class="glossary-categories">
-          <!-- あ行 -->
-          <div class="category-section" v-if="getCategoryTerms('あ').length > 0">
-            <h3 class="category-title">あ行</h3>
-            <div class="terms-grid">
-              <div 
-                v-for="term in getCategoryTerms('あ')" 
-                :key="term.id"
-                class="term-card"
-                @click="toggleTerm(term.id)"
-              >
-                <div class="term-header">
-                  <h4 class="term-name">{{ term.name }}</h4>
-                  <span class="toggle-icon" :class="{ open: openTerms.includes(term.id) }">
-                    <svg width="16" height="16" viewBox="0 0 16 16">
-                      <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-                  </span>
-            </div>
-                <transition name="slide">
-                  <div v-if="openTerms.includes(term.id)" class="term-definition">
-                    <p>{{ term.definition }}</p>
-                    <div v-if="term.example" class="term-example">
-                      <strong>例：</strong>{{ term.example }}
-            </div>
-            </div>
-                </transition>
-            </div>
-            </div>
-          </div>
+    <!-- Contact CTA Section -->
+    <ContactSection />
 
-          <!-- か行 -->
-          <div class="category-section" v-if="getCategoryTerms('か').length > 0">
-            <h3 class="category-title">か行</h3>
-            <div class="terms-grid">
-              <div 
-                v-for="term in getCategoryTerms('か')" 
-                :key="term.id"
-                class="term-card"
-                @click="toggleTerm(term.id)"
-              >
-                <div class="term-header">
-                  <h4 class="term-name">{{ term.name }}</h4>
-                  <span class="toggle-icon" :class="{ open: openTerms.includes(term.id) }">
-                    <svg width="16" height="16" viewBox="0 0 16 16">
-                      <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-                  </span>
-            </div>
-                <transition name="slide">
-                  <div v-if="openTerms.includes(term.id)" class="term-definition">
-                    <p>{{ term.definition }}</p>
-                    <div v-if="term.example" class="term-example">
-                      <strong>例：</strong>{{ term.example }}
-            </div>
-              </div>
-                </transition>
-              </div>
-            </div>
-          </div>
-
-          <!-- その他のカテゴリも同様に -->
-          <div class="category-section" v-for="category in ['さ', 'た', 'な', 'は', 'ま', 'や', 'ら', 'わ', 'A', '数字']" :key="category" v-if="getCategoryTerms(category).length > 0">
-            <h3 class="category-title">{{ getCategoryTitle(category) }}</h3>
-            <div class="terms-grid">
-              <div 
-                v-for="term in getCategoryTerms(category)" 
-                :key="term.id"
-                class="term-card"
-                @click="toggleTerm(term.id)"
-              >
-                <div class="term-header">
-                  <h4 class="term-name">{{ term.name }}</h4>
-                  <span class="toggle-icon" :class="{ open: openTerms.includes(term.id) }">
-                    <svg width="16" height="16" viewBox="0 0 16 16">
-                      <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-                  </span>
-            </div>
-                <transition name="slide">
-                  <div v-if="openTerms.includes(term.id)" class="term-definition">
-                    <p>{{ term.definition }}</p>
-                    <div v-if="term.example" class="term-example">
-                      <strong>例：</strong>{{ term.example }}
-            </div>
-            </div>
-                </transition>
-          </div>
-            </div>
-            </div>
-            </div>
-          </div>
-
-      <div v-if="loading" class="loading">
-        読み込み中...
-          </div>
-        </div>
-
-    <!-- Company CTA Section -->
-    <section class="company-cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p class="cta-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
-          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
-            </div>
-          </div>
-    </section>
+    <!-- Access Section -->
+    <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
 
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
@@ -172,7 +106,11 @@
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
-import FixedActionButtons from "./FixedActionButtons.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import ContactSection from "./ContactSection.vue";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 
 export default {
@@ -181,334 +119,237 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons
+    HeroSection,
+    Breadcrumbs,
+    ContactSection,
+    AccessSection,
+    FixedSideButtons
   },
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
-      loading: false,
       searchQuery: '',
-      selectedLetter: 'all',
-      openTerms: [],
-      alphabet: ['あ', 'か', 'さ', 'た', 'な', 'は', 'ま', 'や', 'ら', 'わ', 'A', '数字'],
-      glossaryTerms: [
+      openItems: [],
+      currentPage: 1,
+      itemsPerPage: 15,
+      glossary: [
         {
-          id: 1,
-          name: 'GDP（国内総生産）',
-          category: 'A',
-          definition: 'Gross Domestic Productの略。一定期間内に国内で生産された財・サービスの付加価値の総額。経済の規模や成長率を測る重要な指標。',
-          example: '日本のGDPは約500兆円（2023年）'
+          category: 'economic',
+          term: 'CPI',
+          definition: 'CPIとは、Consumer Price Index（消費者物価指数）の略称で、一般的な消費者が購入する商品やサービスの価格の変動を測る指標です。この指数は、食品や衣類、住宅、交通費など、日常生活に必要な一連の商品とサービスの価格を追跡し、それらの価格が時間とともにどのように変化するかを示します。<br><br>CPIは、インフレーション（物価上昇）やデフレーション（物価下降）の測定に用いられ、経済の健全性を評価するための重要な指標の一つです。政府や中央銀行は、CPIを参考にして金融政策を決定し、たとえばインフレが高い場合には金利を上げるなどの措置を取ることがあります。<br><br>また、CPIは給与や年金などの生活給付金の調整にも使われることがあり、物価の変動に合わせてこれらの支払い額が増減することがあります。消費者にとっては、物価の変動を理解し、自身の購買力がどのように影響を受けているかを知るための重要な指標となります。',
         },
         {
-          id: 2,
-          name: 'インフレーション',
-          category: 'あ',
-          definition: '物価が継続的に上昇する現象。通貨の価値が下がり、同じ金額で購入できる物やサービスの量が減少する。',
-          example: '年間2%のインフレ率であれば、100円の商品が翌年102円になる'
+          category: 'economic',
+          term: 'TIBOR',
+          definition: 'TIBORとは、Tokyo Interbank Offered Rateの略称で、全国銀行協会が算出する「東京銀行間取引金利」のことを指します。<br><br>具体的には、主要な銀行が他の銀行に資金を貸し出す際に提示する金利の平均値を指します。日本円TIBORとユーロ円TIBORの2種類があり、期間別（1週間、1か月、3か月、6か月、12か月）に算出され、毎営業日午前11時頃に公表されます。<br><br>TIBORは、多くのローンや金融商品の金利設定のベースとして使用されます。例えば、変動金利型住宅ローンの金利や、企業の借入金利などに利用されることがあります。しかし、2012年のLIBOR不正操作問題を受けて、TIBORを含む銀行間取引金利の信頼性や透明性に疑問が投げかけられ、金利指標の改革や代替指標の検討が進められています。その一環で、ユーロ円TIBORは2024年12月末をもって恒久的に公表が停止されています。<br><br>投資家にとっては、TIBORの動向が金融市場全体の金利水準や、金利に連動する金融商品の価格に影響を与えるため、重要な指標の一つとなっています。ただし、近年では代替指標への移行も検討されているため、今後の動向に注意が必要です。',
         },
         {
-          id: 3,
-          name: '金融政策',
-          category: 'か',
-          definition: '中央銀行が通貨供給量や金利を調節して、経済の安定と成長を図る政策。',
-          example: '日本銀行による政策金利の引き上げや引き下げ'
+          category: 'financial',
+          term: '消費者信頼感指数',
+          definition: '消費者が将来の経済状況や自身の収入について抱いている期待感や不安感を数値化した指標です。消費者がどの程度消費を控えるか、あるいは積極的に消費を行うかを予測する上で重要な指標となります。',
         },
         {
-          id: 4,
-          name: '産業クラスター',
-          category: 'さ',
-          definition: '特定の産業分野において、企業、研究機関、教育機関などが地理的に集積し、相互に連携しながら競争力を高める地域。',
-          example: 'シリコンバレーのIT産業クラスター'
+          category: 'financial',
+          term: 'GDPデフレーター',
+          definition: '名目GDPを実質GDPで割って算出される物価指数です。GDPに含まれる全ての財・サービスの価格変動を総合的に測定し、経済全体の物価水準の変化を示す指標です。',
         },
         {
-          id: 5,
-          name: '地域経済',
-          category: 'た',
-          definition: '特定の地域における経済活動の総体。地域の産業構造、雇用、所得水準などを含む。',
-          example: '九州地域の自動車産業や半導体産業'
+          category: 'business',
+          term: '短期金融資産',
+          definition: '1年以内に現金化できる金融資産のことです。現金、預金、短期有価証券、売掛金などが含まれ、企業の流動性や短期的な支払い能力を示す指標となります。',
         },
         {
-          id: 6,
-          name: '日銀短観',
-          category: 'な',
-          definition: '日本銀行が四半期ごとに実施する企業短期経済観測調査。企業の業況判断や設備投資計画などを調査。',
-          example: '大企業製造業の業況判断DI（業況が「良い」と答えた企業の割合から「悪い」と答えた企業の割合を差し引いた値）'
+          category: 'business',
+          term: 'M&A',
+          definition: '企業の合併（Merger）と買収（Acquisition）を総称した用語です。企業の成長戦略や事業再編の手段として活用されます。',
         },
         {
-          id: 7,
-          name: 'ファンダメンタルズ',
-          category: 'は',
-          definition: '経済の基礎的条件。GDP成長率、インフレ率、失業率、財政収支、経常収支など経済の基本的な指標群。',
-          example: '企業の業績予想や投資判断の基礎となる経済指標'
+          category: 'statistics',
+          term: '標準偏差',
+          definition: 'データのばらつきを示す統計指標です。平均値からの偏差の二乗平均の平方根で計算され、リスク分析などに使用されます。',
         },
         {
-          id: 8,
-          name: 'マクロ経済',
-          category: 'ま',
-          definition: '国や地域全体の経済を対象とした経済学の分野。GDP、雇用、物価、金利などの総合的な動向を分析。',
-          example: '政府の財政政策や中央銀行の金融政策の効果分析'
+          category: 'economic',
+          term: '公定歩合',
+          definition: '中央銀行が民間銀行に資金を貸し出す際の基準金利です。金融政策の重要な手段として、市場金利や経済活動に大きな影響を与えます。',
+        },
+        {
+          category: 'economic',
+          term: '実質金利',
+          definition: '名目金利からインフレ率を差し引いた金利です。実際の購買力の変化を反映し、投資判断や経済分析において重要な指標となります。',
+        },
+        {
+          category: 'financial',
+          term: '地方債',
+          definition: '地方公共団体が発行する債券です。道路や学校などの公共事業の財源として活用され、国債と同様に安全な投資対象として知られています。',
         }
       ]
     };
   },
   computed: {
-    filteredTerms() {
-      if (!this.searchQuery) {
-        return this.glossaryTerms;
+    filteredGlossary() {
+      let filtered = this.glossary;
+      
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        filtered = filtered.filter(item => 
+          item.term.toLowerCase().includes(query) ||
+          item.definition.toLowerCase().includes(query)
+        );
       }
-      const query = this.searchQuery.toLowerCase();
-      return this.glossaryTerms.filter(term => 
-        term.name.toLowerCase().includes(query) ||
-        term.definition.toLowerCase().includes(query)
-      );
+      
+      return filtered;
+    },
+    
+    paginatedGlossary() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredGlossary.slice(start, end);
+    },
+    
+    totalPages() {
+      return Math.ceil(this.filteredGlossary.length / this.itemsPerPage);
     }
   },
   methods: {
-    selectLetter(letter) {
-      this.selectedLetter = letter;
-    },
-    getCategoryTerms(category) {
-      return this.filteredTerms.filter(term => term.category === category);
-    },
-    getCategoryTitle(category) {
-      const titles = {
-        'あ': 'あ行',
-        'か': 'か行', 
-        'さ': 'さ行',
-        'た': 'た行',
-        'な': 'な行',
-        'は': 'は行',
-        'ま': 'ま行',
-        'や': 'や行',
-        'ら': 'ら行',
-        'わ': 'わ行',
-        'A': 'アルファベット',
-        '数字': '数字'
-      };
-      return titles[category] || category;
-    },
-    toggleTerm(termId) {
-      const index = this.openTerms.indexOf(termId);
-      if (index > -1) {
-        this.openTerms.splice(index, 1);
+    toggleDefinition(index) {
+      const itemIndex = this.openItems.indexOf(index);
+      if (itemIndex > -1) {
+        this.openItems.splice(itemIndex, 1);
       } else {
-        this.openTerms.push(termId);
+        this.openItems.push(index);
       }
     },
-    scrollToContact() {
-      this.$router.push('/contact');
+    
+    goToPage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 .page-container {
   min-height: 100vh;
-  background-color: #ffffff;
-}
-
-/* Hero Section */
-.hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-overlay {
-  text-align: center;
-  color: white;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
+  background-color: #ECECEC;
 }
 
 /* Page Content */
 .page-content {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 70px 50px;
 }
 
-.glossary-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.section-title {
-  font-size: 2rem;
-  color: #1A1A1A;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  font-weight: 500;
-  position: relative;
-  padding-bottom: 20px;
-  margin-bottom: 15px;
-}
-
-.section-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background-color: #da5761;
-}
-
-.description {
-  color: #666;
-  font-size: 1rem;
-}
-
-/* Search Section */
-.search-section {
+.content-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
   margin-bottom: 40px;
 }
 
-.search-box {
+.page-title {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: -0.72px;
+  text-align: center;
+  margin: 0;
+}
+
+.title-decoration {
   display: flex;
-  max-width: 500px;
-  margin: 0 auto;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: auto;
+  min-width: 306px;
 }
 
-.search-input {
-  flex: 1;
-  padding: 12px 20px;
-  border: 2px solid #dee2e6;
-  border-radius: 25px;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s;
+.line-left, .line-right {
+  width: 80px;
+  height: 2px;
+  background: #DA5761;
+  flex-shrink: 0;
 }
 
-.search-input:focus {
-  border-color: #da5761;
+.title-english {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #DA5761;
 }
 
-.search-btn {
-  background: #da5761;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-
-.search-btn:hover {
-  background: #c44853;
-}
-
-/* Alphabetical Index */
-.alphabetical-index {
+/* Description */
+.glossary-description {
+  text-align: center;
+  margin-bottom: 40px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-}
-
-.letter-btn {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.9rem;
-  color: #666;
-  min-width: 45px;
-}
-
-.letter-btn.active,
-.letter-btn:hover {
-  background: #da5761;
-  color: white;
-  border-color: #da5761;
-}
-
-/* Glossary List */
-.glossary-categories {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-.category-section {
-  background: white;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.category-title {
-  font-size: 1.5rem;
-  color: #1A1A1A;
-  margin-bottom: 25px;
-  font-weight: bold;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #da5761;
-}
-
-.terms-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.term-card {
-  background: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border-left: 4px solid #da5761;
-}
-
-.term-card:hover {
-  background: #e9ecef;
-  transform: translateX(5px);
-}
-
-.term-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-.term-name {
+.glossary-description p {
+  color: #666;
   font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* Glossary Items */
+.glossary-list {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.glossary-item {
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.glossary-term {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.glossary-term:hover {
+  background-color: #f8f9fa;
+}
+
+.term-line {
+  flex: 0 0 5px;
+  width: 5px;
+  height: 40px;
+  background: #da5761;
+  margin-right: 15px;
+}
+
+.term-text {
+  flex: 1;
+  font-size: 1rem;
   color: #1A1A1A;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: "Noto Sans JP", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 .toggle-icon {
@@ -520,30 +361,22 @@ export default {
   transform: rotate(180deg);
 }
 
-.term-definition {
-  margin-top: 15px;
-  padding-top: 15px;
+.glossary-definition {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
   border-top: 1px solid #dee2e6;
 }
 
-.term-definition p {
+.definition-content {
+  flex: 1;
+  padding-top: 5px;
+}
+
+.definition-text {
   color: #666;
   line-height: 1.6;
-  margin-bottom: 10px;
-}
-
-.term-example {
-  background: #e8f4f8;
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
+  margin-bottom: 15px;
 }
 
 /* Slide Animation */
@@ -563,119 +396,84 @@ export default {
 .slide-enter-to,
 .slide-leave-from {
   opacity: 1;
-  max-height: 300px;
-}
-
-/* Company CTA Section */
-.company-cta-section {
-  background: linear-gradient(135deg, #da5761 0%, #c44853 100%);
-  color: white;
-  text-align: center;
-  padding: 80px 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.cta-content h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.cta-description {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  color: rgba(255,255,255,0.9);
-}
-
-.cta-button {
-  background: white;
-  color: #da5761;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-weight: bold;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  max-height: 500px;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  
   .page-content {
     padding: 40px 15px;
   }
   
-  .search-box {
-  flex-direction: column;
-  }
-  
-  .alphabetical-index {
-  gap: 5px;
-}
-
-  .letter-btn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    min-width: 35px;
-  }
-  
-  .category-section {
-    padding: 20px;
-  }
-  
-  .term-header {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .term-card {
+  .glossary-term {
     padding: 15px;
   }
   
-  .term-name {
-    font-size: 1rem;
+  .term-text {
+    font-size: 0.9rem;
   }
   
-  .term-definition p {
-    font-size: 0.9rem;
+  .term-line {
+    width: 5px;
+    height: 35px;
+    margin-right: 10px;
   }
 }
 
 /* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
+
+/* Pagination Styles */
+.pagination {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
+  gap: 10px;
+  margin-top: 30px;
 }
 
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
+.pagination-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  background: #FFFFFF;
+  border: 1px solid #CFCFCF;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover {
+  background: #DA5761;
+  color: #FFFFFF;
+  border-color: #DA5761;
+}
+
+.pagination-btn.active {
+  background: #1A1A1A;
+  color: #FFFFFF;
+  border-color: #1A1A1A;
+}
+
+.pagination-btn:disabled {
+  background: #F6F6F6;
+  color: #B2B2B2;
+  cursor: not-allowed;
+  border-color: #E0E0E0;
+}
+
+.pagination-dots {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.next-btn {
+  width: 60px;
 }
 </style>

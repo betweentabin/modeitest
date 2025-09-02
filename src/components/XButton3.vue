@@ -1,5 +1,5 @@
 <template>
-  <div class="button-4">
+  <div class="button-4 arrow-dark">
     <div class="text-7 valign-text-middle inter-bold-white-15px">一覧を表示</div>
     <frame13213176122 />
   </div>

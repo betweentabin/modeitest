@@ -45,11 +45,7 @@
     <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
   </div>
 </template>
 
@@ -255,35 +251,6 @@ export default {
 }
 
 /* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-.navigation-footer .frame132131753022 {
-  width: 100%;
-  max-width: 1000px;
-}
-
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
-
-.navigation-footer .group27 {
-  width: 100%;
-  max-width: 1000px;
-}
 
 .footer-navigation {
   background: #CFCFCF;
@@ -348,9 +315,7 @@ export default {
     padding: 30px;
   }
 
-  .navigation-footer {
-    padding: 50px 50px;
-  }
+
 }
 
 @media (max-width: 768px) {
@@ -370,8 +335,6 @@ export default {
     font-size: 18px;
   }
 
-  .navigation-footer {
-    padding: 30px 20px;
-  }
+
 }
 </style>

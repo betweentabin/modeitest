@@ -126,11 +126,7 @@
     <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
 
     <!-- Fixed Side Buttons -->
     <FixedSideButtons position="bottom" />
@@ -601,27 +597,6 @@ export default {
 /* Floating Action Buttons styles are now handled by FixedSideButtons component */
 
 /* Footer Navigation */
-.navigation-footer {
-  align-items: center;
-  background-color: var(--celeste);
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-  padding: 100px;
-  position: relative;
-  width: 100%;
-  max-width: 100vw;
-  z-index: 4;
-  box-sizing: border-box;
-}
-
-.vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
 
 /* Responsive Design */
 @media (max-width: 1200px) {

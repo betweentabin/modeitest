@@ -3,27 +3,23 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <p class="hero-subtitle">financial report</p>
-          <h1 class="hero-title">決算報告</h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="決算報告"
+      subtitle="Financial Report"
+      heroImage="/img/hero-image.png"
+    />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['決算報告']" />
 
     <div class="page-content">
-      <!-- Breadcrumb -->
-      <div class="breadcrumb">
-        <span>トップ</span>
-        <span class="separator">＞</span>
-        <span>決算報告</span>
-      </div>
-
-      <!-- Page Header -->
-      <div class="page-header">
-        <h2 class="section-title">決算報告</h2>
-        <p class="section-subtitle">financial report</p>
+      <div class="content-header">
+        <h2 class="page-title">決算報告</h2>
+        <div class="title-decoration">
+          <div class="line-left"></div>
+          <span class="title-english">Financial Report</span>
+          <div class="line-right"></div>
+        </div>
       </div>
 
       <!-- Financial Reports -->
@@ -99,41 +95,39 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="action-buttons">
-        <button class="action-btn contact-btn" @click="goToContact">お問い合わせはコチラ</button>
-        <button class="action-btn member-btn" @click="goToMember">入会はコチラ</button>
-      </div>
-
-      <!-- Company Section -->
-      <section class="company-section">
-        <div class="company-overlay">
-          <div class="company-content">
-            <h2>株式会社ちくぎん地域経済研究所</h2>
-            <p class="company-subtitle">About us</p>
-            <p class="company-description">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
-            <button class="company-btn" @click="goToContact">お問い合わせはコチラ</button>
-          </div>
-        </div>
-      </section>
+      <ActionButton 
+        primaryText="お問い合わせはコチラ"
+        secondaryText="入会はコチラ"
+        maxWidth="1500px"
+        @primary-click="goToContact"
+        @secondary-click="goToMember"
+      />
     </div>
+
+    <!-- Contact CTA Section -->
+    <ContactSection />
 
     <!-- Access Section -->
     <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
+
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
 <script>
-import AccessSection from './AccessSection.vue';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import ContactSection from "./ContactSection.vue";
+import AccessSection from "./AccessSection.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
+import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 
 export default {
@@ -142,7 +136,12 @@ export default {
     Navigation,
     Footer,
     Group27,
-    AccessSection
+    HeroSection,
+    Breadcrumbs,
+    ContactSection,
+    AccessSection,
+    FixedSideButtons,
+    ActionButton
   },
   data() {
     return {
@@ -161,110 +160,75 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .page-container {
   min-height: 100vh;
-  background-color: #ffffff;
-}
-
-/* Hero Section */
-.hero-section {
-  height: 300px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('/img/hero-image.png') center/cover;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 50px;
-}
-
-.hero-overlay {
-  color: white;
-}
-
-.hero-subtitle {
-  font-size: 0.9rem;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-  color: #ffffff;
-  opacity: 0.9;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: white;
+  background-color: #ECECEC;
 }
 
 /* Page Content */
 .page-content {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 70px 50px;
 }
 
-/* Breadcrumb */
-.breadcrumb {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 30px;
+.content-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-bottom: 40px;
 }
 
-.separator {
-  margin: 0 8px;
-  color: #999;
-}
-
-/* Page Header */
-.page-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.section-title {
-  font-size: 2rem;
+.page-title {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
   color: #1A1A1A;
-  margin-bottom: 10px;
-  font-weight: bold;
+  letter-spacing: -0.72px;
+  text-align: center;
+  margin: 0;
 }
 
-.section-subtitle {
-  color: #da5761;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  font-weight: 500;
-  position: relative;
-  padding-bottom: 20px;
+.title-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: auto;
+  min-width: 306px;
 }
 
-.section-subtitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
+.line-left, .line-right {
+  width: 80px;
   height: 2px;
-  background-color: #da5761;
+  background: #DA5761;
+  flex-shrink: 0;
+}
+
+.title-english {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #DA5761;
 }
 
 /* Reports Container */
 .reports-container {
-  margin-bottom: 60px;
+  background: white;
+  max-width: 1500px;
+  margin: 0 auto 50px;
+  padding: 50px;
+  border-radius: 15px;
 }
 
 .report-section {
-  background: white;
-  border-radius: 15px;
   padding: 30px;
-  margin-bottom: 30px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border-bottom: 0.5px dashed #B0B0B0;
+}
+
+.report-section:first-child {
+  border-top: 0.5px dashed #B0B0B0;
 }
 
 .report-year {
@@ -286,7 +250,6 @@ export default {
 
 .report-item {
   padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
   position: relative;
   padding-left: 20px;
 }
@@ -295,7 +258,7 @@ export default {
   content: '•';
   position: absolute;
   left: 0;
-  color: #da5761;
+  color: #0066cc;
   font-size: 1.2rem;
   font-weight: bold;
 }
@@ -305,7 +268,7 @@ export default {
 }
 
 .report-title {
-  color: #666;
+  color: #0066cc;
   font-size: 0.95rem;
   line-height: 1.6;
   cursor: pointer;
@@ -316,133 +279,16 @@ export default {
   color: #da5761;
 }
 
-/* Action Buttons */
-.action-buttons {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-bottom: 60px;
-}
 
-.action-btn {
-  border: none;
-  padding: 15px 40px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: all 0.3s;
-  min-width: 200px;
-}
-
-.contact-btn {
-  background: #da5761;
-  color: white;
-}
-
-.contact-btn:hover {
-  background: #c44853;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
-}
-
-.member-btn {
-  background: #8B0000;
-  color: white;
-}
-
-.member-btn:hover {
-  background: #660000;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
-}
-
-/* Company Section */
-.company-section {
-  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-              url('/img/hero-image.png') center/cover;
-  color: white;
-  text-align: center;
-  padding: 80px 20px;
-  margin-bottom: 60px;
-  border-radius: 20px;
-}
-
-.company-content h2 {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.company-subtitle {
-  font-size: 1rem;
-  letter-spacing: 2px;
-  color: #da5761;
-  margin-bottom: 20px;
-}
-
-.company-description {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  line-height: 1.6;
-}
-
-.company-btn {
-  background: #da5761;
-  color: white;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1rem;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-weight: bold;
-}
-
-.company-btn:hover {
-  background: #c44853;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
-}
-
-/* Access Section */
-
-.access-header h2 {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 5px;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .hero-section {
-    padding-left: 20px;
-  }
-  
-  .hero-title {
-    font-size: 2rem;
-  }
-  
   .page-content {
-    padding: 30px 15px;
+    padding: 40px 15px;
   }
   
   .report-section {
     padding: 20px;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .action-btn {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .company-section {
-    padding: 50px 20px;
   }
 }
 
@@ -450,27 +296,7 @@ export default {
   .report-title {
     font-size: 0.85rem;
   }
-
 }
 
-/* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
 
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
 </style>

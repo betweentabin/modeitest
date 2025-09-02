@@ -4,14 +4,11 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <p class="hero-subtitle">membership</p>
-          <h1 class="hero-title">入会案内</h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      title="入会案内"
+      subtitle="membership"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ba0640caf634ea83255fc6ebd7dda9734c97932?width=2880"
+    />
 
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="['入会案内']" />
@@ -210,11 +207,7 @@
     <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
 
     <!-- Fixed Side Buttons -->
     <FixedSideButtons position="bottom" />
@@ -230,6 +223,7 @@ import Footer from "./Footer.vue";
 import Group27 from "./Group27";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import HeroSection from "./HeroSection.vue";
 import { frame132131753022Data } from "../data";
 
 export default {
@@ -242,7 +236,8 @@ export default {
     Footer,
     Group27,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    HeroSection
   },
   data() {
     return {
@@ -269,46 +264,7 @@ export default {
   min-height: 100vh;
 }
 
-/* Hero Section */
-.hero-section {
-  width: 100%;
-  height: 396px;
-  background: linear-gradient(rgba(77, 77, 77, 0.70), rgba(77, 77, 77, 0.70)), 
-              url('https://api.builder.io/api/v1/image/assets/TEMP/6ba0640caf634ea83255fc6ebd7dda9734c97932?width=2880') lightgray center/cover no-repeat;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: end;
-  padding: 50px 30px;
-}
-
-.hero-overlay {
-  width: 100%;
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.hero-subtitle {
-  color: #FFFFFF;
-  font-family: var(--font-family-inter);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 2.5;
-  letter-spacing: -0.48px;
-}
-
-.hero-title {
-  color: #FFFFFF;
-  font-family: var(--font-family-inter);
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: -0.8px;
-}
+/* Hero Section - 削除済み（HeroSection.vueコンポーネントを使用） */
 
 /* Introduction Section */
 .introduction-section {
@@ -775,50 +731,14 @@ export default {
   }
 }
 
-/* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
 
-.navigation-footer .frame132131753022 {
-  width: 100%;
-  max-width: 1000px;
-}
-
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
-
-.navigation-footer .group27 {
-  width: 100%;
-  max-width: 1000px;
-}
 
 @media (max-width: 768px) {
   .container {
     padding: 0 20px;
   }
   
-  .hero-section {
-    height: 300px;
-    padding: 30px 20px;
-  }
-  
-  .hero-title {
-    font-size: 28px;
-  }
+  /* ヒーローセクションはHeroSection.vueコンポーネントで対応 */
   
   .section-title {
     font-size: 28px;

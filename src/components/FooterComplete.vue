@@ -51,7 +51,7 @@ export default {
 
 .view-3 {
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: #CFCFCF;
   display: flex;
   flex-direction: column;
   gap: 50px;
@@ -110,7 +110,7 @@ export default {
 
 .navigation-footer {
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: #CFCFCF;
   display: flex;
   flex-direction: column;
   gap: 50px;

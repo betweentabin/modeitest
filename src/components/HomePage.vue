@@ -96,7 +96,7 @@
                   :frame1321317481Props="frame1321317481Props"
                 />
               </div>
-              <div class="button" @click="$router.push('/about-institute')" style="cursor: pointer;">
+              <div class="button arrow-dark" @click="$router.push('/about-institute')" style="cursor: pointer;">
                 <div class="text-55 valign-text-middle inter-bold-white-15px">{{ text120 }}</div>
                 <frame13213176122 />
               </div>
@@ -118,91 +118,31 @@
               <x-button3 />
             </div>
             <div class="frame-1321317467">
-              <div class="frame-13213174">
-                <div class="frame-13 news-item-clickable" @click="goToNewsDetail(0)">
-                  <div class="date valign-text-middle inter-normal-sonic-silver-18px">{{ date1 }}</div>
-                  <div :class="getCategoryClass(dynamicNewsItems[0])" class="category-badge">{{ getCategoryLabel(dynamicNewsItems[0]) }}</div>
-                  <div class="hot-info valign-text-middle inter-normal-ship-gray-18px">{{ hotInfomationVol319 }}</div>
-                  <div class="caret-circle-right">
-                    <div class="overlap-group">
-                      <img
-                        class="vector"
-                        :src="vector74"
-                        alt="Vector"
-                      />
-                    </div>
-                    <img class="vector-3" :src="vector3" alt="Vector" />
-                  </div>
-                </div>
-              </div>
-              <div class="frame-13213174">
-                <div class="frame-13 news-item-clickable" @click="goToNewsDetail(1)">
-                  <div class="date valign-text-middle inter-normal-sonic-silver-18px">{{ date2 }}</div>
-                  <div :class="getCategoryClass(dynamicNewsItems[1])" class="category-badge">{{ getCategoryLabel(dynamicNewsItems[1]) }}</div>
-                  <div class="text-58 valign-text-middle inter-normal-ship-gray-18px">{{ text123 }}</div>
-                  <div class="caret-circle-right-1">
-                    <div class="overlap-group">
-                      <img
-                        class="vector"
-                        src="/img/vector-74.svg"
-                        alt="Vector"
-                      />
-                    </div>
-                    <img class="vector-4" :src="vector5" alt="Vector" />
-                  </div>
-                </div>
-              </div>
-              <div class="frame-13213174">
-                <div class="frame-13 news-item-clickable" @click="goToNewsDetail(2)">
-                  <div class="date valign-text-middle inter-normal-sonic-silver-18px">{{ date3 }}</div>
-                  <div :class="getCategoryClass(dynamicNewsItems[2])" class="category-badge">{{ getCategoryLabel(dynamicNewsItems[2]) }}</div>
-                  <div class="hot-info valign-text-middle inter-normal-ship-gray-18px">{{ hotInformationVol318 }}</div>
-                  <div class="caret-circle-right">
-                    <div class="overlap-group">
-                      <img
-                        class="vector"
-                        src="/img/vector-74.svg"
-                        alt="Vector"
-                      />
-                    </div>
-                    <img class="vector-5" :src="vector8" alt="Vector" />
-                  </div>
-                </div>
-              </div>
-              <div class="frame-13213174">
-                <div class="frame-13 news-item-clickable" @click="goToNewsDetail(3)">
-                  <div class="date valign-text-middle inter-normal-sonic-silver-18px">{{ date4 }}</div>
-                  <div :class="getCategoryClass(dynamicNewsItems[3])" class="category-badge">{{ getCategoryLabel(dynamicNewsItems[3]) }}</div>
-                  <div class="hot-info valign-text-middle inter-normal-ship-gray-18px">{{ hotInformationVol3161 }}</div>
-                  <div class="caret-circle-right">
-                    <div class="overlap-group">
-                      <img
-                        class="vector"
-                        src="/img/vector-74.svg"
-                        alt="Vector"
-                      />
-                    </div>
-                    <img class="vector-7" :src="vector10" alt="Vector" />
-                  </div>
-                </div>
-              </div>
-              <div class="frame-13213174">
-                <div class="frame-13 news-item-clickable" @click="goToNewsDetail(4)">
-                  <div class="date valign-text-middle inter-normal-sonic-silver-18px">{{ date5 }}</div>
-                  <div :class="getCategoryClass(dynamicNewsItems[4])" class="category-badge">{{ getCategoryLabel(dynamicNewsItems[4]) }}</div>
-                  <div class="hot-info valign-text-middle inter-normal-ship-gray-18px">{{ hotInformationVol3162 }}</div>
-                  <div class="caret-circle-right">
-                    <div class="overlap-group">
-                      <img
-                        class="vector"
-                        src="/img/vector-74.svg"
-                        alt="Vector"
-                      />
-                    </div>
-                    <img class="vector-8" :src="vector12" alt="Vector" />
-                  </div>
-                </div>
-              </div>
+                             <article 
+                 v-for="(item, index) in dynamicNewsItems.slice(0, 5)" 
+                 :key="index"
+                 class="news-item"
+                 @click="goToNewsDetail(index)"
+                 style="cursor: pointer;"
+               >
+                 <div class="news-meta">
+                   <div class="news-date-category-row">
+                     <span class="news-date">{{ formatDate(item.date) }}</span>
+                     <span :class="['news-category', getCategoryClass(item)]">
+                       {{ getCategoryLabel(item) }}
+                     </span>
+                   </div>
+                   <h3 class="news-title">{{ item.title }}</h3>
+                 </div>
+                 <div class="news-content">
+                   <div class="news-arrow">
+                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                       <circle cx="12" cy="12" r="11" fill="#DA5761"/>
+                       <path d="M9 7L15 12L9 17" stroke="white" stroke-width="2" fill="none"/>
+                     </svg>
+                   </div>
+                 </div>
+               </article>
             </div>
           </div>
         </div>
@@ -346,7 +286,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="overlap-group-1">
+                  <div class="overlap-group-1" @click="$router.push('/glossary')" style="cursor: pointer;">
                     <img class="x2-4" :src="x24" alt="2 4" />
                     <div class="overlap-group-2">
                       <div class="flex-col">
@@ -394,11 +334,7 @@
       </div>
       
       <!-- Footer Navigation -->
-      <div class="navigation-footer">
-        <Footer v-bind="frame132131753022Props" />
-        <div class="vector-7-1"></div>
-        <group27 />
-      </div>
+      <Footer v-bind="frame132131753022Props" />
       
       <!-- Fixed Side Buttons -->
       <FixedSideButtons position="bottom" />
@@ -714,6 +650,9 @@ export default {
   background: #ffffff;
   min-height: 100vh;
   width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Hero Section */
@@ -884,7 +823,7 @@ export default {
   padding: 20px;
   width: 80%;
   max-width: 100vw;
-  margin: -94px auto 0;
+  margin: -150px auto 0;
   position: relative; /* z-indexが効く */
   z-index: 2; /* overlap-group7 より上 */
   gap: 20px;
@@ -1298,6 +1237,113 @@ export default {
   flex-direction: column;
   position: relative;
   width: 100%;
+  margin-bottom: 40px;
+}
+
+/* News List Styles */
+.news-item {
+  display: flex;
+  padding: 20px 20px;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  transition: none;
+  cursor: pointer;
+  border-bottom: 0.5px dashed #DA5761;
+}
+
+.news-item:first-child {
+  border-top: 0.5px dashed #DA5761;
+}
+
+.news-item:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.news-meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border-radius: 5px;
+  flex: 1;
+}
+
+.news-date {
+  color: #1A1A1A;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.news-category {
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  background: #da5761;
+  margin-left: 20px;
+}
+
+.news-category.seminar {
+  background: #da5761;
+  color: white;
+  padding: 5px 25px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.news-category.publication {
+  background: #da5761;
+  color: white;
+  padding: 5px 25px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.news-category.news-category {
+  background: #da5761;
+  color: white;
+  padding: 5px 25px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.news-title {
+  color: var(--color-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  flex: 1;
+}
+
+.news-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.news-arrow {
+  color: #da5761;
+  margin-left: 15px;
+  transition: transform 0.3s;
+}
+
+.news-item:hover .news-arrow {
+  transform: translateX(5px);
 }
 
 .frame-13213174 {
@@ -1471,13 +1517,14 @@ export default {
 }
 
 .frame-1321317472 {
-  align-items: flex-end;
+  align-items: flex-start;
   align-self: stretch;
   display: flex;
   flex: 0 0 auto;
   gap: 20px;
   position: relative;
   width: 100%;
+  justify-content: flex-start;
 }
 
 .frame-1321317485 {
@@ -1922,30 +1969,16 @@ export default {
   width: 1240px;
 }
 
-.navigation-footer {
-  align-items: center;
-  background-color: var(--celeste);
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-  padding: 100px;
-  position: relative;
-  width: 100%;
-  max-width: 100vw;
-  z-index: 4;
-  box-sizing: border-box;
-}
 
-.vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
 
 /* Responsive Design */
 @media (max-width: 1700px) {
+  .home-page {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
   .content-view {
     max-width: 100%;
     padding: 50px 30px;
@@ -1956,6 +1989,17 @@ export default {
     width: 100%;
     max-width: 100vw;
     box-sizing: border-box;
+  }
+
+  .hero-overlay {
+    padding: 200px 50px;
+  }
+
+  .frame-1321317457 {
+    width: 87%;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: -150px auto 0;
   }
   
   .about {
@@ -1990,76 +2034,237 @@ export default {
   }
 }
 
-@media (max-width: 900px) {
-  .u12488u12483u12501u12442-1 {
-    overflow-x: auto;
-  }
-  
-  .hero-section,
-  .main,
-  .content-view,
-  .content-view-3,
-  .navigation-footer,
-  .frame-1321317457,
-  .overlap-group7,
-  .overlap-group8 {
-    min-width: 900px;
-  }
-}
-
-
-
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .hero-section {
-    min-height: 300px;
-    height: 40vh;
+    height: 800px;
+    padding: 40px 30px;
   }
   
   .hero-overlay {
-    padding: 30px 20px;
+    padding: 200px 50px;
   }
   
-  .main {
-    padding: 0px 20px 50px;
-    width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
+  .hero-content {
+    max-width: 800px;
+    gap: 18px;
+  }
+  
+  .hero-title,
+  .hero-subtitle {
+    font-size: 40px;
+  }
+  
+  .hero-title-wrapper,
+  .hero-subtitle-wrapper {
+    padding: 12px 20px;
+  }
+  
+  .hero-button-wrapper {
+    padding: 12px 20px;
+    gap: 15px;
+  }
+  
+  .hero-button-text {
+    font-size: 18px;
+  }
+  
+  .hero-button-icon {
+    height: 24px;
+    width: 24px;
+  }
+  
+  .frame-1321317457 {
+    width: 90%;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: -220px auto 0;
+  }
+  
+  .frame-1321317490,
+  .frame-1321317491-1,
+  .frame-1321317490-1,
+  .frame-1321317492 {
+    width: calc(50% - 7.5px);
+    min-width: 160px;
+    height: 150px;
+  }
+  
+  .frame-1321317490 .text-1,
+  .frame-1321317491-1 .text-1,
+  .frame-1321317490-1 .text-2,
+  .frame-1321317492 .text-2 {
+    font-size: 13px;
+    line-height: 50px;
+    margin-bottom: -10px;
+  }
+  
+  .frame-1321317490 .seminar,
+  .frame-1321317491-1 .publications,
+  .frame-1321317490-1 .infomation,
+  .frame-1321317492 .membership {
+    font-size: 20px;
+    line-height: 50px;
+    margin-top: 0;
   }
   
   .frame-1321317482 {
-    flex-direction: column;
     gap: 15px;
   }
   
   .card {
+    width: calc((100% - 30px) / 3);
+  }
+  
+  .frame-1321317472 {
+    gap: 30px;
+  }
+  
+  .frame-1321317485 {
     width: 100%;
-    max-width: 400px;
   }
   
-  .frame-1321317457-1 {
-    flex-wrap: wrap;
+  .frame-1321317486 {
+    flex-wrap: nowrap;
     gap: 15px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
   }
   
-  .image-1,
-  .image-2,
-  .image-3,
-  .image-4 {
-    width: calc(50% - 7.5px);
-    height: auto;
+  .frame-1321317475 {
+    width: calc((100% - 45px) / 4);
+    min-width: 200px;
   }
-  
-
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
+  .frame-1321317482 {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .frame-1321317472 {
+    flex-direction: column;
+    gap: 25px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  
+  .content-view-1 {
+    height: auto !important;
+    min-height: 398px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 30px !important;
+    align-items: stretch !important;
+    position: relative !important;
+  }
+  
+  .content-view-1 > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative !important;
+  }
+  
+  .frame-1321317473 {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+    transform: none !important;
+    z-index: auto !important;
+  }
+  
+  .frame-1321317473-1 {
+    height: auto !important;
+    min-height: 398px !important;
+  }
+  
+  .frame-1321317474 {
+    width: 100%;
+    max-width: 100%;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+  }
+  
+  .frame-1321317474 .frame-1321317474 {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .frame-1321317474 .frame-1321317473-2 {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .frame-1321317473 * {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+  }
+  
+  .overlap-group-container {
+    position: relative !important;
+    top: 0 !important;
+  }
+  
+  .overlap-group3-1,
+  .overlap-group-1 {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+  }
+  
+  .overlap-group2,
+  .overlap-group-2 {
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    background-color: var(--white) !important;
+    border-radius: 10px 0px 0px 0px !important;
+    z-index: 10 !important;
+  }
+  
+  .x2-2-1,
+  .x2-3,
+  .x2-4 {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 1 !important;
+    height: 122px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  .frame-1321317486 {
+    flex-wrap: nowrap;
+    gap: 15px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 900px) {
   .hero-section {
-    height: 600px;
+    height: 800px;
     padding: 30px 20px;
   }
   
   .hero-overlay {
-    padding: 100px 40px;
+    padding: 250px 40px;
   }
   
   .hero-title,
@@ -2070,16 +2275,124 @@ export default {
   .hero-button-text {
     font-size: 16px;
   }
+  
+  .frame-1321317457 {
+    width: 90%;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: -200px auto 0;
+  }
+  
+  .frame-1321317490,
+  .frame-1321317491-1,
+  .frame-1321317490-1,
+  .frame-1321317492 {
+    width: calc(50% - 7.5px);
+    min-width: 130px;
+    height: 120px;
+  }
+  
+  .frame-1321317490 .text-1,
+  .frame-1321317491-1 .text-1,
+  .frame-1321317490-1 .text-2,
+  .frame-1321317492 .text-2 {
+    font-size: 12px;
+    line-height: 40px;
+    margin-bottom: 6px;
+  }
+  
+  .frame-1321317490 .seminar,
+  .frame-1321317491-1 .publications,
+  .frame-1321317490-1 .infomation,
+  .frame-1321317492 .membership {
+    font-size: 18px;
+    line-height: 40px;
+    margin-top: 0;
+  }
+  
+  .main {
+    padding: 0px 20px 50px;
+  }
+  
+  .content-view {
+    padding: 30px 20px;
+  }
+  
+  .frame-1321317482 {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .frame-1321317472 {
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  
+  .frame-1321317486 {
+    flex-wrap: nowrap;
+    gap: 15px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .frame-1321317475 {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .frame-1321317473-1 {
+    position: relative;
+    left: 0;
+    width: 100%;
+  }
+  
+  .overlap-group-container {
+    align-items: center;
+  }
+  
+  .overlap-group3-1,
+  .overlap-group-1 {
+    width: 100%;
+  }
+  
+  .overlap-group2,
+  .overlap-group-2 {
+    width: 50%;
+    min-width: auto;
+    justify-content: space-between;
+    padding: 10px 15px;
+  }
+  
+  .flex-col,
+  .flex-col-2 {
+    width: auto;
+    flex: 1;
+  }
+  
+  .caret-right {
+    gap: 0;
+    margin-bottom: 0;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .hero-section {
     height: 500px;
     padding: 20px 15px;
   }
   
   .hero-overlay {
-    padding: 80px 30px;
+    padding: 130px 30px;
   }
   
   .hero-title,
@@ -2089,19 +2402,290 @@ export default {
   
   .hero-button-wrapper {
     padding: 12px 20px;
+    gap: 15px;
   }
   
   .hero-button-text {
     font-size: 14px;
   }
   
-  .main {
-    padding: 0px 30px 50px;
+  .hero-button-icon {
+    height: 24px;
+    width: 24px;
   }
   
-  .content-view,
+  .vector-2 {
+    height: 10px;
+    width: 12px;
+  }
+  
+  .frame-1321317457 {
+    padding: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: -120px auto 0;
+  }
+  
+  .frame-1321317490,
+  .frame-1321317491-1,
+  .frame-1321317490-1,
+  .frame-1321317492 {
+    width: calc(50% - 5px);
+    min-width: 150px;
+    height: 100px;
+  }
+  
+  .frame-1321317491,
+  .frame-1321317491-2,
+  .frame-1321317491-3,
+  .frame-1321317491-4 {
+    padding: 0px 15px;
+  }
+  
+  .frame-1321317490 .text-1,
+  .frame-1321317491-1 .text-1,
+  .frame-1321317490-1 .text-2,
+  .frame-1321317492 .text-2 {
+    font-size: 11px;
+    line-height: 25px;
+    margin-bottom: 4px;
+  }
+  
+  .frame-1321317490 .seminar,
+  .frame-1321317491-1 .publications,
+  .frame-1321317490-1 .infomation,
+  .frame-1321317492 .membership {
+    font-size: 15px;
+    line-height: 25px;
+    margin-top: 0;
+  }
+  
+  .main {
+    padding: 0px 15px 30px;
+  }
+  
+  .content-view {
+    padding: 20px 15px;
+  }
+  
+  .main-publication-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .text-47 {
+    font-size: 28px;
+    margin-top: 20px;
+  }
+  
+  .text-48 {
+    font-size: 16px;
+    line-height: 28px;
+    margin-top: 20px;
+  }
+  
+  .group-30 {
+    min-width: 200px;
+    margin-top: 20px;
+  }
+  
+  /* News List Responsive for 768px */
+  .news-item {
+    padding: 15px 15px;
+    gap: 20px;
+  }
+  
+  .news-meta {
+    gap: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .news-date {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .news-title {
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  
+  .news-category {
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    margin-bottom: 5px;
+  }
+
+  .vector-13, 
+  .vector-14-1 {
+    height: 80px;
+  }
+  
+  /* Date and category on same line for 768px */
+  .news-date-category-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .news-date {
+    margin-bottom: 0;
+  }
+  
+  .news-category {
+    margin-bottom: 0;
+  }
+  
+  .for-you {
+    font-size: 18px;
+    margin-left: 15px;
+  }
+  
+  .vector-16,
+  .vector-15 {
+    width: 50px;
+  }
+  
+  .frame-1321317480 {
+    gap: 20px;
+  }
+  
+  .infomation-1 {
+    font-size: 36px;
+    line-height: 48px;
+  }
+  
+  .text-56 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  
+  .frame-13 {
+    padding: 10px 0;
+    gap: 8px;
+  }
+  
+  .date {
+    font-size: 12px;
+    line-height: 18px;
+    min-width: 70px;
+  }
+  
+  .hot-info,
+  .text-58 {
+    font-size: 12px;
+    line-height: 18px;
+    margin-left: 8px;
+    min-width: 120px;
+  }
+  
+  .category-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+    margin-left: 8px;
+    margin-right: 8px;
+    min-width: 45px;
+  }
+  
+  .caret-circle-right,
+  .caret-circle-right-1 {
+    width: 20px;
+  }
+  
+  .overlap-group {
+    height: 18px;
+    min-width: 18px;
+    padding: 0 5px;
+  }
+  
+  .vector {
+    height: 7px;
+    width: 4px;
+  }
+  
+  .vector-3,
+  .vector-4,
+  .vector-5,
+  .vector-7,
+  .vector-8 {
+    height: 20px;
+    width: 20px;
+  }
+  
+  .frame-1321317484 {
+    padding: 20px 10px;
+    gap: 20px;
+  }
+  
+  .ation {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .text-36,
+  .text-39 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .frame-1321317485 {
+    gap: 10px;
+  }
+  
+  .frame-1321317487 {
+    padding: 10px;
+  }
+  
+  .frame-1321317486 {
+    gap: 10px;
+  }
+  
+  .frame-1321317475 {
+    min-height: 150px;
+  }
+  
+  .overlap-group-container {
+    gap: 8px;
+  }
+  
+  .overlap-group3-1,
+  .overlap-group-1 {
+    min-height: 100px;
+  }
+  
+  .overlap-group2,
+  .overlap-group-2 {
+    padding: 8px 12px;
+  }
+  
+  .text-4 {
+    font-size: 9px;
+    line-height: 12px;
+  }
+  
+  .viwe-more {
+    font-size: 7px;
+    line-height: 10px;
+  }
+  
+  .vector-14,
+  .vector-1 {
+    height: 8px;
+    width: 4px;
+  }
+  
+  .vector-17,
+  .vector-18,
+  .vector-19 {
+    height: 10px;
+    width: 10px;
+  }
+  
   .content-view-3 {
-    padding: 0px 30px 50px;
+    padding: 20px 10px;
   }
   
   .frame-1321317457-1 {
@@ -2115,62 +2699,407 @@ export default {
     width: 100%;
     height: auto;
   }
+  
+  .vector-5-1 {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
-/* クリック可能な刊行物アイテムのスタイル */
-.main-publication-wrapper,
-.publication-item-wrapper {
+@media (max-width: 480px) {
+  .hero-content {
+    gap: 10px;
+  }
+  
+  .hero-section {
+    height: 400px;
+    padding: 15px 10px;
+  }
+  
+  .hero-overlay {
+    padding: 90px 10px;
+  }
+  
+  .hero-title,
+  .hero-subtitle {
+    font-size: 20px;
+  }
+  
+  .hero-button-wrapper {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+  
+  .hero-button-text {
+    font-size: 12px;
+  }
+  
+  .hero-button-icon {
+    height: 20px;
+    width: 20px;
+  }
+  
+  .vector-2 {
+    height: 8px;
+    width: 10px;
+  }
+  
+  .frame-1321317457 {
+    padding: 10px;
+    margin-top: -80px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .frame-1321317490,
+  .frame-1321317491-1,
+  .frame-1321317490-1,
+  .frame-1321317492 {
+    width: calc(50% - 4px);
+    min-width: 140px;
+    height: 60px;
+  }
+  
+  .frame-1321317491,
+  .frame-1321317491-2,
+  .frame-1321317491-3,
+  .frame-1321317491-4 {
+    padding: 0px 15px;
+  }
+  
+  .frame-1321317490 .text-1,
+  .frame-1321317491-1 .text-1,
+  .frame-1321317490-1 .text-2,
+  .frame-1321317492 .text-2 {
+    font-size: 10px;
+    line-height: 20px;
+    margin-bottom: 3px;
+  }
+  
+  .frame-1321317490 .seminar,
+  .frame-1321317491-1 .publications,
+  .frame-1321317490-1 .infomation,
+  .frame-1321317492 .membership {
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 0;
+  }
+  
+  .main {
+    padding: 0px 10px 20px;
+  }
+  
+  .content-view {
+    padding: 15px 10px;
+  }
+  
+  .text-47 {
+    font-size: 24px;
+    margin-top: 15px;
+  }
+  
+  .text-48 {
+    font-size: 14px;
+    line-height: 24px;
+    margin-top: 15px;
+  }
+  
+  .group-30 {
+    min-width: 180px;
+    margin-top: 15px;
+  }
+  
+  .for-you {
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  
+  .vector-16,
+  .vector-15 {
+    width: 40px;
+  }
+  
+  .frame-1321317480 {
+    gap: 15px;
+  }
+  
+  .infomation-1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .text-56 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .frame-13 {
+    padding: 10px 0;
+    gap: 8px;
+  }
+  
+  .date {
+    font-size: 12px;
+    line-height: 18px;
+    min-width: 70px;
+  }
+  
+  .hot-info,
+  .text-58 {
+    font-size: 12px;
+    line-height: 18px;
+    margin-left: 8px;
+    min-width: 120px;
+  }
+  
+  .category-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+    margin-left: 8px;
+    margin-right: 8px;
+    min-width: 45px;
+  }
+  
+  .caret-circle-right,
+  .caret-circle-right-1 {
+    width: 20px;
+  }
+  
+  .overlap-group {
+    height: 18px;
+    min-width: 18px;
+    padding: 0 5px;
+  }
+  
+  .vector {
+    height: 7px;
+    width: 4px;
+  }
+  
+  .vector-3,
+  .vector-4,
+  .vector-5,
+  .vector-7,
+  .vector-8 {
+    height: 20px;
+    width: 20px;
+  }
+  
+  .frame-1321317484 {
+    padding: 20px 10px;
+    gap: 20px;
+  }
+  
+  .ation {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .text-36,
+  .text-39 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .frame-1321317485 {
+    gap: 10px;
+  }
+  
+  .frame-1321317487 {
+    padding: 10px;
+  }
+  
+  .frame-1321317486 {
+    gap: 10px;
+  }
+  
+  .frame-1321317475 {
+    min-height: 150px;
+  }
+  
+  .overlap-group-container {
+    gap: 8px;
+  }
+  
+  .overlap-group3-1,
+  .overlap-group-1 {
+    min-height: 100px;
+  }
+
+  .content-view-1 {
+    gap: 10px !important;
+  }
+  
+  .overlap-group2,
+  .overlap-group-2 {
+    padding: 8px 12px;
+    width: 210px;
+  }
+  
+  .text-4 {
+    font-size: 9px;
+    line-height: 12px;
+  }
+  
+  .viwe-more {
+    font-size: 7px;
+    line-height: 10px;
+  }
+  
+  .vector-14,
+  .vector-1 {
+    height: 8px;
+    width: 4px;
+  }
+  
+  .vector-17,
+  .vector-18,
+  .vector-19 {
+    height: 10px;
+    width: 10px;
+  }
+  
+  .content-view-3 {
+    padding: 20px 10px;
+  }
+  
+  .frame-1321317457-1 {
+    gap: 10px;
+  }
+  
+  .image-1,
+  .image-2,
+  .image-3,
+  .image-4 {
+    width: 100%;
+    height: auto;
+  }
+
+   .frame-1321317472 {
+    gap: 10px !important;
+  }
+  
+     /* News List Responsive for 480px */
+   .news-item {
+     padding: 10px 10px;
+     gap: 15px;
+   }
+   
+   .news-meta {
+     gap: 10px;
+     flex-direction: column;
+     align-items: flex-start;
+   }
+   
+   .news-date {
+     font-size: 14px;
+     margin-bottom: 3px;
+   }
+   
+   .news-title {
+     font-size: 14px;
+     margin-top: 3px;
+   }
+   
+   .news-category {
+     padding: 2px 8px;
+     font-size: 0.6rem;
+     margin-bottom: 3px;
+   }
+   
+   /* Date and category on same line for 480px */
+   .news-date-category-row {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     margin-bottom: 3px;
+   }
+   
+   .news-date {
+     margin-bottom: 0;
+   }
+   
+   .news-category {
+     margin-bottom: 0;
+   }
+}
+
+/* タッチデバイス用のホバー効果 */
+@media (hover: none) {
+  .news-item-clickable:hover {
+    background-color: transparent;
+    transform: none;
+  }
+  
+  .news-item:hover {
+    box-shadow: none;
+    transform: none;
+  }
+  
+  .main-publication-wrapper:hover,
+  .publication-item-wrapper:hover {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* 高解像度ディスプレイ対応 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hero-image {
+    background-size: cover;
+  }
+  
+  .frame-1321317490,
+  .frame-1321317491-1,
+  .frame-1321317490-1,
+  .frame-1321317492 {
+    background-size: cover;
+  }
+}
+
+/* 印刷用スタイル */
+@media print {
+  .hero-section {
+    height: auto;
+    min-height: auto;
+  }
+  
+  .hero-overlay {
+    background-color: transparent;
+  }
+  
+  .hero-title,
+  .hero-subtitle {
+    color: #000;
+  }
+  
+  .frame-1321317457 {
+    display: none;
+  }
+}
+
+.main-publication-wrapper {
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.main-publication-wrapper:hover,
-.publication-item-wrapper:hover {
+.main-publication-wrapper:hover {
   transform: scale(1.02);
   opacity: 0.9;
 }
 
-/* 動的カテゴリーバッジのスタイル */
-.category-badge {
-  background-color: #da5761;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  margin-left: 20px;
-  margin-right: 20px;
-  min-width: 60px;
-  display: inline-block;
-}
-
-.news-category {
-  background-color: #da5761;
-}
-
-.seminar-category {
-  background-color: #28a745;
-}
-
-.publication-category {
-  background-color: #007bff;
-}
-
-/* クリック可能なニュース項目のスタイル */
-.news-item-clickable {
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.news-item-clickable:hover {
-  background-color: rgba(218, 87, 97, 0.05);
-  transform: translateX(5px);
-}
-
-.news-item-clickable:active {
-  transform: translateX(3px);
+.frame-1321317472 {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 20px;
+  position: relative;
+  width: 100%;
+  justify-content: flex-start;
 }
 </style>
 

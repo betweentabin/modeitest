@@ -177,11 +177,7 @@
     <AccessSection />
 
     <!-- Footer Navigation -->
-    <div class="navigation-footer">
-      <Footer v-bind="frame132131753022Props" />
-      <div class="vector-7-1"></div>
-      <Group27 />
-    </div>
+    <Footer v-bind="frame132131753022Props" />
 
     <!-- Fixed Side Buttons -->
     <FixedSideButtons position="bottom" />
@@ -199,6 +195,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
+import { navigateToPublication } from '../utils/navigation.js';
 
 export default {
   name: "PublicationsPublicPage",
@@ -1041,23 +1038,4 @@ export default {
 }
 
 /* Footer Navigation */
-.navigation-footer {
-  background: #CFCFCF;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-.navigation-footer .vector-7-1 {
-  height: 1px;
-  background-color: #B2B2B2;
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-}
 </style>

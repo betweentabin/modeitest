@@ -419,12 +419,6 @@
       </div>
       <div class="navigation-footer">
         <frame132131753022 v-bind="frame132131753022Props" />
-        <img
-          class="vector-7-1"
-          src="/img/vector-7.svg"
-          alt="Vector 7"
-        />
-        <group27 />
       </div>
     </div>
   </div>
@@ -1779,10 +1773,5 @@ export default {
   z-index: 4;
 }
 
-.vector-7-1 {
-  height: 1px;
-  object-fit: cover;
-  position: relative;
-  width: 1240px;
-}
+
 </style>
