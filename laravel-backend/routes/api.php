@@ -390,6 +390,20 @@ Route::get('/debug/tables', function() {
             $tables['news_articles'] = ['exists' => false];
         }
         
+        // Publicationsテーブルの存在確認
+        if (Schema::hasTable('publications')) {
+            $columns = Schema::getColumnListing('publications');
+            $count = \App\Models\Publication::count();
+            $tables['publications'] = [
+                'exists' => true,
+                'columns' => $columns,
+                'count' => $count,
+                'sample' => \App\Models\Publication::first()
+            ];
+        } else {
+            $tables['publications'] = ['exists' => false];
+        }
+        
         return response()->json([
             'status' => 'success',
             'tables' => $tables,
