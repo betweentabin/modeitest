@@ -259,7 +259,7 @@ export default {
           ...this.filters
         }
         
-        const response = await apiClient.getAdminSeminars(params, this.authToken)
+        const response = await apiClient.getAdminSeminars(params) // トークンは自動で付与される
         if (response.success && response.data) {
           this.seminars = response.data.seminars.map(seminar => ({
             id: seminar.id,

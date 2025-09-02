@@ -287,7 +287,7 @@ export default {
           ...this.filters
         }
         
-        const response = await apiClient.getAdminNews(params, this.authToken)
+        const response = await apiClient.getAdminNews(params) // トークンは自動で付与される
         if (response.success && response.data) {
           this.notices = response.data.news.map(news => ({
             id: news.id,

@@ -291,7 +291,7 @@ export default {
           ...this.filters
         }
         
-        const response = await apiClient.getAdminPublications(params, this.authToken)
+        const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
         if (response.success && response.data) {
           this.publications = response.data.publications.map(pub => ({
             id: pub.id,

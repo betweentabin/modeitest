@@ -313,34 +313,25 @@ class ApiClient {
   }
 
   // Admin-specific methods with token
-  async getAdminSeminars(params = {}, token) {
+  async getAdminSeminars(params = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/seminars?${queryString}` : '/api/admin/seminars'
-    return this.get(endpoint, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    // トークンは自動的にrequestメソッドで付与される
+    return this.get(endpoint)
   }
 
-  async getAdminNews(params = {}, token) {
+  async getAdminNews(params = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'
-    return this.get(endpoint, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    // トークンは自動的にrequestメソッドで付与される
+    return this.get(endpoint)
   }
 
-  async getAdminPublications(params = {}, token) {
+  async getAdminPublications(params = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/publications-v2?${queryString}` : '/api/admin/publications-v2'
-    return this.get(endpoint, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    // トークンは自動的にrequestメソッドで付与される
+    return this.get(endpoint)
   }
 
   // News categories API methods
