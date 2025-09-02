@@ -17,22 +17,22 @@ class SeminarController extends Controller
     {
         $query = Seminar::query();
 
-        // ステータスフィルタ
-        if ($request->has('status')) {
+        // ステータスフィルタ（空文字は無視）
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
         // 会員要件フィルタ
-        if ($request->has('membership_requirement')) {
+        if ($request->filled('membership_requirement')) {
             $query->where('membership_requirement', $request->membership_requirement);
         }
 
         // 日付範囲フィルタ
-        if ($request->has('date_from')) {
+        if ($request->filled('date_from')) {
             $query->where('date', '>=', $request->date_from);
         }
 
-        if ($request->has('date_to')) {
+        if ($request->filled('date_to')) {
             $query->where('date', '<=', $request->date_to);
         }
 

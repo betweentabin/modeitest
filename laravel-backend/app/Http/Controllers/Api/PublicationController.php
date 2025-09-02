@@ -20,16 +20,16 @@ class PublicationController extends Controller
                 ? Publication::query()->orderBy('publication_date', 'desc')
                 : Publication::where('is_published', true)->orderBy('publication_date', 'desc');
 
-            // フィルタリング
-            if ($request->has('category')) {
+            // フィルタリング（空文字は無視）
+            if ($request->filled('category')) {
                 $query->where('category', $request->category);
             }
 
-            if ($request->has('type')) {
+            if ($request->filled('type')) {
                 $query->where('type', $request->type);
             }
 
-            if ($request->has('search')) {
+            if ($request->filled('search')) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
