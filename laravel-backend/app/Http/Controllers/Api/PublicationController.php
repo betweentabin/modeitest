@@ -12,8 +12,13 @@ class PublicationController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $query = Publication::where('is_published', true)
-                ->orderBy('publication_date', 'desc');
+            // 管理者（/api/admin/* 経由）または認証済み管理ユーザーの場合は全件を対象
+            $isAdminContext = str_starts_with($request->path(), 'api/admin/')
+                || ($request->user() && method_exists($request->user(), 'isAdmin') && $request->user()->isAdmin());
+
+            $query = $isAdminContext
+                ? Publication::query()->orderBy('publication_date', 'desc')
+                : Publication::where('is_published', true)->orderBy('publication_date', 'desc');
 
             // フィルタリング
             if ($request->has('category')) {
@@ -34,9 +39,11 @@ class PublicationController extends Controller
                 });
             }
 
-            // 会員限定フィルタリング
-            if (!$request->boolean('members_only_included')) {
-                $query->where('members_only', false);
+            // 一般公開APIでは会員限定を除外。管理者APIは常に全件。
+            if (!$isAdminContext) {
+                if (!$request->boolean('members_only_included')) {
+                    $query->where('members_only', false);
+                }
             }
 
             // ページネーション
