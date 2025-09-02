@@ -97,6 +97,12 @@ class Admin extends Authenticatable
     {
         return in_array($this->role, ['super_admin', 'admin']);
     }
+    
+    // is_adminプロパティのアクセサ（IsAdminミドルウェア用）
+    public function getIsAdminAttribute()
+    {
+        return $this->isAdmin();
+    }
 
     public function canManage($resource)
     {

@@ -34,11 +34,23 @@ class ApiClient {
     const adminToken = localStorage.getItem('admin_token')
     const authToken = this.token || adminToken
     
+    // トークンがすでにBearerで始まっているか確認
+    let authHeader = null
+    if (authToken) {
+      // トークンがすでにBearerを含んでいるか確認
+      if (authToken.startsWith('Bearer ')) {
+        authHeader = authToken
+      } else {
+        authHeader = `Bearer ${authToken}`
+      }
+      console.log('Using auth token:', authHeader.substring(0, 30) + '...')
+    }
+    
     const config = {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        ...(authHeader ? { Authorization: authHeader } : {}),
         ...options.headers
       },
       mode: 'cors', // CORSモードを明示的に指定

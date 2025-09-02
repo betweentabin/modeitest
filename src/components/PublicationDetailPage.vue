@@ -138,6 +138,7 @@ import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
 import FixedActionButtons from "./FixedActionButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import apiClient from "@/services/apiClient";
 import mockServer from "@/mockServer";
 import MembershipBadge from "./MembershipBadge.vue";
 
@@ -201,7 +202,26 @@ export default {
         
         const publicationId = parseInt(this.$route.params.id);
         
-        // 指定された刊行物を取得
+        // まずAPIから取得を試みる
+        try {
+          const response = await apiClient.getPublication(publicationId);
+          if (response && response.data) {
+            this.publication = response.data;
+            
+            // 関連刊行物を取得
+            const allResponse = await apiClient.getPublications();
+            if (allResponse && allResponse.data) {
+              this.relatedPublications = allResponse.data
+                .filter(p => p.id !== publicationId && p.category === this.publication.category)
+                .slice(0, 3);
+            }
+            return;
+          }
+        } catch (apiError) {
+          console.log('API failed, trying mockServer:', apiError.message);
+        }
+        
+        // APIが失敗した場合はmockServerから取得
         this.publication = await mockServer.getPublication(publicationId);
         
         // 関連刊行物を取得（同じカテゴリーの他の刊行物）

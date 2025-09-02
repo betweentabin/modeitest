@@ -200,14 +200,16 @@ export default {
         this.loading = true;
         const seminarId = this.$route.params.id;
         
-        // まずmockServerから取得を試みる
+        // まずAPIから取得を試みる
         try {
-          const seminar = await mockServer.getSeminar(seminarId);
-          this.seminar = {
-            id: seminar.id,
-            title: seminar.title,
-            description: seminar.description,
-            fullDescription: seminar.detailed_description || seminar.description,
+          const response = await apiClient.getSeminar(seminarId);
+          if (response && response.data) {
+            const seminar = response.data;
+            this.seminar = {
+              id: seminar.id,
+              title: seminar.title,
+              description: seminar.description,
+              fullDescription: seminar.detailed_description || seminar.description,
             date: seminar.date,
             start_time: seminar.start_time,
             end_time: seminar.end_time,
@@ -221,20 +223,33 @@ export default {
             notes: seminar.notes,
             application_deadline: seminar.application_deadline,
             membershipRequirement: seminar.membership_requirement || 'free'
-          };
-          return;
-        } catch (mockError) {
-          console.log('MockServer failed, trying API');
+            };
+            return;
+          }
+        } catch (apiError) {
+          console.log('API failed, trying mockServer:', apiError.message);
         }
         
-        // APIからの取得
-        const response = await apiClient.getSeminar(seminarId);
-        
-        if (response.success && response.data && response.data.seminar) {
-          this.seminar = this.formatSeminarData(response.data.seminar);
-        } else {
-          throw new Error('セミナーが見つかりませんでした');
-        }
+        // APIが失敗した場合はmockServerから取得
+        const seminar = await mockServer.getSeminar(seminarId);
+        this.seminar = {
+          id: seminar.id,
+          title: seminar.title,
+          description: seminar.description,
+          fullDescription: seminar.detailed_description || seminar.description,
+          date: seminar.date,
+          start_time: seminar.start_time,
+          end_time: seminar.end_time,
+          venue: seminar.location,
+          capacity: seminar.capacity,
+          price: seminar.price,
+          organizer: seminar.organizer,
+          membershipRequirement: seminar.membership_requirement,
+          applicationDeadline: seminar.application_deadline,
+          currentParticipants: seminar.current_participants,
+          isOnline: seminar.is_online,
+          featuredImage: seminar.featured_image
+        };
       } catch (error) {
         console.error('セミナー詳細の読み込みに失敗しました:', error);
         this.error = 'セミナー詳細の読み込みに失敗しました。';
