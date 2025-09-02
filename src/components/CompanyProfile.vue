@@ -1043,6 +1043,7 @@ section {
   .history-section,
   .staff-section {
     padding: 30px 20px;
+    gap: 20px;
   }
   
   .philosophy-content,
@@ -1112,5 +1113,18 @@ section {
   .detail-button {
     margin-top: 30px !important;
   }
+
+  .section-header {
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 25px;
+  }
+
+  .divider-text {
+  font-size: 13px;
+}
 }
 </style>

@@ -815,6 +815,19 @@ export default {
   .news-categories-mobile {
     margin-bottom: 20px;
   }
+
+  .news-header {
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 25px;
+  }
+
+  .title-english {
+  font-size: 13px;
+}
 }
 
 

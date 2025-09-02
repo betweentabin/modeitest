@@ -584,11 +584,11 @@ export default {
   }
   
   .faq-item {
-    padding: 20px 0;
+    padding: 0;
   }
   
   .faq-question {
-    padding: 15px 0;
+    padding: 15px;
   }
   
   .question-text {
@@ -642,6 +642,10 @@ export default {
 }
 
 @media (max-width: 480px) {
+  .faq-item {
+    padding: 0;
+  }
+
   .page-content {
     padding: 20px 15px;
   }
@@ -684,7 +688,22 @@ export default {
   .a-mark {
     font-size: 0.9rem;
   }
-}
 
-/* Footer Navigation */
+  .faq-categories-mobile {
+    margin-bottom: 20px;
+  }
+
+  .content-header {
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-size: 25px;
+  }
+
+  .title-english {
+  font-size: 13px;
+}
+}
 </style>

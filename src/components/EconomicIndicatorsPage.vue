@@ -503,6 +503,35 @@ export default {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .page-content {
+    padding: 40px 30px;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-content {
+    padding: 30px 20px;
+  }
+  
+  .indicator-item {
+    padding: 0;
+  }
+  
+  .indicator-term {
+    padding: 15px;
+  }
+  
+  .term-text {
+    font-size: 16px !important;
+  }
+  
+  .indicator-table th,
+  .indicator-table td {
+    font-size: 14px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .page-content {
     padding: 40px 15px;
@@ -532,8 +561,66 @@ export default {
     padding: 8px 4px;
     font-size: 0.75rem;
   }
-  
+}
 
+@media (max-width: 480px) {
+  .page-content {
+    padding: 20px 15px;
+  }
+
+  .indicators-description p {
+  font-size: 13px;
+}
+
+.indicators-description {
+  margin-bottom: 20px;
+}
+  
+  .indicator-item {
+    padding: 0;
+  }
+  
+  .indicator-term {
+    padding: 10px;
+  }
+
+  .indicator-definition {
+  padding: 10px;
+}
+  
+  .term-text {
+    font-size: 14px !important;
+  }
+  
+  .indicator-table-container {
+    padding: 10px;
+    margin-top: 0px;
+  }
+  
+  .indicator-table th,
+  .indicator-table td {
+    padding: 6px 3px;
+    font-size: 12px !important;
+  }
+  
+  .term-line {
+    width: 4px;
+    height: 30px;
+    margin-right: 8px;
+  }
+
+  .content-header {
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-size: 25px;
+  }
+
+  .title-english {
+  font-size: 13px;
+}
 }
 
 
