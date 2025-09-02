@@ -205,13 +205,13 @@ export default {
         // まずAPIから取得を試みる
         try {
           const response = await apiClient.getPublication(publicationId);
-          if (response && response.data) {
-            this.publication = response.data;
+          if (response && response.success && response.data && response.data.publication) {
+            this.publication = response.data.publication;
             
             // 関連刊行物を取得
             const allResponse = await apiClient.getPublications();
-            if (allResponse && allResponse.data) {
-              this.relatedPublications = allResponse.data
+            if (allResponse && allResponse.success && allResponse.data && allResponse.data.publications) {
+              this.relatedPublications = allResponse.data.publications
                 .filter(p => p.id !== publicationId && p.category === this.publication.category)
                 .slice(0, 3);
             }

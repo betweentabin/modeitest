@@ -288,7 +288,8 @@ export default {
         }
         
         const response = await apiClient.getAdminNews(params) // トークンは自動で付与される
-        if (response.success && response.data) {
+        console.log('Admin news API response:', response)
+        if (response && response.success && response.data) {
           this.notices = response.data.news.map(news => ({
             id: news.id,
             title: news.title,

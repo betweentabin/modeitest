@@ -78,7 +78,14 @@ class ApiClient {
         return { success: false, error: data.message || `HTTP error! status: ${response.status}` }
       }
       
-      return data
+      // APIがすでにsuccess/dataフォーマットを返している場合はそのまま返す
+      // そうでない場合は、ラップする
+      if (data && typeof data === 'object' && 'success' in data) {
+        return data
+      }
+      
+      // 古い形式のレスポンスをラップ
+      return { success: true, data: data }
     } catch (error) {
       console.error('API request failed:', error)
       // ネットワークエラーの場合はフォールバックを返す

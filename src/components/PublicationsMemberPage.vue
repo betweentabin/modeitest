@@ -471,7 +471,7 @@ export default {
         
         const response = await apiClient.getPublications(params);
         
-        if (response.success && response.data) {
+        if (response && response.success && response.data && response.data.publications) {
           this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
           this.totalPages = response.data.pagination.total_pages;
         } else {
