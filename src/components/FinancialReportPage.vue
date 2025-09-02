@@ -282,19 +282,131 @@ export default {
 
 
 /* Responsive Design */
+@media (max-width: 1150px) {
+  .page-content {
+    padding: 60px 40px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
+  }
+  
+  .reports-container {
+    padding: 45px 40px !important;
+  }
+  
+  .report-year {
+    font-size: 22px !important;
+  }
+  
+  .report-date {
+    font-size: 18px !important;
+  }
+  
+  .report-title {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-content {
+    padding: 55px 35px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .title-english {
+    font-size: 17px !important;
+  }
+  
+  .reports-container {
+    padding: 40px 35px !important;
+  }
+  
+  .report-year {
+    font-size: 20px !important;
+  }
+  
+  .report-date {
+    font-size: 17px !important;
+  }
+  
+  .report-title {
+    font-size: 17px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .page-content {
-    padding: 40px 15px;
+    padding: 40px 15px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .title-english {
+    font-size: 16px !important;
+  }
+  
+  .reports-container {
+    padding: 30px 20px !important;
   }
   
   .report-section {
-    padding: 20px;
+    padding: 20px !important;
+  }
+  
+  .report-year {
+    font-size: 19px !important;
+  }
+  
+  .report-date {
+    font-size: 16px !important;
+  }
+  
+  .report-title {
+    font-size: 16px !important;
   }
 }
 
 @media (max-width: 480px) {
+  .page-content {
+    padding: 30px 15px !important;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .title-english {
+    font-size: 13px !important;
+  }
+  
+  .reports-container {
+    padding: 20px 15px !important;
+  }
+  
+  .report-section {
+    padding: 15px !important;
+  }
+  
+  .report-year {
+    font-size: 18px !important;
+  }
+  
+  .report-date {
+    font-size: 13px !important;
+  }
+  
   .report-title {
-    font-size: 0.85rem;
+    font-size: 13px !important;
   }
 }
 

@@ -930,9 +930,37 @@ section {
     order: 1;
   }
 
+  .section-title {
+    font-size: 32px !important;
+  }
+
+  .divider-text {
+    font-size: 18px !important;
+  }
+
   .mission-title,
   .message-title {
     font-size: 48px !important;
+  }
+  
+  .mission-description,
+  .message-body,
+  .message-signature,
+  .profile-value,
+  .history-description {
+    font-size: 18px !important;
+  }
+
+  .mission-heading,
+  .history-date,
+  .staff-name {
+    font-size: 22px !important;
+  }
+
+  .staff-position,
+  .staff-note,
+  .staff-reading {
+    font-size: 18px !important;
   }
   
   .history-item,
@@ -945,7 +973,7 @@ section {
   
   .history-year {
     width: auto;
-    font-size: 48px;
+    font-size: 48px !important;
   }
   
   .history-details {
@@ -978,6 +1006,43 @@ section {
   .message-content {
     width: 100%;
     max-width: 100%;
+  }
+
+  .section-title {
+    font-size: 29px !important;
+  }
+
+  .divider-text {
+    font-size: 17px !important;
+  }
+
+  .mission-title,
+  .message-title {
+    font-size: 42px !important;
+  }
+
+  .mission-description,
+  .message-body,
+  .message-signature,
+  .profile-value,
+  .history-description {
+    font-size: 17px !important;
+  }
+
+  .mission-heading,
+  .history-date,
+  .staff-name {
+    font-size: 20px !important;
+  }
+
+  .staff-position,
+  .staff-note,
+  .staff-reading {
+    font-size: 17px !important;
+  }
+
+  .history-year {
+    font-size: 42px !important;
   }
 
   .staff-members {
@@ -1022,6 +1087,43 @@ section {
   .message-section {
     width: 100%;
     overflow: hidden;
+  }
+
+  .section-title {
+    font-size: 27px !important;
+  }
+
+  .divider-text {
+    font-size: 16px !important;
+  }
+
+  .mission-title,
+  .message-title {
+    font-size: 38px !important;
+  }
+
+  .mission-description,
+  .message-body,
+  .message-signature,
+  .profile-value,
+  .history-description {
+    font-size: 16px !important;
+  }
+
+  .mission-heading,
+  .history-date,
+  .staff-name {
+    font-size: 19px !important;
+  }
+
+  .staff-position,
+  .staff-note,
+  .staff-reading {
+    font-size: 16px !important;
+  }
+
+  .history-year {
+    font-size: 38px !important;
   }
   
   .footer-links {
@@ -1115,16 +1217,16 @@ section {
   }
 
   .section-header {
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
   }
 
   .section-title {
-    font-size: 25px;
+    font-size: 22px !important;
   }
 
   .divider-text {
-  font-size: 13px;
-}
+    font-size: 13px !important;
+  }
 }
 </style>

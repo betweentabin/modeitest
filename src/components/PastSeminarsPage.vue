@@ -479,17 +479,207 @@ export default {
 /* Footer Navigation */
 
 /* Responsive Design */
+@media (max-width: 1150px) {
+  .past-seminars-section {
+    padding: 50px 30px !important;
+  }
+  
+  .past-seminars-content {
+    padding: 50px 30px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .section-description {
+    font-size: 18px !important;
+  }
+  
+  .seminar-card {
+    gap: 30px !important;
+  }
+  
+  .seminar-title {
+    font-size: 22px !important;
+  }
+  
+  .seminar-description {
+    font-size: 18px !important;
+  }
+  
+  .seminar-date,
+  .seminar-location {
+    font-size: 18px !important;
+  }
+  
+  .seminar-image {
+    height: 300px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 18px !important;
+  }
+  
+  .pagination-btn {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .past-seminars-section {
+    padding: 45px 25px !important;
+  }
+  
+  .past-seminars-content {
+    padding: 45px 25px !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .section-description {
+    font-size: 17px !important;
+  }
+  
+  .seminar-card {
+    gap: 25px !important;
+  }
+  
+  .seminar-title {
+    font-size: 20px !important;
+  }
+  
+  .seminar-description {
+    font-size: 17px !important;
+  }
+  
+  .seminar-date,
+  .seminar-location {
+    font-size: 17px !important;
+  }
+  
+  .seminar-image {
+    height: 280px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 17px !important;
+  }
+  
+  .pagination-btn {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 12px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .past-seminars-section {
-    padding: 30px 20px;
+    padding: 30px 20px !important;
   }
-
+  
   .past-seminars-content {
-    padding: 30px 20px;
+    padding: 30px 20px !important;
   }
-
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
   .section-description {
-    width: 100%;
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+  
+  .seminar-card {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+  
+  .seminar-title {
+    font-size: 19px !important;
+  }
+  
+  .seminar-description {
+    font-size: 16px !important;
+  }
+  
+  .seminar-date,
+  .seminar-location {
+    font-size: 16px !important;
+  }
+  
+  .seminar-image {
+    width: 100% !important;
+    height: 250px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .seminar-details {
+    width: 100% !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 16px !important;
+  }
+  
+  .pagination-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .past-seminars-section {
+    padding: 20px 15px !important;
+  }
+  
+  .past-seminars-content {
+    padding: 20px 15px !important;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .section-description {
+    font-size: 13px !important;
+  }
+  
+  .seminar-card {
+    gap: 18px !important;
+  }
+  
+  .seminar-title {
+    font-size: 18px !important;
+  }
+  
+  .seminar-description {
+    font-size: 13px !important;
+  }
+  
+  .seminar-date,
+  .seminar-location {
+    font-size: 13px !important;
+  }
+  
+  .seminar-image {
+    height: 200px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 13px !important;
+  }
+  
+  .pagination-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 10px !important;
   }
 }
 </style>

@@ -825,111 +825,225 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1150px) {
   .service-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
   }
   
   .service-grid-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
   
   .access-content {
-    flex-direction: column;
-    gap: 30px;
+    flex-direction: column !important;
+    gap: 30px !important;
   }
   
   .access-map {
-    flex: none;
-    width: 100%;
+    flex: none !important;
+    width: 100% !important;
   }
   
   .access-info {
-    padding: 0;
-  }
-}
-
-/* Footer Navigation */
-
-@media (max-width: 768px) {
-  .container {
-    padding: 0 20px;
-  }
-  
-  .hero-section {
-    height: 300px;
-    padding: 30px 20px;
-  }
-  
-  .hero-title {
-    font-size: 28px;
+    padding: 0 !important;
   }
   
   .section-title {
-    font-size: 28px;
+    font-size: 32px !important;
   }
   
   .category-title {
-    font-size: 28px;
+    font-size: 32px !important;
   }
   
-  .service-grid {
-    grid-template-columns: 1fr;
+  .service-title {
+    font-size: 22px !important;
+  }
+  
+  .service-description {
+    font-size: 18px !important;
+  }
+  
+  .intro-description {
+    font-size: 18px !important;
+  }
+  
+  .hero-title {
+    font-size: 32px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .category-title {
+    font-size: 29px !important;
+  }
+  
+  .service-title {
+    font-size: 20px !important;
+  }
+  
+  .service-description {
+    font-size: 17px !important;
+  }
+  
+  .intro-description {
+    font-size: 17px !important;
+  }
+  
+  .hero-title {
+    font-size: 29px !important;
   }
   
   .services-section,
   .flow-section,
   .cta-section {
-    padding: 30px 20px;
+    padding: 40px 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px !important;
+  }
+  
+  .hero-section {
+    height: 300px !important;
+    padding: 30px 20px !important;
+  }
+  
+  .hero-title {
+    font-size: 27px !important;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
+  .category-title {
+    font-size: 27px !important;
+  }
+  
+  .service-title {
+    font-size: 19px !important;
+  }
+  
+  .service-description {
+    font-size: 16px !important;
+  }
+  
+  .intro-description {
+    font-size: 16px !important;
+  }
+  
+  .service-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .services-section,
+  .flow-section,
+  .cta-section {
+    padding: 30px 20px !important;
   }
   
   .intro-content,
   .services-content,
   .flow-content {
-    padding: 30px;
+    padding: 30px !important;
   }
   
   .cta-button {
-    padding: 15px 50px;
-    font-size: 18px;
+    padding: 15px 50px !important;
+    font-size: 18px !important;
   }
   
   .flow-step {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
   }
   
   .step-number {
-    width: auto;
+    width: auto !important;
   }
   
   .footer-section {
-    padding: 30px 20px;
+    padding: 30px 20px !important;
   }
   
   .footer-links {
-    flex-direction: column;
-    gap: 30px;
+    flex-direction: column !important;
+    gap: 30px !important;
   }
   
   .company-logo-text {
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: column !important;
+    gap: 15px !important;
   }
   
   .fixed-buttons {
-    right: 15px;
-    bottom: 100px;
+    right: 15px !important;
+    bottom: 100px !important;
   }
   
   .fixed-btn {
-    width: 80px;
-    height: 80px;
+    width: 80px !important;
+    height: 80px !important;
   }
   
   .fixed-btn span {
-    font-size: 11px;
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .category-title {
+    font-size: 22px !important;
+  }
+  
+  .service-title {
+    font-size: 18px !important;
+  }
+  
+  .service-description {
+    font-size: 13px !important;
+  }
+  
+  .intro-description {
+    font-size: 13px !important;
+  }
+  
+  .hero-title {
+    font-size: 22px !important;
+  }
+  
+  .hero-section {
+    height: 250px !important;
+    padding: 25px 20px !important;
+  }
+  
+  .services-section,
+  .flow-section,
+  .cta-section {
+    padding: 25px 20px !important;
+  }
+  
+  .intro-content,
+  .services-content,
+  .flow-content {
+    padding: 20px !important;
+  }
+  
+  .cta-button {
+    padding: 12px 40px !important;
+    font-size: 16px !important;
   }
 }
 </style>

@@ -27,7 +27,7 @@
         <img class="about-image" src="https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340" alt="会社画像" />
         <div class="about-text">
           <div class="about-headline">
-            <h3 class="main-headline">産 官 学 金 を<br>繋ぐ架け橋へ</h3>
+            <h3 class="main-headline" v-html="mainHeadlineText"></h3>
           </div>
           <div class="about-description">
             当研究所は、産・官・学・金(金融)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>
@@ -150,16 +150,74 @@ export default {
     return {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
+      mainHeadlineText: '産 官 学 金 を<br>繋ぐ架け橋へ',
     };
   },
   mounted() {
-    // JavaScriptによる画像の高さ調整を削除
+    this.adjustRectangleHeight();
+    this.adjustAboutImageHeight();
+    this.adjustServiceImageHeight();
+    this.adjustMainHeadline();
+    window.addEventListener('resize', this.adjustRectangleHeight);
+    window.addEventListener('resize', this.adjustAboutImageHeight);
+    window.addEventListener('resize', this.adjustServiceImageHeight);
+    window.addEventListener('resize', this.adjustMainHeadline);
   },
   beforeDestroy() {
-    // JavaScriptによる画像の高さ調整を削除
+    window.removeEventListener('resize', this.adjustRectangleHeight);
+    window.removeEventListener('resize', this.adjustAboutImageHeight);
+    window.removeEventListener('resize', this.adjustServiceImageHeight);
+    window.removeEventListener('resize', this.adjustMainHeadline);
   },
   methods: {
-    // JavaScriptによる画像の高さ調整を削除
+    adjustRectangleHeight() {
+      this.$nextTick(() => {
+        const frame1321317466 = this.$el.querySelector('.frame-1321317466');
+        const rectangle3 = this.$el.querySelector('.rectangle-3');
+        
+        if (frame1321317466 && rectangle3) {
+          const frameHeight = frame1321317466.offsetHeight;
+          rectangle3.style.height = frameHeight + 'px';
+        }
+      });
+    },
+    adjustAboutImageHeight() {
+      this.$nextTick(() => {
+        const aboutText = this.$el.querySelector('.about-text');
+        const aboutImage = this.$el.querySelector('.about-image');
+        
+        if (aboutText && aboutImage) {
+          const textHeight = aboutText.offsetHeight;
+          aboutImage.style.height = textHeight + 'px';
+        }
+      });
+    },
+    adjustServiceImageHeight() {
+      this.$nextTick(() => {
+        const serviceCards = this.$el.querySelectorAll('.service-card');
+        
+        serviceCards.forEach(card => {
+          const serviceContent = card.querySelector('.service-content');
+          const serviceImage = card.querySelector('.service-image');
+          
+          if (serviceContent && serviceImage) {
+            const contentHeight = serviceContent.offsetHeight;
+            serviceImage.style.height = contentHeight + 'px';
+          }
+        });
+      });
+    },
+    adjustMainHeadline() {
+      this.$nextTick(() => {
+        if (window.innerWidth <= 1150) {
+          // 1150px以下では改行を削除
+          this.mainHeadlineText = '産 官 学 金 を繋ぐ架け橋へ';
+        } else {
+          // 1150px超では改行を追加
+          this.mainHeadlineText = '産 官 学 金 を<br>繋ぐ架け橋へ';
+        }
+      });
+    },
     handleContactClick() {
       this.$router.push('/contact');
     },
@@ -181,16 +239,7 @@ export default {
 
 
 
-@media (max-width: 480px) {
-  .hero-section {
-    min-height: 250px;
-    height: 35vh;
-  }
-  
-  .hero-overlay {
-    padding: 20px 15px;
-  }
-}
+
 
 
 
@@ -339,7 +388,7 @@ export default {
 
 .service-description {
   color: #3F3F3F;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.6;
 }
@@ -363,255 +412,254 @@ export default {
 
 
 /* Responsive Design */
-@media (max-width: 1200px) {
-  .about-section, .service-section {
-    padding: 60px 40px 40px 40px;
-    gap: 30px;
+@media (max-width: 1150px) {
+  /* セクションのパディング調整 */
+  .about-section,
+  .service-section {
+    padding: 50px 20px !important;
+  }
+
+  /* レイアウトの縦並び化 */
+  .about-content {
+    flex-direction: column !important;
+    gap: 0 !important;
   }
   
-  .section-title {
-    font-size: 32px;
-  }
-  
-  .main-headline {
-    font-size: 48px;
-  }
-  
-  .about-description {
-    font-size: 18px;
-  }
-  
+  /* 要素の幅調整 */
+  .about-image,
   .about-text {
-    padding: 40px;
-    gap: 30px;
+    width: 100% !important;
+  }
+  
+  /* 画像の高さ固定 */
+  .about-image {
+    height: 300px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  /* テキストの角丸とパディング調整 */
+  .about-text {
+    border-radius: 0 0 20px 20px !important;
+    padding: 40px !important;
+  }
+
+  /* サービスカードの縦並び化 */
+  .service-card {
+    flex-direction: column !important;
+  }
+  
+  .service-image,
+  .service-content {
+    width: 100% !important;
+  }
+  
+  .service-image {
+    border-radius: 20px 20px 0 0 !important;
+    height: 300px !important;
   }
   
   .service-content {
-    padding: 30px;
-    gap: 15px;
+    border-radius: 0 0 20px 20px !important;
+  }
+
+  /* フォントサイズ調整 */
+  .section-title {
+    font-size: 32px !important;
+  }
+
+  .divider-text {
+    font-size: 18px !important;
+  }
+
+  .main-headline {
+    font-size: 48px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  .about-description {
+    font-size: 18px !important;
   }
   
   .service-title {
-    font-size: 22px;
+    font-size: 22px !important;
+  }
+  
+  .service-description {
+    font-size: 18px !important;
+  }
+
+  .service-details {
+    font-size: 18px !important;
   }
 }
 
 @media (max-width: 900px) {
-  .about-section, .service-section {
-    padding: 50px 30px 30px 30px;
-    gap: 25px;
-    min-width: auto;
-    width: 100%;
+  .about-institute-page {
+    overflow-x: hidden !important;
   }
   
-  .section-header {
-    gap: 20px;
-  }
-  
-  .section-title {
-    font-size: 28px;
-  }
-  
-  .divider-line {
-    width: 50px;
-  }
-  
-  .divider-text {
-    font-size: 18px;
+  .about-section,
+  .service-section {
+    width: 100% !important;
+    overflow: hidden !important;
+    min-width: auto !important;
   }
   
   .about-content {
-    flex-direction: column;
-    gap: 0;
-  }
-  
-  .about-image {
-    width: 100%;
-    border-radius: 20px 20px 0 0;
-    height: 300px;
-  }
-  
-  .about-text {
-    width: 100%;
-    padding: 30px;
-    gap: 25px;
-    border-radius: 0 0 20px 20px;
-  }
-  
-  .main-headline {
-    font-size: 36px;
-    text-align: center;
-  }
-  
-  .about-description {
-    font-size: 16px;
-    text-align: center;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
   .service-cards {
-    gap: 30px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .section-title {
+    font-size: 29px !important;
+  }
+
+  .divider-text {
+    font-size: 17px !important;
+  }
+
+  .main-headline {
+    font-size: 42px !important;
   }
   
-  .service-card {
-    flex-direction: column;
-  }
-  
-  .service-image {
-    width: 100%;
-    height: 250px;
-  }
-  
-  .service-content {
-    width: 100%;
-    padding: 25px;
-    gap: 15px;
+  .about-description {
+    font-size: 17px !important;
   }
   
   .service-title {
-    font-size: 20px;
-    text-align: center;
+    font-size: 20px !important;
   }
   
   .service-description {
-    font-size: 15px;
-    text-align: center;
+    font-size: 17px !important;
   }
-  
+
   .service-details {
-    font-size: 13px;
-    padding: 15px;
+    font-size: 17px !important;
   }
 }
 
 @media (max-width: 768px) {
-  .about-section, .service-section {
-    padding: 40px 20px 20px 20px;
-    gap: 20px;
+  /* 完全な縦並び化 */
+  .about-content {
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
-  .section-header {
-    gap: 15px;
+  /* セクション幅の最適化 */
+  .about-section,
+  .service-section {
+    width: 100% !important;
+    overflow: hidden !important;
   }
-  
+
+  /* フォントサイズ調整 */
   .section-title {
-    font-size: 24px;
+    font-size: 27px !important;
   }
-  
-  .divider-line {
-    width: 40px;
-  }
-  
+
   .divider-text {
-    font-size: 16px;
+    font-size: 16px !important;
   }
-  
-  .about-image {
-    height: 250px;
-  }
-  
-  .about-text {
-    padding: 25px 20px;
-    gap: 20px;
-  }
-  
+
   .main-headline {
-    font-size: 28px;
+    font-size: 38px !important;
   }
   
   .about-description {
-    font-size: 14px;
-  }
-  
-  .service-cards {
-    gap: 25px;
-  }
-  
-  .service-image {
-    height: 200px;
-  }
-  
-  .service-content {
-    padding: 20px;
-    gap: 12px;
+    font-size: 16px !important;
   }
   
   .service-title {
-    font-size: 18px;
+    font-size: 19px !important;
   }
   
   .service-description {
-    font-size: 14px;
+    font-size: 16px !important;
   }
-  
+
   .service-details {
-    font-size: 12px;
-    padding: 12px;
+    font-size: 16px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .about-section, .service-section {
-    padding: 30px 15px 15px 15px;
-    gap: 15px;
+  /* セクションの調整 */
+  .about-section,
+  .service-section {
+    width: 100% !important;
+    overflow: hidden !important;
+    padding: 30px 20px !important;
+    gap: 20px !important;
   }
   
-  .section-header {
-    gap: 12px;
+  /* コンテンツの調整 */
+  .about-content {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .service-content {
+    padding: 30px 20px !important;
   }
   
-  .section-title {
-    font-size: 20px;
-  }
-  
-  .divider-line {
-    width: 30px;
-  }
-  
-  .divider-text {
-    font-size: 14px;
-  }
-  
-  .about-image {
-    height: 200px;
-  }
-  
+  /* テキストの調整 */
   .about-text {
-    padding: 20px 15px;
-    gap: 15px;
+    padding: 30px 20px !important;
+    gap: 20px !important;
   }
-  
+
+  /* フォントサイズ調整 */
   .main-headline {
-    font-size: 22px;
+    font-size: 25px !important;
   }
   
   .about-description {
-    font-size: 13px;
-  }
-  
-  .service-cards {
-    gap: 20px;
-  }
-  
-  .service-image {
-    height: 180px;
-  }
-  
-  .service-content {
-    padding: 15px;
-    gap: 10px;
+    font-size: 13px !important;
   }
   
   .service-title {
-    font-size: 16px;
+    font-size: 16px !important;
   }
   
   .service-description {
-    font-size: 13px;
+    font-size: 13px !important;
   }
   
   .service-details {
-    font-size: 11px;
-    padding: 10px;
+    font-size: 13px !important;
+    padding: 15px;
+  }
+
+  /* 画像の調整 */
+  .about-image {
+    height: 200px !important;
+  }
+  
+  .service-image {
+    height: 200px !important;
+  }
+
+  /* セクションヘッダーの調整 */
+  .section-header {
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .section-title {
+    font-size: 22px !important;
+  }
+
+  .divider-text {
+    font-size: 13px !important;
   }
 }
 </style>

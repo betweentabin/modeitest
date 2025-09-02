@@ -648,61 +648,163 @@ export default {
 /* Floating Action Buttons styles are now handled by FixedSideButtons component */
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .seminar-detail-section {
-    padding: 40px 20px;
+    padding: 50px 30px !important;
   }
   
-  .seminar-content {
-    flex-direction: column;
+  .seminar-title {
+    font-size: 32px !important;
   }
   
-  .seminar-image {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
+  .seminar-subtitle {
+    font-size: 18px !important;
   }
   
-  .seminar-info {
-    padding: 20px;
-    width: 100%;
-  }
-  
-  
-  
-  .detail-row {
-    flex-direction: column;
+  .seminar-description p {
+    font-size: 18px !important;
   }
   
   .detail-label {
-    width: 100%;
+    font-size: 18px !important;
   }
   
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
+  .detail-value {
+    font-size: 18px !important;
   }
   
   .action-btn {
-    width: 100%;
-    max-width: 300px;
+    font-size: 18px !important;
+    padding: 15px 30px !important;
+  }
+  
+  .seminar-image {
+    height: 350px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .seminar-detail-section {
+    padding: 45px 25px !important;
+  }
+  
+  .seminar-title {
+    font-size: 29px !important;
+  }
+  
+  .seminar-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .seminar-description p {
+    font-size: 17px !important;
+  }
+  
+  .detail-label {
+    font-size: 17px !important;
+  }
+  
+  .detail-value {
+    font-size: 17px !important;
+  }
+  
+  .action-btn {
+    font-size: 17px !important;
+    padding: 14px 28px !important;
+  }
+  
+  .seminar-image {
+    height: 300px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .seminar-detail-section {
+    padding: 40px 20px !important;
+  }
+  
+  .seminar-content {
+    flex-direction: column !important;
+  }
+  
+  .seminar-image {
+    width: 100% !important;
+    height: 200px !important;
+    overflow: hidden !important;
+  }
+  
+  .seminar-info {
+    padding: 20px !important;
+    width: 100% !important;
+  }
+  
+  .seminar-title {
+    font-size: 27px !important;
+  }
+  
+  .seminar-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .seminar-description p {
+    font-size: 16px !important;
+  }
+  
+  .detail-row {
+    flex-direction: column !important;
+  }
+  
+  .detail-label {
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+  
+  .detail-value {
+    font-size: 16px !important;
+  }
+  
+  .action-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .action-btn {
+    width: 100% !important;
+    max-width: 300px !important;
+    font-size: 16px !important;
+    padding: 13px 26px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .seminar-image {
-    height: 200px;
+  .seminar-detail-section {
+    padding: 30px 15px !important;
   }
   
+  .seminar-title {
+    font-size: 22px !important;
+  }
   
+  .seminar-subtitle {
+    font-size: 13px !important;
+  }
   
-  .detail-label,
-  .detail-value {
-    font-size: 0.85rem;
+  .seminar-image {
+    height: 200px !important;
   }
   
   .seminar-description p {
-    font-size: 0.9rem;
+    font-size: 13px !important;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 13px !important;
+  }
+  
+  .action-btn {
+    font-size: 13px !important;
+    padding: 12px 24px !important;
   }
 }
 

@@ -523,12 +523,20 @@ export default {
   }
   
   .term-text {
-    font-size: 16px !important;
+    font-size: 17px !important;
   }
   
   .indicator-table th,
   .indicator-table td {
-    font-size: 14px !important;
+    font-size: 17px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .indicators-description p {
+    font-size: 17px !important;
   }
 }
 
@@ -542,7 +550,7 @@ export default {
   }
   
   .term-text {
-    font-size: 0.9rem;
+    font-size: 16px !important;
   }
   
   .term-line {
@@ -559,7 +567,15 @@ export default {
   .indicator-table th,
   .indicator-table td {
     padding: 8px 4px;
-    font-size: 0.75rem;
+    font-size: 16px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .indicators-description p {
+    font-size: 16px !important;
   }
 }
 
@@ -569,7 +585,7 @@ export default {
   }
 
   .indicators-description p {
-  font-size: 13px;
+  font-size: 13px !important;
 }
 
 .indicators-description {
@@ -589,7 +605,7 @@ export default {
 }
   
   .term-text {
-    font-size: 14px !important;
+    font-size: 13px !important;
   }
   
   .indicator-table-container {
@@ -600,7 +616,7 @@ export default {
   .indicator-table th,
   .indicator-table td {
     padding: 6px 3px;
-    font-size: 12px !important;
+    font-size: 13px !important;
   }
   
   .term-line {
@@ -615,7 +631,7 @@ export default {
   }
 
   .page-title {
-    font-size: 25px;
+    font-size: 22px !important;
   }
 
   .title-english {

@@ -521,38 +521,232 @@ export default {
 /* Footer Navigation */
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .statistics-detail-section {
-    padding: 30px 20px 0 20px;
+    padding: 50px 30px 0 30px !important;
   }
   
   .statistics-detail-card {
-    padding: 30px 20px;
+    padding: 50px 30px !important;
   }
   
-  .statistics-content {
-    flex-direction: column;
+  .statistics-title {
+    font-size: 32px !important;
   }
   
-  .statistics-image {
-    width: 100%;
-    height: 300px;
+  .statistics-subtitle {
+    font-size: 18px !important;
   }
   
-  .statistics-info {
-    width: 100%;
+  .statistics-description {
+    font-size: 18px !important;
   }
   
   .detail-label {
-    width: 100%;
+    font-size: 18px !important;
+  }
+  
+  .detail-value {
+    font-size: 18px !important;
+  }
+  
+  .download-notice {
+    font-size: 18px !important;
+  }
+  
+  .download-btn {
+    font-size: 18px !important;
+    padding: 15px 0px !important;
+    width: 350px !important;
+  }
+  
+  .text-44 {
+    font-size: 18px !important;
   }
   
   .button-section {
-    padding: 50px 20px;
+    padding: 60px 30px !important;
   }
   
   .cta-button {
-    width: 100%;
+    font-size: 18px !important;
+    padding: 15px 30px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .statistics-detail-section {
+    padding: 45px 25px 0 25px !important;
+  }
+  
+  .statistics-detail-card {
+    padding: 45px 25px !important;
+  }
+  
+  .statistics-title {
+    font-size: 29px !important;
+  }
+  
+  .statistics-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .statistics-description {
+    font-size: 17px !important;
+  }
+  
+  .detail-label {
+    font-size: 17px !important;
+  }
+  
+  .detail-value {
+    font-size: 17px !important;
+  }
+  
+  .download-notice {
+    font-size: 17px !important;
+  }
+  
+  .download-btn {
+    font-size: 17px !important;
+    padding: 14px 0px !important;
+    width: 320px !important;
+  }
+  
+  .text-44 {
+    font-size: 17px !important;
+  }
+  
+  .button-section {
+    padding: 55px 25px !important;
+  }
+  
+  .cta-button {
+    font-size: 17px !important;
+    padding: 14px 28px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .statistics-detail-section {
+    padding: 30px 20px 0 20px !important;
+  }
+  
+  .statistics-detail-card {
+    padding: 30px 20px !important;
+  }
+  
+  .statistics-title {
+    font-size: 27px !important;
+  }
+  
+  .statistics-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .statistics-description {
+    font-size: 16px !important;
+  }
+  
+  .statistics-content {
+    flex-direction: column !important;
+  }
+  
+  .statistics-image {
+    width: 100% !important;
+    height: 300px !important;
+  }
+  
+  .statistics-info {
+    width: 100% !important;
+  }
+  
+  .detail-label {
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+  
+  .detail-value {
+    font-size: 16px !important;
+  }
+  
+  .download-notice {
+    font-size: 16px !important;
+  }
+  
+  .download-btn {
+    font-size: 16px !important;
+    padding: 13px 0px !important;
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+  
+  .text-44 {
+    font-size: 16px !important;
+  }
+  
+  .button-section {
+    padding: 50px 20px !important;
+  }
+  
+  .cta-button {
+    width: 100% !important;
+    font-size: 16px !important;
+    padding: 13px 26px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .statistics-detail-section {
+    padding: 20px 15px 0 15px !important;
+  }
+  
+  .statistics-detail-card {
+    padding: 20px 15px !important;
+  }
+  
+  .statistics-title {
+    font-size: 22px !important;
+  }
+  
+  .statistics-subtitle {
+    font-size: 13px !important;
+  }
+  
+  .statistics-description {
+    font-size: 13px !important;
+  }
+  
+  .detail-label {
+    font-size: 13px !important;
+  }
+  
+  .detail-value {
+    font-size: 13px !important;
+  }
+  
+  .download-notice {
+    font-size: 13px !important;
+  }
+  
+  .download-btn {
+    font-size: 13px !important;
+    padding: 12px 0px !important;
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+  
+  .text-44 {
+    font-size: 13px !important;
+  }
+  
+  .button-section {
+    padding: 40px 15px !important;
+  }
+  
+  .cta-button {
+    font-size: 13px !important;
+    padding: 12px 24px !important;
   }
 }
 </style>

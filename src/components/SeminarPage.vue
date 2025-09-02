@@ -700,53 +700,163 @@ export default {
 /* Footer Navigation */
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1150px) {
+  .intro-section {
+    padding: 50px 20px !important;
+  }
+  
   .intro-buttons {
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: column !important;
+    gap: 20px !important;
   }
 
   .intro-btn {
-    width: 100%;
-    max-width: 590px;
+    width: 100% !important;
+    max-width: 590px !important;
   }
 
   .seminar-card {
-    flex-direction: column;
+    flex-direction: column !important;
   }
 
   .seminar-image {
-    width: 100%;
-    height: 250px;
-    border-radius: 20px 20px 0 0;
+    width: 100% !important;
+    height: 250px !important;
+    border-radius: 20px 20px 0 0 !important;
   }
 
   .seminar-details {
-    width: 100%;
+    width: 100% !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .intro-title {
+    font-size: 22px !important;
+  }
+  
+  .intro-description {
+    font-size: 18px !important;
+  }
+  
+  .seminar-title {
+    font-size: 18px !important;
+  }
+  
+  .seminar-description {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .intro-section {
+    padding: 40px 20px !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .intro-title {
+    font-size: 20px !important;
+  }
+  
+  .intro-description {
+    font-size: 17px !important;
+  }
+  
+  .seminar-title {
+    font-size: 17px !important;
+  }
+  
+  .seminar-description {
+    font-size: 17px !important;
   }
 }
 
 @media (max-width: 768px) {
   .intro-section {
-    padding: 50px 20px;
+    padding: 50px 20px !important;
   }
 
   .intro-content {
-    padding: 30px 20px;
+    padding: 30px 20px !important;
   }
 
   .current-seminars-section,
   .past-seminars-section {
-    padding: 30px 20px;
+    padding: 30px 20px !important;
   }
 
   .seminars-content,
   .past-seminars-content {
-    padding: 30px 20px;
+    padding: 30px 20px !important;
   }
 
   .section-description {
-    width: 100%;
+    width: 100% !important;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
+  .intro-title {
+    font-size: 19px !important;
+  }
+  
+  .intro-description {
+    font-size: 16px !important;
+  }
+  
+  .seminar-title {
+    font-size: 16px !important;
+  }
+  
+  .seminar-description {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .intro-section {
+    padding: 30px 20px !important;
+  }
+  
+  .intro-content {
+    padding: 20px 20px !important;
+  }
+  
+  .current-seminars-section,
+  .past-seminars-section {
+    padding: 20px 20px !important;
+  }
+  
+  .seminars-content,
+  .past-seminars-content {
+    padding: 20px 20px !important;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .intro-title {
+    font-size: 18px !important;
+  }
+  
+  .intro-description {
+    font-size: 13px !important;
+  }
+  
+  .seminar-title {
+    font-size: 13px !important;
+  }
+  
+  .seminar-description {
+    font-size: 13px !important;
   }
 }
 </style>

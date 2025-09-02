@@ -610,32 +610,253 @@ export default {
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .detail-header {
-    padding: 20px;
+    padding: 40px 30px !important;
   }
   
   .news-title {
-    font-size: 1.5rem;
+    font-size: 32px !important;
   }
   
-  .action-buttons {
-    flex-direction: column;
+  .news-subtitle {
+    font-size: 18px !important;
+  }
+  
+  .news-meta {
+    gap: 30px !important;
+  }
+  
+  .news-category,
+  .news-date {
+    font-size: 18px !important;
   }
   
   .description-section,
   .related-section {
-    padding: 20px;
+    padding: 40px 30px !important;
   }
   
-  .related-grid {
-    grid-template-columns: 1fr;
+  .description-section h3 {
+    font-size: 22px !important;
+  }
+  
+  .description-section p {
+    font-size: 18px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 22px !important;
+  }
+  
+  .related-title {
+    font-size: 18px !important;
+  }
+  
+  .related-description {
+    font-size: 16px !important;
+  }
+  
+  .related-category {
+    font-size: 12px !important;
+  }
+  
+  .related-date {
+    font-size: 14px !important;
+  }
+  
+  .action-btn {
+    font-size: 18px !important;
+    padding: 15px 30px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .detail-header {
+    padding: 35px 25px !important;
+  }
+  
+  .news-title {
+    font-size: 29px !important;
+  }
+  
+  .news-subtitle {
+    font-size: 17px !important;
   }
   
   .news-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    gap: 25px !important;
+  }
+  
+  .news-category,
+  .news-date {
+    font-size: 17px !important;
+  }
+  
+  .description-section,
+  .related-section {
+    padding: 35px 25px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 20px !important;
+  }
+  
+  .description-section p {
+    font-size: 17px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 20px !important;
+  }
+  
+  .related-title {
+    font-size: 17px !important;
+  }
+  
+  .related-description {
+    font-size: 15px !important;
+  }
+  
+  .related-category {
+    font-size: 11px !important;
+  }
+  
+  .related-date {
+    font-size: 13px !important;
+  }
+  
+  .action-btn {
+    font-size: 17px !important;
+    padding: 14px 28px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-header {
+    padding: 20px !important;
+  }
+  
+  .news-title {
+    font-size: 27px !important;
+  }
+  
+  .news-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .news-meta {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  
+  .news-category,
+  .news-date {
+    font-size: 16px !important;
+  }
+  
+  .action-buttons {
+    flex-direction: column !important;
+  }
+  
+  .description-section,
+  .related-section {
+    padding: 20px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 19px !important;
+  }
+  
+  .description-section p {
+    font-size: 16px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 19px !important;
+  }
+  
+  .related-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .related-title {
+    font-size: 16px !important;
+  }
+  
+  .related-description {
+    font-size: 14px !important;
+  }
+  
+  .related-category {
+    font-size: 10px !important;
+  }
+  
+  .related-date {
+    font-size: 12px !important;
+  }
+  
+  .action-btn {
+    font-size: 16px !important;
+    padding: 13px 26px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-header {
+    padding: 15px !important;
+  }
+  
+  .news-title {
+    font-size: 22px !important;
+  }
+  
+  .news-subtitle {
+    font-size: 13px !important;
+  }
+  
+  .news-category,
+  .news-date {
+    font-size: 13px !important;
+  }
+  
+  .description-section,
+  .related-section {
+    padding: 15px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 18px !important;
+  }
+  
+  .description-section p {
+    font-size: 13px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 18px !important;
+  }
+  
+  .related-title {
+    font-size: 13px !important;
+  }
+  
+  .related-description {
+    font-size: 12px !important;
+  }
+  
+  .related-category {
+    font-size: 9px !important;
+  }
+  
+  .related-date {
+    font-size: 11px !important;
+  }
+  
+  .action-btn {
+    font-size: 13px !important;
+    padding: 12px 24px !important;
   }
 }
 

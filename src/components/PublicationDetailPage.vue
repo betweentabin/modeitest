@@ -585,28 +585,208 @@ export default {
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .detail-header {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 20px;
+    padding: 40px 30px !important;
+    gap: 30px !important;
   }
   
   .publication-title {
-    font-size: 1.6rem;
+    font-size: 32px !important;
   }
   
-  .action-buttons {
-    flex-direction: column;
+  .publication-subtitle {
+    font-size: 18px !important;
+  }
+  
+  .publication-meta {
+    font-size: 18px !important;
   }
   
   .description-section,
   .related-section {
-    padding: 20px;
+    padding: 40px 30px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 22px !important;
+  }
+  
+  .description-section p {
+    font-size: 18px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 22px !important;
+  }
+  
+  .related-title {
+    font-size: 16px !important;
+  }
+  
+  .related-date {
+    font-size: 14px !important;
+  }
+  
+  .action-btn {
+    font-size: 18px !important;
+    padding: 15px 30px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .detail-header {
+    padding: 35px 25px !important;
+    gap: 25px !important;
+  }
+  
+  .publication-title {
+    font-size: 29px !important;
+  }
+  
+  .publication-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .publication-meta {
+    font-size: 17px !important;
+  }
+  
+  .description-section,
+  .related-section {
+    padding: 35px 25px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 20px !important;
+  }
+  
+  .description-section p {
+    font-size: 17px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 20px !important;
+  }
+  
+  .related-title {
+    font-size: 15px !important;
+  }
+  
+  .related-date {
+    font-size: 13px !important;
+  }
+  
+  .action-btn {
+    font-size: 17px !important;
+    padding: 14px 28px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-header {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    padding: 20px !important;
+  }
+  
+  .publication-title {
+    font-size: 27px !important;
+  }
+  
+  .publication-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .publication-meta {
+    font-size: 16px !important;
+  }
+  
+  .action-buttons {
+    flex-direction: column !important;
+  }
+  
+  .description-section,
+  .related-section {
+    padding: 20px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 19px !important;
+  }
+  
+  .description-section p {
+    font-size: 16px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 19px !important;
   }
   
   .related-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+  }
+  
+  .related-title {
+    font-size: 14px !important;
+  }
+  
+  .related-date {
+    font-size: 12px !important;
+  }
+  
+  .action-btn {
+    font-size: 16px !important;
+    padding: 13px 26px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-header {
+    padding: 15px !important;
+    gap: 18px !important;
+  }
+  
+  .publication-title {
+    font-size: 22px !important;
+  }
+  
+  .publication-subtitle {
+    font-size: 13px !important;
+  }
+  
+  .publication-meta {
+    font-size: 13px !important;
+  }
+  
+  .description-section,
+  .related-section {
+    padding: 15px !important;
+  }
+  
+  .description-section h3 {
+    font-size: 18px !important;
+  }
+  
+  .description-section p {
+    font-size: 13px !important;
+  }
+  
+  .related-section h2 {
+    font-size: 18px !important;
+  }
+  
+  .related-title {
+    font-size: 13px !important;
+  }
+  
+  .related-date {
+    font-size: 11px !important;
+  }
+  
+  .action-btn {
+    font-size: 13px !important;
+    padding: 12px 24px !important;
   }
 }
 

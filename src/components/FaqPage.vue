@@ -592,11 +592,15 @@ export default {
   }
   
   .question-text {
-    font-size: 16px !important;
+    font-size: 17px !important;
   }
   
   .answer-text {
-    font-size: 14px !important;
+    font-size: 17px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
   }
 }
 
@@ -625,7 +629,15 @@ export default {
   }
   
   .question-text {
-    font-size: 0.9rem;
+    font-size: 16px !important;
+  }
+  
+  .answer-text {
+    font-size: 16px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
   }
   
   .q-circle,
@@ -699,7 +711,7 @@ export default {
   }
 
   .page-title {
-    font-size: 25px;
+    font-size: 22px !important;
   }
 
   .title-english {

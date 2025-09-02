@@ -306,35 +306,123 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1150px) {
   .form-section {
-    padding: 50px 30px 50px;
+    padding: 50px 30px 50px !important;
   }
   
   .contact-form {
-    padding: 30px;
+    padding: 30px !important;
   }
+  
+  .completion-message {
+    padding: 60px 40px !important;
+  }
+  
+  .completion-title {
+    font-size: 32px !important;
+  }
+  
+  .completion-text {
+    font-size: 18px !important;
+  }
+  
+  .footer-navigation {
+    padding: 50px 60px !important;
+  }
+  
+  .footer-links {
+    gap: 50px !important;
+  }
+}
 
-
+@media (max-width: 900px) {
+  .form-section {
+    padding: 45px 25px 45px !important;
+  }
+  
+  .contact-form {
+    padding: 25px !important;
+  }
+  
+  .completion-message {
+    padding: 55px 35px !important;
+  }
+  
+  .completion-title {
+    font-size: 29px !important;
+  }
+  
+  .completion-text {
+    font-size: 17px !important;
+  }
+  
+  .footer-navigation {
+    padding: 45px 50px !important;
+  }
+  
+  .footer-links {
+    gap: 45px !important;
+  }
 }
 
 @media (max-width: 768px) {
   .form-section {
-    padding: 30px 20px 0;
+    padding: 30px 20px 0 !important;
   }
   
   .contact-form {
-    padding: 20px;
+    padding: 20px !important;
   }
   
   .completion-message {
-    padding: 40px 20px;
+    padding: 40px 20px !important;
+  }
+  
+  .completion-title {
+    font-size: 27px !important;
   }
   
   .completion-text {
-    font-size: 18px;
+    font-size: 16px !important;
   }
+  
+  .footer-navigation {
+    padding: 30px 30px !important;
+  }
+  
+  .footer-links {
+    gap: 40px !important;
+  }
+}
 
-
+@media (max-width: 480px) {
+  .form-section {
+    padding: 20px 15px 0 !important;
+  }
+  
+  .contact-form {
+    padding: 15px !important;
+  }
+  
+  .completion-message {
+    padding: 30px 15px !important;
+  }
+  
+  .completion-title {
+    font-size: 22px !important;
+  }
+  
+  .completion-text {
+    font-size: 13px !important;
+  }
+  
+  .footer-navigation {
+    padding: 20px 20px !important;
+  }
+  
+  .footer-links {
+    gap: 35px !important;
+  }
 }
 </style>

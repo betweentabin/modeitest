@@ -400,23 +400,143 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .page-content {
-    padding: 40px 15px;
+    padding: 50px 30px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .page-description {
+    font-size: 18px !important;
   }
   
   .glossary-term {
-    padding: 15px;
+    padding: 25px 30px !important;
+    gap: 30px !important;
   }
   
   .term-text {
-    font-size: 0.9rem;
+    font-size: 18px !important;
   }
   
   .term-line {
-    width: 5px;
-    height: 35px;
-    margin-right: 10px;
+    width: 8px !important;
+    height: 45px !important;
+    margin-right: 15px !important;
+  }
+  
+  .pagination-btn {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-content {
+    padding: 45px 25px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .page-description {
+    font-size: 17px !important;
+  }
+  
+  .glossary-term {
+    padding: 22px 25px !important;
+    gap: 25px !important;
+  }
+  
+  .term-text {
+    font-size: 17px !important;
+  }
+  
+  .term-line {
+    width: 7px !important;
+    height: 42px !important;
+    margin-right: 13px !important;
+  }
+  
+  .pagination-btn {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding: 40px 15px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .page-description {
+    font-size: 16px !important;
+  }
+  
+  .glossary-term {
+    padding: 15px !important;
+    gap: 20px !important;
+  }
+  
+  .term-text {
+    font-size: 16px !important;
+  }
+  
+  .term-line {
+    width: 5px !important;
+    height: 35px !important;
+    margin-right: 10px !important;
+  }
+  
+  .pagination-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-content {
+    padding: 30px 15px !important;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .page-description {
+    font-size: 13px !important;
+  }
+  
+  .glossary-term {
+    padding: 12px !important;
+    gap: 18px !important;
+  }
+  
+  .term-text {
+    font-size: 13px !important;
+  }
+  
+  .term-line {
+    width: 4px !important;
+    height: 30px !important;
+    margin-right: 8px !important;
+  }
+  
+  .pagination-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 10px !important;
   }
 }
 

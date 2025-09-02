@@ -702,15 +702,19 @@ export default {
   }
   
   .news-title {
-    font-size: 18px !important;
+    font-size: 17px !important;
   }
   
   .news-date {
-    font-size: 16px !important;
+    font-size: 17px !important;
   }
   
   .news-category {
-    font-size: 12px !important;
+    font-size: 17px !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
   }
 
   .news-categories-mobile {
@@ -757,6 +761,22 @@ export default {
     flex-wrap: wrap;
     gap: 10px;
   }
+  
+  .news-title {
+    font-size: 16px !important;
+  }
+  
+  .news-date {
+    font-size: 16px !important;
+  }
+  
+  .news-category {
+    font-size: 16px !important;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -797,15 +817,15 @@ export default {
   }
   
   .news-title {
-    font-size: 16px !important;
+    font-size: 13px !important;
   }
   
   .news-date {
-    font-size: 14px !important;
+    font-size: 13px !important;
   }
   
   .news-category {
-    font-size: 11px !important;
+    font-size: 13px !important;
   }
   
   .news-content h3 {
@@ -822,7 +842,7 @@ export default {
   }
 
   .section-title {
-    font-size: 25px;
+    font-size: 22px !important;
   }
 
   .title-english {

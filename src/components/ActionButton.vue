@@ -99,14 +99,74 @@ export default {
   opacity: 0.9;
 }
 
-@media (max-width: 768px) {
+/* レスポンシブ対応 */
+@media (max-width: 1150px) {
+  /* セクションのパディング調整 */
   .cta-section {
-    padding: 30px 20px;
+    padding: 50px 20px 80px 20px !important;
+  }
+  
+  /* ボタンの調整 */
+  .cta-button {
+    padding: 20px 80px !important;
+    font-size: 18px !important;
+  }
+  
+  /* ボタン間のgap調整 */
+  .cta-buttons {
+    gap: 25px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  /* セクション幅の調整 */
+  .cta-section {
+    padding: 40px 20px 70px 20px !important;
+  }
+  
+  /* ボタンの調整 */
+  .cta-button {
+    padding: 18px 70px !important;
+    font-size: 17px !important;
+  }
+  
+  /* ボタン間のgap調整 */
+  .cta-buttons {
+    gap: 22px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* タブレット縦向き対応 */
+  .cta-section {
+    padding: 30px 20px 60px 20px !important;
   }
   
   .cta-button {
-    padding: 15px 50px;
-    font-size: 18px;
+    padding: 15px 50px !important;
+    font-size: 16px !important;
+  }
+  
+  /* ボタン間のgap調整 */
+  .cta-buttons {
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* スマートフォン対応 */
+  .cta-section {
+    padding: 25px 20px 50px 20px !important;
+  }
+  
+  .cta-button {
+    padding: 12px 40px !important;
+    font-size: 15px !important;
+  }
+  
+  /* ボタン間のgap調整 */
+  .cta-buttons {
+    gap: 18px !important;
   }
 }
 </style>
