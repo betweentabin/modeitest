@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\News;
+use App\Models\NewsArticle;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +16,7 @@ class NoticeController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = News::where('type', 'notice');
+        $query = NewsArticle::where('category', 'notice');
 
         // 検索フィルター
         if ($request->has('search') && $request->search) {
@@ -24,7 +24,7 @@ class NoticeController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
                   ->orWhere('content', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                  ->orWhere('summary', 'LIKE', "%{$search}%");
             });
         }
 
@@ -55,7 +55,7 @@ class NoticeController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $notice = News::where('type', 'notice')->findOrFail($id);
+        $notice = NewsArticle::where('category', 'notice')->findOrFail($id);
         return response()->json($notice);
     }
 
@@ -67,7 +67,7 @@ class NoticeController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'description' => 'nullable|string|max:500',
+            'summary' => 'nullable|string|max:500',
             'category' => 'required|string|max:100',
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
@@ -84,20 +84,16 @@ class NoticeController extends Controller
             ], 422);
         }
 
-        $notice = News::create([
+        $notice = NewsArticle::create([
             'title' => $request->title,
-
+            'slug' => Str::slug($request->title),
             'content' => $request->content,
-            'description' => $request->description,
-            'category' => $request->category,
-            'status' => $request->status,
-            'type' => 'notice',
-            'published_date' => $request->published_at ?? ($request->status === 'published' ? now()->format('Y-m-d') : now()->format('Y-m-d')),
+            'summary' => $request->summary,
+            'category' => 'notice',
+            'is_published' => $request->status === 'published',
+            'published_at' => $request->published_at ?? ($request->status === 'published' ? now() : null),
             'is_featured' => $request->featured ?? false,
-
-
             'featured_image' => $request->featured_image,
-            'created_by' => auth()->id(),
         ]);
 
         return response()->json([
@@ -111,12 +107,12 @@ class NoticeController extends Controller
      */
     public function update(Request $request, $id): JsonResponse
     {
-        $notice = News::where('type', 'notice')->findOrFail($id);
+        $notice = NewsArticle::where('category', 'notice')->findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'description' => 'nullable|string|max:500',
+            'summary' => 'nullable|string|max:500',
             'category' => 'required|string|max:100',
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
@@ -137,7 +133,7 @@ class NoticeController extends Controller
             'title' => $request->title,
 
             'content' => $request->content,
-            'description' => $request->description,
+            'summary' => $request->summary,
             'category' => $request->category,
             'status' => $request->status,
             'published_date' => $request->published_at,
@@ -165,7 +161,7 @@ class NoticeController extends Controller
      */
     public function destroy($id): JsonResponse
     {
-        $notice = News::where('type', 'notice')->findOrFail($id);
+        $notice = NewsArticle::where('category', 'notice')->findOrFail($id);
         $notice->delete();
 
         return response()->json([
@@ -179,11 +175,11 @@ class NoticeController extends Controller
     public function stats(): JsonResponse
     {
         $stats = [
-            'total_notices' => News::where('type', 'notice')->count(),
-            'published_notices' => News::where('type', 'notice')->where('status', 'published')->count(),
-            'draft_notices' => News::where('type', 'notice')->where('status', 'draft')->count(),
-            'featured_notices' => News::where('type', 'notice')->where('featured', true)->count(),
-            'recent_notices' => News::where('type', 'notice')->where('created_at', '>=', now()->subDays(30))->count(),
+            'total_notices' => NewsArticle::where('category', 'notice')->count(),
+            'published_notices' => NewsArticle::where('category', 'notice')->where('status', 'published')->count(),
+            'draft_notices' => NewsArticle::where('category', 'notice')->where('status', 'draft')->count(),
+            'featured_notices' => NewsArticle::where('category', 'notice')->where('featured', true)->count(),
+            'recent_notices' => NewsArticle::where('category', 'notice')->where('created_at', '>=', now()->subDays(30))->count(),
         ];
 
         return response()->json($stats);
@@ -205,7 +201,7 @@ class NoticeController extends Controller
             ], 422);
         }
 
-        $notice = News::where('type', 'notice')->findOrFail($id);
+        $notice = NewsArticle::where('category', 'notice')->findOrFail($id);
         
         $updateData = ['status' => $request->status];
         
@@ -227,7 +223,7 @@ class NoticeController extends Controller
      */
     public function categories(): JsonResponse
     {
-        $categories = News::where('type', 'notice')
+        $categories = NewsArticle::where('category', 'notice')
             ->distinct()
             ->pluck('category')
             ->filter()

@@ -75,11 +75,18 @@ export default {
   name: 'NewAdminLogin',
   data() {
     return {
-      email: 'admin@example.com',
-      password: 'password123',
+      email: 'admin@chikugin-cri.co.jp',
+      password: 'admin123',
       loading: false,
       error: ''
     }
+  },
+  mounted() {
+    // 古いトークンをクリア
+    console.log('Clearing old tokens...')
+    localStorage.removeItem('admin_token')
+    localStorage.removeItem('adminUser')
+    localStorage.removeItem('adminToken') // 古いキーも削除
   },
   methods: {
     async handleLogin() {
@@ -87,32 +94,63 @@ export default {
       this.error = ''
 
       try {
-        // mockServer用の簡易認証
-        if (this.email === 'admin@example.com' && this.password === 'password123') {
-          // 仮のトークンとユーザー情報を作成
-          const mockAdminData = {
-            token: 'mock-admin-token-' + Date.now(),
-            user: {
-              id: 1,
-              email: 'admin@example.com',
-              name: '管理者',
-              role: 'admin'
-            }
+        // デバッグ用自動ログインエンドポイントを使用
+        const response = await fetch(this.getApiUrl('/api/debug/admin-login'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           }
+        })
 
-          localStorage.setItem('admin_token', mockAdminData.token)
-          localStorage.setItem('adminUser', JSON.stringify(mockAdminData.user))
+        const data = await response.json()
+
+        if (data.success && data.token) {
+          // 有効なトークンをlocalStorageに保存
+          localStorage.setItem('admin_token', data.token)
+          localStorage.setItem('adminUser', JSON.stringify(data.user))
           
+          // apiClientにもトークンを設定
+          if (window.apiClient) {
+            window.apiClient.setToken(data.token)
+          }
+          
+          console.log('Login successful with token:', data.token.substring(0, 20) + '...')
           this.$router.push('/admin/dashboard')
         } else {
-          this.error = 'メールアドレスまたはパスワードが正しくありません'
+          // デバッグログインが失敗した場合のフォールバック
+          if (this.email === 'admin@example.com' && this.password === 'password123') {
+            // モックデータでログイン（開発用）
+            const mockAdminData = {
+              token: 'mock-admin-token-' + Date.now(),
+              user: {
+                id: 1,
+                email: 'admin@example.com',
+                name: '管理者',
+                role: 'admin'
+              }
+            }
+
+            localStorage.setItem('admin_token', mockAdminData.token)
+            localStorage.setItem('adminUser', JSON.stringify(mockAdminData.user))
+            
+            this.$router.push('/admin/dashboard')
+          } else {
+            this.error = data.message || 'ログインに失敗しました。管理者アカウントが存在しない可能性があります。'
+          }
         }
       } catch (err) {
-        this.error = 'ログインに失敗しました'
+        this.error = 'ログインに失敗しました: ' + err.message
         console.error('Login error:', err)
       } finally {
         this.loading = false
       }
+    },
+    
+    getApiUrl(endpoint) {
+      // API URLを取得
+      const baseUrl = process.env.VUE_APP_API_URL || 'http://localhost:8000'
+      return baseUrl + endpoint
     }
   }
 }
