@@ -148,9 +148,11 @@ export default {
     },
     
     getApiUrl(endpoint) {
-      // API URLを取得
-      const baseUrl = process.env.VUE_APP_API_URL || 'http://localhost:8000'
-      return baseUrl + endpoint
+      // Railway APIのURLを使用
+      const baseUrl = 'https://heroic-celebration-production.up.railway.app'
+      // エンドポイントが/で始まっていない場合は追加
+      const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+      return baseUrl + normalizedEndpoint
     }
   }
 }

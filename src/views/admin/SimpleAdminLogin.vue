@@ -86,7 +86,10 @@ export default {
       try {
         // まずデバッグエンドポイントで自動ログインを試みる
         console.log('Trying debug login first...')
-        const debugResponse = await axios.post(getApiUrl('/api/debug/admin-login'))
+        // Railway APIのURLを直接使用
+        const apiUrl = 'https://heroic-celebration-production.up.railway.app/api/debug/admin-login'
+        console.log('Calling:', apiUrl)
+        const debugResponse = await axios.post(apiUrl)
         
         if (debugResponse.data.success) {
           console.log('Debug login successful!')
