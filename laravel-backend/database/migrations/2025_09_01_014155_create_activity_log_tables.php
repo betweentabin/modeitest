@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // member_activity_logs テーブル作成
+        if (!Schema::hasTable('member_activity_logs')) {
         Schema::create('member_activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->nullable()->constrained('members')->onDelete('cascade');
@@ -27,8 +28,10 @@ return new class extends Migration
             $table->index(['member_id', 'action_type']);
             $table->index('created_at');
         });
+        }
         
         // content_access_logs テーブル作成
+        if (!Schema::hasTable('content_access_logs')) {
         Schema::create('content_access_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->nullable()->constrained('members')->onDelete('set null');
@@ -44,8 +47,10 @@ return new class extends Migration
             $table->index(['content_type', 'content_id']);
             $table->index('created_at');
         });
+        }
         
         // membership_upgrades テーブル作成
+        if (!Schema::hasTable('membership_upgrades')) {
         Schema::create('membership_upgrades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
@@ -61,6 +66,7 @@ return new class extends Migration
             $table->index(['from_type', 'to_type']);
             $table->index('created_at');
         });
+        }
     }
 
     /**

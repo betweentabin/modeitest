@@ -9,6 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // セミナーテーブル
+        if (!Schema::hasTable('seminars')) {
         Schema::create('seminars', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -29,8 +30,10 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
         });
+        }
 
         // 刊行物カテゴリテーブル
+        if (!Schema::hasTable('publication_categories')) {
         Schema::create('publication_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
@@ -40,8 +43,10 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
+        }
 
         // 刊行物テーブル
+        if (!Schema::hasTable('publications')) {
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -64,8 +69,10 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
+        }
 
         // ニュースカテゴリテーブル
+        if (!Schema::hasTable('news_categories')) {
         Schema::create('news_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
@@ -76,8 +83,10 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
+        }
 
         // ニューステーブル
+        if (!Schema::hasTable('news')) {
         Schema::create('news', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -95,8 +104,10 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
+        }
 
         // 管理者テーブル
+        if (!Schema::hasTable('admins')) {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('username', 50)->unique();
@@ -108,8 +119,10 @@ return new class extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
         });
+        }
 
         // 会員テーブル
+        if (!Schema::hasTable('members')) {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
@@ -127,6 +140,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
+        }
     }
 
     public function down(): void
