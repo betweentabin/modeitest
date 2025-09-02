@@ -668,10 +668,11 @@ export default {
         }));
       }
       
-      // お知らせ数を更新
-      const importantNotices = notices.filter(n => n.isImportant);
-      if (notices.length > 0) {
-        this.infomation1 = `お知らせ(${importantNotices.length > 0 ? importantNotices.length : notices.length}件)`;
+      // お知らせ数を更新 - 配列チェックを追加
+      const noticeArray = Array.isArray(notices) ? notices : [];
+      const importantNotices = noticeArray.filter(n => n.isImportant);
+      if (noticeArray.length > 0) {
+        this.infomation1 = `お知らせ(${importantNotices.length > 0 ? importantNotices.length : noticeArray.length}件)`;
       }
     },
     formatDate(dateString) {

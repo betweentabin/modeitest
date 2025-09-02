@@ -338,6 +338,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import { useAdminAuth } from '../../composables/useAdminAuth'
+import apiClient from '../../services/apiClient'
 
 export default {
   name: 'EconomicReportManagement',
@@ -397,30 +398,24 @@ export default {
       this.error = ''
       
       try {
-        const params = new URLSearchParams({
+        const params = {
           page: this.pagination.current_page,
           per_page: 20
-        })
+        }
         
-        if (this.searchKeyword) params.append('search', this.searchKeyword)
-        if (this.selectedCategory) params.append('category', this.selectedCategory)
-        if (this.selectedYear) params.append('year', this.selectedYear)
-        if (this.selectedStatus) params.append('status', this.selectedStatus)
+        if (this.searchKeyword) params.search = this.searchKeyword
+        if (this.selectedCategory) params.category = this.selectedCategory
+        if (this.selectedYear) params.year = this.selectedYear
+        if (this.selectedStatus) params.status = this.selectedStatus
         
-        const response = await fetch(`/api/admin/economic-reports?${params}`, {
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-            'Accept': 'application/json'
-          }
-        })
+        const queryString = new URLSearchParams(params).toString()
+        const response = await apiClient.get(`/api/admin/economic-reports${queryString ? '?' + queryString : ''}`)
         
-        const data = await response.json()
-        
-        if (data.success) {
-          this.reports = data.data.reports
-          this.pagination = data.data.pagination
+        if (response.success && response.data) {
+          this.reports = response.data.reports || []
+          this.pagination = response.data.pagination || { current_page: 1, total_pages: 1, total: 0 }
         } else {
-          this.error = data.message || 'レポートの読み込みに失敗しました'
+          this.error = response.error || 'レポートの読み込みに失敗しました'
         }
       } catch (err) {
         this.error = 'ネットワークエラーが発生しました'
@@ -432,17 +427,10 @@ export default {
 
     async loadStats() {
       try {
-        const response = await fetch('/api/admin/economic-reports/stats/overview', {
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-            'Accept': 'application/json'
-          }
-        })
+        const response = await apiClient.get('/api/admin/economic-reports/stats/overview')
         
-        const data = await response.json()
-        
-        if (data.success) {
-          this.stats = data.data
+        if (response.success && response.data) {
+          this.stats = response.data
         }
       } catch (err) {
         console.error('Load stats error:', err)

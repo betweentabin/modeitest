@@ -285,16 +285,13 @@ class ApiClient {
 
   async getAdminInquiries(params = {}, token) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/inquiries?${queryString}` : '/api/admin/inquiries'
-    return this.get(endpoint, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    const endpoint = queryString ? `/api/admin/inquiries-v2?${queryString}` : '/api/admin/inquiries-v2'
+    // トークンは自動的にrequestメソッドで付与される
+    return this.get(endpoint)
   }
 
   async deleteInquiry(id, token) {
-    return this.delete(`/api/admin/inquiries/${id}`, {
+    return this.delete(`/api/admin/inquiries-v2/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
