@@ -330,7 +330,6 @@ export default {
           title: this.formData.title,
           description: this.formData.content,
           content: this.formData.content,
-          category: this.formData.category || 'notice',
           type: 'notice',
           published_date: this.formData.publish_date,
           membership_requirement: 'none',
@@ -343,6 +342,7 @@ export default {
           this.successMessage = 'お知らせを作成しました'
           setTimeout(() => { this.$router.push('/admin/notices') }, 1200)
         } else {
+          // 既存データ更新時はカテゴリは送らない（DB列はcategory_idのため）
           const res = await apiClient.put(`/api/admin/news-v2/${this.noticeId}`, payload)
           if (!res.success) throw new Error(res.message || '更新に失敗')
           this.successMessage = 'お知らせを更新しました'

@@ -372,9 +372,9 @@ export default {
       formData: {
         title: '',
         description: '',
-        category: '',
+        category: 'quarterly',
         year: new Date().getFullYear(),
-        publication_date: '',
+        publication_date: new Date().toISOString().split('T')[0],
         author: 'ちくぎん地域経済研究所',
         publisher: '株式会社ちくぎん地域経済研究所',
         keywords: '',
@@ -480,9 +480,9 @@ export default {
       this.formData = {
         title: '',
         description: '',
-        category: '',
+        category: 'quarterly',
         year: new Date().getFullYear(),
-        publication_date: '',
+        publication_date: new Date().toISOString().split('T')[0],
         author: 'ちくぎん地域経済研究所',
         publisher: '株式会社ちくぎん地域経済研究所',
         keywords: '',
