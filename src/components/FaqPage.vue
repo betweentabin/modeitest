@@ -33,6 +33,20 @@
         </button>
       </div>
       
+      <!-- モバイル用プルダウンメニュー -->
+      <div class="faq-categories-mobile">
+        <select 
+          v-model="selectedCategory" 
+          @change="selectedCategory = selectedCategory"
+          class="category-select"
+        >
+          <option value="all">全て</option>
+          <option value="service">各種サービスについて</option>
+          <option value="membership">会員について</option>
+          <option value="research">調査研究について</option>
+        </select>
+      </div>
+      
       <div class="faq-list">
         <div v-for="(item, index) in filteredFaqs" :key="index" class="faq-item">
           <div class="faq-question" @click="toggleAnswer(index)">
@@ -299,6 +313,37 @@ export default {
   margin: 0 auto 40px;
 }
 
+.faq-categories-mobile {
+  display: none;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.category-select {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px 20px;
+  border: 2px solid #F6D5D8;
+  border-radius: 8px;
+  background: #F6D5D8;
+  font-size: 16px;
+  color: #1A1A1A;
+  cursor: pointer;
+  outline: none;
+  margin: 0 0 0 auto;
+  display: block;
+}
+
+.category-select:focus {
+  border-color: #da5761;
+  box-shadow: 0 0 0 2px rgba(218, 87, 97, 0.2);
+}
+
+.category-select option {
+  background: white;
+  color: #1A1A1A;
+}
+
 .category-btn {
   background: #F6D5D8;
   border: none;
@@ -352,15 +397,17 @@ export default {
 }
 
 .q-circle {
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
+  flex: 0 0 35px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background: #da5761;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 15px;
+  min-width: 35px;
+  min-height: 35px;
 }
 
 .q-mark {
@@ -399,9 +446,9 @@ export default {
 }
 
 .a-circle {
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
+  flex: 0 0 35px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background: white;
   border: 2px solid #da5761;
@@ -410,6 +457,8 @@ export default {
   justify-content: center;
   margin-right: 15px;
   margin-top: 5px;
+  min-width: 35px;
+  min-height: 35px;
 }
 
 .a-mark {
@@ -500,6 +549,57 @@ export default {
 
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .page-content {
+    padding: 40px 30px;
+  }
+  
+  .faq-categories {
+    display: none;
+  }
+  
+  .faq-categories-mobile {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-content {
+    padding: 30px 20px;
+  }
+  
+  .faq-categories {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .category-btn {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #DA5761;
+  }
+  
+  .category-btn:last-child {
+    border-bottom: none;
+  }
+  
+  .faq-item {
+    padding: 20px 0;
+  }
+  
+  .faq-question {
+    padding: 15px 0;
+  }
+  
+  .question-text {
+    font-size: 16px !important;
+  }
+  
+  .answer-text {
+    font-size: 14px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .page-content {
     padding: 40px 15px;
@@ -542,9 +642,47 @@ export default {
 }
 
 @media (max-width: 480px) {
+  .page-content {
+    padding: 20px 15px;
+  }
+  
+  .faq-categories {
+    padding: 20px 15px;
+  }
+  
   .category-btn {
-    padding: 6px 8px;
-    font-size: 0.5rem;
+    padding: 15px 20px;
+    font-size: 14px !important;
+  }
+  
+  .faq-item {
+    padding: 0;
+  }
+  
+  .faq-question {
+    padding: 10px 0;
+  }
+  
+  .answer-text,
+  .question-text {
+    font-size: 13px !important;
+  }
+
+  .faq-answer,
+  .faq-question {
+    padding: 10px;
+  }
+  
+  .q-circle,
+  .a-circle {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+  }
+  
+  .q-mark,
+  .a-mark {
+    font-size: 0.9rem;
   }
 }
 
