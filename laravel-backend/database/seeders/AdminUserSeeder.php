@@ -10,13 +10,16 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password123'),
-            'is_admin' => true,
-            'membership_type' => 'premium',
-            'is_active' => true,
-        ]);
+        // 既存があれば更新、無ければ作成（重複エラー回避）
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password123'),
+                'is_admin' => true,
+                'membership_type' => 'premium',
+                'is_active' => true,
+            ]
+        );
     }
 }

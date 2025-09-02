@@ -12,7 +12,7 @@ class NewsV2Controller extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $query = News::published()->orderBy('published_date', 'desc');
+            $query = News::published()->orderBy('published_at', 'desc');
 
             // フィルタリング
             if ($request->has('category')) {
@@ -27,7 +27,7 @@ class NewsV2Controller extends Controller
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%")
+                      ->orWhere('excerpt', 'like', "%{$search}%")
                       ->orWhere('content', 'like', "%{$search}%");
                 });
             }
@@ -38,7 +38,7 @@ class NewsV2Controller extends Controller
 
             // ページネーション
             $perPage = $request->get('per_page', 10);
-            $news = $query->with(['createdBy:id,username,full_name'])->paginate($perPage);
+            $news = $query->paginate($perPage);
 
             return response()->json([
                 'success' => true,
@@ -65,7 +65,6 @@ class NewsV2Controller extends Controller
     {
         try {
             $news = News::published()
-                ->with(['createdBy:id,username,full_name'])
                 ->findOrFail($id);
 
             // ビュー数をインクリメント

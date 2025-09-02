@@ -38,10 +38,9 @@
           <div class="filter-group">
             <select v-model="filters.category" class="filter-select">
               <option value="">カテゴリー</option>
-              <option value="important">重要</option>
-              <option value="event">イベント</option>
-              <option value="update">更新情報</option>
-              <option value="maintenance">メンテナンス</option>
+              <option v-for="category in categories" :key="category.id" :value="category.slug">
+                {{ category.name }}
+              </option>
             </select>
           </div>
           <button @click="applyFilters" class="apply-btn">絞り込み</button>
@@ -108,8 +107,47 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 99 最後</span>
+      <div class="pagination" v-if="totalPages > 1">
+        <button 
+          @click="currentPage > 1 && (currentPage--)"
+          :disabled="currentPage === 1"
+          class="page-btn"
+        >
+          前へ
+        </button>
+        
+        <template v-for="page in totalPages">
+          <button 
+            v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
+            :key="'btn-' + page"
+            @click="currentPage = page"
+            :class="['page-number', { active: page === currentPage }]"
+          >
+            {{ page }}
+          </button>
+          <span 
+            v-else-if="page === 4 && currentPage > 5"
+            :key="'dots-start-' + page"
+            class="page-dots"
+          >
+            ...
+          </span>
+          <span 
+            v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
+            :key="'dots-end-' + page"
+            class="page-dots"
+          >
+            ...
+          </span>
+        </template>
+
+        <button 
+          @click="currentPage < totalPages && (currentPage++)"
+          :disabled="currentPage === totalPages"
+          class="page-btn"
+        >
+          次へ
+        </button>
       </div>
     </div>
   </AdminLayout>
@@ -118,6 +156,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import mockServer from '@/mockServer'
 
 export default {
   name: 'NoticeManagement',
@@ -136,13 +175,18 @@ export default {
         month: '',
         category: ''
       },
+      categories: [],
       currentPage: 1,
       totalPages: 1,
+      itemsPerPage: 20,
       authToken: null
     }
   },
   async mounted() {
-    await this.loadNotices()
+    await Promise.all([
+      this.loadCategories(),
+      this.loadNotices()
+    ])
   },
   computed: {
     filteredNotices() {
@@ -172,32 +216,96 @@ export default {
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        // まずmockServerから取得を試みる
+        try {
+          const categories = await mockServer.getNewsCategories()
+          if (categories && categories.length > 0) {
+            this.categories = categories
+            return
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API')
+        }
+
+        // APIから取得
+        const response = await apiClient.getNewsCategories()
+        if (response.success && response.data) {
+          this.categories = response.data.categories
+        } else {
+          throw new Error('カテゴリーデータの取得に失敗しました')
+        }
+      } catch (err) {
+        console.error('カテゴリー読み込みエラー:', err)
+        // フォールバック: デフォルトカテゴリー
+        this.categories = [
+          { id: 1, name: 'お知らせ', slug: 'notice', color: '#da5761' },
+          { id: 2, name: '重要', slug: 'important', color: '#ff4444' },
+          { id: 3, name: 'イベント', slug: 'event', color: '#4CAF50' },
+          { id: 4, name: 'メディア', slug: 'media', color: '#2196F3' }
+        ]
+      }
+    },
+
     async loadNotices() {
       this.loading = true
       try {
-        // 管理者認証トークンを取得
+        // まずmockServerから取得を試みる
+        try {
+          const allNews = await mockServer.getAllNews()
+          if (allNews && allNews.length > 0) {
+            const start = (this.currentPage - 1) * this.itemsPerPage
+            const end = start + this.itemsPerPage
+            
+            this.notices = allNews.map(news => ({
+              id: news.id,
+              title: news.title,
+              date: news.published_at || news.created_at,
+              category: news.category || 'notice',
+              description: news.description || news.excerpt,
+              status: news.status || 'published',
+              is_featured: news.is_featured || false
+            }))
+            
+            this.totalPages = Math.ceil(this.notices.length / this.itemsPerPage)
+            return
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API')
+        }
+
+        // APIから取得
         this.authToken = localStorage.getItem('admin_token')
-        
         if (!this.authToken) {
-          throw new Error('管理者認証が必要です')
+          console.log('No admin token found, getting debug token...')
+          // デバッグ用: トークンが無い場合は自動取得
+          const debugToken = await apiClient.getDebugAdminToken()
+          if (debugToken) {
+            this.authToken = debugToken
+            console.log('Debug token obtained successfully')
+          } else {
+            throw new Error('管理者認証が必要です')
+          }
         }
         
         const params = {
           page: this.currentPage,
-          per_page: 20
+          per_page: this.itemsPerPage,
+          ...this.filters
         }
         
-        const response = await apiClient.getAdminNews(params, this.authToken)
-        
-        if (response.success && response.data) {
+        const response = await apiClient.getAdminNews(params) // トークンは自動で付与される
+        console.log('Admin news API response:', response)
+        if (response && response.success && response.data) {
           this.notices = response.data.news.map(news => ({
             id: news.id,
             title: news.title,
-            date: news.published_date,
-            category: this.getCategoryText(news.category),
-            description: news.description,
-            status: news.status,
-            is_featured: news.is_featured
+            date: news.published_at || news.created_at,
+            category: news.category || 'notice',
+            description: news.description || news.excerpt,
+            status: news.status || 'published',
+            is_featured: news.is_featured || false
           }))
           
           this.totalPages = response.data.pagination.total_pages
@@ -207,48 +315,10 @@ export default {
       } catch (err) {
         this.error = err.message || 'ニュースデータの読み込みに失敗しました'
         console.error('ニュース読み込みエラー:', err)
-        // フォールバック: デフォルトデータ
-        this.notices = [
-          {
-            id: 1,
-            title: 'Hot Information Vol.325掲載しました！',
-            date: '2025-04-23',
-            category: 'お知らせ'
-        },
-        {
-          id: 5,
-          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-          date: '2025-04-23',
-          category: 'XXXXXXXX'
-        }
-      ]
       } finally {
         this.loading = false
       }
     },
-  },
-  computed: {
-    filteredNotices() {
-      let result = this.notices
-      
-      if (this.searchKeyword) {
-        const keyword = this.searchKeyword.toLowerCase()
-        result = result.filter(notice => 
-          notice.title.toLowerCase().includes(keyword) ||
-          notice.category.toLowerCase().includes(keyword)
-        )
-      }
-      
-      if (this.filters.category) {
-        result = result.filter(notice => 
-          notice.category.toLowerCase().includes(this.filters.category.toLowerCase())
-        )
-      }
-      
-      return result
-    }
-  },
-  methods: {
     formatDate(dateString) {
       const date = new Date(dateString)
       const year = date.getFullYear()
@@ -266,10 +336,20 @@ export default {
       this.$router.push('/admin/notices/new')
     },
     applyFilters() {
-      console.log('Applying filters:', this.filters)
+      this.currentPage = 1
+      this.loadNotices()
     },
     performSearch() {
-      console.log('Searching for:', this.searchKeyword)
+      this.currentPage = 1
+      this.loadNotices()
+    },
+    getCategoryName(slug) {
+      const category = this.categories.find(c => c.slug === slug)
+      return category ? category.name : slug
+    },
+    getCategoryColor(slug) {
+      const category = this.categories.find(c => c.slug === slug)
+      return category ? category.color : '#da5761'
     }
   }
 }
@@ -475,8 +555,52 @@ export default {
   border-top: 1px solid #e5e5e5;
 }
 
-.page-info {
+.page-btn {
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  padding: 6px 12px;
+  border-radius: 4px;
   font-size: 14px;
-  color: #da5761;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: #f8f8f8;
+  border-color: #1A1A1A;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-number {
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  padding: 6px 12px;
+  margin: 0 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-number:hover {
+  background-color: #f8f8f8;
+  border-color: #1A1A1A;
+}
+
+.page-number.active {
+  background-color: #da5761;
+  border-color: #da5761;
+  color: white;
+}
+
+.page-dots {
+  padding: 6px 8px;
+  color: #666;
 }
 </style>

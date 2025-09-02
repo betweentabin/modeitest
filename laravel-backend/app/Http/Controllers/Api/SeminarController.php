@@ -17,29 +17,33 @@ class SeminarController extends Controller
     {
         $query = Seminar::query();
 
-        // ステータスフィルタ
-        if ($request->has('status')) {
+        // ステータスフィルタ（空文字は無視）
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
         // 会員要件フィルタ
-        if ($request->has('membership_requirement')) {
+        if ($request->filled('membership_requirement')) {
             $query->where('membership_requirement', $request->membership_requirement);
         }
 
         // 日付範囲フィルタ
-        if ($request->has('date_from')) {
+        if ($request->filled('date_from')) {
             $query->where('date', '>=', $request->date_from);
         }
 
-        if ($request->has('date_to')) {
+        if ($request->filled('date_to')) {
             $query->where('date', '<=', $request->date_to);
         }
 
         // 公開されているセミナーのみ（一般向け）
-        if (!$request->user() || !$request->user()->isAdmin()) {
+        // 管理者または認証済みユーザー以外には公開セミナーのみ表示
+        if (!$request->user()) {
+            $query->published();
+        } elseif ($request->user() && !$request->user()->isAdmin()) {
             $query->published();
         }
+        // 管理者の場合は全てのステータスのセミナーを表示
 
         // ソート
         $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
@@ -126,6 +130,7 @@ class SeminarController extends Controller
         $seminar = Seminar::create(array_merge($validator->validated(), [
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
+            'status' => $request->input('status', 'scheduled'), // デフォルトをscheduledに変更
         ]));
 
         return response()->json([

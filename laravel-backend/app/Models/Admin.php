@@ -74,10 +74,7 @@ class Admin extends Authenticatable
     }
 
     // アクセサー・ミューテーター
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
+    // パスワードの自動ハッシュ化は AdminSeeder で Hash::make() を使用するため不要
 
     // スコープ
     public function scopeActive($query)
@@ -99,6 +96,12 @@ class Admin extends Authenticatable
     public function isAdmin()
     {
         return in_array($this->role, ['super_admin', 'admin']);
+    }
+    
+    // is_adminプロパティのアクセサ（IsAdminミドルウェア用）
+    public function getIsAdminAttribute()
+    {
+        return $this->isAdmin();
     }
 
     public function canManage($resource)

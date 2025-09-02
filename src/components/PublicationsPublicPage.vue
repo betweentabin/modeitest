@@ -195,7 +195,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
-import { navigateToPublication } from '../utils/navigation.js';
+import mockServer from '@/mockServer';
 
 export default {
   name: "PublicationsPublicPage",
@@ -426,6 +426,38 @@ export default {
     async loadPublications() {
       this.loading = true;
       try {
+        // まずmockServerから取得を試みる
+        try {
+          const allPublications = await mockServer.getPublications();
+          
+          if (allPublications && allPublications.length > 0) {
+            // 無料公開の刊行物のみフィルタリング
+            const freePublications = allPublications.filter(item => 
+              item.membership_level === 'free' || item.membershipLevel === 'free' || !item.membership_level
+            );
+            
+            this.publications = freePublications.map(item => ({
+              id: item.id,
+              title: item.title,
+              image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
+              description: item.description,
+              category: item.category || 'special',
+              publish_date: item.publication_date,
+              author: item.author || 'ちくぎん地域経済研究所',
+              pages: item.pages,
+              file_size: item.file_size,
+              download_count: item.download_count,
+              is_published: item.is_published,
+              membershipLevel: 'free'
+            }));
+            this.totalPages = Math.ceil(this.publications.length / 12);
+            return;
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API');
+        }
+        
+        // APIから取得
         const params = {
           page: this.currentPage,
           year: this.selectedYear !== 'all' ? this.selectedYear : null,
@@ -434,7 +466,7 @@ export default {
         
         const response = await apiClient.getPublications(params);
         
-        if (response.success && response.data) {
+        if (response && response.success && response.data && response.data.publications) {
           this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
           this.totalPages = response.data.pagination.total_pages;
         } else {

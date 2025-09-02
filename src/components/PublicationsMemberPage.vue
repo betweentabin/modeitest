@@ -63,13 +63,14 @@
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
-          <div class="featured-image">
+          <div class="featured-image" v-restricted="{ requiredLevel: featuredPublication.membershipLevel || 'free' }">
             <img src="/img/image-1.png" alt="経営戦略に関する書籍" />
           </div>
           <div class="featured-info">
             <div class="featured-meta">
               <span class="featured-year">2025.4.28</span>
               <span class="featured-category">経営戦略支援の会員限定</span>
+              <MembershipBadge v-if="featuredPublication.membershipLevel && featuredPublication.membershipLevel !== 'free'" :level="featuredPublication.membershipLevel" />
             </div>
             <div class="featured-details">
               <div class="past-info-row">
@@ -98,7 +99,12 @@
               </div>
             </div>
 
-            <button class="download-btn">PDFダウンロード
+            <button 
+              class="download-btn"
+              @click.stop="handleDownload(featuredPublication)"
+              :disabled="!canAccessPublication(featuredPublication)"
+            >
+              {{ getDownloadButtonText(featuredPublication) }}
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -118,9 +124,15 @@
             :key="publication.id"
             class="publication-card"
             @click="goToPublicationDetail(publication.id)"
+            v-restricted="{ requiredLevel: publication.membershipLevel || 'free' }"
           >
             <div class="publication-image">
               <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
+              <MembershipBadge 
+                v-if="publication.membershipLevel && publication.membershipLevel !== 'free'" 
+                :level="publication.membershipLevel" 
+                class="publication-badge"
+              />
             </div>
             <div class="publication-info">
               <div class="publication-meta">
@@ -128,7 +140,12 @@
                 <span class="featured-year">{{ publication.year }}.4.28</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
-              <button class="publication-download">PDFダウンロード
+              <button 
+                class="publication-download"
+                @click.stop="handleDownload(publication)"
+                :disabled="!canAccessPublication(publication)"
+              >
+                {{ getDownloadButtonText(publication) }}
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -180,7 +197,9 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
-import { navigateToPublication } from '../utils/navigation.js';
+import mockServer from '@/mockServer';
+import MembershipBadge from './MembershipBadge.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "PublicationsMemberPage",
@@ -193,7 +212,8 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    MembershipBadge
   },
   data() {
     return {
@@ -229,20 +249,23 @@ export default {
           title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
           year: 2024,
           category: 'economics',
-          image: '/img/image-1.png'
+          image: '/img/image-1.png',
+          membershipLevel: 'free'
         },
         {
           id: 3,
           title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
           year: 2024,
           category: 'quarterly',
-          image: '/img/image-1.png'
+          image: '/img/image-1.png',
+          membershipLevel: 'standard'
         },
         {
           id: 4,
           title: 'メンバーの共有状況にもとづく一冊刊行（約７）ページ',
           year: 2024,
           category: 'special',
+          membershipLevel: 'premium',
           image: '/img/image-1.png'
         },
         {
@@ -406,6 +429,33 @@ export default {
     async loadPublications() {
       this.loading = true;
       try {
+        // まずmockServerから取得を試みる
+        try {
+          const allPublications = await mockServer.getPublications();
+          
+          if (allPublications && allPublications.length > 0) {
+            this.publications = allPublications.map(item => ({
+              id: item.id,
+              title: item.title,
+              image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
+              description: item.description,
+              category: item.category || 'special',
+              publish_date: item.publication_date,
+              author: item.author || 'ちくぎん地域経済研究所',
+              pages: item.pages,
+              file_size: item.file_size,
+              download_count: item.download_count,
+              is_published: item.is_published,
+              membershipLevel: item.membership_level || item.membershipLevel || 'free'
+            }));
+            this.totalPages = Math.ceil(this.publications.length / 12);
+            return;
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API');
+        }
+        
+        // APIから取得
         const params = {
           page: this.currentPage,
           per_page: 12
@@ -417,7 +467,7 @@ export default {
         
         const response = await apiClient.getPublications(params);
         
-        if (response.success && response.data) {
+        if (response && response.success && response.data && response.data.publications) {
           this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
           this.totalPages = response.data.pagination.total_pages;
         } else {
@@ -484,6 +534,46 @@ export default {
     },
     handleJoinClick() {
       this.$router.push('/join');
+    },
+    canAccessPublication(publication) {
+      const requiredLevel = publication.membershipLevel || 'free';
+      return this.$store.getters['auth/canAccess'](requiredLevel);
+    },
+    getDownloadButtonText(publication) {
+      const requiredLevel = publication.membershipLevel || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
+      
+      if (canAccess) {
+        return 'PDFダウンロード';
+      } else if (isRestricted) {
+        return `${this.getMembershipText(requiredLevel)}会員限定`;
+      } else {
+        return 'ログインが必要';
+      }
+    },
+    getMembershipText(level) {
+      switch (level) {
+        case 'standard':
+          return 'スタンダード';
+        case 'premium':
+          return 'プレミアム';
+        default:
+          return '会員';
+      }
+    },
+    handleDownload(publication) {
+      const requiredLevel = publication.membershipLevel || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      if (canAccess) {
+        this.downloadPublication(publication.id);
+      } else if (!this.$store.getters['auth/isAuthenticated']) {
+        this.$router.push('/login');
+      } else {
+        alert(`この刊行物は${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
+        this.$router.push('/membership');
+      }
     }
   }
 };
@@ -891,7 +981,60 @@ export default {
   color: #666;
 }
 
+/* Membership Badge Styles */
+.publication-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
 
+/* Restricted Content Styles */
+.restricted-content {
+  position: relative;
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.restriction-overlay-inline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.lock-icon {
+  font-size: 16px;
+}
+
+/* Disabled Button Styles */
+.publication-download:disabled,
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+}
+
+.publication-card {
+  position: relative;
+}
+
+.publication-image {
+  position: relative;
+}
 
 /* Responsive Design */
 @media (max-width: 1300px) {

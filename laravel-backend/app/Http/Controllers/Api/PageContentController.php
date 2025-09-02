@@ -14,7 +14,12 @@ class PageContentController extends Controller
     public function index(): JsonResponse
     {
         $pages = PageContent::all();
-        return response()->json($pages);
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'pages' => $pages
+            ]
+        ]);
     }
 
     public function show(string $pageKey): JsonResponse
@@ -24,10 +29,18 @@ class PageContentController extends Controller
             ->first();
 
         if (!$page) {
-            return response()->json(['message' => 'Page not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Page not found'
+            ], 404);
         }
 
-        return response()->json($page);
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'page' => $page
+            ]
+        ]);
     }
 
     public function store(Request $request): JsonResponse

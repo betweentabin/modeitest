@@ -1,19 +1,45 @@
 #!/bin/bash
 
-echo "🚀 Laravel API Starting..."
+# Always run from this script's directory (laravel-backend)
+cd "$(cd "$(dirname "$0")" && pwd)" || exit 1
 
-# APP_KEYが設定されていない場合は生成
+echo "🚀 Laravel API Starting in $(pwd) ..."
+
+# Basic env info
+php -v || echo "⚠️  PHP not available in PATH"
+echo "Artisan path check: $(ls -1 artisan 2>/dev/null || echo 'artisan not found')"
+
+# APP_KEYの確認（Railway環境変数を使用）
 if [ -z "$APP_KEY" ]; then
-  echo "APP_KEYが設定されていません。生成中..."
-  php artisan key:generate --force
+  echo "⚠️  APP_KEYが設定されていません。Railway環境変数を確認してください。"
+  # Railway環境ではAPP_KEYが自動設定されるはず
 else
-  echo "APP_KEY設定済み"
+  echo "✅ APP_KEY設定済み"
 fi
 
-# データベースディレクトリを作成
-mkdir -p database
-touch database/database.sqlite
-chmod 664 database/database.sqlite
+# Railway環境変数の確認
+echo "🔍 Railway環境変数確認:"
+echo "DATABASE_URL: ${DATABASE_URL:0:30}..." 
+echo "PGHOST: $PGHOST"
+echo "PGPORT: $PGPORT"
+echo "PGDATABASE: $PGDATABASE"
+echo "PGUSER: $PGUSER"
+
+# PostgreSQL接続確認
+echo "📊 データベース接続確認中..."
+php artisan migrate:status || echo "⚠️  データベース接続に問題があります - 内部ネットワーク接続を確認中"
+
+# 接続テスト
+echo "🔗 環境変数を使った接続テスト..."
+php artisan tinker --execute="
+try {
+    \$result = DB::connection()->getPdo();
+    echo 'データベース接続成功!' . PHP_EOL;
+    echo 'PostgreSQLバージョン: ' . DB::select('SELECT version()')[0]->version . PHP_EOL;
+} catch (Exception \$e) {
+    echo 'データベース接続失敗: ' . \$e->getMessage() . PHP_EOL;
+}
+" || echo "⚠️  接続テストスキップ"
 
 # ストレージディレクトリの権限設定
 mkdir -p storage/logs
@@ -32,5 +58,7 @@ php artisan route:clear || echo "ルートキャッシュクリア失敗"
 # php artisan route:cache || echo "ルートキャッシュ失敗" # 一時的に無効化
 
 # Laravel 起動
+# ポート環境変数を強制的に8080に設定
+export PORT=${PORT:-8080}
 echo "✅ Starting Laravel server on port $PORT"
 php artisan serve --host=0.0.0.0 --port=$PORT

@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\EconomicStatisticsController;
+use App\Http\Controllers\Api\EconomicReportsController;
+use App\Http\Controllers\Admin\EconomicReportManagementController;
 use App\Http\Controllers\Api\FinancialReportsController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\ServicesController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\MemberAccessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +93,16 @@ Route::prefix('economic-statistics')->group(function () {
     });
 });
 
+// 経済統計レポート関連のルート（パブリック）
+Route::prefix('economic-reports')->name('economic-reports.')->group(function () {
+    Route::get('/', [EconomicReportsController::class, 'index'])->name('index');
+    Route::get('/featured', [EconomicReportsController::class, 'featured'])->name('featured');
+    Route::get('/years', [EconomicReportsController::class, 'availableYears'])->name('years');
+    Route::get('/categories', [EconomicReportsController::class, 'categories'])->name('categories');
+    Route::get('/{id}', [EconomicReportsController::class, 'show'])->name('show');
+    Route::post('/{id}/download', [EconomicReportsController::class, 'download'])->name('download');
+});
+
 Route::prefix('financial-reports')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [FinancialReportsController::class, 'index'])->middleware('membership:standard,premium');
@@ -109,6 +122,13 @@ Route::prefix('news')->group(function () {
     Route::get('/{slug}/related', [NewsController::class, 'related']);
 });
 
+// お知らせ関連API（パブリック）
+Route::prefix('notices')->group(function () {
+    Route::get('/', [NoticeController::class, 'index']);
+    Route::get('/categories', [NoticeController::class, 'categories']);
+    Route::get('/{id}', [NoticeController::class, 'show']);
+});
+
 Route::prefix('services')->group(function () {
     Route::get('/', [ServicesController::class, 'index']);
     Route::get('/featured', [ServicesController::class, 'featured']);
@@ -126,6 +146,15 @@ Route::prefix('seminars')->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login']);
+    
+    // テスト用: 認証なしエンドポイント
+    Route::get('/test', function() {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Admin API is working!',
+            'timestamp' => now()
+        ]);
+    });
     
     Route::middleware(['auth:sanctum', 'is.admin'])->group(function () {
         Route::get('/me', [AdminAuthController::class, 'me']);
@@ -147,6 +176,22 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [PublicationsController::class, 'show']);
             Route::put('/{id}', [PublicationsController::class, 'update']);
             Route::delete('/{id}', [PublicationsController::class, 'destroy']);
+        });
+
+        // 経済統計レポート管理関連のルート
+        Route::prefix('economic-reports')->group(function () {
+            Route::get('/', [EconomicReportManagementController::class, 'index']);
+            Route::get('/{id}', [EconomicReportManagementController::class, 'show']);
+            Route::post('/', [EconomicReportManagementController::class, 'store']);
+            Route::put('/{id}', [EconomicReportManagementController::class, 'update']);
+            Route::delete('/{id}', [EconomicReportManagementController::class, 'destroy']);
+            
+            // 公開状態の変更
+            Route::patch('/{id}/toggle-publish', [EconomicReportManagementController::class, 'togglePublishStatus']);
+            Route::patch('/{id}/toggle-feature', [EconomicReportManagementController::class, 'toggleFeaturedStatus']);
+            
+            // 統計情報
+            Route::get('/stats/overview', [EconomicReportManagementController::class, 'statistics']);
         });
         
         Route::prefix('seminars')->group(function () {
@@ -222,6 +267,12 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
 
+// 公開ページコンテンツAPI（認証不要）
+Route::prefix('public')->group(function () {
+    Route::get('/pages', [PageContentController::class, 'index']);
+    Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
+});
+
 // 新しいニュースAPI（v2）
 Route::prefix('news-v2')->group(function () {
     Route::get('/', [NewsV2Controller::class, 'index']);
@@ -240,10 +291,233 @@ Route::prefix('inquiries-v2')->group(function () {
     Route::post('/', [InquiryController::class, 'store']); // 公開：お問い合わせ送信
 });
 
+// 会員アクセス権限API
+Route::prefix('member')->middleware('auth:sanctum')->group(function () {
+    Route::get('/can-access/{type}/{id}', [MemberAccessController::class, 'canAccess']);
+    Route::post('/log-access', [MemberAccessController::class, 'logAccess']);
+    Route::get('/upgrade-history', [MemberAccessController::class, 'getUpgradeHistory']);
+});
+
 Route::prefix('publications')->group(function () {
     Route::get('/', [PublicationsController::class, 'index']);
     Route::get('/featured', [PublicationsController::class, 'featured']);
     Route::get('/latest', [PublicationsController::class, 'latest']);
     Route::get('/{id}', [PublicationsController::class, 'show']);
     Route::get('/{id}/download', [PublicationsController::class, 'download'])->middleware('auth:sanctum');
+});
+
+// デバッグ用: Admin テーブル確認エンドポイント
+Route::get('/debug/admins', function() {
+    try {
+        $admins = \App\Models\Admin::select('id', 'username', 'email', 'full_name', 'role', 'is_active')->get();
+        return response()->json([
+            'status' => 'success',
+            'admin_count' => $admins->count(),
+            'admins' => $admins,
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ]);
+    }
+});
+
+// デバッグ用: 管理者パスワード修正エンドポイント
+Route::post('/debug/fix-admin-password', function() {
+    try {
+        $admin = \App\Models\Admin::where('email', 'admin@chikugin-cri.co.jp')->first();
+        
+        if (!$admin) {
+            return response()->json(['status' => 'error', 'message' => 'Admin not found']);
+        }
+        
+        // パスワードを直接更新（Admin モデルのミューテーターを回避）
+        $admin->forceFill(['password' => \Illuminate\Support\Facades\Hash::make('admin123')])->save();
+        
+        // 検証
+        $passwordCheck = \Illuminate\Support\Facades\Hash::check('admin123', $admin->fresh()->password);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Admin password updated successfully',
+            'password_check' => $passwordCheck,
+            'admin_email' => $admin->email
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ]);
+    }
+});
+
+// デバッグ用: 管理者自動ログイン
+Route::post('/debug/admin-login', [App\Http\Controllers\Api\AdminAuthController::class, 'debugLogin']);
+
+// デバッグ用: テーブル構造確認
+Route::get('/debug/tables', function() {
+    try {
+        $tables = [];
+        
+        // Newsテーブルの存在確認と構造
+        if (Schema::hasTable('news')) {
+            $columns = Schema::getColumnListing('news');
+            $count = \App\Models\News::count();
+            $tables['news'] = [
+                'exists' => true,
+                'columns' => $columns,
+                'count' => $count,
+                'sample' => \App\Models\News::first()
+            ];
+        } else {
+            $tables['news'] = ['exists' => false];
+        }
+        
+        // NewsArticlesテーブルの存在確認
+        if (Schema::hasTable('news_articles')) {
+            $columns = Schema::getColumnListing('news_articles');
+            $count = \App\Models\NewsArticle::count();
+            $tables['news_articles'] = [
+                'exists' => true,
+                'columns' => $columns,
+                'count' => $count
+            ];
+        } else {
+            $tables['news_articles'] = ['exists' => false];
+        }
+        
+        // Publicationsテーブルの存在確認
+        if (Schema::hasTable('publications')) {
+            $columns = Schema::getColumnListing('publications');
+            $count = \App\Models\Publication::count();
+            $tables['publications'] = [
+                'exists' => true,
+                'columns' => $columns,
+                'count' => $count,
+                'sample' => \App\Models\Publication::first()
+            ];
+        } else {
+            $tables['publications'] = ['exists' => false];
+        }
+        
+        return response()->json([
+            'status' => 'success',
+            'tables' => $tables,
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ]);
+    }
+});
+
+// デバッグ用: AdminSeederを再実行するエンドポイント
+Route::post('/debug/run-admin-seeder', function() {
+    try {
+        Artisan::call('db:seed', ['--class' => 'AdminSeeder', '--force' => true]);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'AdminSeeder executed successfully.',
+            'output' => Artisan::output(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
+
+// デバッグ用: ログインテストエンドポイント
+Route::post('/debug/login-test', function(Request $request) {
+    try {
+        $admin = \App\Models\Admin::where('email', 'admin@chikugin-cri.co.jp')->first();
+        
+        if (!$admin) {
+            return response()->json(['status' => 'error', 'message' => 'Admin not found']);
+        }
+        
+        $passwordCheck = \Illuminate\Support\Facades\Hash::check('admin123', $admin->password);
+        
+        return response()->json([
+            'status' => 'success',
+            'admin_found' => true,
+            'password_check' => $passwordCheck,
+            'admin_email' => $admin->email,
+            'is_active' => $admin->is_active
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+    }
+});
+
+// デバッグ用: データベース接続確認エンドポイント
+Route::get('/debug/database', function() {
+    try {
+        $members = DB::table('members')->select('id', 'email', 'membership_type')->take(3)->get();
+        $publications = DB::table('publications')->select('id', 'title', 'membership_level')->take(3)->get();
+        $seminars = DB::table('seminars')->select('id', 'title', 'status', 'membership_requirement')->take(5)->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'database_connection' => 'OK',
+            'sample_data' => [
+                'members' => $members,
+                'publications' => $publications,
+                'seminars' => $seminars
+            ],
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ], 500);
+    }
+});
+
+// デバッグ用: セミナーステータス詳細確認
+Route::get('/debug/seminars', function() {
+    try {
+        $allSeminars = DB::table('seminars')
+            ->select('id', 'title', 'status', 'date', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+            
+        $statusCounts = DB::table('seminars')
+            ->select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'recent_seminars' => $allSeminars,
+            'status_counts' => $statusCounts,
+            'published_scope_filter' => "status IN ('scheduled', 'ongoing')",
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => now()
+        ], 500);
+    }
 });

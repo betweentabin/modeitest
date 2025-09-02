@@ -13,22 +13,26 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        Admin::create([
-            'username' => 'admin',
-            'email' => 'admin@chikugin-cri.co.jp',
-            'password' => Hash::make('admin123'),
-            'full_name' => 'システム管理者',
-            'role' => 'super_admin',
-            'is_active' => true,
-        ]);
+        Admin::updateOrCreate(
+            ['email' => 'admin@chikugin-cri.co.jp'],
+            [
+                'username' => 'admin',
+                'password' => Hash::make('admin123'),
+                'full_name' => 'システム管理者',
+                'role' => 'super_admin',
+                'is_active' => true,
+            ]
+        );
 
-        Admin::create([
-            'username' => 'editor',
-            'email' => 'editor@chikugin-cri.co.jp',
-            'password' => Hash::make('editor123'),
-            'full_name' => '編集者',
-            'role' => 'editor',
-            'is_active' => true,
-        ]);
+        Admin::updateOrCreate(
+            ['email' => 'editor@chikugin-cri.co.jp'],
+            [
+                'username' => 'editor',
+                'password' => Hash::make('editor123'),
+                'full_name' => '編集者',
+                'role' => 'editor',
+                'is_active' => true,
+            ]
+        );
     }
 }

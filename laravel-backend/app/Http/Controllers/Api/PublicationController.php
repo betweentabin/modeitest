@@ -12,19 +12,24 @@ class PublicationController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $query = Publication::where('is_published', true)
-                ->orderBy('publication_date', 'desc');
+            // 管理者（/api/admin/* 経由）または認証済み管理ユーザーの場合は全件を対象
+            $isAdminContext = str_starts_with($request->path(), 'api/admin/')
+                || ($request->user() && method_exists($request->user(), 'isAdmin') && $request->user()->isAdmin());
 
-            // フィルタリング
-            if ($request->has('category')) {
+            $query = $isAdminContext
+                ? Publication::query()->orderBy('publication_date', 'desc')
+                : Publication::where('is_published', true)->orderBy('publication_date', 'desc');
+
+            // フィルタリング（空文字は無視）
+            if ($request->filled('category')) {
                 $query->where('category', $request->category);
             }
 
-            if ($request->has('type')) {
+            if ($request->filled('type')) {
                 $query->where('type', $request->type);
             }
 
-            if ($request->has('search')) {
+            if ($request->filled('search')) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -34,9 +39,11 @@ class PublicationController extends Controller
                 });
             }
 
-            // 会員限定フィルタリング
-            if (!$request->boolean('members_only_included')) {
-                $query->where('members_only', false);
+            // 一般公開APIでは会員限定を除外。管理者APIは常に全件。
+            if (!$isAdminContext) {
+                if (!$request->boolean('members_only_included')) {
+                    $query->where('members_only', false);
+                }
             }
 
             // ページネーション
@@ -67,8 +74,14 @@ class PublicationController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $publication = Publication::where('is_published', true)
-                ->findOrFail($id);
+            $isAdminContext = request() && (
+                str_starts_with(request()->path(), 'api/admin/') ||
+                (request()->user() && method_exists(request()->user(), 'isAdmin') && request()->user()->isAdmin())
+            );
+
+            $publication = $isAdminContext
+                ? Publication::findOrFail($id)
+                : Publication::where('is_published', true)->findOrFail($id);
 
             // ビュー数をインクリメント
             $publication->increment('view_count');
@@ -77,7 +90,7 @@ class PublicationController extends Controller
                 'success' => true,
                 'data' => [
                     'publication' => $publication,
-                    'formatted_date' => $publication->publication_date->format('Y.m.d'),
+                    'formatted_date' => $publication->publication_date?->format('Y.m.d'),
                     'formatted_price' => $publication->price ? '¥' . number_format($publication->price) : '無料',
                     'can_download' => $publication->is_downloadable && $publication->file_url
                 ]

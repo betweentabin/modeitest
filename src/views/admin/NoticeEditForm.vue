@@ -238,7 +238,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import mockServer from '@/mockServer'
+import apiClient from '../../services/apiClient'
 
 export default {
   name: 'NoticeEditForm',
@@ -278,15 +278,13 @@ export default {
     }
   },
   async mounted() {
-    const token = localStorage.getItem('adminToken')
+    const token = localStorage.getItem('admin_token')
     
     if (!token) {
       this.$router.push('/admin/login')
       return
     }
 
-    // モックサーバーを使用するため、認証ヘッダーは不要
-    
     if (!this.isNew) {
       await this.fetchNoticeData()
     } else {
@@ -301,13 +299,19 @@ export default {
       this.error = ''
 
       try {
-        const data = await mockServer.getNotice(this.noticeId)
-        // mockServerのデータ形式に合わせて調整
-        this.formData = {
-          ...data,
-          publish_date: data.date,
-          is_pinned: data.isImportant,
-          is_published: true
+        const res = await apiClient.get(`/api/admin/news-v2/${this.noticeId}`)
+        if (res.success && res.data && res.data.news) {
+          const data = res.data.news
+          this.formData = {
+            title: data.title,
+            content: data.content,
+            category: data.category || 'notice',
+            publish_date: data.published_date || data.published_at,
+            is_pinned: data.is_important || data.is_featured || false,
+            is_published: data.status ? data.status === 'published' : (data.is_published || false)
+          }
+        } else {
+          throw new Error('Notice not found')
         }
       } catch (err) {
         this.error = 'お知らせデータの取得に失敗しました'
@@ -322,29 +326,25 @@ export default {
       this.successMessage = ''
 
       try {
+        const payload = {
+          title: this.formData.title,
+          description: this.formData.content,
+          content: this.formData.content,
+          type: 'notice',
+          published_date: this.formData.publish_date,
+          membership_requirement: 'none',
+          is_featured: !!this.formData.is_pinned,
+          status: this.formData.is_pinned || this.formData.is_published ? 'published' : 'draft'
+        }
         if (this.isNew) {
-          // mockServerのデータ形式に合わせて変換
-          const noticeData = {
-            title: this.formData.title,
-            content: this.formData.content,
-            date: this.formData.publish_date,
-            category: this.formData.category || 'notice',
-            isImportant: this.formData.is_pinned
-          }
-          await mockServer.createNotice(noticeData)
+          const res = await apiClient.post('/api/admin/news-v2', payload)
+          if (!res.success) throw new Error(res.message || '作成に失敗')
           this.successMessage = 'お知らせを作成しました'
-          setTimeout(() => {
-            this.$router.push('/admin/notices')
-          }, 1500)
+          setTimeout(() => { this.$router.push('/admin/notices') }, 1200)
         } else {
-          const noticeData = {
-            title: this.formData.title,
-            content: this.formData.content,
-            date: this.formData.publish_date,
-            category: this.formData.category || 'notice',
-            isImportant: this.formData.is_pinned
-          }
-          await mockServer.updateNotice(this.noticeId, noticeData)
+          // 既存データ更新時はカテゴリは送らない（DB列はcategory_idのため）
+          const res = await apiClient.put(`/api/admin/news-v2/${this.noticeId}`, payload)
+          if (!res.success) throw new Error(res.message || '更新に失敗')
           this.successMessage = 'お知らせを更新しました'
         }
       } catch (err) {
@@ -362,7 +362,7 @@ export default {
       this.$router.push('/admin/notices')
     },
     handleLogout() {
-      localStorage.removeItem('adminToken')
+      localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
       this.$router.push('/admin/login')

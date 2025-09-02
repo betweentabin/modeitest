@@ -375,7 +375,12 @@ export default {
     };
   },
   async mounted() {
-    await this.loadPublications();
+    await Promise.all([
+      this.loadFeaturedReport(),
+      this.loadCategories(),
+      this.loadYears(),
+      this.loadPublications()
+    ]);
   },
   computed: {
     filteredPublications() {
@@ -400,11 +405,15 @@ export default {
         if (this.selectedCategory && this.selectedCategory !== 'all') {
           params.category = this.selectedCategory;
         }
+
+        if (this.selectedYear && this.selectedYear !== 'all') {
+          params.year = this.selectedYear;
+        }
         
-        const response = await apiClient.getPublications(params);
+        const response = await apiClient.getEconomicReports(params);
         
         if (response.success && response.data) {
-          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
+          this.publications = response.data.reports.map(item => this.formatReportItem(item));
           this.totalPages = response.data.pagination.total_pages;
         } else {
           // フォールバック: 既存データを使用
@@ -418,32 +427,88 @@ export default {
         this.loading = false;
       }
     },
+
+    async loadFeaturedReport() {
+      try {
+        const response = await apiClient.getFeaturedEconomicReport();
+        
+        if (response.success && response.data) {
+          this.featuredPublication = this.formatReportItem(response.data);
+        }
+      } catch (err) {
+        console.error('特集レポートの読み込みに失敗しました:', err);
+        // フォールバック: 既存データを使用
+      }
+    },
+
+    async loadCategories() {
+      try {
+        const response = await apiClient.getEconomicReportCategories();
+        
+        if (response.success && response.data) {
+          this.categories = [
+            { id: 'all', name: '全て' },
+            ...response.data
+          ];
+        }
+      } catch (err) {
+        console.error('カテゴリの読み込みに失敗しました:', err);
+        // フォールバック: 既存データを使用
+      }
+    },
+
+    async loadYears() {
+      try {
+        const response = await apiClient.getEconomicReportYears();
+        
+        if (response.success && response.data) {
+          this.years = response.data;
+        }
+      } catch (err) {
+        console.error('年の読み込みに失敗しました:', err);
+        // フォールバック: 既存データを使用
+      }
+    },
     
-    formatPublicationItem(item) {
+    formatReportItem(item) {
       return {
         id: item.id,
         title: item.title,
-        year: new Date(item.publication_date).getFullYear(),
+        year: item.year,
         category: item.category,
-        image: item.cover_image || '/img/image-1.png',
+        image: item.cover_image_url || item.cover_image || '/img/image-1.png',
         description: item.description,
         author: item.author,
+        publisher: item.publisher,
         pages: item.pages,
         is_downloadable: item.is_downloadable,
-        members_only: item.members_only
+        members_only: item.members_only,
+        publication_date: item.publication_date,
+        keywords: item.keywords
       };
     },
     
     async downloadPublication(publicationId) {
       try {
-        const response = await apiClient.downloadPublication(publicationId);
-        if (response.success && response.data.download_url) {
-          // ダウンロードリンクを開く
-          window.open(response.data.download_url, '_blank');
+        const response = await apiClient.downloadEconomicReport(publicationId);
+        
+        if (response.success && response.data) {
+          if (response.data.file_url) {
+            // ダウンロードURLにリダイレクト
+            window.open(response.data.file_url, '_blank');
+          } else {
+            throw new Error('ダウンロードURLが取得できませんでした');
+          }
+        } else if (response.requires_login) {
+          // ログインが必要な場合
+          alert('このレポートは会員限定です。ログインしてください。');
+          this.$router.push('/login');
+        } else {
+          throw new Error(response.message || 'ダウンロードに失敗しました');
         }
       } catch (err) {
         console.error('ダウンロードに失敗しました:', err);
-        alert('ダウンロードに失敗しました。');
+        alert('ダウンロードに失敗しました。しばらくしてから再度お試しください。');
       }
     },
     selectYear(year) {

@@ -257,6 +257,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import apiClient from '../../services/apiClient'
 import mockServer from '@/mockServer'
 
 export default {
@@ -296,15 +297,13 @@ export default {
     }
   },
   async mounted() {
-    const token = localStorage.getItem('adminToken')
+    const token = localStorage.getItem('admin_token')
     
     if (!token) {
       this.$router.push('/admin/login')
       return
     }
 
-    // モックサーバーを使用するため、認証ヘッダーは不要
-    
     if (!this.isNew) {
       await this.fetchPublicationData()
     }
@@ -315,12 +314,16 @@ export default {
       this.error = ''
 
       try {
-        const data = await mockServer.getPublication(this.publicationId)
-        // mockServerのデータ形式に合わせて調整
-        this.formData = {
-          ...data,
-          issue_number: data.issue_number || '',
-          download_count: data.download_count || 0
+        const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
+        if (res.success && res.data && res.data.publication) {
+          const data = res.data.publication
+          this.formData = {
+            ...data,
+            issue_number: data.issue_number || '',
+            download_count: data.download_count || 0
+          }
+        } else {
+          throw new Error('Publication not found')
         }
       } catch (err) {
         this.error = '刊行物データの取得に失敗しました'
@@ -336,13 +339,13 @@ export default {
 
       try {
         if (this.isNew) {
-          await mockServer.createPublication(this.formData)
+          const res = await apiClient.post('/api/admin/publications-v2', this.formData)
+          if (!res.success) throw new Error(res.message || '作成に失敗')
           this.successMessage = '刊行物を作成しました'
-          setTimeout(() => {
-            this.$router.push('/admin/publications')
-          }, 1500)
+          setTimeout(() => { this.$router.push('/admin/publications') }, 1200)
         } else {
-          await mockServer.updatePublication(this.publicationId, this.formData)
+          const res = await apiClient.put(`/api/admin/publications-v2/${this.publicationId}`, this.formData)
+          if (!res.success) throw new Error(res.message || '更新に失敗')
           this.successMessage = '刊行物を更新しました'
         }
       } catch (err) {
@@ -360,7 +363,7 @@ export default {
       this.$router.push('/admin/publications')
     },
     handleLogout() {
-      localStorage.removeItem('adminToken')
+      localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       // モックサーバーを使用するため、認証ヘッダーの削除は不要
       this.$router.push('/admin/login')

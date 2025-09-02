@@ -11,23 +11,25 @@ class News extends Model
 
     protected $fillable = [
         'title',
-        'description',
+        'slug',
         'content',
-        'category',
-        'type',
+        'excerpt',
+        'category_id',
         'featured_image',
-        'published_date',
-        'status',
-        'membership_requirement',
-        'view_count',
+        'is_important',
+        'is_published',
         'is_featured',
-        'created_by',
-        'updated_by'
+        'view_count',
+        'tags',
+        'meta_description',
+        'published_at'
     ];
 
     protected $casts = [
-        'published_date' => 'date',
+        'published_at' => 'datetime',
         'is_featured' => 'boolean',
+        'is_published' => 'boolean',
+        'is_important' => 'boolean',
         'view_count' => 'integer'
     ];
 
@@ -42,10 +44,10 @@ class News extends Model
         return $this->belongsTo(Admin::class, 'updated_by');
     }
 
-    // Scopes
+    // Scopes - CMS版newsテーブル構造に対応
     public function scopePublished($query)
     {
-        return $query->where('status', 'published');
+        return $query->where('is_published', true);
     }
 
     public function scopeFeatured($query)
@@ -55,27 +57,30 @@ class News extends Model
 
     public function scopeByCategory($query, $category)
     {
-        return $query->where('category', $category);
+        return $query->where('category_id', $category);
     }
 
     public function scopeForMembership($query, $membershipLevel = 'none')
     {
-        $levels = ['none', 'basic', 'standard', 'premium'];
-        $allowedLevels = array_slice($levels, 0, array_search($membershipLevel, $levels) + 1);
-        
-        return $query->whereIn('membership_requirement', $allowedLevels);
+        // CMS版newsテーブルにはmembership_requirementフィールドがないので
+        // 全てのニュースを返す（会員制限なし）
+        return $query;
     }
 
     // Accessors
     public function getFormattedDateAttribute()
     {
-        return $this->published_date->format('Y.m.d');
+        return $this->published_at ? $this->published_at->format('Y.m.d') : '';
     }
 
-    public function getExcerptAttribute()
+    public function getDescriptionAttribute()
     {
-        return strlen($this->description) > 100 
-            ? substr($this->description, 0, 100) . '...' 
-            : $this->description;
+        // excerpt フィールドがある場合はそれを返し、なければcontentから抜粋を作成
+        if ($this->excerpt) {
+            return $this->excerpt;
+        }
+        return strlen($this->content) > 100 
+            ? substr($this->content, 0, 100) . '...' 
+            : $this->content;
     }
 }

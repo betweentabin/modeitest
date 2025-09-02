@@ -80,7 +80,11 @@ class NewsArticlesSeeder extends Seeder
         ];
 
         foreach ($articles as $article) {
-            NewsArticle::create($article);
+            // 既存のslugがあれば更新、無ければ作成（再実行時の重複エラーを回避）
+            NewsArticle::updateOrCreate(
+                ['slug' => $article['slug']],
+                $article
+            );
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -19,22 +19,23 @@ class AdminAuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $admin = Admin::where('email', $request->email)
+                     ->where('is_active', true)
+                     ->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        if (!$user->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // 最終ログイン時刻を更新
+        $admin->update(['last_login_at' => now()]);
 
-        $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $admin->createToken('admin-token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
+            'user' => $admin,
             'token' => $token,
         ]);
     }
@@ -48,5 +49,34 @@ class AdminAuthController extends Controller
     public function me(Request $request): JsonResponse
     {
         return response()->json($request->user());
+    }
+
+    /**
+     * デバッグ用: 管理者でログインしてトークンを取得
+     */
+    public function debugLogin(Request $request): JsonResponse
+    {
+        $admin = Admin::where('email', 'admin@chikugin-cri.co.jp')
+                     ->where('is_active', true)
+                     ->first();
+
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin account not found'
+            ], 404);
+        }
+
+        // 最終ログイン時刻を更新
+        $admin->update(['last_login_at' => now()]);
+
+        $token = $admin->createToken('debug-admin-token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'user' => $admin,
+            'token' => $token,
+            'message' => 'Debug admin login successful'
+        ]);
     }
 }

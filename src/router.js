@@ -18,6 +18,7 @@ import NewAdminDashboard from "./views/admin/NewAdminDashboard";
 import MemberManagement from "./views/admin/MemberManagement";
 import SeminarManagement from "./views/admin/SeminarManagement";
 import PublicationManagement from "./views/admin/PublicationManagement";
+import EconomicReportManagement from "./views/admin/EconomicReportManagement";
 import NoticeManagement from "./views/admin/NoticeManagement";
 import InquiryManagement from "./views/admin/InquiryManagement";
 import MediaManagement from "./views/admin/MediaManagement";
@@ -314,6 +315,12 @@ const router = new Router({
       name: "publicationEdit",
       component: PublicationEditForm,
       meta: { title: "刊行物編集 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/economic-reports",
+      name: "economicReportManagement",
+      component: EconomicReportManagement,
+      meta: { title: "経済統計レポート管理 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/notices",

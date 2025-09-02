@@ -24,7 +24,7 @@
       </div>
 
       <!-- Seminar Details Card -->
-      <div class="seminar-detail-card">
+      <div class="seminar-detail-card" v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }">
           <div class="seminar-content">
                          <div class="seminar-info">
               <div class="seminar-details">
@@ -62,6 +62,11 @@
            
            <div class="seminar-image">
              <img :src="seminar.image || '/img/image-1.png'" :alt="seminar.title" />
+             <MembershipBadge 
+               v-if="seminar.membershipRequirement && seminar.membershipRequirement !== 'free'" 
+               :level="seminar.membershipRequirement" 
+               class="detail-badge"
+             />
            </div>
          </div>
 
@@ -77,8 +82,12 @@
 
         <!-- Registration Button -->
         <div class="registration-section" v-if="seminar.status === 'current'">
-          <div class="registration-btn" @click="registerSeminar">
-            <div class="text-44 valign-text-middle inter-bold-white-15px">セミナーを予約する</div>
+          <div 
+            class="registration-btn" 
+            @click="handleRegistration"
+            :class="{ disabled: !canRegister }"
+          >
+            <div class="text-44 valign-text-middle inter-bold-white-15px">{{ registrationButtonText }}</div>
             <frame13213176122 />
           </div>
         </div>
@@ -130,6 +139,8 @@ import Frame13213176122 from "./Frame13213176122.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
+import mockServer from '@/mockServer';
+import MembershipBadge from './MembershipBadge.vue';
 
 export default {
   name: "SeminarDetailPage",
@@ -143,7 +154,8 @@ export default {
     FixedSideButtons,
     ContactSection,
     Frame13213176122,
-    ActionButton
+    ActionButton,
+    MembershipBadge
   },
   data() {
     return {
@@ -156,19 +168,84 @@ export default {
   async mounted() {
     await this.loadSeminar();
   },
+  computed: {
+    canRegister() {
+      if (!this.seminar) return false;
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      return this.$store.getters['auth/canAccess'](requiredLevel);
+    },
+    registrationButtonText() {
+      if (!this.seminar) return 'セミナーを予約する';
+      
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
+      
+      if (canAccess) {
+        return 'セミナーを予約する';
+      } else if (isRestricted) {
+        return `${this.getMembershipText(requiredLevel)}会員限定`;
+      } else {
+        return 'ログインが必要';
+      }
+    }
+  },
   methods: {
     async loadSeminar() {
       try {
         this.loading = true;
         const seminarId = this.$route.params.id;
         
-        const response = await apiClient.getSeminar(seminarId);
-        
-        if (response.success && response.data && response.data.seminar) {
-          this.seminar = this.formatSeminarData(response.data.seminar);
-        } else {
-          throw new Error('セミナーが見つかりませんでした');
+        // まずAPIから取得を試みる
+        try {
+          const response = await apiClient.getSeminar(seminarId);
+          if (response && response.data) {
+            const seminar = response.data;
+            this.seminar = {
+              id: seminar.id,
+              title: seminar.title,
+              description: seminar.description,
+              fullDescription: seminar.detailed_description || seminar.description,
+            date: seminar.date,
+            start_time: seminar.start_time,
+            end_time: seminar.end_time,
+            venue: seminar.location,
+            location: seminar.location,
+            capacity: seminar.capacity ? `${seminar.capacity}名` : '30名',
+            fee: seminar.fee === 0 || seminar.fee === '0' ? '会員無料' : `${seminar.fee}円`,
+            status: seminar.status === 'scheduled' || seminar.status === 'ongoing' ? 'current' : seminar.status,
+            image: seminar.featured_image || '/img/image-1.png',
+            instructor: seminar.instructor || 'ちくぎん地域経済研究所',
+            notes: seminar.notes,
+            application_deadline: seminar.application_deadline,
+            membershipRequirement: seminar.membership_requirement || 'free'
+            };
+            return;
+          }
+        } catch (apiError) {
+          console.log('API failed, trying mockServer:', apiError.message);
         }
+        
+        // APIが失敗した場合はmockServerから取得
+        const seminar = await mockServer.getSeminar(seminarId);
+        this.seminar = {
+          id: seminar.id,
+          title: seminar.title,
+          description: seminar.description,
+          fullDescription: seminar.detailed_description || seminar.description,
+          date: seminar.date,
+          start_time: seminar.start_time,
+          end_time: seminar.end_time,
+          venue: seminar.location,
+          capacity: seminar.capacity,
+          price: seminar.price,
+          organizer: seminar.organizer,
+          membershipRequirement: seminar.membership_requirement,
+          applicationDeadline: seminar.application_deadline,
+          currentParticipants: seminar.current_participants,
+          isOnline: seminar.is_online,
+          featuredImage: seminar.featured_image
+        };
       } catch (error) {
         console.error('セミナー詳細の読み込みに失敗しました:', error);
         this.error = 'セミナー詳細の読み込みに失敗しました。';
@@ -194,6 +271,7 @@ export default {
         image: seminar.featured_image || '/img/image-1.png',
         start_time: seminar.start_time,
         end_time: seminar.end_time,
+        membershipRequirement: seminar.membership_requirement || 'free',
         capacity: seminar.capacity,
         current_participants: seminar.current_participants,
         application_deadline: seminar.application_deadline,
@@ -289,6 +367,31 @@ export default {
       const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
       const weekday = weekdays[date.getDay()];
       return `${year}年${month}月${day}日（${weekday}）`;
+    },
+    getMembershipText(level) {
+      switch (level) {
+        case 'standard':
+          return 'スタンダード';
+        case 'premium':
+          return 'プレミアム';
+        default:
+          return '会員';
+      }
+    },
+    handleRegistration() {
+      if (!this.seminar) return;
+      
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      if (canAccess) {
+        this.registerSeminar();
+      } else if (!this.$store.getters['auth/isAuthenticated']) {
+        this.$router.push('/login');
+      } else {
+        alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
+        this.$router.push('/membership');
+      }
     },
     registerSeminar() {
       // セミナー予約処理
@@ -516,7 +619,27 @@ export default {
   font-size: 1.1rem;
 }
 
+/* 会員制限スタイル */
+.detail-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 2;
+}
 
+.seminar-image {
+  position: relative;
+}
+
+.registration-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+}
+
+.seminar-detail-card {
+  position: relative;
+}
 
 /* Contact Banner styles are now handled by ContactSection component */
 
