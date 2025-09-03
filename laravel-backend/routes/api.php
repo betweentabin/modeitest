@@ -83,6 +83,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
+// 会員認証API（Member用）
+Route::prefix('member-auth')->group(function () {
+    Route::post('/register', [App\Http\Controllers\Api\MemberAuthController::class, 'register']);
+    Route::post('/login', [App\Http\Controllers\Api\MemberAuthController::class, 'login']);
+    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [App\Http\Controllers\Api\MemberAuthController::class, 'me']);
+        Route::post('/logout', [App\Http\Controllers\Api\MemberAuthController::class, 'logout']);
+    });
+});
+
 Route::prefix('economic-statistics')->group(function () {
     Route::get('/categories', [EconomicStatisticsController::class, 'categories']);
     Route::get('/latest', [EconomicStatisticsController::class, 'latest']);
@@ -209,6 +220,26 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [NewsV2Controller::class, 'show']);
             Route::put('/{id}', [NewsV2Controller::class, 'update']);
             Route::delete('/{id}', [NewsV2Controller::class, 'destroy']);
+        });
+
+        // メールグループ管理
+        Route::prefix('mail-groups')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\MailGroupController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\MailGroupController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'destroy']);
+            Route::post('/{id}/members', [App\Http\Controllers\Admin\MailGroupController::class, 'members']);
+        });
+
+        // メールキャンペーン管理
+        Route::prefix('emails')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'show']);
+            Route::post('/{id}/preview', [App\Http\Controllers\Admin\EmailCampaignController::class, 'preview']);
+            Route::post('/{id}/schedule', [App\Http\Controllers\Admin\EmailCampaignController::class, 'schedule']);
+            Route::post('/{id}/send-now', [App\Http\Controllers\Admin\EmailCampaignController::class, 'sendNow']);
         });
         
         // 管理者用刊行物API

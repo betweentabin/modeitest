@@ -12,7 +12,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Enqueue scheduled email campaigns every minute
+        $schedule->call(function () {
+            \App\Models\EmailCampaign::where('status', 'scheduled')
+                ->where('scheduled_at', '<=', now())
+                ->orderBy('scheduled_at', 'asc')
+                ->limit(50)
+                ->get()
+                ->each(function ($campaign) {
+                    \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
+                });
+        })->everyMinute();
     }
 
     /**

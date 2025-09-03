@@ -22,6 +22,9 @@ class Seminar extends Model
         'fee',
         'status',
         'membership_requirement',
+        'premium_open_at',
+        'standard_open_at',
+        'free_open_at',
         'featured_image',
         'application_deadline',
         'contact_email',
@@ -37,6 +40,9 @@ class Seminar extends Model
         'end_time' => 'datetime:H:i',
         'application_deadline' => 'date',
         'fee' => 'decimal:2',
+        'premium_open_at' => 'datetime',
+        'standard_open_at' => 'datetime',
+        'free_open_at' => 'datetime',
     ];
 
     // リレーションシップ
@@ -158,6 +164,13 @@ class Seminar extends Model
 
         // 定員チェック
         if ($this->is_full) {
+            return false;
+        }
+
+        // 会員別の解禁日（存在する場合は最遅のfree_open_atを基準に最低限の公開判定）
+        // ここでは会員種別は考慮せず、解禁日が全て未設定なら通過
+        $earliest = $this->free_open_at ?? $this->standard_open_at ?? $this->premium_open_at;
+        if ($earliest && now()->lt($earliest)) {
             return false;
         }
 
