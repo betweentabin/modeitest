@@ -28,6 +28,8 @@ import SeminarEditForm from "./views/admin/SeminarEditForm";
 import PublicationEditForm from "./views/admin/PublicationEditForm";
 import NoticeEditForm from "./views/admin/NoticeEditForm";
 import MediaEditForm from "./views/admin/MediaEditForm";
+import MailGroupManagement from "./views/admin/MailGroupManagement";
+import EmailCampaignManagement from "./views/admin/EmailCampaignManagement";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
 import SeminarPage from "./components/SeminarPage";
@@ -327,6 +329,18 @@ const router = new Router({
       name: "noticeManagement",
       component: NoticeManagement,
       meta: { title: "お知らせ管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/mail-groups",
+      name: "mailGroupManagement",
+      component: MailGroupManagement,
+      meta: { title: "メールグループ管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/emails",
+      name: "emailCampaignManagement",
+      component: EmailCampaignManagement,
+      meta: { title: "メール配信 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/notices/new",

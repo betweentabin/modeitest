@@ -225,6 +225,7 @@
 import Navigation from '@/components/Navigation.vue'
 import FooterComplete from '@/components/FooterComplete.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MemberDirectoryPage',
@@ -317,7 +318,7 @@ export default {
           params.membership_type = this.membershipFilter
         }
 
-        const response = await this.$apiClient.request('GET', '/member/directory', null, { params })
+        const response = await apiClient.get('/api/member/directory', { params })
 
         if (response.success) {
           let membersData = response.data
@@ -369,7 +370,7 @@ export default {
       try {
         if (member.is_favorite) {
           // お気に入りから削除
-          const response = await this.$apiClient.request('DELETE', `/member/favorites/${member.id}`)
+          const response = await apiClient.delete(`/api/member/favorites/${member.id}`)
           if (response.success) {
             member.is_favorite = false
           } else {
@@ -377,7 +378,7 @@ export default {
           }
         } else {
           // お気に入りに追加
-          const response = await this.$apiClient.request('POST', `/member/favorites/${member.id}`)
+          const response = await apiClient.post(`/api/member/favorites/${member.id}`)
           if (response.success) {
             member.is_favorite = true
           } else {
@@ -400,13 +401,10 @@ export default {
         if (this.searchQuery) params.search = this.searchQuery
         if (this.membershipFilter) params.membership_type = this.membershipFilter
 
-        const response = await this.$apiClient.request('GET', '/member/directory/export/csv', null, { 
-          params,
-          responseType: 'blob'
-        })
+        const response = await apiClient.get('/api/member/directory/export/csv', { params, responseType: 'blob' })
 
         // CSVファイルをダウンロード
-        const blob = new Blob([response], { type: 'text/csv' })
+        const blob = response.data instanceof Blob ? response.data : new Blob([response.data || ''], { type: 'text/csv' })
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement('a')
         link.href = url

@@ -18,7 +18,11 @@ class ApiClient {
 
   // 現在のトークンを取得（設定されたトークンまたはadminトークン）
   getCurrentToken() {
-    return this.token || this.getAdminToken()
+    // 優先: 明示設定 > admin_token > auth_token(member) > memberToken(legacy)
+    return this.token 
+      || this.getAdminToken() 
+      || localStorage.getItem('auth_token') 
+      || localStorage.getItem('memberToken')
   }
 
   // adminとして認証されているかチェック
@@ -26,8 +30,37 @@ class ApiClient {
     return !!this.getAdminToken()
   }
 
-  // Generic request method
-  async request(endpoint, options = {}) {
+  // Generic request method (supports two signatures):
+  // 1) request(endpoint, options)
+  // 2) request(method, endpoint, body, options)
+  async request(a, b = {}, c = null, d = {}) {
+    let method, endpoint, body, options
+
+    // Detect signature
+    const upper = typeof a === 'string' ? a.toUpperCase() : ''
+    const isVerb = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(upper)
+    if (isVerb) {
+      method = upper
+      endpoint = b
+      body = c
+      options = d || {}
+    } else {
+      method = (b && b.method) ? b.method : 'GET'
+      endpoint = a
+      body = (b && b.body) ? b.body : null
+      options = b || {}
+    }
+
+    // Handle params: append to endpoint if provided
+    if (options.params && typeof options.params === 'object') {
+      const qs = new URLSearchParams(options.params).toString()
+      if (qs) {
+        endpoint = endpoint.includes('?') ? `${endpoint}&${qs}` : `${endpoint}?${qs}`
+      }
+      // prevent fetch from choking on non-standard option
+      delete options.params
+    }
+
     const url = getApiUrl(endpoint)
     
     // adminトークンまたは設定されたトークンを自動取得
@@ -54,38 +87,51 @@ class ApiClient {
         ...options.headers
       },
       mode: 'cors', // CORSモードを明示的に指定
+      method,
+      ...(body ? { body: typeof body === 'string' ? body : JSON.stringify(body) } : {}),
       ...options
     }
 
     try {
       const response = await fetch(url, config)
-      
-      // レスポンスが空の場合のハンドリング
-      const text = await response.text()
-      let data = {}
-      
-      if (text) {
-        try {
-          data = JSON.parse(text)
-        } catch (e) {
-          console.error('JSON parse error:', e)
-          data = { success: false, error: 'Invalid JSON response' }
-        }
-      }
-      
+
+      // 非200系
       if (!response.ok) {
-        console.error(`API Error: ${response.status} ${response.statusText}`, data)
-        return { success: false, error: data.message || `HTTP error! status: ${response.status}` }
+        let errText = ''
+        try { errText = await response.text() } catch(e) {}
+        let errJson = null
+        try { errJson = errText ? JSON.parse(errText) : null } catch(e) {}
+        const message = errJson?.message || `HTTP error! status: ${response.status}`
+        console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
+        return { success: false, error: message }
       }
-      
-      // APIがすでにsuccess/dataフォーマットを返している場合はそのまま返す
-      // そうでない場合は、ラップする
-      if (data && typeof data === 'object' && 'success' in data) {
-        return data
+
+      // レスポンス種別指定（blob/arraybuffer/text等）
+      const respType = options.responseType || null
+      if (respType === 'blob') {
+        const blob = await response.blob()
+        return { success: true, data: blob }
       }
-      
-      // 古い形式のレスポンスをラップ
-      return { success: true, data: data }
+      if (respType === 'arraybuffer') {
+        const buf = await response.arrayBuffer()
+        return { success: true, data: buf }
+      }
+      if (respType === 'text') {
+        const txt = await response.text()
+        return { success: true, data: txt }
+      }
+
+      // Content-TypeでJSON/テキストを判定
+      const contentType = response.headers.get('Content-Type') || ''
+      if (contentType.includes('application/json')) {
+        const data = await response.json()
+        if (data && typeof data === 'object' && 'success' in data) return data
+        return { success: true, data }
+      }
+
+      // デフォルト: テキストとして返却
+      const text = await response.text()
+      return { success: true, data: text }
     } catch (error) {
       console.error('API request failed:', error)
       // ネットワークエラーの場合はフォールバックを返す
@@ -127,6 +173,19 @@ class ApiClient {
     })
   }
 
+  // Member Admin APIs
+  async getAdminMembers(params = {}) {
+    return this.get('/api/admin/members', { params })
+  }
+
+  async updateAdminMember(id, data) {
+    return this.put(`/api/admin/members/${id}`, data)
+  }
+
+  async extendAdminMember(id, extendMonths) {
+    return this.request('PATCH', `/api/admin/members/${id}/extend`, { extend_months: extendMonths })
+  }
+
   // Seminar API methods
   async getSeminars(params = {}) {
     const queryString = new URLSearchParams(params).toString()
@@ -165,6 +224,79 @@ class ApiClient {
         'Authorization': `Bearer ${token}`
       }
     })
+  }
+
+  // Member favorites APIs
+  async getMemberFavorites() {
+    return this.get('/api/member/favorites')
+  }
+
+  async addMemberFavorite(favoriteMemberId) {
+    return this.post(`/api/member/favorites/${favoriteMemberId}`)
+  }
+
+  async removeMemberFavorite(favoriteMemberId) {
+    return this.delete(`/api/member/favorites/${favoriteMemberId}`)
+  }
+
+  // Member directory APIs
+  async getMemberDirectory(params = {}) {
+    return this.get('/api/member/directory', { params })
+  }
+
+  async getMemberDirectoryDetail(id) {
+    return this.get(`/api/member/directory/${id}`)
+  }
+
+  async exportMemberDirectoryCsv(params = {}) {
+    // Note: this client uses fetch; for streaming CSV, a dedicated download path may be used in UI
+    return this.get('/api/member/directory/export/csv', { params })
+  }
+
+  // Admin mail groups
+  async getMailGroups(params = {}) {
+    return this.get('/api/admin/mail-groups', { params })
+  }
+
+  async createMailGroup(data) {
+    return this.post('/api/admin/mail-groups', data)
+  }
+
+  async updateMailGroup(id, data) {
+    return this.put(`/api/admin/mail-groups/${id}`, data)
+  }
+
+  async deleteMailGroup(id) {
+    return this.delete(`/api/admin/mail-groups/${id}`)
+  }
+
+  async bulkEditMailGroupMembers(id, action, memberIds) {
+    return this.post(`/api/admin/mail-groups/${id}/members`, { action, member_ids: memberIds })
+  }
+
+  // Admin email campaigns
+  async getEmailCampaigns(params = {}) {
+    return this.get('/api/admin/emails', { params })
+  }
+
+  async createEmailCampaign(data) {
+    return this.post('/api/admin/emails', data)
+  }
+
+  async getEmailCampaign(id) {
+    return this.get(`/api/admin/emails/${id}`)
+  }
+
+  async previewEmailCampaign(id) {
+    return this.post(`/api/admin/emails/${id}/preview`)
+  }
+
+  async scheduleEmailCampaign(id, scheduledAt) {
+    return this.post(`/api/admin/emails/${id}/schedule`, { scheduled_at: scheduledAt })
+  }
+
+  async sendEmailCampaignNow(id) {
+    return this.post(`/api/admin/emails/${id}/send-now`)
   }
 
   // News API methods
@@ -301,7 +433,8 @@ class ApiClient {
 
   // Auth API methods (to be implemented)
   async login(credentials) {
-    return this.post('/api/auth/login', credentials)
+    // Use member auth endpoints for member login
+    return this.post('/api/member-auth/login', credentials)
   }
 
   async logout(token) {

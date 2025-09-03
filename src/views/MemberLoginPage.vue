@@ -134,6 +134,8 @@ export default {
           const user = res.user || res.data?.user || null
           // 永続化
           localStorage.setItem('auth_token', token)
+          // useMemberAuth互換
+          localStorage.setItem('memberToken', token)
           if (user) localStorage.setItem('memberUser', JSON.stringify(user))
           // Vuexにも反映（v-restricted連動）
           if (this.$store) {

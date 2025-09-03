@@ -200,10 +200,47 @@ class Member extends Authenticatable
 
     public function isExpiringSoon($days = 30)
     {
-        if (!$this->expiry_date) {
+        // 新しいフィールドを優先、フォールバックで古いフィールド
+        $expiryDate = $this->membership_expires_at ?? $this->expiry_date;
+        
+        if (!$expiryDate) {
             return false;
         }
 
-        return $this->expiry_date <= now()->addDays($days);
+        return $expiryDate->diffInDays(now()) <= $days 
+               && $expiryDate->isFuture();
+    }
+
+    /**
+     * 会員期限が有効かチェック
+     */
+    public function membershipIsActive()
+    {
+        if ($this->membership_type === 'free') {
+            return $this->is_active;
+        }
+
+        $expiryDate = $this->membership_expires_at ?? $this->expiry_date;
+
+        return $this->is_active 
+               && ($expiryDate === null || $expiryDate->isFuture());
+    }
+
+    /**
+     * アクティブで有効期限内の会員のみを取得するスコープ
+     */
+    public function scopeActiveWithValidMembership($query)
+    {
+        return $query->where('is_active', true)
+                    ->where(function ($q) {
+                        $q->where('membership_type', 'free')
+                          ->orWhere('membership_expires_at', '>', now())
+                          ->orWhereNull('membership_expires_at')
+                          ->orWhere(function($sub) {
+                              // フォールバック: 古いフィールドもチェック
+                              $sub->whereNull('membership_expires_at')
+                                  ->where('expiry_date', '>', now());
+                          });
+                    });
     }
 }

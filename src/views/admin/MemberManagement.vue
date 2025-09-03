@@ -261,6 +261,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import apiClient from '../../services/apiClient.js'
 
 export default {
   name: 'MemberManagement',
@@ -334,7 +335,7 @@ export default {
           params.status = this.selectedStatus
         }
         
-        const response = await this.$apiClient.request('GET', '/admin/members', null, { params })
+        const response = await apiClient.getAdminMembers(params)
         
         if (response.success) {
           this.members = response.data.data
@@ -391,11 +392,7 @@ export default {
       this.saving = true
       
       try {
-        const response = await this.$apiClient.request(
-          'PUT', 
-          `/admin/members/${this.editingMember.id}`, 
-          this.editForm
-        )
+        const response = await apiClient.updateAdminMember(this.editingMember.id, this.editForm)
         
         if (response.success) {
           alert('会員情報を更新しました')
@@ -425,11 +422,7 @@ export default {
       this.extending = true
       
       try {
-        const response = await this.$apiClient.request(
-          'PATCH', 
-          `/admin/members/${this.editingMember.id}/extend`, 
-          { extend_months: this.extendMonths }
-        )
+        const response = await apiClient.extendAdminMember(this.editingMember.id, this.extendMonths)
         
         if (response.success) {
           alert(response.message)
