@@ -63,9 +63,20 @@ class MemberDirectoryController extends Controller
                 $query->where('membership_type', $request->membership_type);
             }
 
-            // 地域フィルター
+            // 地域フィルター（regionカラムがあれば優先）
             if ($request->filled('region')) {
-                $query->where('address', 'LIKE', "%{$request->region}%");
+                if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'region')) {
+                    $query->where('region', $request->region);
+                } else {
+                    $query->where('address', 'LIKE', "%{$request->region}%");
+                }
+            }
+
+            // 業種フィルター
+            if ($request->filled('industry')) {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'industry')) {
+                    $query->where('industry', $request->industry);
+                }
             }
 
             // ソート

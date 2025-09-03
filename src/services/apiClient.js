@@ -62,20 +62,27 @@ class ApiClient {
     }
 
     const url = getApiUrl(endpoint)
-    
-    // adminトークンまたは設定されたトークンを自動取得
-    const adminToken = localStorage.getItem('admin_token')
-    const authToken = this.token || adminToken
-    
-    // トークンがすでにBearerで始まっているか確認
+
+    // Token selection by endpoint type (member vs admin)
+    const adminTokenLS = localStorage.getItem('admin_token')
+    const memberTokenLS = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+    const isAdminEndpoint = typeof endpoint === 'string' && endpoint.startsWith('/api/admin')
+    const isMemberEndpoint = typeof endpoint === 'string' && (endpoint.startsWith('/api/member') || endpoint.startsWith('/api/member-auth'))
+
+    let chosenToken = null
+    if (isAdminEndpoint) {
+      chosenToken = this.token || adminTokenLS || null
+    } else if (isMemberEndpoint) {
+      chosenToken = this.token || memberTokenLS || null
+    } else {
+      // Prefer member token, fallback to admin for mixed/public endpoints
+      chosenToken = this.token || memberTokenLS || adminTokenLS || null
+    }
+
+    // Build Authorization header
     let authHeader = null
-    if (authToken) {
-      // トークンがすでにBearerを含んでいるか確認
-      if (authToken.startsWith('Bearer ')) {
-        authHeader = authToken
-      } else {
-        authHeader = `Bearer ${authToken}`
-      }
+    if (chosenToken) {
+      authHeader = chosenToken.startsWith('Bearer ') ? chosenToken : `Bearer ${chosenToken}`
       console.log('Using auth token:', authHeader.substring(0, 30) + '...')
     }
     
@@ -171,6 +178,27 @@ class ApiClient {
       method: 'DELETE',
       ...options
     })
+  }
+
+  // Member masters
+  async getRegions() { return this.get('/api/member-masters/regions') }
+  async getIndustries() { return this.get('/api/member-masters/industries') }
+
+  // Member seminar APIs
+  async getMemberSeminars(params = {}) {
+    return this.get('/api/member/seminars', { params })
+  }
+  async getMySeminarRegistrations(params = {}) {
+    return this.get('/api/member/seminar-registrations', { params })
+  }
+  async getSeminarFavorites(params = {}) {
+    return this.get('/api/member/seminar-favorites', { params })
+  }
+  async addSeminarFavorite(seminarId) {
+    return this.post(`/api/member/seminar-favorites/${seminarId}`)
+  }
+  async removeSeminarFavorite(seminarId) {
+    return this.delete(`/api/member/seminar-favorites/${seminarId}`)
   }
 
   // Member Admin APIs

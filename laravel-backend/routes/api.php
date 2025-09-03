@@ -350,11 +350,22 @@ Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::delete('/favorites/{favorite_member_id}', [App\Http\Controllers\Api\MemberFavoritesController::class, 'destroy']);
     Route::get('/favorites/{favorite_member_id}/check', [App\Http\Controllers\Api\MemberFavoritesController::class, 'check']);
     
+    // セミナーお気に入り
+    Route::get('/seminar-favorites', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'index']);
+    Route::post('/seminar-favorites/{seminar_id}', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'store']);
+    Route::delete('/seminar-favorites/{seminar_id}', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'destroy']);
+    
     // 会員名簿（standard以上）
     Route::get('/directory', [App\Http\Controllers\Api\MemberDirectoryController::class, 'index']);
     Route::get('/directory/{id}', [App\Http\Controllers\Api\MemberDirectoryController::class, 'show']);
     Route::get('/directory/export/csv', [App\Http\Controllers\Api\MemberDirectoryController::class, 'exportCsv']);
     Route::get('/dashboard', [App\\Http\\Controllers\\Api\\MemberDashboardController::class, 'index']);
+});
+
+// 会員マスタ（認証不要でも良いが、ここでは公開APIとして提供）
+Route::prefix('member-masters')->group(function () {
+    Route::get('/regions', [App\\Http\\Controllers\\Api\\MemberMasterController::class, 'regions']);
+    Route::get('/industries', [App\\Http\\Controllers\\Api\\MemberMasterController::class, 'industries']);
 });
 
 Route::prefix('publications')->group(function () {
