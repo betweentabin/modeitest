@@ -283,10 +283,15 @@ export default {
     async loadCurrentSeminars() {
       try {
         // APIから取得（公開かつ開催予定/開催中を優先表示）
-        const res = await apiClient.getSeminars({ per_page: 12 });
+        const res = await apiClient.getSeminars({ per_page: 50 });
         if (res.success && res.data && Array.isArray(res.data.seminars)) {
+          const toTs = (s) => {
+            const ts = Date.parse(`${s.date} ${s.start_time || '00:00'}`)
+            return isNaN(ts) ? Date.parse(s.date) : ts
+          }
           const upcoming = res.data.seminars
             .filter(s => ['scheduled', 'ongoing'].includes(s.status))
+            .sort((a, b) => toTs(b) - toTs(a))
             .slice(0, 4)
             .map(s => ({
               image: s.featured_image || '/img/image-1.png',
@@ -302,8 +307,13 @@ export default {
         }
         // mockServerフォールバック
         const mock = await mockServer.getSeminars();
+        const toTs = (s) => {
+          const ts = Date.parse(`${s.date} ${s.start_time || '00:00'}`)
+          return isNaN(ts) ? Date.parse(s.date) : ts
+        }
         const mockUpcoming = mock
           .filter(s => ['current', 'ongoing'].includes(s.status))
+          .sort((a, b) => toTs(b) - toTs(a))
           .slice(0, 4)
           .map(s => ({
             image: s.image || s.featured_image || '/img/image-1.png',

@@ -282,7 +282,13 @@ export default {
         const params = { per_page: 50 }
         const res = await apiClient.getSeminars(params)
         if (res.success && res.data && Array.isArray(res.data.seminars)) {
-          const currentSeminars = res.data.seminars.filter(s => ['scheduled', 'ongoing'].includes(s.status))
+          const toTs = (s) => {
+            const ts = Date.parse(`${s.date} ${s.start_time || '00:00'}`)
+            return isNaN(ts) ? Date.parse(s.date) : ts
+          }
+          const currentSeminars = res.data.seminars
+            .filter(s => ['scheduled', 'ongoing'].includes(s.status))
+            .sort((a, b) => toTs(b) - toTs(a))
           this.seminarsFromServer = currentSeminars.map(s => ({
             id: s.id,
             image: s.featured_image || '/img/image-1.png',
@@ -296,7 +302,13 @@ export default {
         }
         // APIが空 or 失敗 → mockServer
         const seminars = await mockServer.getSeminars()
-        const current = seminars.filter(s => s.status === 'current' || s.status === 'ongoing')
+        const toTs = (s) => {
+          const ts = Date.parse(`${s.date} ${s.start_time || '00:00'}`)
+          return isNaN(ts) ? Date.parse(s.date) : ts
+        }
+        const current = seminars
+          .filter(s => s.status === 'current' || s.status === 'ongoing')
+          .sort((a, b) => toTs(b) - toTs(a))
         this.seminarsFromServer = current.map(s => ({
           id: s.id,
           image: s.image || s.featured_image || '/img/image-1.png',

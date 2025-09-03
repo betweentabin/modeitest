@@ -167,7 +167,6 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import apiClient from '../services/apiClient.js';
-import mockServer from '@/mockServer';
 import { frame132131753022Data } from "../data.js";
 
 export default {
@@ -201,7 +200,7 @@ export default {
     async loadNews() {
       this.loading = true
       try {
-        // まずAPIから取得
+        // DB（Laravel API）のみから取得（フォールバックなし）
         const params = {
           page: this.currentPage,
           per_page: 10
@@ -215,37 +214,21 @@ export default {
           this.totalPages = response.data.pagination.total_pages
           this.totalItems = response.data.pagination.total_items
         } else {
-          // フォールバック: mockServer
-          await this.loadFromMock()
+          // APIが成功しない/空の場合でもフォールバックはしない
+          this.newsItems = []
+          this.totalPages = 1
+          this.totalItems = 0
         }
       } catch (err) {
         console.error('ニュースの読み込みに失敗しました:', err)
         this.error = 'ニュースの読み込みに失敗しました。'
-        await this.loadFromMock()
+        // フォールバックは行わない
+        this.newsItems = []
+        this.totalPages = 1
+        this.totalItems = 0
       } finally {
         this.loading = false
       }
-    },
-    async loadFromMock() {
-      try {
-        const allNews = await mockServer.getAllNews()
-        if (allNews && allNews.length > 0) {
-          this.newsItems = allNews.map(item => ({
-            id: item.id,
-            date: item.date,
-            category: item.category || item.type || 'notice',
-            title: item.title,
-            description: item.description || item.content,
-            type: item.type || item.category || 'notice'
-          }))
-          this.totalPages = Math.ceil(this.newsItems.length / 10)
-          this.totalItems = this.newsItems.length
-          return
-        }
-      } catch (e) {
-        // noop: 最終フォールバックへ
-      }
-      this.loadFallbackNews()
     },
     
     formatNewsItem(item) {
@@ -259,35 +242,7 @@ export default {
       }
     },
     
-    async loadFallbackNews() {
-      // フォールバック: 既存のモックデータから生成
-      this.newsItems = [
-        {
-          id: 1,
-          date: '2025-05-12',
-          category: 'seminar',
-          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-          description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
-          type: 'seminar'
-        },
-        {
-          id: 2,
-          date: '2025-05-12',
-          category: 'publication',
-          title: 'HOT infomation Vol.319掲載しました！',
-          description: '最新の経済動向と地域企業の動きをまとめました。',
-          type: 'publication'
-        },
-        {
-          id: 3,
-          date: '2025-05-12',
-          category: 'publication',
-          title: 'Hot Information Vol.318掲載しました！',
-          description: '地域経済の最新情報をお届けします。',
-          type: 'publication'
-        }
-      ]
-    },
+    // フォールバックは使用しない方針
     async changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
