@@ -191,6 +191,8 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
+import apiClient from '../services/apiClient.js';
+import mockServer from '@/mockServer';
 
 export default {
   name: "SeminarPage",
@@ -207,6 +209,7 @@ export default {
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
+      // デフォルト（フォールバック）表示用データ
       currentSeminars: [
         {
           image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
@@ -273,7 +276,56 @@ export default {
       ]
     };
   },
+  async mounted() {
+    await this.loadCurrentSeminars();
+  },
   methods: {
+    async loadCurrentSeminars() {
+      try {
+        // APIから取得（公開かつ開催予定/開催中を優先表示）
+        const res = await apiClient.getSeminars({ per_page: 12 });
+        if (res.success && res.data && Array.isArray(res.data.seminars)) {
+          const upcoming = res.data.seminars
+            .filter(s => ['scheduled', 'ongoing'].includes(s.status))
+            .slice(0, 4)
+            .map(s => ({
+              image: s.featured_image || '/img/image-1.png',
+              reservationPeriod: `${(s.start_time || '10:00')}～${(s.end_time || '12:00')}`,
+              date: this.formatToJaDate(s.date),
+              title: s.title,
+              content: s.description || ''
+            }));
+          if (upcoming.length > 0) {
+            this.currentSeminars = upcoming;
+            return;
+          }
+        }
+        // mockServerフォールバック
+        const mock = await mockServer.getSeminars();
+        const mockUpcoming = mock
+          .filter(s => ['current', 'ongoing'].includes(s.status))
+          .slice(0, 4)
+          .map(s => ({
+            image: s.image || s.featured_image || '/img/image-1.png',
+            reservationPeriod: `${(s.start_time || '10:00')}～${(s.end_time || '12:00')}`,
+            date: this.formatToJaDate(s.date),
+            title: s.title,
+            content: s.description || ''
+          }));
+        if (mockUpcoming.length > 0) {
+          this.currentSeminars = mockUpcoming;
+        }
+      } catch (e) {
+        // 既存のフォールバックデータをそのまま表示
+        console.error('セミナーの読み込みに失敗:', e);
+      }
+    },
+    formatToJaDate(dateString) {
+      if (!dateString) return '';
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return dateString;
+      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+    },
     goToCurrentSeminars() {
       this.$router.push('/seminars/current');
     },

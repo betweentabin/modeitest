@@ -167,6 +167,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import apiClient from '../services/apiClient.js';
+import mockServer from '@/mockServer';
 import { frame132131753022Data } from "../data.js";
 
 export default {
@@ -200,53 +201,51 @@ export default {
     async loadNews() {
       this.loading = true
       try {
-        // まずmockServerから取得を試みる
-        try {
-          const allNews = await mockServer.getAllNews();
-          
-          if (allNews && allNews.length > 0) {
-            this.newsItems = allNews.map(item => ({
-              id: item.id,
-              date: item.date,
-              category: item.category || item.type || 'notice',
-              title: item.title,
-              description: item.description || item.content,
-              type: item.type || item.category || 'notice'
-            }));
-            this.totalPages = Math.ceil(this.newsItems.length / 10);
-            this.totalItems = this.newsItems.length;
-            return;
-          }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API');
-        }
-        
-        // APIから取得
+        // まずAPIから取得
         const params = {
           page: this.currentPage,
           per_page: 10
         }
-        
         if (this.selectedCategory && this.selectedCategory !== 'all') {
           params.category = this.selectedCategory
         }
-        
         const response = await apiClient.getNews(params)
-        
-        if (response.success && response.data) {
+        if (response.success && response.data && Array.isArray(response.data.news)) {
           this.newsItems = response.data.news.map(item => this.formatNewsItem(item))
           this.totalPages = response.data.pagination.total_pages
           this.totalItems = response.data.pagination.total_items
         } else {
-          this.loadFallbackNews()
+          // フォールバック: mockServer
+          await this.loadFromMock()
         }
       } catch (err) {
         console.error('ニュースの読み込みに失敗しました:', err)
         this.error = 'ニュースの読み込みに失敗しました。'
-        this.loadFallbackNews()
+        await this.loadFromMock()
       } finally {
         this.loading = false
       }
+    },
+    async loadFromMock() {
+      try {
+        const allNews = await mockServer.getAllNews()
+        if (allNews && allNews.length > 0) {
+          this.newsItems = allNews.map(item => ({
+            id: item.id,
+            date: item.date,
+            category: item.category || item.type || 'notice',
+            title: item.title,
+            description: item.description || item.content,
+            type: item.type || item.category || 'notice'
+          }))
+          this.totalPages = Math.ceil(this.newsItems.length / 10)
+          this.totalItems = this.newsItems.length
+          return
+        }
+      } catch (e) {
+        // noop: 最終フォールバックへ
+      }
+      this.loadFallbackNews()
     },
     
     formatNewsItem(item) {

@@ -42,7 +42,8 @@
           <div class="filter-group">
             <select v-model="filters.status" class="filter-select">
               <option value="">対応状況</option>
-              <option value="pending">未対応</option>
+              <option value="new">未対応</option>
+              <option value="in_progress">対応中</option>
               <option value="responded">対応済み</option>
             </select>
           </div>
@@ -140,7 +141,7 @@
                       </svg>
                     </button>
                     <button 
-                      v-if="inquiry.status === 'pending'" 
+                      v-if="inquiry.status === 'new' || inquiry.status === 'in_progress'" 
                       @click="markAsResponded(inquiry)" 
                       class="respond-btn" 
                       title="対応済みにする"
@@ -235,7 +236,7 @@
         </div>
         <div class="modal-footer">
           <button 
-            v-if="selectedInquiry.status === 'pending'" 
+            v-if="selectedInquiry.status === 'new' || selectedInquiry.status === 'in_progress'" 
             @click="markAsResponded(selectedInquiry)"
             class="respond-btn"
           >
@@ -398,7 +399,8 @@ export default {
 
     getStatusText(status) {
       switch (status) {
-        case 'pending': return '未対応'
+        case 'new': return '未対応'
+        case 'in_progress': return '対応中'
         case 'responded': return '対応済み'
         default: return status
       }
@@ -692,6 +694,8 @@ export default {
 .type-badge.other { background-color: #f5f5f5; color: #616161; }
 
 .status-badge.pending { background-color: #ffebee; color: #d32f2f; }
+.status-badge.new { background-color: #ffebee; color: #d32f2f; }
+.status-badge.in_progress { background-color: #fff8e1; color: #f57c00; }
 .status-badge.responded { background-color: #e8f5e8; color: #388e3c; }
 
 .action-buttons {

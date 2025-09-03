@@ -254,7 +254,8 @@ class ApiClient {
 
   // Inquiry API methods
   async submitInquiry(inquiryData) {
-    return this.post('/api/inquiries', inquiryData)
+    // Use v2 endpoint to align with admin listing
+    return this.post('/api/inquiries-v2', inquiryData)
   }
 
   async getInquiries(params = {}, token) {
@@ -276,7 +277,7 @@ class ApiClient {
   }
 
   async markInquiryAsResponded(id, token) {
-    return this.post(`/api/admin/inquiries/${id}/respond`, null, {
+    return this.post(`/api/admin/inquiries-v2/${id}/respond`, null, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
