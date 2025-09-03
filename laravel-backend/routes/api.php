@@ -359,13 +359,13 @@ Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::get('/directory', [App\Http\Controllers\Api\MemberDirectoryController::class, 'index']);
     Route::get('/directory/{id}', [App\Http\Controllers\Api\MemberDirectoryController::class, 'show']);
     Route::get('/directory/export/csv', [App\Http\Controllers\Api\MemberDirectoryController::class, 'exportCsv']);
-    Route::get('/dashboard', [App\\Http\\Controllers\\Api\\MemberDashboardController::class, 'index']);
+    Route::get('/dashboard', [App\Http\Controllers\Api\MemberDashboardController::class, 'index']);
 });
 
 // 会員マスタ（認証不要でも良いが、ここでは公開APIとして提供）
 Route::prefix('member-masters')->group(function () {
-    Route::get('/regions', [App\\Http\\Controllers\\Api\\MemberMasterController::class, 'regions']);
-    Route::get('/industries', [App\\Http\\Controllers\\Api\\MemberMasterController::class, 'industries']);
+    Route::get('/regions', [App\Http\Controllers\Api\MemberMasterController::class, 'regions']);
+    Route::get('/industries', [App\Http\Controllers\Api\MemberMasterController::class, 'industries']);
 });
 
 Route::prefix('publications')->group(function () {
