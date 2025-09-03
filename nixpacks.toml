@@ -1,0 +1,17 @@
+# Force a PHP-only build and avoid Node provider to speed up builds
+providers = ["php"]
+
+[phases.install]
+cmds = [
+  "cd laravel-backend && composer install --no-dev --prefer-dist --no-interaction --no-progress"
+]
+
+[phases.build]
+cmds = [
+  "cd laravel-backend && php artisan config:cache || true",
+  "cd laravel-backend && php artisan route:clear || true",
+  "cd laravel-backend && php artisan view:cache || true"
+]
+
+[start]
+cmd = "laravel-backend/start.sh"
