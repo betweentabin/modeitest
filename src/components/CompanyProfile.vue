@@ -378,7 +378,7 @@ section {
   display: flex;
   align-items: flex-start;
   width: 100%;
-  max-width: 100%;
+  max-width: 2000px;
 }
 
 .philosophy-image {
@@ -447,7 +447,7 @@ section {
   display: flex;
   align-items: flex-start;
   width: 100%;
-  max-width: 100%;
+  max-width: 2000px;
 }
 
 .message-text {
@@ -884,7 +884,7 @@ section {
   .company-profile-section,
   .history-section,
   .staff-section {
-    padding: 50px 20px;
+    padding: 50px 30px;
   }
 
   .philosophy-text,
@@ -892,7 +892,7 @@ section {
   .profile-table,
   .history-content,
   .staff-carousel {
-    padding: 30px 20px;
+    padding: 50px;
   }
   
   .philosophy-content,
@@ -915,12 +915,12 @@ section {
   
   .philosophy-text {
     border-radius: 0 0 20px 20px;
-    padding: 40px;
+    padding: 50px;
   }
   
   .message-text {
     border-radius: 0 0 20px 20px;
-    padding: 40px;
+    padding: 50px;
     order: 2;
   }
   
@@ -981,6 +981,20 @@ section {
   }
 }
 
+@media (max-width: 1150px) {
+  .section-header {
+    gap: 25px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .divider-text {
+    font-size: 18px !important;
+  }
+}
+
 @media (max-width: 900px) {
   .company-profile {
     overflow-x: hidden;
@@ -1006,6 +1020,10 @@ section {
   .message-content {
     width: 100%;
     max-width: 100%;
+  }
+
+  .section-header {
+    gap: 22px !important;
   }
 
   .section-title {
@@ -1053,6 +1071,26 @@ section {
     overflow-x: visible;
   }
 
+  .philosophy-section,
+  .message-section,
+  .company-profile-section,
+  .history-section,
+  .staff-section {
+    padding: 30px 20px;
+    gap: 30px;
+  }
+  
+  .philosophy-text,
+  .message-text {
+    padding: 30px 20px;
+  }
+  
+  .profile-table,
+  .history-content,
+  .staff-carousel {
+    padding: 30px 20px;
+  }
+
   .staff-member {
     width: 100%;
   }
@@ -1087,6 +1125,30 @@ section {
   .message-section {
     width: 100%;
     overflow: hidden;
+  }
+
+  .philosophy-section,
+  .message-section,
+  .company-profile-section,
+  .history-section,
+  .staff-section {
+    padding: 30px 20px;
+    gap: 30px;
+  }
+  
+  .philosophy-text,
+  .message-text {
+    padding: 30px 20px;
+  }
+  
+  .profile-table,
+  .history-content,
+  .staff-carousel {
+    padding: 30px 20px;
+  }
+
+  .section-header {
+    gap: 20px !important;
   }
 
   .section-title {
@@ -1156,8 +1218,14 @@ section {
   
   .philosophy-text,
   .message-text {
-    padding: 30px 20px;
+    padding: 20px 15px;
     gap: 20px;
+  }
+  
+  .profile-table,
+  .history-content,
+  .staff-carousel {
+    padding: 20px 15px;
   }
 
   .history-year {
@@ -1217,7 +1285,7 @@ section {
   }
 
   .section-header {
-    gap: 20px !important;
+    gap: 18px !important;
     margin-bottom: 20px !important;
   }
 

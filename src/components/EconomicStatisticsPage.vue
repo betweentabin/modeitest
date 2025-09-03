@@ -981,7 +981,7 @@ export default {
 /* Responsive Design */
 @media (max-width: 1150px) {
   .page-content {
-    padding: 50px 20px !important;
+    padding: 50px 30px !important;
   }
   
   .publications-grid {
@@ -1012,7 +1012,7 @@ export default {
 
 @media (max-width: 900px) {
   .page-content {
-    padding: 40px 20px !important;
+    padding: 30px 20px !important;
   }
   
   .publications-grid {
@@ -1060,7 +1060,7 @@ export default {
 
 @media (max-width: 768px) {
   .page-content {
-    padding: 40px 15px !important;
+    padding: 30px 20px !important;
   }
   
   .publications-grid {
@@ -1102,7 +1102,7 @@ export default {
 
 @media (max-width: 480px) {
   .page-content {
-    padding: 30px 20px !important;
+    padding: 20px 15px !important;
   }
   
   .publications-grid {

@@ -40,7 +40,7 @@
         </div>
         
         <div class="service-card">
-          <div class="service-icon">📈</div>
+          <div class="">📈</div>
           <h3>データベース</h3>
           <p>地域経済に関する豊富なデータベースをご利用いただけます。</p>
           <ul>

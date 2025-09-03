@@ -416,7 +416,7 @@ export default {
   /* セクションのパディング調整 */
   .about-section,
   .service-section {
-    padding: 50px 20px !important;
+    padding: 50px 30px !important;
   }
 
   /* レイアウトの縦並び化 */
@@ -440,7 +440,7 @@ export default {
   /* テキストの角丸とパディング調整 */
   .about-text {
     border-radius: 0 0 20px 20px !important;
-    padding: 40px !important;
+    padding: 50px !important;
   }
 
   /* サービスカードの縦並び化 */
@@ -495,6 +495,20 @@ export default {
   }
 }
 
+@media (max-width: 1150px) {
+  .section-header {
+    gap: 25px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .divider-text {
+    font-size: 18px !important;
+  }
+}
+
 @media (max-width: 900px) {
   .about-institute-page {
     overflow-x: hidden !important;
@@ -515,6 +529,10 @@ export default {
   .service-cards {
     width: 100% !important;
     max-width: 100% !important;
+  }
+
+  .section-header {
+    gap: 22px !important;
   }
 
   .section-title {
@@ -559,6 +577,11 @@ export default {
   .service-section {
     width: 100% !important;
     overflow: hidden !important;
+  }
+
+  /* セクションヘッダーの調整 */
+  .section-header {
+    gap: 20px !important;
   }
 
   /* フォントサイズ調整 */
@@ -611,9 +634,13 @@ export default {
     padding: 30px 20px !important;
   }
   
-  /* テキストの調整 */
   .about-text {
     padding: 30px 20px !important;
+  }
+  
+  /* テキストの調整 */
+  .about-text {
+    padding: 20px 15px !important;
     gap: 20px !important;
   }
 
@@ -650,7 +677,7 @@ export default {
 
   /* セクションヘッダーの調整 */
   .section-header {
-    gap: 20px !important;
+    gap: 18px !important;
     margin-bottom: 20px !important;
   }
 

@@ -260,32 +260,155 @@ export default {
 
 
 /* Responsive Design */
-
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .main-content {
-    padding: 40px 20px;
+    padding: 50px 30px !important;
   }
   
-  .content-container {
-    padding: 30px 20px;
-  }
-
-
-  
-  .hero-overlay {
-    padding: 30px 20px;
+  .content-header {
+    gap: 25px !important;
   }
   
   .hero-title {
-    font-size: 32px;
+    font-size: 32px !important;
   }
   
   .page-title {
-    font-size: 28px;
+    font-size: 32px !important;
   }
   
   .section-title {
-    font-size: 24px;
+    font-size: 29px !important;
+  }
+  
+  .intro-text {
+    font-size: 18px !important;
+  }
+  
+  .section-content {
+    font-size: 18px !important;
+  }
+  
+  .list-content {
+    font-size: 18px !important;
+  }
+  
+  .hero-overlay {
+    padding: 50px 30px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  .hero-title {
+    font-size: 29px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
+  .intro-text {
+    font-size: 17px !important;
+  }
+  
+  .section-content {
+    font-size: 17px !important;
+  }
+  
+  .list-content {
+    font-size: 17px !important;
+  }
+  
+  .hero-overlay {
+    padding: 45px 25px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 20px !important;
+  }
+  
+  .hero-title {
+    font-size: 27px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .section-title {
+    font-size: 24px !important;
+  }
+  
+  .intro-text {
+    font-size: 16px !important;
+  }
+  
+  .section-content {
+    font-size: 16px !important;
+  }
+  
+  .list-content {
+    font-size: 16px !important;
+  }
+  
+  .hero-overlay {
+    padding: 30px 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 20px 15px !important;
+  }
+  
+  .content-header {
+    gap: 18px !important;
+  }
+  
+  .hero-title {
+    font-size: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .section-title {
+    font-size: 20px !important;
+  }
+  
+  .intro-text {
+    font-size: 13px !important;
+  }
+  
+  .section-content {
+    font-size: 13px !important;
+  }
+  
+  .list-content {
+    font-size: 13px !important;
+  }
+  
+  .hero-overlay {
+    padding: 20px 15px !important;
   }
 }
 </style>

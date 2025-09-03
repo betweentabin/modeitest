@@ -702,7 +702,7 @@ export default {
 /* Responsive Design */
 @media (max-width: 1150px) {
   .intro-section {
-    padding: 50px 20px !important;
+    padding: 50px 30px !important;
   }
   
   .intro-buttons {

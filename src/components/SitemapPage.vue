@@ -193,11 +193,13 @@ export default {
   font-weight: 700;
   line-height: 150%;
   margin: 0;
+  text-align: center;
 }
 
 .title-decoration {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   width: auto;
   min-width: 306px;
@@ -247,7 +249,7 @@ export default {
 .section-content {
   color: #3F3F3F;
   font-family: var(--font-family-inter);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 150%;
   margin-bottom: 30px;
@@ -309,38 +311,138 @@ export default {
 
  /* Responsive Design */
  
+ @media (max-width: 1150px) {
+  .main-content {
+    padding: 50px 30px !important;
+  }
+
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
+  }
+  
+  .section-content {
+    font-size: 18px !important;
+  }
+  
+  .sitemap-section {
+    padding: 40px 30px;
+  }
+}
+
+ @media (max-width: 900px) {
+  .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .title-english {
+    font-size: 17px !important;
+  }
+  
+  .section-content {
+    font-size: 17px !important;
+  }
+  
+  .sitemap-section {
+    padding: 30px 20px;
+  }
+  
+  .sitemap-links {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+}
+
  @media (max-width: 768px) {
-   .main-content {
-     padding: 40px 20px;
-   }
-   
-   .sitemap-section {
-     padding: 30px 20px;
-   }
-   
-   .sitemap-links {
-     grid-template-columns: 1fr;
-     gap: 30px;
-   }
-   
-   .hero-title {
-     font-size: 28px;
-   }
-   
-   .hero-subtitle {
-     font-size: 18px;
-   }
-   
-   .page-title {
-     font-size: 28px;
-   }
-   
-   .content-view-2 {
-     padding: 40px 20px;
-   }
-   
+  .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 20px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .title-english {
+    font-size: 16px !important;
+  }
+  
+  .section-content {
+    font-size: 16px !important;
+  }
+  
+  .sitemap-section {
+    padding: 30px 15px;
+  }
+  
+  .sitemap-links {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .category-title {
+    font-size: 16px !important;
+  }
+  
+  .sitemap-link {
+    font-size: 15px !important;
+  }
+}
 
-   
-
- }
+ @media (max-width: 480px) {
+  .main-content {
+    padding: 20px 15px !important;
+  }
+  
+  .content-header {
+    gap: 18px !important;
+    margin-bottom: 20px;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .title-english {
+    font-size: 13px !important;
+  }
+  
+  .sitemap-section {
+    padding: 20px 15px;
+  }
+  
+  .sitemap-links {
+    gap: 20px;
+  }
+  
+  .category-title {
+    font-size: 15px !important;
+  }
+  
+  .sitemap-link {
+    font-size: 13px !important;
+  }
+  
+  .section-content {
+    font-size: 13px !important;
+  }
+}
 </style>
