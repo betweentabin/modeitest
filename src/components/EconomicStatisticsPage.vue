@@ -72,7 +72,7 @@
       <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
           <div class="featured-image">
-            <img src="/img/image-1.png" alt="経済統計レポート" />
+            <img :src="featuredPublication.image || '/img/image-1.png'" :alt="featuredPublication.title" />
           </div>
           <div class="featured-info">
             <div class="featured-meta">
@@ -80,8 +80,8 @@
               <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
             </div>
             <div class="featured-details">
-               <div class="content-title">雇用（有効求人倍率、パート有効求人数）</div>
-               <div class="content-text">雇用（有効求人倍率、パート有効求人数）を更新しました。2025年3月の福岡県の有効求人倍率は前月を0.02ポイント上回り1.20倍、パートタイム有効求人数は前年同月比1.6%減の45,783人となりました。雇用関連の先行き指標である2025年2月の福岡県所定外労働時間は、前年同月比3.5％減の8.5時間となりました。</div>
+               <div class="content-title">{{ featuredPublication.title }}</div>
+               <div class="content-text">{{ featuredPublication.description }}</div>
              </div>
 
             <button class="download-btn" @click="goToStatisticsDetail(featuredPublication.id)">詳細を見る
