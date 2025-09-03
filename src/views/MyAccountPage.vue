@@ -31,6 +31,29 @@
       </div>
       
       <div class="account-content">
+        <!-- ダッシュボードサマリー -->
+        <div v-if="dashboard" class="summary-cards">
+          <div class="card">
+            <div class="card-title">会員プラン</div>
+            <div class="card-value">
+              <span :class="['membership-badge', `membership-${dashboard.member.membership_type}`]">
+                {{ getMembershipLabel(dashboard.member.membership_type) }}
+              </span>
+            </div>
+            <div class="card-sub" v-if="dashboard.member.membership_expires_at">
+              期限: {{ formatDate(dashboard.member.membership_expires_at) }}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">お気に入り</div>
+            <div class="card-value">{{ dashboard.stats.favorites_count }} 件</div>
+          </div>
+          <div class="card">
+            <div class="card-title">近日のセミナー</div>
+            <div class="card-value">{{ dashboard.stats.upcoming_seminars_count }} 件</div>
+          </div>
+        </div>
+
         <!-- アカウント情報タブ -->
         <div v-if="activeTab === 'profile'" class="content-section">
           <h2>アカウント情報</h2>
@@ -318,6 +341,7 @@ export default {
     return {
       activeTab: 'profile',
       memberInfo: null,
+      dashboard: null,
       downloadHistory: [],
       favoriteMembers: [],
       settings: {
@@ -362,11 +386,22 @@ export default {
   async mounted() {
     await this.initializeAuth()
     if (this.memberInfo) {
+      this.loadDashboard()
       this.loadFavoriteMembers()
       this.loadDownloadHistory()
     }
   },
   methods: {
+    async loadDashboard() {
+      try {
+        const res = await apiClient.get('/api/member/dashboard')
+        if (res && res.success) {
+          this.dashboard = res.data
+        }
+      } catch (e) {
+        console.warn('Failed to load dashboard', e)
+      }
+    },
     async initializeAuth() {
       try {
         const response = await apiClient.get('/api/member/my-profile')
@@ -504,9 +539,9 @@ export default {
       console.log('再ダウンロード:', item)
     },
     
-    getMembershipLabel() {
+    getMembershipLabel(type) {
       const { getMembershipLabel } = useMemberAuth()
-      return getMembershipLabel()
+      return getMembershipLabel(type)
     },
     
     getMembershipFeatures(type) {
@@ -553,6 +588,35 @@ export default {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 30px;
+}
+
+/* ダッシュボードサマリー */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.summary-cards .card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.summary-cards .card-title {
+  font-size: 12px;
+  color: #666;
+}
+.summary-cards .card-value {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+.summary-cards .card-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #777;
 }
 
 /* サイドバー */

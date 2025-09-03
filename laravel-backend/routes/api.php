@@ -354,6 +354,7 @@ Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::get('/directory', [App\Http\Controllers\Api\MemberDirectoryController::class, 'index']);
     Route::get('/directory/{id}', [App\Http\Controllers\Api\MemberDirectoryController::class, 'show']);
     Route::get('/directory/export/csv', [App\Http\Controllers\Api\MemberDirectoryController::class, 'exportCsv']);
+    Route::get('/dashboard', [App\\Http\\Controllers\\Api\\MemberDashboardController::class, 'index']);
 });
 
 Route::prefix('publications')->group(function () {

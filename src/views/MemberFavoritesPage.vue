@@ -204,6 +204,7 @@
 import Navigation from '@/components/Navigation.vue'
 import FooterComplete from '@/components/FooterComplete.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MemberFavoritesPage',
@@ -246,7 +247,7 @@ export default {
       this.error = ''
 
       try {
-        const response = await this.$apiClient.request('GET', '/member/favorites')
+        const response = await apiClient.get('/api/member/favorites')
 
         if (response.success) {
           this.favorites = response.data.map(favorite => ({
@@ -274,7 +275,7 @@ export default {
       favorite.removing = true
 
       try {
-        const response = await this.$apiClient.request('DELETE', `/member/favorites/${favorite.id}`)
+        const response = await apiClient.delete(`/api/member/favorites/${favorite.id}`)
         
         if (response.success) {
           // 一覧から削除
