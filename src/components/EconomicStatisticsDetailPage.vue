@@ -183,10 +183,11 @@ export default {
         this.loading = true;
         const statisticsId = this.$route.params.id;
         
-        const response = await apiClient.getPublication(statisticsId);
+        // 経済統計レポートAPIから取得
+        const response = await apiClient.getEconomicReport(statisticsId);
         
-        if (response.success && response.data && response.data.publication) {
-          this.statistics = this.formatStatisticsData(response.data.publication);
+        if (response.success && response.data) {
+          this.statistics = this.formatStatisticsData(response.data);
         } else {
           // Fallback to mock data
           this.loadFallbackData();
@@ -214,7 +215,17 @@ export default {
     
     formatStatisticsData(statisticsData) {
       return {
-        ...statisticsData
+        id: statisticsData.id,
+        title: statisticsData.title,
+        category: statisticsData.category,
+        description: statisticsData.description,
+        notes: statisticsData.notes,
+        check: statisticsData.check,
+        image: statisticsData.cover_image_url || statisticsData.cover_image || '/img/image-1.png',
+        publication_date: statisticsData.publication_date,
+        year: statisticsData.year,
+        is_downloadable: statisticsData.is_downloadable,
+        members_only: statisticsData.members_only
       };
     },
     
@@ -225,10 +236,11 @@ export default {
     
     async downloadStatistics() {
       try {
-        const response = await apiClient.downloadPublication(this.statistics.id);
-        if (response.success && response.data.download_url) {
+        const response = await apiClient.downloadEconomicReport(this.statistics.id);
+        if (response.success && response.data && (response.data.file_url || response.data.download_url)) {
           // ダウンロードリンクを開く
-          window.open(response.data.download_url, '_blank');
+          const url = response.data.file_url || response.data.download_url
+          window.open(url, '_blank');
         } else {
           // フォールバック: 直接ダウンロード
           this.downloadFallback();
