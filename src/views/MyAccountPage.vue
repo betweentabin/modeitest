@@ -305,6 +305,7 @@ import Navigation from '@/components/Navigation.vue'
 import FooterComplete from '@/components/FooterComplete.vue'
 import PublicationCard from '@/components/PublicationCard.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MyAccountPage',
@@ -367,23 +368,15 @@ export default {
   },
   methods: {
     async initializeAuth() {
-      const { getMemberInfo, isLoggedIn } = useMemberAuth()
-      
-      if (!isLoggedIn()) {
-        this.$router.push('/login?redirect=/my-account')
-        return
-      }
-
       try {
-        const response = await this.$apiClient.request('GET', '/member/my-profile')
+        const response = await apiClient.get('/api/member/my-profile')
         if (response.success) {
           this.memberInfo = response.data
         } else {
-          console.error('プロフィール取得に失敗:', response.message)
+          this.$router.push('/login?redirect=/my-account')
         }
       } catch (error) {
-        console.error('認証情報の取得に失敗:', error)
-        this.$router.push('/login')
+        this.$router.push('/login?redirect=/my-account')
       }
     },
 
@@ -409,7 +402,7 @@ export default {
       this.saving = true
       
       try {
-        const response = await this.$apiClient.request('PUT', '/member/my-profile', this.editForm)
+        const response = await apiClient.put('/api/member/my-profile', this.editForm)
         
         if (response.success) {
           this.memberInfo = response.data
@@ -432,7 +425,7 @@ export default {
       this.favoritesError = ''
 
       try {
-        const response = await this.$apiClient.request('GET', '/member/favorites')
+        const response = await apiClient.get('/api/member/favorites')
         
         if (response.success) {
           this.favoriteMembers = response.data
@@ -453,7 +446,7 @@ export default {
       }
 
       try {
-        const response = await this.$apiClient.request('DELETE', `/member/favorites/${favorite.id}`)
+        const response = await apiClient.delete(`/api/member/favorites/${favorite.id}`)
         
         if (response.success) {
           this.favoriteMembers = this.favoriteMembers.filter(f => f.id !== favorite.id)
@@ -495,7 +488,9 @@ export default {
     handleLogout() {
       if (confirm('ログアウトしますか？')) {
         const { logout } = useMemberAuth()
+        try { apiClient.post('/api/member-auth/logout') } catch(e) {}
         logout()
+        localStorage.removeItem('auth_token')
         this.$router.push('/')
       }
     },

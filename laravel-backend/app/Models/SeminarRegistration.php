@@ -20,6 +20,11 @@ class SeminarRegistration extends Model
         'attendance_status',
         'payment_status',
         'registration_number',
+        'approval_status',
+        'approved_at',
+        'rejected_at',
+        'approved_by',
+        'rejection_reason',
     ];
 
     // リレーションシップ
@@ -52,6 +57,22 @@ class SeminarRegistration extends Model
     public function scopePending($query)
     {
         return $query->where('payment_status', 'pending');
+    }
+
+    // 承認系スコープ
+    public function scopeApprovalPending($query)
+    {
+        return $query->where('approval_status', 'pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('approval_status', 'approved');
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('approval_status', 'rejected');
     }
 
     // アクセサー

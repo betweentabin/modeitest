@@ -25,6 +25,7 @@ import MediaManagement from "./views/admin/MediaManagement";
 import PageEditForm from "./views/admin/PageEditForm";
 import NewPageEditForm from "./views/admin/NewPageEditForm";
 import SeminarEditForm from "./views/admin/SeminarEditForm";
+import SeminarRegistrationApproval from "./views/admin/SeminarRegistrationApproval";
 import PublicationEditForm from "./views/admin/PublicationEditForm";
 import NoticeEditForm from "./views/admin/NoticeEditForm";
 import MediaEditForm from "./views/admin/MediaEditForm";
@@ -299,6 +300,12 @@ const router = new Router({
       name: "seminarEdit",
       component: SeminarEditForm,
       meta: { title: "セミナー編集 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/seminars/:id/registrations",
+      name: "seminarRegistrations",
+      component: SeminarRegistrationApproval,
+      meta: { title: "セミナー申込承認 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/publications",

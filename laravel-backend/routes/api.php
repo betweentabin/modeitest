@@ -211,6 +211,12 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [SeminarController::class, 'show']);
             Route::put('/{id}', [SeminarController::class, 'update']);
             Route::delete('/{id}', [SeminarController::class, 'destroy']);
+
+            // 申込承認（案B）
+            Route::get('/{id}/registrations', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'index']);
+            Route::post('/{id}/registrations/bulk-approve', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'bulkApprove']);
+            Route::post('/{id}/registrations/{regId}/approve', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'approve']);
+            Route::post('/{id}/registrations/{regId}/reject', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'reject']);
         });
         
         // 管理者用ニュースAPI
