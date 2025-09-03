@@ -37,16 +37,24 @@ class SeminarController extends Controller
         }
 
         // 公開されているセミナーのみ（一般向け）
-        // 管理者または認証済みユーザー以外には公開セミナーのみ表示
-        if (!$request->user()) {
-            $query->published();
-        } elseif ($request->user() && !$request->user()->isAdmin()) {
-            $query->published();
+        // ただし、status=completed/cancelled が明示された場合は一般でもそのステータスを許可
+        $requestedStatus = $request->input('status');
+        $skipPublishedFilter = in_array($requestedStatus, ['completed', 'cancelled'], true);
+
+        if (!$skipPublishedFilter) {
+            if (!$request->user() || ($request->user() && !$request->user()->isAdmin())) {
+                $query->published();
+            }
         }
         // 管理者の場合は全てのステータスのセミナーを表示
 
         // ソート
-        $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+        // 過去セミナーは新しい順、それ以外は従来通り昇順
+        if ($requestedStatus === 'completed') {
+            $query->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+        } else {
+            $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+        }
 
         // ページネーション
         $perPage = $request->input('per_page', 10);
