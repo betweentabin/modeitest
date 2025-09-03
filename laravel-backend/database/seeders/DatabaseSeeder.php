@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             FinancialReportsSeeder::class,
             ServicesSeeder::class,
             PageContentsSeeder::class,
+            CompletePagesSeeder::class,
         ]);
     }
 }
