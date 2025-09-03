@@ -68,8 +68,8 @@
           </div>
           <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">2025.4.28</span>
-              <span class="featured-category">経営戦略支援の会員限定</span>
+              <span class="featured-year">{{ formatDate(featuredPublication.publish_date || featuredPublication.publication_date) }}</span>
+              <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
               <MembershipBadge v-if="featuredPublication.membershipLevel && featuredPublication.membershipLevel !== 'free'" :level="featuredPublication.membershipLevel" />
             </div>
             <div class="featured-details">
@@ -136,8 +136,8 @@
             </div>
             <div class="publication-info">
               <div class="publication-meta">
-                <span class="featured-category">経営戦略支援の会員限定</span>
-                <span class="featured-year">{{ publication.year }}.4.28</span>
+                <span class="featured-category">{{ getCategoryName(publication.category) }}</span>
+                <span class="featured-year">{{ formatDate(publication.publish_date || publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
               <button 
@@ -522,6 +522,12 @@ export default {
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
       return category ? category.name : 'ちくぎん地域経済レポート';
+    },
+    formatDate(dateString) {
+      if (!dateString) return ''
+      const d = new Date(dateString)
+      if (isNaN(d.getTime())) return dateString
+      return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`
     },
     goToPublicationDetail(publicationId) {
       this.$router.push(`/publications/${publicationId}`);
