@@ -321,7 +321,7 @@ export default {
 
 .category-select {
   width: 100%;
-  max-width: 300px;
+  max-width: 100%;
   padding: 15px 20px;
   border: 2px solid #F6D5D8;
   border-radius: 8px;
@@ -330,7 +330,7 @@ export default {
   color: #1A1A1A;
   cursor: pointer;
   outline: none;
-  margin: 0 0 0 auto;
+  margin: 0;
   display: block;
 }
 
@@ -551,7 +551,7 @@ export default {
 /* Responsive Design */
 @media (max-width: 1200px) {
   .page-content {
-    padding: 40px 30px;
+    padding: 50px 30px;
   }
   
   .faq-categories {
@@ -563,9 +563,31 @@ export default {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1150px) {
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
+  }
+
   .page-content {
-    padding: 30px 20px;
+    padding: 50px 30px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-container {
+    overflow-x: hidden;
+  }
+  
+  .page-content {
+    padding: 30px 20px !important;
   }
   
   .faq-categories {
@@ -602,11 +624,23 @@ export default {
   .page-title {
     font-size: 29px !important;
   }
+  
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  .title-english {
+    font-size: 17px !important;
+  }
 }
 
 @media (max-width: 768px) {
   .page-content {
-    padding: 40px 15px;
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 20px !important;
   }
   
   .faq-categories {
@@ -663,7 +697,7 @@ export default {
   }
   
   .faq-categories {
-    padding: 20px 15px;
+    padding: 20px 15px !important;
   }
   
   .category-btn {
@@ -706,7 +740,7 @@ export default {
   }
 
   .content-header {
-    gap: 20px;
+    gap: 18px !important;
     margin-bottom: 20px;
   }
 

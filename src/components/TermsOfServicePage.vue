@@ -293,46 +293,291 @@ export default {
 /* Responsive Design */
 @media (max-width: 1150px) {
   .frame-1321317467-1 {
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: column !important;
+    gap: 20px !important;
   }
   
   .rectangle-3 {
-    width: 100%;
-    max-width: none;
-    order: 2;
+    width: 100% !important;
+    max-width: none !important;
+    order: 2 !important;
   }
   
   .frame-1321317466 {
-    order: 1;
+    order: 1 !important;
+  }
+  
+  .hero-title {
+    font-size: 32px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px !important;
+  }
+  
+  .main-content {
+    padding: 50px 30px !important;
+  }
+  
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .decoration-text {
+    font-size: 18px !important;
+  }
+  
+  .transaction-law-table {
+    padding: 50px 30px !important;
+  }
+  
+  .table-label {
+    font-size: 18px !important;
+  }
+  
+  .table-value {
+    font-size: 18px !important;
+  }
+  
+  .intro-text {
+    font-size: 18px !important;
+  }
+  
+  .section-content {
+    font-size: 18px !important;
+  }
+  
+  .list-content {
+    font-size: 18px !important;
+  }
+  
+  .company-address {
+    font-size: 18px !important;
+  }
+  
+  .copyright {
+    font-size: 18px !important;
+  }
+  
+  .footer-section {
+    padding: 50px 30px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-title {
+    font-size: 29px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .decoration-text {
+    font-size: 17px !important;
+  }
+  
+  .transaction-law-table {
+    padding: 45px 25px !important;
+  }
+  
+  .table-label {
+    font-size: 17px !important;
+  }
+  
+  .table-value {
+    font-size: 17px !important;
+  }
+  
+  .intro-text {
+    font-size: 17px !important;
+  }
+  
+  .section-content {
+    font-size: 17px !important;
+  }
+  
+  .list-content {
+    font-size: 17px !important;
+  }
+  
+  .company-address {
+    font-size: 17px !important;
+  }
+  
+  .copyright {
+    font-size: 17px !important;
+  }
+  
+  .footer-section {
+    padding: 45px 25px !important;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding: 40px 20px;
+    padding: 30px 20px !important;
   }
   
-  .content-container {
-    padding: 30px 20px;
-  }
-
-
-  
-  .hero-overlay {
-    padding: 30px 20px;
-  }
-  
-  .hero-title {
-    font-size: 32px;
+  .content-header {
+    gap: 20px !important;
   }
   
   .page-title {
-    font-size: 28px;
+    font-size: 27px !important;
   }
   
-  .section-title {
-    font-size: 24px;
+  .decoration-text {
+    font-size: 16px !important;
+  }
+  
+  .transaction-law-table {
+    padding: 30px 20px !important;
+  }
+  
+  .table-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .table-label {
+    min-width: auto !important;
+    font-size: 16px !important;
+  }
+  
+  .table-value {
+    max-width: none !important;
+    font-size: 16px !important;
+  }
+  
+  .table-value-with-button {
+    flex-direction: column !important;
+    gap: 15px !important;
+    width: 100% !important;
+  }
+  
+  .intro-text {
+    font-size: 16px !important;
+  }
+  
+  .section-content {
+    font-size: 16px !important;
+  }
+  
+  .list-content {
+    font-size: 16px !important;
+  }
+
+  .hero-title {
+    font-size: 27px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .company-address {
+    font-size: 16px !important;
+  }
+  
+  .copyright {
+    font-size: 16px !important;
+  }
+
+  .footer-section {
+    padding: 30px 20px !important;
+  }
+
+  .footer-navigation {
+    flex-direction: column !important;
+    gap: 30px !important;
+  }
+
+  .footer-column {
+    width: 100% !important;
+  }
+
+  .company-logo-section {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 22px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 13px !important;
+  }
+  
+  .main-content {
+    padding: 20px 15px !important;
+  }
+  
+  .content-header {
+    gap: 18px !important;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .decoration-text {
+    font-size: 13px !important;
+  }
+  
+  .transaction-law-table {
+    padding: 20px 15px !important;
+  }
+  
+  .table-label {
+    font-size: 13px !important;
+  }
+  
+  .table-value {
+    font-size: 13px !important;
+  }
+  
+  .intro-text {
+    font-size: 13px !important;
+  }
+  
+  .section-content {
+    font-size: 13px !important;
+  }
+  
+  .list-content {
+    font-size: 13px !important;
+  }
+  
+  .company-address {
+    font-size: 13px !important;
+  }
+  
+  .copyright {
+    font-size: 13px !important;
+  }
+  
+  .footer-section {
+    padding: 20px 15px !important;
   }
 }
 </style>

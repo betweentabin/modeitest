@@ -31,7 +31,7 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 @media (max-width: 1150px) {
   /* セクションのパディング調整 */
   .section {
-    padding: 50px 20px !important;
+    padding: 50px 30px !important;
   }
 
   /* レイアウトの縦並び化 */
@@ -98,40 +98,62 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 }
 ```
 
+#### コンテンツヘッダー調整
+```css
+@media (max-width: 1150px) {
+  /* コンテンツヘッダーのギャップ調整 */
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  /* ページタイトル */
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  /* 装飾テキスト */
+  .decoration-text,
+  .title-english {
+    font-size: 18px !important;
+  }
+}
+```
+
 ### 2. 900px以下（タブレット）
 
-#### レイアウト調整
+#### レイアウト変更
 ```css
 @media (max-width: 900px) {
-  /* 横スクロール無効化 */
-  .page {
-    overflow-x: hidden !important;
-  }
-  
-  /* セクション幅の調整 */
+  /* セクションのパディング調整 */
   .section {
-    width: 100% !important;
-    overflow: hidden !important;
-    min-width: auto !important;
+    padding: 30px 20px !important;
+  }
+
+  /* レイアウトの縦並び化 */
+  .content {
+    flex-direction: column !important;
+    gap: 0 !important;
   }
   
-  /* コンテンツ幅の調整 */
-  .content {
+  /* 要素の幅調整 */
+  .image,
+  .text {
     width: 100% !important;
-    max-width: 100% !important;
   }
-
-  /* グリッドレイアウトの調整 */
-  .grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    width: 100%;
+  
+  /* 画像の高さ固定 */
+  .image {
+    height: 280px !important;
   }
-
-  /* ナビゲーション要素の非表示 */
-  .nav-button {
-    display: none;
+  
+  /* 角丸の調整 */
+  .image {
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .text {
+    border-radius: 0 0 20px 20px !important;
+    padding: 35px !important;
   }
 }
 ```
@@ -139,27 +161,54 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 #### フォントサイズ調整
 ```css
 @media (max-width: 900px) {
+  /* セクションタイトル */
   .section-title {
     font-size: 29px !important;
   }
 
+  /* ディバイダーテキスト */
   .divider-text {
     font-size: 17px !important;
   }
 
+  /* メインヘッドライン */
   .main-headline {
-    font-size: 42px !important;
+    font-size: 44px !important;
   }
-
+  
+  /* 説明文 */
   .description {
     font-size: 17px !important;
   }
-
+  
+  /* 見出し */
   .heading {
     font-size: 20px !important;
   }
-
+  
+  /* 詳細テキスト */
   .details {
+    font-size: 17px !important;
+  }
+}
+```
+
+#### コンテンツヘッダー調整
+```css
+@media (max-width: 900px) {
+  /* コンテンツヘッダーのギャップ調整 */
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  /* ページタイトル */
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  /* 装飾テキスト */
+  .decoration-text,
+  .title-english {
     font-size: 17px !important;
   }
 }
@@ -167,31 +216,39 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 
 ### 3. 768px以下（タブレット縦向き）
 
-#### レイアウト調整
+#### レイアウト変更
 ```css
 @media (max-width: 768px) {
-  /* 完全な縦並び化 */
-  .content {
-    flex-direction: column !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  
-  /* セクション幅の最適化 */
+  /* セクションのパディング調整 */
   .section {
-    width: 100% !important;
-    overflow: hidden !important;
+    padding: 30px 20px !important;
   }
 
-  /* スクロール設定 */
-  .scrollable {
-    overflow-x: scroll;
+  /* レイアウトの縦並び化 */
+  .content {
+    flex-direction: column !important;
+    gap: 0 !important;
   }
   
-  /* フッター要素の調整 */
-  .footer-links {
-    flex-wrap: wrap;
-    gap: 30px;
+  /* 要素の幅調整 */
+  .image,
+  .text {
+    width: 100% !important;
+  }
+  
+  /* 画像の高さ固定 */
+  .image {
+    height: 250px !important;
+  }
+  
+  /* 角丸の調整 */
+  .image {
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .text {
+    border-radius: 0 0 20px 20px !important;
+    padding: 30px !important;
   }
 }
 ```
@@ -199,27 +256,54 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 #### フォントサイズ調整
 ```css
 @media (max-width: 768px) {
+  /* セクションタイトル */
   .section-title {
     font-size: 27px !important;
   }
 
+  /* ディバイダーテキスト */
   .divider-text {
     font-size: 16px !important;
   }
 
+  /* メインヘッドライン */
   .main-headline {
-    font-size: 38px !important;
+    font-size: 40px !important;
   }
-
+  
+  /* 説明文 */
   .description {
     font-size: 16px !important;
   }
-
+  
+  /* 見出し */
   .heading {
     font-size: 19px !important;
   }
-
+  
+  /* 詳細テキスト */
   .details {
+    font-size: 16px !important;
+  }
+}
+```
+
+#### コンテンツヘッダー調整
+```css
+@media (max-width: 768px) {
+  /* コンテンツヘッダーのギャップ調整 */
+  .content-header {
+    gap: 20px !important;
+  }
+  
+  /* ページタイトル */
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  /* 装飾テキスト */
+  .decoration-text,
+  .title-english {
     font-size: 16px !important;
   }
 }
@@ -227,38 +311,39 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 
 ### 4. 480px以下（スマートフォン）
 
-#### レイアウト調整
+#### レイアウト変更
 ```css
 @media (max-width: 480px) {
-  /* セクションの調整 */
+  /* セクションのパディング調整 */
   .section {
-    width: 100% !important;
-    overflow: hidden !important;
-    padding: 30px 20px !important;
-    gap: 20px !important;
-  }
-  
-  /* コンテンツの調整 */
-  .content {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  
-  /* テキストの調整 */
-  .text {
-    padding: 30px 20px !important;
-    gap: 20px !important;
+    padding: 20px 15px !important;
   }
 
-  /* 画像の調整 */
+  /* レイアウトの縦並び化 */
+  .content {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  /* 要素の幅調整 */
+  .image,
+  .text {
+    width: 100% !important;
+  }
+  
+  /* 画像の高さ固定 */
   .image {
     height: 200px !important;
   }
-
-  /* セクションヘッダーの調整 */
-  .section-header {
-    gap: 20px !important;
-    margin-bottom: 20px !important;
+  
+  /* 角丸の調整 */
+  .image {
+    border-radius: 15px 15px 0 0 !important;
+  }
+  
+  .text {
+    border-radius: 0 0 15px 15px !important;
+    padding: 20px !important;
   }
 }
 ```
@@ -266,122 +351,288 @@ CompanyProfile.vueで実装されたレスポンシブ設定を基に作成さ�
 #### フォントサイズ調整
 ```css
 @media (max-width: 480px) {
+  /* セクションタイトル */
   .section-title {
     font-size: 22px !important;
   }
 
+  /* ディバイダーテキスト */
+  .divider-text {
+    font-size: 13px !important;
+  }
+
+  /* メインヘッドライン */
   .main-headline {
-    font-size: 25px !important;
+    font-size: 32px !important;
   }
   
+  /* 説明文 */
   .description {
     font-size: 13px !important;
   }
   
+  /* 見出し */
   .heading {
     font-size: 18px !important;
   }
   
+  /* 詳細テキスト */
   .details {
     font-size: 13px !important;
   }
+}
+```
 
-  .divider-text {
+#### コンテンツヘッダー調整
+```css
+@media (max-width: 480px) {
+  /* コンテンツヘッダーのギャップ調整 */
+  .content-header {
+    gap: 18px !important;
+  }
+  
+  /* ページタイトル */
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  /* 装飾テキスト */
+  .decoration-text,
+  .title-english {
     font-size: 13px !important;
   }
 }
 ```
 
-## フォントサイズの段階的変化パターン
+## 統一フォントサイズスケール
 
-### 基本パターン
+### セクションタイトル
+- デスクトップ: 36px
+- 1150px以下: 32px
+- 900px以下: 29px
+- 768px以下: 27px
+- 480px以下: 22px
+
+### 説明文・詳細テキスト
+- デスクトップ: 20px
+- 1150px以下: 18px
+- 900px以下: 17px
+- 768px以下: 16px
+- 480px以下: 13px
+
+### メインヘッドライン
+- デスクトップ: 48px
+- 1150px以下: 44px
+- 900px以下: 40px
+- 768px以下: 36px
+- 480px以下: 32px
+
+### 見出し
+- デスクトップ: 24px
+- 1150px以下: 22px
+- 900px以下: 20px
+- 768px以下: 19px
+- 480px以下: 18px
+
+### ページタイトル
+- デスクトップ: 36px
+- 1150px以下: 32px
+- 900px以下: 29px
+- 768px以下: 27px
+- 480px以下: 22px
+
+### 装飾テキスト・英語タイトル
+- デスクトップ: 20px
+- 1150px以下: 18px
+- 900px以下: 17px
+- 768px以下: 16px
+- 480px以下: 13px
+
+## コンテンツヘッダーのギャップ設定
+
+### 各ブレークポイントでのギャップ調整
+- デスクトップ: 29px（基本）
+- 1150px以下: 25px
+- 900px以下: 22px
+- 768px以下: 20px
+- 480px以下: 18px
+
+## パディング設定
+
+### 統一されたパディングパターン
+セクション全体の外側のパディングと、コンテンツエリアの内側のパディングを統一するための設定です。
+
+#### 外パディング設定（セクション全体）
 ```css
-/* セクションタイトル */
-36px → 32px → 29px → 27px → 22px
-
-/* メインヘッドライン */
-55px → 48px → 42px → 38px → 25px
-
-/* 説明文・詳細・ディバイダーテキスト（統一） */
-20px → 18px → 17px → 16px → 13px
-
-/* 見出し */
-24px → 22px → 20px → 19px → 18px
-
-/* 特殊要素（履歴年など） */
-48px → 48px → 42px → 38px → 35px
-```
-
-## 実装のポイント
-
-### 1. !importantの使用
-- 全てのレスポンシブ設定に!importantを付与
-- 他のCSSルールとの競合を完全回避
-- 確実なCSS適用を保証
-
-### 2. 段階的な調整
-- 各ブレークポイントで適切なサイズ調整
-- 可読性の維持
-- ユーザビリティの向上
-
-### 3. レイアウトの最適化
-- デバイスサイズに応じた最適なレイアウト
-- 縦並び化によるモバイル対応
-- 画像サイズの最適化
-
-### 4. 一貫性の確保
-- 関連要素のサイズ統一
-- デザインの一貫性
-- ユーザー体験の統一
-
-## 使用例
-
-### 新しいコンポーネントでの適用
-```css
-/* 基本スタイル（デスクトップ） */
-.my-component {
-  font-size: 20px;
-  padding: 50px;
-  width: 50%;
+/* デスクトップ（1150px超）: 基本スタイル */
+.your-section-class {
+  padding: 70px 50px 50px;
 }
 
-/* レスポンシブ対応 */
+/* 1150px以下（タブレット横向き） */
 @media (max-width: 1150px) {
-  .my-component {
-    font-size: 18px !important;
-    padding: 50px 20px !important;
-    width: 100% !important;
+  .your-section-class {
+    padding: 50px 30px !important;
+  }
+}
+
+/* 900px以下（タブレット） */
+@media (max-width: 900px) {
+  .your-section-class {
+    padding: 30px 20px !important;
+  }
+}
+
+/* 768px以下（タブレット縦向き） */
+@media (max-width: 768px) {
+  .your-section-class {
+    padding: 30px 20px !important;
+  }
+}
+
+/* 480px以下（スマートフォン） */
+@media (max-width: 480px) {
+  .your-section-class {
+    padding: 20px 15px !important;
+  }
+}
+```
+
+#### 内パディング設定（コンテンツエリア）
+```css
+/* デスクトップ（1150px超）: 基本スタイル */
+.your-content-class {
+  padding: 50px;
+}
+
+/* 1150px以下（タブレット横向き） */
+@media (max-width: 1150px) {
+  .your-content-class {
+    padding: 30px 20px !important;
+  }
+}
+
+/* 900px以下（タブレット） */
+@media (max-width: 900px) {
+  .your-content-class {
+    padding: 30px 20px !important;
+  }
+}
+
+/* 768px以下（タブレット縦向き） */
+@media (max-width: 768px) {
+  .your-content-class {
+    padding: 30px 20px !important;
+  }
+}
+
+/* 480px以下（スマートフォン） */
+@media (max-width: 480px) {
+  .your-content-class {
+    padding: 20px 15px !important;
+  }
+}
+```
+
+### 使用方法
+新しいクラスにパディングを適用したい場合は：
+
+#### 外パディング（セクション全体）
+1. **「そのクラスを外パディング設定して」**と言う
+2. **`.your-section-class` を対象クラス名に変更**
+3. **セクション全体の外側パディング**が適用される
+
+#### 内パディング（コンテンツエリア）
+1. **「そのクラスを内パディング設定して」**と言う
+2. **`.your-content-class` を対象クラス名に変更**
+3. **コンテンツエリアの内側パディング**が適用される
+
+### パディング値の一覧
+
+#### 外パディング（セクション全体）
+- **基本**: `padding: 70px 50px 50px`
+- **1150px以下**: `padding: 50px 30px !important`
+- **900px以下**: `padding: 30px 20px !important`
+- **768px以下**: `padding: 30px 20px !important`
+- **480px以下**: `padding: 20px 15px !important`
+
+#### 内パディング（コンテンツエリア）
+- **基本**: `padding: 50px`
+- **1150px以下**: `padding: 30px 20px !important`
+- **900px以下**: `padding: 30px 20px !important`
+- **768px以下**: `padding: 30px 20px !important`
+- **480px以下**: `padding: 20px 15px !important`
+
+### 実装例
+
+#### 外パディングの例
+```css
+/* 例：.my-section クラスに外パディングを適用 */
+.my-section {
+  padding: 70px 50px 50px;
+}
+
+@media (max-width: 1150px) {
+  .my-section {
+    padding: 50px 30px !important;
   }
 }
 
 @media (max-width: 900px) {
-  .my-component {
-    font-size: 17px !important;
+  .my-section {
+    padding: 30px 20px !important;
   }
 }
 
 @media (max-width: 768px) {
-  .my-component {
-    font-size: 16px !important;
+  .my-section {
+    padding: 30px 20px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .my-component {
-    font-size: 13px !important;
-    padding: 30px 20px !important;
+  .my-section {
+    padding: 20px 15px !important;
   }
 }
 ```
 
-## 注意事項
+#### 内パディングの例
+```css
+/* 例：.my-content クラスに内パディングを適用 */
+.my-content {
+  padding: 50px;
+}
 
-1. **!importantの過度な使用**: 必要最小限に留める
-2. **パフォーマンス**: メディアクエリの最適化
-3. **テスト**: 各ブレークポイントでの動作確認
-4. **保守性**: コードの可読性と保守性のバランス
+@media (max-width: 1150px) {
+  .my-content {
+    padding: 30px 20px !important;
+  }
+}
 
-## まとめ
+@media (max-width: 900px) {
+  .my-content {
+    padding: 30px 20px !important;
+  }
+}
 
-このテンプレートを使用することで、一貫性のあるレスポンシブ対応が実現できます。
-各ブレークポイントでの適切な調整により、すべてのデバイスサイズで最適なユーザー体験を提供できます。
+@media (max-width: 768px) {
+  .my-content {
+    padding: 30px 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-content {
+    padding: 20px 15px !important;
+  }
+}
+```
+
+## 実装のポイント
+
+1. **!importantの使用**: すべてのレスポンシブCSSプロパティに`!important`を付けて、確実にスタイルが適用されるようにする
+2. **段階的な調整**: 各ブレークポイントで適切なサイズ調整を行い、ユーザビリティを向上させる
+3. **一貫性の維持**: フォントサイズやレイアウトの調整パターンを統一し、プロジェクト全体の一貫性を保つ
+4. **コンテンツヘッダーの配慮**: ページタイトルと装飾要素の間隔を適切に調整し、視認性を向上させる
+5. **内パディングの統一**: テキストセクションやコンテンツエリアの内側のパディングを統一し、一貫したユーザー体験を提供する

@@ -509,9 +509,27 @@ export default {
   }
 }
 
+@media (max-width: 1150px) {
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
+  }
+}
+
 @media (max-width: 900px) {
   .page-content {
     padding: 30px 20px;
+  }
+  
+  .content-header {
+    gap: 22px !important;
   }
   
   .indicator-item {
@@ -543,6 +561,10 @@ export default {
 @media (max-width: 768px) {
   .page-content {
     padding: 40px 15px;
+  }
+  
+  .content-header {
+    gap: 20px !important;
   }
   
   .indicator-term {
@@ -626,7 +648,7 @@ export default {
   }
 
   .content-header {
-    gap: 20px;
+    gap: 18px !important;
     margin-bottom: 20px;
   }
 

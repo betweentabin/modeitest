@@ -13,8 +13,8 @@
     <Breadcrumbs :breadcrumbs="['お知らせ']" />
 
     <div class="page-content">
-      <div class="news-header">
-        <h2 class="section-title">お知らせ</h2>
+      <div class="content-header">
+        <h2 class="page-title">お知らせ</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
           <span class="title-english">information</span>
@@ -311,7 +311,7 @@ export default {
   box-shadow: none;
 }
 
-.news-header {
+.content-header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -319,7 +319,7 @@ export default {
   margin-bottom: 40px;
 }
 
-.section-title {
+.page-title {
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 36px;
   font-weight: 700;
@@ -381,7 +381,7 @@ export default {
 
 .category-select {
   width: 100%;
-  max-width: 300px;
+  max-width: 100%;
   padding: 15px 20px;
   border: 2px solid #F6D5D8;
   border-radius: 8px;
@@ -390,7 +390,7 @@ export default {
   color: #1A1A1A;
   cursor: pointer;
   outline: none;
-  margin: 0 0 0 auto;
+  margin: 0;
   display: block;
 }
 
@@ -595,7 +595,7 @@ export default {
 /* Responsive Design */
 @media (max-width: 1200px) {
   .page-content {
-    padding: 40px 30px;
+    padding: 50px 30px !important;
   }
   
   .news-categories {
@@ -607,8 +607,22 @@ export default {
   }
 }
 
+@media (max-width: 1150px) {
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
+  }
+}
+
 @media (max-width: 900px) {
-  .company-profile {
+  .page-container {
     overflow-x: hidden;
   }
 
@@ -618,6 +632,18 @@ export default {
   
   .page-content {
     padding: 30px 20px;
+  }
+  
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .title-english {
+    font-size: 17px !important;
   }
   
   .news-categories {
@@ -660,10 +686,6 @@ export default {
   .news-category {
     font-size: 17px !important;
   }
-  
-  .section-title {
-    font-size: 29px !important;
-  }
 
   .news-categories-mobile {
     margin-bottom: 30px;
@@ -676,7 +698,19 @@ export default {
   }
   
   .page-content {
-    padding: 40px 15px;
+    padding: 30px 20px !important;
+  }
+  
+  .content-header {
+    gap: 20px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .title-english {
+    font-size: 16px !important;
   }
   
   .news-categories {
@@ -722,14 +756,18 @@ export default {
     font-size: 16px !important;
   }
   
-  .section-title {
+  .page-title {
     font-size: 27px !important;
+  }
+  
+  .content-header {
+    gap: 20px !important;
   }
 }
 
 @media (max-width: 480px) {
   .page-content {
-    padding: 20px 15px;
+    padding: 20px 15px !important;
   }
   
   .news-categories {
@@ -784,12 +822,12 @@ export default {
     margin-bottom: 20px;
   }
 
-  .news-header {
-    gap: 20px;
+  .content-header {
+    gap: 18px !important;
     margin-bottom: 20px;
   }
 
-  .section-title {
+  .page-title {
     font-size: 22px !important;
   }
 

@@ -96,11 +96,6 @@
                 <span class="service-label">consultation</span>
                 <h4 class="service-title">ご相談</h4>
               </div>
-              <div class="service-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M13.125 2.25V21.75C13.125 22.0484 13.0065 22.3345 12.7955 22.5455C12.5845 22.7565 12.2984 22.875 12 22.875C11.7016 22.875 11.4155 22.7565 11.2045 22.5455C10.9935 22.3345 10.875 22.0484 10.875 21.75V2.25C10.875 1.95163 10.9935 1.66548 11.2045 1.4545C11.4155 1.24353 11.7016 1.125 12 1.125C12.2984 1.125 12.5845 1.24353 12.7955 1.4545C13.0065 1.66548 13.125 1.95163 13.125 2.25Z" fill="#1A1A1A"/>
-                </svg>
-              </div>
             </div>
             <div class="service-card">
               <img src="https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590" alt="Problem Analysis" class="service-image" />
@@ -468,7 +463,7 @@ export default {
 /* Main Duties Section */
 .main-duties-section {
   width: 100%;
-  padding: 50px 50px 80px;
+  padding: 50px 50px 70px;
 }
 
 .duties-container {
@@ -590,19 +585,20 @@ export default {
 
 .service-image {
   width: 100%;
-  height: 294px;
+  height: auto;
   object-fit: cover;
   border-radius: 20px;
+  aspect-ratio: 16 / 9;
 }
 
 .service-info {
   position: absolute;
   bottom: 0;
-  left: 83px;
+  right: 0;
   background: #FFF;
   padding: 13px;
   border-radius: 10px 0 0 0;
-  width: 100%;
+  width: 85%;
 }
 
 .service-label {
@@ -620,14 +616,6 @@ export default {
   font-size: 18px;
   font-weight: 700;
   margin: 0;
-}
-
-.service-icon {
-  position: absolute;
-  bottom: 28px;
-  left: 55px;
-  width: 24px;
-  height: 24px;
 }
 
 .support-divider {
@@ -707,9 +695,10 @@ export default {
 
 .achievement-image {
   width: 100%;
-  height: 186px;
+  height: auto;
   object-fit: cover;
   border-radius: 10px;
+  aspect-ratio: 16 / 9;
 }
 
 .achievement-info {
@@ -853,7 +842,148 @@ export default {
 
 
 /* Responsive Design */
+@media (max-width: 1280px) {
+  .what-is-section {
+    padding: 50px 30px !important;
+  }
+  
+  .main-duties-section {
+    padding: 50px 30px !important;
+  }
+  
+  .support-section {
+    padding: 50px 30px !important;
+  }
+  
+  .achievements-section {
+    padding: 50px 30px !important;
+  }
+  
+  .section-header {
+    gap: 25px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .content-subtitle,
+  .duties-title {
+    font-size: 48px !important;
+  }
+  
+  .content-heading,
+  .duties-heading {
+    font-size: 25px !important;
+  }
+  
+  .content-description,
+  .duties-description,
+  .support-description p,
+  .achievements-note,
+  .duties-list p {
+    font-size: 17px !important;
+  }
+  
+  .category-title {
+    font-size: 32px !important;
+  }
+  
+  .achievement-title {
+    font-size: 18px !important;
+  }
+  
+  .achievement-description {
+    font-size: 17px !important;
+  }
+  
+  .frame-1321317467-1 {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .rectangle-3 {
+    width: 100%;
+    max-width: none;
+    order: 2;
+  }
+  
+  .frame-1321317466 {
+    order: 1;
+  }
+  
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .achievements-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 1150px) {
+  .what-is-section {
+    padding: 50px 30px !important;
+  }
+  
+  .main-duties-section {
+    padding: 50px 30px !important;
+  }
+  
+  .support-section {
+    padding: 50px 30px !important;
+  }
+  
+  .achievements-section {
+    padding: 50px 30px !important;
+  }
+  
+  .section-header {
+    gap: 25px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .content-subtitle,
+  .duties-title {
+    font-size: 48px !important;
+  }
+  
+  .content-heading,
+  .duties-heading {
+    font-size: 25px !important;
+  }
+  
+  .content-description,
+  .duties-description,
+  .support-description p,
+  .achievements-note,
+  .duties-list p {
+    font-size: 17px !important;
+  }
+  
+  .category-title {
+    font-size: 32px !important;
+  }
+  
+  .achievement-title {
+    font-size: 18px !important;
+  }
+  
+  .achievement-description {
+    font-size: 17px !important;
+  }
+  
   .frame-1321317467-1 {
     flex-direction: column;
     gap: 20px;
@@ -870,74 +1000,69 @@ export default {
   }
 }
 
-/* Footer Navigation */
-
-/* Access Section */
-
-.access-title-container svg {
-  position: absolute;
-  left: 0;
-  top: 18px;
-}
-
-.access-main-title {
-  color: #1A1A1A;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 150%;
-  position: absolute;
-  left: 0;
-  top: 54px;
-  margin: 0;
-}
-
-.access-subtitle {
-  color: #1A1A1A;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 150%;
-  position: absolute;
-  left: 114px;
-  top: 0;
-}
-
-.access-map {
-  width: 692px;
-  height: 398px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.info-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.info-title {
-  color: #DA5761;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 200%;
-  margin: 0;
-}
-
-.info-item {
-  color: #1A1A1A;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 200%;
-  margin: 0;
-}
-
-
-
-/* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
+  .cri-consulting-page {
+    overflow-x: hidden;
+  }
+  
+  .what-is-section {
+    padding: 30px 20px !important;
+  }
+  
+  .main-duties-section {
+    padding: 30px 20px !important;
+  }
+  
+  .support-section {
+    padding: 30px 20px !important;
+  }
+  
+  .achievements-section {
+    padding: 30px 20px !important;
+  }
+  
+  .section-header {
+    gap: 22px !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .content-subtitle,
+  .duties-title {
+    font-size: 42px !important;
+  }
+  
+  .content-heading,
+  .duties-heading {
+    font-size: 23px !important;
+  }
+  
+  .content-description,
+  .duties-description,
+  .support-description p,
+  .achievements-note,
+  .duties-list p {
+    font-size: 16px !important;
+  }
+  
+  .category-title {
+    font-size: 29px !important;
+  }
+  
+  .achievement-title {
+    font-size: 17px !important;
+  }
+  
+  .achievement-description {
+    font-size: 16px !important;
+  }
+  
   .content-container,
   .duties-container {
     flex-direction: column;
@@ -946,31 +1071,92 @@ export default {
   .content-image,
   .duties-image {
     width: 100%;
-    border-radius: 20px;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .duties-container {
+    flex-direction: column-reverse;
+  }
+  
+  .duties-content {
+    border-radius: 0 0 20px 20px;
+  }
+  
+  .duties-image {
+    height: 300px !important;
+  }
+  
+  .content-image {
+    height: 300px !important;
   }
   
   .service-grid,
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
+  
   .access-map {
     width: 100%;
   }
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 28px;
+  .what-is-section {
+    padding: 30px 20px !important;
+  }
+  
+  .main-duties-section {
+    padding: 30px 20px !important;
+  }
+  
+  .support-section {
+    padding: 30px 20px !important;
+  }
+  
+  .achievements-section {
+    padding: 30px 20px !important;
+  }
+  
+  .section-header {
+    gap: 20px !important;
   }
   
   .section-title {
-    font-size: 28px;
+    font-size: 27px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 15px !important;
   }
   
   .content-subtitle,
   .duties-title {
-    font-size: 48px;
+    font-size: 38px !important;
+  }
+  
+  .content-heading,
+  .duties-heading {
+    font-size: 22px !important;
+  }
+  
+  .content-description,
+  .duties-description,
+  .support-description p,
+  .achievements-note,
+  .duties-list p {
+    font-size: 15px !important;
+  }
+  
+  .category-title {
+    font-size: 27px !important;
+  }
+  
+  .achievement-title {
+    font-size: 16px !important;
+  }
+  
+  .achievement-description {
+    font-size: 15px !important;
   }
   
   .service-grid,
@@ -983,6 +1169,118 @@ export default {
     padding: 15px 20px;
   }
   
+  .content-text,
+  .duties-content {
+    padding: 30px 20px;
+  }
 
+  .content-text,
+  .duties-content {
+    gap: 20px;
+  }
+  
+  .support-content,
+  .achievements-content {
+    padding: 30px 20px;
+    gap: 30px;
+  }
+  
+  .content-image {
+    height: 300px !important;
+  }
+  
+  .duties-image {
+    height: 300px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .what-is-section {
+    padding: 20px 15px !important;
+  }
+  
+  .main-duties-section {
+    padding: 20px 15px !important;
+  }
+  
+  .support-section {
+    padding: 20px 15px !important;
+  }
+  
+  .achievements-section {
+    padding: 20px 15px !important;
+  }
+  
+  .section-header {
+    gap: 18px !important;
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 13px !important;
+  }
+  
+  .content-subtitle,
+  .duties-title {
+    font-size: 25px !important;
+  }
+  
+  .content-heading,
+  .duties-heading {
+    font-size: 18px !important;
+  }
+  
+  .content-description,
+  .duties-description,
+  .support-description p,
+  .achievements-note,
+  .duties-list p {
+    font-size: 13px !important;
+  }
+  
+  .category-title {
+    font-size: 22px !important;
+  }
+  
+  .achievement-title {
+    font-size: 15px !important;
+  }
+  
+  .achievement-description {
+    font-size: 13px !important;
+  }
+  
+  .content-text,
+  .duties-content {
+    padding: 20px 15px;
+  }
+  
+  .support-content,
+  .achievements-content {
+    padding: 20px 15px;
+    gap: 30px;
+  }
+  
+  .content-image {
+    height: 200px !important;
+  }
+  
+  .duties-image {
+    height: 200px !important;
+  }
+  
+  .service-grid,
+  .achievements-grid {
+    gap: 15px;
+  }
+  
+  .contact-btn {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 </style>

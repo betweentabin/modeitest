@@ -748,6 +748,18 @@ export default {
     padding: 50px 30px !important;
   }
   
+  .content-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .decoration-text {
+    font-size: 18px !important;
+  }
+  
   .transaction-law-table {
     padding: 50px 30px !important;
   }
@@ -758,6 +770,55 @@ export default {
   
   .table-value {
     font-size: 18px !important;
+  }
+  
+  .service-title {
+    font-size: 18px !important;
+  }
+  
+  .service-text {
+    font-size: 18px !important;
+  }
+  
+  .terms-content {
+    font-size: 18px !important;
+  }
+  
+  .terms-title {
+    font-size: 18px !important;
+  }
+  
+  .terms-text {
+    font-size: 18px !important;
+  }
+  
+  .terms-notice {
+    font-size: 18px !important;
+  }
+  
+  .fee-description {
+    font-size: 18px !important;
+  }
+  
+  .fee-section-title {
+    font-size: 18px !important;
+  }
+  
+  .fee-type {
+    font-size: 18px !important;
+  }
+  
+  .fee-amount {
+    font-size: 18px !important;
+  }
+  
+  .fee-row {
+    padding: 12px !important;
+  }
+  
+  .contact-button {
+    font-size: 18px !important;
+    padding: 15px 30px !important;
   }
   
   .company-address {
@@ -786,6 +847,18 @@ export default {
     padding: 45px 25px !important;
   }
   
+  .content-header {
+    gap: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .decoration-text {
+    font-size: 17px !important;
+  }
+  
   .transaction-law-table {
     padding: 45px 25px !important;
   }
@@ -796,6 +869,61 @@ export default {
   
   .table-value {
     font-size: 17px !important;
+  }
+  
+  .table-value-with-button {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+  
+  .service-title {
+    font-size: 17px !important;
+  }
+  
+  .service-text {
+    font-size: 17px !important;
+  }
+  
+  .terms-content {
+    font-size: 17px !important;
+  }
+  
+  .terms-title {
+    font-size: 17px !important;
+  }
+  
+  .terms-text {
+    font-size: 17px !important;
+  }
+  
+  .terms-notice {
+    font-size: 17px !important;
+  }
+  
+  .fee-description {
+    font-size: 17px !important;
+  }
+  
+  .fee-section-title {
+    font-size: 17px !important;
+  }
+  
+  .fee-type {
+    font-size: 17px !important;
+  }
+  
+  .fee-amount {
+    font-size: 17px !important;
+  }
+  
+  .fee-row {
+    padding: 11px !important;
+  }
+  
+  .contact-button {
+    font-size: 17px !important;
+    padding: 14px 28px !important;
   }
   
   .company-address {
@@ -814,6 +942,18 @@ export default {
 @media (max-width: 768px) {
   .main-content {
     padding: 40px 20px !important;
+  }
+  
+  .content-header {
+    gap: 20px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .decoration-text {
+    font-size: 16px !important;
   }
   
   .transaction-law-table {
@@ -839,6 +979,55 @@ export default {
     flex-direction: column !important;
     gap: 15px !important;
     width: 100% !important;
+  }
+  
+  .service-title {
+    font-size: 16px !important;
+  }
+  
+  .service-text {
+    font-size: 16px !important;
+  }
+  
+  .terms-content {
+    font-size: 16px !important;
+  }
+  
+  .terms-title {
+    font-size: 16px !important;
+  }
+  
+  .terms-text {
+    font-size: 16px !important;
+  }
+  
+  .terms-notice {
+    font-size: 16px !important;
+  }
+  
+  .fee-description {
+    font-size: 16px !important;
+  }
+  
+  .fee-section-title {
+    font-size: 16px !important;
+  }
+  
+  .fee-type {
+    font-size: 16px !important;
+  }
+  
+  .fee-amount {
+    font-size: 16px !important;
+  }
+  
+  .fee-row {
+    padding: 10px !important;
+  }
+  
+  .contact-button {
+    font-size: 16px !important;
+    padding: 13px 26px !important;
   }
 
   .hero-title {
@@ -889,6 +1078,18 @@ export default {
     padding: 30px 15px !important;
   }
   
+  .content-header {
+    gap: 18px !important;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .decoration-text {
+    font-size: 13px !important;
+  }
+  
   .transaction-law-table {
     padding: 20px 15px !important;
   }
@@ -899,6 +1100,55 @@ export default {
   
   .table-value {
     font-size: 13px !important;
+  }
+  
+  .service-title {
+    font-size: 13px !important;
+  }
+  
+  .service-text {
+    font-size: 13px !important;
+  }
+  
+  .terms-content {
+    font-size: 13px !important;
+  }
+  
+  .terms-title {
+    font-size: 13px !important;
+  }
+  
+  .terms-text {
+    font-size: 13px !important;
+  }
+  
+  .terms-notice {
+    font-size: 13px !important;
+  }
+  
+  .fee-description {
+    font-size: 13px !important;
+  }
+  
+  .fee-section-title {
+    font-size: 13px !important;
+  }
+  
+  .fee-type {
+    font-size: 13px !important;
+  }
+  
+  .fee-amount {
+    font-size: 13px !important;
+  }
+  
+  .fee-row {
+    padding: 8px !important;
+  }
+  
+  .contact-button {
+    font-size: 13px !important;
+    padding: 12px 24px !important;
   }
   
   .company-address {

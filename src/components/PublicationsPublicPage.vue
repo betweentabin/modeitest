@@ -1007,7 +1007,7 @@ export default {
 /* Responsive Design */
 @media (max-width: 1150px) {
   .page-content {
-    padding: 50px 20px !important;
+    padding: 50px 30px !important;
   }
   
   .publications-grid {
