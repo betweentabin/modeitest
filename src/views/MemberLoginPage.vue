@@ -101,6 +101,7 @@ import AccessSection from '@/components/AccessSection.vue'
 import Footer from '@/components/Footer.vue'
 import FixedSideButtons from '@/components/FixedSideButtons.vue'
 import { frame132131753022Data } from '@/data'
+import apiClient from '@/services/apiClient'
 
 export default {
   name: 'MemberLoginPage',
@@ -127,11 +128,21 @@ export default {
       this.error = ''
 
       try {
-        // ログイン処理をここに実装
-        // 例: await this.$store.dispatch('auth/login', { email: this.email, password: this.password })
-        
-        // 成功時の処理
-        this.$router.push('/my-account')
+        const res = await apiClient.login({ email: this.email, password: this.password })
+        if (res && res.success && (res.access_token || res.token || res.data?.access_token)) {
+          const token = res.access_token || res.token || res.data?.access_token
+          const user = res.user || res.data?.user || null
+          // 永続化
+          localStorage.setItem('auth_token', token)
+          if (user) localStorage.setItem('memberUser', JSON.stringify(user))
+          // Vuexにも反映（v-restricted連動）
+          if (this.$store) {
+            this.$store.commit('auth/SET_AUTH', { token, user })
+          }
+          this.$router.push('/my-account')
+        } else {
+          throw new Error(res?.message || 'ログインに失敗しました')
+        }
       } catch (error) {
         this.error = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。'
       } finally {
@@ -232,10 +243,12 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 15px;
-  padding: 20px 50px 50px 50px;
-  border-radius: 20px;
+  padding: 40px 32px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 622px;
+  max-width: 480px;
+  background: #fff;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
 }
 
 .login-form {
@@ -288,22 +301,25 @@ export default {
 
 .login-button {
   display: flex;
-  width: 300px;
-  padding: 10px 0;
+  width: 100%;
+  max-width: 360px;
+  padding: 14px 24px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border-radius: 10px;
-  background: #1A1A1A;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #da5761 0%, #ff6b9d 100%);
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .login-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.3);
 }
 
 .login-button:disabled {
@@ -326,16 +342,14 @@ export default {
 }
 
 .error-message {
-  color: #DA5761;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-align: center;
-  padding: 10px;
-  background: rgba(218, 87, 97, 0.1);
+  background: rgba(218, 87, 97, 0.08);
+  border: 1px solid rgba(218, 87, 97, 0.2);
   border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: -8px;
+  color: #DA5761;
   width: 100%;
-  max-width: 300px;
+  max-width: 360px;
 }
 
 .password-reset-text {

@@ -238,6 +238,8 @@ Route::prefix('admin')->group(function () {
             Route::put('/{id}', [MemberController::class, 'update']);
             Route::delete('/{id}', [MemberController::class, 'destroy']);
             Route::patch('/{id}/status', [MemberController::class, 'updateStatus']);
+            Route::patch('/{id}/membership', [MemberController::class, 'updateMembership']);
+            Route::patch('/{id}/extend', [MemberController::class, 'extendMembership']);
         });
         
         // お知らせ管理API

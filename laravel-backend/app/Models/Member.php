@@ -23,6 +23,8 @@ class Member extends Authenticatable
         'status',
         'joined_date',
         'expiry_date',
+        'membership_expires_at',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -33,8 +35,10 @@ class Member extends Authenticatable
     protected $casts = [
         'joined_date' => 'date',
         'expiry_date' => 'date',
+        'membership_expires_at' => 'datetime',
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
+        'is_active' => 'boolean',
     ];
 
     // リレーションシップ
