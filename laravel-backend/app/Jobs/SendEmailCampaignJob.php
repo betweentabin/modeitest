@@ -27,18 +27,13 @@ class SendEmailCampaignJob implements ShouldQueue
 
         EmailRecipient::where('campaign_id', $campaign->id)
             ->where('status', 'pending')
+            ->orderBy('id')
             ->chunkById(500, function ($recipients) {
                 foreach ($recipients as $recipient) {
-                    // 実送信処理は未実装（メールドライバ設定に依存）
-                    $recipient->update([
-                        'status' => 'sent',
-                        'sent_at' => now(),
-                    ]);
+                    SendCampaignEmailToRecipient::dispatch($recipient->id);
                 }
             });
 
-        $pending = EmailRecipient::where('campaign_id', $campaign->id)->where('status', 'pending')->count();
-        $campaign->update(['status' => $pending > 0 ? 'sending' : 'sent']);
+        // Do not mark as sent here; per-recipient jobs will update statuses.
     }
 }
-

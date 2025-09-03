@@ -59,6 +59,9 @@ class EmailCampaignController extends Controller
             'error' => null,
         ]);
 
+        // Re-dispatch sending for this recipient
+        \App\Jobs\SendCampaignEmailToRecipient::dispatch($recipient->id);
+
         return response()->json(['success' => true]);
     }
 
@@ -70,6 +73,9 @@ class EmailCampaignController extends Controller
             'sent_at' => null,
             'error' => null,
         ]);
+
+        // Re-dispatch campaign send for pending recipients
+        \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
 
         return response()->json(['success' => true]);
     }
@@ -159,15 +165,8 @@ class EmailCampaignController extends Controller
         $campaign = EmailCampaign::findOrFail($id);
         $campaign->update(['status' => 'sending']);
 
-        // Simplified immediate send: mark all pending as sent
-        $now = now();
+        \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
 
-        EmailRecipient::where('campaign_id', $campaign->id)
-            ->where('status', 'pending')
-            ->update(['status' => 'sent', 'sent_at' => $now]);
-
-        $campaign->update(['status' => 'sent']);
-
-        return response()->json(['success' => true, 'message' => '送信処理を完了しました']);
+        return response()->json(['success' => true, 'message' => '送信キューに投入しました']);
     }
 }

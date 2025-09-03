@@ -64,3 +64,11 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Email Campaigns (Project-specific)
+
+- Queue: set `QUEUE_CONNECTION=database` and run migrations to create the `jobs` table.
+- Worker: run `php artisan queue:work --queue=default` (Railway: add a Worker process).
+- Scheduler: run `php artisan schedule:run` every minute to enqueue scheduled campaigns.
+- Mail: set SMTP envs (`MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, `MAIL_FROM_NAME`).
+- Dry-run: set `MAIL_DRY_RUN=true` to skip real sends while testing.
