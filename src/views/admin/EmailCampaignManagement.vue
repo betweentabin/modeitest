@@ -102,6 +102,54 @@
         </div>
       </div>
     </div>
+
+    <!-- 受信者モーダル -->
+    <div v-if="showRecipients" class="modal-overlay" @click="showRecipients=false">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>受信者一覧</h3>
+          <button class="close-btn" @click="showRecipients=false">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <select v-model="recipientStatusFilter" class="form-select" @change="loadRecipients()">
+              <option value="">すべて</option>
+              <option value="pending">pending</option>
+              <option value="sent">sent</option>
+              <option value="failed">failed</option>
+            </select>
+            <button class="save-btn" @click="resendFailed">失敗を再送待ちに戻す</button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Member</th>
+                <th>Status</th>
+                <th>Sent At</th>
+                <th>Error</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="r in recipients" :key="r.id">
+                <td>{{ r.id }}</td>
+                <td>{{ r.email }}</td>
+                <td>{{ r.member_id || '-' }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ formatDateTime(r.sent_at) }}</td>
+                <td>{{ r.error && r.error.length > 120 ? (r.error.slice(0,120) + '...') : (r.error || '') }}</td>
+                <td>
+                  <button class="small-btn" :disabled="r.status==='pending'" @click="resendRecipient(r)">再送待ちへ</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </AdminLayout>
 </template>
 
@@ -234,4 +282,3 @@ export default {
 .close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #666; }
 .preview-html { border: 1px solid #eee; padding: 12px; border-radius: 6px; background: #fafafa; min-height: 200px; }
 </style>
-

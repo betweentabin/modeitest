@@ -240,6 +240,8 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/preview', [App\Http\Controllers\Admin\EmailCampaignController::class, 'preview']);
             Route::post('/{id}/schedule', [App\Http\Controllers\Admin\EmailCampaignController::class, 'schedule']);
             Route::post('/{id}/send-now', [App\Http\Controllers\Admin\EmailCampaignController::class, 'sendNow']);
+            Route::post('/{id}/resend-failed', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendFailed']);
+            Route::post('/{id}/recipients/{recipientId}/resend', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendRecipient']);
         });
         
         // 管理者用刊行物API

@@ -299,6 +299,14 @@ class ApiClient {
     return this.post(`/api/admin/emails/${id}/send-now`)
   }
 
+  async resendFailedRecipients(id) {
+    return this.post(`/api/admin/emails/${id}/resend-failed`)
+  }
+
+  async resendRecipient(id, recipientId) {
+    return this.post(`/api/admin/emails/${id}/recipients/${recipientId}/resend`)
+  }
+
   // News API methods
   async getNews(params = {}) {
     const queryString = new URLSearchParams(params).toString()

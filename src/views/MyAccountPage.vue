@@ -370,7 +370,7 @@ export default {
       const { getMemberInfo, isLoggedIn } = useMemberAuth()
       
       if (!isLoggedIn()) {
-        this.$router.push('/member/login?redirect=/my-account')
+        this.$router.push('/login?redirect=/my-account')
         return
       }
 
@@ -383,7 +383,7 @@ export default {
         }
       } catch (error) {
         console.error('認証情報の取得に失敗:', error)
-        this.$router.push('/member/login')
+        this.$router.push('/login')
       }
     },
 

@@ -288,7 +288,7 @@ export default {
       const { getMemberInfo, isLoggedIn } = useMemberAuth()
       
       if (!isLoggedIn()) {
-        this.$router.push('/member/login?redirect=/member-directory')
+        this.$router.push('/login?redirect=/member-directory')
         return
       }
 
@@ -297,7 +297,7 @@ export default {
         this.canAccess = this.memberInfo && ['standard', 'premium'].includes(this.memberInfo.membership_type)
       } catch (error) {
         console.error('認証情報の取得に失敗:', error)
-        this.$router.push('/member/login')
+        this.$router.push('/login')
       }
     },
 

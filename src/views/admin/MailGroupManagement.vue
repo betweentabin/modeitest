@@ -84,11 +84,45 @@
           <button class="close-btn" @click="closeMembersModal">×</button>
         </div>
         <div class="modal-body">
-          <p>メンバーIDをカンマ区切りで入力（例: 1,2,3）</p>
-          <textarea v-model="memberIdsText" class="form-textarea" rows="5"></textarea>
           <div class="form-row">
-            <button class="save-btn" :disabled="memberSaving" @click="bulkMembers('add')">追加</button>
-            <button class="cancel-btn" :disabled="memberSaving" @click="bulkMembers('remove')">削除</button>
+            <input v-model="memberSearch" class="form-input" placeholder="会社名/代表者/メールで検索" @keyup.enter="loadMemberCandidates()" />
+            <select v-model="memberTypeFilter" class="form-select" @change="loadMemberCandidates()">
+              <option value="">会員種別（全て）</option>
+              <option value="free">無料</option>
+              <option value="standard">スタンダード</option>
+              <option value="premium">プレミアム</option>
+            </select>
+            <button class="save-btn" @click="loadMemberCandidates">検索</button>
+          </div>
+          <div class="candidate-list">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" :checked="allChecked" @change="toggleAllCandidates($event)" /></th>
+                  <th>ID</th>
+                  <th>会社名</th>
+                  <th>代表者名</th>
+                  <th>メール</th>
+                  <th>種別</th>
+                  <th>状態</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="m in candidates" :key="m.id">
+                  <td><input type="checkbox" :value="m.id" v-model="selectedCandidateIds" /></td>
+                  <td>{{ m.id }}</td>
+                  <td>{{ m.company_name }}</td>
+                  <td>{{ m.representative_name }}</td>
+                  <td>{{ m.email }}</td>
+                  <td>{{ m.membership_type }}</td>
+                  <td>{{ groupMemberIds.has(m.id) ? '登録済' : '' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-row">
+            <button class="save-btn" :disabled="memberSaving || selectedCandidateIds.length===0" @click="addSelectedToGroup">選択を追加</button>
+            <button class="cancel-btn" :disabled="memberSaving || removeIds.length===0" @click="removeSelectedFromGroup">選択を削除</button>
           </div>
         </div>
       </div>
@@ -116,7 +150,12 @@ export default {
       createForm: { name: '', description: '' },
       showMembers: false,
       currentGroup: null,
-      memberIdsText: ''
+      memberIdsText: '',
+      memberSearch: '',
+      memberTypeFilter: '',
+      candidates: [],
+      selectedCandidateIds: [],
+      groupMemberIds: new Set()
     }
   },
   computed: {
@@ -171,18 +210,61 @@ export default {
         else alert(res.error || '削除に失敗しました')
       } catch (e) { alert('削除に失敗しました') }
     },
-    openMembersModal(group) { this.currentGroup = group; this.memberIdsText = ''; this.showMembers = true },
+    openMembersModal(group) { this.currentGroup = group; this.memberIdsText = ''; this.showMembers = true; this.selectedCandidateIds=[]; this.loadGroupMembers(); this.loadMemberCandidates(); },
     closeMembersModal() { this.showMembers = false; this.currentGroup = null },
-    async bulkMembers(action) {
+    async loadGroupMembers() {
+      try {
+        if (!this.currentGroup) return
+        const res = await apiClient.get(`/api/admin/mail-groups/${this.currentGroup.id}`)
+        if (res.success) {
+          const ids = (res.data.members || []).map(x => x.member_id)
+          this.groupMemberIds = new Set(ids)
+        }
+      } catch(e) { console.warn('Failed to load group members', e) }
+    },
+    async loadMemberCandidates(page=1) {
+      try {
+        const params = { page, per_page: 20 }
+        if (this.memberSearch) params.search = this.memberSearch
+        if (this.memberTypeFilter) params.membership_type = this.memberTypeFilter
+        const res = await apiClient.get('/api/admin/members', { params })
+        if (res.success) {
+          this.candidates = res.data.data || []
+        }
+      } catch(e) { console.warn('Failed to load candidates', e) }
+    },
+    get allChecked() {
+      return this.candidates.length>0 && this.selectedCandidateIds.length===this.candidates.length
+    },
+    toggleAllCandidates(ev) {
+      if (ev.target.checked) this.selectedCandidateIds = this.candidates.map(c=>c.id)
+      else this.selectedCandidateIds = []
+    },
+    get addIds() {
+      return this.selectedCandidateIds.filter(id => !this.groupMemberIds.has(id))
+    },
+    get removeIds() {
+      return this.selectedCandidateIds.filter(id => this.groupMemberIds.has(id))
+    },
+    async addSelectedToGroup() {
       if (!this.currentGroup) return
+      const ids = this.addIds
+      if (ids.length===0) { alert('追加対象がありません'); return }
       this.memberSaving = true
       try {
-        const ids = this.memberIdsText.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n))
-        if (ids.length === 0) { alert('メンバーIDを入力してください'); return }
-        const res = await apiClient.bulkEditMailGroupMembers(this.currentGroup.id, action, ids)
-        if (res.success) { alert('更新しました'); this.loadGroups(this.pagination.current_page) }
-        else alert(res.error || '更新に失敗しました')
-      } catch (e) { alert('更新に失敗しました') } finally { this.memberSaving = false }
+        const res = await apiClient.bulkEditMailGroupMembers(this.currentGroup.id, 'add', ids)
+        if (res.success) { await this.loadGroupMembers(); alert('追加しました') }
+      } catch(e) { alert('追加に失敗しました') } finally { this.memberSaving = false }
+    },
+    async removeSelectedFromGroup() {
+      if (!this.currentGroup) return
+      const ids = this.removeIds
+      if (ids.length===0) { alert('削除対象がありません'); return }
+      this.memberSaving = true
+      try {
+        const res = await apiClient.bulkEditMailGroupMembers(this.currentGroup.id, 'remove', ids)
+        if (res.success) { await this.loadGroupMembers(); alert('削除しました') }
+      } catch(e) { alert('削除に失敗しました') } finally { this.memberSaving = false }
     }
   }
 }
@@ -211,6 +293,7 @@ export default {
 .modal-content.large { width: 720px; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; }
 .modal-body { padding: 16px 20px; }
+.candidate-list { max-height: 420px; overflow: auto; margin: 12px 0; }
 .modal-footer { padding: 12px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #eee; }
 .close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #666; }
 .form-group { margin-bottom: 12px; }
@@ -218,4 +301,3 @@ export default {
 .cancel-btn { padding: 8px 16px; border: 1px solid #6c757d; border-radius: 4px; background: white; color: #6c757d; }
 .save-btn { padding: 8px 16px; border: 1px solid #28a745; border-radius: 4px; background: #28a745; color: white; }
 </style>
-

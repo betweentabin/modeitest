@@ -21,7 +21,7 @@ class EmailCampaignController extends Controller
         return response()->json(['success' => true, 'data' => $campaigns]);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $campaign = EmailCampaign::withCount([
             'recipients as total_recipients',
@@ -30,15 +30,48 @@ class EmailCampaignController extends Controller
             'recipients as pending_count' => function ($q) { $q->where('status', 'pending'); },
         ])->findOrFail($id);
 
-        $recipients = EmailRecipient::where('campaign_id', $campaign->id)
+        $recipientsQuery = EmailRecipient::where('campaign_id', $campaign->id)
             ->select('id', 'email', 'member_id', 'status', 'sent_at', 'error')
-            ->orderBy('id', 'asc')
-            ->paginate(50);
+            ->orderBy('id', 'asc');
+
+        if ($request->filled('status')) {
+            $recipientsQuery->where('status', $request->get('status'));
+        }
+
+        $perPage = (int) $request->get('per_page', 50);
+        $recipients = $recipientsQuery->paginate($perPage);
 
         return response()->json(['success' => true, 'data' => [
             'campaign' => $campaign,
             'recipients' => $recipients,
         ]]);
+    }
+
+    public function resendRecipient($id, $recipientId)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $recipient = EmailRecipient::where('campaign_id', $campaign->id)->where('id', $recipientId)->firstOrFail();
+
+        // Reset to pending for resend
+        $recipient->update([
+            'status' => 'pending',
+            'sent_at' => null,
+            'error' => null,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function resendFailed($id)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        EmailRecipient::where('campaign_id', $campaign->id)->where('status', 'failed')->update([
+            'status' => 'pending',
+            'sent_at' => null,
+            'error' => null,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     public function store(Request $request)
@@ -138,4 +171,3 @@ class EmailCampaignController extends Controller
         return response()->json(['success' => true, 'message' => '送信処理を完了しました']);
     }
 }
-
