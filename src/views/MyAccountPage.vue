@@ -54,6 +54,22 @@
           </div>
         </div>
 
+        <!-- セミナー系タブ -->
+        <div v-if="activeTab==='seminars'" class="content-section">
+          <h2>セミナー一覧</h2>
+          <MemberSeminarsTab />
+        </div>
+
+        <div v-if="activeTab==='seminar-favorites'" class="content-section">
+          <h2>お気に入りセミナー</h2>
+          <MemberSeminarFavoritesTab />
+        </div>
+
+        <div v-if="activeTab==='registrations'" class="content-section">
+          <h2>申込状況</h2>
+          <MemberSeminarRegistrationsTab />
+        </div>
+
         <!-- アカウント情報タブ -->
         <div v-if="activeTab === 'profile'" class="content-section">
           <h2>アカウント情報</h2>
@@ -335,7 +351,10 @@ export default {
   components: {
     Navigation,
     FooterComplete,
-    PublicationCard
+    PublicationCard,
+    MemberSeminarsTab: () => import('./partials/MemberSeminarsTab.vue'),
+    MemberSeminarFavoritesTab: () => import('./partials/MemberSeminarFavoritesTab.vue'),
+    MemberSeminarRegistrationsTab: () => import('./partials/MemberSeminarRegistrationsTab.vue')
   },
   data() {
     return {
@@ -376,6 +395,9 @@ export default {
     menuItems() {
       return [
         { id: 'profile', label: 'アカウント情報', icon: '👤' },
+        { id: 'seminars', label: 'セミナー', icon: '🎫' },
+        { id: 'seminar-favorites', label: 'セミナーお気に入り', icon: '⭐' },
+        { id: 'registrations', label: '申込状況', icon: '📝' },
         { id: 'membership', label: '会員プラン', icon: '★' },
         { id: 'downloads', label: 'ダウンロード履歴', icon: '↓' },
         { id: 'favorites', label: 'お気に入り', icon: '♥' },
