@@ -527,7 +527,9 @@ export default {
       if (!dateString) return ''
       const d = new Date(dateString)
       if (isNaN(d.getTime())) return dateString
-      return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}/${mm}/${dd}`
     },
     goToPublicationDetail(publicationId) {
       this.$router.push(`/publications/${publicationId}`);
