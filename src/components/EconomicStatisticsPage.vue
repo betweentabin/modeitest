@@ -72,16 +72,16 @@
       <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
           <div class="featured-image">
-            <img src="/img/image-1.png" alt="経済統計レポート" />
+            <img :src="featuredPublication.image || '/img/image-1.png'" :alt="featuredPublication.title" />
           </div>
           <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">2025.4.28</span>
-              <span class="featured-category">経済・調査統計の会員限定</span>
+              <span class="featured-year">{{ formatDate(featuredPublication.publication_date) }}</span>
+              <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
             </div>
             <div class="featured-details">
-               <div class="content-title">雇用（有効求人倍率、パート有効求人数）</div>
-               <div class="content-text">雇用（有効求人倍率、パート有効求人数）を更新しました。2025年3月の福岡県の有効求人倍率は前月を0.02ポイント上回り1.20倍、パートタイム有効求人数は前年同月比1.6%減の45,783人となりました。雇用関連の先行き指標である2025年2月の福岡県所定外労働時間は、前年同月比3.5％減の8.5時間となりました。</div>
+               <div class="content-title">{{ featuredPublication.title }}</div>
+               <div class="content-text">{{ featuredPublication.description }}</div>
              </div>
 
             <button class="download-btn" @click="goToStatisticsDetail(featuredPublication.id)">詳細を見る
@@ -110,8 +110,8 @@
             </div>
             <div class="publication-info">
               <div class="publication-meta">
-                <span class="featured-category">経済・調査統計の会員限定</span>
-                <span class="featured-year">{{ publication.year }}.4.28</span>
+                <span class="featured-category">{{ getCategoryName(publication.category) }}</span>
+                <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
               <button class="publication-download" @click.stop="goToStatisticsDetail(publication.id)">PDFダウンロード
@@ -190,188 +190,10 @@ export default {
       error: null,
       currentPage: 1,
       totalPages: 1,
-      years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
-      categories: [
-        { id: 'all', name: '全て' },
-        { id: 'quarterly', name: '四半期経済レポート' },
-        { id: 'annual', name: '年次経済統計' },
-        { id: 'regional', name: '地域経済調査' },
-        { id: 'industry', name: '産業別統計' }
-      ],
-      featuredPublication: {
-        id: 1,
-        title: '地域経済統計レポート',
-        year: 2024,
-        category: 'quarterly',
-        author: 'ちくぎん地域経済研究所',
-        publisher: '株式会社ちくぎん地域経済研究所',
-        description: '2024年度版 地域経済動向調査レポート',
-        keywords: '地域経済、統計データ、産業分析について',
-        image: '/img/image-1.png'
-      },
-      publications: [
-        {
-          id: 2,
-          title: '四半期経済動向調査レポート（約７）ページ',
-          year: 2024,
-          category: 'quarterly',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 3,
-          title: '年次経済統計データ集（約７）ページ',
-          year: 2024,
-          category: 'annual',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 4,
-          title: '地域経済調査結果報告書（約７）ページ',
-          year: 2024,
-          category: 'regional',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 5,
-          title: '産業別統計分析レポート（約７）ページ',
-          year: 2024,
-          category: 'industry',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 6,
-          title: '四半期経済動向調査レポート（約７）ページ',
-          year: 2023,
-          category: 'quarterly',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 7,
-          title: '年次経済統計データ集（約７）ページ',
-          year: 2023,
-          category: 'annual',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 8,
-          title: '地域経済調査結果報告書（約７）ページ',
-          year: 2023,
-          category: 'regional',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 9,
-          title: '産業別統計分析レポート（約７）ページ',
-          year: 2023,
-          category: 'industry',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 10,
-          title: '四半期経済動向調査レポート（約７）ページ',
-          year: 2022,
-          category: 'quarterly',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 11,
-          title: '年次経済統計データ集（約７）ページ',
-          year: 2022,
-          category: 'annual',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 12,
-          title: '地域経済調査結果報告書（約７）ページ',
-          year: 2022,
-          category: 'regional',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 13,
-          title: '産業別統計分析レポート（約７）ページ',
-          year: 2022,
-          category: 'industry',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 14,
-          title: '四半期経済動向調査レポート（約７）ページ',
-          year: 2021,
-          category: 'quarterly',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 15,
-          title: '年次経済統計データ集（約７）ページ',
-          year: 2021,
-          category: 'annual',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 16,
-          title: '地域経済調査結果報告書（約７）ページ',
-          year: 2021,
-          category: 'regional',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 17,
-          title: '産業別統計分析レポート（約７）ページ',
-          year: 2021,
-          category: 'industry',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 18,
-          title: '四半期経済動向調査レポート（約７）ページ',
-          year: 2020,
-          category: 'quarterly',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 19,
-          title: '年次経済統計データ集（約７）ページ',
-          year: 2020,
-          category: 'annual',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 20,
-          title: '地域経済調査結果報告書（約７）ページ',
-          year: 2020,
-          category: 'regional',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 21,
-          title: '産業別統計分析レポート（約７）ページ',
-          year: 2020,
-          category: 'industry',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 22,
-          title: '四半期経済動向調査レポート（約７）ページ',
-          year: 2019,
-          category: 'quarterly',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 23,
-          title: '年次経済統計データ集（約７）ページ',
-          year: 2019,
-          category: 'annual',
-          image: '/img/image-1.png'
-        },
-        {
-          id: 24,
-          title: '地域経済調査結果報告書（約７）ページ',
-          year: 2019,
-          category: 'regional',
-          image: '/img/image-1.png'
-        }
-      ]
+      years: [],
+      categories: [ { id: 'all', name: '全て' } ],
+      featuredPublication: null,
+      publications: []
     };
   },
   async mounted() {
@@ -520,6 +342,14 @@ export default {
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
       return category ? category.name : '経済統計';
+    },
+    formatDate(dateString) {
+      if (!dateString) return ''
+      const d = new Date(dateString)
+      if (isNaN(d.getTime())) return dateString
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}/${mm}/${dd}`
     },
     goToPublicationDetail(publicationId) {
       this.$router.push(navigateToPublication(publicationId));

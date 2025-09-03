@@ -16,13 +16,23 @@ class Member extends Authenticatable
         'password',
         'company_name',
         'representative_name',
+        'position',
+        'department',
         'phone',
         'postal_code',
         'address',
+        'capital',
+        'industry',
+        'region',
+        'concerns',
+        'notes',
         'membership_type',
         'status',
         'joined_date',
+        'started_at',
         'expiry_date',
+        'membership_expires_at',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -32,9 +42,12 @@ class Member extends Authenticatable
 
     protected $casts = [
         'joined_date' => 'date',
+        'started_at' => 'date',
         'expiry_date' => 'date',
+        'membership_expires_at' => 'datetime',
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
+        'is_active' => 'boolean',
     ];
 
     // リレーションシップ
@@ -56,6 +69,33 @@ class Member extends Authenticatable
     public function pageViews()
     {
         return $this->hasMany(PageView::class);
+    }
+
+    // お気に入り関連のリレーション
+    public function favorites()
+    {
+        return $this->hasMany(MemberFavorite::class, 'member_id');
+    }
+
+    public function favoritedBy()
+    {
+        return $this->hasMany(MemberFavorite::class, 'favorite_member_id');
+    }
+
+    // お気に入りの会員（多対多リレーション）
+    public function favoriteMembers()
+    {
+        return $this->belongsToMany(Member::class, 'member_favorites', 'member_id', 'favorite_member_id')
+                    ->withTimestamps()
+                    ->withPivot('created_at');
+    }
+
+    // この会員をお気に入り登録している会員
+    public function favoriteByMembers()
+    {
+        return $this->belongsToMany(Member::class, 'member_favorites', 'favorite_member_id', 'member_id')
+                    ->withTimestamps()
+                    ->withPivot('created_at');
     }
 
     // アクセサー・ミューテーター
@@ -169,10 +209,47 @@ class Member extends Authenticatable
 
     public function isExpiringSoon($days = 30)
     {
-        if (!$this->expiry_date) {
+        // 新しいフィールドを優先、フォールバックで古いフィールド
+        $expiryDate = $this->membership_expires_at ?? $this->expiry_date;
+        
+        if (!$expiryDate) {
             return false;
         }
 
-        return $this->expiry_date <= now()->addDays($days);
+        return $expiryDate->diffInDays(now()) <= $days 
+               && $expiryDate->isFuture();
+    }
+
+    /**
+     * 会員期限が有効かチェック
+     */
+    public function membershipIsActive()
+    {
+        if ($this->membership_type === 'free') {
+            return $this->is_active;
+        }
+
+        $expiryDate = $this->membership_expires_at ?? $this->expiry_date;
+
+        return $this->is_active 
+               && ($expiryDate === null || $expiryDate->isFuture());
+    }
+
+    /**
+     * アクティブで有効期限内の会員のみを取得するスコープ
+     */
+    public function scopeActiveWithValidMembership($query)
+    {
+        return $query->where('is_active', true)
+                    ->where(function ($q) {
+                        $q->where('membership_type', 'free')
+                          ->orWhere('membership_expires_at', '>', now())
+                          ->orWhereNull('membership_expires_at')
+                          ->orWhere(function($sub) {
+                              // フォールバック: 古いフィールドもチェック
+                              $sub->whereNull('membership_expires_at')
+                                  ->where('expiry_date', '>', now());
+                          });
+                    });
     }
 }

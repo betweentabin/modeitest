@@ -191,6 +191,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "SeminarPage",
@@ -207,73 +208,52 @@ export default {
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
-      currentSeminars: [
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        }
-      ],
-      pastSeminars: [
-        {
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        }
-      ]
+      // APIのみ表示（フォールバック無し）
+      currentSeminars: [],
+      pastSeminars: []
     };
   },
+  async mounted() {
+    await this.loadCurrentSeminars();
+  },
   methods: {
+    async loadCurrentSeminars() {
+      try {
+        // APIから取得（公開かつ開催予定/開催中を優先表示）
+        const res = await apiClient.getSeminars({ per_page: 50 });
+        if (res.success && res.data && Array.isArray(res.data.seminars)) {
+          const toTs = (s) => {
+            const ts = Date.parse(`${s.date} ${s.start_time || '00:00'}`)
+            return isNaN(ts) ? Date.parse(s.date) : ts
+          }
+          const upcoming = res.data.seminars
+            .filter(s => ['scheduled', 'ongoing'].includes(s.status))
+            .sort((a, b) => toTs(b) - toTs(a))
+            .slice(0, 4)
+            .map(s => ({
+              image: s.featured_image || '/img/image-1.png',
+              reservationPeriod: `${(s.start_time || '10:00')}～${(s.end_time || '12:00')}`,
+              date: this.formatToJaDate(s.date),
+              title: s.title,
+              content: s.description || ''
+            }));
+          if (upcoming.length > 0) {
+            this.currentSeminars = upcoming;
+            return;
+          }
+        }
+        // APIのみ運用のためフォールバック無し
+      } catch (e) {
+        // APIのみ運用のため表示は空
+        console.error('セミナーの読み込みに失敗:', e);
+      }
+    },
+    formatToJaDate(dateString) {
+      if (!dateString) return '';
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return dateString;
+      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+    },
     goToCurrentSeminars() {
       this.$router.push('/seminars/current');
     },

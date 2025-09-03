@@ -187,23 +187,49 @@ export default {
       };
       return subjects[value] || value;
     },
-    
-    
-    
     async submitForm() {
       if (this.isSubmitting) return;
-      
+
       this.isSubmitting = true;
-      
+      this.submitError = null;
+
       try {
-        // テスト用に直接完了ページに遷移
-        this.inquiryNumber = 'TEST-' + Date.now();
-        this.$router.push(`/contact/complete?inquiryNumber=${this.inquiryNumber}`);
+        // subject表示用テキストとtypeコードを分離
+        const subjectMap = {
+          inquiry: 'サービスに関するお問い合わせ',
+          membership: '会員に関するお問い合わせ',
+          seminar: 'セミナーに関するお問い合わせ',
+          other: 'その他'
+        }
+
+        const payload = {
+          name: `${this.formData.lastName} ${this.formData.firstName}`.trim(),
+          email: this.formData.email,
+          phone: this.formData.phone || '',
+          company: this.formData.companyName || '',
+          subject: subjectMap[this.formData.subject] || this.formData.subject,
+          message: this.formData.content,
+          inquiry_type: this.formData.subject || null
+        }
+
+        const res = await apiClient.submitInquiry(payload)
+        if (!res || res.success === false) {
+          throw new Error(res?.message || res?.error || '送信に失敗しました')
+        }
+
+        // v2: res.data.inquiry_number or fallback to id from either v1/v2
+        const inquiryNumber = res?.data?.inquiry_number
+          || (res?.data?.inquiry_id ? `INQ-${String(res.data.inquiry_id).padStart(6, '0')}` : null)
+          || (res?.inquiry_id ? `INQ-${String(res.inquiry_id).padStart(6, '0')}` : null)
+          || `INQ-${Date.now()}`
+
+        this.$router.push(`/contact/complete?inquiryNumber=${encodeURIComponent(inquiryNumber)}`)
       } catch (err) {
-        console.error('遷移エラー:', err);
-        alert('エラーが発生しました。再度お試しください。');
+        console.error('お問い合わせ送信エラー:', err)
+        this.submitError = err.message || 'エラーが発生しました。再度お試しください。'
+        alert(this.submitError)
       } finally {
-        this.isSubmitting = false;
+        this.isSubmitting = false
       }
     }
   }

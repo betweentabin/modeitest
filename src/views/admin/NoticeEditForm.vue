@@ -299,16 +299,17 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/news-v2/${this.noticeId}`)
-        if (res.success && res.data && res.data.news) {
-          const data = res.data.news
+        const res = await apiClient.get(`/api/admin/notices/${this.noticeId}`)
+        // NoticeController returns raw model
+        if (res && res.id || res?.data?.id) {
+          const data = res.id ? res : res.data
           this.formData = {
             title: data.title,
             content: data.content,
             category: data.category || 'notice',
-            publish_date: data.published_date || data.published_at,
-            is_pinned: data.is_important || data.is_featured || false,
-            is_published: data.status ? data.status === 'published' : (data.is_published || false)
+            publish_date: (data.published_at || '').split('T')[0] || '',
+            is_pinned: !!data.is_featured,
+            is_published: !!data.is_published
           }
         } else {
           throw new Error('Notice not found')
@@ -326,25 +327,25 @@ export default {
       this.successMessage = ''
 
       try {
+        // Map to NoticeController expected fields
         const payload = {
           title: this.formData.title,
-          description: this.formData.content,
           content: this.formData.content,
-          type: 'notice',
-          published_date: this.formData.publish_date,
-          membership_requirement: 'none',
-          is_featured: !!this.formData.is_pinned,
-          status: this.formData.is_pinned || this.formData.is_published ? 'published' : 'draft'
+          summary: this.formData.summary || this.formData.content?.slice(0, 120) || '',
+          category: this.formData.category || 'notice',
+          status: (this.formData.is_published || this.formData.is_pinned) ? 'published' : 'draft',
+          published_at: this.formData.publish_date || null,
+          featured: !!this.formData.is_pinned,
+          featured_image: this.formData.featured_image || ''
         }
         if (this.isNew) {
-          const res = await apiClient.post('/api/admin/news-v2', payload)
-          if (!res.success) throw new Error(res.message || '作成に失敗')
+          const res = await apiClient.post('/api/admin/notices', payload)
+          if (!res || res.status === 'error') throw new Error(res.message || '作成に失敗')
           this.successMessage = 'お知らせを作成しました'
           setTimeout(() => { this.$router.push('/admin/notices') }, 1200)
         } else {
-          // 既存データ更新時はカテゴリは送らない（DB列はcategory_idのため）
-          const res = await apiClient.put(`/api/admin/news-v2/${this.noticeId}`, payload)
-          if (!res.success) throw new Error(res.message || '更新に失敗')
+          const res = await apiClient.put(`/api/admin/notices/${this.noticeId}`, payload)
+          if (!res || res.status === 'error') throw new Error(res.message || '更新に失敗')
           this.successMessage = 'お知らせを更新しました'
         }
       } catch (err) {

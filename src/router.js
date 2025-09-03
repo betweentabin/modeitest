@@ -25,9 +25,12 @@ import MediaManagement from "./views/admin/MediaManagement";
 import PageEditForm from "./views/admin/PageEditForm";
 import NewPageEditForm from "./views/admin/NewPageEditForm";
 import SeminarEditForm from "./views/admin/SeminarEditForm";
+import SeminarRegistrationApproval from "./views/admin/SeminarRegistrationApproval";
 import PublicationEditForm from "./views/admin/PublicationEditForm";
 import NoticeEditForm from "./views/admin/NoticeEditForm";
 import MediaEditForm from "./views/admin/MediaEditForm";
+import MailGroupManagement from "./views/admin/MailGroupManagement";
+import EmailCampaignManagement from "./views/admin/EmailCampaignManagement";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
 import SeminarPage from "./components/SeminarPage";
@@ -299,6 +302,12 @@ const router = new Router({
       meta: { title: "セミナー編集 - ちくぎん地域経済研究所" }
     },
     {
+      path: "/admin/seminars/:id/registrations",
+      name: "seminarRegistrations",
+      component: SeminarRegistrationApproval,
+      meta: { title: "セミナー申込承認 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/admin/publications",
       name: "publicationManagement",
       component: PublicationManagement,
@@ -327,6 +336,18 @@ const router = new Router({
       name: "noticeManagement",
       component: NoticeManagement,
       meta: { title: "お知らせ管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/mail-groups",
+      name: "mailGroupManagement",
+      component: MailGroupManagement,
+      meta: { title: "メールグループ管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/emails",
+      name: "emailCampaignManagement",
+      component: EmailCampaignManagement,
+      meta: { title: "メール配信 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/notices/new",
@@ -417,6 +438,18 @@ const router = new Router({
       name: "myAccount",
       component: MyAccountPage,
       meta: { title: "マイアカウント - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/member-directory",
+      name: "memberDirectory",
+      component: () => import('./views/MemberDirectoryPage.vue'),
+      meta: { title: "会員名簿 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/member-favorites",
+      name: "memberFavorites",
+      component: () => import('./views/MemberFavoritesPage.vue'),
+      meta: { title: "お気に入り会員 - ちくぎん地域経済研究所" }
     },
     {
       path: "/upgrade",

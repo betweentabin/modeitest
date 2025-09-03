@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -16,21 +17,31 @@ class MemberController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = User::query();
+        $query = Member::query();
 
         // 検索フィルター
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
+                $q->where('representative_name', 'LIKE', "%{$search}%")
                   ->orWhere('email', 'LIKE', "%{$search}%")
-                  ->orWhere('company', 'LIKE', "%{$search}%");
+                  ->orWhere('company_name', 'LIKE', "%{$search}%");
             });
         }
 
         // 会員種別フィルター
         if ($request->has('membership_type') && $request->membership_type) {
             $query->where('membership_type', $request->membership_type);
+        }
+
+        // ステータスフィルター
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // アクティブフィルター
+        if ($request->has('is_active')) {
+            $query->where('is_active', $request->boolean('is_active'));
         }
 
         // ソート
@@ -42,6 +53,13 @@ class MemberController extends Controller
         $perPage = $request->get('per_page', 15);
         $members = $query->paginate($perPage);
 
+        // 各会員の追加情報を含める
+        $members->getCollection()->transform(function ($member) {
+            $member->is_expiring_soon = $member->isExpiringSoon();
+            $member->membership_level_value = $member->getMembershipLevelValue();
+            return $member;
+        });
+
         return response()->json($members);
     }
 
@@ -50,7 +68,9 @@ class MemberController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $member = User::findOrFail($id);
+        $member = Member::findOrFail($id);
+        $member->is_expiring_soon = $member->isExpiringSoon();
+        $member->membership_level_value = $member->getMembershipLevelValue();
         return response()->json($member);
     }
 
@@ -97,23 +117,26 @@ class MemberController extends Controller
         ], 201);
     }
 
-    /**
-     * 会員情報を更新
+        /**
+     * 会員情報を更新（管理者用）
      */
     public function update(Request $request, $id): JsonResponse
     {
-        $member = User::findOrFail($id);
+        $member = Member::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'representative_name' => 'sometimes|string|max:100',
+            'email' => 'sometimes|string|email|max:255|unique:members,email,' . $id,
             'password' => 'nullable|string|min:8',
-            'company' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
+            'company_name' => 'sometimes|string|max:200',
             'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-            'membership_type' => 'required|in:standard,premium',
-            'status' => 'required|in:active,inactive,suspended',
+            'address' => 'nullable|string',
+            'membership_type' => 'sometimes|in:free,basic,standard,premium',
+            'status' => 'sometimes|in:pending,active,suspended,cancelled',
+            'membership_expires_at' => 'nullable|date_format:Y-m-d H:i:s',
+            'is_active' => 'sometimes|boolean',
+            'joined_date' => 'nullable|date',
+            'expiry_date' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {
@@ -123,22 +146,30 @@ class MemberController extends Controller
             ], 422);
         }
 
-        $updateData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'company' => $request->company,
-            'position' => $request->position,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'membership_type' => $request->membership_type,
-            'status' => $request->status,
-        ];
+        $updateData = $request->only([
+            'representative_name',
+            'email',
+            'company_name',
+            'phone',
+            'address',
+            'membership_type',
+            'status',
+            'membership_expires_at',
+            'is_active',
+            'joined_date',
+            'expiry_date'
+        ]);
 
         if ($request->password) {
             $updateData['password'] = Hash::make($request->password);
         }
 
         $member->update($updateData);
+
+        // 更新後の情報を取得
+        $member->refresh();
+        $member->is_expiring_soon = $member->isExpiringSoon();
+        $member->membership_level_value = $member->getMembershipLevelValue();
 
         return response()->json([
             'message' => '会員情報を更新しました',
@@ -183,7 +214,7 @@ class MemberController extends Controller
     public function updateStatus(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:active,inactive,suspended',
+            'status' => 'required|in:pending,active,suspended,cancelled',
         ]);
 
         if ($validator->fails()) {
@@ -193,12 +224,93 @@ class MemberController extends Controller
             ], 422);
         }
 
-        $member = User::findOrFail($id);
+        $member = Member::findOrFail($id);
         $member->update(['status' => $request->status]);
 
         return response()->json([
             'message' => '会員ステータスを更新しました',
             'member' => $member
+        ]);
+    }
+
+    /**
+     * 会員のランクを更新
+     */
+    public function updateMembership(Request $request, $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'membership_type' => 'required|in:free,basic,standard,premium',
+            'membership_expires_at' => 'nullable|date',
+            'is_active' => 'sometimes|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'バリデーションエラー',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $member = Member::findOrFail($id);
+        
+        $updateData = [
+            'membership_type' => $request->membership_type,
+            'membership_expires_at' => $request->membership_expires_at,
+        ];
+
+        if ($request->has('is_active')) {
+            $updateData['is_active'] = $request->is_active;
+        }
+
+        $member->update($updateData);
+
+        // 更新後の情報を取得
+        $member->refresh();
+        $member->is_expiring_soon = $member->isExpiringSoon();
+        $member->membership_level_value = $member->getMembershipLevelValue();
+
+        return response()->json([
+            'message' => '会員ランクを更新しました',
+            'member' => $member
+        ]);
+    }
+
+    /**
+     * 会員の有効期限を延長
+     */
+    public function extendMembership(Request $request, $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'extend_months' => 'required|integer|min:1|max:24',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'バリデーションエラー',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $member = Member::findOrFail($id);
+        
+        // 現在の期限から延長、または現在日時から延長
+        $currentExpiry = $member->membership_expires_at;
+        $baseDate = $currentExpiry && $currentExpiry->isFuture() ? $currentExpiry : now();
+        
+        $newExpiry = $baseDate->addMonths($request->extend_months);
+        
+        $member->update([
+            'membership_expires_at' => $newExpiry,
+            'is_active' => true,
+        ]);
+
+        $member->refresh();
+        $member->is_expiring_soon = $member->isExpiringSoon();
+
+        return response()->json([
+            'message' => "会員期限を{$request->extend_months}ヶ月延長しました",
+            'member' => $member,
+            'new_expiry' => $newExpiry->format('Y-m-d H:i:s')
         ]);
     }
 }

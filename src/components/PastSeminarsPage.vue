@@ -117,6 +117,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: "PastSeminarsPage",
@@ -135,59 +136,11 @@ export default {
       frame132131753022Props: frame132131753022Data,
       currentPage: 1,
       itemsPerPage: 10,
-      allPastSeminars: [
-        {
-          date: "2025年6月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。"
-        },
-        {
-          date: "2025年6月10日",
-          title: "デジタル変革時代の経営戦略セミナー",
-          content: "デジタル技術を活用した経営戦略の立案と実行について、最新の事例を交えて詳しく解説しました。"
-        },
-        {
-          date: "2025年6月5日",
-          title: "ESG投資とサステナブル経営セミナー",
-          content: "環境・社会・ガバナンスを考慮した投資と経営について、実践的なアプローチをご紹介しました。"
-        },
-        {
-          date: "2025年5月30日",
-          title: "中小企業の資金調達戦略セミナー",
-          content: "中小企業が直面する資金調達の課題と解決策について、具体的な事例を交えて解説しました。"
-        },
-        {
-          date: "2025年5月25日",
-          title: "リモートワーク時代の人材マネジメントセミナー",
-          content: "テレワーク環境での効果的な人材管理とチーム運営について、実践的なノウハウをご紹介しました。"
-        },
-        {
-          date: "2025年5月20日",
-          title: "AI・機械学習のビジネス活用セミナー",
-          content: "人工知能と機械学習をビジネスに活用する方法について、最新の技術動向と実用例をご紹介しました。"
-        },
-        {
-          date: "2025年5月15日",
-          title: "グローバル展開戦略セミナー",
-          content: "海外進出を目指す企業向けに、市場分析から現地法人設立まで、包括的な戦略をご提案しました。"
-        },
-        {
-          date: "2025年5月10日",
-          title: "データドリブン経営セミナー",
-          content: "データを活用した意思決定と経営改善について、具体的な分析手法と活用事例をご紹介しました。"
-        },
-        {
-          date: "2025年5月5日",
-          title: "働き方改革と生産性向上セミナー",
-          content: "働き方改革を推進しながら生産性を向上させる方法について、成功事例を交えて解説しました。"
-        },
-        {
-          date: "2025年4月30日",
-          title: "新規事業開発とイノベーションセミナー",
-          content: "新規事業の立ち上げから成長戦略まで、イノベーションを生み出す組織づくりについて解説しました。"
-        }
-      ]
+      allPastSeminars: []
     };
+  },
+  async mounted() {
+    await this.loadPastSeminars()
   },
   computed: {
     pastSeminars() {
@@ -196,10 +149,33 @@ export default {
       return this.allPastSeminars.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.allPastSeminars.length / this.itemsPerPage);
+      return Math.ceil(this.allPastSeminars.length / this.itemsPerPage) || 1;
     }
   },
   methods: {
+    async loadPastSeminars() {
+      try {
+        const res = await apiClient.get('/api/seminars?status=completed&per_page=100')
+        if (res.success && res.data && Array.isArray(res.data.seminars)) {
+          this.allPastSeminars = res.data.seminars.map(s => ({
+            id: s.id,
+            date: this.formatDate(s.date),
+            title: s.title,
+            content: s.description
+          }))
+        } else {
+          this.allPastSeminars = []
+        }
+      } catch (e) {
+        console.error('過去セミナー取得失敗:', e)
+        this.allPastSeminars = []
+      }
+    },
+    formatDate(dateString) {
+      const d = new Date(dateString)
+      if (isNaN(d.getTime())) return dateString
+      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+    },
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;

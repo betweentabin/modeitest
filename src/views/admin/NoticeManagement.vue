@@ -156,7 +156,6 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
-import mockServer from '@/mockServer'
 
 export default {
   name: 'NoticeManagement',
@@ -218,103 +217,37 @@ export default {
   methods: {
     async loadCategories() {
       try {
-        // まずmockServerから取得を試みる
-        try {
-          const categories = await mockServer.getNewsCategories()
-          if (categories && categories.length > 0) {
-            this.categories = categories
-            return
-          }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API')
-        }
-
-        // APIから取得
-        const response = await apiClient.getNewsCategories()
-        if (response.success && response.data) {
-          this.categories = response.data.categories
-        } else {
-          throw new Error('カテゴリーデータの取得に失敗しました')
-        }
+        const res = await apiClient.get('/api/admin/notices/categories')
+        // NoticeController returns array of strings
+        const list = Array.isArray(res) ? res : (res?.data || [])
+        this.categories = (list || []).map((c, idx) => ({ id: idx+1, name: c, slug: c, color: '#da5761' }))
       } catch (err) {
         console.error('カテゴリー読み込みエラー:', err)
-        // フォールバック: デフォルトカテゴリー
-        this.categories = [
-          { id: 1, name: 'お知らせ', slug: 'notice', color: '#da5761' },
-          { id: 2, name: '重要', slug: 'important', color: '#ff4444' },
-          { id: 3, name: 'イベント', slug: 'event', color: '#4CAF50' },
-          { id: 4, name: 'メディア', slug: 'media', color: '#2196F3' }
-        ]
+        this.categories = []
       }
     },
 
     async loadNotices() {
       this.loading = true
       try {
-        // まずmockServerから取得を試みる
-        try {
-          const allNews = await mockServer.getAllNews()
-          if (allNews && allNews.length > 0) {
-            const start = (this.currentPage - 1) * this.itemsPerPage
-            const end = start + this.itemsPerPage
-            
-            this.notices = allNews.map(news => ({
-              id: news.id,
-              title: news.title,
-              date: news.published_at || news.created_at,
-              category: news.category || 'notice',
-              description: news.description || news.excerpt,
-              status: news.status || 'published',
-              is_featured: news.is_featured || false
-            }))
-            
-            this.totalPages = Math.ceil(this.notices.length / this.itemsPerPage)
-            return
-          }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API')
-        }
-
-        // APIから取得
-        this.authToken = localStorage.getItem('admin_token')
-        if (!this.authToken) {
-          console.log('No admin token found, getting debug token...')
-          // デバッグ用: トークンが無い場合は自動取得
-          const debugToken = await apiClient.getDebugAdminToken()
-          if (debugToken) {
-            this.authToken = debugToken
-            console.log('Debug token obtained successfully')
-          } else {
-            throw new Error('管理者認証が必要です')
-          }
-        }
-        
-        const params = {
-          page: this.currentPage,
-          per_page: this.itemsPerPage,
-          ...this.filters
-        }
-        
-        const response = await apiClient.getAdminNews(params) // トークンは自動で付与される
-        console.log('Admin news API response:', response)
-        if (response && response.success && response.data) {
-          this.notices = response.data.news.map(news => ({
-            id: news.id,
-            title: news.title,
-            date: news.published_at || news.created_at,
-            category: news.category || 'notice',
-            description: news.description || news.excerpt,
-            status: news.status || 'published',
-            is_featured: news.is_featured || false
-          }))
-          
-          this.totalPages = response.data.pagination.total_pages
-        } else {
-          throw new Error('ニュースデータの取得に失敗しました')
-        }
+        const params = { page: this.currentPage, per_page: this.itemsPerPage }
+        const response = await apiClient.get('/api/admin/notices', { params })
+        // apiClient wraps non-success into {success:true, data:paginator}
+        const paginator = response?.data || response
+        const items = paginator?.data || []
+        this.notices = items.map(n => ({
+          id: n.id,
+          title: n.title,
+          date: n.published_at || n.created_at,
+          category: n.category || 'notice',
+          description: n.summary || n.content || '',
+          status: n.is_published ? 'published' : 'draft',
+          is_featured: !!n.is_featured
+        }))
+        this.totalPages = paginator?.last_page || 1
       } catch (err) {
-        this.error = err.message || 'ニュースデータの読み込みに失敗しました'
-        console.error('ニュース読み込みエラー:', err)
+        this.error = err.message || 'お知らせデータの読み込みに失敗しました'
+        console.error('お知らせ読み込みエラー:', err)
       } finally {
         this.loading = false
       }

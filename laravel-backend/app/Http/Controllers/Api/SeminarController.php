@@ -37,25 +37,47 @@ class SeminarController extends Controller
         }
 
         // 公開されているセミナーのみ（一般向け）
-        // 管理者または認証済みユーザー以外には公開セミナーのみ表示
-        if (!$request->user()) {
-            $query->published();
-        } elseif ($request->user() && !$request->user()->isAdmin()) {
-            $query->published();
+        // ただし、status=completed/cancelled が明示された場合は一般でもそのステータスを許可
+        $requestedStatus = $request->input('status');
+        $skipPublishedFilter = in_array($requestedStatus, ['completed', 'cancelled'], true);
+
+        if (!$skipPublishedFilter) {
+            if (!$request->user() || ($request->user() && !$request->user()->isAdmin())) {
+                $query->published();
+            }
         }
         // 管理者の場合は全てのステータスのセミナーを表示
 
         // ソート
-        $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+        // 過去セミナーは新しい順、それ以外は従来通り昇順
+        if ($requestedStatus === 'completed') {
+            $query->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+        } else {
+            $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+        }
 
         // ページネーション
         $perPage = $request->input('per_page', 10);
         $seminars = $query->paginate($perPage);
 
+        // 会員の種類に応じた can_register 判定（案A: 解禁日制）
+        $authUser = $request->user();
+        $memberType = null;
+        if ($authUser && method_exists($authUser, 'membership_type')) {
+            $memberType = $authUser->membership_type;
+        } elseif ($authUser && property_exists($authUser, 'membership_type')) {
+            $memberType = $authUser->membership_type;
+        }
+
+        $items = collect($seminars->items())->map(function ($seminar) use ($memberType) {
+            $seminar->can_register_for_user = $this->canRegisterForMemberType($seminar, $memberType);
+            return $seminar;
+        })->all();
+
         return response()->json([
             'success' => true,
             'data' => [
-                'seminars' => $seminars->items(),
+                'seminars' => $items,
                 'pagination' => [
                     'current_page' => $seminars->currentPage(),
                     'total_pages' => $seminars->lastPage(),
@@ -79,11 +101,15 @@ class SeminarController extends Controller
             abort(404);
         }
 
+        $authUser = request()->user();
+        $memberType = $authUser && property_exists($authUser, 'membership_type') ? $authUser->membership_type : null;
+
         return response()->json([
             'success' => true,
             'data' => [
                 'seminar' => $seminar,
                 'can_register' => $seminar->can_register,
+                'can_register_for_user' => $this->canRegisterForMemberType($seminar, $memberType),
                 'available_spots' => $seminar->available_spots,
                 'formatted_date' => $seminar->formatted_date,
                 'formatted_time' => $seminar->formatted_time,
@@ -321,5 +347,43 @@ class SeminarController extends Controller
         } while (SeminarRegistration::where('registration_number', $number)->exists());
 
         return $number;
+    }
+
+    private function canRegisterForMemberType(Seminar $seminar, ?string $memberType): bool
+    {
+        // まずベース条件
+        if (!$seminar->can_register) {
+            return false;
+        }
+
+        // 会員要件
+        $required = $seminar->membership_requirement;
+        $priority = ['free' => 1, 'standard' => 2, 'premium' => 3];
+
+        // 未ログインは free として扱う（要件free以外は不可）
+        if (!$memberType) {
+            if ($required !== 'free') return false;
+            $effectiveOpen = $seminar->free_open_at;
+            return !$effectiveOpen || now()->gte($effectiveOpen);
+        }
+
+        // 必要ランクを満たすか
+        $memberLevel = $priority[$memberType] ?? 0;
+        $requiredLevel = $priority[$required] ?? 1; // default free
+        if ($memberLevel < $requiredLevel) return false;
+
+        // ランク別の解禁日
+        switch ($memberType) {
+            case 'premium':
+                $effectiveOpen = $seminar->premium_open_at ?? $seminar->standard_open_at ?? $seminar->free_open_at;
+                break;
+            case 'standard':
+                $effectiveOpen = $seminar->standard_open_at ?? $seminar->free_open_at;
+                break;
+            default: // free
+                $effectiveOpen = $seminar->free_open_at;
+        }
+
+        return !$effectiveOpen || now()->gte($effectiveOpen);
     }
 }

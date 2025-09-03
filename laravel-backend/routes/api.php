@@ -83,6 +83,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
+// 会員認証API（Member用）
+Route::prefix('member-auth')->group(function () {
+    Route::post('/register', [App\Http\Controllers\Api\MemberAuthController::class, 'register']);
+    Route::post('/login', [App\Http\Controllers\Api\MemberAuthController::class, 'login']);
+    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [App\Http\Controllers\Api\MemberAuthController::class, 'me']);
+        Route::post('/logout', [App\Http\Controllers\Api\MemberAuthController::class, 'logout']);
+    });
+});
+
 Route::prefix('economic-statistics')->group(function () {
     Route::get('/categories', [EconomicStatisticsController::class, 'categories']);
     Route::get('/latest', [EconomicStatisticsController::class, 'latest']);
@@ -200,6 +211,12 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [SeminarController::class, 'show']);
             Route::put('/{id}', [SeminarController::class, 'update']);
             Route::delete('/{id}', [SeminarController::class, 'destroy']);
+
+            // 申込承認（案B）
+            Route::get('/{id}/registrations', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'index']);
+            Route::post('/{id}/registrations/bulk-approve', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'bulkApprove']);
+            Route::post('/{id}/registrations/{regId}/approve', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'approve']);
+            Route::post('/{id}/registrations/{regId}/reject', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'reject']);
         });
         
         // 管理者用ニュースAPI
@@ -209,6 +226,28 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [NewsV2Controller::class, 'show']);
             Route::put('/{id}', [NewsV2Controller::class, 'update']);
             Route::delete('/{id}', [NewsV2Controller::class, 'destroy']);
+        });
+
+        // メールグループ管理
+        Route::prefix('mail-groups')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\MailGroupController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\MailGroupController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'destroy']);
+            Route::post('/{id}/members', [App\Http\Controllers\Admin\MailGroupController::class, 'members']);
+        });
+
+        // メールキャンペーン管理
+        Route::prefix('emails')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'show']);
+            Route::post('/{id}/preview', [App\Http\Controllers\Admin\EmailCampaignController::class, 'preview']);
+            Route::post('/{id}/schedule', [App\Http\Controllers\Admin\EmailCampaignController::class, 'schedule']);
+            Route::post('/{id}/send-now', [App\Http\Controllers\Admin\EmailCampaignController::class, 'sendNow']);
+            Route::post('/{id}/resend-failed', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendFailed']);
+            Route::post('/{id}/recipients/{recipientId}/resend', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendRecipient']);
         });
         
         // 管理者用刊行物API
@@ -238,6 +277,8 @@ Route::prefix('admin')->group(function () {
             Route::put('/{id}', [MemberController::class, 'update']);
             Route::delete('/{id}', [MemberController::class, 'destroy']);
             Route::patch('/{id}/status', [MemberController::class, 'updateStatus']);
+            Route::patch('/{id}/membership', [MemberController::class, 'updateMembership']);
+            Route::patch('/{id}/extend', [MemberController::class, 'extendMembership']);
         });
         
         // お知らせ管理API
@@ -296,6 +337,35 @@ Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::get('/can-access/{type}/{id}', [MemberAccessController::class, 'canAccess']);
     Route::post('/log-access', [MemberAccessController::class, 'logAccess']);
     Route::get('/upgrade-history', [MemberAccessController::class, 'getUpgradeHistory']);
+    
+    // プロフィール管理
+    Route::get('/my-profile', [App\Http\Controllers\Api\MemberProfileController::class, 'show']);
+    Route::put('/my-profile', [App\Http\Controllers\Api\MemberProfileController::class, 'update']);
+    Route::put('/my-profile/password', [App\Http\Controllers\Api\MemberProfileController::class, 'updatePassword']);
+    Route::delete('/my-profile', [App\Http\Controllers\Api\MemberProfileController::class, 'deleteAccount']);
+    
+    // お気に入り機能
+    Route::get('/favorites', [App\Http\Controllers\Api\MemberFavoritesController::class, 'index']);
+    Route::post('/favorites/{favorite_member_id}', [App\Http\Controllers\Api\MemberFavoritesController::class, 'store']);
+    Route::delete('/favorites/{favorite_member_id}', [App\Http\Controllers\Api\MemberFavoritesController::class, 'destroy']);
+    Route::get('/favorites/{favorite_member_id}/check', [App\Http\Controllers\Api\MemberFavoritesController::class, 'check']);
+    
+    // セミナーお気に入り
+    Route::get('/seminar-favorites', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'index']);
+    Route::post('/seminar-favorites/{seminar_id}', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'store']);
+    Route::delete('/seminar-favorites/{seminar_id}', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'destroy']);
+    
+    // 会員名簿（standard以上）
+    Route::get('/directory', [App\Http\Controllers\Api\MemberDirectoryController::class, 'index']);
+    Route::get('/directory/{id}', [App\Http\Controllers\Api\MemberDirectoryController::class, 'show']);
+    Route::get('/directory/export/csv', [App\Http\Controllers\Api\MemberDirectoryController::class, 'exportCsv']);
+    Route::get('/dashboard', [App\Http\Controllers\Api\MemberDashboardController::class, 'index']);
+});
+
+// 会員マスタ（認証不要でも良いが、ここでは公開APIとして提供）
+Route::prefix('member-masters')->group(function () {
+    Route::get('/regions', [App\Http\Controllers\Api\MemberMasterController::class, 'regions']);
+    Route::get('/industries', [App\Http\Controllers\Api\MemberMasterController::class, 'industries']);
 });
 
 Route::prefix('publications')->group(function () {

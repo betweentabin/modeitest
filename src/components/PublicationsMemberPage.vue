@@ -68,8 +68,8 @@
           </div>
           <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">2025.4.28</span>
-              <span class="featured-category">経営戦略支援の会員限定</span>
+              <span class="featured-year">{{ formatDate(featuredPublication.publish_date || featuredPublication.publication_date) }}</span>
+              <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
               <MembershipBadge v-if="featuredPublication.membershipLevel && featuredPublication.membershipLevel !== 'free'" :level="featuredPublication.membershipLevel" />
             </div>
             <div class="featured-details">
@@ -136,8 +136,8 @@
             </div>
             <div class="publication-info">
               <div class="publication-meta">
-                <span class="featured-category">経営戦略支援の会員限定</span>
-                <span class="featured-year">{{ publication.year }}.4.28</span>
+                <span class="featured-category">{{ getCategoryName(publication.category) }}</span>
+                <span class="featured-year">{{ formatDate(publication.publish_date || publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
               <button 
@@ -415,7 +415,8 @@ export default {
     await this.loadPublications();
   },
   computed: {
-    ...mapGetters([
+    // 認証系のゲッターはnamespaced module 'auth' から取得
+    ...mapGetters('auth', [
       'isAuthenticated',
       'canAccess',
       'canViewButRestricted'
@@ -434,57 +435,53 @@ export default {
     async loadPublications() {
       this.loading = true;
       try {
-        // まずmockServerから取得を試みる
-        try {
-          const allPublications = await mockServer.getPublications();
-          
-          if (allPublications && allPublications.length > 0) {
-            this.publications = allPublications.map(item => ({
-              id: item.id,
-              title: item.title,
-              image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
-              description: item.description,
-              category: item.category || 'special',
-              publish_date: item.publication_date,
-              author: item.author || 'ちくぎん地域経済研究所',
-              pages: item.pages,
-              file_size: item.file_size,
-              download_count: item.download_count,
-              is_published: item.is_published,
-              membershipLevel: item.membership_level || item.membershipLevel || 'free'
-            }));
-            this.totalPages = Math.ceil(this.publications.length / 12);
-            return;
-          }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API');
-        }
-        
-        // APIから取得
+        // APIから取得（会員限定も含める）
         const params = {
           page: this.currentPage,
-          per_page: 12
+          per_page: 12,
+          members_only_included: true
         };
-        
         if (this.selectedCategory && this.selectedCategory !== 'all') {
           params.category = this.selectedCategory;
         }
-        
         const response = await apiClient.getPublications(params);
-        
         if (response && response.success && response.data && response.data.publications) {
           this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
           this.totalPages = response.data.pagination.total_pages;
         } else {
-          // フォールバック: 既存データを使用
-          console.log('APIからデータを取得できませんでした。フォールバックデータを使用します。');
+          // フォールバック: mockServer
+          await this.loadFromMock();
         }
       } catch (err) {
         console.error('刊行物の読み込みに失敗しました:', err);
         this.error = '刊行物の読み込みに失敗しました。';
-        // フォールバック: 既存データを使用
+        await this.loadFromMock();
       } finally {
         this.loading = false;
+      }
+    },
+    async loadFromMock() {
+      try {
+        const allPublications = await mockServer.getPublications();
+        if (allPublications && allPublications.length > 0) {
+          this.publications = allPublications.map(item => ({
+            id: item.id,
+            title: item.title,
+            image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
+            description: item.description,
+            category: item.category || 'special',
+            publish_date: item.publication_date,
+            author: item.author || 'ちくぎん地域経済研究所',
+            pages: item.pages,
+            file_size: item.file_size,
+            download_count: item.download_count,
+            is_published: item.is_published,
+            membershipLevel: item.membership_level || item.membershipLevel || 'free'
+          }));
+          this.totalPages = Math.ceil(this.publications.length / 12);
+        }
+      } catch (e) {
+        // noop: 既存のプレースホルダーデータを維持
       }
     },
     
@@ -499,7 +496,8 @@ export default {
         author: item.author,
         pages: item.pages,
         is_downloadable: item.is_downloadable,
-        members_only: item.members_only
+        members_only: item.members_only,
+        membershipLevel: item.members_only ? 'standard' : 'free'
       };
     },
     
@@ -524,6 +522,14 @@ export default {
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
       return category ? category.name : 'ちくぎん地域経済レポート';
+    },
+    formatDate(dateString) {
+      if (!dateString) return ''
+      const d = new Date(dateString)
+      if (isNaN(d.getTime())) return dateString
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}/${mm}/${dd}`
     },
     goToPublicationDetail(publicationId) {
       this.$router.push(`/publications/${publicationId}`);

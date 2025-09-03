@@ -4,33 +4,48 @@
       <!-- ページヘッダー -->
       <div class="page-header">
         <h1 class="page-title">会員管理</h1>
-      </div>
-
-      <!-- 地域フィルター -->
-      <div class="region-filter">
-        <div class="region-tabs">
-          <button 
-            v-for="region in regions" 
-            :key="region"
-            @click="selectedRegion = region"
-            :class="['region-tab', { active: selectedRegion === region }]"
-          >
-            {{ region }}
+        <div class="header-actions">
+          <button @click="refreshMembers" class="refresh-btn" :disabled="loading">
+            {{ loading ? '読み込み中...' : '更新' }}
           </button>
         </div>
       </div>
 
-      <!-- 業種フィルター -->
-      <div class="industry-filter">
-        <div class="industry-grid">
-          <button 
-            v-for="industry in industries" 
-            :key="industry"
-            @click="toggleIndustry(industry)"
-            :class="['industry-btn', { active: selectedIndustries.includes(industry) }]"
+      <!-- フィルター -->
+      <div class="filters-section">
+        <!-- 検索バー -->
+        <div class="search-filter">
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="会社名、代表者名、メールアドレスで検索..."
+            class="search-input"
+            @input="debouncedSearch"
           >
-            {{ industry }}
-          </button>
+        </div>
+
+        <!-- 会員種別フィルター -->
+        <div class="membership-filter">
+          <label>会員種別:</label>
+          <select v-model="selectedMembershipType" @change="loadMembers">
+            <option value="">全て</option>
+            <option value="free">無料</option>
+            <option value="basic">ベーシック</option>
+            <option value="standard">スタンダード</option>
+            <option value="premium">プレミアム</option>
+          </select>
+        </div>
+
+        <!-- ステータスフィルター -->
+        <div class="status-filter">
+          <label>ステータス:</label>
+          <select v-model="selectedStatus" @change="loadMembers">
+            <option value="">全て</option>
+            <option value="pending">承認待ち</option>
+            <option value="active">アクティブ</option>
+            <option value="suspended">停止中</option>
+            <option value="cancelled">解約</option>
+          </select>
         </div>
       </div>
 
@@ -43,22 +58,40 @@
             <thead>
               <tr>
                 <th>会社名</th>
-                <th>概要</th>
-                <th>資本金</th>
-                <th>お困りごと</th>
-                <th>備考</th>
+                <th>代表者名</th>
+                <th>メールアドレス</th>
+                <th>会員種別</th>
+                <th>ステータス</th>
+                <th>有効期限</th>
+                <th>登録日</th>
                 <th>管理</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="member in filteredMembers" :key="member.id">
-                <td class="company-name">{{ member.companyName }}</td>
-                <td class="overview">{{ member.overview }}</td>
-                <td class="capital">{{ member.capital }}</td>
-                <td class="concern">{{ member.concern }}</td>
-                <td class="note">{{ member.note }}</td>
-                <td>
-                  <button @click="viewDetails(member)" class="detail-btn">詳細を確認</button>
+              <tr v-for="member in members" :key="member.id" :class="{ 'expiring-soon': member.is_expiring_soon }">
+                <td class="company-name">{{ member.company_name }}</td>
+                <td class="representative-name">{{ member.representative_name }}</td>
+                <td class="email">{{ member.email }}</td>
+                <td class="membership-type">
+                  <span :class="['membership-badge', `membership-${member.membership_type}`]">
+                    {{ getMembershipTypeLabel(member.membership_type) }}
+                  </span>
+                </td>
+                <td class="status">
+                  <span :class="['status-badge', `status-${member.status}`]">
+                    {{ getStatusLabel(member.status) }}
+                  </span>
+                </td>
+                <td class="expiry">
+                  <span v-if="member.membership_expires_at" :class="{ 'text-warning': member.is_expiring_soon }">
+                    {{ formatDate(member.membership_expires_at) }}
+                  </span>
+                  <span v-else class="text-muted">無期限</span>
+                </td>
+                <td class="joined-date">{{ formatDate(member.created_at) }}</td>
+                <td class="actions">
+                  <button @click="editMember(member)" class="edit-btn">編集</button>
+                  <button @click="viewDetails(member)" class="detail-btn">詳細</button>
                 </td>
               </tr>
             </tbody>
@@ -67,8 +100,160 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 99 最後</span>
+      <div class="pagination" v-if="pagination.total > pagination.per_page">
+        <button 
+          v-for="page in paginationPages" 
+          :key="page"
+          @click="loadMembers(page)"
+          :class="['page-btn', { active: page === pagination.current_page }]"
+          :disabled="loading"
+        >
+          {{ page }}
+        </button>
+      </div>
+    </div>
+
+    <!-- 会員編集モーダル -->
+    <div v-if="editingMember" class="modal-overlay" @click="closeEditModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>会員情報編集</h3>
+          <button @click="closeEditModal" class="close-btn">×</button>
+        </div>
+        
+        <div class="modal-body">
+          <form @submit.prevent="saveMember">
+            <div class="form-row">
+              <div class="form-group">
+                <label>会社名</label>
+                <input 
+                  v-model="editForm.company_name" 
+                  type="text" 
+                  class="form-input"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label>代表者名</label>
+                <input 
+                  v-model="editForm.representative_name" 
+                  type="text" 
+                  class="form-input"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>メールアドレス</label>
+                <input 
+                  v-model="editForm.email" 
+                  type="email" 
+                  class="form-input"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label>電話番号</label>
+                <input 
+                  v-model="editForm.phone" 
+                  type="text" 
+                  class="form-input"
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>会員種別</label>
+                <select v-model="editForm.membership_type" class="form-select">
+                  <option value="free">無料</option>
+                  <option value="basic">ベーシック</option>
+                  <option value="standard">スタンダード</option>
+                  <option value="premium">プレミアム</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>ステータス</label>
+                <select v-model="editForm.status" class="form-select">
+                  <option value="pending">承認待ち</option>
+                  <option value="active">アクティブ</option>
+                  <option value="suspended">停止中</option>
+                  <option value="cancelled">解約</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>有効期限</label>
+                <input 
+                  v-model="editForm.membership_expires_at" 
+                  type="datetime-local" 
+                  class="form-input"
+                >
+              </div>
+              <div class="form-group">
+                <label>アクティブ</label>
+                <input 
+                  v-model="editForm.is_active" 
+                  type="checkbox" 
+                  class="form-checkbox"
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>住所</label>
+              <textarea 
+                v-model="editForm.address" 
+                class="form-textarea"
+                rows="3"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        
+        <div class="modal-footer">
+          <button @click="closeEditModal" class="cancel-btn">キャンセル</button>
+          <button @click="saveMember" class="save-btn" :disabled="saving">
+            {{ saving ? '保存中...' : '保存' }}
+          </button>
+          <button @click="extendMembership" class="extend-btn" v-if="editingMember.membership_type !== 'free'">
+            期限延長
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 期限延長モーダル -->
+    <div v-if="showExtendModal" class="modal-overlay" @click="closeExtendModal">
+      <div class="modal-content extend-modal" @click.stop>
+        <div class="modal-header">
+          <h3>会員期限延長</h3>
+          <button @click="closeExtendModal" class="close-btn">×</button>
+        </div>
+        
+        <div class="modal-body">
+          <p>{{ editingMember.company_name }} の会員期限を延長します。</p>
+          <div class="form-group">
+            <label>延長期間（月）</label>
+            <select v-model="extendMonths" class="form-select">
+              <option value="1">1ヶ月</option>
+              <option value="3">3ヶ月</option>
+              <option value="6">6ヶ月</option>
+              <option value="12">12ヶ月</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button @click="closeExtendModal" class="cancel-btn">キャンセル</button>
+          <button @click="confirmExtendMembership" class="save-btn" :disabled="extending">
+            {{ extending ? '延長中...' : '延長実行' }}
+          </button>
+        </div>
       </div>
     </div>
   </AdminLayout>
@@ -76,6 +261,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import apiClient from '../../services/apiClient.js'
 
 export default {
   name: 'MemberManagement',
@@ -84,100 +270,205 @@ export default {
   },
   data() {
     return {
-      members: [
-        {
-          id: 1,
-          companyName: 'ちくぎん地域経済研究所',
-          overview: '製造業',
-          capital: '1,000,000,000円',
-          concern: 'ウェブサイトの保守運用',
-          note: 'ＸＸＸＸＸＸ'
-        },
-        {
-          id: 2,
-          companyName: 'ちくぎん地域経済研究所',
-          overview: '製造業',
-          capital: '1,000,000,000円',
-          concern: 'ウェブサイトの保守運用',
-          note: 'ＸＸＸＸＸＸ'
-        },
-        {
-          id: 3,
-          companyName: 'ちくぎん地域経済研究所',
-          overview: '製造業',
-          capital: '1,000,000,000円',
-          concern: 'ウェブサイトの保守運用',
-          note: 'ＸＸＸＸＸＸ'
-        },
-        {
-          id: 4,
-          companyName: 'ちくぎん地域経済研究所',
-          overview: '製造業',
-          capital: '1,000,000,000円',
-          concern: 'ウェブサイトの保守運用',
-          note: 'ＸＸＸＸＸＸ'
-        },
-        {
-          id: 5,
-          companyName: 'ちくぎん地域経済研究所',
-          overview: '製造業',
-          capital: '1,000,000,000円',
-          concern: 'ウェブサイトの保守運用',
-          note: 'ＸＸＸＸＸＸ'
-        }
-      ],
-      regions: ['福岡', '佐賀', '長崎', '大分', '熊本', '宮崎', '鹿児島'],
-      industries: [
-        '全て', '製造業', '鉱業', '建設業', '運輸交通業', '官公署',
-        '貨物取扱業', '農林業', '畜産・水産業', '商業', '金融・広告業', '清掃・倉業',
-        '映画・演劇業', '通信業', '教育・研究業', '保健衛生業', '接客娯楽業', 'その他の事業'
-      ],
-      selectedRegion: '福岡',
-      selectedIndustries: ['全て'],
+      members: [],
       loading: false,
-      error: ''
+      error: '',
+      
+      // フィルター
+      searchQuery: '',
+      selectedMembershipType: '',
+      selectedStatus: '',
+      
+      // ページネーション
+      pagination: {
+        current_page: 1,
+        last_page: 1,
+        per_page: 15,
+        total: 0
+      },
+      
+      // 編集関連
+      editingMember: null,
+      editForm: {},
+      saving: false,
+      
+      // 期限延長関連
+      showExtendModal: false,
+      extendMonths: 12,
+      extending: false
     }
   },
   computed: {
-    filteredMembers() {
-      let result = this.members
+    paginationPages() {
+      const pages = []
+      const maxShow = 5
+      const start = Math.max(1, this.pagination.current_page - Math.floor(maxShow / 2))
+      const end = Math.min(this.pagination.last_page, start + maxShow - 1)
       
-      // 業種フィルタリング
-      if (!this.selectedIndustries.includes('全て') && this.selectedIndustries.length > 0) {
-        result = result.filter(member => 
-          this.selectedIndustries.includes(member.overview)
-        )
+      for (let i = start; i <= end; i++) {
+        pages.push(i)
       }
-      
-      return result
+      return pages
     }
   },
+  mounted() {
+    this.loadMembers()
+  },
   methods: {
-    toggleIndustry(industry) {
-      if (industry === '全て') {
-        this.selectedIndustries = ['全て']
-      } else {
-        const index = this.selectedIndustries.indexOf(industry)
-        if (index > -1) {
-          this.selectedIndustries.splice(index, 1)
+    async loadMembers(page = 1) {
+      this.loading = true
+      this.error = ''
+      
+      try {
+        const params = {
+          page,
+          per_page: this.pagination.per_page
+        }
+        
+        if (this.searchQuery) {
+          params.search = this.searchQuery
+        }
+        if (this.selectedMembershipType) {
+          params.membership_type = this.selectedMembershipType
+        }
+        if (this.selectedStatus) {
+          params.status = this.selectedStatus
+        }
+        
+        const response = await apiClient.getAdminMembers(params)
+        
+        if (response.success) {
+          this.members = response.data.data
+          this.pagination = {
+            current_page: response.data.current_page,
+            last_page: response.data.last_page,
+            per_page: response.data.per_page,
+            total: response.data.total
+          }
         } else {
-          this.selectedIndustries.push(industry)
+          this.error = response.message || '会員データの取得に失敗しました'
         }
-        
-        // 「全て」を除外
-        const allIndex = this.selectedIndustries.indexOf('全て')
-        if (allIndex > -1) {
-          this.selectedIndustries.splice(allIndex, 1)
-        }
-        
-        // 何も選択されていなければ「全て」を選択
-        if (this.selectedIndustries.length === 0) {
-          this.selectedIndustries = ['全て']
-        }
+      } catch (error) {
+        this.error = 'サーバーエラーが発生しました'
+        console.error('Failed to load members:', error)
+      } finally {
+        this.loading = false
       }
     },
+    
+    debouncedSearch() {
+      clearTimeout(this.searchTimeout)
+      this.searchTimeout = setTimeout(() => {
+        this.loadMembers()
+      }, 500)
+    },
+    
+    refreshMembers() {
+      this.loadMembers(this.pagination.current_page)
+    },
+    
+    editMember(member) {
+      this.editingMember = { ...member }
+      this.editForm = {
+        company_name: member.company_name,
+        representative_name: member.representative_name,
+        email: member.email,
+        phone: member.phone,
+        address: member.address,
+        membership_type: member.membership_type,
+        status: member.status,
+        membership_expires_at: member.membership_expires_at ? 
+          new Date(member.membership_expires_at).toISOString().slice(0, 16) : '',
+        is_active: member.is_active
+      }
+    },
+    
+    closeEditModal() {
+      this.editingMember = null
+      this.editForm = {}
+    },
+    
+    async saveMember() {
+      this.saving = true
+      
+      try {
+        const response = await apiClient.updateAdminMember(this.editingMember.id, this.editForm)
+        
+        if (response.success) {
+          alert('会員情報を更新しました')
+          this.closeEditModal()
+          this.loadMembers(this.pagination.current_page)
+        } else {
+          this.error = response.message || '更新に失敗しました'
+        }
+      } catch (error) {
+        this.error = 'サーバーエラーが発生しました'
+        console.error('Failed to save member:', error)
+      } finally {
+        this.saving = false
+      }
+    },
+    
+    extendMembership() {
+      this.showExtendModal = true
+    },
+    
+    closeExtendModal() {
+      this.showExtendModal = false
+      this.extendMonths = 12
+    },
+    
+    async confirmExtendMembership() {
+      this.extending = true
+      
+      try {
+        const response = await apiClient.extendAdminMember(this.editingMember.id, this.extendMonths)
+        
+        if (response.success) {
+          alert(response.message)
+          this.closeExtendModal()
+          this.closeEditModal()
+          this.loadMembers(this.pagination.current_page)
+        } else {
+          this.error = response.message || '期限延長に失敗しました'
+        }
+      } catch (error) {
+        this.error = 'サーバーエラーが発生しました'
+        console.error('Failed to extend membership:', error)
+      } finally {
+        this.extending = false
+      }
+    },
+    
     viewDetails(member) {
       console.log('View details:', member)
+      // 詳細表示機能は今後実装
+    },
+    
+    getMembershipTypeLabel(type) {
+      const labels = {
+        'free': '無料',
+        'basic': 'ベーシック',
+        'standard': 'スタンダード',
+        'premium': 'プレミアム'
+      }
+      return labels[type] || type
+    },
+    
+    getStatusLabel(status) {
+      const labels = {
+        'pending': '承認待ち',
+        'active': 'アクティブ',
+        'suspended': '停止中',
+        'cancelled': '解約'
+      }
+      return labels[status] || status
+    },
+    
+    formatDate(dateString) {
+      if (!dateString) return '-'
+      const date = new Date(dateString)
+      return date.toLocaleDateString('ja-JP')
     }
   }
 }
@@ -356,7 +647,296 @@ export default {
   color: #da5761;
 }
 
+/* 新しいフィルター・UI スタイル */
+.filters-section {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-filter {
+  flex: 1;
+  min-width: 300px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.membership-filter, .status-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.membership-filter label, .status-filter label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.membership-filter select, .status-filter select {
+  padding: 6px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.refresh-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.refresh-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* バッジスタイル */
+.membership-badge, .status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.membership-free { background-color: #f8f9fa; color: #6c757d; }
+.membership-basic { background-color: #e3f2fd; color: #1976d2; }
+.membership-standard { background-color: #e8f5e8; color: #388e3c; }
+.membership-premium { background-color: #fff3e0; color: #f57c00; }
+
+.status-pending { background-color: #fff3cd; color: #856404; }
+.status-active { background-color: #d4edda; color: #155724; }
+.status-suspended { background-color: #f8d7da; color: #721c24; }
+.status-cancelled { background-color: #f1f3f4; color: #5f6368; }
+
+.expiring-soon {
+  background-color: #fff3cd;
+}
+
+.text-warning {
+  color: #856404;
+  font-weight: 500;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+/* アクションボタン */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn {
+  padding: 4px 8px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background-color: white;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.edit-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* ページネーション */
+.page-btn {
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+
+.page-btn:hover {
+  background-color: #e9ecef;
+}
+
+.page-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* モーダル */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  padding: 20px 24px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* フォーム */
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-checkbox {
+  width: auto;
+}
+
+.cancel-btn, .save-btn, .extend-btn {
+  padding: 8px 16px;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  background-color: white;
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.extend-btn {
+  background-color: #ffc107;
+  color: #212529;
+  border-color: #ffc107;
+}
+
+.cancel-btn:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.extend-btn:hover {
+  background-color: #e0a800;
+}
+
+.save-btn:disabled, .extend-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.extend-modal {
+  max-width: 400px;
+}
+
 @media (max-width: 768px) {
+  .filters-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .modal-content {
+    width: 95%;
+  }
+  
   .industry-grid {
     grid-template-columns: repeat(3, 1fr);
   }

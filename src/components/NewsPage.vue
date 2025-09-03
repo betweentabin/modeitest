@@ -200,95 +200,50 @@ export default {
     async loadNews() {
       this.loading = true
       try {
-        // まずmockServerから取得を試みる
-        try {
-          const allNews = await mockServer.getAllNews();
-          
-          if (allNews && allNews.length > 0) {
-            this.newsItems = allNews.map(item => ({
-              id: item.id,
-              date: item.date,
-              category: item.category || item.type || 'notice',
-              title: item.title,
-              description: item.description || item.content,
-              type: item.type || item.category || 'notice'
-            }));
-            this.totalPages = Math.ceil(this.newsItems.length / 10);
-            this.totalItems = this.newsItems.length;
-            return;
-          }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API');
-        }
-        
-        // APIから取得
+        // DB（Laravel API）のみから取得（フォールバックなし）
         const params = {
           page: this.currentPage,
           per_page: 10
         }
-        
         if (this.selectedCategory && this.selectedCategory !== 'all') {
           params.category = this.selectedCategory
         }
-        
-        const response = await apiClient.getNews(params)
-        
+        // Notice (お知らせ) に一本化
+        const response = await apiClient.getNotices(params)
         if (response.success && response.data) {
-          this.newsItems = response.data.news.map(item => this.formatNewsItem(item))
-          this.totalPages = response.data.pagination.total_pages
-          this.totalItems = response.data.pagination.total_items
+          const paginator = response.data
+          const items = Array.isArray(paginator.data) ? paginator.data : []
+          this.newsItems = items.map(item => ({
+            id: item.id,
+            date: item.published_at || item.created_at,
+            category: item.category || 'notice',
+            title: item.title,
+            description: item.summary || item.content,
+            type: 'notice'
+          }))
+          this.totalPages = paginator.last_page || 1
+          this.totalItems = paginator.total || this.newsItems.length
         } else {
-          this.loadFallbackNews()
+          // APIが成功しない/空の場合でもフォールバックはしない
+          this.newsItems = []
+          this.totalPages = 1
+          this.totalItems = 0
         }
       } catch (err) {
         console.error('ニュースの読み込みに失敗しました:', err)
         this.error = 'ニュースの読み込みに失敗しました。'
-        this.loadFallbackNews()
+        // フォールバックは行わない
+        this.newsItems = []
+        this.totalPages = 1
+        this.totalItems = 0
       } finally {
         this.loading = false
       }
     },
     
-    formatNewsItem(item) {
-      return {
-        id: item.id,
-        date: item.published_date,
-        category: item.category,
-        title: item.title,
-        description: item.description,
-        type: item.type
-      }
-    },
+    // formatNewsItem: Notice統一のため未使用
     
-    async loadFallbackNews() {
-      // フォールバック: 既存のモックデータから生成
-      this.newsItems = [
-        {
-          id: 1,
-          date: '2025-05-12',
-          category: 'seminar',
-          title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-          description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
-          type: 'seminar'
-        },
-        {
-          id: 2,
-          date: '2025-05-12',
-          category: 'publication',
-          title: 'HOT infomation Vol.319掲載しました！',
-          description: '最新の経済動向と地域企業の動きをまとめました。',
-          type: 'publication'
-        },
-        {
-          id: 3,
-          date: '2025-05-12',
-          category: 'publication',
-          title: 'Hot Information Vol.318掲載しました！',
-          description: '地域経済の最新情報をお届けします。',
-          type: 'publication'
-        }
-      ]
-    },
+    // フォールバックは使用しない方針
     async changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
@@ -308,29 +263,22 @@ export default {
       return `${year}.${month}.${day}`;
     },
     getCategoryLabel(category) {
+      // ニュース種別・カテゴリに応じて日本語ラベルを表示
       const labels = {
-        'seminar': 'セミナー',
-        'publication': 'カテゴリ1',
-        'notice': 'カテゴリ1',
-        'research': 'カテゴリ1',
-        'quarterly': 'カテゴリ1',
-        'special': 'カテゴリ1',
-        'free': 'カテゴリ1'
-      };
-      return labels[category] || 'カテゴリ1';
+        seminar: 'セミナー',
+        publication: '刊行物',
+        notice: 'お知らせ',
+        research: '研究',
+        quarterly: '四半期経済レポート',
+        special: '特集',
+        free: '一般公開'
+      }
+      return labels[category] || category || 'お知らせ'
     },
-         getCategoryClass(category) {
-       const classes = {
-         'seminar': 'seminar',
-         'publication': 'seminar',
-         'notice': 'seminar',
-         'research': 'seminar',
-         'quarterly': 'seminar',
-         'special': 'seminar',
-         'free': 'seminar'
-       };
-       return classes[category] || 'seminar';
-     },
+    getCategoryClass(category) {
+      // カテゴリ名をそのままクラスに使用（未定義はnotice）
+      return category || 'notice'
+    },
     goToNewsDetail(newsId) {
       this.$router.push(`/news/${newsId}`);
     }
