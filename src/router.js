@@ -419,6 +419,18 @@ const router = new Router({
       meta: { title: "マイアカウント - ちくぎん地域経済研究所" }
     },
     {
+      path: "/member-directory",
+      name: "memberDirectory",
+      component: () => import('./views/MemberDirectoryPage.vue'),
+      meta: { title: "会員名簿 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/member-favorites",
+      name: "memberFavorites",
+      component: () => import('./views/MemberFavoritesPage.vue'),
+      meta: { title: "お気に入り会員 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/upgrade",
       name: "upgrade",
       component: UpgradePage,

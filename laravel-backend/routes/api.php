@@ -298,6 +298,23 @@ Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::get('/can-access/{type}/{id}', [MemberAccessController::class, 'canAccess']);
     Route::post('/log-access', [MemberAccessController::class, 'logAccess']);
     Route::get('/upgrade-history', [MemberAccessController::class, 'getUpgradeHistory']);
+    
+    // プロフィール管理
+    Route::get('/my-profile', [App\Http\Controllers\Api\MemberProfileController::class, 'show']);
+    Route::put('/my-profile', [App\Http\Controllers\Api\MemberProfileController::class, 'update']);
+    Route::put('/my-profile/password', [App\Http\Controllers\Api\MemberProfileController::class, 'updatePassword']);
+    Route::delete('/my-profile', [App\Http\Controllers\Api\MemberProfileController::class, 'deleteAccount']);
+    
+    // お気に入り機能
+    Route::get('/favorites', [App\Http\Controllers\Api\MemberFavoritesController::class, 'index']);
+    Route::post('/favorites/{favorite_member_id}', [App\Http\Controllers\Api\MemberFavoritesController::class, 'store']);
+    Route::delete('/favorites/{favorite_member_id}', [App\Http\Controllers\Api\MemberFavoritesController::class, 'destroy']);
+    Route::get('/favorites/{favorite_member_id}/check', [App\Http\Controllers\Api\MemberFavoritesController::class, 'check']);
+    
+    // 会員名簿（standard以上）
+    Route::get('/directory', [App\Http\Controllers\Api\MemberDirectoryController::class, 'index']);
+    Route::get('/directory/{id}', [App\Http\Controllers\Api\MemberDirectoryController::class, 'show']);
+    Route::get('/directory/export/csv', [App\Http\Controllers\Api\MemberDirectoryController::class, 'exportCsv']);
 });
 
 Route::prefix('publications')->group(function () {

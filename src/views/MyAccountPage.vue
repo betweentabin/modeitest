@@ -35,26 +35,126 @@
         <div v-if="activeTab === 'profile'" class="content-section">
           <h2>アカウント情報</h2>
           
-          <div class="info-card">
+          <!-- 表示モード -->
+          <div v-if="!editMode" class="info-card">
             <div class="info-row">
-              <label>氏名</label>
-              <div class="info-value">{{ memberInfo?.name }}</div>
+              <label>会社名</label>
+              <div class="info-value">{{ memberInfo?.company_name || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>代表者名</label>
+              <div class="info-value">{{ memberInfo?.representative_name || '未登録' }}</div>
             </div>
             <div class="info-row">
               <label>メールアドレス</label>
               <div class="info-value">{{ memberInfo?.email }}</div>
             </div>
             <div class="info-row">
-              <label>会社名</label>
-              <div class="info-value">{{ memberInfo?.company || '未登録' }}</div>
+              <label>電話番号</label>
+              <div class="info-value">{{ memberInfo?.phone || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>郵便番号</label>
+              <div class="info-value">{{ memberInfo?.postal_code || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>住所</label>
+              <div class="info-value">{{ memberInfo?.address || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>会員種別</label>
+              <div class="info-value">
+                <span :class="['membership-badge', `membership-${memberInfo?.membership_type}`]">
+                  {{ getMembershipLabel(memberInfo?.membership_type) }}
+                </span>
+              </div>
             </div>
             <div class="info-row">
               <label>登録日</label>
-              <div class="info-value">{{ formatDate(memberInfo?.joinedDate) }}</div>
+              <div class="info-value">{{ formatDate(memberInfo?.created_at) }}</div>
             </div>
           </div>
           
-          <button class="edit-button">プロフィールを編集</button>
+          <!-- 編集モード -->
+          <div v-else class="edit-form">
+            <form @submit.prevent="saveProfile">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>会社名 *</label>
+                  <input 
+                    v-model="editForm.company_name" 
+                    type="text" 
+                    class="form-input"
+                    required
+                  >
+                </div>
+                <div class="form-group">
+                  <label>代表者名 *</label>
+                  <input 
+                    v-model="editForm.representative_name" 
+                    type="text" 
+                    class="form-input"
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>メールアドレス *</label>
+                  <input 
+                    v-model="editForm.email" 
+                    type="email" 
+                    class="form-input"
+                    required
+                  >
+                </div>
+                <div class="form-group">
+                  <label>電話番号</label>
+                  <input 
+                    v-model="editForm.phone" 
+                    type="text" 
+                    class="form-input"
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>郵便番号</label>
+                  <input 
+                    v-model="editForm.postal_code" 
+                    type="text" 
+                    class="form-input"
+                    placeholder="例: 123-4567"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>住所</label>
+                <textarea 
+                  v-model="editForm.address" 
+                  class="form-textarea"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" @click="cancelEdit" class="cancel-button">
+                  キャンセル
+                </button>
+                <button type="submit" class="save-button" :disabled="saving">
+                  {{ saving ? '保存中...' : '保存する' }}
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div v-if="!editMode" class="profile-actions">
+            <button @click="startEdit" class="edit-button">プロフィールを編集</button>
+            <button @click="showPasswordForm = true" class="password-button">パスワード変更</button>
+          </div>
         </div>
         
         <!-- 会員プランタブ -->
@@ -112,17 +212,43 @@
         
         <!-- お気に入りタブ -->
         <div v-if="activeTab === 'favorites'" class="content-section">
-          <h2>お気に入り</h2>
+          <h2>お気に入り会員</h2>
           
-          <div class="favorites-grid">
-            <PublicationCard 
-              v-for="publication in favoritePublications"
-              :key="publication.id"
-              :publication="publication"
-            />
+          <div class="favorites-header">
+            <p class="favorites-description">お気に入りに登録した会員の一覧です。</p>
+            <button @click="$router.push('/member-directory')" class="directory-link-btn">
+              会員名簿を見る
+            </button>
+          </div>
+          
+          <div v-if="loadingFavorites" class="loading">読み込み中...</div>
+          <div v-else-if="favoritesError" class="error">{{ favoritesError }}</div>
+          <div v-else>
+            <div v-if="favoriteMembers.length === 0" class="empty-state">
+              <div class="empty-icon">⭐</div>
+              <h3>お気に入り会員はまだありません</h3>
+              <p>会員名簿からお気に入りの会員を登録してみましょう。</p>
+              <button @click="$router.push('/member-directory')" class="directory-btn">
+                会員名簿を見る
+              </button>
+            </div>
             
-            <div v-if="favoritePublications.length === 0" class="empty-state">
-              <p>お気に入りに登録された刊行物はありません</p>
+            <div v-else class="favorites-list">
+              <div 
+                v-for="favorite in favoriteMembers" 
+                :key="favorite.id"
+                class="favorite-item"
+              >
+                <div class="favorite-info">
+                  <h4>{{ favorite.company_name }}</h4>
+                  <p>{{ favorite.representative_name }}</p>
+                  <span class="membership-type">{{ getMembershipLabel(favorite.membership_type) }}</span>
+                </div>
+                <div class="favorite-actions">
+                  <button @click="viewFavoriteDetail(favorite)" class="view-btn">詳細</button>
+                  <button @click="removeFavorite(favorite)" class="remove-btn">削除</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -192,12 +318,30 @@ export default {
       activeTab: 'profile',
       memberInfo: null,
       downloadHistory: [],
-      favoritePublications: [],
+      favoriteMembers: [],
       settings: {
         newsletter: true,
         emailNotifications: true,
         smsNotifications: false
-      }
+      },
+      
+      // プロフィール編集
+      editMode: false,
+      editForm: {},
+      saving: false,
+      
+      // パスワード変更
+      showPasswordForm: false,
+      passwordForm: {
+        current_password: '',
+        new_password: '',
+        new_password_confirmation: ''
+      },
+      changingPassword: false,
+      
+      // お気に入り
+      loadingFavorites: false,
+      favoritesError: ''
     }
   },
   computed: {
@@ -215,55 +359,139 @@ export default {
     }
   },
   async mounted() {
-    const { getMemberInfo, isLoggedIn } = useMemberAuth()
-    
-    // ログインチェック
-    if (!isLoggedIn()) {
-      this.$router.push('/login?redirect=/my-account')
-      return
+    await this.initializeAuth()
+    if (this.memberInfo) {
+      this.loadFavoriteMembers()
+      this.loadDownloadHistory()
     }
-
-    // 会員情報の取得
-    try {
-      this.memberInfo = await getMemberInfo()
-    } catch (error) {
-      console.error('会員情報の取得に失敗:', error)
-    }
-
-    // サンプルデータの設定
-    this.downloadHistory = [
-      {
-        id: 1,
-        title: 'ちくぎん地域経済レポート Vol.15',
-        date: '2024-03-15',
-        type: 'PDF',
-        size: '2.3MB'
-      },
-      {
-        id: 2,
-        title: 'Hot Information 2024年2月号',
-        date: '2024-02-28',
-        type: 'PDF',
-        size: '1.8MB'
-      }
-    ]
-
-    this.favoritePublications = [
-      {
-        id: 1,
-        title: 'ちくぎん地域経済レポート',
-        description: '地域経済の動向分析',
-        category: 'research'
-      },
-      {
-        id: 2,
-        title: 'Hot Information',
-        description: '最新の経済情報',
-        category: 'quarterly'
-      }
-    ]
   },
   methods: {
+    async initializeAuth() {
+      const { getMemberInfo, isLoggedIn } = useMemberAuth()
+      
+      if (!isLoggedIn()) {
+        this.$router.push('/member/login?redirect=/my-account')
+        return
+      }
+
+      try {
+        const response = await this.$apiClient.request('GET', '/member/my-profile')
+        if (response.success) {
+          this.memberInfo = response.data
+        } else {
+          console.error('プロフィール取得に失敗:', response.message)
+        }
+      } catch (error) {
+        console.error('認証情報の取得に失敗:', error)
+        this.$router.push('/member/login')
+      }
+    },
+
+    // プロフィール編集
+    startEdit() {
+      this.editForm = {
+        company_name: this.memberInfo.company_name || '',
+        representative_name: this.memberInfo.representative_name || '',
+        email: this.memberInfo.email || '',
+        phone: this.memberInfo.phone || '',
+        postal_code: this.memberInfo.postal_code || '',
+        address: this.memberInfo.address || ''
+      }
+      this.editMode = true
+    },
+
+    cancelEdit() {
+      this.editMode = false
+      this.editForm = {}
+    },
+
+    async saveProfile() {
+      this.saving = true
+      
+      try {
+        const response = await this.$apiClient.request('PUT', '/member/my-profile', this.editForm)
+        
+        if (response.success) {
+          this.memberInfo = response.data
+          this.editMode = false
+          alert('プロフィールを更新しました')
+        } else {
+          alert(response.message || 'プロフィールの更新に失敗しました')
+        }
+      } catch (error) {
+        console.error('プロフィール更新に失敗:', error)
+        alert('サーバーエラーが発生しました')
+      } finally {
+        this.saving = false
+      }
+    },
+
+    // お気に入り会員
+    async loadFavoriteMembers() {
+      this.loadingFavorites = true
+      this.favoritesError = ''
+
+      try {
+        const response = await this.$apiClient.request('GET', '/member/favorites')
+        
+        if (response.success) {
+          this.favoriteMembers = response.data
+        } else {
+          this.favoritesError = response.message || 'お気に入り一覧の取得に失敗しました'
+        }
+      } catch (error) {
+        this.favoritesError = 'サーバーエラーが発生しました'
+        console.error('お気に入り取得に失敗:', error)
+      } finally {
+        this.loadingFavorites = false
+      }
+    },
+
+    async removeFavorite(favorite) {
+      if (!confirm(`${favorite.company_name} をお気に入りから削除しますか？`)) {
+        return
+      }
+
+      try {
+        const response = await this.$apiClient.request('DELETE', `/member/favorites/${favorite.id}`)
+        
+        if (response.success) {
+          this.favoriteMembers = this.favoriteMembers.filter(f => f.id !== favorite.id)
+          alert('お気に入りから削除しました')
+        } else {
+          alert(response.message || 'お気に入りの削除に失敗しました')
+        }
+      } catch (error) {
+        console.error('お気に入り削除に失敗:', error)
+        alert('サーバーエラーが発生しました')
+      }
+    },
+
+    viewFavoriteDetail(favorite) {
+      // 会員名簿ページに遷移（詳細表示）
+      this.$router.push(`/member-directory?view=${favorite.id}`)
+    },
+
+    // ダウンロード履歴（サンプル）
+    loadDownloadHistory() {
+      this.downloadHistory = [
+        {
+          id: 1,
+          title: 'ちくぎん地域経済レポート Vol.15',
+          date: '2024-03-15',
+          type: 'PDF',
+          size: '2.3MB'
+        },
+        {
+          id: 2,
+          title: 'Hot Information 2024年2月号',
+          date: '2024-02-28',
+          type: 'PDF',
+          size: '1.8MB'
+        }
+      ]
+    },
+
     handleLogout() {
       if (confirm('ログアウトしますか？')) {
         const { logout } = useMemberAuth()

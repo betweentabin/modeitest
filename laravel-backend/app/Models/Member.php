@@ -62,6 +62,33 @@ class Member extends Authenticatable
         return $this->hasMany(PageView::class);
     }
 
+    // お気に入り関連のリレーション
+    public function favorites()
+    {
+        return $this->hasMany(MemberFavorite::class, 'member_id');
+    }
+
+    public function favoritedBy()
+    {
+        return $this->hasMany(MemberFavorite::class, 'favorite_member_id');
+    }
+
+    // お気に入りの会員（多対多リレーション）
+    public function favoriteMembers()
+    {
+        return $this->belongsToMany(Member::class, 'member_favorites', 'member_id', 'favorite_member_id')
+                    ->withTimestamps()
+                    ->withPivot('created_at');
+    }
+
+    // この会員をお気に入り登録している会員
+    public function favoriteByMembers()
+    {
+        return $this->belongsToMany(Member::class, 'member_favorites', 'favorite_member_id', 'member_id')
+                    ->withTimestamps()
+                    ->withPivot('created_at');
+    }
+
     // アクセサー・ミューテーター
     public function setPasswordAttribute($value)
     {
