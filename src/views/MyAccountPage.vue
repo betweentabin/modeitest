@@ -251,13 +251,12 @@
         
         <!-- お気に入りタブ -->
         <div v-if="activeTab === 'favorites'" class="content-section">
-          <h2>お気に入り会員</h2>
-          
           <div class="favorites-header">
-            <p class="favorites-description">お気に入りに登録した会員の一覧です。</p>
-            <button @click="$router.push('/member-directory')" class="directory-link-btn">
-              会員名簿を見る
-            </button>
+            <h2>お気に入り会員</h2>
+            <div class="header-actions">
+              <button @click="$router.push('/member-favorites')" class="go-page-btn">お気に入り一覧ページへ</button>
+              <button @click="$router.push('/member-directory')" class="directory-link-btn">会員名簿を見る</button>
+            </div>
           </div>
           
           <div v-if="loadingFavorites" class="loading">読み込み中...</div>
