@@ -158,6 +158,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
 import mockServer from '@/mockServer'
+import apiClient from '@/services/apiClient.js'
 import MembershipBadge from './MembershipBadge.vue'
 
 export default {
@@ -277,22 +278,37 @@ export default {
   methods: {
     async loadSeminars() {
       try {
+        // API優先: 開催予定/開催中のみ取得
+        const params = { per_page: 50 }
+        const res = await apiClient.getSeminars(params)
+        if (res.success && res.data && Array.isArray(res.data.seminars)) {
+          const currentSeminars = res.data.seminars.filter(s => ['scheduled', 'ongoing'].includes(s.status))
+          this.seminarsFromServer = currentSeminars.map(s => ({
+            id: s.id,
+            image: s.featured_image || '/img/image-1.png',
+            reservationPeriod: `${s.start_time || '10:00'}〜${s.end_time || '12:00'}`,
+            date: this.formatDate(s.date),
+            title: s.title,
+            content: s.description,
+            membershipRequirement: s.membership_requirement || 'free'
+          }))
+          return
+        }
+        // APIが空 or 失敗 → mockServer
         const seminars = await mockServer.getSeminars()
-        // ongoingまたはcurrentステータスのセミナーのみフィルタリング
-        const currentSeminars = seminars.filter(s => s.status === 'current' || s.status === 'ongoing')
-        
-        // データ形式をコンポーネントの形式に変換
-        this.seminarsFromServer = currentSeminars.map(s => ({
+        const current = seminars.filter(s => s.status === 'current' || s.status === 'ongoing')
+        this.seminarsFromServer = current.map(s => ({
           id: s.id,
           image: s.image || s.featured_image || '/img/image-1.png',
           reservationPeriod: `${s.start_time || '10:00'}〜${s.end_time || '12:00'}`,
           date: this.formatDate(s.date),
           title: s.title,
-          content: s.description
+          content: s.description,
+          membershipRequirement: s.membershipRequirement || 'free'
         }))
       } catch (error) {
         console.error('セミナーデータの取得に失敗:', error)
-        // エラー時はデフォルトデータを使用
+        // エラー時はデフォルトデータを使用（既存ダミー）
       }
     },
     formatDate(dateString) {

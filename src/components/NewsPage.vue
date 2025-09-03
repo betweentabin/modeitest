@@ -307,29 +307,22 @@ export default {
       return `${year}.${month}.${day}`;
     },
     getCategoryLabel(category) {
+      // ニュース種別・カテゴリに応じて日本語ラベルを表示
       const labels = {
-        'seminar': 'セミナー',
-        'publication': 'カテゴリ1',
-        'notice': 'カテゴリ1',
-        'research': 'カテゴリ1',
-        'quarterly': 'カテゴリ1',
-        'special': 'カテゴリ1',
-        'free': 'カテゴリ1'
-      };
-      return labels[category] || 'カテゴリ1';
+        seminar: 'セミナー',
+        publication: '刊行物',
+        notice: 'お知らせ',
+        research: '研究',
+        quarterly: '四半期経済レポート',
+        special: '特集',
+        free: '一般公開'
+      }
+      return labels[category] || category || 'お知らせ'
     },
-         getCategoryClass(category) {
-       const classes = {
-         'seminar': 'seminar',
-         'publication': 'seminar',
-         'notice': 'seminar',
-         'research': 'seminar',
-         'quarterly': 'seminar',
-         'special': 'seminar',
-         'free': 'seminar'
-       };
-       return classes[category] || 'seminar';
-     },
+    getCategoryClass(category) {
+      // カテゴリ名をそのままクラスに使用（未定義はnotice）
+      return category || 'notice'
+    },
     goToNewsDetail(newsId) {
       this.$router.push(`/news/${newsId}`);
     }
