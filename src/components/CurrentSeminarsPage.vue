@@ -157,7 +157,6 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
 import { frame132131753022Data } from "../data";
-import mockServer from '@/mockServer'
 import apiClient from '@/services/apiClient.js'
 import MembershipBadge from './MembershipBadge.vue'
 
@@ -178,84 +177,7 @@ export default {
     return {
       frame132131753022Props: frame132131753022Data,
       currentPage: 1,
-      itemsPerPage: 10,
-      allCurrentSeminars: [
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月15日",
-          title: "手形・小切手の全面的な電子化セミナー",
-          content: "当セミナーでは、手形の電子化に向けた金融界の取組みや、代替手段である「でんさい」や「法人インターネットバンキング（ビジネスWeb）」の仕組みや導入方法、でんさいの基本的な操作方法についてご説明します。",
-          membershipRequirement: 'free'
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月16日",
-          title: "デジタル変革時代の経営戦略セミナー",
-          content: "デジタル技術を活用した経営戦略の立案と実行について、最新の事例を交えて詳しく解説します。",
-          membershipRequirement: 'standard'
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "14:00～16:00",
-          date: "2025年7月17日",
-          title: "ESG投資とサステナブル経営セミナー",
-          content: "環境・社会・ガバナンスを考慮した投資と経営について、実践的なアプローチをご紹介します。",
-          membershipRequirement: 'premium'
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "13:00～15:00",
-          date: "2025年7月18日",
-          title: "中小企業の資金調達戦略セミナー",
-          content: "中小企業が直面する資金調達の課題と解決策について、具体的な事例を交えて解説します。",
-          membershipRequirement: 'free'
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月19日",
-          title: "リモートワーク時代の人材マネジメントセミナー",
-          content: "テレワーク環境での効果的な人材管理とチーム運営について、実践的なノウハウをご紹介します。",
-          membershipRequirement: 'standard'
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "15:00～17:00",
-          date: "2025年7月20日",
-          title: "AI・機械学習のビジネス活用セミナー",
-          content: "人工知能と機械学習をビジネスに活用する方法について、最新の技術動向と実用例をご紹介します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "11:00～13:00",
-          date: "2025年7月21日",
-          title: "グローバル展開戦略セミナー",
-          content: "海外進出を目指す企業向けに、市場分析から現地法人設立まで、包括的な戦略をご提案します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "14:00～16:00",
-          date: "2025年7月22日",
-          title: "データドリブン経営セミナー",
-          content: "データを活用した意思決定と経営改善について、具体的な分析手法と活用事例をご紹介します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "10:00～12:00",
-          date: "2025年7月23日",
-          title: "働き方改革と生産性向上セミナー",
-          content: "働き方改革を推進しながら生産性を向上させる方法について、成功事例を交えて解説します。"
-        },
-        {
-          image: "https://api.builder.io/api/v1/image/assets/TEMP/6f8050c173e2495bc6d7c0f029347413638f330f?width=534",
-          reservationPeriod: "13:00～15:00",
-          date: "2025年7月24日",
-          title: "新規事業開発とイノベーションセミナー",
-          content: "新規事業の立ち上げから成長戦略まで、イノベーションを生み出す組織づくりについて解説します。"
-        }
-      ],
+      allCurrentSeminars: [],
       seminarsFromServer: []
     };
   },
@@ -264,15 +186,12 @@ export default {
   },
   computed: {
     currentSeminars() {
-      // mockServerから取得したデータがあればそれを使用、なければデフォルトデータを使用
-      const seminarsToShow = this.seminarsFromServer.length > 0 ? this.seminarsFromServer : this.allCurrentSeminars
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return seminarsToShow.slice(start, end);
+      return this.seminarsFromServer.slice(start, end);
     },
     totalPages() {
-      const seminarsToShow = this.seminarsFromServer.length > 0 ? this.seminarsFromServer : this.allCurrentSeminars
-      return Math.ceil(seminarsToShow.length / this.itemsPerPage);
+      return Math.ceil(this.seminarsFromServer.length / this.itemsPerPage) || 1;
     }
   },
   methods: {
@@ -298,29 +217,9 @@ export default {
             content: s.description,
             membershipRequirement: s.membership_requirement || 'free'
           }))
-          return
         }
-        // APIが空 or 失敗 → mockServer
-        const seminars = await mockServer.getSeminars()
-        const toTs = (s) => {
-          const ts = Date.parse(`${s.date} ${s.start_time || '00:00'}`)
-          return isNaN(ts) ? Date.parse(s.date) : ts
-        }
-        const current = seminars
-          .filter(s => s.status === 'current' || s.status === 'ongoing')
-          .sort((a, b) => toTs(b) - toTs(a))
-        this.seminarsFromServer = current.map(s => ({
-          id: s.id,
-          image: s.image || s.featured_image || '/img/image-1.png',
-          reservationPeriod: `${s.start_time || '10:00'}〜${s.end_time || '12:00'}`,
-          date: this.formatDate(s.date),
-          title: s.title,
-          content: s.description,
-          membershipRequirement: s.membershipRequirement || 'free'
-        }))
       } catch (error) {
         console.error('セミナーデータの取得に失敗:', error)
-        // エラー時はデフォルトデータを使用（既存ダミー）
       }
     },
     formatDate(dateString) {
