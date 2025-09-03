@@ -42,11 +42,6 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/news" class="nav-item" :class="{ active: isActive('/admin/news') }">
-              ニュース管理
-            </router-link>
-          </li>
-          <li>
             <router-link to="/admin/inquiries" class="nav-item" :class="{ active: isActive('/admin/inquiries') }">
               お問い合わせ管理
             </router-link>

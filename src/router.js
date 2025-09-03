@@ -27,8 +27,6 @@ import NewPageEditForm from "./views/admin/NewPageEditForm";
 import SeminarEditForm from "./views/admin/SeminarEditForm";
 import PublicationEditForm from "./views/admin/PublicationEditForm";
 import NoticeEditForm from "./views/admin/NoticeEditForm";
-import NewsManagement from "./views/admin/NewsManagement.vue";
-import NewsEditForm from "./views/admin/NewsEditForm.vue";
 import MediaEditForm from "./views/admin/MediaEditForm";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
@@ -331,34 +329,16 @@ const router = new Router({
       meta: { title: "お知らせ管理 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/news",
-      name: "newsManagement",
-      component: NewsManagement,
-      meta: { title: "ニュース管理 - ちくぎん地域経済研究所" }
-    },
-    {
       path: "/admin/notices/new",
       name: "noticeNew",
       component: NoticeEditForm,
       meta: { title: "お知らせ新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/news/new",
-      name: "newsNew",
-      component: NewsEditForm,
-      meta: { title: "ニュース新規作成 - ちくぎん地域経済研究所" }
-    },
-    {
       path: "/admin/notices/:id/edit",
       name: "noticeEdit",
       component: NoticeEditForm,
       meta: { title: "お知らせ編集 - ちくぎん地域経済研究所" }
-    },
-    {
-      path: "/admin/news/:id/edit",
-      name: "newsEdit",
-      component: NewsEditForm,
-      meta: { title: "ニュース編集 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/inquiries",

@@ -90,7 +90,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
-import mockServer from "@/mockServer";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "NewsDetailPage",
@@ -130,54 +130,25 @@ export default {
         this.loading = true;
         this.error = '';
         
-        const newsId = parseInt(this.$route.params.id);
-        
-                 // フォールバックデータを使用（NewsPage.vueと同じデータ）
-         const fallbackNews = [
-           {
-             id: 1,
-             date: '2025-05-12',
-             category: 'seminar',
-             title: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-             description: '優秀な人材を見極め、獲得するための面接技術を習得できるセミナーを開催します。',
-             type: 'seminar',
-             image: '/img/hero-image.png'
-           },
-           {
-             id: 2,
-             date: '2025-05-12',
-             category: 'publication',
-             title: 'HOT infomation Vol.319掲載しました！',
-             description: '最新の経済動向と地域企業の動きをまとめました。',
-             type: 'publication',
-             image: '/img/image-1@2x.png'
-           },
-           {
-             id: 3,
-             date: '2025-05-12',
-             category: 'publication',
-             title: 'Hot Information Vol.318掲載しました！',
-             description: '地域経済の最新情報をお届けします。',
-             type: 'publication',
-             image: '/img/image-2@2x.png'
-           }
-         ];
-        
-        // 指定されたニュースを検索
-        this.newsItem = fallbackNews.find(news => news.id === newsId);
-        
-        if (!this.newsItem) {
-          this.error = 'ニュースが見つかりませんでした';
-          return;
+        const newsId = this.$route.params.id;
+        const res = await apiClient.getNotice(newsId)
+        const n = res?.data || res
+        if (!n || (!n.id && !n.notice)) {
+          this.error = 'ニュースが見つかりませんでした'
+          return
         }
-        
-        // 元データを取得（セミナー、刊行物、お知らせの詳細情報）
-        await this.loadOriginalItem();
-        
-        // 関連ニュースを取得（同じカテゴリーの他のニュース）
-        this.relatedNews = fallbackNews
-          .filter(news => news.id !== newsId && news.type === this.newsItem.type)
-          .slice(0, 3);
+        const notice = n.notice || n
+        this.newsItem = {
+          id: notice.id,
+          date: notice.published_at || notice.created_at,
+          category: notice.category || 'notice',
+          title: notice.title,
+          description: notice.summary || notice.content,
+          type: 'notice',
+          image: notice.featured_image || ''
+        }
+        this.originalItem = { content: notice.content }
+        this.relatedNews = []
         
       } catch (err) {
         this.error = 'ニュースの詳細情報を取得できませんでした';
@@ -186,41 +157,7 @@ export default {
         this.loading = false;
       }
     },
-    async loadOriginalItem() {
-      try {
-                 // フォールバックデータの詳細情報
-         const fallbackDetails = {
-           seminar: {
-             id: 1,
-             location: 'ちくぎん本店 会議室',
-             capacity: 30,
-             fee: 5000,
-             status: 'recruiting',
-             heading: '採用力強化！経営・人事向け　面接官トレーニングセミナー',
-             content: '面接官として必要なスキルを習得し、優秀な人材を採用できるようになります。'
-           },
-           publication: {
-             id: 2,
-             author: 'ちくぎん地域経済研究所',
-             pages: 24,
-             file_size: 2.5,
-             file_url: '#',
-             heading: 'HOT infomation Vol.319掲載しました！',
-             content: '地域経済の最新動向と企業の取り組みを詳しく解説しています。'
-           }
-         };
-        
-        // ニュースタイプに応じて詳細情報を設定
-        if (fallbackDetails[this.newsItem.type]) {
-          this.originalItem = fallbackDetails[this.newsItem.type];
-        } else {
-          this.originalItem = {};
-        }
-      } catch (err) {
-        console.warn('元データの取得に失敗:', err);
-        this.originalItem = {};
-      }
-    },
+    // loadOriginalItem は Notice運用のため不要
     formatDate(dateString) {
       const date = new Date(dateString);
       const year = date.getFullYear();

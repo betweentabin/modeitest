@@ -208,11 +208,21 @@ export default {
         if (this.selectedCategory && this.selectedCategory !== 'all') {
           params.category = this.selectedCategory
         }
-        const response = await apiClient.getNews(params)
-        if (response.success && response.data && Array.isArray(response.data.news)) {
-          this.newsItems = response.data.news.map(item => this.formatNewsItem(item))
-          this.totalPages = response.data.pagination.total_pages
-          this.totalItems = response.data.pagination.total_items
+        // Notice (お知らせ) に一本化
+        const response = await apiClient.getNotices(params)
+        if (response.success && response.data) {
+          const paginator = response.data
+          const items = Array.isArray(paginator.data) ? paginator.data : []
+          this.newsItems = items.map(item => ({
+            id: item.id,
+            date: item.published_at || item.created_at,
+            category: item.category || 'notice',
+            title: item.title,
+            description: item.summary || item.content,
+            type: 'notice'
+          }))
+          this.totalPages = paginator.last_page || 1
+          this.totalItems = paginator.total || this.newsItems.length
         } else {
           // APIが成功しない/空の場合でもフォールバックはしない
           this.newsItems = []
@@ -231,16 +241,7 @@ export default {
       }
     },
     
-    formatNewsItem(item) {
-      return {
-        id: item.id,
-        date: item.published_date,
-        category: item.category,
-        title: item.title,
-        description: item.description,
-        type: item.type
-      }
-    },
+    // formatNewsItem: Notice統一のため未使用
     
     // フォールバックは使用しない方針
     async changePage(page) {
