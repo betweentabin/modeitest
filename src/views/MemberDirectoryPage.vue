@@ -294,22 +294,26 @@ export default {
   methods: {
     async initializeAuth() {
       const { getMemberInfo, isLoggedIn } = useMemberAuth()
-      
-      if (!isLoggedIn()) {
-        // 未ログイン時はリダイレクトせず、アクセス制限カードを表示
-        this.memberInfo = null
-        this.canAccess = false
-        return
+      try {
+        // ローカルの会員情報を優先
+        this.memberInfo = getMemberInfo()
+        if (!this.memberInfo) {
+          // トークンがあればAPIからフェッチして補完
+          const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+          if (token) {
+            const res = await apiClient.get('/api/member/my-profile')
+            if (res && res.success) {
+              this.memberInfo = res.data
+              localStorage.setItem('memberUser', JSON.stringify(res.data))
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('会員情報の取得に失敗:', e)
       }
 
-      try {
-        this.memberInfo = await getMemberInfo()
-        this.canAccess = this.memberInfo && canAccess(this.memberInfo.membership_type, 'standard')
-      } catch (error) {
-        console.error('認証情報の取得に失敗:', error)
-        this.memberInfo = null
-        this.canAccess = false
-      }
+      // アクセス権判定
+      this.canAccess = !!(this.memberInfo && canAccess(this.memberInfo.membership_type, 'standard'))
     },
 
     async loadMembers(page = 1) {

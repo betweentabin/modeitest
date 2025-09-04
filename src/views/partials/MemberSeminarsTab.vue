@@ -109,14 +109,25 @@ export default {
     }
   },
   mounted() { this.load() },
+  computed: {
+    filteredSeminars() {
+      const list = Array.isArray(this.seminars) ? this.seminars : []
+      return this.onlyReservable ? list.filter(s => this.canReserve(s)) : list
+    }
+  },
   methods: {
     async load() {
       this.loading = true
       this.error = ''
       try {
         const res = await apiClient.getMemberSeminars({ ...this.filters, per_page: 20 })
-        if (res.success) this.seminars = res.data.seminars || []
-        else this.error = res.error || res.message || '読み込みに失敗しました'
+        if (res && res.success) {
+          const nested = (res.data && (res.data.seminars || res.data.data?.seminars)) || []
+          this.seminars = Array.isArray(nested) ? nested : []
+        } else {
+          this.seminars = []
+          this.error = res?.error || res?.message || '読み込みに失敗しました'
+        }
       } catch(e) { this.error = '読み込みに失敗しました' } finally { this.loading = false }
     },
     formatDate(d) { return d ? new Date(d).toLocaleDateString('ja-JP') : '-' },
