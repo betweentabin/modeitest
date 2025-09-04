@@ -4,20 +4,20 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="お知らせ"
-      subtitle="information"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['お知らせ']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">お知らせ</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">information</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -172,6 +172,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import apiClient from '../services/apiClient.js';
 import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "NewsPage",
@@ -188,6 +189,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'news',
       frame132131753022Props: frame132131753022Data,
       currentPage: 1,
       totalPages: 1,
@@ -200,6 +202,15 @@ export default {
   },
   async mounted() {
     await this.loadNews()
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'お知らせ') || 'お知らせ' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'information') || 'information' },
   },
   methods: {
     async loadNews() {

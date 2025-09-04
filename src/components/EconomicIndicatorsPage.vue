@@ -4,20 +4,20 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="経済指標一覧"
-      subtitle="Economic Indicators"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['経済指標一覧']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">経済指標一覧</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">Economic Indicators</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -103,6 +103,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '@/services/apiClient.js'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "EconomicIndicatorsPage",
@@ -118,6 +119,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'economic-indicators',
       frame132131753022Props: frame132131753022Data,
       pageBodyHtml: '',
       searchQuery: '',
@@ -157,6 +159,19 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '経済指標一覧') || '経済指標一覧' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Economic Indicators') || 'Economic Indicators' },
+  },
+  async mounted() {
+    try {
+      this._pageText = usePageText(this.pageKey)
+      await this._pageText.load()
+      const p = this._pageText?.page?.value
+      this.pageBodyHtml = (p && p.content && typeof p.content.html === 'string') ? p.content.html : ''
+    } catch(e) { /* noop */ }
   },
   computed: {
     filteredIndicators() {
