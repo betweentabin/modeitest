@@ -954,7 +954,7 @@ export default {
     min-width: auto !important;
     font-size: 16px !important;
   }
-
+  
   .field-input {
     width: 100% !important;
   }
@@ -1076,7 +1076,7 @@ export default {
   .form-steps {
     font-size: 13px !important;
   }
-
+  
   .field-label {
     font-size: 13px !important;
   }
@@ -1107,7 +1107,7 @@ export default {
   .privacy-checkbox label {
     font-size: 13px !important;
   }
-
+  
   .submit-btn {
     font-size: 14px !important;
     width: 100% !important;
