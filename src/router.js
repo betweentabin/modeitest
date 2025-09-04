@@ -268,7 +268,7 @@ const router = new Router({
     {
       path: "/admin/login",
       name: "adminLogin",
-      component: NewAdminLogin,
+      component: AdminLoginPage,
       meta: { title: "管理者ログイン - ちくぎん地域経済研究所" }
     },
     {

@@ -41,6 +41,20 @@
             />
           </div>
 
+          <div v-if="mfaRequired" class="form-group">
+            <label for="otp" class="form-label inter-semi-bold-ship-gray-12px">
+              ワンタイムパスコード（OTP）
+            </label>
+            <input
+              id="otp"
+              v-model="otp"
+              type="text"
+              inputmode="numeric"
+              class="form-input inter-normal-ship-gray-16px"
+              placeholder="123456"
+            />
+          </div>
+
           <div v-if="error" class="error-message inter-normal-ship-gray-15px">
             <img src="/img/vector-28.svg" alt="Error" class="error-icon" />
             {{ error }}
@@ -73,6 +87,8 @@ export default {
     return {
       email: '',
       password: '',
+      otp: '',
+      mfaRequired: false,
       loading: false,
       error: ''
     }
@@ -99,7 +115,8 @@ export default {
 
       const payload = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        ...(this.mfaRequired && this.otp ? { otp: this.otp } : {})
       };
       console.log('Sending payload to API:', payload); // デバッグ用ログ
 
@@ -120,7 +137,10 @@ export default {
           console.error('Error response status:', err.response.status);
         }
         
-        if (err.response?.status === 403) {
+        if (err.response?.status === 401 && err.response?.data?.mfa_required) {
+          this.mfaRequired = true
+          this.error = 'ワンタイムパスコードを入力してください'
+        } else if (err.response?.status === 403) {
           this.error = '管理者権限がありません'
         } else if (err.response?.data?.message) {
           this.error = err.response.data.message

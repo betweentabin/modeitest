@@ -156,7 +156,7 @@ Route::prefix('seminars')->group(function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::post('/login', [AdminAuthController::class, 'login']);
+    Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:admin-login');
     
     // テスト用: 認証なしエンドポイント
     Route::get('/test', function() {
@@ -170,6 +170,11 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth:sanctum', 'is.admin'])->group(function () {
         Route::get('/me', [AdminAuthController::class, 'me']);
         Route::post('/logout', [AdminAuthController::class, 'logout']);
+
+        // MFA endpoints
+        Route::post('/mfa/setup', [AdminAuthController::class, 'mfaSetup']);
+        Route::post('/mfa/enable', [AdminAuthController::class, 'mfaEnable']);
+        Route::post('/mfa/disable', [AdminAuthController::class, 'mfaDisable']);
         
         Route::prefix('pages')->group(function () {
             Route::get('/', [PageContentController::class, 'index']);

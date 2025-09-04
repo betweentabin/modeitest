@@ -19,6 +19,10 @@ class Admin extends Authenticatable
         'role',
         'is_active',
         'last_login_at',
+        'failed_attempts',
+        'locked_until',
+        'mfa_enabled',
+        'mfa_secret',
     ];
 
     protected $hidden = [
@@ -29,6 +33,8 @@ class Admin extends Authenticatable
     protected $casts = [
         'is_active' => 'boolean',
         'last_login_at' => 'datetime',
+        'locked_until' => 'datetime',
+        'mfa_enabled' => 'boolean',
         'email_verified_at' => 'datetime',
     ];
 
