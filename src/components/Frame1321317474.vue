@@ -1,5 +1,5 @@
 <template>
-  <div :class="[`frame-1321317474`, className || ``]">
+  <div :class="[`frame-1321317474`, className || ``]" @click="goToPublication" style="cursor: pointer;">
     <div class="frame-1321317473-2">
       <div class="overlap-group1">
         <img class="x2-2-2" :src="x22" alt="2 2" />
@@ -17,6 +17,12 @@
 export default {
   name: "Frame1321317474",
   props: ["x22", "className"],
+  methods: {
+    goToPublication() {
+      // 刊行物ページに遷移
+      this.$router.push('/publication');
+    }
+  }
 };
 </script>
 
