@@ -133,7 +133,9 @@
         </div>
 
         <div class="past-seminars-content">
-                      <div class="past-seminar-card" v-for="(seminar, index) in pastSeminars" :key="index">
+          <!-- 過去セミナーがある場合 -->
+          <template v-if="pastSeminars.length > 0">
+            <div class="past-seminar-card" v-for="(seminar, index) in pastSeminars" :key="index">
               <div class="past-seminar-info">
                 <div class="past-info-row">
                   <div class="info-label info-label-date">
@@ -156,13 +158,21 @@
               </div>
             </div>
 
-          <button class="show-more-btn past-show-more" @click="goToPastSeminars">
-            <span>さらに表示</span>
-            <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-              <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
-              <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
-            </svg>
-          </button>
+            <button class="show-more-btn past-show-more" @click="goToPastSeminars">
+              <span>さらに表示</span>
+              <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
+                <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
+                <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
+              </svg>
+            </button>
+          </template>
+          
+          <!-- 過去セミナーがない場合 -->
+          <template v-else>
+            <div class="no-past-seminars">
+              <p class="no-seminars-message">過去セミナーはありません</p>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -324,6 +334,8 @@ export default {
   font-size: 20px;
   font-weight: 400;
   line-height: 150%;
+  max-width: 800px;
+  width: 100%;
 }
 
 .intro-buttons {
@@ -372,7 +384,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 29px;
-  margin-bottom: 50px;
+  margin-bottom: 29px;
 }
 
 .section-title {
@@ -410,7 +422,8 @@ export default {
   font-weight: 400;
   line-height: normal;
   letter-spacing: -0.36px;
-  width: 1014px;
+  max-width: 1014px;
+  width: 100%;
   margin: 0;
 }
 
@@ -531,14 +544,20 @@ export default {
   background: #727272;
   white-space: nowrap;
   width: 250px;
+  flex-shrink: 0;
+  min-width: 250px;
 }
 
 .info-label-date {
   width: 250px;
+  flex-shrink: 0;
+  min-width: 250px;
 }
 
 .info-label-title {
   width: 250px;
+  flex-shrink: 0;
+  min-width: 250px;
 }
 
 .label-text {
@@ -566,8 +585,10 @@ export default {
 
 .reserve-btn {
   display: flex;
-  padding: 10px 100px;
+  width: 300px;
+  padding: 10px 0;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   border-radius: 10px;
   background: #9C3940;
@@ -681,10 +702,26 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 1150px) {
+  /* セクションのパディング調整 */
   .intro-section {
     padding: 50px 30px !important;
   }
   
+  .current-seminars-section,
+  .past-seminars-section {
+    padding: 50px 30px !important;
+  }
+
+  .intro-content {
+    padding: 40px !important;
+  }
+
+  .seminars-content,
+  .past-seminars-content {
+    padding: 40px !important;
+  }
+
+  /* レイアウトの縦並び化 */
   .intro-buttons {
     flex-direction: column !important;
     gap: 20px !important;
@@ -697,146 +734,434 @@ export default {
 
   .seminar-card {
     flex-direction: column !important;
+    gap: 0 !important;
   }
 
-  .seminar-image {
-    width: 100% !important;
-    height: 250px !important;
-    border-radius: 20px 20px 0 0 !important;
-  }
-
+  /* 要素の幅調整 */
+  .seminar-image,
   .seminar-details {
     width: 100% !important;
   }
   
+  /* 画像の高さ固定 */
+  .seminar-image {
+    height: 300px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 20px 20px !important;
+    padding: 40px !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 32px !important;
   }
-  
-  .intro-title {
-    font-size: 22px !important;
+
+  .divider-text {
+    font-size: 18px !important;
   }
-  
-  .intro-description {
+
+  .intro-text {
     font-size: 18px !important;
   }
   
-  .seminar-title {
+  .section-description {
     font-size: 18px !important;
   }
   
-  .seminar-description {
+  .label-text {
     font-size: 18px !important;
+  }
+  
+  .info-value {
+    font-size: 18px !important;
+  }
+  
+  .intro-btn span {
+    font-size: 18px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 18px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 18px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 25px !important;
   }
 }
 
 @media (max-width: 900px) {
+  /* セクションのパディング調整 */
   .intro-section {
-    padding: 40px 20px !important;
+    padding: 30px 20px !important;
   }
   
+  .current-seminars-section,
+  .past-seminars-section {
+    padding: 30px 20px !important;
+  }
+
+  .intro-content {
+    padding: 35px !important;
+  }
+
+  .seminars-content,
+  .past-seminars-content {
+    padding: 35px !important;
+  }
+  
+  /* 900px以下でbrタグを非表示 */
+  .intro-text br {
+    display: none !important;
+  }
+
+  /* レイアウトの縦並び化 */
+  .intro-buttons {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .intro-btn {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .seminar-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
+    width: 100% !important;
+  }
+  
+  /* 画像の高さ固定 */
+  .seminar-image {
+    height: 280px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 20px 20px !important;
+    padding: 35px !important;
+  }
+  
+  /* 情報行の縦並び化 */
+  .info-row {
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 20px 0 !important;
+    align-items: flex-start !important;
+  }
+
+  .info-row-first,
+  .info-row-second,
+  .info-row-third,
+  .info-row-fourth {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .info-label {
+    width: 250px !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-label-date,
+  .info-label-title {
+    width: 250px !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-value {
+    width: 100% !important;
+    padding-left: 0 !important;
+    text-align: left !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 29px !important;
   }
-  
-  .intro-title {
-    font-size: 20px !important;
+
+  .divider-text {
+    font-size: 17px !important;
   }
-  
-  .intro-description {
+
+  .intro-text {
     font-size: 17px !important;
   }
   
-  .seminar-title {
+  .section-description {
     font-size: 17px !important;
   }
   
-  .seminar-description {
+  .label-text {
     font-size: 17px !important;
+  }
+  
+  .info-value {
+    font-size: 17px !important;
+  }
+  
+  .intro-btn span {
+    font-size: 17px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 17px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 17px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 22px !important;
   }
 }
 
 @media (max-width: 768px) {
+  /* セクションのパディング調整 */
   .intro-section {
-    padding: 50px 20px !important;
-  }
-
-  .intro-content {
     padding: 30px 20px !important;
   }
-
+  
   .current-seminars-section,
   .past-seminars-section {
     padding: 30px 20px !important;
   }
 
-  .seminars-content,
-  .past-seminars-content {
-    padding: 30px 20px !important;
+  .intro-content {
+    padding: 30px !important;
   }
 
-  .section-description {
+  .seminars-content,
+  .past-seminars-content {
+    padding: 30px !important;
+  }
+
+  /* レイアウトの縦並び化 */
+  .intro-buttons {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .intro-btn {
+    width: 100% !important;
+    max-width: 590px !important;
+  }
+
+  .seminar-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
     width: 100% !important;
   }
   
+  /* 画像の高さ固定 */
+  .seminar-image {
+    height: 250px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 20px 20px !important;
+    padding: 30px !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 27px !important;
   }
-  
-  .intro-title {
-    font-size: 19px !important;
+
+  .divider-text {
+    font-size: 16px !important;
   }
-  
-  .intro-description {
+
+  .intro-text {
     font-size: 16px !important;
   }
   
-  .seminar-title {
+  .section-description {
     font-size: 16px !important;
   }
   
-  .seminar-description {
+  .label-text {
     font-size: 16px !important;
+  }
+  
+  .info-value {
+    font-size: 16px !important;
+  }
+  
+  .intro-btn span {
+    font-size: 16px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 16px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 16px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 20px !important;
   }
 }
 
 @media (max-width: 480px) {
+  /* セクションのパディング調整 */
   .intro-section {
-    padding: 30px 20px !important;
-  }
-  
-  .intro-content {
-    padding: 20px 20px !important;
+    padding: 20px 15px !important;
   }
   
   .current-seminars-section,
   .past-seminars-section {
-    padding: 20px 20px !important;
+    padding: 20px 15px !important;
   }
-  
+
+  .intro-content {
+    padding: 20px !important;
+  }
+
   .seminars-content,
   .past-seminars-content {
-    padding: 20px 20px !important;
+    padding: 20px !important;
+  }
+
+  /* レイアウトの縦並び化 */
+  .intro-buttons {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .intro-btn {
+    width: 100% !important;
+    max-width: 590px !important;
+    padding: 15px 50px !important;
+  }
+
+  .seminar-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
+    width: 100% !important;
   }
   
+  /* 画像の高さ固定 */
+  .seminar-image {
+    height: 200px !important;
+    border-radius: 15px 15px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 15px 15px !important;
+    padding: 20px !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 22px !important;
   }
-  
-  .intro-title {
-    font-size: 18px !important;
+
+  .divider-text {
+    font-size: 13px !important;
   }
-  
-  .intro-description {
+
+  .intro-text {
     font-size: 13px !important;
   }
   
-  .seminar-title {
+  .section-description {
     font-size: 13px !important;
   }
   
-  .seminar-description {
+  .label-text {
     font-size: 13px !important;
+  }
+  
+  .info-value {
+    font-size: 13px !important;
+  }
+  
+  .intro-btn span {
+    font-size: 13px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 13px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 13px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 18px !important;
+  }
+  
+  /* ボタンのサイズ調整 */
+  .reserve-btn {
+    width: 100% !important;
+    padding: 8px 0 !important;
+  }
+  
+  .show-more-btn {
+    width: 250px !important;
+  }
+
+  .show-more-btn {
+    width: 100% !important;
+  }
+  
+  /* 情報行のギャップ調整 */
+  .info-row {
+    gap: 20px !important;
+    padding: 10px 0 !important;
+  }
+  
+  .info-label {
+    padding: 8px 20px !important;
+    width: 250px !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+  
+  .info-label-date,
+  .info-label-title {
+    width: 250px !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
   }
 }
 </style>

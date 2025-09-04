@@ -564,7 +564,7 @@ export default {
 .category-title {
   color: #1A1A1A;
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 700;
   line-height: normal;
   margin: 0;
@@ -613,7 +613,7 @@ export default {
 .service-title {
   color: #3F3F3F;
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   margin: 0;
 }
@@ -861,6 +861,7 @@ export default {
   
   .section-header {
     gap: 25px !important;
+    margin-bottom: 25px !important;
   }
   
   .section-title {
@@ -869,6 +870,10 @@ export default {
   
   .section-subtitle {
     font-size: 17px !important;
+  }
+  
+  .divider-text {
+    font-size: 18px !important;
   }
   
   .content-subtitle,
@@ -889,8 +894,12 @@ export default {
     font-size: 17px !important;
   }
   
+  .duties-description {
+    margin-top: 40px !important;
+  }
+  
   .category-title {
-    font-size: 32px !important;
+    font-size: 22px !important;
   }
   
   .achievement-title {
@@ -944,6 +953,7 @@ export default {
   
   .section-header {
     gap: 25px !important;
+    margin-bottom: 25px !important;
   }
   
   .section-title {
@@ -972,8 +982,16 @@ export default {
     font-size: 17px !important;
   }
   
+  .duties-description {
+    margin-top: 40px !important;
+  }
+  
+  .service-title {
+    font-size: 17px !important;
+  }
+  
   .category-title {
-    font-size: 32px !important;
+    font-size: 22px !important;
   }
   
   .achievement-title {
@@ -1023,6 +1041,7 @@ export default {
   
   .section-header {
     gap: 22px !important;
+    margin-bottom: 22px !important;
   }
   
   .section-title {
@@ -1031,6 +1050,10 @@ export default {
   
   .section-subtitle {
     font-size: 16px !important;
+  }
+  
+  .divider-text {
+    font-size: 17px !important;
   }
   
   .content-subtitle,
@@ -1051,8 +1074,16 @@ export default {
     font-size: 16px !important;
   }
   
+  .duties-description {
+    margin-top: 30px !important;
+  }
+  
+  .service-title {
+    font-size: 16px !important;
+  }
+  
   .category-title {
-    font-size: 29px !important;
+    font-size: 20px !important;
   }
   
   .achievement-title {
@@ -1119,6 +1150,7 @@ export default {
   
   .section-header {
     gap: 20px !important;
+    margin-bottom: 20px !important;
   }
   
   .section-title {
@@ -1127,6 +1159,10 @@ export default {
   
   .section-subtitle {
     font-size: 15px !important;
+  }
+  
+  .divider-text {
+    font-size: 16px !important;
   }
   
   .content-subtitle,
@@ -1147,8 +1183,16 @@ export default {
     font-size: 15px !important;
   }
   
+  .duties-description {
+    margin-top: 25px !important;
+  }
+  
+  .service-title {
+    font-size: 15px !important;
+  }
+  
   .category-title {
-    font-size: 27px !important;
+    font-size: 19px !important;
   }
   
   .achievement-title {
@@ -1213,7 +1257,7 @@ export default {
   
   .section-header {
     gap: 18px !important;
-    margin-bottom: 20px;
+    margin-bottom: 18px !important;
   }
   
   .section-title {
@@ -1221,6 +1265,10 @@ export default {
   }
   
   .section-subtitle {
+    font-size: 13px !important;
+  }
+  
+  .divider-text {
     font-size: 13px !important;
   }
   
@@ -1242,8 +1290,16 @@ export default {
     font-size: 13px !important;
   }
   
+  .duties-description {
+    margin-top: 20px !important;
+  }
+  
+  .service-title {
+    font-size: 13px !important;
+  }
+  
   .category-title {
-    font-size: 22px !important;
+    font-size: 18px !important;
   }
   
   .achievement-title {

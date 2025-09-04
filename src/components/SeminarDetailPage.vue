@@ -683,84 +683,139 @@ export default {
   }
 }
 
-@media (max-width: 900px) {
+/* 1150px以下（タブレット横向き） */
+@media (max-width: 1150px) {
   .seminar-detail-section {
-    padding: 45px 25px !important;
+    padding: 50px 30px !important;
   }
   
-  .seminar-title {
-    font-size: 29px !important;
-  }
-  
-  .seminar-subtitle {
-    font-size: 17px !important;
-  }
-  
-  .seminar-description p {
-    font-size: 17px !important;
-  }
-  
-  .detail-label {
-    font-size: 17px !important;
-  }
-  
-  .detail-value {
-    font-size: 17px !important;
-  }
-  
-  .action-btn {
-    font-size: 17px !important;
-    padding: 14px 28px !important;
-  }
-  
-  .seminar-image {
-    height: 300px !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .seminar-detail-section {
-    padding: 40px 20px !important;
+  .seminar-detail-card {
+    padding: 40px !important;
   }
   
   .seminar-content {
     flex-direction: column !important;
+    gap: 0 !important;
   }
   
   .seminar-image {
     width: 100% !important;
-    height: 200px !important;
-    overflow: hidden !important;
+    height: 300px !important;
+    border-radius: 20px 20px 0 0 !important;
+    order: -1 !important;
   }
   
   .seminar-info {
-    padding: 20px !important;
     width: 100% !important;
+    border-radius: 0 0 20px 20px !important;
+    padding: 30px 0 0 0 !important;
+    order: 1 !important;
   }
   
-  .seminar-title {
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .divider-text {
+    font-size: 18px !important;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 18px !important;
+  }
+  
+  .section-header {
+    gap: 25px !important;
+  }
+}
+
+/* 900px以下（タブレット） */
+@media (max-width: 900px) {
+  .seminar-detail-section {
+    padding: 30px 20px !important;
+  }
+  
+  .seminar-detail-card {
+    padding: 35px !important;
+  }
+  
+  .seminar-image {
+    height: 280px !important;
+    order: -1 !important;
+  }
+  
+  .seminar-info {
+    padding: 35px 0 0 0 !important;
+    order: 1 !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .divider-text {
+    font-size: 17px !important;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 17px !important;
+  }
+  
+  .section-header {
+    gap: 22px !important;
+  }
+}
+
+/* 768px以下（タブレット縦向き） */
+@media (max-width: 768px) {
+  .seminar-detail-section {
+    padding: 30px 20px !important;
+  }
+  
+  .seminar-detail-card {
+    padding: 30px !important;
+  }
+  
+  .seminar-content {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  .seminar-image {
+    width: 100% !important;
+    height: 250px !important;
+    border-radius: 20px 20px 0 0 !important;
+    order: -1 !important;
+  }
+  
+  .seminar-info {
+    width: 100% !important;
+    padding: 30px 0 0 0 !important;
+    border-radius: 0 0 20px 20px !important;
+    order: 1 !important;
+  }
+  
+  .section-title {
     font-size: 27px !important;
   }
   
-  .seminar-subtitle {
+  .divider-text {
     font-size: 16px !important;
   }
   
-  .seminar-description p {
+  .detail-label,
+  .detail-value {
     font-size: 16px !important;
+  }
+  
+  .section-header {
+    gap: 20px !important;
   }
   
   .detail-row {
     flex-direction: column !important;
-  }
-  
-  .detail-label {
-    width: 100% !important;
-    font-size: 16px !important;
-  }
-  
-  .detail-value {
-    font-size: 16px !important;
   }
   
   .action-buttons {
@@ -776,24 +831,33 @@ export default {
   }
 }
 
+/* 480px以下（スマートフォン） */
 @media (max-width: 480px) {
   .seminar-detail-section {
-    padding: 30px 15px !important;
+    padding: 20px 15px !important;
   }
   
-  .seminar-title {
-    font-size: 22px !important;
-  }
-  
-  .seminar-subtitle {
-    font-size: 13px !important;
+  .seminar-detail-card {
+    padding: 20px !important;
   }
   
   .seminar-image {
     height: 200px !important;
+    border-radius: 15px 15px 0 0 !important;
+    order: -1 !important;
   }
   
-  .seminar-description p {
+  .seminar-info {
+    padding: 20px 0 0 0 !important;
+    border-radius: 0 0 15px 15px !important;
+    order: 1 !important;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .divider-text {
     font-size: 13px !important;
   }
   
@@ -802,9 +866,18 @@ export default {
     font-size: 13px !important;
   }
   
+  .section-header {
+    gap: 18px !important;
+  }
+  
   .action-btn {
     font-size: 13px !important;
     padding: 12px 24px !important;
+  }
+  
+  .registration-btn {
+    width: 100% !important;
+    padding: 15px 20px !important;
   }
 }
 

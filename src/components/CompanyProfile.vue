@@ -984,6 +984,7 @@ section {
 @media (max-width: 1150px) {
   .section-header {
     gap: 25px !important;
+    margin-bottom: 25px !important;
   }
   
   .section-title {
@@ -1024,6 +1025,7 @@ section {
 
   .section-header {
     gap: 22px !important;
+    margin-bottom: 22px !important;
   }
 
   .section-title {
@@ -1149,6 +1151,7 @@ section {
 
   .section-header {
     gap: 20px !important;
+    margin-bottom: 20px !important;
   }
 
   .section-title {
@@ -1286,7 +1289,7 @@ section {
 
   .section-header {
     gap: 18px !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 18px !important;
   }
 
   .section-title {

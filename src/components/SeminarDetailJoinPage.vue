@@ -442,38 +442,172 @@ export default {
 /* Footer Navigation */
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* 1150px以下（タブレット横向き） */
+@media (max-width: 1150px) {
   .seminar-detail-section {
-    padding: 30px 20px 0 20px;
+    padding: 50px 30px !important;
   }
   
   .seminar-detail-card {
-    padding: 30px 20px;
+    padding: 40px !important;
   }
   
   .seminar-content {
-    flex-direction: column;
+    flex-direction: column !important;
+    gap: 0 !important;
   }
   
   .seminar-image {
-    width: 100%;
-    height: 300px;
+    width: 100% !important;
+    height: 300px !important;
+    border-radius: 20px 20px 0 0 !important;
+    order: -1 !important;
   }
   
   .seminar-info {
-    width: 100%;
+    width: 100% !important;
+    border-radius: 0 0 20px 20px !important;
+    padding: 30px 0 0 0 !important;
+    order: 1 !important;
   }
   
-  .detail-label {
-    width: 100%;
+  .section-title {
+    font-size: 32px !important;
   }
   
-  .button-section {
-    padding: 50px 20px;
+  .divider-text {
+    font-size: 18px !important;
   }
   
-  .cta-button {
-    width: 100%;
+  .detail-label,
+  .detail-value {
+    font-size: 18px !important;
+  }
+  
+  .section-header {
+    gap: 25px !important;
+  }
+}
+
+/* 900px以下（タブレット） */
+@media (max-width: 900px) {
+  .seminar-detail-section {
+    padding: 30px 20px !important;
+  }
+  
+  .seminar-detail-card {
+    padding: 35px !important;
+  }
+  
+  .seminar-image {
+    height: 280px !important;
+    order: -1 !important;
+  }
+  
+  .seminar-info {
+    padding: 35px 0 0 0 !important;
+    order: 1 !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .divider-text {
+    font-size: 17px !important;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 17px !important;
+  }
+  
+  .section-header {
+    gap: 22px !important;
+  }
+}
+
+/* 768px以下（タブレット縦向き） */
+@media (max-width: 768px) {
+  .seminar-detail-section {
+    padding: 30px 20px !important;
+  }
+  
+  .seminar-detail-card {
+    padding: 30px !important;
+  }
+  
+  .seminar-image {
+    height: 250px !important;
+    order: -1 !important;
+  }
+  
+  .seminar-info {
+    padding: 30px 0 0 0 !important;
+    order: 1 !important;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
+  .divider-text {
+    font-size: 16px !important;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 16px !important;
+  }
+  
+  .section-header {
+    gap: 20px !important;
+  }
+}
+
+/* 480px以下（スマートフォン） */
+@media (max-width: 480px) {
+  .seminar-detail-section {
+    padding: 20px 15px !important;
+  }
+  
+  .seminar-detail-card {
+    padding: 20px !important;
+  }
+  
+  .seminar-image {
+    height: 200px !important;
+    border-radius: 15px 15px 0 0 !important;
+    order: -1 !important;
+  }
+  
+  .seminar-info {
+    padding: 20px 0 0 0 !important;
+    border-radius: 0 0 15px 15px !important;
+    order: 1 !important;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .divider-text {
+    font-size: 13px !important;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 13px !important;
+  }
+  
+  .section-header {
+    gap: 18px !important;
+  }
+  
+  .registration-btn {
+    width: 100% !important;
+    padding: 15px 20px !important;
   }
 }
 </style>

@@ -377,7 +377,7 @@ export default {
 
 /* Form Section */
 .form-section {
-  padding: 70px 50px 70px;
+  padding: 70px 50px 50px;
 }
 
 .form-container {
@@ -438,12 +438,6 @@ export default {
 .step-inactive {
   font-weight: 400;
   color: #727272;
-}
-
-/* Form Fields */
-.contact-form {
-  padding: 50px;
-  border-radius: 20px;
 }
 
 .form-field {
@@ -749,45 +743,446 @@ export default {
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1150px) {
   .form-section {
-    padding: 50px 30px 50px;
-  }
-  
-  .contact-form {
-    padding: 30px;
+    padding: 50px 30px 40px !important;
   }
   
   .field-input {
-    width: 100%;
+    width: 70% !important;
   }
   
   .field-label {
-    min-width: 200px;
+    min-width: 200px !important;
+    font-size: 18px !important;
   }
 
+  .form-title {
+    font-size: 32px !important;
+  }
 
+  .divider-text {
+    font-size: 18px !important;
+  }
+
+  .form-steps {
+    font-size: 18px !important;
+  }
+
+  .select-field,
+  .text-input,
+  .textarea-input {
+    font-size: 18px !important;
+  }
+
+  .terms-title,
+  .service-title {
+    font-size: 18px !important;
+  }
+
+  .terms-text,
+  .service-text,
+  .service-subtitle {
+    font-size: 18px !important;
+  }
+
+  .download-link {
+    font-size: 18px !important;
+  }
+
+  .privacy-text,
+  .privacy-checkbox label {
+    font-size: 18px !important;
+  }
+
+  .submit-btn {
+    font-size: 20px !important;
+    width: 450px !important;
+    padding: 18px 80px !important;
+  }
+
+  .form-header {
+    gap: 25px !important;
+  }
+
+  .form-container {
+    gap: 35px !important;
+  }
+
+  .terms-content {
+    padding: 35px !important;
+    gap: 25px !important;
+  }
+
+  .terms-section {
+    gap: 25px !important;
+  }
+
+  /* フォームフィールドの調整 */
+  .form-field {
+    padding: 22px 0 !important;
+  }
+
+  /* 名前入力フィールドの調整 */
+  .name-inputs {
+    gap: 12px !important;
+  }
+
+  /* セレクトフィールドの調整 */
+  .select-field {
+    padding: 16px !important;
+  }
+
+  /* テキストエリアの調整 */
+  .textarea-input {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .form-section {
+    padding: 30px 20px 40px !important;
+  }
+  
+  .field-input {
+    width: 100% !important;
+  }
+  
+  .field-label {
+    min-width: 180px !important;
+    font-size: 17px !important;
+  }
+
+  .field-input {
+    width: 65% !important;
+  }
+
+  .form-title {
+    font-size: 29px !important;
+  }
+
+  .divider-text {
+    font-size: 17px !important;
+  }
+
+  .form-steps {
+    font-size: 17px !important;
+  }
+
+  .select-field,
+  .text-input,
+  .textarea-input {
+    font-size: 17px !important;
+  }
+
+  .terms-title,
+  .service-title {
+    font-size: 17px !important;
+  }
+
+  .terms-text,
+  .service-text,
+  .service-subtitle {
+    font-size: 17px !important;
+  }
+
+  .download-link {
+    font-size: 17px !important;
+  }
+
+  .privacy-text,
+  .privacy-checkbox label {
+    font-size: 17px !important;
+  }
+
+  .submit-btn {
+    font-size: 18px !important;
+    width: 400px !important;
+    padding: 16px 70px !important;
+  }
+
+  .form-header {
+    gap: 22px !important;
+  }
+
+  .form-container {
+    gap: 30px !important;
+  }
+
+  .terms-content {
+    padding: 30px !important;
+    gap: 25px !important;
+  }
+
+  .terms-section {
+    gap: 25px !important;
+  }
+
+  /* フォームフィールドの調整 */
+  .form-field {
+    padding: 20px 0 !important;
+  }
+
+  /* 名前入力フィールドの調整 */
+  .name-inputs {
+    gap: 10px !important;
+  }
+
+  /* セレクトフィールドの調整 */
+  .select-field {
+    padding: 15px !important;
+  }
+
+  /* テキストエリアの調整 */
+  .textarea-input {
+    padding: 15px !important;
+  }
 }
 
 @media (max-width: 768px) {
   .form-section {
-    padding: 30px 20px 0;
+    padding: 30px 20px 40px !important;
   }
   
   .form-field {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
   }
   
   .field-label {
-    min-width: auto;
+    min-width: auto !important;
+    font-size: 16px !important;
+  }
+
+  .field-input {
+    width: 100% !important;
+  }
+
+  .form-title {
+    font-size: 27px !important;
+  }
+
+  .divider-text {
+    font-size: 16px !important;
+  }
+
+  .form-steps {
+    font-size: 16px !important;
+  }
+
+  .select-field,
+  .text-input,
+  .textarea-input {
+    font-size: 16px !important;
+  }
+
+  .terms-title,
+  .service-title {
+    font-size: 16px !important;
+  }
+
+  .terms-text,
+  .service-text,
+  .service-subtitle {
+    font-size: 16px !important;
+  }
+
+  .download-link {
+    font-size: 16px !important;
+  }
+
+  .privacy-text,
+  .privacy-checkbox label {
+    font-size: 16px !important;
+  }
+
+  .submit-btn {
+    font-size: 17px !important;
+    width: 100% !important;
+    padding: 15px 60px !important;
+  }
+
+  .form-header {
+    gap: 20px !important;
+  }
+
+  .form-container {
+    gap: 25px !important;
+  }
+
+  .terms-content {
+    padding: 25px !important;
+    gap: 20px !important;
+  }
+
+  .terms-section {
+    gap: 20px !important;
+  }
+
+  .name-inputs {
+    width: 100% !important;
+  }
+
+  .text-input.single {
+    height: 50px !important;
+  }
+
+  .textarea-input {
+    height: 200px !important;
+  }
+
+  /* フォームフィールドのレイアウト調整 */
+  .form-field {
+    padding: 18px 0 !important;
+  }
+
+  /* 名前入力フィールドの調整 */
+  .name-inputs {
+    gap: 8px !important;
+  }
+
+  /* セレクトフィールドの調整 */
+  .select-field {
+    padding: 14px !important;
+  }
+
+  /* テキストエリアの調整 */
+  .textarea-input {
+    padding: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-section {
+    padding: 20px 15px 30px !important;
   }
   
-  .submit-btn {
-    width: 100%;
+  .form-field {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 15px 0 !important;
   }
 
+  .form-title {
+    font-size: 22px !important;
+  }
 
+  .divider-text {
+    font-size: 13px !important;
+  }
+
+  .form-steps {
+    font-size: 13px !important;
+  }
+
+  .field-label {
+    font-size: 13px !important;
+  }
+
+  .select-field,
+  .text-input,
+  .textarea-input {
+    font-size: 13px !important;
+    padding: 12px !important;
+  }
+
+  .terms-title,
+  .service-title {
+    font-size: 13px !important;
+  }
+
+  .terms-text,
+  .service-text,
+  .service-subtitle {
+    font-size: 13px !important;
+  }
+
+  .download-link {
+    font-size: 13px !important;
+  }
+
+  .privacy-text,
+  .privacy-checkbox label {
+    font-size: 13px !important;
+  }
+
+  .submit-btn {
+    font-size: 14px !important;
+    width: 100% !important;
+    padding: 12px 40px !important;
+    border-radius: 12px !important;
+  }
+
+  .form-header {
+    gap: 18px !important;
+  }
+
+  .form-container {
+    gap: 20px !important;
+  }
+
+  .terms-content {
+    padding: 15px !important;
+    gap: 15px !important;
+    border-radius: 15px !important;
+  }
+
+  .terms-section {
+    gap: 15px !important;
+  }
+
+  .name-inputs {
+    width: 100% !important;
+  }
+
+  .text-input.single {
+    height: 45px !important;
+  }
+
+  .textarea-input {
+    height: 150px !important;
+  }
+
+  .divider-line {
+    width: 50px !important;
+  }
+
+  .form-divider {
+    gap: 10px !important;
+  }
+
+  /* フォームフィールドの詳細調整 */
+  .form-field {
+    padding: 12px 0 !important;
+  }
+
+  /* 名前入力フィールドの調整 */
+  .name-inputs {
+    gap: 6px !important;
+  }
+
+  /* セレクトフィールドの調整 */
+  .select-field {
+    padding: 10px !important;
+  }
+
+  /* テキストエリアの調整 */
+  .textarea-input {
+    padding: 10px !important;
+  }
+
+  /* チェックボックスの調整 */
+  .privacy-checkbox input[type="checkbox"] {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* ダウンロードリンクの調整 */
+  .download-link svg {
+    width: 25px !important;
+    height: 25px !important;
+  }
 }
 </style>

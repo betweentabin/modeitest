@@ -535,104 +535,131 @@ export default {
 /* Responsive Design */
 @media (max-width: 1150px) {
   .form-section {
-    padding: 50px 30px 50px !important;
+    padding: 50px 30px 40px !important;
   }
   
   .contact-form {
-    padding: 30px !important;
+    padding: 30px 20px !important;
   }
   
   .form-title {
     font-size: 32px !important;
   }
-  
-  .form-subtitle {
+
+  .divider-text {
     font-size: 18px !important;
   }
-  
+
+  .form-steps {
+    font-size: 18px !important;
+  }
+
   .field-label {
     font-size: 18px !important;
     min-width: 200px !important;
   }
   
   .field-input {
-    width: 100% !important;
+    width: 70% !important;
+  }
+
+  .confirm-value {
     font-size: 18px !important;
   }
-  
-  .back-btn,
+
   .submit-btn {
-    font-size: 18px !important;
-    padding: 15px 30px !important;
+    font-size: 20px !important;
+    width: 450px !important;
+    padding: 18px 80px !important;
   }
-  
-  .footer-section {
-    padding: 50px 30px !important;
+
+  .form-header {
+    gap: 25px !important;
   }
-  
-  .footer-links {
-    gap: 50px !important;
+
+  .form-container {
+    gap: 35px !important;
+  }
+
+  .action-section {
+    padding-top: 40px !important;
   }
 }
 
 @media (max-width: 900px) {
   .form-section {
-    padding: 45px 25px 45px !important;
+    padding: 30px 20px 40px !important;
   }
   
   .contact-form {
-    padding: 25px !important;
+    padding: 30px 20px !important;
   }
   
   .form-title {
     font-size: 29px !important;
   }
-  
-  .form-subtitle {
+
+  .divider-text {
     font-size: 17px !important;
   }
-  
+
+  .form-steps {
+    font-size: 17px !important;
+  }
+
   .field-label {
     font-size: 17px !important;
     min-width: 180px !important;
   }
   
   .field-input {
+    width: 65% !important;
+  }
+
+  .confirm-value {
     font-size: 17px !important;
   }
-  
-  .back-btn,
+
   .submit-btn {
-    font-size: 17px !important;
-    padding: 14px 28px !important;
+    font-size: 18px !important;
+    width: 400px !important;
+    padding: 16px 70px !important;
   }
-  
-  .footer-section {
-    padding: 45px 25px !important;
+
+  .form-header {
+    gap: 22px !important;
   }
-  
-  .footer-links {
-    gap: 45px !important;
+
+  .form-container {
+    gap: 30px !important;
+  }
+
+  .action-section {
+    padding-top: 35px !important;
   }
 }
 
 @media (max-width: 768px) {
   .form-section {
-    padding: 30px 20px 0 !important;
+    padding: 30px 20px 40px !important;
   }
   
   .contact-form {
-    padding: 20px !important;
+    padding: 30px 20px !important;
   }
   
   .form-title {
     font-size: 27px !important;
   }
-  
-  .form-subtitle {
+
+  .divider-text {
     font-size: 16px !important;
   }
-  
+
+  .form-steps {
+    font-size: 16px !important;
+  }
+
   .form-field {
     flex-direction: column !important;
     align-items: flex-start !important;
@@ -645,67 +672,96 @@ export default {
   }
   
   .field-input {
+    width: 100% !important;
+  }
+
+  .confirm-value {
     font-size: 16px !important;
   }
-  
+
   .action-buttons {
     flex-direction: column !important;
     gap: 20px !important;
   }
   
-  .back-btn,
   .submit-btn {
     width: 100% !important;
-    font-size: 16px !important;
-    padding: 13px 26px !important;
+    font-size: 17px !important;
+    padding: 15px 60px !important;
   }
-  
-  .footer-section {
-    padding: 30px 20px !important;
+
+  .form-header {
+    gap: 20px !important;
   }
-  
-  .footer-links {
-    gap: 40px !important;
+
+  .form-container {
+    gap: 25px !important;
+  }
+
+  .action-section {
+    padding-top: 30px !important;
   }
 }
 
 @media (max-width: 480px) {
   .form-section {
-    padding: 20px 15px 0 !important;
+    padding: 20px 15px 30px !important;
   }
   
   .contact-form {
-    padding: 15px !important;
+    padding: 20px 15px !important;
   }
   
   .form-title {
     font-size: 22px !important;
   }
-  
-  .form-subtitle {
+
+  .divider-text {
     font-size: 13px !important;
   }
-  
+
+  .form-steps {
+    font-size: 13px !important;
+  }
+
   .field-label {
     font-size: 13px !important;
   }
   
   .field-input {
-    font-size: 13px !important;
+    width: 100% !important;
   }
-  
-  .back-btn,
+
+  .confirm-value {
+    font-size: 13px !important;
+    padding: 12px !important;
+  }
+
   .submit-btn {
-    font-size: 13px !important;
-    padding: 12px 24px !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    padding: 12px 40px !important;
+    border-radius: 12px !important;
   }
-  
-  .footer-section {
-    padding: 20px 15px !important;
+
+  .form-header {
+    gap: 18px !important;
   }
-  
-  .footer-links {
-    gap: 35px !important;
+
+  .form-container {
+    gap: 20px !important;
+  }
+
+  .action-section {
+    padding-top: 25px !important;
+  }
+
+  .divider-line {
+    width: 50px !important;
+  }
+
+  .form-divider {
+    gap: 10px !important;
   }
 }
 </style>

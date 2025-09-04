@@ -852,6 +852,10 @@ export default {
     font-size: 32px !important;
   }
   
+  .section-header {
+    margin-bottom: 25px !important;
+  }
+  
   .category-title {
     font-size: 32px !important;
   }
@@ -876,6 +880,10 @@ export default {
 @media (max-width: 900px) {
   .section-title {
     font-size: 29px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 22px !important;
   }
   
   .category-title {
@@ -921,6 +929,10 @@ export default {
   
   .section-title {
     font-size: 27px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 20px !important;
   }
   
   .category-title {
@@ -1002,6 +1014,10 @@ export default {
 @media (max-width: 480px) {
   .section-title {
     font-size: 22px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 18px !important;
   }
   
   .category-title {

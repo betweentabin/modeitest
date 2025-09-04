@@ -47,11 +47,6 @@
                 <div class="service-overlay">
                   <span class="service-tag">consultation</span>
                   <h4 class="service-name">日経トップリーダー</h4>
-                  <div class="service-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M13.125 2.25V21.75C13.125 22.0484 13.0065 22.3345 12.7955 22.5455C12.5845 22.7565 12.2984 22.875 12 22.875C11.7016 22.875 11.4155 22.7565 11.2045 22.5455C10.9935 22.3345 10.875 22.0484 10.875 21.75V2.25C10.875 1.95163 10.9935 1.66548 11.2045 1.4545C11.4155 1.24353 11.7016 1.125 12 1.125C12.2984 1.125 12.5845 1.24353 12.7955 1.4545C13.0065 1.66548 13.125 1.95163 13.125 2.25Z" fill="#1A1A1A"/>
-                    </svg>
-                  </div>
                 </div>
               </div>
             </div>
@@ -84,8 +79,6 @@
                   <h4 class="service-name">経済統計指標DL</h4>
                 </div>
               </div>
-            </div>
-            <div class="service-grid service-grid-2">
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/3a52b313c631d4d2f82f6039afa3a0b86b3c4f1e?width=800" alt="地域経済統計レポート閲覧" class="service-image" />
                 <div class="service-overlay">
@@ -128,7 +121,7 @@
           </div>
 
           <!-- Button -->
-          <button class="filter-download-btn">プレミアム会員の特典詳細はこちら
+          <button class="filter-download-btn">プレミアム会員の特典詳細
           <div class="icon-box">
             <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="23" height="23" rx="5" fill="white"/>
@@ -358,7 +351,7 @@ export default {
 .category-title {
   color: #1A1A1A;
   font-family: var(--font-family-inter);
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 700;
   line-height: normal;
   margin-bottom: 20px;
@@ -371,63 +364,51 @@ export default {
   margin-bottom: 10px;
 }
 
-.service-grid-2 {
-  grid-template-columns: repeat(3, 1fr);
-}
+
 
 .service-card {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  height: 294px;
+  background: #FFF;
 }
 
 .service-image {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
+  border-radius: 20px;
+  aspect-ratio: 16 / 9;
 }
 
 .service-overlay {
   position: absolute;
   bottom: 0;
-  left: 83px;
   right: 0;
-  background: #FFFFFF;
-  border-radius: 10px 0 0 0;
+  background: #FFF;
   padding: 13px;
-  width: 100%;
-  height: 67px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
+  border-radius: 10px 0 0 0;
+  width: 85%;
 }
 
 .service-tag {
   color: #DA5761;
-  font-family: var(--font-family-inter);
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 15px;
   font-weight: 400;
-  line-height: normal;
+  display: block;
+  margin-bottom: 5px;
 }
 
 .service-name {
   color: #3F3F3F;
-  font-family: var(--font-family-inter);
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 18px;
   font-weight: 700;
-  line-height: normal;
+  margin: 0;
 }
 
-.service-icon {
-  position: absolute;
-  left: -28px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-}
+
 
 .section-divider {
   width: 100%;
@@ -446,7 +427,7 @@ export default {
 .membership-info-title {
   color: #1A1A1A;
   font-family: var(--font-family-inter);
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 700;
   line-height: normal;
   margin-bottom: 20px;
@@ -518,7 +499,7 @@ export default {
   font-weight: 700;
   line-height: 150%;
   transition: all 0.3s ease;
-  margin: 50px auto 30px;
+  margin: 50px auto 0px;
 }
 
 .filter-download-btn:hover {
@@ -707,201 +688,449 @@ export default {
 }
 
 /* Responsive Design */
+@media (max-width: 1280px) {
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
 @media (max-width: 1150px) {
+  .introduction-section {
+    padding: 50px 30px !important;
+  }
+  
+  .services-section {
+    padding: 50px 30px !important;
+  }
+  
+  .flow-section {
+    padding: 50px 30px !important;
+  }
+  
+  .intro-content {
+    padding: 30px 20px !important;
+    gap: 35px !important;
+  }
+  
+  .services-content {
+    padding: 30px 20px !important;
+  }
+  
+  .flow-content {
+    padding: 30px 20px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+    margin-bottom: 25px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 25px !important;
+  }
+  
+  .category-title {
+    font-size: 22px !important;
+  }
+  
+  .membership-info-title {
+    font-size: 22px !important;
+  }
+  
+  .decoration-text {
+    font-size: 18px !important;
+  }
+  
+  .intro-title {
+    font-size: 18px !important;
+  }
+  
+  .intro-text {
+    font-size: 18px !important;
+  }
+  
+  .service-name {
+    font-size: 18px !important;
+  }
+  
+  .step-title {
+    font-size: 18px !important;
+  }
+  
+  .step-description {
+    font-size: 18px !important;
+  }
+  
+  .table-label {
+    font-size: 18px !important;
+  }
+  
+  .table-content {
+    font-size: 18px !important;
+  }
+  
+  .membership-description {
+    font-size: 18px !important;
+  }
+  
+  .step-number {
+    font-size: 32px !important;
+  }
+  
   .service-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   
-  .service-grid-2 {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .access-content {
-    flex-direction: column !important;
-    gap: 30px !important;
-  }
-  
-  .access-map {
-    flex: none !important;
-    width: 100% !important;
-  }
-  
-  .access-info {
-    padding: 0 !important;
-  }
-  
-  .section-title {
-    font-size: 32px !important;
-  }
-  
-  .category-title {
-    font-size: 32px !important;
-  }
-  
-  .service-title {
-    font-size: 22px !important;
-  }
-  
-  .service-description {
-    font-size: 18px !important;
-  }
-  
-  .intro-description {
-    font-size: 18px !important;
+  .flow-step {
+    min-height: 110px !important;
   }
 }
 
 @media (max-width: 900px) {
+  .introduction-section {
+    padding: 30px 20px !important;
+  }
+  
+  .services-section {
+    padding: 30px 20px !important;
+  }
+  
+  .flow-section {
+    padding: 30px 20px !important;
+  }
+  
+  .intro-content {
+    padding: 35px !important;
+    gap: 30px !important;
+  }
+  
+  .services-content {
+    padding: 30px 20px !important;
+  }
+  
+  .flow-content {
+    padding: 30px 20px !important;
+  }
+  
   .section-title {
     font-size: 29px !important;
+    margin-bottom: 22px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 22px !important;
   }
   
   .category-title {
-    font-size: 29px !important;
-  }
-  
-  .service-title {
     font-size: 20px !important;
   }
   
-  .service-description {
+  .membership-info-title {
+    font-size: 20px !important;
+  }
+  
+  .decoration-text {
     font-size: 17px !important;
   }
   
-  .intro-description {
+  .intro-title {
     font-size: 17px !important;
   }
   
-  .services-section,
-  .flow-section,
-  .cta-section {
-    padding: 40px 20px !important;
+  .intro-text {
+    font-size: 17px !important;
+  }
+  
+  .service-name {
+    font-size: 17px !important;
+  }
+  
+  .step-title {
+    font-size: 17px !important;
+  }
+  
+  .step-description {
+    font-size: 17px !important;
+  }
+  
+  .table-label {
+    font-size: 17px !important;
+  }
+  
+  .table-content {
+    font-size: 17px !important;
+  }
+  
+  .membership-description {
+    font-size: 17px !important;
+  }
+  
+  .step-number {
+    font-size: 29px !important;
+  }
+  
+  .flow-step {
+    min-height: 100px !important;
+  }
+  
+  .section-divider {
+    margin: 40px 0 !important;
   }
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 0 20px !important;
+  .introduction-section {
+    padding: 30px 20px !important;
   }
   
-  /* ヒーローセクションはHeroSection.vueコンポーネントで対応 */
+  .services-section {
+    padding: 30px 20px !important;
+  }
+  
+  .flow-section {
+    padding: 30px 20px !important;
+  }
+  
+  .intro-content {
+    padding: 30px !important;
+    gap: 25px !important;
+  }
+  
+  .services-content {
+    padding: 30px 20px !important;
+  }
+  
+  .flow-content {
+    padding: 30px 20px !important;
+  }
   
   .section-title {
     font-size: 27px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 20px !important;
   }
   
   .category-title {
-    font-size: 27px !important;
-  }
-  
-  .service-title {
     font-size: 19px !important;
   }
   
-  .service-description {
+  .membership-info-title {
+    font-size: 19px !important;
+  }
+  
+  .decoration-text {
     font-size: 16px !important;
   }
   
-  .intro-description {
+  .intro-title {
     font-size: 16px !important;
+  }
+  
+  .intro-text {
+    font-size: 16px !important;
+  }
+  
+  .service-name {
+    font-size: 16px !important;
+  }
+  
+  .step-title {
+    font-size: 16px !important;
+  }
+  
+  .step-description {
+    font-size: 16px !important;
+  }
+  
+  .table-label {
+    font-size: 16px !important;
+  }
+  
+  .table-content {
+    font-size: 16px !important;
+  }
+  
+  .membership-description {
+    font-size: 16px !important;
+  }
+  
+  .step-number {
+    font-size: 27px !important;
   }
   
   .service-grid {
     grid-template-columns: 1fr !important;
-  }
-  
-  .services-section,
-  .flow-section,
-  .cta-section {
-    padding: 30px 20px !important;
-  }
-  
-  .intro-content,
-  .services-content,
-  .flow-content {
-    padding: 30px !important;
-  }
-  
-  .cta-button {
-    padding: 15px 50px !important;
-    font-size: 18px !important;
   }
   
   .flow-step {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 15px !important;
+    min-height: auto !important;
+    padding: 20px 0 !important;
   }
   
   .step-number {
     width: auto !important;
   }
   
-  .footer-section {
-    padding: 30px 20px !important;
+  .section-divider {
+    margin: 30px 0 !important;
   }
   
-  .footer-links {
-    flex-direction: column !important;
-    gap: 30px !important;
+  .membership-info {
+    padding: 25px !important;
   }
   
-  .company-logo-text {
+  .filter-download-btn {
+    margin: 40px auto 0px !important;
+    padding: 12px 40px !important;
+    font-size: 14px !important;
+  }
+  
+  .table-row,
+  .table-row-top {
     flex-direction: column !important;
+    align-items: flex-start !important;
     gap: 15px !important;
   }
   
-  .fixed-buttons {
-    right: 15px !important;
-    bottom: 100px !important;
+  .table-label {
+    width: 150px !important;
+    text-align: left !important;
   }
   
-  .fixed-btn {
-    width: 80px !important;
-    height: 80px !important;
-  }
-  
-  .fixed-btn span {
-    font-size: 11px !important;
+  .table-content {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 480px) {
+  .introduction-section {
+    padding: 20px 15px !important;
+  }
+  
+  .services-section {
+    padding: 20px 15px !important;
+  }
+  
+  .flow-section {
+    padding: 20px 15px !important;
+  }
+  
+  .intro-content {
+    padding: 20px !important;
+    gap: 20px !important;
+  }
+  
+  .services-content {
+    padding: 20px 15px !important;
+  }
+  
+  .flow-content {
+    padding: 20px 15px !important;
+  }
+  
   .section-title {
     font-size: 22px !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .section-header {
+    margin-bottom: 18px !important;
   }
   
   .category-title {
-    font-size: 22px !important;
-  }
-  
-  .service-title {
     font-size: 18px !important;
   }
   
-  .service-description {
+  .membership-info-title {
+    font-size: 18px !important;
+  }
+  
+  .decoration-text {
     font-size: 13px !important;
   }
   
-  .intro-description {
+  .intro-title {
     font-size: 13px !important;
   }
   
-  .services-section,
-  .flow-section,
-  .cta-section {
-    padding: 25px 20px !important;
+  .intro-text {
+    font-size: 13px !important;
   }
   
-  .intro-content,
-  .services-content,
-  .flow-content {
-    padding: 20px !important;
+  .service-name {
+    font-size: 13px !important;
   }
   
-  .cta-button {
-    padding: 12px 40px !important;
-    font-size: 16px !important;
+  .step-title {
+    font-size: 13px !important;
+  }
+  
+  .step-description {
+    font-size: 13px !important;
+  }
+  
+  .table-label {
+    font-size: 13px !important;
+  }
+  
+  .table-content {
+    font-size: 13px !important;
+  }
+  
+  .membership-description {
+    font-size: 13px !important;
+  }
+  
+  .step-number {
+    font-size: 22px !important;
+  }
+  
+  .flow-step {
+    padding: 15px 0 !important;
+    gap: 12px !important;
+  }
+  
+  .section-divider {
+    margin: 20px 0 !important;
+  }
+  
+  .membership-info {
+    padding: 15px !important;
+  }
+  
+  .filter-download-btn {
+    margin: 30px auto 0px !important;
+    padding: 10px 30px !important;
+    font-size: 12px !important;
+  }
+  
+  .decoration-line {
+    width: 50px !important;
+  }
+  
+  .section-decoration {
+    gap: 10px !important;
+  }
+  
+  .service-overlay {
+    padding: 10px !important;
+    height: 60px !important;
+  }
+  
+  .table-row {
+    gap: 20px !important;
+    padding: 12px 0 !important;
+  }
+  
+  .table-label {
+    width: 150px !important;
+    padding: 4px 8px !important;
   }
 }
 </style>
