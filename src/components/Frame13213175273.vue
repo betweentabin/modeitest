@@ -1,14 +1,17 @@
 <template>
   <div class="frame-132131752-2">
-    <frame13213175222 :text19="frame13213175222Props.text19" />
-    <router-link v-if="frame13213175251Props.link" :to="frame13213175251Props.link" class="footer-link">
+    <router-link v-if="frame13213175222Props.link" :to="frame13213175222Props.link" class="footer-link">
+      <frame13213175222 :text19="frame13213175222Props.text19" />
+    </router-link>
+    <frame13213175222 v-else :text19="frame13213175222Props.text19" />
+    <router-link v-if="frame13213175251Props.link && frame13213175251Props.text22" :to="frame13213175251Props.link" class="footer-link">
       <frame13213175255 :text22="frame13213175251Props.text22" />
     </router-link>
-    <frame13213175255 v-else :text22="frame13213175251Props.text22" />
-    <router-link v-if="frame13213175252Props.link" :to="frame13213175252Props.link" class="footer-link">
+    <frame13213175255 v-else-if="frame13213175251Props.text22" :text22="frame13213175251Props.text22" />
+    <router-link v-if="frame13213175252Props.link && frame13213175252Props.text22" :to="frame13213175252Props.link" class="footer-link">
       <frame13213175255 :text22="frame13213175252Props.text22" />
     </router-link>
-    <frame13213175255 v-else :text22="frame13213175252Props.text22" />
+    <frame13213175255 v-else-if="frame13213175252Props.text22" :text22="frame13213175252Props.text22" />
   </div>
 </template>
 

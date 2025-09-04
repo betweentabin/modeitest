@@ -92,15 +92,16 @@ export const frame132131752731Data = {
 };
 
 export const frame132131752224Data = {
-    text19: "会員PR",
+    text19: "入会案内",
+    link: "/membership",
 };
 
 export const frame132131752553Data = {
-    text22: "会員PRどっとコム",
+    text22: "",
 };
 
 export const frame132131752554Data = {
-    text22: "入会案内",
+    text22: "",
     link: "/register",
 };
 

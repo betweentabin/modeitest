@@ -826,28 +826,39 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 1150px) {
-  .service-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+  /* セクションのパディング調整 */
+  .introduction-section,
+  .publications-section {
+    padding: 50px 30px !important;
   }
   
-  .service-grid-2 {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .access-content {
+  /* レイアウトの縦並び化 */
+  .featured-content {
     flex-direction: column !important;
     gap: 30px !important;
   }
   
-  .access-map {
-    flex: none !important;
+  /* 要素の幅調整 */
+  .featured-image {
     width: 100% !important;
+    height: 300px !important;
   }
   
-  .access-info {
+  /* 角丸の調整 */
+  .featured-image {
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .featured-info {
+    border-radius: 0 0 20px 20px !important;
     padding: 0 !important;
   }
   
+  .content-box {
+    padding: 30px 0 !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 32px !important;
   }
@@ -856,28 +867,79 @@ export default {
     margin-bottom: 25px !important;
   }
   
-  .category-title {
+  .hero-title {
     font-size: 32px !important;
   }
   
-  .service-title {
+  .hero-subtitle {
+    font-size: 18px !important;
+  }
+  
+  .intro-title {
+    font-size: 18px !important;
+  }
+  
+  .intro-text {
+    font-size: 18px !important;
+  }
+  
+  .content-title {
     font-size: 22px !important;
   }
   
-  .service-description {
+  .content-body {
     font-size: 18px !important;
   }
   
-  .intro-description {
+  .decoration-text {
     font-size: 18px !important;
   }
   
-  .hero-title {
-    font-size: 32px !important;
+  /* コンテンツ調整 */
+  .intro-content {
+    padding: 30px 20px !important;
+    gap: 30px !important;
+  }
+  
+  .featured-publication {
+    padding: 30px 20px !important;
   }
 }
 
 @media (max-width: 900px) {
+  /* セクションのパディング調整 */
+  .introduction-section,
+  .publications-section {
+    padding: 30px 20px !important;
+  }
+  
+  /* レイアウトの縦並び化 */
+  .featured-content {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  /* 要素の幅調整 */
+  .featured-image {
+    width: 100% !important;
+    height: 280px !important;
+  }
+  
+  /* 角丸の調整 */
+  .featured-image {
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .featured-info {
+    border-radius: 0 0 20px 20px !important;
+    padding: 0 !important;
+  }
+  
+  .content-box {
+    padding: 25px 0 !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 29px !important;
   }
@@ -886,36 +948,50 @@ export default {
     margin-bottom: 22px !important;
   }
   
-  .category-title {
-    font-size: 29px !important;
-  }
-  
-  .service-title {
-    font-size: 20px !important;
-  }
-  
-  .service-description {
-    font-size: 17px !important;
-  }
-  
-  .intro-description {
-    font-size: 17px !important;
-  }
-  
   .hero-title {
     font-size: 29px !important;
   }
   
-  .services-section,
-  .flow-section,
-  .cta-section {
-    padding: 40px 20px !important;
+  .hero-subtitle {
+    font-size: 17px !important;
+  }
+  
+  .intro-title {
+    font-size: 17px !important;
+  }
+  
+  .intro-text {
+    font-size: 17px !important;
+  }
+  
+  .content-title {
+    font-size: 20px !important;
+  }
+  
+  .content-body {
+    font-size: 17px !important;
+  }
+  
+  .decoration-text {
+    font-size: 17px !important;
+  }
+  
+  /* コンテンツ調整 */
+  .intro-content {
+    padding: 30px 20px !important;
+    gap: 25px !important;
+  }
+  
+  .featured-publication {
+    padding: 30px 20px !important;
   }
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 0 20px !important;
+  /* セクションのパディング調整 */
+  .introduction-section,
+  .publications-section {
+    padding: 30px 20px !important;
   }
   
   .hero-section {
@@ -923,10 +999,33 @@ export default {
     padding: 30px 20px !important;
   }
   
-  .hero-title {
-    font-size: 27px !important;
+  /* レイアウトの縦並び化 */
+  .featured-content {
+    flex-direction: column !important;
+    gap: 0 !important;
   }
   
+  /* 要素の幅調整 */
+  .featured-image {
+    width: 100% !important;
+    height: 250px !important;
+  }
+  
+  /* 角丸の調整 */
+  .featured-image {
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .featured-info {
+    border-radius: 0 0 20px 20px !important;
+    padding: 0 !important;
+  }
+  
+  .content-box {
+    padding: 20px 0 !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 27px !important;
   }
@@ -935,83 +1034,89 @@ export default {
     margin-bottom: 20px !important;
   }
   
-  .category-title {
+  .hero-title {
     font-size: 27px !important;
   }
   
-  .service-title {
+  .hero-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .intro-title {
+    font-size: 16px !important;
+  }
+  
+  .intro-text {
+    font-size: 16px !important;
+  }
+  
+  .content-title {
     font-size: 19px !important;
   }
   
-  .service-description {
+  .content-body {
     font-size: 16px !important;
   }
   
-  .intro-description {
+  .decoration-text {
     font-size: 16px !important;
   }
   
-  .service-grid {
-    grid-template-columns: 1fr !important;
+  /* コンテンツ調整 */
+  .intro-content {
+    padding: 30px 20px !important;
+    gap: 20px !important;
   }
   
-  .services-section,
-  .flow-section,
-  .cta-section {
+  .featured-publication {
     padding: 30px 20px !important;
   }
   
-  .intro-content,
-  .services-content,
-  .flow-content {
-    padding: 30px !important;
-  }
-  
-  .cta-button {
+  .download-btn {
     padding: 15px 50px !important;
     font-size: 18px !important;
-  }
-  
-  .flow-step {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 15px !important;
-  }
-  
-  .step-number {
-    width: auto !important;
-  }
-  
-  .footer-section {
-    padding: 30px 20px !important;
-  }
-  
-  .footer-links {
-    flex-direction: column !important;
-    gap: 30px !important;
-  }
-  
-  .company-logo-text {
-    flex-direction: column !important;
-    gap: 15px !important;
-  }
-  
-  .fixed-buttons {
-    right: 15px !important;
-    bottom: 100px !important;
-  }
-  
-  .fixed-btn {
-    width: 80px !important;
-    height: 80px !important;
-  }
-  
-  .fixed-btn span {
-    font-size: 11px !important;
   }
 }
 
 @media (max-width: 480px) {
+  /* セクションのパディング調整 */
+  .introduction-section,
+  .publications-section {
+    padding: 20px 15px !important;
+  }
+  
+  .hero-section {
+    height: 250px !important;
+    padding: 25px 20px !important;
+  }
+  
+  /* レイアウトの縦並び化 */
+  .featured-content {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  /* 要素の幅調整 */
+  .featured-image {
+    width: 100% !important;
+    height: 200px !important;
+  }
+  
+  /* 角丸の調整 */
+  .featured-image {
+    border-radius: 15px 15px 0 0 !important;
+  }
+  
+  .featured-info {
+    border-radius: 0 0 15px 15px !important;
+    padding: 0 !important;
+  }
+  
+  .content-box {
+    padding: 15px 0 !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 22px !important;
   }
@@ -1020,46 +1125,48 @@ export default {
     margin-bottom: 18px !important;
   }
   
-  .category-title {
-    font-size: 22px !important;
-  }
-  
-  .service-title {
-    font-size: 18px !important;
-  }
-  
-  .service-description {
-    font-size: 13px !important;
-  }
-  
-  .intro-description {
-    font-size: 13px !important;
-  }
-  
   .hero-title {
     font-size: 22px !important;
   }
   
-  .hero-section {
-    height: 250px !important;
-    padding: 25px 20px !important;
+  .hero-subtitle {
+    font-size: 13px !important;
   }
   
-  .services-section,
-  .flow-section,
-  .cta-section {
-    padding: 25px 20px !important;
+  .intro-title {
+    font-size: 13px !important;
   }
   
-  .intro-content,
-  .services-content,
-  .flow-content {
-    padding: 20px !important;
+  .intro-text {
+    font-size: 13px !important;
   }
   
-  .cta-button {
+  .content-title {
+    font-size: 18px !important;
+  }
+  
+  .content-body {
+    font-size: 13px !important;
+  }
+  
+  .decoration-text {
+    font-size: 13px !important;
+  }
+  
+  /* コンテンツ調整 */
+  .intro-content {
+    padding: 20px 15px !important;
+    gap: 15px !important;
+  }
+  
+  .featured-publication {
+    padding: 20px 15px !important;
+  }
+  
+  .download-btn {
     padding: 12px 40px !important;
     font-size: 16px !important;
+    width: 100% !important;
   }
 }
 </style>
