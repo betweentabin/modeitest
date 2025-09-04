@@ -496,8 +496,19 @@ export default {
     };
   },
   async mounted() {
-    // CMSから最新データを取得
+    // データをロード
     await this.loadLatestData();
+    // ページテキスト
+    try {
+      this._pageText = usePageText(this.pageKey)
+      await this._pageText.load()
+    } catch(e) { /* noop */ }
+    // メディアレジストリ
+    try {
+      const mod = await import('@/composables/useMedia')
+      this._media = mod.useMedia()
+      await this._media.ensure()
+    } catch(e) { /* noop */ }
   },
   methods: {
     async loadLatestData() {
@@ -544,23 +555,13 @@ export default {
       return this._pageText?.getText('lead', this.text67) || this.text67
     },
     resolvedHomeHero() {
-      // Try global media key first, fallback to existing heroImage
-      try {
-        const mod = require('@/composables/useMedia')
-        const media = mod.useMedia()
-        media.ensure()
-        return media.getImage('hero_home', this.heroImage) || this.heroImage
-      } catch (e) {
-        return this.heroImage
+      if (this._media && this._media.getImage) {
+        return this._media.getImage('hero_home', this.heroImage) || this.heroImage
       }
+      return this.heroImage
     },
   },
-  mounted() {
-    try {
-      this._pageText = usePageText(this.pageKey)
-      this._pageText.load()
-    } catch(e) { /* noop */ }
-  },
+  
 
     updatePageData(allNews, seminars, publications, notices) {
       // ニュース枠はお知らせを使用

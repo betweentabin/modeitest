@@ -36,6 +36,7 @@
               <tr>
                 <th style="width: 160px;">プレビュー</th>
                 <th>キー</th>
+                <th>表示箇所</th>
                 <th>URL</th>
                 <th style="width: 120px;">操作</th>
               </tr>
@@ -48,6 +49,12 @@
                 </td>
                 <td>
                   <input v-model="row.key" class="form-input" placeholder="例）hero_home" />
+                </td>
+                <td>
+                  <div class="usage">
+                    <div class="usage-label">{{ getUsage(row.key).label }}</div>
+                    <button v-if="getUsage(row.key).path" class="link-btn" @click="openUsage(row.key)">ページを開く</button>
+                  </div>
                 </td>
                 <td>
                   <input v-model="row.value" class="form-input" placeholder="/img/hero.jpg または https://..." />
@@ -98,6 +105,32 @@ export default {
     await this.load()
   },
   methods: {
+    getUsage(key) {
+      const map = {
+        hero_home: { label: 'ホーム：ファーストビュー背景', path: '/' },
+        hero_publications: { label: '刊行物：ヒーロー', path: '/publications-public' },
+        hero_financial_reports: { label: '決算報告：ヒーロー', path: '/financial-reports' },
+        hero_economic_indicators: { label: '経済指標一覧：ヒーロー', path: '/economic-indicators' },
+        hero_economic_statistics: { label: '経済・調査統計：ヒーロー', path: '/statistics' },
+        hero_news: { label: 'お知らせ：ヒーロー', path: '/news' },
+        hero_contact: { label: 'お問い合わせ：ヒーロー', path: '/contact' },
+        hero_privacy: { label: 'プライバシーポリシー：ヒーロー', path: '/privacy-policy' },
+        hero_terms: { label: '利用規約：ヒーロー', path: '/terms-of-service' },
+        hero_transaction_law: { label: '特定商取引法：ヒーロー', path: '/transaction-law' },
+        hero_sitemap: { label: 'サイトマップ：ヒーロー', path: '/sitemap' },
+        hero_company_profile: { label: '会社概要：ヒーロー', path: '/company-profile' },
+        hero_consulting: { label: 'CRIコンサルティング：ヒーロー', path: '/cri-consulting' },
+        hero_membership: { label: '入会案内：ヒーロー', path: '/services' },
+        hero_seminars_current: { label: '受付中のセミナー：ヒーロー', path: '/seminars/current' },
+        hero_glossary: { label: '用語集：ヒーロー', path: '/glossary' },
+        hero_faq: { label: 'FAQ：ヒーロー', path: '/faq' },
+      }
+      return map[key] || { label: '（未定義）', path: '' }
+    },
+    openUsage(key) {
+      const u = this.getUsage(key)
+      if (u.path) this.$router.push(u.path)
+    },
     async load() {
       this.loading = true
       this.error = ''
