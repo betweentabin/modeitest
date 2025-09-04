@@ -349,6 +349,37 @@ const router = new Router({
       component: EmailCampaignManagement,
       meta: { title: "メール配信 - ちくぎん地域経済研究所" }
     },
+    // Mail magazine route aliases
+    {
+      path: "/admin/mailmagazine",
+      name: "mailMagazine",
+      component: EmailCampaignManagement,
+      meta: { title: "一括メール管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/mailmagazine/new",
+      name: "mailMagazineNew",
+      component: EmailCampaignManagement,
+      meta: { title: "一括メール新規作成 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/mailmagazine/edit",
+      name: "mailMagazineEdit",
+      component: EmailCampaignManagement,
+      meta: { title: "一括メール編集 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/mailmagazine/preview",
+      name: "mailMagazinePreview",
+      component: EmailCampaignManagement,
+      meta: { title: "一括メールプレビュー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/mailmagazine/group",
+      name: "mailMagazineGroup",
+      component: MailGroupManagement,
+      meta: { title: "一括メール送信グループ管理 - ちくぎん地域経済研究所" }
+    },
     {
       path: "/admin/notices/new",
       name: "noticeNew",

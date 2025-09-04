@@ -57,7 +57,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/emails" class="nav-item" :class="{ active: isActive('/admin/emails') }">
+            <router-link to="/admin/mailmagazine" class="nav-item" :class="{ active: isActive('/admin/mailmagazine') }">
               一括メール管理
             </router-link>
           </li>
