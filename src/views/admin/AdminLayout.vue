@@ -56,6 +56,11 @@
               各ページ管理
             </router-link>
           </li>
+          <li>
+            <router-link to="/admin/emails" class="nav-item" :class="{ active: isActive('/admin/emails') }">
+              一括メール管理
+            </router-link>
+          </li>
         </ul>
       </nav>
 

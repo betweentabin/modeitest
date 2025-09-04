@@ -22,7 +22,7 @@
         <div class="form-row">
           <div class="form-group full">
             <label>本文（HTML）</label>
-            <textarea v-model="form.body_html" class="form-textarea" rows="8" placeholder="HTML本文"></textarea>
+            <MinimalEditor v-model="form.body_html" placeholder="本文を入力..." />
           </div>
         </div>
         <div class="form-row">
@@ -155,11 +155,12 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import MinimalEditor from '@/components/MinimalEditor.vue'
 import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'EmailCampaignManagement',
-  components: { AdminLayout },
+  components: { AdminLayout, MinimalEditor },
   data() {
     return {
       loading: false,
