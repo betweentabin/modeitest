@@ -124,6 +124,7 @@ import AccessSection from "./AccessSection";
 import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
+import CmsBlock from './CmsBlock.vue'
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
 
@@ -137,6 +138,7 @@ export default {
     HeroSection,
     Breadcrumbs,
     FixedSideButtons,
+    CmsBlock,
   },
   data() {
     return {
