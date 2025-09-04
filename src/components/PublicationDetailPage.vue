@@ -1,142 +1,116 @@
 <template>
   <div class="page-container">
     <Navigation />
-    <div class="page-content">
-      <div v-if="loading" class="loading-container">
-        <div class="loading-message">読み込み中...</div>
-      </div>
-      
-      <div v-else-if="error" class="error-container">
-        <div class="error-message">{{ error }}</div>
-        <button @click="$router.push('/publications')" class="back-btn">刊行物一覧に戻る</button>
-      </div>
-      
-      <div v-else-if="publication" class="detail-container">
-        <!-- パンくずナビ -->
-        <nav class="breadcrumb">
-          <router-link to="/" class="breadcrumb-link">ホーム</router-link>
-          <span class="breadcrumb-separator">></span>
-          <router-link to="/publications" class="breadcrumb-link">刊行物</router-link>
-          <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{ publication.title }}</span>
-        </nav>
+    
+    <!-- Hero Section -->
+    <HeroSection 
+      title="刊行物"
+      subtitle="publications"
+      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/ab5db9916398054424d59236a434310786cb8146?width=2880"
+    />
 
-        <!-- メインコンテンツ -->
-        <div class="detail-content">
-          <div class="detail-header">
-            <div class="publication-image-large" v-restricted="{ requiredLevel: publication.membership_level || 'free' }">
-              <img 
-                :src="publication.image_url || '/img/-----2-2-5.png'" 
-                :alt="publication.title"
-                class="main-image"
-              />
-              <MembershipBadge 
-                v-if="publication.membership_level && publication.membership_level !== 'free'" 
-                :level="publication.membership_level" 
-                class="detail-badge"
-              />
-            </div>
-            
-            <div class="publication-info">
-              <div class="publication-meta">
-                <span class="publication-category">{{ getCategoryText(publication.category) }}</span>
-                <span class="publication-date">{{ formatDate(publication.publication_date) }}</span>
-              </div>
-              
-              <h1 class="publication-title">{{ publication.title }}</h1>
-              
+    <!-- Breadcrumbs -->
+    <Breadcrumbs :breadcrumbs="['刊行物']" />
+
+    <!-- Publication Detail Section -->
+    <section class="publication-detail-section" v-if="publication">
+      <div class="section-header">
+        <h2 class="section-title">刊行物</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">publications</span>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+
+      <!-- Publication Details Card -->
+      <div class="publication-detail-card">
+          <div class="publication-content">
+                         <div class="publication-info">
               <div class="publication-details">
-                <div class="detail-item" v-if="publication.author">
-                  <span class="detail-label">著者・編集者:</span>
+                             <div class="detail-row">
+                  <span class="detail-label">タイトル</span>
+                  <span class="detail-value">{{ publication.title || '刊行物レポート' }}</span>
+                </div>
+
+                <div class="detail-row">
+                  <span class="detail-label">カテゴリー</span>
+                  <span class="detail-value">{{ getCategoryText(publication.category) || '研究レポート' }}</span>
+                </div>
+                
+                <div class="detail-row">
+                  <span class="detail-label">詳細</span>
+                  <span class="detail-value">{{ publication.description || '詳細情報がここに表示されます。' }}</span>
+                </div>
+                
+                <div class="detail-row" v-if="publication.author">
+                  <span class="detail-label">著者・編集者</span>
                   <span class="detail-value">{{ publication.author }}</span>
                 </div>
                 
-                <div class="detail-item" v-if="publication.pages">
-                  <span class="detail-label">ページ数:</span>
+                <div class="detail-row" v-if="publication.pages">
+                  <span class="detail-label">ページ数</span>
                   <span class="detail-value">{{ publication.pages }}ページ</span>
                 </div>
-                
-                <div class="detail-item" v-if="publication.file_size">
-                  <span class="detail-label">ファイルサイズ:</span>
-                  <span class="detail-value">{{ publication.file_size }}MB</span>
-                </div>
-                
-                <div class="detail-item" v-if="publication.download_count !== undefined">
-                  <span class="detail-label">ダウンロード数:</span>
-                  <span class="detail-value">{{ publication.download_count }}回</span>
-                </div>
-              </div>
-              
-              <div class="action-buttons">
-                <button 
-                  @click="handleDownload" 
-                  class="download-btn"
-                  :disabled="!canDownload"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                  </svg>
-                  {{ downloadButtonText }}
-                </button>
-                
-                <button @click="sharePage" class="share-btn">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.19C16.5,7.69 17.21,8 18,8A3,3 0 0,0 21,5A3,3 0 0,0 18,2A3,3 0 0,0 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.81C7.5,9.31 6.79,9 6,9A3,3 0 0,0 3,12A3,3 0 0,0 6,15C6.79,15 7.5,14.69 8.04,14.19L15.16,18.34C15.11,18.55 15.08,18.77 15.08,19C15.08,20.61 16.39,21.91 18,21.91C19.61,21.91 20.92,20.61 20.92,19A2.92,2.92 0 0,0 18,16.08Z"/>
-                  </svg>
-                  シェア
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- 詳細説明 -->
-          <div class="description-section" v-restricted="{ requiredLevel: publication.membership_level || 'free', blurLevel: 2 }">
-            <h2>概要</h2>
-            <p class="description-text">{{ publication.description }}</p>
-          </div>
-          
-          <!-- 関連刊行物 -->
-          <div v-if="relatedPublications.length > 0" class="related-section">
-            <h2>関連刊行物</h2>
-            <div class="related-grid">
-              <div 
-                v-for="related in relatedPublications" 
-                :key="related.id"
-                class="related-item"
-                @click="goToPublication(related.id)"
-              >
-                <img 
-                  :src="related.image_url || '/img/-----2-2-1.png'" 
-                  :alt="related.title"
-                  class="related-image"
-                />
-                <div class="related-info">
-                  <div class="related-date">{{ formatDate(related.publication_date) }}</div>
-                  <h3 class="related-title">{{ related.title }}</h3>
-                </div>
-              </div>
-            </div>
+               
+               
+             </div>
+           </div>
+           
+           <div class="publication-image">
+             <img :src="publication.image_url || '/img/image-1.png'" :alt="publication.title" />
+           </div>
+         </div>
+
+
+
+        <!-- Login Button -->
+        <div class="login-section">
+          <div class="login-btn" @click="goToLogin">
+            <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
+            <frame13213176122 />
           </div>
         </div>
+
       </div>
-    </div>
+      </section>
+
+<!-- Action Button Section -->
+<ActionButton 
+  primary-text="お問い合わせはコチラ"
+  secondary-text="メンバー登録はコチラ"
+  max-width="1500px"
+  @primary-click="handleContactClick"
+  @secondary-click="handleJoinClick"
+/>
+
+    <!-- Contact Section -->
+    <ContactSection />
+
+    <!-- Access Section -->
+    <AccessSection />
+
     <!-- Footer Navigation -->
     <Footer v-bind="frame132131753022Props" />
 
-    <!-- Fixed Action Buttons -->
-    <FixedActionButtons />
+    <!-- Fixed Side Buttons -->
+    <FixedSideButtons position="bottom" />
   </div>
 </template>
 
 <script>
-import Navigation from "./Navigation.vue";
-import Footer from "./Footer.vue";
-import Group27 from "./Group27.vue";
-import FixedActionButtons from "./FixedActionButtons.vue";
-import { frame132131753022Data } from "../data.js";
-import apiClient from "@/services/apiClient";
-import mockServer from "@/mockServer";
-import MembershipBadge from "./MembershipBadge.vue";
+import Navigation from "./Navigation";
+import Footer from "./Footer";
+import Group27 from "./Group27";
+import AccessSection from "./AccessSection.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import FixedSideButtons from "./FixedSideButtons.vue";
+import ContactSection from "./ContactSection.vue";
+import Frame13213176122 from "./Frame13213176122.vue";
+import ActionButton from "./ActionButton.vue";
+import { frame132131753022Data } from "../data";
+import apiClient from '../services/apiClient.js';
 
 export default {
   name: "PublicationDetailPage",
@@ -144,104 +118,75 @@ export default {
     Navigation,
     Footer,
     Group27,
-    FixedActionButtons,
-    MembershipBadge
+    AccessSection,
+    HeroSection,
+    Breadcrumbs,
+    FixedSideButtons,
+    ContactSection,
+    Frame13213176122,
+    ActionButton
   },
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
-      loading: true,
-      error: '',
       publication: null,
-      relatedPublications: []
+      loading: true,
+      error: null
     };
   },
   async mounted() {
     await this.loadPublication();
   },
-  computed: {
-    canDownload() {
-      if (!this.publication) return false;
-      const requiredLevel = this.publication.membership_level || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
-      return canAccess && this.publication.file_url;
-    },
-    downloadButtonText() {
-      if (!this.publication) return 'PDFダウンロード';
-      
-      const requiredLevel = this.publication.membership_level || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
-      const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
-      
-      if (!this.publication.file_url) {
-        return 'ファイルなし';
-      } else if (canAccess) {
-        return 'PDFダウンロード';
-      } else if (isRestricted) {
-        return `${this.getMembershipText(requiredLevel)}会員限定`;
-      } else {
-        return 'ログインが必要';
-      }
-    }
-  },
-  watch: {
-    '$route'() {
-      // ルートが変わったら再読み込み
-      this.loadPublication();
-    }
-  },
   methods: {
     async loadPublication() {
       try {
         this.loading = true;
-        this.error = '';
+        const publicationId = this.$route.params.id;
         
-        const publicationId = parseInt(this.$route.params.id);
+        const response = await apiClient.getPublication(publicationId);
         
-        // まずAPIから取得を試みる
-        try {
-          const response = await apiClient.getPublication(publicationId);
-          console.log('Publication API response:', response);
-          if (response && response.success && response.data && response.data.publication) {
-            this.publication = response.data.publication;
-            
-            // 関連刊行物を取得
-            const allResponse = await apiClient.getPublications();
-            console.log('All publications API response:', allResponse);
-            if (allResponse && allResponse.success && allResponse.data && allResponse.data.publications) {
-              this.relatedPublications = allResponse.data.publications
-                .filter(p => p.id !== publicationId && p.category === this.publication.category)
-                .slice(0, 3);
-            }
-            return;
-          }
-        } catch (apiError) {
-          console.log('API failed, trying mockServer:', apiError.message);
+        if (response.success && response.data && response.data.publication) {
+          this.publication = this.formatPublicationData(response.data.publication);
+        } else {
+          // Fallback to mock data
+          this.loadFallbackData();
         }
-        
-        // APIが失敗した場合はmockServerから取得
-        this.publication = await mockServer.getPublication(publicationId);
-        
-        // 関連刊行物を取得（同じカテゴリーの他の刊行物）
-        const allPublications = await mockServer.getPublications();
-        this.relatedPublications = allPublications
-          .filter(p => p.id !== publicationId && p.category === this.publication.category)
-          .slice(0, 3);
-        
-      } catch (err) {
-        this.error = '刊行物の詳細情報を取得できませんでした';
-        console.error('Publication detail loading error:', err);
+      } catch (error) {
+        console.error('Error loading publication:', error);
+        this.loadFallbackData();
       } finally {
         this.loading = false;
       }
     },
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
+    
+    loadFallbackData() {
+      // Mock data for demonstration
+             this.publication = {
+         id: this.$route.params.id,
+         title: '経営戦略に関する書籍',
+         category: 'research',
+         description: '経営戦略に関する詳細な分析と考察をまとめた書籍です。最新の経営理論と実践的な事例を交えて解説しています。',
+         author: '田中太郎',
+         pages: 250,
+         membersOnly: true,
+         image_url: '/img/image-1.png',
+         isDownloadable: true
+       };
     },
+    
+    formatPublicationData(publicationData) {
+      return {
+        ...publicationData,
+        isDownloadable: publicationData.is_downloadable || false,
+        membersOnly: publicationData.members_only || false
+      };
+    },
+    
+    formatDetailDate(dateString) {
+      if (!dateString) return '';
+      return dateString;
+    },
+    
     getCategoryText(category) {
       const categories = {
         'research': '研究レポート',
@@ -251,544 +196,262 @@ export default {
       };
       return categories[category] || 'その他';
     },
-    getMembershipText(level) {
-      switch (level) {
-        case 'standard':
-          return 'スタンダード';
-        case 'premium':
-          return 'プレミアム';
-        default:
-          return '会員';
-      }
+    
+    goToLogin() {
+      this.$router.push('/login');
     },
-    handleDownload() {
-      if (!this.publication) return;
-      
-      const requiredLevel = this.publication.membership_level || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
-      
-      if (canAccess && this.publication.file_url) {
-        this.downloadPDF();
-      } else if (!this.$store.getters['auth/isAuthenticated']) {
-        this.$router.push('/login');
-      } else {
-        alert(`この刊行物は${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
-        this.$router.push('/membership');
-      }
+    
+    goToContact() {
+      this.$router.push('/contact');
     },
-    downloadPDF() {
-      if (this.publication.file_url) {
-        // ダウンロード数を増加
-        this.publication.download_count++;
-        window.open(this.publication.file_url, '_blank');
-      } else {
-        alert('PDFファイルが見つかりません');
-      }
+    
+    goToMember() {
+      this.$router.push('/member');
     },
-    sharePage() {
-      if (navigator.share) {
-        navigator.share({
-          title: this.publication.title,
-          text: this.publication.description,
-          url: window.location.href
-        });
-      } else {
-        // フォールバック: URLをクリップボードにコピー
-        navigator.clipboard.writeText(window.location.href).then(() => {
-          alert('URLをクリップボードにコピーしました');
-        });
-      }
+    handleContactClick() {
+      this.$router.push('/contact');
     },
-    goToPublication(publicationId) {
-      this.$router.push(`/publications/${publicationId}`);
+    handleJoinClick() {
+      this.$router.push('/register');
     }
   }
 };
 </script>
 
 <style scoped>
+
 .page-container {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #ECECEC;
 }
 
-.page-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
+/* Hero Section and Breadcrumb styles are now handled by components */
 
-.loading-container,
-.error-container {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.loading-message {
-  font-size: 18px;
-  color: #666;
-}
-
-.error-message {
-  font-size: 18px;
-  color: #dc3545;
-  margin-bottom: 20px;
-}
-
-.back-btn {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.back-btn:hover {
-  background-color: #5a6268;
-}
-
-.breadcrumb {
-  margin-bottom: 30px;
-  font-size: 14px;
-}
-
-.breadcrumb-link {
-  color: #0066cc;
-  text-decoration: none;
-}
-
-.breadcrumb-link:hover {
-  text-decoration: underline;
-}
-
-.breadcrumb-separator {
-  margin: 0 10px;
-  color: #6c757d;
-}
-
-.breadcrumb-current {
-  color: #1A1A1A;
-  font-weight: 500;
-}
-
-.detail-content {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.detail-header {
-  display: grid;
-  grid-template-columns: 400px 1fr;
+/* Publication Detail Section */
+.publication-detail-section {
+  padding: 70px 50px 50px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 40px;
-  padding: 40px;
+  background: #ECECEC;
 }
 
-.publication-image-large {
-  position: relative;
+.section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
 }
 
-.main-image {
+.section-title {
+  color: #1A1A1A;
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.72px;
+}
+
+.section-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.divider-line {
+  width: 69px;
+  height: 2px;
+  background: #DA5761;
+}
+
+.divider-text {
+  color: #DA5761;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Publication Detail Card */
+.publication-detail-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
   width: 100%;
+  max-width: 1500px;
+  padding: 50px;
+}
+
+.publication-content {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 50px;
   height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.publication-image {
+  width: 40%;
+  height: auto;
+  overflow: hidden;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.publication-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 400px;
 }
 
 .publication-info {
-  padding: 20px 0;
-}
-
-.publication-meta {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.publication-category {
-  background-color: #da5761;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.publication-date {
-  color: #6c757d;
-  font-size: 14px;
-}
-
-.publication-title {
-  font-size: 2.2rem;
-  color: #1A1A1A;
-  margin-bottom: 30px;
-  line-height: 1.3;
+  width: 60%;
+  flex: 1;
+  height: 100%;
 }
 
 .publication-details {
-  margin-bottom: 30px;
-}
-
-.detail-item {
+  height: 100%;
   display: flex;
-  margin-bottom: 10px;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.detail-label {
-  font-weight: 600;
-  color: #1A1A1A;
-  min-width: 120px;
-}
-
-.detail-value {
-  color: #666;
-}
-
-.action-buttons {
+.detail-row {
   display: flex;
-  gap: 15px;
+  flex-direction: column;
+  margin-bottom: 15px;
+  align-items: flex-start;
+  border-bottom: 0.5px dashed #D0D0D0;
+  padding-bottom: 15px;
 }
 
-.download-btn,
-.share-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+ .detail-row:first-child {
+   border-top: 0.5px dashed #D0D0D0;
+   padding-top: 15px;
+ }
 
-.download-btn {
-  background-color: #da5761;
+ .detail-row:last-child {
+   padding-bottom: 0;
+   margin-bottom: 0;
+ }
+
+ .detail-label {
+  width: 200px;
+  font-weight: normal;
   color: white;
-}
-
-.download-btn:hover:not(:disabled) {
-  background-color: #c44853;
-}
-
-.download-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.share-btn {
-  background-color: #f8f9fa;
-  color: #1A1A1A;
-  border: 1px solid #dee2e6;
-}
-
-.share-btn:hover {
-  background-color: #e9ecef;
-}
-
-.description-section {
-  padding: 40px;
-  border-top: 1px solid #eee;
-}
-
-.description-section h2 {
-  font-size: 1.5rem;
-  color: #1A1A1A;
-  margin-bottom: 20px;
-}
-
-.description-text {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #666;
-}
-
-.related-section {
-  padding: 40px;
-  border-top: 1px solid #eee;
-  background-color: #f8f9fa;
-}
-
-.related-section h2 {
-  font-size: 1.5rem;
-  color: #1A1A1A;
-  margin-bottom: 20px;
-}
-
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.related-item {
-  background: white;
-  border-radius: 8px;
-  padding: 15px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  gap: 15px;
-}
-
-.related-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.related-image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+  font-size: 0.9rem;
+  background-color: #727272;
+  padding: 5px 0;
   border-radius: 5px;
-  flex-shrink: 0;
-}
-
-.related-info {
-  flex: 1;
-}
-
-.related-date {
-  font-size: 12px;
-  color: #6c757d;
+  text-align: center;
   margin-bottom: 5px;
 }
 
-.related-title {
-  font-size: 14px;
-  color: #1A1A1A;
-  line-height: 1.4;
-  margin: 0;
+.detail-value {
+  width: 100%;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding-left: 10px;
 }
 
-/* 会員制限スタイル */
-.detail-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 2;
+/* Login Section */
+.login-section {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.publication-image-large {
+.login-btn {
+  align-items: center;
+  background-color: var(--mandy);
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px #0000000d;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px 0px;
+  width: 380px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-family: var(--font-family-inter);
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s;
+  margin: 0 auto;
+}
+
+.login-btn:hover {
+  background: #c44853;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
+}
+
+.text-44 {
+  letter-spacing: 0;
+  line-height: 22.5px;
+  margin-top: 0px;
   position: relative;
+  white-space: nowrap;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  color: var(--white);
+  font-family: var(--font-family-inter);
+  font-size: 15px;
+  font-weight: 700;
 }
 
-.download-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  background-color: #e0e0e0;
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+  font-size: 1.1rem;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 1150px) {
-  .detail-header {
-    padding: 40px 30px !important;
-    gap: 30px !important;
-  }
-  
-  .publication-title {
-    font-size: 32px !important;
-  }
-  
-  .publication-subtitle {
-    font-size: 18px !important;
-  }
-  
-  .publication-meta {
-    font-size: 18px !important;
-  }
-  
-  .description-section,
-  .related-section {
-    padding: 40px 30px !important;
-  }
-  
-  .description-section h3 {
-    font-size: 22px !important;
-  }
-  
-  .description-section p {
-    font-size: 18px !important;
-  }
-  
-  .related-section h2 {
-    font-size: 22px !important;
-  }
-  
-  .related-title {
-    font-size: 16px !important;
-  }
-  
-  .related-date {
-    font-size: 14px !important;
-  }
-  
-  .action-btn {
-    font-size: 18px !important;
-    padding: 15px 30px !important;
-  }
-}
+/* Contact Banner styles are now handled by ContactSection component */
 
-@media (max-width: 900px) {
-  .detail-header {
-    padding: 35px 25px !important;
-    gap: 25px !important;
-  }
-  
-  .publication-title {
-    font-size: 29px !important;
-  }
-  
-  .publication-subtitle {
-    font-size: 17px !important;
-  }
-  
-  .publication-meta {
-    font-size: 17px !important;
-  }
-  
-  .description-section,
-  .related-section {
-    padding: 35px 25px !important;
-  }
-  
-  .description-section h3 {
-    font-size: 20px !important;
-  }
-  
-  .description-section p {
-    font-size: 17px !important;
-  }
-  
-  .related-section h2 {
-    font-size: 20px !important;
-  }
-  
-  .related-title {
-    font-size: 15px !important;
-  }
-  
-  .related-date {
-    font-size: 13px !important;
-  }
-  
-  .action-btn {
-    font-size: 17px !important;
-    padding: 14px 28px !important;
-  }
-}
+/* Access Section styles are now handled by AccessSection component */
 
-@media (max-width: 768px) {
-  .detail-header {
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
-    padding: 20px !important;
-  }
-  
-  .publication-title {
-    font-size: 27px !important;
-  }
-  
-  .publication-subtitle {
-    font-size: 16px !important;
-  }
-  
-  .publication-meta {
-    font-size: 16px !important;
-  }
-  
-  .action-buttons {
-    flex-direction: column !important;
-  }
-  
-  .description-section,
-  .related-section {
-    padding: 20px !important;
-  }
-  
-  .description-section h3 {
-    font-size: 19px !important;
-  }
-  
-  .description-section p {
-    font-size: 16px !important;
-  }
-  
-  .related-section h2 {
-    font-size: 19px !important;
-  }
-  
-  .related-grid {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .related-title {
-    font-size: 14px !important;
-  }
-  
-  .related-date {
-    font-size: 12px !important;
-  }
-  
-  .action-btn {
-    font-size: 16px !important;
-    padding: 13px 26px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .detail-header {
-    padding: 15px !important;
-    gap: 18px !important;
-  }
-  
-  .publication-title {
-    font-size: 22px !important;
-  }
-  
-  .publication-subtitle {
-    font-size: 13px !important;
-  }
-  
-  .publication-meta {
-    font-size: 13px !important;
-  }
-  
-  .description-section,
-  .related-section {
-    padding: 15px !important;
-  }
-  
-  .description-section h3 {
-    font-size: 18px !important;
-  }
-  
-  .description-section p {
-    font-size: 13px !important;
-  }
-  
-  .related-section h2 {
-    font-size: 18px !important;
-  }
-  
-  .related-title {
-    font-size: 13px !important;
-  }
-  
-  .related-date {
-    font-size: 11px !important;
-  }
-  
-  .action-btn {
-    font-size: 13px !important;
-    padding: 12px 24px !important;
-  }
-}
+/* Floating Action Buttons styles are now handled by FixedSideButtons component */
 
 /* Footer Navigation */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .publication-detail-section {
+    padding: 30px 20px 0 20px;
+  }
+  
+  .publication-detail-card {
+    padding: 30px 20px;
+  }
+  
+  .publication-content {
+    flex-direction: column;
+  }
+  
+  .publication-image {
+    width: 100%;
+    height: 300px;
+  }
+  
+  .publication-info {
+    width: 100%;
+  }
+  
+  .detail-label {
+    width: 100%;
+  }
+  
+  .button-section {
+    padding: 50px 20px;
+  }
+  
+  .cta-button {
+    width: 100%;
+  }
+}
 </style>

@@ -419,7 +419,7 @@ export default {
 /* Page Content */
 .page-content {
   margin: 0 auto;
-  padding: 70px 50px 50px 50px;
+  padding: 70px 50px 50px;
 }
 
 .publications-header {
@@ -553,6 +553,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .category-select {
@@ -762,6 +764,55 @@ export default {
   gap: 30px;
 }
 
+/* Add row separators when grid becomes 2 columns */
+@media (min-width: 600px) and (max-width: 900px) {
+  .publications-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .publication-card:nth-child(odd) {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  
+  .publication-card:nth-child(even) {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  
+  .publication-card:nth-last-child(-n+2) {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 10px !important;
+  }
+}
+
+/* Add row separators when grid becomes 1 column */
+@media (max-width: 599px) {
+  .publications-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .publication-card:not(:last-child) {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  
+  .publication-card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 10px !important;
+  }
+}
+
 .publication-card {
   background: white;
   border-radius: 10px;
@@ -847,9 +898,32 @@ export default {
 
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .category-filter {
+    justify-content: center !important;
+  }
+  
+  .category-select {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 @media (max-width: 1150px) {
   .page-content {
     padding: 50px 30px !important;
+  }
+  
+  .publications-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
   }
   
   .publications-grid {
@@ -857,23 +931,59 @@ export default {
     gap: 20px !important;
   }
   
-  .section-title {
-    font-size: 32px !important;
+  .featured-publication {
+    padding: 30px 20px !important;
   }
   
-  .featured-title {
-    font-size: 22px !important;
+  .featured-content {
+    flex-direction: column !important;
+    gap: 20px !important;
   }
   
-  .featured-description {
+  .featured-image {
+    width: 100% !important;
+    height: 300px !important;
+  }
+  
+  .featured-info {
+    width: 100% !important;
+  }
+  
+  .featured-details {
+    gap: 0 !important;
+    text-align: left !important;
+  }
+  
+  .content-title {
+    text-align: left !important;
+  }
+  
+  .content-text {
+    text-align: left !important;
+  }
+  
+  .download-btn {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+  
+  .filter-container {
+    padding: 30px 20px !important;
+  }
+  
+  .publications-container {
+    padding: 30px 20px !important;
+  }
+  
+  .content-title {
+    font-size: 18px !important;
+  }
+  
+  .content-text {
     font-size: 18px !important;
   }
   
   .publication-title {
-    font-size: 18px !important;
-  }
-  
-  .publication-description {
     font-size: 18px !important;
   }
 }
@@ -883,20 +993,40 @@ export default {
     padding: 30px 20px !important;
   }
   
+  .publications-header {
+    gap: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .title-english {
+    font-size: 17px !important;
+  }
+  
   .publications-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 20px !important;
   }
   
-  .section-title {
-    font-size: 29px !important;
+  .featured-publication {
+    padding: 30px 20px !important;
   }
   
-  .featured-title {
-    font-size: 20px !important;
+  .filter-container {
+    padding: 30px 20px !important;
   }
   
-  .featured-description {
+  .publications-container {
+    padding: 30px 20px !important;
+  }
+  
+  .content-title {
+    font-size: 17px !important;
+  }
+  
+  .content-text {
     font-size: 17px !important;
   }
   
@@ -904,25 +1034,13 @@ export default {
     font-size: 17px !important;
   }
   
-  .publication-description {
-    font-size: 17px !important;
-  }
-  
   .year-filter {
     justify-content: center !important;
   }
   
-  .category-filter {
-    flex-wrap: wrap !important;
-    gap: 5px !important;
-  }
-  
-  .category-btn {
-    padding: 10px 15px !important;
-    font-size: 0.7rem !important;
-    border-right: none !important;
-    border-radius: 15px !important;
-    margin-bottom: 5px !important;
+  .category-select {
+    min-width: 100% !important;
+    padding: 12px 18px !important;
   }
 }
 
@@ -931,28 +1049,44 @@ export default {
     padding: 30px 20px !important;
   }
   
+  .publications-header {
+    gap: 20px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .title-english {
+    font-size: 16px !important;
+  }
+  
   .publications-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
     gap: 15px !important;
   }
   
-  .section-title {
-    font-size: 27px !important;
+  .featured-publication {
+    padding: 30px 20px !important;
   }
   
-  .featured-title {
-    font-size: 19px !important;
+  .filter-container {
+    padding: 30px 20px !important;
   }
   
-  .featured-description {
+  .publications-container {
+    padding: 30px 20px !important;
+  }
+  
+  .content-title {
+    font-size: 16px !important;
+  }
+  
+  .content-text {
     font-size: 16px !important;
   }
   
   .publication-title {
-    font-size: 16px !important;
-  }
-  
-  .publication-description {
     font-size: 16px !important;
   }
   
@@ -963,8 +1097,14 @@ export default {
   
   .featured-image {
     flex: none !important;
-    max-width: 300px !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 auto !important;
+  }
+  
+  .category-select {
+    min-width: 100% !important;
+    padding: 10px 15px !important;
   }
 }
 
@@ -973,29 +1113,51 @@ export default {
     padding: 20px 15px !important;
   }
   
+  .publications-header {
+    gap: 18px !important;
+  }
+  
+  .page-title {
+    font-size: 22px !important;
+  }
+  
+  .title-english {
+    font-size: 13px !important;
+  }
+  
   .publications-grid {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
   }
   
-  .section-title {
-    font-size: 22px !important;
+  .featured-publication {
+    padding: 20px 15px !important;
   }
   
-  .featured-title {
-    font-size: 18px !important;
+  .filter-container {
+    padding: 20px 15px !important;
   }
   
-  .featured-description {
+  .publications-container {
+    padding: 20px 15px !important;
+  }
+  
+  .content-title {
     font-size: 13px !important;
+    width: 100% !important;
+  }
+  
+  .content-text {
+    font-size: 13px !important;
+    width: 100% !important;
   }
   
   .publication-title {
     font-size: 13px !important;
   }
   
-  .publication-description {
-    font-size: 13px !important;
+  .featured-image {
+    height: 200px !important;
   }
   
   .featured-image img {
@@ -1009,6 +1171,11 @@ export default {
   .year-btn {
     padding: 6px 12px !important;
     font-size: 0.8rem !important;
+  }
+  
+  .category-select {
+    min-width: 100% !important;
+    padding: 8px 12px !important;
   }
 }
 

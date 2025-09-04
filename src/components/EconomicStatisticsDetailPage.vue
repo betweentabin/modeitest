@@ -533,24 +533,41 @@ export default {
 /* Footer Navigation */
 
 /* Responsive Design */
-@media (max-width: 1150px) {
-  .statistics-detail-section {
-    padding: 50px 30px 0 30px !important;
+@media (max-width: 1200px) {
+  .statistics-content {
+    flex-direction: column !important;
+    gap: 30px !important;
   }
   
-  .statistics-detail-card {
+  .statistics-image {
+    width: 100% !important;
+    height: 300px !important;
+    order: -1 !important;
+  }
+  
+  .statistics-info {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 1150px) {
+  .statistics-detail-section {
     padding: 50px 30px !important;
   }
   
-  .statistics-title {
+  .statistics-detail-card {
+    padding: 30px 20px !important;
+  }
+  
+  .statistics-image {
+    height: 350px !important;
+  }
+  
+  .section-title {
     font-size: 32px !important;
   }
   
-  .statistics-subtitle {
-    font-size: 18px !important;
-  }
-  
-  .statistics-description {
+  .divider-text {
     font-size: 18px !important;
   }
   
@@ -559,10 +576,6 @@ export default {
   }
   
   .detail-value {
-    font-size: 18px !important;
-  }
-  
-  .download-notice {
     font-size: 18px !important;
   }
   
@@ -577,7 +590,7 @@ export default {
   }
   
   .button-section {
-    padding: 60px 30px !important;
+    padding: 30px 20px 50px 20px !important;
   }
   
   .cta-button {
@@ -588,22 +601,22 @@ export default {
 
 @media (max-width: 900px) {
   .statistics-detail-section {
-    padding: 45px 25px 0 25px !important;
+    padding: 30px 20px !important;
   }
   
   .statistics-detail-card {
-    padding: 45px 25px !important;
+    padding: 30px 20px !important;
   }
   
-  .statistics-title {
+  .statistics-image {
+    height: 280px !important;
+  }
+  
+  .section-title {
     font-size: 29px !important;
   }
   
-  .statistics-subtitle {
-    font-size: 17px !important;
-  }
-  
-  .statistics-description {
+  .divider-text {
     font-size: 17px !important;
   }
   
@@ -612,10 +625,6 @@ export default {
   }
   
   .detail-value {
-    font-size: 17px !important;
-  }
-  
-  .download-notice {
     font-size: 17px !important;
   }
   
@@ -630,7 +639,7 @@ export default {
   }
   
   .button-section {
-    padding: 55px 25px !important;
+    padding: 30px 20px 50px 20px !important;
   }
   
   .cta-button {
@@ -641,48 +650,30 @@ export default {
 
 @media (max-width: 768px) {
   .statistics-detail-section {
-    padding: 30px 20px 0 20px !important;
+    padding: 30px 20px !important;
   }
   
   .statistics-detail-card {
     padding: 30px 20px !important;
   }
   
-  .statistics-title {
+  .statistics-image {
+    height: 250px !important;
+  }
+  
+  .section-title {
     font-size: 27px !important;
   }
   
-  .statistics-subtitle {
+  .divider-text {
     font-size: 16px !important;
-  }
-  
-  .statistics-description {
-    font-size: 16px !important;
-  }
-  
-  .statistics-content {
-    flex-direction: column !important;
-  }
-  
-  .statistics-image {
-    width: 100% !important;
-    height: 300px !important;
-  }
-  
-  .statistics-info {
-    width: 100% !important;
   }
   
   .detail-label {
-    width: 100% !important;
     font-size: 16px !important;
   }
   
   .detail-value {
-    font-size: 16px !important;
-  }
-  
-  .download-notice {
     font-size: 16px !important;
   }
   
@@ -698,7 +689,7 @@ export default {
   }
   
   .button-section {
-    padding: 50px 20px !important;
+    padding: 30px 20px 50px 20px !important;
   }
   
   .cta-button {
@@ -710,22 +701,22 @@ export default {
 
 @media (max-width: 480px) {
   .statistics-detail-section {
-    padding: 20px 15px 0 15px !important;
+    padding: 20px 15px !important;
   }
   
   .statistics-detail-card {
     padding: 20px 15px !important;
   }
   
-  .statistics-title {
+  .statistics-image {
+    height: 200px !important;
+  }
+  
+  .section-title {
     font-size: 22px !important;
   }
   
-  .statistics-subtitle {
-    font-size: 13px !important;
-  }
-  
-  .statistics-description {
+  .divider-text {
     font-size: 13px !important;
   }
   
@@ -734,10 +725,6 @@ export default {
   }
   
   .detail-value {
-    font-size: 13px !important;
-  }
-  
-  .download-notice {
     font-size: 13px !important;
   }
   
@@ -753,12 +740,16 @@ export default {
   }
   
   .button-section {
-    padding: 40px 15px !important;
+    padding: 20px 15px 40px 15px !important;
   }
   
   .cta-button {
     font-size: 13px !important;
     padding: 12px 24px !important;
+  }
+  
+  .login-btn {
+    width: 100% !important;
   }
 }
 </style>

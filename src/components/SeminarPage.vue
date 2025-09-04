@@ -710,18 +710,6 @@ export default {
   border-top: 0.5px dashed #B0B0B0;
 }
 
-.past-show-more {
-  /* Same styles as show-more-btn */
-}
-
-/* Contact Banner styles are now handled by ContactSection component */
-
-/* Access Section styles are now handled by AccessSection component */
-
-/* Floating Action Buttons styles are now handled by FixedSideButtons component */
-
-/* Footer Navigation */
-
 /* Responsive Design */
 @media (max-width: 1150px) {
   /* セクションのパディング調整 */
@@ -813,6 +801,52 @@ export default {
     font-size: 18px !important;
   }
   
+  /* 情報行の縦並び化 */
+  .info-row {
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 20px 0 !important;
+    align-items: flex-start !important;
+  }
+
+  .info-row-first,
+  .info-row-second,
+  .info-row-third,
+  .info-row-fourth {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .info-label {
+    width: 250px !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-label-date,
+  .info-label-title {
+    width: 250px !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-value {
+    width: 100% !important;
+    padding-left: 0 !important;
+    text-align: left !important;
+  }
+
+  .past-info-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 20px 0 !important;
+    align-items: flex-start !important;
+  }
+  
   /* セクションヘッダーのギャップ調整 */
   .section-header {
     gap: 25px !important;
@@ -878,45 +912,6 @@ export default {
     padding: 35px !important;
   }
   
-  /* 情報行の縦並び化 */
-  .info-row {
-    flex-direction: column !important;
-    gap: 15px !important;
-    padding: 20px 0 !important;
-    align-items: flex-start !important;
-  }
-
-  .info-row-first,
-  .info-row-second,
-  .info-row-third,
-  .info-row-fourth {
-    flex-direction: column !important;
-    gap: 10px !important;
-    align-items: flex-start !important;
-    width: 100% !important;
-  }
-
-  .info-label {
-    width: 250px !important;
-    justify-content: flex-start !important;
-    text-align: left !important;
-    flex-shrink: 0 !important;
-    min-width: 250px !important;
-  }
-
-  .info-label-date,
-  .info-label-title {
-    width: 250px !important;
-    flex-shrink: 0 !important;
-    min-width: 250px !important;
-  }
-
-  .info-value {
-    width: 100% !important;
-    padding-left: 0 !important;
-    text-align: left !important;
-  }
-  
   /* フォントサイズ調整 */
   .section-title {
     font-size: 29px !important;
@@ -957,6 +952,27 @@ export default {
   /* セクションヘッダーのギャップ調整 */
   .section-header {
     gap: 22px !important;
+  }
+  
+  /* 過去セミナーの情報行を縦並び化 */
+  .past-info-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 20px 0 !important;
+    align-items: flex-start !important;
+  }
+  
+  .past-info-row .info-label {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+  }
+  
+  .past-info-row .info-value {
+    width: 100% !important;
+    padding-left: 0 !important;
+    text-align: left !important;
   }
 }
 
@@ -1165,6 +1181,10 @@ export default {
   .show-more-btn {
     width: 100% !important;
   }
+
+  .past-info-row .info-label {
+    width: auto !important;
+  }
   
   /* 情報行のギャップ調整 */
   .info-row {
@@ -1174,16 +1194,16 @@ export default {
   
   .info-label {
     padding: 8px 20px !important;
-    width: 250px !important;
+    width: auto !important;
     flex-shrink: 0 !important;
-    min-width: 250px !important;
+    min-width: auto !important;
   }
   
   .info-label-date,
   .info-label-title {
-    width: 250px !important;
+    width: auto !important;
     flex-shrink: 0 !important;
-    min-width: 250px !important;
+    min-width: auto !important;
   }
 }
 </style>

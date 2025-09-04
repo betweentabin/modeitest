@@ -58,26 +58,20 @@
       
       
     
-      <svg class="vector-13" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M-8.02699e-08 120L-3.89972e-06 44.6076C413.287 -99.5267 685.476 162.131 1440 44.6077L1440 120L-8.02699e-08 120Z" fill="#ECECEC"/>
-      </svg>
       <div class="overlap-group8">
+        <svg class="vector-13" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M-8.02699e-08 120L-3.89972e-06 44.6076C413.287 -99.5267 685.476 162.131 1440 44.6077L1440 120L-8.02699e-08 120Z" fill="#ECECEC"/>
+        </svg>
         <div class="main">
           <div class="about">
             <div class="flex-col-1">
-              <div class="text-47">{{ text112 }}</div>
-              <div class="group-30">
-                <img
-                  class="vector-16"
-                  :src="vector152"
-                  alt="Vector 16"
-                />
-                <div class="for-you valign-text-middle">{{ forYou }}</div>
-                <img
-                  class="vector-15"
-                  :src="vector152"
-                  alt="Vector 15"
-                />
+              <div class="section-header">
+                <h2 class="section-title">ちくぎん地域経済研究所について</h2>
+                <div class="section-divider">
+                  <div class="divider-line"></div>
+                  <span class="divider-text">FOR YOU</span>
+                  <div class="divider-line"></div>
+                </div>
               </div>
               <div class="text-48" v-html="text113"></div>
             </div>
@@ -862,6 +856,7 @@ export default {
 .vector-13 {
   height: 120px;
   margin-top: 50px;
+  margin-bottom: -5px;
   width: 100vw;
   min-width: 100vw;
   max-width: 100vw;
@@ -1053,26 +1048,40 @@ export default {
   max-width: 1340px;
 }
 
-.text-47 {
-  color: var(--hot-pink);
-  font-family: var(--font-family-inter);
-  font-size: 36px;
-  font-weight: 600;
-  letter-spacing: -0.72px;
-  line-height: normal;
-  margin-top: 31px;
-  min-height: 44px;
-  text-align: center;
-  width: 100%;
-  max-width: 1340px;
+/* Section Headers */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-top: 20px;
 }
 
-.group-30 {
-  align-items: center;
+.section-title {
+  color: #DA5761;
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.72px;
+}
+
+.section-divider {
   display: flex;
-  margin-left: 2px;
-  margin-top: 33px;
-  min-width: 270px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.divider-line {
+  width: 69px;
+  height: 2px;
+  background: #DA5761;
+}
+
+.divider-text {
+  color: #DA5761;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .vector-16 {
@@ -1095,7 +1104,6 @@ export default {
 
 .vector-15 {
   height: 2px;
-  margin-left: 20px;
   width: 69px;
 }
 
@@ -1925,6 +1933,7 @@ export default {
   transform: translateX(-50%);
   z-index: 8;
   box-sizing: border-box;
+  margin-top: -5px;
 }
 
 
@@ -2019,6 +2028,7 @@ export default {
     width: 100%;
     max-width: 100vw;
     box-sizing: border-box;
+    gap: 40px;
   }
 
   .hero-overlay {
@@ -2036,7 +2046,6 @@ export default {
     max-width: 100%;
   }
   
-  .text-47,
   .text-48 {
     width: 100%;
     max-width: 100%;
@@ -2291,6 +2300,20 @@ export default {
   }
 }
 
+@media (max-width: 1150px) {
+  .section-header {
+    gap: 25px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .divider-text {
+    font-size: 18px !important;
+  }
+}
+
 @media (max-width: 900px) {
   .hero-section {
     height: 800px;
@@ -2308,6 +2331,19 @@ export default {
   
   .hero-button-text {
     font-size: 16px;
+  }
+  
+  .section-header {
+    gap: 20px !important;
+  }
+
+  /* フォントサイズ調整 */
+  .section-title {
+    font-size: 29px !important;
+  }
+
+  .divider-text {
+    font-size: 16px !important;
   }
   
   .frame-1321317457 {
@@ -2348,6 +2384,7 @@ export default {
   
   .main {
     padding: 0px 20px 50px;
+    gap: 35px;
   }
   
   .content-view {
@@ -2567,6 +2604,7 @@ export default {
   
   .main {
     padding: 0px 15px 30px;
+    gap: 30px;
   }
   
   .content-view {
@@ -2579,19 +2617,9 @@ export default {
     overflow: hidden;
   }
   
-  .text-47 {
-    font-size: 28px;
-    margin-top: 20px;
-  }
-  
   .text-48 {
     font-size: 16px;
     line-height: 28px;
-    margin-top: 20px;
-  }
-  
-  .group-30 {
-    min-width: 200px;
     margin-top: 20px;
   }
   
@@ -2851,6 +2879,19 @@ export default {
     padding: 90px 10px;
   }
   
+  .section-header {
+    gap: 18px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .section-title {
+    font-size: 22px !important;
+  }
+
+  .divider-text {
+    font-size: 13px !important;
+  }
+  
   .hero-title,
   .hero-subtitle {
     font-size: 18px;
@@ -2953,15 +2994,11 @@ export default {
   
   .main {
     padding: 0px 10px 20px;
+    gap: 25px;
   }
   
   .content-view {
     padding: 15px 10px;
-  }
-  
-  .text-47 {
-    font-size: 24px;
-    margin-top: 15px;
   }
   
   .text-48 {
@@ -2970,9 +3007,12 @@ export default {
     margin-top: 15px;
   }
   
-  .group-30 {
-    min-width: 180px;
-    margin-top: 15px;
+  .section-header {
+    gap: 22px !important;
+  }
+
+  .divider-text {
+    font-size: 17px !important;
   }
   
   .for-you {

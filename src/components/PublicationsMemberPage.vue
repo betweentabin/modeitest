@@ -58,6 +58,24 @@
             {{ category.name }}
           </button>
         </div>
+
+        <!-- Category Filter Mobile -->
+        <div class="category-filter-mobile">
+          <select 
+            v-model="selectedCategory" 
+            @change="selectCategory(selectedCategory)"
+            class="category-select-mobile"
+          >
+            <option value="">すべてのカテゴリ</option>
+            <option 
+              v-for="category in categories" 
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <!-- Featured Publication -->
@@ -599,7 +617,7 @@ export default {
 /* Page Content */
 .page-content {
   margin: 0 auto;
-  padding: 70px 50px 50px 50px;
+  padding: 70px 50px 50px;
 }
 
 .publications-header {
@@ -728,6 +746,8 @@ export default {
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .category-btn {
@@ -745,6 +765,35 @@ export default {
 
 .category-btn:last-child {
   border-right: none;
+}
+
+/* Category Filter Mobile */
+.category-filter-mobile {
+  display: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.category-select-mobile {
+  width: 100%;
+  padding: 15px 20px;
+  background: #F6D5D8;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #1A1A1A;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.category-select-mobile:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #DA5761;
 }
 
 .category-btn.active,
@@ -911,6 +960,55 @@ export default {
   gap: 30px;
 }
 
+/* Add row separators when grid becomes 2 columns */
+@media (min-width: 600px) and (max-width: 900px) {
+  .publications-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .publication-card:nth-child(odd) {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  
+  .publication-card:nth-child(even) {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  
+  .publication-card:nth-last-child(-n+2) {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 10px !important;
+  }
+}
+
+/* Add row separators when grid becomes 1 column */
+@media (max-width: 599px) {
+  .publications-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .publication-card:not(:last-child) {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  
+  .publication-card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 10px !important;
+  }
+}
+
 .publication-card {
   background: white;
   border-radius: 10px;
@@ -1048,9 +1146,33 @@ export default {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .category-filter {
+    display: none;
+  }
+  
+  .category-filter-mobile {
+    display: block;
+    margin-bottom: 40px;
+    width: 100%;
+  }
+}
+
 @media (max-width: 1150px) {
   .page-content {
     padding: 50px 30px !important;
+  }
+  
+  .publications-header {
+    gap: 25px !important;
+  }
+  
+  .page-title {
+    font-size: 32px !important;
+  }
+  
+  .title-english {
+    font-size: 18px !important;
   }
   
   .publications-grid {
@@ -1058,30 +1180,83 @@ export default {
     gap: 20px !important;
   }
   
-  .section-title {
-    font-size: 32px !important;
+  .featured-publication {
+    padding: 30px 20px !important;
   }
   
-  .featured-title {
-    font-size: 22px !important;
+  .featured-content {
+    flex-direction: column !important;
+    gap: 20px !important;
   }
   
-  .featured-description {
+  .featured-image {
+    width: 100% !important;
+    height: 300px !important;
+  }
+  
+  .featured-info {
+    width: 100% !important;
+  }
+  
+  .featured-details {
+    gap: 0 !important;
+    text-align: left !important;
+  }
+  
+  .past-info-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+  
+  .info-label {
+    width: 100% !important;
+    text-align: left !important;
+  }
+  
+  .download-btn {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+  
+  .filter-container {
+    padding: 30px 20px !important;
+  }
+  
+  .publications-container {
+    padding: 30px 20px !important;
+  }
+  
+  .info-label {
+    font-size: 18px !important;
+    padding: 8px 25px !important;
+    width: 220px !important;
+  }
+  
+  .info-value {
     font-size: 18px !important;
   }
   
   .publication-title {
     font-size: 18px !important;
   }
-  
-  .publication-description {
-    font-size: 18px !important;
-  }
 }
 
 @media (max-width: 900px) {
   .page-content {
-    padding: 40px 20px !important;
+    padding: 30px 20px !important;
+  }
+  
+  .publications-header {
+    gap: 22px !important;
+  }
+  
+  .page-title {
+    font-size: 29px !important;
+  }
+  
+  .title-english {
+    font-size: 17px !important;
   }
   
   .publications-grid {
@@ -1089,23 +1264,29 @@ export default {
     gap: 20px !important;
   }
   
-  .section-title {
-    font-size: 29px !important;
+  .featured-publication {
+    padding: 30px 20px !important;
   }
   
-  .featured-title {
-    font-size: 20px !important;
+  .filter-container {
+    padding: 30px 20px !important;
   }
   
-  .featured-description {
+  .publications-container {
+    padding: 30px 20px !important;
+  }
+  
+  .info-label {
+    font-size: 17px !important;
+    padding: 8px 20px !important;
+    width: 200px !important;
+  }
+  
+  .info-value {
     font-size: 17px !important;
   }
   
   .publication-title {
-    font-size: 17px !important;
-  }
-  
-  .publication-description {
     font-size: 17px !important;
   }
   
@@ -1114,22 +1295,36 @@ export default {
   }
   
   .category-filter {
-    flex-wrap: wrap !important;
-    gap: 5px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
   }
   
   .category-btn {
-    padding: 10px 15px !important;
-    font-size: 0.7rem !important;
+    width: 100% !important;
     border-right: none !important;
-    border-radius: 15px !important;
-    margin-bottom: 5px !important;
+    border-bottom: 1px solid #DA5761 !important;
+  }
+  
+  .category-btn:last-child {
+    border-bottom: none !important;
   }
 }
 
 @media (max-width: 768px) {
   .page-content {
-    padding: 40px 15px !important;
+    padding: 30px 20px !important;
+  }
+  
+  .publications-header {
+    gap: 20px !important;
+  }
+  
+  .page-title {
+    font-size: 27px !important;
+  }
+  
+  .title-english {
+    font-size: 16px !important;
   }
   
   .publications-grid {
@@ -1137,23 +1332,29 @@ export default {
     gap: 15px !important;
   }
   
-  .section-title {
-    font-size: 27px !important;
+  .featured-publication {
+    padding: 30px 20px !important;
   }
   
-  .featured-title {
-    font-size: 19px !important;
+  .filter-container {
+    padding: 30px 20px !important;
   }
   
-  .featured-description {
+  .publications-container {
+    padding: 30px 20px !important;
+  }
+  
+  .info-label {
+    font-size: 16px !important;
+    padding: 8px 18px !important;
+    width: 180px !important;
+  }
+  
+  .info-value {
     font-size: 16px !important;
   }
   
   .publication-title {
-    font-size: 16px !important;
-  }
-  
-  .publication-description {
     font-size: 16px !important;
   }
   
@@ -1164,14 +1365,31 @@ export default {
   
   .featured-image {
     flex: none !important;
-    max-width: 300px !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 auto !important;
+  }
+  
+  .category-filter {
+    flex-wrap: nowrap !important;
+    gap: 0 !important;
+  }
+  
+  .category-btn {
+    padding: 8px 10px !important;
+    font-size: 0.6rem !important;
+    border-right: 1px solid #DA5761 !important;
+    border-bottom: none !important;
+    border-radius: 0 !important;
+    margin-bottom: 0 !important;
+    min-width: 0 !important;
+    flex: 1 !important;
   }
 }
 
 @media (max-width: 480px) {
   .page-content {
-    padding: 30px 20px !important;
+    padding: 20px 15px !important;
   }
   
   .publications-grid {
@@ -1199,6 +1417,22 @@ export default {
     font-size: 13px !important;
   }
   
+  .featured-publication {
+    padding: 20px 15px !important;
+  }
+  
+  .filter-container {
+    padding: 20px 15px !important;
+  }
+  
+  .publications-container {
+    padding: 20px 15px !important;
+  }
+  
+  .featured-image {
+    height: 200px !important;
+  }
+  
   .featured-image img {
     height: 200px !important;
   }
@@ -1210,6 +1444,15 @@ export default {
   .year-btn {
     padding: 6px 12px !important;
     font-size: 0.8rem !important;
+  }
+  
+  .info-label {
+    width: 100% !important;
+  }
+  
+  .category-btn {
+    padding: 15px 20px !important;
+    font-size: 14px !important;
   }
 }
 

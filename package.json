@@ -14,8 +14,10 @@
     "@tiptap/vue-2": "^2.26.1",
     "axios": "^1.11.0",
     "core-js": "^3.6.5",
+    "quill": "^2.0.3",
     "serve": "^14.2.0",
     "vue": "^2.6.11",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.5.2",
     "vuex": "^3.6.2"
   },
