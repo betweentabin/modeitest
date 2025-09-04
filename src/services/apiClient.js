@@ -180,6 +180,31 @@ class ApiClient {
     })
   }
 
+  // Upload (multipart/form-data). body must be FormData
+  async upload(endpoint, formData, options = {}) {
+    const url = getApiUrl(endpoint)
+    const adminTokenLS = localStorage.getItem('admin_token')
+    const chosenToken = this.token || adminTokenLS || null
+    const headers = {
+      'Accept': 'application/json',
+      ...(chosenToken ? { 'Authorization': chosenToken.startsWith('Bearer ') ? chosenToken : `Bearer ${chosenToken}` } : {}),
+      ...(options.headers || {})
+    }
+    const res = await fetch(url, { method: (options.method || 'POST'), headers, body: formData })
+    if (!res.ok) {
+      let msg = ''
+      try { msg = await res.text() } catch(e) {}
+      try { msg = JSON.parse(msg).message || msg } catch(e) {}
+      return { success: false, error: msg || `HTTP ${res.status}` }
+    }
+    const ct = res.headers.get('Content-Type') || ''
+    if (ct.includes('application/json')) {
+      return await res.json()
+    }
+    const text = await res.text()
+    return { success: true, data: text }
+  }
+
   // Member masters
   async getRegions() { return this.get('/api/member-masters/regions') }
   async getIndustries() { return this.get('/api/member-masters/industries') }
@@ -302,6 +327,12 @@ class ApiClient {
     return this.post(`/api/admin/mail-groups/${id}/members`, { action, member_ids: memberIds })
   }
 
+  async uploadMailGroupCsv(id, file) {
+    const fd = new FormData()
+    fd.append('file', file)
+    return this.upload(`/api/admin/mail-groups/${id}/import-csv`, fd)
+  }
+
   // Admin email campaigns
   async getEmailCampaigns(params = {}) {
     return this.get('/api/admin/emails', { params })
@@ -333,6 +364,20 @@ class ApiClient {
 
   async resendRecipient(id, recipientId) {
     return this.post(`/api/admin/emails/${id}/recipients/${recipientId}/resend`)
+  }
+
+  async listEmailAttachments(id) {
+    return this.get(`/api/admin/emails/${id}/attachments`)
+  }
+
+  async uploadEmailAttachment(id, file) {
+    const fd = new FormData()
+    fd.append('attachment', file)
+    return this.upload(`/api/admin/emails/${id}/attachments`, fd)
+  }
+
+  async deleteEmailAttachment(id, attachmentId) {
+    return this.delete(`/api/admin/emails/${id}/attachments/${attachmentId}`)
   }
 
   // News API methods

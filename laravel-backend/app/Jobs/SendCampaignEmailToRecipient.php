@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\CampaignMail;
 use App\Models\EmailCampaign;
+use App\Models\EmailAttachment;
 use App\Models\EmailRecipient;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -48,10 +49,15 @@ class SendCampaignEmailToRecipient implements ShouldQueue
 
         try {
             if (!$dryRun) {
+                $attachments = EmailAttachment::where('campaign_id', $recipient->campaign_id)
+                    ->get(['disk','path','filename'])
+                    ->map(fn($a) => ['disk' => $a->disk, 'path' => $a->path, 'filename' => $a->filename])
+                    ->toArray();
                 $mailable = new CampaignMail(
                     subjectLine: $campaign->subject,
                     bodyHtml: $campaign->body_html,
-                    bodyText: $campaign->body_text
+                    bodyText: $campaign->body_text,
+                    attachmentsMeta: $attachments,
                 );
 
                 Mail::to($recipient->email)->send($mailable);

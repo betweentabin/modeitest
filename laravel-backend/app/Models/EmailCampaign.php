@@ -26,5 +26,9 @@ class EmailCampaign extends Model
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }
-}
 
+    public function attachments()
+    {
+        return $this->hasMany(EmailAttachment::class, 'campaign_id');
+    }
+}

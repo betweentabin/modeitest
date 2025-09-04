@@ -41,6 +41,10 @@
             />
           </div>
 
+          <div class="form-actions-row">
+            <button type="button" class="link-btn" @click="openReset = true">パスワードをお忘れですか？</button>
+          </div>
+
           <div v-if="mfaRequired" class="form-group">
             <label for="otp" class="form-label inter-semi-bold-ship-gray-12px">
               ワンタイムパスコード（OTP）
@@ -73,6 +77,22 @@
           セキュアな接続で保護されています
         </div>
       </div>
+      <div v-if="openReset" class="modal-overlay" @click="openReset=false">
+        <div class="modal-content" @click.stop>
+          <div class="modal-header">
+            <h3>パスワードリセット</h3>
+            <button class="close-btn" @click="openReset=false">×</button>
+          </div>
+          <div class="modal-body">
+            <p>登録メールアドレスを入力してください。リセット用リンクを送信します。</p>
+            <input v-model="resetEmail" type="email" class="form-input" :placeholder="email || 'admin@example.com'" />
+          </div>
+          <div class="modal-footer">
+            <button class="cancel-btn" @click="openReset=false">キャンセル</button>
+            <button class="login-button" @click="sendResetLink">送信</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -90,7 +110,9 @@ export default {
       otp: '',
       mfaRequired: false,
       loading: false,
-      error: ''
+      error: '',
+      openReset: false,
+      resetEmail: ''
     }
   },
   mounted() {
@@ -150,6 +172,22 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    async sendResetLink() {
+      const email = this.resetEmail || this.email
+      if (!email) { this.error = 'メールアドレスを入力してください'; return }
+      try {
+        this.loading = true
+        const response = await axios.post(getApiUrl('/api/admin/password/email'), { email })
+        if (response.data?.success) {
+          alert('リセット用リンクを送信しました')
+          this.openReset = false
+        } else {
+          alert(response.data?.message || '送信に失敗しました')
+        }
+      } catch (e) {
+        alert('送信に失敗しました')
+      } finally { this.loading = false }
     }
   }
 }
@@ -246,6 +284,16 @@ export default {
 .form-input::placeholder {
   color: var(--celeste);
 }
+
+.form-actions-row { display: flex; justify-content: flex-end; margin-top: -12px; margin-bottom: 12px; }
+.link-btn { background: none; border: none; color: #007bff; cursor: pointer; padding: 0; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; }
+.modal-content { background: #fff; border-radius: 8px; width: 420px; max-width: 95%; overflow: hidden; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; }
+.modal-body { padding: 16px 20px; }
+.modal-footer { padding: 12px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #eee; }
+.close-btn, .cancel-btn { background: none; border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; cursor: pointer; }
 
 .error-message {
   background: rgba(218, 87, 97, 0.08);

@@ -8,6 +8,8 @@ use App\Models\EmailRecipient;
 use App\Models\MailGroupMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Models\EmailAttachment;
 
 class EmailCampaignController extends Controller
 {
@@ -168,5 +170,44 @@ class EmailCampaignController extends Controller
         \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
 
         return response()->json(['success' => true, 'message' => '送信キューに投入しました']);
+    }
+
+    // Attachments: list
+    public function attachments($id)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $atts = $campaign->attachments()->orderBy('id', 'asc')->get();
+        return response()->json(['success' => true, 'data' => $atts]);
+    }
+
+    // Attachments: upload
+    public function uploadAttachment(Request $request, $id)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $request->validate([
+            'attachment' => 'required|file|max:10240', // 10MB
+        ]);
+        $file = $request->file('attachment');
+        $disk = env('MAIL_ATTACHMENT_DISK', 'public');
+        $path = $file->store('email_attachments/'.$campaign->id, $disk);
+        $att = EmailAttachment::create([
+            'campaign_id' => $campaign->id,
+            'disk' => $disk,
+            'path' => $path,
+            'filename' => $file->getClientOriginalName(),
+            'mime' => $file->getClientMimeType(),
+            'size' => $file->getSize(),
+        ]);
+        return response()->json(['success' => true, 'data' => $att], 201);
+    }
+
+    // Attachments: delete
+    public function deleteAttachment($id, $attachmentId)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $att = EmailAttachment::where('campaign_id', $campaign->id)->where('id', $attachmentId)->firstOrFail();
+        Storage::disk($att->disk)->delete($att->path);
+        $att->delete();
+        return response()->json(['success' => true]);
     }
 }

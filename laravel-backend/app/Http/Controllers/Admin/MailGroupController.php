@@ -7,6 +7,7 @@ use App\Models\MailGroup;
 use App\Models\MailGroupMember;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MailGroupController extends Controller
 {
@@ -105,5 +106,60 @@ class MailGroupController extends Controller
         $count = MailGroupMember::where('group_id', $group->id)->count();
         return response()->json(['success' => true, 'member_count' => $count]);
     }
-}
 
+    // CSV import: accepts file with columns: member_id or email
+    public function importCsv(Request $request, $id)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:10240',
+        ]);
+        $group = MailGroup::findOrFail($id);
+
+        $path = $request->file('file')->getRealPath();
+        $handle = fopen($path, 'r');
+        if (!$handle) return response()->json(['success' => false, 'message' => 'ファイルを開けませんでした'], 422);
+
+        $headers = null;
+        $rows = [];
+        while (($data = fgetcsv($handle)) !== false) {
+            if ($headers === null) {
+                // Detect header if contains alpha
+                $hasAlpha = false;
+                foreach ($data as $v) { if (preg_match('/[A-Za-z]/', $v)) { $hasAlpha = true; break; } }
+                if ($hasAlpha) { $headers = array_map('strtolower', $data); continue; }
+                else { $headers = []; }
+            }
+            if ($headers) {
+                $row = [];
+                foreach ($headers as $i => $h) { $row[$h] = $data[$i] ?? null; }
+                $rows[] = $row;
+            } else {
+                $rows[] = ['member_id' => $data[0] ?? null, 'email' => $data[1] ?? null];
+            }
+        }
+        fclose($handle);
+
+        $memberIds = [];
+        $emails = [];
+        foreach ($rows as $r) {
+            if (!empty($r['member_id'])) $memberIds[] = (int) $r['member_id'];
+            elseif (!empty($r['email'])) $emails[] = trim($r['email']);
+        }
+        $memberIds = array_filter(array_unique($memberIds));
+        $emails = array_filter(array_unique($emails));
+
+        $mappedIds = [];
+        if (!empty($emails)) {
+            $mappedIds = Member::whereIn('email', $emails)->pluck('id')->all();
+        }
+        $allIds = array_values(array_unique(array_merge($memberIds, $mappedIds)));
+
+        $inserted = 0;
+        foreach ($allIds as $mid) {
+            $m = MailGroupMember::firstOrCreate(['group_id' => $group->id, 'member_id' => $mid], ['created_at' => now()]);
+            if ($m->wasRecentlyCreated) $inserted++;
+        }
+
+        return response()->json(['success' => true, 'inserted' => $inserted, 'total_ids' => count($allIds)]);
+    }
+}

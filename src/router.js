@@ -11,6 +11,7 @@ import PublicationsPublicPage from "./components/PublicationsPublicPage";
 import ApplicationFormPage from "./components/ApplicationFormPage";
 import SeminarRegistrationPage from "./components/SeminarRegistrationPage";
 import AdminLoginPage from "./views/admin/AdminLoginPage";
+import AdminResetPassword from "./views/admin/AdminResetPassword.vue";
 import SimpleAdminLogin from "./views/admin/SimpleAdminLogin";
 import NewAdminLogin from "./views/admin/NewAdminLogin";
 import AdminDashboard from "./views/admin/AdminDashboard";
@@ -270,6 +271,12 @@ const router = new Router({
       name: "adminLogin",
       component: AdminLoginPage,
       meta: { title: "管理者ログイン - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/reset-password",
+      name: "adminResetPassword",
+      component: AdminResetPassword,
+      meta: { title: "管理者パスワード再設定 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/dashboard",

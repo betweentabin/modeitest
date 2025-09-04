@@ -14,6 +14,7 @@ class CampaignMail extends Mailable
         public string $subjectLine,
         public ?string $bodyHtml = null,
         public ?string $bodyText = null,
+        public array $attachmentsMeta = [], // each: ['disk' => 'public', 'path' => '...', 'filename' => '...']
     ) {}
 
     public function build(): self
@@ -32,7 +33,16 @@ class CampaignMail extends Mailable
             $mail->text('emails.plain', ['bodyText' => '']);
         }
 
+        // Attach uploaded files
+        foreach ($this->attachmentsMeta as $a) {
+            $disk = $a['disk'] ?? 'public';
+            $path = $a['path'] ?? null;
+            $name = $a['filename'] ?? null;
+            if ($path) {
+                $mail->attachFromStorageDisk($disk, $path, $name);
+            }
+        }
+
         return $mail;
     }
 }
-

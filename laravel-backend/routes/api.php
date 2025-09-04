@@ -157,6 +157,8 @@ Route::prefix('seminars')->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:admin-login');
+    Route::post('/password/email', [AdminAuthController::class, 'sendResetLinkEmail'])->middleware('throttle:admin-login');
+    Route::post('/password/reset', [AdminAuthController::class, 'resetPassword'])->middleware('throttle:admin-login');
     
     // テスト用: 認証なしエンドポイント
     Route::get('/test', function() {
@@ -234,17 +236,18 @@ Route::prefix('admin')->group(function () {
         });
 
         // メールグループ管理
-        Route::prefix('mail-groups')->group(function () {
+        Route::prefix('mail-groups')->middleware('can:manage-mails')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\MailGroupController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Admin\MailGroupController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'show']);
             Route::put('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'update']);
             Route::delete('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'destroy']);
             Route::post('/{id}/members', [App\Http\Controllers\Admin\MailGroupController::class, 'members']);
+            Route::post('/{id}/import-csv', [App\Http\Controllers\Admin\MailGroupController::class, 'importCsv']);
         });
 
         // メールキャンペーン管理
-        Route::prefix('emails')->group(function () {
+        Route::prefix('emails')->middleware('can:manage-mails')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'show']);
@@ -253,6 +256,10 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/send-now', [App\Http\Controllers\Admin\EmailCampaignController::class, 'sendNow']);
             Route::post('/{id}/resend-failed', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendFailed']);
             Route::post('/{id}/recipients/{recipientId}/resend', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendRecipient']);
+            // attachments
+            Route::get('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'attachments']);
+            Route::post('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'uploadAttachment']);
+            Route::delete('/{id}/attachments/{attachmentId}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'deleteAttachment']);
         });
         
         // 管理者用刊行物API
