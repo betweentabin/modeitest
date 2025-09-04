@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\EconomicStatisticsController;
+use App\Http\Controllers\Api\EconomicIndicatorsController;
 use App\Http\Controllers\Api\EconomicReportsController;
 use App\Http\Controllers\Admin\EconomicReportManagementController;
 use App\Http\Controllers\Api\FinancialReportsController;
@@ -102,6 +103,12 @@ Route::prefix('economic-statistics')->group(function () {
         Route::get('/', [EconomicStatisticsController::class, 'index'])->middleware('feature:economic_statistics_basic');
         Route::get('/{id}', [EconomicStatisticsController::class, 'show'])->middleware('feature:economic_statistics_basic');
     });
+});
+
+// 経済指標（公開API）
+Route::prefix('economic-indicators')->group(function () {
+    Route::get('/categories', [EconomicIndicatorsController::class, 'categories']);
+    Route::get('/', [EconomicIndicatorsController::class, 'index']);
 });
 
 // 経済統計レポート関連のルート（パブリック）
@@ -210,6 +217,24 @@ Route::prefix('admin')->group(function () {
             
             // 統計情報
             Route::get('/stats/overview', [EconomicReportManagementController::class, 'statistics']);
+        });
+
+        // 経済指標管理関連のルート
+        Route::prefix('economic-indicators')->middleware('can:manage-content')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\EconomicIndicatorManagementController::class, 'index']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\EconomicIndicatorManagementController::class, 'show']);
+            Route::post('/', [App\Http\Controllers\Admin\EconomicIndicatorManagementController::class, 'store']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\EconomicIndicatorManagementController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\EconomicIndicatorManagementController::class, 'destroy']);
+        });
+
+        // 経済指標カテゴリ管理
+        Route::prefix('economic-indicator-categories')->middleware('can:manage-content')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\EconomicIndicatorCategoryManagementController::class, 'index']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\EconomicIndicatorCategoryManagementController::class, 'show']);
+            Route::post('/', [App\Http\Controllers\Admin\EconomicIndicatorCategoryManagementController::class, 'store']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\EconomicIndicatorCategoryManagementController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\EconomicIndicatorCategoryManagementController::class, 'destroy']);
         });
         
         Route::prefix('seminars')->group(function () {

@@ -37,6 +37,16 @@
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/economic-indicators" class="nav-item" :class="{ active: isActive('/admin/economic-indicators') }">
+              経済指標管理
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/admin/economic-indicator-categories" class="nav-item" :class="{ active: isActive('/admin/economic-indicator-categories') }">
+              経済指標カテゴリ管理
+            </router-link>
+          </li>
+          <li>
             <router-link to="/admin/news" class="nav-item" :class="{ active: isActive('/admin/news') }">
               お知らせ管理
             </router-link>

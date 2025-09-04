@@ -20,6 +20,8 @@ import MemberManagement from "./views/admin/MemberManagement";
 import SeminarManagement from "./views/admin/SeminarManagement";
 import PublicationManagement from "./views/admin/PublicationManagement";
 import EconomicReportManagement from "./views/admin/EconomicReportManagement";
+import EconomicIndicatorManagement from "./views/admin/EconomicIndicatorManagement.vue";
+import EconomicIndicatorCategoryManagement from "./views/admin/EconomicIndicatorCategoryManagement.vue";
 import NoticeManagement from "./views/admin/NoticeManagement";
 import InquiryManagement from "./views/admin/InquiryManagement";
 import MediaManagement from "./views/admin/MediaManagement";
@@ -344,6 +346,18 @@ const router = new Router({
       name: "economicReportManagement",
       component: EconomicReportManagement,
       meta: { title: "経済統計レポート管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/economic-indicators",
+      name: "economicIndicatorManagement",
+      component: EconomicIndicatorManagement,
+      meta: { title: "経済指標管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/economic-indicator-categories",
+      name: "economicIndicatorCategoryManagement",
+      component: EconomicIndicatorCategoryManagement,
+      meta: { title: "経済指標カテゴリ管理 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/news",
