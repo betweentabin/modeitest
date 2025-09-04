@@ -5,21 +5,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="利用規約"
-      subtitle="terms of service"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['利用規約']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">利用規約</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">terms of service</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -127,6 +127,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import CmsBlock from './CmsBlock.vue'
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "TermsOfServicePage",
@@ -149,11 +150,18 @@ export default {
   mounted() {
     this.adjustRectangleHeight();
     window.addEventListener('resize', this.adjustRectangleHeight);
+    try {
+      this._pageText = usePageText('terms')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '利用規約') || '利用規約' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'terms of service') || 'terms of service' },
     adjustRectangleHeight() {
       this.$nextTick(() => {
         const frame1321317466 = this.$el.querySelector('.frame-1321317466');

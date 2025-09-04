@@ -5,21 +5,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="特定商取引法に関する表記"
-      subtitle="transaction law"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['特定商取引法に関する表記']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">特定商取引法に関する表記</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="decoration-line"></div>
-          <span class="decoration-text">transaction law</span>
+          <span class="decoration-text">{{ pageSubtitle }}</span>
           <div class="decoration-line"></div>
         </div>
       </div>
@@ -213,6 +213,7 @@ import Footer from "./Footer";
 import Group27 from "./Group27";
 import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
+import { usePageText } from '@/composables/usePageText'
 import FixedSideButtons from "./FixedSideButtons.vue";
 
 import vector7 from "../../public/img/vector-7.svg";
@@ -235,6 +236,17 @@ export default {
       frame132131753022Props: frame132131753022Data,
       
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '特定商取引法に関する表記') || '特定商取引法に関する表記' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'transaction law') || 'transaction law' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('transaction-law')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
 };
 </script>

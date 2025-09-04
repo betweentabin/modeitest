@@ -4,13 +4,13 @@
 
     <!-- Hero Section -->
     <HeroSection 
-      title="会社概要"
-      subtitle="About Us"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/df7ca8cd2f554040b151c3c0f960f06d9826cc19?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['会社概要']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Philosophy Section -->
     <section class="philosophy-section">
@@ -243,6 +243,7 @@ import Group27 from "./Group27";
 import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
+import { usePageText } from '@/composables/usePageText'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -261,16 +262,26 @@ export default {
   },
   data() {
     return {
+      pageKey: 'company-profile',
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
   },
   mounted() {
     this.adjustImageHeight();
     this.adjustRectangleHeight();
     window.addEventListener('resize', this.adjustImageHeight);
     window.addEventListener('resize', this.adjustRectangleHeight);
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustImageHeight);

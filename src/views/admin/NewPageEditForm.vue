@@ -234,11 +234,24 @@
                 <label class="form-label">
                   テキストフィールド（content.texts）
                 </label>
+                <div class="recommended-keys" v-if="recommendedKeys.length">
+                  <div class="subtitle">推奨キー</div>
+                  <div class="chips">
+                    <span 
+                      v-for="rk in recommendedKeys" 
+                      :key="rk"
+                      :class="['chip', hasTextKey(rk) ? 'chip-ok' : 'chip-missing']"
+                    >
+                      {{ rk }}
+                    </span>
+                  </div>
+                  <button type="button" class="btn btn-secondary small" @click="addMissingRecommendedKeys">不足キーを追加</button>
+                </div>
                 <div class="fields-editor">
                   <div 
                     v-for="(row, idx) in textsEditor" 
                     :key="row._id"
-                    class="field-row"
+                    :class="['field-row', getKeyLimit(row.key) && (row.value || '').length > getKeyLimit(row.key) ? 'field-row-warning' : '']"
                   >
                     <input
                       v-model="row.key"
@@ -252,6 +265,10 @@
                       class="form-input field-value"
                       placeholder="値（表示テキスト）"
                     />
+                    <div class="field-hint">
+                      <span v-if="getKeyLimit(row.key)" class="counter">{{ (row.value || '').length }}/{{ getKeyLimit(row.key) }}</span>
+                      <span v-else class="counter">{{ (row.value || '').length }}</span>
+                    </div>
                     <button type="button" class="btn btn-secondary small" @click="removeTextField(idx)">削除</button>
                   </div>
                   <button type="button" class="btn btn-primary" @click="addTextField">+ フィールドを追加</button>
@@ -352,6 +369,28 @@ import mockServer from '@/mockServer'
 import axios from 'axios'
 import apiClient from '@/services/apiClient.js'
 
+// 推奨キー（ページキーごと）
+const RECOMMENDED_KEYS = {
+  home: ['page_title', 'lead', 'cta_primary', 'cta_secondary'],
+  'economic-statistics': ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
+  publications: ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
+  'financial-reports': ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
+  'economic-indicators': ['page_title', 'page_subtitle'],
+  news: ['page_title', 'page_subtitle'],
+  about: ['page_title', 'mission_title', 'mission_body', 'cta_primary']
+}
+
+// ソフト上限（超過時に警告）
+const TEXT_LIMITS = {
+  page_title: 40,
+  page_subtitle: 60,
+  lead: 120,
+  cta_primary: 30,
+  cta_secondary: 30,
+  mission_title: 40,
+  mission_body: 200
+}
+
 export default {
   name: 'NewPageEditForm',
   components: {
@@ -395,6 +434,10 @@ export default {
     },
     pageKey() {
       return this.$route.params.pageKey
+    },
+    recommendedKeys() {
+      const key = this.formData.page_key || this.pageKey || ''
+      return RECOMMENDED_KEYS[key] || []
     }
   },
   watch: {
@@ -546,12 +589,49 @@ export default {
     removeTextField(index) {
       this.textsEditor.splice(index, 1)
     },
+    hasTextKey(k) {
+      const key = (k || '').trim()
+      return this.textsEditor.some(r => (r.key || '').trim() === key)
+    },
+    addMissingRecommendedKeys() {
+      const toAdd = (this.recommendedKeys || []).filter(k => !this.hasTextKey(k))
+      for (const k of toAdd) {
+        this.textsEditor.push({ _id: `rk-${k}-${Date.now()}-${Math.random()}`, key: k, value: '' })
+      }
+    },
+    getKeyLimit(k) {
+      const key = (k || '').trim()
+      return TEXT_LIMITS[key] || null
+    },
+    collectTextWarnings() {
+      const warnings = []
+      for (const row of this.textsEditor) {
+        const key = (row.key || '').trim()
+        const limit = this.getKeyLimit(key)
+        const len = (row.value || '').length
+        if (limit && len > limit) {
+          warnings.push(`${key}: ${len}/${limit}`)
+        }
+      }
+      return warnings
+    },
     async handleSubmit() {
       this.submitLoading = true
       this.submitError = ''
       this.successMessage = ''
 
       try {
+        // Fieldsモードの長文ガード（ソフト）
+        if (this.contentMode === 'fields') {
+          const warns = this.collectTextWarnings()
+          if (warns.length) {
+            const proceed = confirm(`一部のフィールドが推奨文字数を超えています:\n\n${warns.join('\n')}\n\nこのまま保存しますか？`)
+            if (!proceed) {
+              this.submitLoading = false
+              return
+            }
+          }
+        }
         // コンテンツのモードに応じて content を設定
         if (this.contentMode === 'html') {
           this.formData.content = this.contentHtml || ''
@@ -813,6 +893,74 @@ export default {
   min-height: 300px;
   box-sizing: border-box;
   transition: border-color 0.2s;
+}
+
+/* Fields mode styles */
+.fields-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.field-row-warning .field-value {
+  border-color: #f59e0b; /* amber-500 */
+}
+
+.field-key { }
+.field-value { }
+
+.field-hint {
+  font-size: 12px;
+  color: #666;
+}
+
+.counter {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.recommended-keys {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.recommended-keys .subtitle {
+  font-size: 13px;
+  color: #666;
+}
+
+.recommended-keys .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.chip-ok {
+  background: #e8f5e9; /* green-50 */
+  border-color: #a7f3d0; /* green-200 */
+}
+
+.chip-missing {
+  background: #fff7ed; /* orange-50 */
+  border-color: #fdba74; /* orange-300 */
 }
 
 .json-editor:focus {

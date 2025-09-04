@@ -5,21 +5,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="プライバシーポリシー"
-      subtitle="privacy policy"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['プライバシーポリシー']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">プライバシーポリシー</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">privacy policy</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -118,6 +118,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import CmsBlock from './CmsBlock.vue'
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "PrivacyPolicyPage",
@@ -136,6 +137,17 @@ export default {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'プライバシーポリシー') || 'プライバシーポリシー' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'privacy policy') || 'privacy policy' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('privacy')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
 
 };
