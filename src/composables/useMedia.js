@@ -13,13 +13,30 @@ async function loadMedia() {
   state.loading = true
   state.error = null
   try {
+    // 1) Prefer admin endpoint if available (works for unpublished drafts too)
+    const adminRes = await apiClient.get('/api/admin/pages/media')
+    if (adminRes && (adminRes.data || adminRes.page)) {
+      const d = adminRes.data || adminRes
+      const page = d?.page || d
+      const images = page?.content?.images || {}
+      state.images = images || {}
+      state.loaded = true
+      return
+    }
+  } catch(e) {
+    // ignore, fallback to public/local
+  }
+
+  try {
+    // 2) Public endpoint (requires published page)
     const res = await apiClient.getPageContent('media')
     const page = res?.data?.page || res?.data?.data?.page
     const images = page?.content?.images || {}
     state.images = images || {}
     state.loaded = true
+    return
   } catch (e) {
-    // fallback: try localStorage mock
+    // 3) Fallback: try localStorage mock
     try {
       const str = localStorage.getItem('cms_mock_data')
       const json = str ? JSON.parse(str) : null
@@ -48,4 +65,3 @@ export function useMedia() {
 }
 
 export default useMedia
-

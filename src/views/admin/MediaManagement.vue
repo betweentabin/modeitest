@@ -135,8 +135,10 @@ export default {
       this.loading = true
       this.error = ''
       try {
-        const res = await apiClient.getPageContent('media')
-        const page = res?.data?.page || res?.data?.data?.page
+        // Admin側は非公開でも取得できる管理APIを優先
+        const res = await apiClient.get('/api/admin/pages/media')
+        const d = res?.data || {}
+        const page = d?.page || d
         const images = page?.content?.images || {}
         this.rows = Object.keys(images).map(k => ({ _id: `m-${k}-${Date.now()}-${Math.random()}`, key: k, value: images[k] }))
       } catch (e) {
