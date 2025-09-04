@@ -575,6 +575,24 @@ class ApiClient {
     return this.get(endpoint)
   }
 
+  // Admin seminar registrations management
+  async getAdminSeminarRegistrations(seminarId, params = {}) {
+    const endpoint = `/api/admin/seminars/${seminarId}/registrations`
+    return this.get(endpoint, { params })
+  }
+  async approveAdminSeminarRegistration(seminarId, regId) {
+    const endpoint = `/api/admin/seminars/${seminarId}/registrations/${regId}/approve`
+    return this.post(endpoint)
+  }
+  async rejectAdminSeminarRegistration(seminarId, regId, reason = '') {
+    const endpoint = `/api/admin/seminars/${seminarId}/registrations/${regId}/reject`
+    return this.post(endpoint, { reason })
+  }
+  async bulkApproveAdminSeminarRegistrations(seminarId, registrationIds = []) {
+    const endpoint = `/api/admin/seminars/${seminarId}/registrations/bulk-approve`
+    return this.post(endpoint, { registration_ids: registrationIds })
+  }
+
   async getAdminNews(params = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'

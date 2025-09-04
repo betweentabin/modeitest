@@ -48,12 +48,19 @@ class PageContentController extends Controller
         $validated = $request->validate([
             'page_key' => 'required|string|unique:page_contents',
             'title' => 'required|string',
-            'content' => 'required|array',
+            // JSON or raw HTML/string どちらも許容
+            'content' => 'required',
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ]);
+
+        // content が文字列ならラップして保存（互換保持）
+        $content = $validated['content'];
+        if (is_string($content)) {
+            $validated['content'] = [ 'html' => $content ];
+        }
 
         $validated['updated_by'] = auth()->id();
         $page = PageContent::create($validated);
@@ -71,12 +78,17 @@ class PageContentController extends Controller
 
         $validated = $request->validate([
             'title' => 'sometimes|string',
-            'content' => 'sometimes|array',
+            // JSONまたは文字列どちらも許容
+            'content' => 'sometimes',
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ]);
+
+        if (array_key_exists('content', $validated) && is_string($validated['content'])) {
+            $validated['content'] = [ 'html' => $validated['content'] ];
+        }
 
         $validated['updated_by'] = auth()->id();
         $page->update($validated);

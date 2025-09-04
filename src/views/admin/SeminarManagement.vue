@@ -102,6 +102,7 @@
                 <td class="capacity">{{ seminar.capacity || '200' }}名</td>
                 <td>
                   <button @click="editSeminar(seminar)" class="edit-btn">編集</button>
+                  <button @click="openRegistrations(seminar)" class="reg-btn">申込一覧</button>
                 </td>
                 <td>
                   <input 
@@ -160,6 +161,65 @@
           次へ
         </button>
       </div>
+
+      <!-- Registrations Modal -->
+      <div v-if="showRegModal" class="modal-overlay" @click.self="closeRegModal">
+        <div class="modal-box">
+          <div class="modal-header">
+            <h3>申込一覧 - {{ currentSeminar?.title }}</h3>
+            <button class="close" @click="closeRegModal">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="reg-filters">
+              <label>
+                ステータス:
+                <select v-model="regFilter.status" @change="loadRegistrations()">
+                  <option value="">すべて</option>
+                  <option value="pending">承認待ち</option>
+                  <option value="approved">承認</option>
+                  <option value="rejected">却下</option>
+                </select>
+              </label>
+              <button class="bulk-approve" @click="bulkApprove" :disabled="regSelection.length===0">選択を承認</button>
+            </div>
+
+            <div v-if="regLoading" class="loading">読み込み中...</div>
+            <div v-else-if="regError" class="error">{{ regError }}</div>
+            <table v-else class="data-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>申込番号</th>
+                  <th>氏名</th>
+                  <th>会社</th>
+                  <th>メール</th>
+                  <th>電話</th>
+                  <th>承認</th>
+                  <th>申込日時</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="r in regItems" :key="r.id">
+                  <td><input type="checkbox" v-model="regSelection" :value="r.id"></td>
+                  <td>{{ r.registration_number }}</td>
+                  <td>{{ r.name }}</td>
+                  <td>{{ r.company || '-' }}</td>
+                  <td>{{ r.email }}</td>
+                  <td>{{ r.phone || '-' }}</td>
+                  <td>{{ approvalText(r.approval_status) }}</td>
+                  <td>{{ formatDateTime(r.created_at) }}</td>
+                  <td>
+                    <button v-if="r.approval_status!=='approved'" class="approve-btn" @click="approve(r)">承認</button>
+                    <button v-if="r.approval_status!=='rejected'" class="reject-btn" @click="reject(r)">却下</button>
+                  </td>
+                </tr>
+                <tr v-if="regItems.length===0"><td colspan="9" class="empty">申込はありません</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </AdminLayout>
 </template>
@@ -189,7 +249,15 @@ export default {
       currentPage: 1,
       totalPages: 1,
       itemsPerPage: 20,
-      authToken: null
+      authToken: null,
+      // registrations modal
+      showRegModal: false,
+      currentSeminar: null,
+      regLoading: false,
+      regError: '',
+      regItems: [],
+      regFilter: { status: '', per_page: 50 },
+      regSelection: []
     }
   },
   async mounted() {
@@ -330,6 +398,56 @@ export default {
     },
     createNewSeminar() {
       this.$router.push('/admin/seminars/new')
+    },
+    openRegistrations(seminar) {
+      this.currentSeminar = seminar
+      this.showRegModal = true
+      this.regSelection = []
+      this.loadRegistrations()
+    },
+    closeRegModal() { this.showRegModal = false },
+    async loadRegistrations() {
+      if (!this.currentSeminar) return
+      this.regLoading = true
+      this.regError = ''
+      try {
+        const res = await apiClient.getAdminSeminarRegistrations(this.currentSeminar.id, this.regFilter)
+        if (res && res.success) {
+          // API returns paginator
+          const data = res.data?.data || res.data || []
+          this.regItems = Array.isArray(data) ? data : []
+        } else {
+          this.regError = res?.message || '申込の取得に失敗しました'
+        }
+      } catch (e) {
+        this.regError = 'サーバーエラーが発生しました'
+        console.error(e)
+      } finally { this.regLoading = false }
+    },
+    approvalText(s) { return { pending: '承認待ち', approved: '承認', rejected: '却下' }[s] || s },
+    formatDateTime(ts) { try { return new Date(ts).toLocaleString('ja-JP') } catch(e) { return '-' } },
+    async approve(r) {
+      try {
+        const res = await apiClient.approveAdminSeminarRegistration(this.currentSeminar.id, r.id)
+        if (res && res.success) { r.approval_status = 'approved' }
+      } catch(e) { alert('承認に失敗しました') }
+    },
+    async reject(r) {
+      const reason = prompt('却下理由（任意）') || ''
+      try {
+        const res = await apiClient.rejectAdminSeminarRegistration(this.currentSeminar.id, r.id, reason)
+        if (res && res.success) { r.approval_status = 'rejected' }
+      } catch(e) { alert('却下に失敗しました') }
+    },
+    async bulkApprove() {
+      if (this.regSelection.length === 0) return
+      try {
+        const res = await apiClient.bulkApproveAdminSeminarRegistrations(this.currentSeminar.id, this.regSelection)
+        if (res && res.success) {
+          this.regItems = this.regItems.map(i => this.regSelection.includes(i.id) ? { ...i, approval_status: 'approved' } : i)
+          this.regSelection = []
+        }
+      } catch(e) { alert('一括承認に失敗しました') }
     },
     async applyFilters() {
       console.log('Applying filters:', this.filters)
@@ -607,6 +725,26 @@ export default {
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
+.reg-btn {
+  margin-left: 8px;
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index: 2000; }
+.modal-box { width: min(980px, 96vw); background:#fff; border-radius: 10px; overflow: hidden; }
+.modal-header { display:flex; align-items:center; justify-content: space-between; padding: 12px 16px; background:#f8f8f8; border-bottom:1px solid #eee; }
+.modal-header h3 { margin: 0; font-size: 16px; }
+.modal-header .close { background:none; border:none; font-size:18px; cursor:pointer; }
+.modal-body { padding: 16px; }
+.reg-filters { display:flex; align-items:center; gap: 12px; margin-bottom: 12px; }
+.bulk-approve { background:#10b981; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; }
 
 .edit-btn:hover {
   background-color: #555;

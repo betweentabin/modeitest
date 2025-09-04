@@ -180,7 +180,12 @@
             <!-- コンテンツ -->
             <div class="form-section">
               <h3 class="section-title">コンテンツ</h3>
-              <div class="form-group">
+              <div class="mode-toggle">
+                <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
+                <label><input type="radio" value="html" v-model="contentMode" /> HTML（全文編集）</label>
+              </div>
+
+              <div v-if="contentMode==='json'" class="form-group">
                 <label for="content" class="form-label">
                   コンテンツ (JSON形式) <span class="required">*</span>
                 </label>
@@ -207,6 +212,20 @@
                     JSONフォーマットが正しいです
                   </div>
                 </div>
+              </div>
+
+              <div v-else class="form-group">
+                <label for="content_html" class="form-label">
+                  コンテンツ (HTML)
+                </label>
+                <textarea
+                  id="content_html"
+                  v-model="contentHtml"
+                  rows="18"
+                  class="html-editor"
+                  placeholder="ここにHTMLを直接入力してください"
+                />
+                <p class="form-help">危険なスクリプトは入れないでください（自動サニタイズは行っていません）。</p>
               </div>
             </div>
 
@@ -317,7 +336,9 @@ export default {
         is_published: false,
         images: []
       },
+      contentMode: 'json',
       contentJson: '',
+      contentHtml: '',
       jsonError: '',
       loading: false,
       submitLoading: false,
