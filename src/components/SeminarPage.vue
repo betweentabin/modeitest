@@ -244,6 +244,7 @@ export default {
             .sort((a, b) => toTs(b) - toTs(a))
             .slice(0, 4)
             .map(s => ({
+              id: s.id,
               image: s.featured_image || '/img/image-1.png',
               reservationPeriod: `${(s.start_time || '10:00')}～${(s.end_time || '12:00')}`,
               date: this.formatToJaDate(s.date),

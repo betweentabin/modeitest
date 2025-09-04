@@ -87,7 +87,6 @@ class Member extends Authenticatable
     public function favoriteMembers()
     {
         return $this->belongsToMany(Member::class, 'member_favorites', 'member_id', 'favorite_member_id')
-                    ->withTimestamps()
                     ->withPivot('created_at');
     }
 
@@ -95,7 +94,6 @@ class Member extends Authenticatable
     public function favoriteByMembers()
     {
         return $this->belongsToMany(Member::class, 'member_favorites', 'favorite_member_id', 'member_id')
-                    ->withTimestamps()
                     ->withPivot('created_at');
     }
 

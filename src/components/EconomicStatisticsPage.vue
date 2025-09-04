@@ -198,6 +198,8 @@ export default {
     };
   },
   async mounted() {
+    // 認証状態からブラー制御を再判定
+    await this.updateBlurFromAuth()
     await Promise.all([
       this.loadFeaturedReport(),
       this.loadCategories(),
@@ -224,6 +226,33 @@ export default {
     }
   },
   methods: {
+    async updateBlurFromAuth() {
+      try {
+        // まずlocalStorageで判定
+        const userRaw = localStorage.getItem('memberUser')
+        if (userRaw) {
+          const u = JSON.parse(userRaw)
+          const t = u?.membership_type
+          this.shouldBlur = !(t === 'standard' || t === 'premium')
+          return
+        }
+        // トークンがあればプロフィールを取得して保存
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        if (token) {
+          const res = await apiClient.get('/api/member/my-profile')
+          const m = (res && res.success) ? res.data : null
+          if (m && m.membership_type) {
+            localStorage.setItem('memberUser', JSON.stringify(m))
+            this.shouldBlur = !(m.membership_type === 'standard' || m.membership_type === 'premium')
+            return
+          }
+        }
+        // 取得できない場合はぼかしを維持
+        this.shouldBlur = true
+      } catch (e) {
+        this.shouldBlur = true
+      }
+    },
     async loadPublications() {
       this.loading = true;
       try {

@@ -16,7 +16,7 @@
         </div>
 
         <!-- アクセス制限メッセージ -->
-        <div v-if="!canAccess" class="access-restricted">
+        <div v-if="!hasDirectoryAccess" class="access-restricted">
           <div class="restriction-card">
             <h3>🔒 アクセス制限</h3>
             <p>会員名簿の閲覧はスタンダード会員以上でご利用いただけます。</p>
@@ -50,10 +50,23 @@
               
               <div class="filter-group">
                 <select v-model="membershipFilter" @change="loadMembers" class="filter-select">
-                  <option value="">全ての会員種別</option>
-                  <option value="free">無料会員</option>
-                  <option value="standard">スタンダード会員</option>
-                  <option value="premium">プレミアム会員</option>
+                  <option v-for="option in membershipOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <select v-model="regionFilter" @change="loadMembers" class="filter-select">
+                  <option v-for="option in regionOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <select v-model="industryFilter" @change="loadMembers" class="filter-select">
+                  <option v-for="option in industryOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
                 </select>
               </div>
 
@@ -63,7 +76,7 @@
                 </button>
                 
                 <button 
-                  v-if="memberInfo && memberInfo.membership_type === 'premium'" 
+                  v-if="memberInfo && canAccess(memberInfo.membership_type, 'premium', true)" 
                   @click="exportCSV" 
                   class="export-btn"
                   :disabled="exporting"
@@ -231,6 +244,7 @@ import Navigation from '@/components/Navigation.vue'
 import FooterComplete from '@/components/FooterComplete.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
 import apiClient from '@/services/apiClient.js'
+import { getMembershipOptions, getMembershipLabel, canAccess } from '@/utils/membershipTypes'
 
 export default {
   name: 'MemberDirectoryPage',
@@ -241,7 +255,7 @@ export default {
   data() {
     return {
       memberInfo: null,
-      canAccess: false,
+      hasDirectoryAccess: false,
       loading: false,
       error: '',
       exporting: false,
@@ -266,7 +280,43 @@ export default {
       selectedMember: null,
       
       // デバウンス用
-      searchTimeout: null
+      searchTimeout: null,
+      
+      // 会員種別選択肢
+      membershipOptions: getMembershipOptions(),
+      // 地域・業種フィルター
+      regionFilter: '',
+      industryFilter: '',
+      regionOptions: [
+        { value: '', label: '全ての地域' },
+        { value: '福岡', label: '福岡' },
+        { value: '佐賀', label: '佐賀' },
+        { value: '長崎', label: '長崎' },
+        { value: '大分', label: '大分' },
+        { value: '熊本', label: '熊本' },
+        { value: '宮崎', label: '宮崎' },
+        { value: '鹿児島', label: '鹿児島' }
+      ],
+      industryOptions: [
+        { value: '', label: '全ての業種' },
+        { value: '製造業', label: '製造業' },
+        { value: '鉱業', label: '鉱業' },
+        { value: '建設業', label: '建設業' },
+        { value: '運輸交通業', label: '運輸交通業' },
+        { value: '官公署', label: '官公署' },
+        { value: '貨物取扱業', label: '貨物取扱業' },
+        { value: '農林業', label: '農林業' },
+        { value: '畜産・水産業', label: '畜産・水産業' },
+        { value: '商業', label: '商業' },
+        { value: '金融・広告業', label: '金融・広告業' },
+        { value: '清掃・と畜業', label: '清掃・と畜業' },
+        { value: '映画・演劇業', label: '映画・演劇業' },
+        { value: '通信業', label: '通信業' },
+        { value: '教育・研究業', label: '教育・研究業' },
+        { value: '保健衛生業', label: '保健衛生業' },
+        { value: '接客娯楽業', label: '接客娯楽業' },
+        { value: 'その他の事業', label: 'その他の事業' }
+      ]
     }
   },
   computed: {
@@ -284,29 +334,38 @@ export default {
   },
   async mounted() {
     await this.initializeAuth()
-    if (this.canAccess) {
+    if (this.hasDirectoryAccess) {
       this.loadMembers()
     }
   },
   methods: {
     async initializeAuth() {
-      const { getMemberInfo, isLoggedIn } = useMemberAuth()
-      
-      if (!isLoggedIn()) {
-        // 未ログイン時はリダイレクトせず、アクセス制限カードを表示
-        this.memberInfo = null
-        this.canAccess = false
-        return
+      const { getMemberInfo } = useMemberAuth()
+      try {
+        // ローカル優先
+        this.memberInfo = getMemberInfo()
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        if (!this.memberInfo && token) {
+          // 1st: member/my-profile（推奨）
+          let res = await apiClient.get('/api/member/my-profile')
+          if (res && res.success && res.data?.membership_type) {
+            this.memberInfo = res.data
+            localStorage.setItem('memberUser', JSON.stringify(res.data))
+          } else {
+            // 2nd: member-auth/me（互換）
+            res = await apiClient.get('/api/member-auth/me')
+            if (res && res.success && res.member?.membership_type) {
+              this.memberInfo = res.member
+              localStorage.setItem('memberUser', JSON.stringify(res.member))
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('会員情報の取得に失敗:', e)
       }
 
-      try {
-        this.memberInfo = await getMemberInfo()
-        this.canAccess = this.memberInfo && ['standard', 'premium'].includes(this.memberInfo.membership_type)
-      } catch (error) {
-        console.error('認証情報の取得に失敗:', error)
-        this.memberInfo = null
-        this.canAccess = false
-      }
+      // アクセス権判定
+      this.hasDirectoryAccess = !!(this.memberInfo && canAccess(this.memberInfo.membership_type, 'standard'))
     },
 
     async loadMembers(page = 1) {
@@ -322,9 +381,9 @@ export default {
         if (this.searchQuery) {
           params.search = this.searchQuery
         }
-        if (this.membershipFilter) {
-          params.membership_type = this.membershipFilter
-        }
+        if (this.membershipFilter) params.membership_type = this.membershipFilter
+        if (this.regionFilter) params.region = this.regionFilter
+        if (this.industryFilter) params.industry = this.industryFilter
 
         const response = await apiClient.get('/api/member/directory', { params })
 
@@ -408,6 +467,9 @@ export default {
         const params = {}
         if (this.searchQuery) params.search = this.searchQuery
         if (this.membershipFilter) params.membership_type = this.membershipFilter
+        if (this.regionFilter) params.region = this.regionFilter
+        if (this.industryFilter) params.industry = this.industryFilter
+        if (this.showFavoritesOnly) params.favorites_only = 1
 
         const response = await apiClient.get('/api/member/directory/export/csv', { params, responseType: 'blob' })
 
@@ -436,12 +498,11 @@ export default {
     },
 
     getMembershipLabel(type) {
-      const labels = {
-        'free': '無料',
-        'standard': 'スタンダード',
-        'premium': 'プレミアム'
-      }
-      return labels[type] || type
+      return getMembershipLabel(type)
+    },
+    
+    canAccess(currentType, requiredType, exact = false) {
+      return canAccess(currentType, requiredType, exact)
     },
 
     formatDate(dateString) {

@@ -398,6 +398,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import { getMembershipOptions, getMembershipLabel } from '@/utils/membershipTypes'
 
 export default {
   name: 'MemberManagement',
@@ -661,6 +662,7 @@ export default {
       this.adding = true
       
       try {
+        console.log('Sending member data:', this.addForm)
         const response = await apiClient.createAdminMember(this.addForm)
         
         if (response.success) {
@@ -668,11 +670,21 @@ export default {
           this.closeAddModal()
           this.loadMembers(1) // 最初のページに戻る
         } else {
-          alert(response.message || '会員追加に失敗しました')
+          console.error('Validation errors:', response.errors)
+          console.error('Debug info:', response.debug)
+          
+          // バリデーションエラーの詳細表示
+          let errorMessage = 'バリデーションエラー:\n'
+          if (response.errors) {
+            Object.keys(response.errors).forEach(field => {
+              errorMessage += `${field}: ${response.errors[field].join(', ')}\n`
+            })
+          }
+          alert(errorMessage)
         }
       } catch (error) {
-        alert('サーバーエラーが発生しました')
         console.error('Failed to add member:', error)
+        alert('サーバーエラーが発生しました: ' + (error.message || '不明なエラー'))
       } finally {
         this.adding = false
       }
