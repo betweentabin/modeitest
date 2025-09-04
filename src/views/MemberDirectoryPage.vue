@@ -16,7 +16,7 @@
         </div>
 
         <!-- アクセス制限メッセージ -->
-        <div v-if="!canAccess" class="access-restricted">
+        <div v-if="!hasDirectoryAccess" class="access-restricted">
           <div class="restriction-card">
             <h3>🔒 アクセス制限</h3>
             <p>会員名簿の閲覧はスタンダード会員以上でご利用いただけます。</p>
@@ -241,7 +241,7 @@ export default {
   data() {
     return {
       memberInfo: null,
-      canAccess: false,
+      hasDirectoryAccess: false,
       loading: false,
       error: '',
       exporting: false,
@@ -287,7 +287,7 @@ export default {
   },
   async mounted() {
     await this.initializeAuth()
-    if (this.canAccess) {
+    if (this.hasDirectoryAccess) {
       this.loadMembers()
     }
   },
@@ -318,7 +318,7 @@ export default {
       }
 
       // アクセス権判定
-      this.canAccess = !!(this.memberInfo && canAccess(this.memberInfo.membership_type, 'standard'))
+      this.hasDirectoryAccess = !!(this.memberInfo && canAccess(this.memberInfo.membership_type, 'standard'))
     },
 
     async loadMembers(page = 1) {

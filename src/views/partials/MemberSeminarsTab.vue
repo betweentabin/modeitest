@@ -39,6 +39,12 @@
           <td>{{ s.location || '-' }}</td>
           <td>{{ statusLabel(s.status) }}</td>
           <td class="actions">
+            <button 
+              class="fav-btn" 
+              :class="{ active: isFavorite(s.id) }" 
+              @click="toggleFavorite(s, $event)"
+              :title="isFavorite(s.id) ? 'お気に入り解除' : 'お気に入り追加'"
+            >{{ isFavorite(s.id) ? '★' : '☆' }}</button>
             <button v-if="canReserve(s)" class="reserve-btn" @click="openReservation(s)">予約する</button>
             <span v-else class="disabled-text">{{ disabledReason(s) }}</span>
           </td>
@@ -163,6 +169,8 @@ export default {
         if (res && res.success) {
           alert('予約を受け付けました')
           this.showModal = false
+          // 親へ通知（マイページ側で申込状況タブを更新）
+          this.$emit('reservation-made', res.data?.registration || { seminar_id: this.selectedSeminar.id })
           this.load()
         } else {
           this.error = res?.message || '予約に失敗しました'

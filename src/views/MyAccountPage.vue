@@ -57,7 +57,7 @@
         <!-- セミナー系タブ -->
         <div v-if="activeTab==='seminars'" class="content-section">
           <h2>セミナー一覧</h2>
-          <MemberSeminarsTab />
+          <MemberSeminarsTab @reservation-made="onReservationMade" />
         </div>
 
         <div v-if="activeTab==='seminar-favorites'" class="content-section">
@@ -67,7 +67,7 @@
 
         <div v-if="activeTab==='registrations'" class="content-section">
           <h2>申込状況</h2>
-          <MemberSeminarRegistrationsTab />
+          <MemberSeminarRegistrationsTab ref="registrationsTab" />
         </div>
 
         <!-- アカウント情報タブ -->
@@ -471,6 +471,13 @@ export default {
     await this.fetchInitialData()
   },
   methods: {
+    onReservationMade(payload) {
+      // 申込状況タブに切替え、一覧をリロード
+      this.activeTab = 'registrations'
+      if (this.$refs && this.$refs.registrationsTab && typeof this.$refs.registrationsTab.load === 'function') {
+        this.$refs.registrationsTab.load()
+      }
+    },
     async fetchInitialData() {
       try {
         const [profileRes, dashboardRes, favoritesRes] = await Promise.all([
