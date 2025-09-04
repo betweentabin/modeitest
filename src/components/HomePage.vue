@@ -29,6 +29,9 @@
       </div>
     </div>
 
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="home" wrapper-class="cms-body" />
+
       <div class="frame-1321317457">
           <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }">
             <div class="frame-1321317491">
@@ -368,10 +371,12 @@ import vector65 from "../../public/img/vector-65.svg";
 import vector61 from "../../public/img/vector-61.svg";
 import vector5 from "../../public/img/vector-5.svg";
 import vector7 from "../../public/img/vector-7.svg";
+import CmsBlock from './CmsBlock.vue'
 export default {
   name: "HomePage",
   components: {
     Navigation,
+    CmsBlock,
     ContactSection,
     Card,
     Frame1321317481,
@@ -3345,5 +3350,3 @@ export default {
   justify-content: flex-start;
 }
 </style>
-
-

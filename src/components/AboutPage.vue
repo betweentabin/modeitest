@@ -13,6 +13,7 @@
     </div>
 
     <!-- Our Mission Section -->
+    <CmsBlock page-key="about" wrapper-class="cms-body" />
     <section class="section mission-section">
       <div class="container">
         <div class="section-header">
@@ -234,6 +235,7 @@ import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
 import AccessSection from "./AccessSection.vue";
 import { frame132131753022Data } from "../data.js";
+import CmsBlock from './CmsBlock.vue'
 import axios from 'axios';
 import { getApiUrl } from '@/config/api';
 
@@ -243,7 +245,8 @@ export default {
     Navigation,
     Footer,
     Group27,
-    AccessSection
+    AccessSection,
+    CmsBlock
   },
   data() {
     return {

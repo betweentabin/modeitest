@@ -13,6 +13,9 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="['セミナー', '受付中のセミナー']" />
 
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="seminars-current" wrapper-class="cms-body" />
+
     <!-- Current Seminars Section -->
     <div class="current-seminars-section">
       <div class="seminars-container">
@@ -156,6 +159,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
+import CmsBlock from './CmsBlock.vue'
 import { frame132131753022Data } from "../data";
 import apiClient from '@/services/apiClient.js'
 import MembershipBadge from './MembershipBadge.vue'
@@ -171,6 +175,7 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ContactSection,
+    CmsBlock,
     MembershipBadge
   },
   data() {

@@ -24,6 +24,7 @@
         </div>
       </div>
 
+      <CmsBlock page-key="terms" wrapper-class="cms-body" />
       <div class="content-container">
         <!-- Introduction -->
         <div class="intro-section">

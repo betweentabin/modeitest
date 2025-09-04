@@ -22,6 +22,9 @@
         </div>
       </div>
 
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="news" wrapper-class="cms-body" />
+
       <div class="news-container">
         <div class="news-categories">
           <button 
@@ -168,6 +171,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import apiClient from '../services/apiClient.js';
 import { frame132131753022Data } from "../data.js";
+import CmsBlock from './CmsBlock.vue'
 
 export default {
   name: "NewsPage",
@@ -179,7 +183,8 @@ export default {
     Breadcrumbs,
     ContactSection,
     AccessSection,
-    FixedSideButtons
+    FixedSideButtons,
+    CmsBlock
   },
   data() {
     return {
