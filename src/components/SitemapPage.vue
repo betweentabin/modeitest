@@ -58,8 +58,6 @@
               <div class="sitemap-category">
                 <h4 class="category-title">会員サービス</h4>
                 <ul class="link-list">
-                  <li><router-link to="/member-pr" class="sitemap-link">会員PR</router-link></li>
-                  <li><router-link to="/member-pr-dotcom" class="sitemap-link">会員PRどっとコム</router-link></li>
                   <li><router-link to="/membership" class="sitemap-link">入会案内</router-link></li>
                 </ul>
               </div>

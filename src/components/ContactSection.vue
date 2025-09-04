@@ -19,7 +19,7 @@
       <div class="text-46 valign-text-middle inter-bold-white-20px">
         様々な分野の調査研究を通じ、企業活動などをサポートします。
       </div>
-      <div class="button-3">
+      <div class="button-3" @click="goToContact">
         <div class="text-44 valign-text-middle inter-bold-white-15px">お問い合わせはコチラ</div>
         <frame13213176122 />
       </div>
@@ -34,6 +34,11 @@ export default {
   components: {
     Frame13213176122,
   },
+  methods: {
+    goToContact() {
+      this.$router.push('/contact');
+    }
+  }
 };
 </script>
 

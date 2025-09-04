@@ -59,7 +59,7 @@
           <div class="table-label">メール</div>
           <div class="table-value-with-button">
             <span>info@chikugin-ri.co.jp</span>
-            <button class="contact-button">
+            <button class="contact-button" @click="goToContact">
               お問い合わせはコチラ
               <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -237,6 +237,11 @@ export default {
       frame132131753022Props: frame132131753022Data,
       
     };
+  },
+  methods: {
+    goToContact() {
+      this.$router.push('/contact');
+    }
   },
   computed: {
     _pageRef() { return this._pageText?.page?.value },

@@ -148,7 +148,7 @@
         
         <div class="support-description">
           <p>「経営改善」とは、会社（ハード）が変わるのではなく、会社の中にいる「人」（ソフト）が変わることです。 ちくぎん地域経済研究所は、事業のお悩み解決のために、あなたにぴったりの解決策をご提案いたします。<br>どうぞお気軽にご相談ください。</p>
-          <button class="contact-btn">
+          <button class="contact-btn" @click="goToContact">
             <span>お問い合わせはコチラ</span>
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
               <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -344,6 +344,9 @@ export default {
     },
     handleJoinClick() {
       this.$router.push('/application-form');
+    },
+    goToContact() {
+      this.$router.push('/contact');
     }
   }
 };
