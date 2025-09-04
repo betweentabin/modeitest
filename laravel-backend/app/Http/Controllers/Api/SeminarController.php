@@ -270,6 +270,23 @@ class SeminarController extends Controller
             ], 403);
         }
 
+        // 認証されたユーザーの場合、emailでmemberを検索
+        if ($member) {
+            // 認証されたユーザーのemailとフォームのemailが一致するかチェック
+            if ($request->email !== $member->email) {
+                return response()->json([
+                    'success' => false,
+                    'error' => [
+                        'code' => 'EMAIL_MISMATCH',
+                        'message' => 'ログイン中のメールアドレスと入力されたメールアドレスが一致しません'
+                    ]
+                ], 400);
+            }
+        } else {
+            // 認証されていない場合、emailでmemberを検索
+            $member = \App\Models\Member::where('email', $request->email)->first();
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'email' => 'required|email|max:255',

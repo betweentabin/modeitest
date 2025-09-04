@@ -779,6 +779,11 @@ export default {
       const key = (k || '').trim()
       return KEY_HELP[key]?.placeholder || ''
     },
+    getKeyLocation(k) {
+      const page = (this.formData.page_key || this.pageKey || '').trim()
+      const key = (k || '').trim()
+      return (KEY_LOCATIONS[page] && KEY_LOCATIONS[page][key]) ? KEY_LOCATIONS[page][key] : ''
+    },
     reloadFieldsFromJson() {
       try {
         const base = this.contentJson ? JSON.parse(this.contentJson) : {}
