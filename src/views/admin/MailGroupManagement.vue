@@ -94,6 +94,11 @@
             </select>
             <button class="save-btn" @click="loadMemberCandidates">検索</button>
           </div>
+          <div class="form-row" style="align-items:center; gap:8px;">
+            <label style="min-width:140px;">CSVで追加</label>
+            <input ref="csvInput" type="file" accept=".csv,text/csv" @change="onCsvSelected" />
+            <button class="small-btn" :disabled="!csvFile || uploadingCsv" @click="uploadCsv">{{ uploadingCsv ? 'アップロード中...' : '取り込み' }}</button>
+          </div>
           <div class="candidate-list">
             <table class="data-table">
               <thead>
@@ -155,7 +160,9 @@ export default {
       memberTypeFilter: '',
       candidates: [],
       selectedCandidateIds: [],
-      groupMemberIds: new Set()
+      groupMemberIds: new Set(),
+      csvFile: null,
+      uploadingCsv: false,
     }
   },
   computed: {
@@ -189,6 +196,27 @@ export default {
         this.error = '読み込みに失敗しました'
         console.error(e)
       } finally { this.loading = false }
+    },
+    onCsvSelected(e) {
+      const f = e.target.files && e.target.files[0]
+      this.csvFile = f || null
+    },
+    async uploadCsv() {
+      if (!this.currentGroup || !this.csvFile) return
+      this.uploadingCsv = true
+      try {
+        const res = await apiClient.uploadMailGroupCsv(this.currentGroup.id, this.csvFile)
+        if (res.success) {
+          alert(`取り込み完了: ${res.inserted || 0}件追加（候補: ${res.total_ids || 0}件）`)
+          await this.loadGroupMembers()
+          this.$refs.csvInput.value = ''
+          this.csvFile = null
+        } else {
+          alert(res.error || res.message || '取り込みに失敗しました')
+        }
+      } catch(e) {
+        alert('取り込みに失敗しました')
+      } finally { this.uploadingCsv = false }
     },
     openCreateModal() { this.showCreate = true },
     async createGroup() {

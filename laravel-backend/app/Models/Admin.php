@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Notification;
 
 class Admin extends Authenticatable
 {
@@ -118,5 +119,14 @@ class Admin extends Authenticatable
         
         // 各リソースに対する権限チェックのロジック
         return $this->isAdmin();
+    }
+
+    // Customize password reset notification for SPA route
+    public function sendPasswordResetNotification($token)
+    {
+        $base = env('FRONTEND_ADMIN_RESET_URL', env('FRONTEND_URL', config('app.url')));
+        $url = rtrim($base, '/') . '/#/admin/reset-password?token=' . urlencode($token) . '&email=' . urlencode($this->email);
+        Notification::route('mail', $this->email)
+            ->notify(new \App\Notifications\AdminResetPassword($url));
     }
 }

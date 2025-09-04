@@ -10,7 +10,7 @@ class EmailCampaign extends Model
     use HasFactory;
 
     protected $fillable = [
-        'subject', 'body_html', 'body_text', 'status', 'scheduled_at', 'created_by'
+        'subject', 'body_html', 'body_text', 'status', 'scheduled_at', 'created_by', 'is_template'
     ];
 
     protected $casts = [
@@ -26,5 +26,9 @@ class EmailCampaign extends Model
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }
-}
 
+    public function attachments()
+    {
+        return $this->hasMany(EmailAttachment::class, 'campaign_id');
+    }
+}

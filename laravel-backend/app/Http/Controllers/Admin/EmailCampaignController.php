@@ -8,6 +8,8 @@ use App\Models\EmailRecipient;
 use App\Models\MailGroupMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Models\EmailAttachment;
 
 class EmailCampaignController extends Controller
 {
@@ -78,6 +80,62 @@ class EmailCampaignController extends Controller
         \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
 
         return response()->json(['success' => true]);
+    }
+
+    // Templates: list
+    public function templates()
+    {
+        $templates = EmailCampaign::where('is_template', true)
+            ->orderBy('updated_at', 'desc')
+            ->select('id','subject','updated_at')
+            ->get();
+        return response()->json(['success' => true, 'data' => $templates]);
+    }
+
+    public function markTemplate($id)
+    {
+        $c = EmailCampaign::findOrFail($id);
+        $c->update(['is_template' => true]);
+        return response()->json(['success' => true]);
+    }
+
+    public function unmarkTemplate($id)
+    {
+        $c = EmailCampaign::findOrFail($id);
+        $c->update(['is_template' => false]);
+        return response()->json(['success' => true]);
+    }
+
+    public function createFromTemplate($id)
+    {
+        // same behavior as duplicate
+        return $this->duplicate($id);
+    }
+
+    // Duplicate campaign (content + attachments; recipients are not copied)
+    public function duplicate($id)
+    {
+        $orig = EmailCampaign::with('attachments')->findOrFail($id);
+        $copy = EmailCampaign::create([
+            'subject' => $orig->subject,
+            'body_html' => $orig->body_html,
+            'body_text' => $orig->body_text,
+            'status' => 'draft',
+            'created_by' => optional(request()->user())->id,
+        ]);
+
+        foreach ($orig->attachments as $att) {
+            EmailAttachment::create([
+                'campaign_id' => $copy->id,
+                'disk' => $att->disk,
+                'path' => $att->path,
+                'filename' => $att->filename,
+                'mime' => $att->mime,
+                'size' => $att->size,
+            ]);
+        }
+
+        return response()->json(['success' => true, 'data' => $copy], 201);
     }
 
     public function store(Request $request)
@@ -168,5 +226,44 @@ class EmailCampaignController extends Controller
         \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
 
         return response()->json(['success' => true, 'message' => '送信キューに投入しました']);
+    }
+
+    // Attachments: list
+    public function attachments($id)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $atts = $campaign->attachments()->orderBy('id', 'asc')->get();
+        return response()->json(['success' => true, 'data' => $atts]);
+    }
+
+    // Attachments: upload
+    public function uploadAttachment(Request $request, $id)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $request->validate([
+            'attachment' => 'required|file|max:10240', // 10MB
+        ]);
+        $file = $request->file('attachment');
+        $disk = env('MAIL_ATTACHMENT_DISK', 'public');
+        $path = $file->store('email_attachments/'.$campaign->id, $disk);
+        $att = EmailAttachment::create([
+            'campaign_id' => $campaign->id,
+            'disk' => $disk,
+            'path' => $path,
+            'filename' => $file->getClientOriginalName(),
+            'mime' => $file->getClientMimeType(),
+            'size' => $file->getSize(),
+        ]);
+        return response()->json(['success' => true, 'data' => $att], 201);
+    }
+
+    // Attachments: delete
+    public function deleteAttachment($id, $attachmentId)
+    {
+        $campaign = EmailCampaign::findOrFail($id);
+        $att = EmailAttachment::where('campaign_id', $campaign->id)->where('id', $attachmentId)->firstOrFail();
+        Storage::disk($att->disk)->delete($att->path);
+        $att->delete();
+        return response()->json(['success' => true]);
     }
 }

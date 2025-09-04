@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -21,6 +21,21 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Basic RBAC gates based on Admin.role
+        Gate::define('view-admin', function ($user) {
+            return in_array($user->role ?? null, ['super_admin','admin','editor','viewer']);
+        });
+
+        Gate::define('manage-mails', function ($user) {
+            return in_array($user->role ?? null, ['super_admin','admin']);
+        });
+
+        Gate::define('manage-content', function ($user) {
+            return in_array($user->role ?? null, ['super_admin','admin','editor']);
+        });
+
+        Gate::define('manage-members', function ($user) {
+            return in_array($user->role ?? null, ['super_admin','admin']);
+        });
     }
 }

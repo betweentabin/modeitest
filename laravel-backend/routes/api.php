@@ -157,6 +157,8 @@ Route::prefix('seminars')->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:admin-login');
+    Route::post('/password/email', [AdminAuthController::class, 'sendResetLinkEmail'])->middleware('throttle:admin-login');
+    Route::post('/password/reset', [AdminAuthController::class, 'resetPassword'])->middleware('throttle:admin-login');
     
     // テスト用: 認証なしエンドポイント
     Route::get('/test', function() {
@@ -176,7 +178,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/mfa/enable', [AdminAuthController::class, 'mfaEnable']);
         Route::post('/mfa/disable', [AdminAuthController::class, 'mfaDisable']);
         
-        Route::prefix('pages')->group(function () {
+        Route::prefix('pages')->middleware('can:manage-content')->group(function () {
             Route::get('/', [PageContentController::class, 'index']);
             Route::post('/', [PageContentController::class, 'store']);
             Route::get('/{pageKey}', [PageContentController::class, 'show']);
@@ -186,7 +188,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
         });
         
-        Route::prefix('publications')->group(function () {
+        Route::prefix('publications')->middleware('can:manage-content')->group(function () {
             Route::get('/', [PublicationsController::class, 'index']);
             Route::post('/', [PublicationsController::class, 'store']);
             Route::get('/{id}', [PublicationsController::class, 'show']);
@@ -234,17 +236,18 @@ Route::prefix('admin')->group(function () {
         });
 
         // メールグループ管理
-        Route::prefix('mail-groups')->group(function () {
+        Route::prefix('mail-groups')->middleware('can:manage-mails')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\MailGroupController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Admin\MailGroupController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'show']);
             Route::put('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'update']);
             Route::delete('/{id}', [App\Http\Controllers\Admin\MailGroupController::class, 'destroy']);
             Route::post('/{id}/members', [App\Http\Controllers\Admin\MailGroupController::class, 'members']);
+            Route::post('/{id}/import-csv', [App\Http\Controllers\Admin\MailGroupController::class, 'importCsv']);
         });
 
         // メールキャンペーン管理
-        Route::prefix('emails')->group(function () {
+        Route::prefix('emails')->middleware('can:manage-mails')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'show']);
@@ -253,6 +256,16 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/send-now', [App\Http\Controllers\Admin\EmailCampaignController::class, 'sendNow']);
             Route::post('/{id}/resend-failed', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendFailed']);
             Route::post('/{id}/recipients/{recipientId}/resend', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendRecipient']);
+            Route::post('/{id}/duplicate', [App\Http\Controllers\Admin\EmailCampaignController::class, 'duplicate']);
+            // templates
+            Route::get('/templates', [App\Http\Controllers\Admin\EmailCampaignController::class, 'templates']);
+            Route::post('/{id}/mark-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'markTemplate']);
+            Route::post('/{id}/unmark-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'unmarkTemplate']);
+            Route::post('/{id}/create-from-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'createFromTemplate']);
+            // attachments
+            Route::get('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'attachments']);
+            Route::post('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'uploadAttachment']);
+            Route::delete('/{id}/attachments/{attachmentId}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'deleteAttachment']);
         });
         
         // 管理者用刊行物API
@@ -287,7 +300,7 @@ Route::prefix('admin')->group(function () {
         });
         
         // お知らせ管理API
-        Route::prefix('notices')->group(function () {
+        Route::prefix('notices')->middleware('can:manage-content')->group(function () {
             Route::get('/', [NoticeController::class, 'index']);
             Route::post('/', [NoticeController::class, 'store']);
             Route::get('/stats', [NoticeController::class, 'stats']);

@@ -76,6 +76,8 @@
                 <td>{{ formatDateTime(c.created_at) }}</td>
                 <td>
                   <button class="small-btn" @click="preview(c)">プレビュー</button>
+                  <button class="small-btn" @click="openAttachments(c)">添付</button>
+                  <button class="small-btn" @click="duplicate(c)">複製</button>
                   <button class="small-btn" @click="schedule(c)">予約</button>
                   <button class="small-btn danger" @click="sendNow(c)">即時送信</button>
                 </td>
@@ -150,6 +152,41 @@
       </div>
     </div>
 
+    <!-- 添付ファイルモーダル -->
+    <div v-if="showAttachments" class="modal-overlay" @click="closeAttachments">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>添付ファイル: キャンペーン #{{ currentCampaign?.id }}</h3>
+          <button class="close-btn" @click="closeAttachments">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row" style="align-items:center; gap:8px;">
+            <input ref="attInput" type="file" @change="onAttachmentSelected" />
+            <button class="small-btn" :disabled="!attachmentFile || uploadingAttachment" @click="uploadAttachment">{{ uploadingAttachment ? 'アップロード中...' : '追加' }}</button>
+          </div>
+          <table class="data-table" v-if="attachments.length">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>ファイル名</th>
+                <th>サイズ</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="a in attachments" :key="a.id">
+                <td>{{ a.id }}</td>
+                <td>{{ a.filename }}</td>
+                <td>{{ formatSize(a.size) }}</td>
+                <td><button class="small-btn danger" @click="deleteAttachment(a)">削除</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else class="error">添付はありません</div>
+        </div>
+      </div>
+    </div>
+
   </AdminLayout>
 </template>
 
@@ -174,7 +211,12 @@ export default {
       extraEmailsText: '',
       showPreview: false,
       previewHtml: '',
-      previewSubject: ''
+      previewSubject: '',
+      showAttachments: false,
+      currentCampaign: null,
+      attachments: [],
+      attachmentFile: null,
+      uploadingAttachment: false,
     }
   },
   computed: {
@@ -250,7 +292,54 @@ export default {
         else alert(res.error || '送信に失敗しました')
       } catch (e) { alert('送信に失敗しました') }
     },
+    async duplicate(c) {
+      if (!confirm('このキャンペーンを複製しますか？（受信者はコピーされません）')) return
+      try {
+        const res = await apiClient.duplicateEmailCampaign(c.id)
+        if (res.success) { alert('複製しました'); this.loadCampaigns(this.pagination.current_page) }
+      } catch(e) { alert('複製に失敗しました') }
+    },
+    openAttachments(c) {
+      this.currentCampaign = c
+      this.showAttachments = true
+      this.loadAttachments()
+    },
+    closeAttachments() {
+      this.showAttachments = false
+      this.currentCampaign = null
+      this.attachments = []
+      this.attachmentFile = null
+      if (this.$refs.attInput) this.$refs.attInput.value = ''
+    },
+    async loadAttachments() {
+      if (!this.currentCampaign) return
+      try {
+        const res = await apiClient.listEmailAttachments(this.currentCampaign.id)
+        if (res.success) this.attachments = res.data || []
+      } catch(e) { console.warn('Failed to load attachments', e) }
+    },
+    onAttachmentSelected(e) { this.attachmentFile = (e.target.files && e.target.files[0]) || null },
+    async uploadAttachment() {
+      if (!this.currentCampaign || !this.attachmentFile) return
+      this.uploadingAttachment = true
+      try {
+        const res = await apiClient.uploadEmailAttachment(this.currentCampaign.id, this.attachmentFile)
+        if (res.success) {
+          await this.loadAttachments()
+          if (this.$refs.attInput) this.$refs.attInput.value = ''
+          this.attachmentFile = null
+        } else { alert(res.error || res.message || 'アップロードに失敗しました') }
+      } catch(e) { alert('アップロードに失敗しました') } finally { this.uploadingAttachment = false }
+    },
+    async deleteAttachment(a) {
+      if (!confirm(`添付「${a.filename}」を削除しますか？`)) return
+      try {
+        const res = await apiClient.deleteEmailAttachment(this.currentCampaign.id, a.id)
+        if (res.success) this.attachments = this.attachments.filter(x => x.id !== a.id)
+      } catch(e) { alert('削除に失敗しました') }
+    },
     formatDateTime(s) { return s ? new Date(s).toLocaleString('ja-JP') : '-' }
+    ,formatSize(n) { if (!n && n!==0) return '-' ; const u=['B','KB','MB','GB']; let i=0; let v=n; while(v>=1024 && i<u.length-1){v/=1024;i++} return `${v.toFixed(v>=100?0: v>=10?1:2)} ${u[i]}` }
   }
 }
 </script>

@@ -8,6 +8,10 @@
     "start": "npx serve -s dist -l $PORT"
   },
   "dependencies": {
+    "@tiptap/core": "^2.26.1",
+    "@tiptap/pm": "^2.26.1",
+    "@tiptap/starter-kit": "^2.26.1",
+    "@tiptap/vue-2": "^2.26.1",
     "axios": "^1.11.0",
     "core-js": "^3.6.5",
     "quill": "^2.0.3",
