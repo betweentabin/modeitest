@@ -22,6 +22,9 @@
         </div>
       </div>
 
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="financial-reports" wrapper-class="cms-body" />
+
       <!-- Financial Reports -->
       <div class="reports-container">
         <!-- 2025年3月期 -->

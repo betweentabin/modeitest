@@ -23,7 +23,8 @@
       </div>
       
       <div class="indicators-description">
-        <p>経済の動向を把握するために重要な経済指標の一覧となります。</p>
+        <div v-if="pageBodyHtml" class="cms-body" v-html="pageBodyHtml"></div>
+        <p v-else>経済の動向を把握するために重要な経済指標の一覧となります。</p>
       </div>
       
       <div class="indicators-list">
@@ -101,6 +102,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: "EconomicIndicatorsPage",
@@ -117,6 +119,7 @@ export default {
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
+      pageBodyHtml: '',
       searchQuery: '',
       openItems: [],
       indicators: [
@@ -173,6 +176,16 @@ export default {
     paginatedIndicators() {
       return this.filteredIndicators;
     }
+  },
+  async mounted() {
+    // CMSからHTMLが設定されていれば優先表示
+    try {
+      const res = await apiClient.getPageContent('economic-indicators')
+      const html = res?.data?.page?.content?.html
+      if (typeof html === 'string' && html.trim()) {
+        this.pageBodyHtml = html
+      }
+    } catch (e) { /* noop */ }
   },
   methods: {
     toggleDefinition(index) {

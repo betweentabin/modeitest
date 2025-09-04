@@ -23,6 +23,9 @@
         </div>
       </div>
 
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="publications" wrapper-class="cms-body" />
+
       <!-- Filter Container -->
       <div class="filter-container">
         <!-- Year Filter -->
@@ -212,6 +215,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import CmsBlock from './CmsBlock.vue'
 import apiClient from '../services/apiClient.js';
 import mockServer from '@/mockServer';
 
@@ -225,7 +229,8 @@ export default {
     Breadcrumbs,
     ContactSection,
     AccessSection,
-    FixedSideButtons
+    FixedSideButtons,
+    CmsBlock
   },
   data() {
     return {

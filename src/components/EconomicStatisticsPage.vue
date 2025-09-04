@@ -23,6 +23,9 @@
         </div>
       </div>
 
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="economic-statistics" wrapper-class="cms-body" />
+
       <!-- Filter Container -->
       <div class="filter-container">
         <!-- Year Filter -->
@@ -167,6 +170,7 @@ import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
 import { navigateToPublication, navigateToStatistics } from '../utils/navigation.js';
+import CmsBlock from './CmsBlock.vue'
 
 export default {
   name: "EconomicStatisticsPage",
@@ -179,7 +183,8 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsBlock
   },
   data() {
     return {
