@@ -1,5 +1,11 @@
 // 会員認証とアクセス制御のユーティリティ
 import mockServer from '../mockServer'
+import { 
+  getMembershipLabel, 
+  getMembershipLevel, 
+  canAccess,
+  isValidMembershipType 
+} from '../utils/membershipTypes'
 
 // グローバルな状態管理（Vue 2互換のシンプルなストア）
 const store = {
@@ -65,16 +71,10 @@ export function useMemberAuth() {
     return u?.membership_type || u?.membershipType || 'guest'
   }
 
-  // 会員ランクのラベル取得
-  const getMembershipLabel = (type) => {
+  // 会員ランクのラベル取得（ユーティリティを使用）
+  const getMembershipLabelLocal = (type) => {
     const memberType = type || getMembershipType()
-    const labels = {
-      basic: 'ベーシック会員',
-      standard: 'スタンダード会員', 
-      premium: 'プレミアム会員',
-      guest: 'ゲスト'
-    }
-    return labels[memberType] || 'ゲスト'
+    return getMembershipLabel(memberType)
   }
 
   // ログイン処理
@@ -97,28 +97,20 @@ export function useMemberAuth() {
     store.clearMember()
   }
 
-  // コンテンツへのアクセス可否確認
-  const canAccessContent = (requiredType) => {
+  // コンテンツへのアクセス可否確認（ユーティリティを使用）
+  const canAccessContent = (requiredType, exact = false) => {
     const currentType = getMembershipType()
-    
-    if (currentType === 'guest') return false
-    if (!requiredType || requiredType === 'basic') return true
-    
-    const ranks = {
-      basic: 1,
-      standard: 2,
-      premium: 3
-    }
-    
-    const currentRank = ranks[currentType] || 0
-    const requiredRank = ranks[requiredType] || 0
-    
-    return currentRank >= requiredRank
+    return canAccess(currentType, requiredType, exact)
   }
 
   // アップグレード処理
   const upgradeMembership = async (newType) => {
     try {
+      // バリデーション
+      if (!isValidMembershipType(newType)) {
+        return { success: false, error: '無効な会員種別です' }
+      }
+      
       // 実際のAPIコールをここに実装
       // 今はモック実装
       const currentMember = store.state.currentMember
@@ -140,7 +132,7 @@ export function useMemberAuth() {
     getMemberInfo,
     isLoggedIn,
     getMembershipType,
-    getMembershipLabel,
+    getMembershipLabel: getMembershipLabelLocal,
     
     // Actions
     login,

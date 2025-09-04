@@ -225,6 +225,11 @@
             <div v-if="memberInfo?.expiryDate" class="expiry-info">
               <span>有効期限: {{ formatDate(memberInfo.expiryDate) }}</span>
             </div>
+
+            <div class="upgrade-section" style="margin-top: 16px;">
+              <p>個別相談の予約をご希望の方はこちらからお申し込みください。</p>
+              <button @click="openReservationModal()" class="upgrade-button">個別相談を予約する</button>
+            </div>
           </div>
         </div>
         
@@ -332,6 +337,46 @@
         </div>
       </div>
     </div>
+    
+    <!-- 予約モーダル -->
+    <div v-if="showReservationModal" class="modal-backdrop" @click.self="closeReservationModal">
+      <div class="modal">
+        <h3>予約フォーム</h3>
+        <form @submit.prevent="submitReservation">
+          <div class="form-row">
+            <div class="form-group">
+              <label>お名前 *</label>
+              <input v-model="reservationForm.name" type="text" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label>メールアドレス *</label>
+              <input v-model="reservationForm.email" type="email" class="form-input" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>会社名</label>
+              <input v-model="reservationForm.company" type="text" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label>電話番号</label>
+              <input v-model="reservationForm.phone" type="text" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>ご要望・備考</label>
+            <textarea v-model="reservationForm.special_requests" class="form-textarea" rows="4" placeholder="ご要望などがあればご記入ください"></textarea>
+          </div>
+
+          <p v-if="reservationError" class="error-text">{{ reservationError }}</p>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-button" @click="closeReservationModal" :disabled="reservationLoading">キャンセル</button>
+            <button type="submit" class="save-button" :disabled="reservationLoading">{{ reservationLoading ? '送信中...' : '送信する' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <FooterComplete />
   </div>
 </template>
@@ -384,7 +429,20 @@ export default {
       
       // お気に入り
       loadingFavorites: false,
-      favoritesError: ''
+      favoritesError: '',
+
+      // 予約モーダル
+      showReservationModal: false,
+      reservationLoading: false,
+      reservationError: '',
+      reservationTarget: null,
+      reservationForm: {
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        special_requests: ''
+      }
     }
   },
   computed: {
@@ -405,14 +463,45 @@ export default {
     }
   },
   async mounted() {
-    await this.initializeAuth()
-    if (this.memberInfo) {
-      this.loadDashboard()
-      this.loadFavoriteMembers()
-      this.loadDownloadHistory()
-    }
+    // プロフィール・ダッシュボード・お気に入りを並行ロード
+    await this.fetchInitialData()
   },
   methods: {
+    async fetchInitialData() {
+      try {
+        const [profileRes, dashboardRes, favoritesRes] = await Promise.all([
+          apiClient.get('/api/member/my-profile'),
+          apiClient.get('/api/member/dashboard'),
+          apiClient.get('/api/member/favorites')
+        ])
+
+        // プロフィール
+        if (profileRes && profileRes.success) {
+          this.memberInfo = profileRes.data
+        } else {
+          this.$router.push('/login?redirect=/my-account')
+          return
+        }
+
+        // ダッシュボード
+        if (dashboardRes && dashboardRes.success) {
+          this.dashboard = dashboardRes.data
+        }
+
+        // お気に入り
+        if (favoritesRes && favoritesRes.success) {
+          this.favoriteMembers = favoritesRes.data
+        } else if (favoritesRes && !favoritesRes.success) {
+          this.favoritesError = favoritesRes.message || 'お気に入り一覧の取得に失敗しました'
+        }
+
+        // ダウンロード履歴（API未提供のためダミー）
+        this.loadDownloadHistory()
+      } catch (error) {
+        console.error('初期データ取得に失敗:', error)
+        this.$router.push('/login?redirect=/my-account')
+      }
+    },
     async loadDashboard() {
       try {
         const res = await apiClient.get('/api/member/dashboard')
@@ -527,14 +616,14 @@ export default {
         {
           id: 1,
           title: 'ちくぎん地域経済レポート Vol.15',
-          date: '2024-03-15',
+          downloadedAt: '2024-03-15',
           type: 'PDF',
           size: '2.3MB'
         },
         {
           id: 2,
           title: 'Hot Information 2024年2月号',
-          date: '2024-02-28',
+          downloadedAt: '2024-02-28',
           type: 'PDF',
           size: '1.8MB'
         }
@@ -555,9 +644,24 @@ export default {
       this.$router.push('/upgrade')
     },
     
-    redownload(item) {
-      // 再ダウンロードの実装
-      console.log('再ダウンロード:', item)
+    async redownload(item) {
+      try {
+        const res = await apiClient.downloadPublication(item.id)
+        if (res && res.success) {
+          const url = res.data?.download_url || res.data?.url || res.download_url
+          if (url) {
+            window.open(url, '_blank')
+            alert('ダウンロードを開始します')
+          } else {
+            alert('ダウンロードURLが取得できませんでした')
+          }
+        } else {
+          alert(res?.message || 'ダウンロードに失敗しました')
+        }
+      } catch (e) {
+        console.error('ダウンロードエラー:', e)
+        alert('サーバーエラーが発生しました')
+      }
     },
     
     getMembershipLabel(type) {
@@ -591,6 +695,60 @@ export default {
     saveSettings() {
       // 設定保存の実装
       console.log('設定を保存:', this.settings)
+    },
+
+    // 予約モーダル
+    openReservationModal(target = null) {
+      this.reservationTarget = target
+      this.reservationError = ''
+      this.reservationForm = {
+        name: this.memberInfo?.representative_name || this.memberInfo?.name || '',
+        email: this.memberInfo?.email || '',
+        company: this.memberInfo?.company_name || '',
+        phone: this.memberInfo?.phone || '',
+        special_requests: ''
+      }
+      this.showReservationModal = true
+    },
+    closeReservationModal() {
+      if (this.reservationLoading) return
+      this.showReservationModal = false
+    },
+    async submitReservation() {
+      this.reservationLoading = true
+      this.reservationError = ''
+      try {
+        if (this.reservationTarget?.seminarId) {
+          const res = await apiClient.registerForSeminar(this.reservationTarget.seminarId, this.reservationForm)
+          if (res && res.success) {
+            this.showReservationModal = false
+            alert('予約を受け付けました')
+          } else {
+            this.reservationError = res?.message || '予約に失敗しました'
+          }
+        } else {
+          const res = await apiClient.submitInquiry({
+            name: this.reservationForm.name,
+            email: this.reservationForm.email,
+            phone: this.reservationForm.phone,
+            company: this.reservationForm.company,
+            subject: '個別相談の予約',
+            message: this.reservationForm.special_requests || '個別相談の予約を希望します。',
+            inquiry_type: 'reservation'
+          })
+          if (res && res.success) {
+            this.showReservationModal = false
+            alert('予約申請を送信しました')
+          } else {
+            this.reservationError = res?.message || '予約申請の送信に失敗しました'
+          }
+        }
+      } catch (e) {
+        console.error('予約送信エラー:', e)
+        this.reservationError = 'サーバーエラーが発生しました'
+      } finally {
+        this.reservationLoading = false
+      }
     }
   }
 }
@@ -1040,6 +1198,31 @@ export default {
 
 .delete-button:hover {
   background: #c82333;
+}
+
+/* モーダル */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #fff;
+  width: min(680px, 92vw);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal h3 {
+  margin: 0 0 16px 0;
+}
+.error-text {
+  color: #d32f2f;
+  font-size: 14px;
 }
 
 /* 空状態 */

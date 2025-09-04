@@ -50,10 +50,9 @@
               
               <div class="filter-group">
                 <select v-model="membershipFilter" @change="loadMembers" class="filter-select">
-                  <option value="">全ての会員種別</option>
-                  <option value="free">無料会員</option>
-                  <option value="standard">スタンダード会員</option>
-                  <option value="premium">プレミアム会員</option>
+                  <option v-for="option in membershipOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
                 </select>
               </div>
 
@@ -63,7 +62,7 @@
                 </button>
                 
                 <button 
-                  v-if="memberInfo && memberInfo.membership_type === 'premium'" 
+                  v-if="memberInfo && canAccess(memberInfo.membership_type, 'premium', true)" 
                   @click="exportCSV" 
                   class="export-btn"
                   :disabled="exporting"
@@ -231,6 +230,7 @@ import Navigation from '@/components/Navigation.vue'
 import FooterComplete from '@/components/FooterComplete.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
 import apiClient from '@/services/apiClient.js'
+import { getMembershipOptions, getMembershipLabel, canAccess } from '@/utils/membershipTypes'
 
 export default {
   name: 'MemberDirectoryPage',
@@ -266,7 +266,10 @@ export default {
       selectedMember: null,
       
       // デバウンス用
-      searchTimeout: null
+      searchTimeout: null,
+      
+      // 会員種別選択肢
+      membershipOptions: getMembershipOptions()
     }
   },
   computed: {
@@ -301,7 +304,7 @@ export default {
 
       try {
         this.memberInfo = await getMemberInfo()
-        this.canAccess = this.memberInfo && ['standard', 'premium'].includes(this.memberInfo.membership_type)
+        this.canAccess = this.memberInfo && canAccess(this.memberInfo.membership_type, 'standard')
       } catch (error) {
         console.error('認証情報の取得に失敗:', error)
         this.memberInfo = null
@@ -436,12 +439,11 @@ export default {
     },
 
     getMembershipLabel(type) {
-      const labels = {
-        'free': '無料',
-        'standard': 'スタンダード',
-        'premium': 'プレミアム'
-      }
-      return labels[type] || type
+      return getMembershipLabel(type)
+    },
+    
+    canAccess(currentType, requiredType, exact = false) {
+      return canAccess(currentType, requiredType, exact)
     },
 
     formatDate(dateString) {

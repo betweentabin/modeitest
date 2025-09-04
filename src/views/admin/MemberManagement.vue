@@ -398,6 +398,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import { getMembershipOptions, getMembershipLabel } from '@/utils/membershipTypes'
 
 export default {
   name: 'MemberManagement',
