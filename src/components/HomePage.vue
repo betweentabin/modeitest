@@ -542,11 +542,17 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     heroTitle() {
-      // CMS override: content.texts.page_title
-      return this._pageText?.getText('page_title', this.text66) || this.text66
+      // CMS override優先 → data.js → 最後に安全な固定文言
+      const cms = this._pageText?.getText('page_title', '') || ''
+      const base = this.text66 || ''
+      const val = cms || base
+      return (typeof val === 'string' && val.trim().length) ? val : 'ページタイトル'
     },
     heroSubtitle() {
-      return this._pageText?.getText('lead', this.text67) || this.text67
+      const cms = this._pageText?.getText('lead', '') || ''
+      const base = this.text67 || ''
+      const val = cms || base
+      return (typeof val === 'string' && val.trim().length) ? val : 'サブタイトル'
     },
   },
   
