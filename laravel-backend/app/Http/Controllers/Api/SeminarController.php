@@ -258,8 +258,8 @@ class SeminarController extends Controller
             ], 400);
         }
 
-        // 会員の場合の権限チェック
-        $member = auth('member')->user();
+        // 会員の場合の権限チェック（Sanctum トークンから取得）
+        $member = $request->user();
         if ($member && !$member->canRegisterSeminar($seminar)) {
             return response()->json([
                 'success' => false,

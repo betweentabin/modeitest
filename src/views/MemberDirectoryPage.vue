@@ -293,18 +293,23 @@ export default {
   },
   methods: {
     async initializeAuth() {
-      const { getMemberInfo, isLoggedIn } = useMemberAuth()
+      const { getMemberInfo } = useMemberAuth()
       try {
-        // ローカルの会員情報を優先
+        // ローカル優先
         this.memberInfo = getMemberInfo()
-        if (!this.memberInfo) {
-          // トークンがあればAPIからフェッチして補完
-          const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
-          if (token) {
-            const res = await apiClient.get('/api/member/my-profile')
-            if (res && res.success) {
-              this.memberInfo = res.data
-              localStorage.setItem('memberUser', JSON.stringify(res.data))
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        if (!this.memberInfo && token) {
+          // 1st: member/my-profile（推奨）
+          let res = await apiClient.get('/api/member/my-profile')
+          if (res && res.success && res.data?.membership_type) {
+            this.memberInfo = res.data
+            localStorage.setItem('memberUser', JSON.stringify(res.data))
+          } else {
+            // 2nd: member-auth/me（互換）
+            res = await apiClient.get('/api/member-auth/me')
+            if (res && res.success && res.member?.membership_type) {
+              this.memberInfo = res.member
+              localStorage.setItem('memberUser', JSON.stringify(res.member))
             }
           }
         }

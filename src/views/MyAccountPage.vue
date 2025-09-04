@@ -408,7 +408,11 @@ export default {
       downloadHistory: [],
       favoriteMembers: [],
       settings: {
+        // 表示している3つのトグル
         newsletter: true,
+        seminar: true,
+        promotion: false,
+        // 拡張用（UI非表示）
         emailNotifications: true,
         smsNotifications: false
       },
@@ -693,8 +697,17 @@ export default {
     },
     
     saveSettings() {
-      // 設定保存の実装
-      console.log('設定を保存:', this.settings)
+      // Vueのリアクティブラッパを外したプレーンオブジェクトに変換
+      const payload = JSON.parse(JSON.stringify(this.settings))
+      try {
+        // まだAPIがないため、一時的にlocalStorageへ保存
+        localStorage.setItem('member_settings', JSON.stringify(payload))
+        console.log('設定を保存:', payload)
+        alert('設定を保存しました')
+      } catch (e) {
+        console.error('設定の保存に失敗:', e)
+        alert('設定の保存に失敗しました')
+      }
     },
 
     // 予約モーダル
