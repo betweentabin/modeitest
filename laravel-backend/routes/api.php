@@ -197,7 +197,7 @@ Route::prefix('admin')->group(function () {
         });
 
         // 経済統計レポート管理関連のルート
-        Route::prefix('economic-reports')->group(function () {
+        Route::prefix('economic-reports')->middleware('can:manage-content')->group(function () {
             Route::get('/', [EconomicReportManagementController::class, 'index']);
             Route::get('/{id}', [EconomicReportManagementController::class, 'show']);
             Route::post('/', [EconomicReportManagementController::class, 'store']);
@@ -312,7 +312,7 @@ Route::prefix('admin')->group(function () {
         });
         
         // メディア管理API
-        Route::prefix('media')->group(function () {
+        Route::prefix('media')->middleware('can:manage-content')->group(function () {
             Route::get('/', [MediaController::class, 'index']);
             Route::post('/upload', [MediaController::class, 'upload']);
             Route::delete('/delete', [MediaController::class, 'destroy']);

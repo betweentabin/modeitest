@@ -71,7 +71,7 @@
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
-          <div class="featured-image">
+          <div class="featured-image" :class="{ blurred: shouldBlur }">
             <img :src="featuredPublication.image || '/img/image-1.png'" :alt="featuredPublication.title" />
           </div>
           <div class="featured-info">
@@ -105,7 +105,7 @@
             class="publication-card"
             @click="goToPublicationDetail(publication.id)"
           >
-            <div class="publication-image">
+            <div class="publication-image" :class="{ blurred: shouldBlur }">
               <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
             </div>
             <div class="publication-info">
@@ -193,7 +193,8 @@ export default {
       years: [],
       categories: [ { id: 'all', name: '全て' } ],
       featuredPublication: null,
-      publications: []
+      publications: [],
+      shouldBlur: true
     };
   },
   async mounted() {
@@ -203,6 +204,13 @@ export default {
       this.loadYears(),
       this.loadPublications()
     ]);
+  },
+  created() {
+    try {
+      const user = JSON.parse(localStorage.getItem('memberUser') || 'null')
+      const t = user?.membership_type
+      this.shouldBlur = !(t === 'standard' || t === 'premium')
+    } catch(e) { this.shouldBlur = true }
   },
   computed: {
     filteredPublications() {
@@ -751,6 +759,7 @@ export default {
   height: 100%;
   object-fit: cover;
 }
+.publication-image.blurred img, .featured-image.blurred img { filter: blur(6px); }
 
 .publication-info {
   padding: 20px 0 0 0;

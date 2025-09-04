@@ -18,6 +18,9 @@
               <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }} ({{ g.members_count || 0 }})</option>
             </select>
           </div>
+          <div class="form-group" style="align-self:flex-end;">
+            <button class="small-btn" @click="openTemplates">テンプレートから作成</button>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group full">
@@ -78,6 +81,7 @@
                   <button class="small-btn" @click="preview(c)">プレビュー</button>
                   <button class="small-btn" @click="openAttachments(c)">添付</button>
                   <button class="small-btn" @click="duplicate(c)">複製</button>
+                  <button class="small-btn" @click="toggleTemplate(c)">{{ c.is_template ? 'テンプレ解除' : 'テンプレ化' }}</button>
                   <button class="small-btn" @click="schedule(c)">予約</button>
                   <button class="small-btn danger" @click="sendNow(c)">即時送信</button>
                 </td>
@@ -187,6 +191,31 @@
       </div>
     </div>
 
+    <!-- テンプレートモーダル -->
+    <div v-if="showTemplates" class="modal-overlay" @click="closeTemplates">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>テンプレート一覧</h3>
+          <button class="close-btn" @click="closeTemplates">×</button>
+        </div>
+        <div class="modal-body">
+          <div v-if="templatesLoading" class="loading">読み込み中...</div>
+          <div v-else>
+            <table class="data-table" v-if="templates.length">
+              <thead><tr><th>ID</th><th>件名</th><th>更新日</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr v-for="t in templates" :key="t.id">
+                  <td>{{ t.id }}</td><td>{{ t.subject }}</td><td>{{ formatDateTime(t.updated_at) }}</td>
+                  <td><button class="small-btn" @click="createFromTemplate(t)">このテンプレで作成</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div v-else class="error">テンプレートがありません</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </AdminLayout>
 </template>
 
@@ -217,6 +246,9 @@ export default {
       attachments: [],
       attachmentFile: null,
       uploadingAttachment: false,
+      showTemplates: false,
+      templatesLoading: false,
+      templates: [],
     }
   },
   computed: {
@@ -337,6 +369,30 @@ export default {
         const res = await apiClient.deleteEmailAttachment(this.currentCampaign.id, a.id)
         if (res.success) this.attachments = this.attachments.filter(x => x.id !== a.id)
       } catch(e) { alert('削除に失敗しました') }
+    },
+    async toggleTemplate(c) {
+      try {
+        const res = c.is_template ? await apiClient.unmarkEmailTemplate(c.id) : await apiClient.markEmailTemplate(c.id)
+        if (res.success) { await this.loadCampaigns(this.pagination.current_page) }
+      } catch(e) { alert('更新に失敗しました') }
+    },
+    openTemplates() {
+      this.showTemplates = true
+      this.loadTemplates()
+    },
+    closeTemplates() { this.showTemplates = false; this.templates = [] },
+    async loadTemplates() {
+      this.templatesLoading = true
+      try {
+        const res = await apiClient.listEmailTemplates()
+        if (res.success) this.templates = res.data || []
+      } catch(e) { console.warn('Failed to load templates', e) } finally { this.templatesLoading = false }
+    },
+    async createFromTemplate(t) {
+      try {
+        const res = await apiClient.createCampaignFromTemplate(t.id)
+        if (res.success) { alert('テンプレートから作成しました'); this.closeTemplates(); this.loadCampaigns(1) }
+      } catch(e) { alert('作成に失敗しました') }
     },
     formatDateTime(s) { return s ? new Date(s).toLocaleString('ja-JP') : '-' }
     ,formatSize(n) { if (!n && n!==0) return '-' ; const u=['B','KB','MB','GB']; let i=0; let v=n; while(v>=1024 && i<u.length-1){v/=1024;i++} return `${v.toFixed(v>=100?0: v>=10?1:2)} ${u[i]}` }
