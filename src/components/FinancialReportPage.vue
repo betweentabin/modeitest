@@ -4,23 +4,27 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="決算報告"
-      subtitle="Financial Report"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
+      mediaKey="hero_financial_reports"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['決算報告']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">決算報告</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">Financial Report</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
+
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="financial-reports" wrapper-class="cms-body" />
 
       <!-- Financial Reports -->
       <div class="reports-container">
@@ -96,8 +100,8 @@
 
       <!-- Action Buttons -->
       <ActionButton 
-        primaryText="お問い合わせはコチラ"
-        secondaryText="入会はコチラ"
+        :primaryText="ctaPrimaryText"
+        :secondaryText="ctaSecondaryText"
         maxWidth="1500px"
         @primary-click="goToContact"
         @secondary-click="goToMember"
@@ -129,6 +133,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "FinancialReportPage",
@@ -143,17 +148,33 @@ export default {
     FixedSideButtons,
     ActionButton
   },
+  mounted() {
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
   data() {
     return {
+      pageKey: 'financial-reports',
       frame132131753022Props: frame132131753022Data,
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '決算報告') || '決算報告' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Financial Report') || 'Financial Report' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+  },
   methods: {
     goToContact() {
-      this.$router.push('/contact');
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link);
     },
     goToMember() {
-      this.$router.push('/register');
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link);
     }
   }
 };

@@ -5,21 +5,22 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="サイトマップ"
-      subtitle="sitemap"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
+      mediaKey="hero_sitemap"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['サイトマップ']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">サイトマップ</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">sitemap</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -38,8 +39,8 @@
                 <h4 class="category-title">メインページ</h4>
                 <ul class="link-list">
                   <li><router-link to="/" class="sitemap-link">トップページ</router-link></li>
-                  <li><router-link to="/company-profile" class="sitemap-link">会社概要</router-link></li>
-                  <li><router-link to="/about-institute" class="sitemap-link">研究所について</router-link></li>
+                  <li><router-link to="/company" class="sitemap-link">会社概要</router-link></li>
+                  <li><router-link to="/aboutus" class="sitemap-link">研究所について</router-link></li>
                 </ul>
               </div>
               
@@ -47,7 +48,7 @@
                 <h4 class="category-title">サービス</h4>
                 <ul class="link-list">
                   <li><router-link to="/seminar" class="sitemap-link">セミナー</router-link></li>
-                  <li><router-link to="/publications" class="sitemap-link">刊行物</router-link></li>
+                  <li><router-link to="/publication" class="sitemap-link">刊行物</router-link></li>
                   <li><router-link to="/consulting" class="sitemap-link">経営コンサルティング</router-link></li>
                   <li><router-link to="/research" class="sitemap-link">調査・研究</router-link></li>
                   <li><router-link to="/training" class="sitemap-link">人材育成</router-link></li>
@@ -57,8 +58,6 @@
               <div class="sitemap-category">
                 <h4 class="category-title">会員サービス</h4>
                 <ul class="link-list">
-                  <li><router-link to="/member-pr" class="sitemap-link">会員PR</router-link></li>
-                  <li><router-link to="/member-pr-dotcom" class="sitemap-link">会員PRどっとコム</router-link></li>
                   <li><router-link to="/membership" class="sitemap-link">入会案内</router-link></li>
                 </ul>
               </div>
@@ -83,9 +82,9 @@
               <div class="sitemap-category">
                 <h4 class="category-title">法的情報</h4>
                 <ul class="link-list">
-                  <li><router-link to="/privacy-policy" class="sitemap-link">プライバシーポリシー</router-link></li>
-                  <li><router-link to="/terms-of-service" class="sitemap-link">利用規約</router-link></li>
-                  <li><router-link to="/transaction-law" class="sitemap-link">特定商取引法に関する表記</router-link></li>
+                  <li><router-link to="/privacy" class="sitemap-link">プライバシーポリシー</router-link></li>
+                  <li><router-link to="/terms" class="sitemap-link">利用規約</router-link></li>
+                  <li><router-link to="/legal" class="sitemap-link">特定商取引法に関する表記</router-link></li>
                 </ul>
               </div>
             </div>
@@ -96,8 +95,8 @@
 
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはコチラ"
-      secondary-text="入会はコチラ"
+      :primaryText="ctaPrimaryText"
+      :secondaryText="ctaSecondaryText"
       max-width="1200px"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
@@ -123,6 +122,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import { usePageText } from '@/composables/usePageText'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -146,12 +146,27 @@ export default {
       
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'サイトマップ') || 'サイトマップ' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'sitemap') || 'sitemap' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('sitemap')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
   methods: {
     handleContactClick() {
-      this.$router.push('/contact');
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link);
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link);
     }
   }
 

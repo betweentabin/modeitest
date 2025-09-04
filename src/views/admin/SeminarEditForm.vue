@@ -290,7 +290,7 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/seminars/${this.seminarId}`)
+        const res = await apiClient.get(`/api/seminars/${this.seminarId}`)
         if (res.success && res.data && res.data.seminar) {
           this.formData = res.data.seminar
         } else {
@@ -310,12 +310,12 @@ export default {
 
       try {
         if (this.isNew) {
-          const res = await apiClient.post('/api/admin/seminars', this.formData)
+          const res = await apiClient.post('/api/seminars', this.formData)
           if (!res.success) throw new Error(res.message || '作成に失敗')
           this.successMessage = 'セミナーを作成しました'
-          setTimeout(() => { this.$router.push('/admin/seminars') }, 1200)
+          setTimeout(() => { this.$router.push('/admin/seminar') }, 1200)
         } else {
-          const res = await apiClient.put(`/api/admin/seminars/${this.seminarId}`, this.formData)
+          const res = await apiClient.put(`/api/seminars/${this.seminarId}`, this.formData)
           if (!res.success) throw new Error(res.message || '更新に失敗')
           this.successMessage = 'セミナーを更新しました'
         }
@@ -327,7 +327,7 @@ export default {
       }
     },
     goBack() {
-      this.$router.push('/admin/seminars')
+      this.$router.push('/admin/seminar')
     },
     handleLogout() {
       localStorage.removeItem('admin_token')

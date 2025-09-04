@@ -387,7 +387,7 @@ export default {
       if (canAccess) {
         this.registerSeminar();
       } else if (!this.$store.getters['auth/isAuthenticated']) {
-        this.$router.push('/login');
+        this.$router.push('/member-login');
       } else {
         alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');
@@ -401,7 +401,7 @@ export default {
       this.$router.push('/contact');
     },
     goToMember() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     },
     scrollToContact() {
       this.$router.push('/contact');
@@ -410,7 +410,7 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     }
   }
 };

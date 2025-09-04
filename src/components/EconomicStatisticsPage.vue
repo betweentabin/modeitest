@@ -4,24 +4,28 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="経済・調査統計"
-      subtitle="economic statistics"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
+      mediaKey="hero_economic_statistics"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['経済・調査統計']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <!-- Publications Header -->
       <div class="publications-header">
-        <h2 class="page-title">経済・調査統計</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">economic statistics</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
+
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="economic-statistics" wrapper-class="cms-body" />
 
       <!-- Filter Container -->
       <div class="filter-container">
@@ -134,8 +138,8 @@
 
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはコチラ"
-      secondary-text="入会はコチラ"
+      :primaryText="ctaPrimaryText"
+      :secondaryText="ctaSecondaryText"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
     />
@@ -166,7 +170,9 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
+import { usePageText } from '@/composables/usePageText'
 import { navigateToPublication, navigateToStatistics } from '../utils/navigation.js';
+import CmsBlock from './CmsBlock.vue'
 
 export default {
   name: "EconomicStatisticsPage",
@@ -179,10 +185,12 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsBlock
   },
   data() {
     return {
+      pageKey: 'economic-statistics',
       frame132131753022Props: frame132131753022Data,
       loading: true,
       selectedYear: 'all',
@@ -198,6 +206,11 @@ export default {
     };
   },
   async mounted() {
+    // Load structured texts for this page (title, lead, CTA etc.)
+    try {
+      this._pageText = usePageText(this.pageKey)
+      await this._pageText.load()
+    } catch(e) { /* noop */ }
     // 認証状態からブラー制御を再判定
     await this.updateBlurFromAuth()
     await Promise.all([
@@ -215,6 +228,21 @@ export default {
     } catch(e) { this.shouldBlur = true }
   },
   computed: {
+    // Access a ref to establish reactivity
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() {
+      // fallback to hardcoded title if no CMS override
+      return this._pageText?.getText('page_title', '経済・調査統計') || '経済・調査統計'
+    },
+    pageSubtitle() {
+      return this._pageText?.getText('page_subtitle', 'economic statistics') || 'economic statistics'
+    },
+    ctaPrimaryText() {
+      return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ'
+    },
+    ctaSecondaryText() {
+      return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ'
+    },
     filteredPublications() {
       const filtered = this.publications.filter(pub => {
         const yearMatch = this.selectedYear === 'all' || pub.year === this.selectedYear;
@@ -226,6 +254,14 @@ export default {
     }
   },
   methods: {
+    handleContactClick() {
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link)
+    },
+    handleJoinClick() {
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link)
+    },
     async updateBlurFromAuth() {
       try {
         // まずlocalStorageで判定
@@ -361,7 +397,7 @@ export default {
         } else if (response.requires_login) {
           // ログインが必要な場合
           alert('このレポートは会員限定です。ログインしてください。');
-          this.$router.push('/login');
+          this.$router.push('/member-login');
         } else {
           throw new Error(response.message || 'ダウンロードに失敗しました');
         }
@@ -398,13 +434,13 @@ export default {
       this.$router.push('/contact');
     },
     goToRegister() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     },
     handleContactClick() {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/join');
+      this.$router.push('/membership');
     }
   }
 };

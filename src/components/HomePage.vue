@@ -9,10 +9,10 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <h1 class="hero-title">{{ text66 }}</h1>
+              <h1 class="hero-title">{{ heroTitle }}</h1>
             </div>
             <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">{{ text67 }}</div>
+              <div class="hero-subtitle">{{ heroSubtitle }}</div>
             </div>
             <div class="hero-button-wrapper">
               <div class="hero-button-text">{{ text68 }}</div>
@@ -29,26 +29,29 @@
       </div>
     </div>
 
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="home" wrapper-class="cms-body" />
+
       <div class="frame-1321317457">
-          <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }">
+          <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }" @click="goToSeminar" style="cursor: pointer;">
             <div class="frame-1321317491">
               <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text72 }}</div>
               <div class="seminar valign-text-middle inter-bold-white-24px">{{ seminar }}</div>
             </div>
           </div>
-          <div class="frame-1321317491-1" :style="{ 'background-image': 'url(' + frame1321317491 + ')' }">
+          <div class="frame-1321317491-1" :style="{ 'background-image': 'url(' + frame1321317491 + ')' }" @click="goToPublication" style="cursor: pointer;">
             <div class="frame-1321317491-2">
               <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text69 }}</div>
               <div class="publications valign-text-middle inter-bold-white-24px">{{ publications1 }}</div>
             </div>
           </div>
-          <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }">
+          <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }" @click="goToNews" style="cursor: pointer;">
             <div class="frame-1321317491-3">
               <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text70 }}</div>
               <div class="infomation valign-text-middle inter-bold-white-24px">{{ infomation1 }}</div>
             </div>
           </div>
-          <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }">
+          <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }" @click="goToMembership" style="cursor: pointer;">
             <div class="frame-1321317491-4">
               <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text71 }}</div>
               <div class="membership valign-text-middle inter-bold-white-24px">{{ membership }}</div>
@@ -90,7 +93,7 @@
                   :frame1321317481Props="frame1321317481Props"
                 />
               </div>
-              <div class="button arrow-dark" @click="$router.push('/about-institute')" style="cursor: pointer;">
+              <div class="button arrow-dark" @click="$router.push('/aboutus')" style="cursor: pointer;">
                 <div class="text-55 valign-text-middle inter-bold-white-15px">{{ text120 }}</div>
                 <frame13213176122 />
               </div>
@@ -109,7 +112,7 @@
                    <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
                  </div>
                </div>
-               <x-button3 class="desktop-button" />
+               <x-button3 class="desktop-button" @click="goToNewsList" />
              </div>
              <div class="frame-1321317467">
                               <article 
@@ -138,7 +141,7 @@
                   </div>
                                 </article>
                </div>
-               <x-button3 class="mobile-button" />
+               <x-button3 class="mobile-button" @click="goToNewsList" />
              </div>
            </div>
         
@@ -171,14 +174,18 @@
                     class="vector-9"
                     :src="vector91"
                     alt="Vector 9"
+                    @click="prevPublication"
+                    style="cursor: pointer;"
                   />
                   <img
                     class="vector-10"
                     :src="vector101"
                     alt="Vector 10"
+                    @click="nextPublication"
+                    style="cursor: pointer;"
                   />
                 </div>
-                <x-button3 />
+                <x-button3 @click="goToPublicationList" />
               </div>
               <div class="frame-1321317486">
                 <div class="publication-item-wrapper" @click="goToPublication(0)">
@@ -247,7 +254,7 @@
             <div class="frame-1321317473">
               <div class="frame-1321317473-1">
                 <div class="overlap-group-container">
-                  <div class="overlap-group3-1">
+                  <div class="overlap-group3-1" @click="goToEconomicIndicators" style="cursor: pointer;">
                     <img class="x2-2-1" :src="x222" alt="2 2" />
                     <div class="overlap-group2">
                       <div class="flex-col-2">
@@ -264,7 +271,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="overlap-group-1">
+                  <div class="overlap-group-1" @click="goToFinancialReport" style="cursor: pointer;">
                     <img class="x2-3" :src="x23" alt="2 3" />
                     <div class="overlap-group-2">
                       <div class="flex-col">
@@ -351,6 +358,7 @@ import Footer from "./Footer";
 import Group27 from "./Group27";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
+import { usePageText } from '@/composables/usePageText'
 import { homePageData } from "../data.js";
 import mockServer from "@/mockServer";
 import apiClient from "@/services/apiClient"; // apiClientをインポート
@@ -368,10 +376,12 @@ import vector65 from "../../public/img/vector-65.svg";
 import vector61 from "../../public/img/vector-61.svg";
 import vector5 from "../../public/img/vector-5.svg";
 import vector7 from "../../public/img/vector-7.svg";
+import CmsBlock from './CmsBlock.vue'
 export default {
   name: "HomePage",
   components: {
     Navigation,
+    CmsBlock,
     ContactSection,
     Card,
     Frame1321317481,
@@ -388,6 +398,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'home',
       // Import data from homePageData
       heroImage: homePageData.heroImage,
       text66: homePageData.text66,
@@ -462,8 +473,9 @@ export default {
       frame132131753022Props: homePageData.frame132131753022Props,
       // Dynamic CMS data for publications
       dynamicMainPublication: homePageData.frame13213174741Props, // デフォルト値
-      dynamicPublications: [], // CMSから取得した刊行物データ
+      dynamicPublications: [], // 表示用の4件（循環）
       allPublications: [], // 全ての刊行物データ（ID参照用）
+      currentIndex: 0, // メイン表示の先頭インデックス
       // Dynamic news data
       dynamicNewsItems: [], // CMSから取得したニュースデータ（カテゴリー情報含む）
       // Vector images for UI elements
@@ -484,8 +496,13 @@ export default {
     };
   },
   async mounted() {
-    // CMSから最新データを取得
+    // データをロード
     await this.loadLatestData();
+    // ページテキスト
+    try {
+      this._pageText = usePageText(this.pageKey)
+      await this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   methods: {
     async loadLatestData() {
@@ -504,29 +521,56 @@ export default {
         console.log("Fetching data from API...");
         // APIからデータを取得
         const [newsResponse, seminarsResponse, publicationsResponse, noticesResponse] = await Promise.all([
-          apiClient.getNews({ per_page: 5 }), // 最新5件
+          apiClient.getNews({ per_page: 5 }),
           apiClient.getSeminars(),
           apiClient.getPublications(),
-          apiClient.getNotices()
+          apiClient.getNotices({ per_page: 5 })
         ]);
 
-        const allNews = newsResponse.data || [];
-        const seminars = seminarsResponse.data || [];
-        const publications = publicationsResponse.data || [];
-        const notices = noticesResponse.data || [];
+        const seminars = seminarsResponse?.data || [];
+        const publications = publicationsResponse?.data?.publications || publicationsResponse?.data || [];
+        const notices = (noticesResponse?.data?.data) || (noticesResponse?.data?.notices) || (noticesResponse?.data) || [];
 
-        this.updatePageData(allNews, seminars, publications, notices);
+        // ニュース枠は「お知らせ管理」の内容を表示する
+        this.updatePageData(/*allNews not used*/[], seminars, publications, notices);
 
       } catch (error) {
         console.error('CMSデータの取得に失敗:', error);
         // エラー時は何もしない（デフォルトデータが既に表示されているため）
-      }
+    }
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    heroTitle() {
+      // CMS override優先 → data.js → 最後に規定文言
+      const cms = (this._pageText?.getText && this._pageText.getText('page_title', '')) || ''
+      const base = this.text66 || ''
+      const val = cms || base
+      // 既定文言（白丸の上段）：
+      const fallback = '産・官・学・金（金融機関）の力で'
+      return (typeof val === 'string' && val.trim().length) ? val : fallback
     },
+    heroSubtitle() {
+      const cms = (this._pageText?.getText && this._pageText.getText('lead', '')) || ''
+      const base = this.text67 || ''
+      const val = cms || base
+      // 既定文言（白丸の下段）：
+      const fallback = '企業活動を支援'
+      return (typeof val === 'string' && val.trim().length) ? val : fallback
+    },
+  },
+  
 
     updatePageData(allNews, seminars, publications, notices) {
-      // 最新の5件を取得 - 配列チェックを追加
-      const latestNews = Array.isArray(allNews) ? allNews.slice(0, 5) : [];
-      this.dynamicNewsItems = latestNews; // ニュースデータを保存
+      // ニュース枠はお知らせを使用
+      const rawNotices = Array.isArray(notices) ? notices.slice(0, 5) : [];
+      const latestNews = rawNotices.map(n => ({
+        id: n.id,
+        date: n.published_at || n.created_at,
+        title: n.title,
+        type: 'notice'
+      }))
+      this.dynamicNewsItems = latestNews;
       
       // 既存のデータ変数に最新情報をマッピング
       if (latestNews.length > 0) {
@@ -576,27 +620,8 @@ export default {
       if (publicationArray.length > 0) {
         this.publications1 = `刊行物(${publicationArray.length}件)`;
         this.allPublications = publicationArray; // 全データを保存
-        
-        // メイン刊行物（最新）のデータを設定
-        const mainPublication = publicationArray[0];
-        if (mainPublication) {
-          this.dynamicMainPublication = {
-            x22: mainPublication.image_url || this.frame13213174741Props.x22 // デフォルト画像を使用
-          };
-        }
-        
-        // 右側の刊行物リスト（最大4件）用のデータを設定
-        const defaultImages = [
-          this.frame13213174751Props.x22, // 1番目のデフォルト画像
-          this.frame13213174752Props.x22, // 2番目のデフォルト画像  
-          this.frame13213174752Props.x22, // 3番目のデフォルト画像
-          this.frame13213174752Props.x22  // 4番目のデフォルト画像
-        ];
-        
-        this.dynamicPublications = publications.slice(0, 4).map((pub, index) => ({
-          x22: pub.image_url || defaultImages[index], // CMSの画像がなければデフォルト画像
-          hotInformationVol324: pub.title
-        }));
+        this.currentIndex = 0;
+        this.refreshVisiblePublications();
       }
       
       // お知らせ数を更新 - 配列チェックを追加
@@ -614,18 +639,55 @@ export default {
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
     goToMainPublication() {
-      // メイン刊行物（最新）の詳細ページに遷移
-      if (this.allPublications.length > 0) {
-        const mainPublication = this.allPublications[0];
-        this.$router.push(`/publications/${mainPublication.id}`);
-      }
+      // 現在のメイン刊行物へ遷移
+      const len = this.allPublications.length
+      if (!len) return
+      const mainPublication = this.allPublications[this.currentIndex % len]
+      if (mainPublication && mainPublication.id) this.$router.push(`/publication/${mainPublication.id}`)
     },
     goToPublication(index) {
-      // 指定されたインデックスの刊行物詳細ページに遷移
-      if (this.allPublications.length > index) {
-        const publication = this.allPublications[index];
-        this.$router.push(`/publications/${publication.id}`);
+      // 右側の相対インデックスから遷移
+      const len = this.allPublications.length
+      if (!len) return
+      const absolute = (this.currentIndex + 1 + index) % len
+      const publication = this.allPublications[absolute]
+      if (publication && publication.id) this.$router.push(`/publication/${publication.id}`)
+    },
+    prevPublication() {
+      const len = this.allPublications.length
+      if (!len) return
+      this.currentIndex = (this.currentIndex - 1 + len) % len
+      this.refreshVisiblePublications()
+    },
+    nextPublication() {
+      const len = this.allPublications.length
+      if (!len) return
+      this.currentIndex = (this.currentIndex + 1) % len
+      this.refreshVisiblePublications()
+    },
+    refreshVisiblePublications() {
+      const len = this.allPublications.length
+      if (!len) return
+      const main = this.allPublications[this.currentIndex % len]
+      this.dynamicMainPublication = {
+        x22: main?.cover_image || main?.image_url || this.frame13213174741Props.x22
       }
+      const defaultImages = [
+        this.frame13213174751Props.x22,
+        this.frame13213174752Props.x22,
+        this.frame13213174752Props.x22,
+        this.frame13213174752Props.x22
+      ]
+      const list = []
+      for (let i = 0; i < 4; i++) {
+        const item = this.allPublications[(this.currentIndex + 1 + i) % len]
+        list.push({
+          x22: item?.cover_image || item?.image_url || defaultImages[i],
+          hotInformationVol324: item?.title || '',
+          id: item?.id
+        })
+      }
+      this.dynamicPublications = list
     },
     getCategoryLabel(newsItem) {
       // ニュースの種類に応じてカテゴリーラベルを返す
@@ -663,6 +725,38 @@ export default {
         const newsItem = this.dynamicNewsItems[index];
         this.$router.push(`/news/${newsItem.id}`);
       }
+    },
+    goToNewsList() {
+      // ニュース一覧ページに遷移
+      this.$router.push('/news');
+    },
+    goToPublicationList() {
+      // 刊行物一覧ページに遷移
+      this.$router.push('/publication');
+    },
+    goToSeminar() {
+      // セミナーページに遷移
+      this.$router.push('/seminar');
+    },
+    goToPublication() {
+      // 刊行物ページに遷移
+      this.$router.push('/publication');
+    },
+    goToNews() {
+      // ニュースページに遷移
+      this.$router.push('/news');
+    },
+    goToMembership() {
+      // 会員ページに遷移
+      this.$router.push('/membership');
+    },
+    goToEconomicIndicators() {
+      // 経済指標ページに遷移
+      this.$router.push('/economic-indicators');
+    },
+    goToFinancialReport() {
+      // 決算報告ページに遷移
+      this.$router.push('/financial-report');
     }
   }
 };
@@ -2091,6 +2185,7 @@ export default {
   .hero-title,
   .hero-subtitle {
     font-size: 40px;
+    color: #1A1A1A;
   }
   
   .hero-title-wrapper,
@@ -2327,6 +2422,7 @@ export default {
   .hero-title,
   .hero-subtitle {
     font-size: 28px;
+    color: #1A1A1A;
   }
   
   .hero-button-text {
@@ -2895,6 +2991,7 @@ export default {
   .hero-title,
   .hero-subtitle {
     font-size: 18px;
+    color: #1A1A1A;
   }
   
   .hero-button-wrapper {
@@ -3345,5 +3442,3 @@ export default {
   justify-content: flex-start;
 }
 </style>
-
-

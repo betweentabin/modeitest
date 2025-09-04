@@ -142,7 +142,7 @@ export default {
           if (this.$store) {
             this.$store.commit('auth/SET_AUTH', { token, user })
           }
-          const redirect = this.$route.query.redirect || '/my-account'
+          const redirect = this.$route.query.redirect || '/myaccount'
           this.$router.replace(redirect)
         } else {
           throw new Error(res?.message || 'ログインに失敗しました')

@@ -300,7 +300,7 @@ export default {
     const token = localStorage.getItem('admin_token')
     
     if (!token) {
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
       return
     }
 
@@ -342,7 +342,7 @@ export default {
           const res = await apiClient.post('/api/admin/publications-v2', this.formData)
           if (!res.success) throw new Error(res.message || '作成に失敗')
           this.successMessage = '刊行物を作成しました'
-          setTimeout(() => { this.$router.push('/admin/publications') }, 1200)
+          setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
         } else {
           const res = await apiClient.put(`/api/admin/publications-v2/${this.publicationId}`, this.formData)
           if (!res.success) throw new Error(res.message || '更新に失敗')
@@ -360,13 +360,13 @@ export default {
       }
     },
     goBack() {
-      this.$router.push('/admin/publications')
+      this.$router.push('/admin/publication')
     },
     handleLogout() {
       localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       // モックサーバーを使用するため、認証ヘッダーの削除は不要
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
     }
   }
 }

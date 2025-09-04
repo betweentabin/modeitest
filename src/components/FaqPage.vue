@@ -4,20 +4,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="よくあるご質問"
-      subtitle="FAQ"
+      :title="pageTitle || 'よくあるご質問'"
+      :subtitle="pageSubtitle || 'FAQ'"
       heroImage="/img/hero-image.png"
+      mediaKey="hero_faq"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['よくあるご質問']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">よくあるご質問</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">FAQ</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -102,6 +103,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "FaqPage",
@@ -214,23 +216,29 @@ export default {
     };
   },
   computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'よくあるご質問') || 'よくあるご質問' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'FAQ') || 'FAQ' },
     filteredFaqs() {
       let filtered = this.faqs;
-      
       if (this.selectedCategory !== 'all') {
         filtered = filtered.filter(faq => faq.category === this.selectedCategory);
       }
-      
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
         filtered = filtered.filter(faq => 
           faq.question.toLowerCase().includes(query) ||
-          faq.answer.toLowerCase().includes(query)
+          (faq.answer || '').toLowerCase().includes(query)
         );
       }
-      
       return filtered;
     }
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('faq')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   methods: {
     toggleAnswer(index) {

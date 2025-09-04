@@ -4,13 +4,14 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="CRI 経営コンサルティング"
-      subtitle="consulting"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/db22880ee1d73553a2fa432da82e4e20fe5c43c9?width=2880"
+      mediaKey="hero_consulting"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['CRI 経営コンサルティング']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
     
     <!-- What is CRI Consulting Section -->
     <div class="what-is-section">
@@ -147,7 +148,7 @@
         
         <div class="support-description">
           <p>「経営改善」とは、会社（ハード）が変わるのではなく、会社の中にいる「人」（ソフト）が変わることです。 ちくぎん地域経済研究所は、事業のお悩み解決のために、あなたにぴったりの解決策をご提案いたします。<br>どうぞお気軽にご相談ください。</p>
-          <button class="contact-btn">
+          <button class="contact-btn" @click="goToContact">
             <span>お問い合わせはコチラ</span>
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
               <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -264,6 +265,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import { usePageText } from '@/composables/usePageText'
 
 import Group27 from "./Group27";
 import { homePageData, frame132131753022Data } from "../data";
@@ -283,17 +285,24 @@ export default {
   },
   data() {
     return {
-      // Access section data
-      
-      // Footer data
+      pageKey: 'consulting',
       frame132131753022Props: homePageData.frame132131753022Props,
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'consulting') || 'consulting' },
   },
   mounted() {
     this.adjustImageHeight();
     this.adjustRectangleHeight();
     window.addEventListener('resize', this.adjustImageHeight);
     window.addEventListener('resize', this.adjustRectangleHeight);
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustImageHeight);
@@ -334,7 +343,10 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
+    },
+    goToContact() {
+      this.$router.push('/contact');
     }
   }
 };

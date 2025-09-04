@@ -5,13 +5,14 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="入会案内"
-      subtitle="membership"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ba0640caf634ea83255fc6ebd7dda9734c97932?width=2880"
+      mediaKey="hero_membership"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['入会案内']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Introduction Section -->
     <section class="introduction-section">
@@ -19,7 +20,7 @@
         <div class="intro-content">
           <h2 class="intro-title">ご入会に際しまして</h2>
           <p class="intro-text">
-            ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報���「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。
+            ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報誌「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。
           </p>
         </div>
       </div>
@@ -105,7 +106,7 @@
               <div class="table-row table-row-top">
                 <div class="table-label">会員のメリット</div>
                 <div class="table-content">
-                  浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを��料または会員価格でご利用になれます。
+                  浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。
                 </div>
               </div>
               <div class="table-row">
@@ -176,7 +177,7 @@
             <div class="flow-step">
               <div class="step-number">STEP4</div>
               <div class="step-content">
-                <h4 class="step-title">支払���完了後、当事務所での確認作業が完了し次第、当事務所より、お客様の会員IDとパスワードを発行し、メールにてご連絡させていただきます。</h4>
+                <h4 class="step-title">支払い完了後、当事務所での確認作業が完了し次第、当事務所より、お客様の会員IDとパスワードを発行し、メールにてご連絡させていただきます。</h4>
               </div>
             </div>
           </div>
@@ -218,6 +219,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import HeroSection from "./HeroSection.vue";
 import { frame132131753022Data } from "../data";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "MembershipPage",
@@ -237,14 +239,25 @@ export default {
       frame132131753022Props: frame132131753022Data,
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '入会案内') || '入会案内' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('membership')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
   methods: {
     handleContactClick() {
-      // Navigate to contact page
-      this.$router.push('/contact');
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link);
     },
     handleJoinClick() {
-      // Navigate to join page or handle join action
-      this.$router.push('/join');
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link);
     }
   }
 };

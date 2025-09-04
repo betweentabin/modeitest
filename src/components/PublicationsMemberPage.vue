@@ -556,13 +556,13 @@ export default {
       this.$router.push('/contact');
     },
     goToRegister() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     },
     handleContactClick() {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/join');
+      this.$router.push('/membership');
     },
     canAccessPublication(publication) {
       const requiredLevel = publication.membershipLevel || 'free';
@@ -598,7 +598,7 @@ export default {
       if (canAccess) {
         this.downloadPublication(publication.id);
       } else if (!this.isAuthenticated) {
-        this.$router.push('/login');
+        this.$router.push('/member-login');
       } else {
         alert(`この刊行物は${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');

@@ -134,7 +134,7 @@
 
     <!-- Action Buttons Section -->
     <div class="action-buttons-section">
-      <button class="contact-btn">
+      <button class="contact-btn" @click="goToContact">
         <span>お問い合わせはコチラ</span>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
@@ -153,7 +153,7 @@
     <!-- About Section -->
     <div class="about-section">
       <div class="about-content">
-        <button class="about-contact-btn">
+        <button class="about-contact-btn" @click="goToContact">
           <span>お問い合わせはコチラ</span>
           <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -437,7 +437,12 @@
 <script>
 import AccessSection from './AccessSection.vue';
 export default {
-  name: "SeminarRegistrationPage"
+  name: "SeminarRegistrationPage",
+  methods: {
+    goToContact() {
+      this.$router.push('/contact');
+    }
+  }
 };
 </script>
 

@@ -5,13 +5,17 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="受付中のセミナー"
-      subtitle="current seminars"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/ab5db9916398054424d59236a434310786cb8146?width=2880"
+      mediaKey="hero_seminars_current"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', '受付中のセミナー']" />
+    <Breadcrumbs :breadcrumbs="['セミナー', pageTitle]" />
+
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="seminars-current" wrapper-class="cms-body" />
 
     <!-- Current Seminars Section -->
     <div class="current-seminars-section">
@@ -156,9 +160,11 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
+import CmsBlock from './CmsBlock.vue'
 import { frame132131753022Data } from "../data";
 import apiClient from '@/services/apiClient.js'
 import MembershipBadge from './MembershipBadge.vue'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "CurrentSeminarsPage",
@@ -171,10 +177,12 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ContactSection,
+    CmsBlock,
     MembershipBadge
   },
   data() {
     return {
+      pageKey: 'seminars-current',
       frame132131753022Props: frame132131753022Data,
       currentPage: 1,
       itemsPerPage: 10,
@@ -184,8 +192,15 @@ export default {
   },
   async mounted() {
     await this.loadSeminars()
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '受付中のセミナー') || '受付中のセミナー' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'current seminars') || 'current seminars' },
     currentSeminars() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
@@ -193,6 +208,14 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.seminarsFromServer.length / this.itemsPerPage) || 1;
+    },
+    // ローカルキャッシュベースの簡易ログイン判定
+    loggedInCached() {
+      try {
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        const user = localStorage.getItem('memberUser')
+        return !!token && !!user
+      } catch (e) { return false }
     }
   },
   methods: {
@@ -238,7 +261,7 @@ export default {
     goToSeminarDetail(seminar) {
       // 実際のIDを使用（APIからのデータに含まれている）
       const seminarId = seminar.id || this.generateSeminarId(seminar);
-      this.$router.push(`/seminars/${seminarId}`);
+      this.$router.push(`/seminar/${seminarId}`);
     },
     generateSeminarId(seminar) {
       // セミナーのタイトルと日付からIDを生成（フォールバック用）
@@ -246,14 +269,15 @@ export default {
     },
     canAccessSeminar(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
-      return this.$store.getters['auth/canAccess'](requiredLevel);
+      // ストアの判定がfalseでも、ログインキャッシュがあればボタンは有効化
+      return this.$store.getters['auth/canAccess'](requiredLevel) || this.loggedInCached;
     },
     getReservationButtonText(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
       const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
       
-      if (canAccess) {
+      if (canAccess || this.loggedInCached) {
         return 'セミナーを予約する';
       } else if (isRestricted) {
         return `${this.getMembershipText(requiredLevel)}会員限定`;
@@ -273,12 +297,12 @@ export default {
     },
     handleReservation(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel) || this.loggedInCached;
       
       if (canAccess) {
         this.goToSeminarDetail(seminar);
       } else if (!this.$store.getters['auth/isAuthenticated']) {
-        this.$router.push('/login');
+        this.$router.push('/member-login');
       } else {
         alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');

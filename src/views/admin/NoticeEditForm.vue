@@ -269,8 +269,8 @@ export default {
   },
   computed: {
     isNew() {
-      // /admin/notices/new の場合は params.id が undefined
-      // /admin/notices/:id/edit の場合は params.id が存在
+      // /admin/news/register の場合は params.id が undefined
+      // /admin/news/:id/edit の場合は params.id が存在
       return !this.$route.params.id || this.$route.params.id === 'new'
     },
     noticeId() {
@@ -281,7 +281,7 @@ export default {
     const token = localStorage.getItem('admin_token')
     
     if (!token) {
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
       return
     }
 
@@ -299,7 +299,7 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/notices/${this.noticeId}`)
+        const res = await apiClient.get(`/api/admin/news/${this.noticeId}`)
         // NoticeController returns raw model
         if (res && res.id || res?.data?.id) {
           const data = res.id ? res : res.data
@@ -342,9 +342,9 @@ export default {
           const res = await apiClient.post('/api/admin/notices', payload)
           if (!res || res.status === 'error') throw new Error(res.message || '作成に失敗')
           this.successMessage = 'お知らせを作成しました'
-          setTimeout(() => { this.$router.push('/admin/notices') }, 1200)
+          setTimeout(() => { this.$router.push('/admin/news') }, 1200)
         } else {
-          const res = await apiClient.put(`/api/admin/notices/${this.noticeId}`, payload)
+          const res = await apiClient.put(`/api/admin/news/${this.noticeId}`, payload)
           if (!res || res.status === 'error') throw new Error(res.message || '更新に失敗')
           this.successMessage = 'お知らせを更新しました'
         }
@@ -360,13 +360,13 @@ export default {
       }
     },
     goBack() {
-      this.$router.push('/admin/notices')
+      this.$router.push('/admin/news')
     },
     handleLogout() {
       localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
     }
   }
 }

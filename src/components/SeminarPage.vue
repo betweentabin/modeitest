@@ -286,15 +286,15 @@ export default {
       return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
     },
     goToCurrentSeminars() {
-      this.$router.push('/seminars/current');
+      this.$router.push('/seminar');
     },
     goToPastSeminars() {
-      this.$router.push('/seminars/past');
+      this.$router.push('/seminar/archive');
     },
     goToSeminarDetail(seminar) {
       // 実際のIDを使用（APIからのデータに含まれている）
       const seminarId = seminar.id || this.generateSeminarId(seminar);
-      this.$router.push(`/seminars/${seminarId}`);
+      this.$router.push(`/seminar/${seminarId}`);
     },
     generateSeminarId(seminar) {
       // セミナーのタイトルと日付からIDを生成（フォールバック用）

@@ -259,7 +259,7 @@ export default {
       } catch (err) {
         if (err.message === 'Admin token not found') {
           console.log('Redirecting to login page...')
-          this.$router.push('/admin/login')
+          this.$router.push('/admin')
           return
         }
         this.error = 'ページの取得に失敗しました'

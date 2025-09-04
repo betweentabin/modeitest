@@ -4,33 +4,35 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="経済指標一覧"
-      subtitle="Economic Indicators"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
+      mediaKey="hero_economic_indicators"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['経済指標一覧']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">経済指標一覧</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">Economic Indicators</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
       
       <div class="indicators-description">
-        <p>経済の動向を把握するために重要な経済指標の一覧となります。</p>
+        <div v-if="pageBodyHtml" class="cms-body" v-html="pageBodyHtml"></div>
+        <p v-else>経済の動向を把握するために重要な経済指標の一覧となります。</p>
       </div>
       
       <div class="indicators-list">
-        <div v-for="(item, index) in paginatedIndicators" :key="index" class="indicator-item">
+        <div v-for="(cat, index) in categories" :key="cat.slug || index" class="indicator-item">
           <div class="indicator-term" @click="toggleDefinition(index)">
             <div class="term-line"></div>
-            <span class="term-text">{{ item.term }}</span>
+            <span class="term-text">{{ cat.name }}</span>
             <span class="toggle-icon" :class="{ open: openItems.includes(index) }">
               <svg width="20" height="20" viewBox="0 0 20 20">
                 <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -46,13 +48,13 @@
                     <table class="indicator-table">
                       <thead>
                         <tr>
-                          <th>{{ getTableHeaders(item.term).column1 }}</th>
-                          <th>{{ getTableHeaders(item.term).column2 }}</th>
-                          <th>{{ getTableHeaders(item.term).column3 }}</th>
+                          <th>{{ getTableHeaders(cat).column1 }}</th>
+                          <th>{{ getTableHeaders(cat).column2 }}</th>
+                          <th>{{ getTableHeaders(cat).column3 }}</th>
                         </tr>
                       </thead>
                                               <tbody>
-                          <tr v-for="(row, rowIndex) in getIndicatorData(item.term)" :key="rowIndex">
+                          <tr v-for="(row, rowIndex) in getIndicatorRows(cat)" :key="rowIndex">
                             <td>
                               <a v-if="row.itemLink" :href="row.itemLink" target="_blank" class="table-link">{{ row.item || 'データなし' }}</a>
                               <span v-else>{{ row.item || 'データなし' }}</span>
@@ -101,6 +103,8 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import apiClient from '@/services/apiClient.js'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "EconomicIndicatorsPage",
@@ -116,9 +120,12 @@ export default {
   },
   data() {
     return {
+      pageKey: 'economic-indicators',
       frame132131753022Props: frame132131753022Data,
-      searchQuery: '',
+      pageBodyHtml: '',
       openItems: [],
+      categories: [],
+      indicatorsByCategory: {},
       indicators: [
         {
           category: 'economic',
@@ -156,6 +163,19 @@ export default {
     };
   },
   computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '経済指標一覧') || '経済指標一覧' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Economic Indicators') || 'Economic Indicators' },
+  },
+  async mounted() {
+    try {
+      this._pageText = usePageText(this.pageKey)
+      await this._pageText.load()
+      const p = this._pageText?.page?.value
+      this.pageBodyHtml = (p && p.content && typeof p.content.html === 'string') ? p.content.html : ''
+    } catch(e) { /* noop */ }
+  },
+  computed: {
     filteredIndicators() {
       let filtered = this.indicators;
       
@@ -174,6 +194,32 @@ export default {
       return this.filteredIndicators;
     }
   },
+  async mounted() {
+    // CMSからHTMLが設定されていれば優先表示 + カテゴリ/指標の読込
+    try {
+      const [pageRes, catRes, indRes] = await Promise.all([
+        apiClient.getPageContent('economic-indicators'),
+        apiClient.getIndicatorCategories(),
+        apiClient.getIndicators()
+      ])
+      const html = pageRes?.data?.page?.content?.html
+      if (typeof html === 'string' && html.trim()) {
+        this.pageBodyHtml = html
+      }
+      if (catRes?.success) {
+        this.categories = Array.isArray(catRes.data) ? catRes.data : []
+      }
+      if (indRes?.success) {
+        const grouped = {}
+        ;(indRes.data || []).forEach(i => {
+          const key = i.category || 'others'
+          if (!grouped[key]) grouped[key] = []
+          grouped[key].push(i)
+        })
+        this.indicatorsByCategory = grouped
+      }
+    } catch (e) { /* noop */ }
+  },
   methods: {
     toggleDefinition(index) {
       const itemIndex = this.openItems.indexOf(index);
@@ -186,14 +232,26 @@ export default {
     
 
 
-    getTableHeaders(term) {
+    getTableHeaders(termOrCat) {
       return {
         column1: '経済指標',
         column2: 'リンク先',
         column3: '公表日'
       };
     },
-
+    getIndicatorRows(cat) {
+      const list = this.indicatorsByCategory[cat?.slug] || []
+      return list.map(ind => ({
+        item: ind.name,
+        latest: ind.source || '-',
+        previous: (ind.publication_schedule && String(ind.publication_schedule).trim())
+          ? ind.publication_schedule
+          : (ind.publication_date ? new Date(ind.publication_date).toLocaleDateString('ja-JP') : '-'),
+        itemLink: ind.link_url || '',
+        latestLink: ind.link_url || ''
+      }))
+    },
+    // 既存の静的データは下に残します（未取得時のフォールバック用）
     getIndicatorData(term) {
       // 各経済指標に対応する11行3列のデータを返す
       const dataMap = {

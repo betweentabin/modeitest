@@ -109,7 +109,9 @@ class ApiClient {
         let errJson = null
         try { errJson = errText ? JSON.parse(errText) : null } catch(e) {}
         const message = errJson?.message || `HTTP error! status: ${response.status}`
-        console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
+        if (!options || !options.silent) {
+          console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
+        }
         return { success: false, error: message }
       }
 
@@ -465,6 +467,17 @@ class ApiClient {
     return this.post(`/api/economic-reports/${id}/download`)
   }
 
+  // Economic Indicators (public)
+  async getIndicatorCategories() {
+    return this.get('/api/economic-indicators/categories')
+  }
+
+  async getIndicators(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/economic-indicators?${queryString}` : '/api/economic-indicators'
+    return this.get(endpoint)
+  }
+
   async createPublication(publicationData, token) {
     return this.post('/api/admin/publications', publicationData, {
       headers: {
@@ -605,6 +618,42 @@ class ApiClient {
     const endpoint = queryString ? `/api/admin/publications-v2?${queryString}` : '/api/admin/publications-v2'
     // トークンは自動的にrequestメソッドで付与される
     return this.get(endpoint)
+  }
+
+  // Admin: Economic Indicators
+  async getAdminIndicators(params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    const endpoint = queryString ? `/api/admin/economic-indicators?${queryString}` : '/api/admin/economic-indicators'
+    return this.get(endpoint)
+  }
+
+  async createAdminIndicator(data) {
+    return this.post('/api/admin/economic-indicators', data)
+  }
+
+  async updateAdminIndicator(id, data) {
+    return this.put(`/api/admin/economic-indicators/${id}`, data)
+  }
+
+  async deleteAdminIndicator(id) {
+    return this.delete(`/api/admin/economic-indicators/${id}`)
+  }
+
+  // Admin: Indicator Categories
+  async getAdminIndicatorCategories() {
+    return this.get('/api/admin/economic-indicator-categories')
+  }
+
+  async createAdminIndicatorCategory(data) {
+    return this.post('/api/admin/economic-indicator-categories', data)
+  }
+
+  async updateAdminIndicatorCategory(id, data) {
+    return this.put(`/api/admin/economic-indicator-categories/${id}`, data)
+  }
+
+  async deleteAdminIndicatorCategory(id) {
+    return this.delete(`/api/admin/economic-indicator-categories/${id}`)
   }
 
   // News categories API methods

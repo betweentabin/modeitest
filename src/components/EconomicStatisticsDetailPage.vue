@@ -262,7 +262,7 @@ export default {
     },
     
     goToLogin() {
-      this.$router.push('/login');
+      this.$router.push('/member-login');
     },
     
     goToContact() {
@@ -270,13 +270,13 @@ export default {
     },
     
     goToMember() {
-      this.$router.push('/member');
+      this.$router.push('/membership');
     },
     handleContactClick() {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     }
   }
 };

@@ -151,7 +151,7 @@ export default {
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
         
-        this.$router.push('/admin/dashboard')
+        this.$router.push('/admin/member-list')
       } catch (err) {
         console.error('Login API error:', err); // デバッグ用エラーログ
         if (err.response) {

@@ -394,10 +394,10 @@ export default {
       }
     },
     editSeminar(seminar) {
-      this.$router.push(`/admin/seminars/${seminar.id}/edit`)
+      this.$router.push(`/admin/seminar/edit?id=${seminar.id}`)
     },
     createNewSeminar() {
-      this.$router.push('/admin/seminars/new')
+      this.$router.push('/admin/seminar/register')
     },
     openRegistrations(seminar) {
       this.currentSeminar = seminar

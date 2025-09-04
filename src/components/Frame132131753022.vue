@@ -4,7 +4,7 @@
       <router-link to="/" class="footer-link">
         <frame13213175225 :text14="frame132131752251Props.text14" />
       </router-link>
-      <router-link to="/about" class="footer-link">
+      <router-link to="/company" class="footer-link">
         <frame13213175225 :text14="frame132131752252Props.text14" />
       </router-link>
       <router-link to="/news" class="footer-link">
@@ -18,21 +18,21 @@
       </router-link>
     </div>
     <div class="frame-1321317522">
-      <router-link to="/seminars" class="footer-link">
+      <router-link to="/seminar" class="footer-link">
         <frame13213175222 :text19="frame132131752221Props.text19" />
       </router-link>
-      <router-link to="/publications" class="footer-link">
+      <router-link to="/publication" class="footer-link">
         <frame13213175222 :text19="frame132131752222Props.text19" />
       </router-link>
       <div class="frame-132131752-2">
         <div class="footer-item">
           <span class="footer-text">各種情報</span>
         </div>
-        <router-link to="/statistics" class="footer-item footer-link">
+        <router-link to="/economic-research" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">経済指標一覧</span>
         </router-link>
-        <router-link to="/statistics" class="footer-item footer-link">
+        <router-link to="/economic-research" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">経済調査統計一覧</span>
         </router-link>
@@ -41,7 +41,7 @@
         <div class="footer-item">
           <span class="footer-text">会員PR</span>
         </div>
-        <router-link to="/register" class="footer-item footer-link">
+        <router-link to="/application-form" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">会員PRどっとコム</span>
         </router-link>
@@ -98,7 +98,7 @@
         <div class="footer-item">
           <span class="footer-text">会員ログイン</span>
         </div>
-        <router-link to="/transaction-law" class="footer-item footer-link">
+        <router-link to="/legal" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">特定商取引法に関する表記</span>
         </router-link>

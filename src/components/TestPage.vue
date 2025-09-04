@@ -50,7 +50,7 @@ export default {
       this.currentTime = new Date().toLocaleString('ja-JP')
     },
     goToAdmin() {
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
     }
   },
   mounted() {

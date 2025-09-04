@@ -17,7 +17,7 @@
           <div class="auth-card">
             <h3>ログインが必要です</h3>
             <p>お気に入り機能をご利用いただくには、ログインが必要です。</p>
-            <button @click="$router.push('/login')" class="login-btn">
+            <button @click="$router.push('/member-login')" class="login-btn">
               ログイン
             </button>
           </div>

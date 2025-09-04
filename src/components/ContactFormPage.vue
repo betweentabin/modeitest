@@ -4,22 +4,23 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="お問い合わせ"
-      subtitle="contact"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
+      mediaKey="hero_contact"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['お問い合わせ']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">お問い合わせ</h1>
+          <h1 class="form-title">{{ formTitle }}</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">contact</span>
+            <span class="divider-text">{{ pageSubtitle }}</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
@@ -209,6 +210,7 @@ import AccessSection from './AccessSection.vue';
 import HeroSection from './HeroSection.vue';
 import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: 'ContactFormPage',
@@ -222,6 +224,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'contact',
       formData: {
         subject: '',
         lastName: '',
@@ -242,6 +245,21 @@ export default {
       frame132131753022Props: frame132131753022Data
     };
   },
+  computed: {
+    canSubmit() {
+      return this.formData.subject &&
+             this.formData.lastName &&
+             this.formData.firstName &&
+             this.formData.email &&
+             this.formData.content &&
+             this.formData.privacyAgreement &&
+             !this.isSubmitting;
+    },
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'contact') || 'contact' },
+    formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
+  },
   mounted() {
     // URLパラメータからフォームデータを復元
     const params = new URLSearchParams(this.$route.query);
@@ -252,17 +270,11 @@ export default {
         console.error('フォームデータの復元に失敗しました:', e);
       }
     }
-  },
-  computed: {
-    canSubmit() {
-      return this.formData.subject &&
-             this.formData.lastName &&
-             this.formData.firstName &&
-             this.formData.email &&
-             this.formData.content &&
-             this.formData.privacyAgreement &&
-             !this.isSubmitting;
-    }
+    // Load page texts
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   methods: {
     async submitForm() {

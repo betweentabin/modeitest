@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             ServicesSeeder::class,
             PageContentsSeeder::class,
             CompletePagesSeeder::class,
+            EconomicIndicatorSeeder::class,
         ]);
     }
 }

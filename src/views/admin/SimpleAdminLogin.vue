@@ -102,7 +102,7 @@ export default {
           axios.defaults.headers.common['Authorization'] = `Bearer ${debugResponse.data.token}`
           
           alert('ログイン成功！ダッシュボードに遷移します。')
-          this.$router.push('/admin/dashboard')
+          this.$router.push('/admin/member-list')
           return
         }
       } catch (debugErr) {
@@ -124,7 +124,7 @@ export default {
           axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
           
           alert('ログイン成功！ダッシュボードに遷移します。')
-          this.$router.push('/admin/dashboard')
+          this.$router.push('/admin/member-list')
         } catch (err) {
           if (err.response?.status === 422) {
             this.error = 'メールアドレスまたはパスワードが正しくありません'

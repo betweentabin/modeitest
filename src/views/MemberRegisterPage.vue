@@ -307,7 +307,7 @@ export default {
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
         
-        this.$router.push('/member/dashboard')
+        this.$router.push('/myaccount')
       } catch (err) {
         if (err.response?.data?.errors) {
           const firstError = Object.values(err.response.data.errors)[0]

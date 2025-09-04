@@ -4,20 +4,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="用語集"
-      subtitle="Glossary"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
+      mediaKey="hero_glossary"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['用語集']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">用語集</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">Glossary</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -112,6 +113,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "GlossaryPage",
@@ -185,6 +187,17 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '用語集') || '用語集' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Glossary') || 'Glossary' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('glossary')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   computed: {
     filteredGlossary() {

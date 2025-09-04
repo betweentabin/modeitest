@@ -130,22 +130,15 @@ export default {
     };
 
     const logout = async () => {
-      const token = localStorage.getItem('auth_token');
-      
-      try {
-        await fetch(getApiUrl('/api/logout'), {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-          },
-        });
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-      
+      const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken');
+      // API側のログアウトを両方叩く（失敗しても続行）
+      try { await fetch(getApiUrl('/api/logout'), { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }) } catch(e) {}
+      try { await fetch(getApiUrl('/api/member-auth/logout'), { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }) } catch(e) {}
+      // ローカルキャッシュを完全削除
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
+      localStorage.removeItem('memberToken');
+      localStorage.removeItem('memberUser');
       user.value = null;
       isLoggedIn.value = false;
       dropdownOpen.value = false;

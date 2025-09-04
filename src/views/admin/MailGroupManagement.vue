@@ -255,7 +255,7 @@ export default {
         const params = { page, per_page: 20 }
         if (this.memberSearch) params.search = this.memberSearch
         if (this.memberTypeFilter) params.membership_type = this.memberTypeFilter
-        const res = await apiClient.get('/api/admin/members', { params })
+        const res = await apiClient.get('/api/admin/member-list', { params })
         if (res.success) {
           this.candidates = res.data.data || []
         }

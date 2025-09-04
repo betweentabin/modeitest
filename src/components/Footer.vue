@@ -5,7 +5,7 @@
       <router-link to="/" class="footer-link">
         <frame13213175225 :text14="frame132131752251Props.text14" />
       </router-link>
-      <router-link to="/about" class="footer-link">
+      <router-link to="/company" class="footer-link">
         <frame13213175225 :text14="frame132131752252Props.text14" />
       </router-link>
       <router-link to="/news" class="footer-link">
@@ -22,10 +22,10 @@
 
     
     <div class="frame-1321317522">
-      <router-link to="/seminars" class="footer-link">
+      <router-link to="/seminar" class="footer-link">
         <frame13213175222 :text19="frame132131752221Props.text19" />
       </router-link>
-      <router-link to="/publications" class="footer-link">
+      <router-link to="/publication" class="footer-link">
         <frame13213175222 :text19="frame132131752222Props.text19" />
       </router-link>
       <frame13213175273
@@ -58,7 +58,7 @@
         <router-link to="/cri-consulting" class="footer-link">
           <frame13213175222 :text19="'CRI 経営コンサルティング'" />
         </router-link>
-        <router-link to="/financial-reports" class="footer-link">
+        <router-link to="/financial-report" class="footer-link">
           <frame13213175222 :text19="'決算報告'" />
         </router-link>
       </div>
@@ -68,16 +68,16 @@
     
     <div class="frame-1321317524-1">
       <div class="frame-container-1">
-        <router-link to="/login" class="footer-link">
+        <router-link to="/member-login" class="footer-link">
           <frame13213175223 :text29="frame132131752231Props.text29" />
         </router-link>
-        <router-link to="/transaction-law" class="footer-link">
+        <router-link to="/legal" class="footer-link">
           <frame13213175223 :text29="frame132131752232Props.text29" :className="frame132131752232Props.className" />
         </router-link>
-        <router-link to="/privacy-policy" class="footer-link">
+        <router-link to="/privacy" class="footer-link">
           <frame13213175223 :text29="frame132131752233Props.text29" :className="frame132131752233Props.className" />
         </router-link>
-        <router-link to="/terms-of-service" class="footer-link">
+        <router-link to="/terms" class="footer-link">
           <frame13213175223 :text29="frame132131752234Props.text29" :className="frame132131752234Props.className" />
         </router-link>
         <router-link to="/sitemap" class="footer-link">

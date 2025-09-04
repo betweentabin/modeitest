@@ -34,7 +34,7 @@
           <div class="nav-separator">|</div>
           <router-link to="/services" class="nav-link">会員サービスのご案内</router-link>
           <div class="nav-separator">|</div>
-          <router-link to="/about" class="nav-link">会社概要</router-link>
+          <router-link to="/company" class="nav-link">会社概要</router-link>
           <div class="nav-separator">|</div>
           <router-link to="/news" class="nav-link">お知らせ</router-link>
           <div class="nav-separator">|</div>
@@ -272,7 +272,7 @@
               </svg>
               トップ
             </a>
-            <a href="/about" class="footer-link">
+            <a href="/company" class="footer-link">
               <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0.329269 15.3301C0.117926 15.5414 -0.000806808 15.8281 -0.000806808 16.127C-0.000806808 16.4258 0.117926 16.7125 0.329269 16.9238C0.540614 17.1352 0.827258 17.2539 1.12614 17.2539C1.42503 17.2539 1.71168 17.1352 1.92302 16.9238L9.42302 9.42383C9.5279 9.31931 9.61112 9.19512 9.6679 9.05837C9.72468 8.92163 9.75391 8.77502 9.75391 8.62695C9.75391 8.47889 9.72468 8.33228 9.6679 8.19553C9.61112 8.05878 9.5279 7.93459 9.42302 7.83008L1.92302 0.330076C1.71168 0.118732 1.42503 -4.45375e-09 1.12614 0C0.827258 4.45375e-09 0.540614 0.118732 0.329269 0.330077C0.117926 0.541421 -0.000806808 0.828065 -0.000806808 1.12695C-0.000806808 1.42584 0.117926 1.71248 0.329269 1.92383L7.03146 8.62601L0.329269 15.3301Z" fill="#DA5761"/>
               </svg>

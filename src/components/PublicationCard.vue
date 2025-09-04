@@ -102,7 +102,7 @@ export default {
     handleRestrictedClick() {
       // 制限コンテンツがクリックされた時の処理
       if (!this.isLoggedIn()) {
-        this.$router.push('/login')
+        this.$router.push('/member-login')
       }
     },
     handleUpgrade() {
@@ -110,7 +110,7 @@ export default {
         // アップグレードページへ（今後実装）
         alert('プランのアップグレード機能は準備中です')
       } else {
-        this.$router.push('/login')
+        this.$router.push('/member-login')
       }
     }
   }

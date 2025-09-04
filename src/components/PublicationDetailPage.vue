@@ -4,21 +4,22 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="刊行物"
-      subtitle="publications"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/ab5db9916398054424d59236a434310786cb8146?width=2880"
+      mediaKey="hero_publications"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['刊行物']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Publication Detail Section -->
     <section class="publication-detail-section" v-if="publication">
       <div class="section-header">
-        <h2 class="section-title">刊行物</h2>
+        <h2 class="section-title">{{ pageTitle }}</h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">publications</span>
+          <span class="divider-text">{{ pageSubtitle }}</span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -77,8 +78,8 @@
 
 <!-- Action Button Section -->
 <ActionButton 
-  primary-text="お問い合わせはコチラ"
-  secondary-text="メンバー登録はコチラ"
+  :primaryText="ctaPrimaryText"
+  :secondaryText="ctaSecondaryText"
   max-width="1500px"
   @primary-click="handleContactClick"
   @secondary-click="handleJoinClick"
@@ -111,6 +112,7 @@ import Frame13213176122 from "./Frame13213176122.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "PublicationDetailPage",
@@ -128,6 +130,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'publications',
       frame132131753022Props: frame132131753022Data,
       publication: null,
       loading: true,
@@ -136,6 +139,17 @@ export default {
   },
   async mounted() {
     await this.loadPublication();
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '刊行物') || '刊行物' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はコチラ') || 'メンバー登録はコチラ' },
   },
   methods: {
     async loadPublication() {
@@ -198,7 +212,7 @@ export default {
     },
     
     goToLogin() {
-      this.$router.push('/login');
+      this.$router.push('/member-login');
     },
     
     goToContact() {
@@ -206,13 +220,15 @@ export default {
     },
     
     goToMember() {
-      this.$router.push('/member');
+      this.$router.push('/membership');
     },
     handleContactClick() {
-      this.$router.push('/contact');
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link);
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link);
     }
   }
 };
