@@ -174,11 +174,15 @@
                     class="vector-9"
                     :src="vector91"
                     alt="Vector 9"
+                    @click="prevPublication"
+                    style="cursor: pointer;"
                   />
                   <img
                     class="vector-10"
                     :src="vector101"
                     alt="Vector 10"
+                    @click="nextPublication"
+                    style="cursor: pointer;"
                   />
                 </div>
                 <x-button3 />
@@ -469,8 +473,9 @@ export default {
       frame132131753022Props: homePageData.frame132131753022Props,
       // Dynamic CMS data for publications
       dynamicMainPublication: homePageData.frame13213174741Props, // デフォルト値
-      dynamicPublications: [], // CMSから取得した刊行物データ
+      dynamicPublications: [], // 表示用の4件（循環）
       allPublications: [], // 全ての刊行物データ（ID参照用）
+      currentIndex: 0, // メイン表示の先頭インデックス
       // Dynamic news data
       dynamicNewsItems: [], // CMSから取得したニュースデータ（カテゴリー情報含む）
       // Vector images for UI elements
@@ -605,28 +610,8 @@ export default {
       if (publicationArray.length > 0) {
         this.publications1 = `刊行物(${publicationArray.length}件)`;
         this.allPublications = publicationArray; // 全データを保存
-        
-        // メイン刊行物（最新）のデータを設定
-        const mainPublication = publicationArray[0];
-        if (mainPublication) {
-          this.dynamicMainPublication = {
-            x22: mainPublication.image_url || this.frame13213174741Props.x22 // デフォルト画像を使用
-          };
-        }
-        
-        // 右側の刊行物リスト（最大4件）用のデータを設定
-        const defaultImages = [
-          this.frame13213174751Props.x22, // 1番目のデフォルト画像
-          this.frame13213174752Props.x22, // 2番目のデフォルト画像  
-          this.frame13213174752Props.x22, // 3番目のデフォルト画像
-          this.frame13213174752Props.x22  // 4番目のデフォルト画像
-        ];
-        
-        this.dynamicPublications = publicationArray.slice(0, 4).map((pub, index) => ({
-          x22: pub.cover_image || pub.image_url || defaultImages[index],
-          hotInformationVol324: pub.title,
-          id: pub.id
-        }));
+        this.currentIndex = 0;
+        this.refreshVisiblePublications();
       }
       
       // お知らせ数を更新 - 配列チェックを追加
@@ -644,18 +629,55 @@ export default {
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
     goToMainPublication() {
-      // メイン刊行物（最新）の詳細ページに遷移
-      if (this.allPublications.length > 0) {
-        const mainPublication = this.allPublications[0];
-        this.$router.push(`/publications/${mainPublication.id}`);
-      }
+      // 現在のメイン刊行物へ遷移
+      const len = this.allPublications.length
+      if (!len) return
+      const mainPublication = this.allPublications[this.currentIndex % len]
+      if (mainPublication && mainPublication.id) this.$router.push(`/publications/${mainPublication.id}`)
     },
     goToPublication(index) {
-      // 指定されたインデックスの刊行物詳細ページに遷移
-      if (this.allPublications.length > index) {
-        const publication = this.allPublications[index] || this.dynamicPublications[index];
-        this.$router.push(`/publications/${publication.id}`);
+      // 右側の相対インデックスから遷移
+      const len = this.allPublications.length
+      if (!len) return
+      const absolute = (this.currentIndex + 1 + index) % len
+      const publication = this.allPublications[absolute]
+      if (publication && publication.id) this.$router.push(`/publications/${publication.id}`)
+    },
+    prevPublication() {
+      const len = this.allPublications.length
+      if (!len) return
+      this.currentIndex = (this.currentIndex - 1 + len) % len
+      this.refreshVisiblePublications()
+    },
+    nextPublication() {
+      const len = this.allPublications.length
+      if (!len) return
+      this.currentIndex = (this.currentIndex + 1) % len
+      this.refreshVisiblePublications()
+    },
+    refreshVisiblePublications() {
+      const len = this.allPublications.length
+      if (!len) return
+      const main = this.allPublications[this.currentIndex % len]
+      this.dynamicMainPublication = {
+        x22: main?.cover_image || main?.image_url || this.frame13213174741Props.x22
       }
+      const defaultImages = [
+        this.frame13213174751Props.x22,
+        this.frame13213174752Props.x22,
+        this.frame13213174752Props.x22,
+        this.frame13213174752Props.x22
+      ]
+      const list = []
+      for (let i = 0; i < 4; i++) {
+        const item = this.allPublications[(this.currentIndex + 1 + i) % len]
+        list.push({
+          x22: item?.cover_image || item?.image_url || defaultImages[i],
+          hotInformationVol324: item?.title || '',
+          id: item?.id
+        })
+      }
+      this.dynamicPublications = list
     },
     getCategoryLabel(newsItem) {
       // ニュースの種類に応じてカテゴリーラベルを返す
