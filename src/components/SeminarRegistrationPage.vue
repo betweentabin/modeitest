@@ -153,7 +153,7 @@
     <!-- About Section -->
     <div class="about-section">
       <div class="about-content">
-        <button class="about-contact-btn">
+        <button class="about-contact-btn" @click="goToContact">
           <span>お問い合わせはコチラ</span>
           <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect y="0.5" width="18" height="18" rx="5" fill="white"/>

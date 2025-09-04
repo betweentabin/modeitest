@@ -142,7 +142,7 @@
 
       <!-- Contact Buttons -->
       <div class="contact-section">
-        <button class="contact-button primary">
+        <button class="contact-button primary" @click="goToContact">
           お問い合わせはコチラ
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
@@ -172,7 +172,7 @@
           
           <p class="promo-subtitle">様々な分野の調査研究を通じ、企業活動などをサポートします。</p>
           
-          <button class="promo-button">
+          <button class="promo-button" @click="goToContact">
             お問い合わせはコチラ
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
@@ -219,7 +219,9 @@ export default {
     };
   },
   methods: {
-    // Component methods can be added here if needed
+    goToContact() {
+      this.$router.push('/contact');
+    }
   }
 };
 </script>
