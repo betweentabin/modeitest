@@ -136,7 +136,7 @@ export default {
       this.error = ''
       try {
         // Admin側は非公開でも取得できる管理APIを優先
-        const res = await apiClient.get('/api/admin/pages/media')
+        const res = await apiClient.get('/api/admin/pages/media', { silent: true })
         const d = res?.data || {}
         const page = d?.page || d
         const images = page?.content?.images || {}

@@ -4,8 +4,8 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      :title="pageTitle"
-      :subtitle="pageSubtitle"
+      :title="pageTitle || 'よくあるご質問'"
+      :subtitle="pageSubtitle || 'FAQ'"
       heroImage="/img/hero-image.png"
       mediaKey="hero_faq"
     />

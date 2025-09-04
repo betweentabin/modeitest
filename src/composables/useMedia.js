@@ -14,7 +14,7 @@ async function loadMedia() {
   state.error = null
   try {
     // 1) Prefer admin endpoint if available (works for unpublished drafts too)
-    const adminRes = await apiClient.get('/api/admin/pages/media')
+    const adminRes = await apiClient.get('/api/admin/pages/media', { silent: true })
     if (adminRes && (adminRes.data || adminRes.page)) {
       const d = adminRes.data || adminRes
       const page = d?.page || d
@@ -29,7 +29,7 @@ async function loadMedia() {
 
   try {
     // 2) Public endpoint (requires published page)
-    const res = await apiClient.getPageContent('media')
+    const res = await apiClient.get('/api/public/pages/media', { silent: true })
     const page = res?.data?.page || res?.data?.data?.page
     const images = page?.content?.images || {}
     state.images = images || {}

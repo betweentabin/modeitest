@@ -5,7 +5,7 @@
         <h3>会社情報</h3>
         <ul>
           <li><router-link to="/">トップ</router-link></li>
-          <li><router-link to="/about">会社概要</router-link></li>
+          <li><router-link to="/company">会社概要</router-link></li>
           <li><router-link to="/services">会員サービスのご案内</router-link></li>
           <li><router-link to="/news">お知らせ</router-link></li>
           <li><router-link to="/faq">よくあるご質問</router-link></li>

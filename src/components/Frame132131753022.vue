@@ -4,7 +4,7 @@
       <router-link to="/" class="footer-link">
         <frame13213175225 :text14="frame132131752251Props.text14" />
       </router-link>
-      <router-link to="/about" class="footer-link">
+      <router-link to="/company" class="footer-link">
         <frame13213175225 :text14="frame132131752252Props.text14" />
       </router-link>
       <router-link to="/news" class="footer-link">
@@ -18,7 +18,7 @@
       </router-link>
     </div>
     <div class="frame-1321317522">
-      <router-link to="/seminars" class="footer-link">
+      <router-link to="/seminar" class="footer-link">
         <frame13213175222 :text19="frame132131752221Props.text19" />
       </router-link>
       <router-link to="/publications" class="footer-link">

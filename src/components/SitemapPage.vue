@@ -39,8 +39,8 @@
                 <h4 class="category-title">メインページ</h4>
                 <ul class="link-list">
                   <li><router-link to="/" class="sitemap-link">トップページ</router-link></li>
-                  <li><router-link to="/company-profile" class="sitemap-link">会社概要</router-link></li>
-                  <li><router-link to="/about-institute" class="sitemap-link">研究所について</router-link></li>
+                  <li><router-link to="/company" class="sitemap-link">会社概要</router-link></li>
+                  <li><router-link to="/aboutus" class="sitemap-link">研究所について</router-link></li>
                 </ul>
               </div>
               

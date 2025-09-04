@@ -261,7 +261,7 @@ export default {
     goToSeminarDetail(seminar) {
       // 実際のIDを使用（APIからのデータに含まれている）
       const seminarId = seminar.id || this.generateSeminarId(seminar);
-      this.$router.push(`/seminars/${seminarId}`);
+      this.$router.push(`/seminar/${seminarId}`);
     },
     generateSeminarId(seminar) {
       // セミナーのタイトルと日付からIDを生成（フォールバック用）

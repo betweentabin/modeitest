@@ -4,8 +4,8 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      :title="pageTitle"
-      :subtitle="pageSubtitle"
+      :title="pageTitle || 'お知らせ'"
+      :subtitle="pageSubtitle || 'information'"
       heroImage="/img/hero-image.png"
       mediaKey="hero_news"
     />

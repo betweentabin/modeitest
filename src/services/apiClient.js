@@ -109,7 +109,9 @@ class ApiClient {
         let errJson = null
         try { errJson = errText ? JSON.parse(errText) : null } catch(e) {}
         const message = errJson?.message || `HTTP error! status: ${response.status}`
-        console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
+        if (!options || !options.silent) {
+          console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
+        }
         return { success: false, error: message }
       }
 

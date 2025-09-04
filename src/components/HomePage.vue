@@ -93,7 +93,7 @@
                   :frame1321317481Props="frame1321317481Props"
                 />
               </div>
-              <div class="button arrow-dark" @click="$router.push('/about-institute')" style="cursor: pointer;">
+              <div class="button arrow-dark" @click="$router.push('/aboutus')" style="cursor: pointer;">
                 <div class="text-55 valign-text-middle inter-bold-white-15px">{{ text120 }}</div>
                 <frame13213176122 />
               </div>

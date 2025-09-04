@@ -74,22 +74,29 @@ const router = new Router({
       meta: { title: "ちくぎん地域経済研究所" }
     },
     {
-      path: "/about",
-      name: "about",
+      path: "/company",
+      name: "company",
       component: CompanyProfile,
       meta: { title: "会社概要 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/about-institute",
-      name: "aboutInstitute",
+      path: "/aboutus",
+      name: "aboutus",
       component: AboutInstitutePage,
       meta: { title: "ちくぎん地域経済研究所について - ちくぎん地域経済研究所" }
     },
+    // 旧URLからのリダイレクト
+    {
+      path: "/about",
+      redirect: "/company"
+    },
+    {
+      path: "/about-institute",
+      redirect: "/aboutus"
+    },
     {
       path: "/company-profile",
-      name: "companyProfile",
-      component: CompanyProfile,
-      meta: { title: "会社概要 - ちくぎん地域経済研究所" }
+      redirect: "/company"
     },
     {
       path: "/services",
@@ -115,10 +122,10 @@ const router = new Router({
       meta: { title: "よくある質問 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/publications",
-      name: "publications",
+      path: "/publication",
+      name: "publication",
       component: PublicationsMemberPage,
-      meta: { title: "刊行物（会員） - ちくぎん地域経済研究所" }
+      meta: { title: "刊行物 - ちくぎん地域経済研究所" }
     },
     {
       path: "/publications-public",
@@ -137,21 +144,21 @@ const router = new Router({
       component: PublicationDetailPage,
     },
     {
-      path: "/seminars",
-      name: "seminars",
+      path: "/seminar",
+      name: "seminar",
       component: SeminarPage,
       meta: { title: "セミナー - ちくぎん地域経済研究所" }
     },
     {
-      path: "/seminars/current",
-      name: "currentSeminars",
-      component: CurrentSeminarsPage,
+      path: "/seminar/archive",
+      name: "seminarArchive",
+      component: PastSeminarsPage,
       meta: { title: "受付中のセミナー - ��くぎん地域経済研究所" }
     },
     {
-      path: "/seminars/past",
-      name: "pastSeminars",
-      component: PastSeminarsPage,
+      path: "/seminar/:id",
+      name: "seminarDetail",
+      component: SeminarDetailPage,
       meta: { title: "過去のセミナー - ちくぎん地域経済研究所" }
     },
     {
@@ -190,10 +197,10 @@ const router = new Router({
       meta: { title: "経済指標一覧 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/statistics",
-      name: "statistics",
+      path: "/economic-research",
+      name: "economicResearch",
       component: EconomicStatisticsPage,
-      meta: { title: "経済・調査統計 - ちくぎん地域経済研究所" }
+      meta: { title: "経済調査統計一覧 - ちくぎん地域経済研究所" }
     },
     {
       path: "/economic-statistics/:id/detail",
@@ -208,20 +215,20 @@ const router = new Router({
       meta: { title: "経済・調査統計詳細 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/transaction-law",
-      name: "transactionLaw",
+      path: "/legal",
+      name: "legal",
       component: TransactionLawPage,
       meta: { title: "特定商取引法に関する表記 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/privacy-policy",
-      name: "privacyPolicy",
+      path: "/privacy",
+      name: "privacy",
       component: PrivacyPolicyPage,
       meta: { title: "プライバシーポリシー - ちくぎん地域経済研究所" }
     },
     {
-      path: "/terms-of-service",
-      name: "termsOfService",
+      path: "/terms",
+      name: "terms",
       component: TermsOfServicePage,
       meta: { title: "利用規約 - ちくぎん地域経済研究所" }
     },
@@ -256,8 +263,8 @@ const router = new Router({
       meta: { title: "サイトマップ - ちくぎん地域経済研究所" }
     },
     {
-      path: "/financial-reports",
-      name: "financialReports",
+      path: "/financial-report",
+      name: "financialReport",
       component: FinancialReportPage,
       meta: { title: "決算報告 - ちくぎん地域経済研究所" }
     },
@@ -442,7 +449,7 @@ const router = new Router({
       meta: { title: "ページ新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/login",
+      path: "/member-login",
       name: "memberLogin",
       component: MemberLoginPage,
       meta: { title: "会員ログイン - ちくぎん地域経済研究所" }
@@ -472,7 +479,7 @@ const router = new Router({
       meta: { title: "プレミアム会員の特典 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/my-account",
+      path: "/myaccount", 
       name: "myAccount",
       component: MyAccountPage,
       meta: { title: "マイアカウント - ちくぎん地域経済研究所" }
@@ -506,6 +513,59 @@ const router = new Router({
       name: "seminarRoom",
       component: SeminarDetailJoinPage,
       meta: { title: "セミナールーム - ちくぎん地域経済研究所" }
+    },
+    // 旧URLからのリダイレクト設定
+    {
+      path: "/seminars",
+      redirect: "/seminar"
+    },
+    {
+      path: "/seminars/current",
+      redirect: "/seminar"
+    },
+    {
+      path: "/seminars/past",
+      redirect: "/seminar/archive"
+    },
+    {
+      path: "/seminars/:id",
+      redirect: to => `/seminar/${to.params.id}`
+    },
+    {
+      path: "/publications",
+      redirect: "/publication"
+    },
+    {
+      path: "/publications-public",
+      redirect: "/publication"
+    },
+    {
+      path: "/statistics",
+      redirect: "/economic-research"
+    },
+    {
+      path: "/login",
+      redirect: "/member-login"
+    },
+    {
+      path: "/transaction-law",
+      redirect: "/legal"
+    },
+    {
+      path: "/privacy-policy",
+      redirect: "/privacy"
+    },
+    {
+      path: "/terms-of-service",
+      redirect: "/terms"
+    },
+    {
+      path: "/financial-reports",
+      redirect: "/financial-report"
+    },
+    {
+      path: "/my-account",
+      redirect: "/myaccount"
     },
     {
       path: "*",
