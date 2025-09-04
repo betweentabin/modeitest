@@ -83,7 +83,7 @@ class MemberController extends Controller
             'company_name' => 'required|string|max:255',
             'representative_name' => 'required|string|max:100',
             'email' => 'required|string|email|max:255|unique:members',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
             'membership_type' => 'required|in:free,basic,standard,premium',
@@ -93,10 +93,24 @@ class MemberController extends Controller
         ]);
 
         if ($validator->fails()) {
+            \Log::error('Member creation validation failed', [
+                'errors' => $validator->errors(),
+                'request_data' => $request->except(['password', 'password_confirmation'])
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => 'バリデーションエラー',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
+                'debug' => [
+                    'received_fields' => array_keys($request->all()),
+                    'validation_rules' => [
+                        'company_name' => 'required|string|max:255',
+                        'representative_name' => 'required|string|max:100',
+                        'email' => 'required|string|email|max:255|unique:members',
+                        'password' => 'required|string|min:8|confirmed',
+                    ]
+                ]
             ], 422);
         }
 
