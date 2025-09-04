@@ -1,0 +1,5 @@
+[33m4c3eceb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Resolve merge conflicts in package.json and package-lock.json
+[33m9cf4db0[m Update ContactFormPage.vue and package files
+[33m90a86f7[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m 🎯 セミナー表示改善とメール機能強化
+[33m0f18529[m 📦 パッケージ依存関係更新
+[33m67f666f[m 📧 メール配信システム完全強化と認証システム改善

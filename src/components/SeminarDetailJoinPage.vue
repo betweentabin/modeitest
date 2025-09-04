@@ -506,7 +506,7 @@ export default {
   }
   
   .seminar-info {
-    padding: 35px 0 0 0 !important;
+    padding: 30px 0 0 0 !important;
     order: 1 !important;
   }
   

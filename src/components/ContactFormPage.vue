@@ -326,14 +326,6 @@ export default {
   min-width: 0;
 }
 
-.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  justify-content: flex-end;
-  min-width: 300px;
-}
-
 .sub-nav {
   display: flex;
   align-items: center;

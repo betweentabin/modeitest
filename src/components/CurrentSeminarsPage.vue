@@ -690,25 +690,16 @@ export default {
     font-size: 32px !important;
   }
   
+  .divider-text {
+    font-size: 18px !important;
+  }
+  
   .section-description {
     font-size: 18px !important;
   }
   
   .seminar-card {
     gap: 30px !important;
-  }
-  
-  .seminar-title {
-    font-size: 22px !important;
-  }
-  
-  .seminar-description {
-    font-size: 18px !important;
-  }
-  
-  .seminar-date,
-  .seminar-location {
-    font-size: 18px !important;
   }
   
   .seminar-image {
@@ -720,19 +711,40 @@ export default {
     height: 38px !important;
     font-size: 13px !important;
   }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 25px !important;
+  }
+  
+  .label-text {
+    font-size: 18px !important;
+  }
+  
+  .info-value {
+    font-size: 18px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 18px !important;
+  }
 }
 
 @media (max-width: 900px) {
   .current-seminars-section {
-    padding: 45px 25px !important;
+    padding: 30px 20px !important;
   }
   
   .seminars-content {
-    padding: 45px 25px !important;
+    padding: 35px !important;
   }
   
   .section-title {
     font-size: 29px !important;
+  }
+  
+  .divider-text {
+    font-size: 17px !important;
   }
   
   .section-description {
@@ -741,19 +753,6 @@ export default {
   
   .seminar-card {
     gap: 25px !important;
-  }
-  
-  .seminar-title {
-    font-size: 20px !important;
-  }
-  
-  .seminar-description {
-    font-size: 17px !important;
-  }
-  
-  .seminar-date,
-  .seminar-location {
-    font-size: 17px !important;
   }
   
   .seminar-image {
@@ -765,6 +764,23 @@ export default {
     height: 36px !important;
     font-size: 12px !important;
   }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 22px !important;
+  }
+  
+  .label-text {
+    font-size: 17px !important;
+  }
+  
+  .info-value {
+    font-size: 17px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 17px !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -773,11 +789,15 @@ export default {
   }
   
   .seminars-content {
-    padding: 30px 20px !important;
+    padding: 30px !important;
   }
   
   .section-title {
     font-size: 27px !important;
+  }
+  
+  .divider-text {
+    font-size: 16px !important;
   }
   
   .section-description {
@@ -790,19 +810,6 @@ export default {
     gap: 20px !important;
   }
   
-  .seminar-title {
-    font-size: 19px !important;
-  }
-  
-  .seminar-description {
-    font-size: 16px !important;
-  }
-  
-  .seminar-date,
-  .seminar-location {
-    font-size: 16px !important;
-  }
-  
   .seminar-image {
     width: 100% !important;
     height: 250px !important;
@@ -811,12 +818,35 @@ export default {
   
   .seminar-details {
     width: 100% !important;
+    border-radius: 0 0 20px 20px !important;
+    padding: 30px !important;
   }
   
   .pagination-btn {
     width: 34px !important;
     height: 34px !important;
     font-size: 11px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 20px !important;
+  }
+  
+  .label-text {
+    font-size: 16px !important;
+  }
+  
+  .info-value {
+    font-size: 16px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 16px !important;
+  }
+  
+  .reserve-btn {
+    padding: 10px 80px !important;
   }
 }
 
@@ -826,11 +856,15 @@ export default {
   }
   
   .seminars-content {
-    padding: 20px 15px !important;
+    padding: 20px !important;
   }
   
   .section-title {
     font-size: 22px !important;
+  }
+  
+  .divider-text {
+    font-size: 13px !important;
   }
   
   .section-description {
@@ -841,27 +875,45 @@ export default {
     gap: 18px !important;
   }
   
-  .seminar-title {
-    font-size: 18px !important;
-  }
-  
-  .seminar-description {
-    font-size: 13px !important;
-  }
-  
-  .seminar-date,
-  .seminar-location {
-    font-size: 13px !important;
-  }
-  
   .seminar-image {
     height: 200px !important;
+    border-radius: 15px 15px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 15px 15px !important;
+    padding: 20px !important;
   }
   
   .pagination-btn {
     width: 32px !important;
     height: 32px !important;
     font-size: 10px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 18px !important;
+  }
+  
+  .label-text {
+    font-size: 13px !important;
+  }
+  
+  .info-value {
+    font-size: 13px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 13px !important;
+  }
+  
+  .reserve-btn {
+    padding: 8px 60px !important;
+  }
+  
+  .info-label {
+    padding: 8px 20px !important;
   }
 }
 </style>

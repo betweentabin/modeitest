@@ -30,7 +30,7 @@ export default {
 <style>
 .button-1 {
   align-items: center;
-  background-color: var(--black);
+  background-color: #9C3940;
   border-radius: 8px;
   box-shadow: 0px 1px 2px #0000000d;
   display: inline-flex;
