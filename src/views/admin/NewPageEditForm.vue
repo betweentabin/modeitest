@@ -234,6 +234,17 @@
                 <label class="form-label">
                   テキストフィールド（content.texts）
                 </label>
+                <div class="fields-guide">
+                  <div class="guide-title">使い方（初心者向けの簡単ステップ）</div>
+                  <ol>
+                    <li>推奨キーを見て、不足があれば「不足キーを追加」を押す</li>
+                    <li>各行の「値」に表示したい文言を入力（キーは基本そのままでOK）</li>
+                    <li>右側の文字数カウンタを目安に短く整えるとレイアウトが安定します</li>
+                  </ol>
+                  <div class="guide-actions">
+                    <button type="button" class="btn btn-secondary small" @click="reloadFieldsFromJson">JSON→Fieldsに再読込</button>
+                  </div>
+                </div>
                 <div class="recommended-keys" v-if="recommendedKeys.length">
                   <div class="subtitle">推奨キー</div>
                   <div class="chips">
@@ -248,6 +259,12 @@
                   <button type="button" class="btn btn-secondary small" @click="addMissingRecommendedKeys">不足キーを追加</button>
                 </div>
                 <div class="fields-editor">
+                  <div class="field-head">
+                    <div>キー</div>
+                    <div>値</div>
+                    <div>文字数</div>
+                    <div>操作</div>
+                  </div>
                   <div 
                     v-for="(row, idx) in textsEditor" 
                     :key="row._id"
@@ -257,22 +274,64 @@
                       v-model="row.key"
                       type="text"
                       class="form-input field-key"
-                      placeholder="キー（例: page_title, lead, cta_primary）"
+                      :placeholder="getKeyPlaceholder(row.key) || 'キー（例: page_title, lead, cta_primary）'"
                     />
                     <input
                       v-model="row.value"
                       type="text"
                       class="form-input field-value"
-                      placeholder="値（表示テキスト）"
+                      :placeholder="getKeyPlaceholder(row.key) ? getKeyPlaceholder(row.key) : '値（表示テキスト）'"
                     />
                     <div class="field-hint">
                       <span v-if="getKeyLimit(row.key)" class="counter">{{ (row.value || '').length }}/{{ getKeyLimit(row.key) }}</span>
                       <span v-else class="counter">{{ (row.value || '').length }}</span>
+                      <div v-if="getKeyLabel(row.key)" class="key-help">{{ getKeyLabel(row.key) }}：{{ getKeyDesc(row.key) }}</div>
+                      <div v-if="getKeyLocation(row.key)" class="key-help">表示箇所：{{ getKeyLocation(row.key) }}</div>
                     </div>
                     <button type="button" class="btn btn-secondary small" @click="removeTextField(idx)">削除</button>
                   </div>
                   <button type="button" class="btn btn-primary" @click="addTextField">+ フィールドを追加</button>
                   <p class="form-help">推奨キー例: page_title, page_subtitle, lead, cta_primary, cta_secondary</p>
+                </div>
+
+                <!-- Links subsection -->
+                <label class="form-label" style="margin-top:20px;">
+                  リンクフィールド（content.links）
+                </label>
+                <div class="fields-editor">
+                  <div class="field-head">
+                    <div>キー</div>
+                    <div>URL（/ または http(s)://）</div>
+                    <div>検証</div>
+                    <div>操作</div>
+                  </div>
+                  <div 
+                    v-for="(row, idx) in linksEditor" 
+                    :key="row._id"
+                    :class="['field-row', !isValidLink(row.value) && (row.value||'').length ? 'field-row-warning' : '']"
+                  >
+                    <input
+                      v-model="row.key"
+                      type="text"
+                      class="form-input field-key"
+                      placeholder="キー（例: cta_primary, cta_secondary）"
+                    />
+                    <input
+                      v-model="row.value"
+                      type="text"
+                      class="form-input field-value"
+                      placeholder="例）/contact または https://example.com"
+                    />
+                    <div class="field-hint">
+                      <span class="counter" :style="{color: isValidLink(row.value) || !(row.value||'').length ? '#065f46' : '#b45309'}">{{ isValidLink(row.value) || !(row.value||'').length ? 'OK' : 'URL形式を確認してください' }}</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary small" @click="removeLinkField(idx)">削除</button>
+                  </div>
+                  <div class="guide-actions">
+                    <button type="button" class="btn btn-secondary small" @click="addMissingLinkKeys">不足キーを追加（cta系）</button>
+                    <button type="button" class="btn btn-primary" @click="addLinkField">+ リンクを追加</button>
+                  </div>
+                  <p class="form-help">安全のため、`/` から始まるサイト内リンクか、`http(s)://` のみ許可</p>
                 </div>
               </div>
             </div>
@@ -391,6 +450,102 @@ const TEXT_LIMITS = {
   mission_body: 200
 }
 
+// 初心者向けのキー説明
+const KEY_HELP = {
+  page_title: { label: 'ページタイトル', desc: 'ページの大見出しに表示されます', placeholder: '例）経済・調査統計' },
+  page_subtitle: { label: 'サブタイトル（英字など）', desc: 'タイトル下に小さく英字等で表示', placeholder: '例）economic statistics' },
+  lead: { label: 'リード文', desc: 'ページ冒頭の説明文（任意）', placeholder: 'ページの概要を1〜2文で書きます' },
+  cta_primary: { label: 'メインボタン文言', desc: '主ボタンのテキスト', placeholder: '例）お問い合わせはコチラ' },
+  cta_secondary: { label: 'サブボタン文言', desc: '副ボタンのテキスト', placeholder: '例）入会はコチラ' },
+  form_title: { label: 'フォーム見出し', desc: 'お問い合わせフォーム上部の見出し', placeholder: 'お問い合わせ' },
+  mission_title: { label: 'ミッション見出し', desc: '会社/団体紹介の小見出し', placeholder: '産学官金のネットワークを活かした地域創生' },
+  mission_body: { label: 'ミッション本文', desc: '紹介の本文', placeholder: '私たちは、〜〜〜' },
+}
+
+// キーの表示箇所（ページ別）
+const KEY_LOCATIONS = {
+  'home': {
+    page_title: 'ヒーロー大見出し（HomePage）',
+    page_subtitle: 'ヒーロー小見出し（HomePage）',
+    lead: 'ヒーロー下の説明文（HomePage）',
+    cta_primary: '最下部の主ボタン文言（HomePage）',
+    cta_secondary: '最下部の副ボタン文言（HomePage）',
+  },
+  'economic-statistics': {
+    page_title: 'ヒーロー・パンくず・見出し（EconomicStatisticsPage）',
+    page_subtitle: '英字のサブ見出し（EconomicStatisticsPage）',
+    cta_primary: '最下部の主ボタン文言（EconomicStatisticsPage）',
+    cta_secondary: '最下部の副ボタン文言（EconomicStatisticsPage）',
+  },
+  'publications': {
+    page_title: 'ヒーロー・パンくず・見出し（PublicationsPublic/Detail）',
+    page_subtitle: '英字のサブ見出し（PublicationsPublic/Detail）',
+    cta_primary: '下部の主ボタン文言（Detail等）',
+    cta_secondary: '下部の副ボタン文言（Detail等）',
+  },
+  'financial-reports': {
+    page_title: 'ヒーロー・パンくず・見出し（FinancialReportPage）',
+    page_subtitle: '英字のサブ見出し（FinancialReportPage）',
+    cta_primary: '最下部の主ボタン文言',
+    cta_secondary: '最下部の副ボタン文言',
+  },
+  'economic-indicators': {
+    page_title: 'ヒーロー・パンくず・見出し（EconomicIndicatorsPage）',
+    page_subtitle: '英字のサブ見出し（EconomicIndicatorsPage）',
+  },
+  'news': {
+    page_title: 'ヒーロー・パンくず・見出し（NewsPage）',
+    page_subtitle: '英字のサブ見出し（NewsPage）',
+  },
+  'contact': {
+    page_title: 'ヒーロー・パンくず（ContactFormPage）',
+    page_subtitle: '英字のサブ見出し（ContactFormPage）',
+    form_title: 'フォームの大見出し（ContactFormPage）',
+  },
+  'company-profile': {
+    page_title: 'ヒーロー・パンくず（CompanyProfile）',
+    page_subtitle: '英字のサブ見出し（CompanyProfile）',
+  },
+  'privacy': {
+    page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',
+    page_subtitle: '英字のサブ見出し（PrivacyPolicyPage）',
+  },
+  'terms': {
+    page_title: 'ヒーロー・パンくず・見出し（TermsOfServicePage）',
+    page_subtitle: '英字のサブ見出し（TermsOfServicePage）',
+  },
+  'transaction-law': {
+    page_title: 'ヒーロー・パンくず・見出し（TransactionLawPage）',
+    page_subtitle: '英字のサブ見出し（TransactionLawPage）',
+  },
+  'sitemap': {
+    page_title: 'ヒーロー・パンくず・見出し（SitemapPage）',
+    page_subtitle: '英字のサブ見出し（SitemapPage）',
+    cta_primary: '下部ボタン（お問い合わせ）',
+    cta_secondary: '下部ボタン（入会）',
+  },
+  'consulting': {
+    page_title: 'ヒーロー・パンくず（CRIConsultingPage）',
+    page_subtitle: '英字のサブ見出し（CRIConsultingPage）',
+  },
+  'about': {
+    page_title: 'ヒーロー見出し（AboutPage）',
+    page_subtitle: 'ヒーロー英字（AboutPage）',
+    mission_title: '経営理念セクションの見出し',
+    mission_body: '経営理念セクションの本文',
+  },
+  'membership': {
+    page_title: 'ヒーロー・パンくず（MembershipPage）',
+    page_subtitle: '英字のサブ見出し（MembershipPage）',
+    cta_primary: '下部ボタン（お問い合わせ）',
+    cta_secondary: '下部ボタン（入会）',
+  },
+  'seminars-current': {
+    page_title: 'ヒーロー・パンくず（CurrentSeminarsPage）',
+    page_subtitle: '英字のサブ見出し（CurrentSeminarsPage）',
+  }
+}
+
 export default {
   name: 'NewPageEditForm',
   components: {
@@ -411,6 +566,7 @@ export default {
       contentJson: '',
       contentHtml: '',
       textsEditor: [],
+      linksEditor: [],
       jsonError: '',
       loading: false,
       submitLoading: false,
@@ -482,6 +638,8 @@ export default {
         // Initialize fields editor from content.texts if available
         const texts = (data && data.content && data.content.texts) ? data.content.texts : {}
         this.textsEditor = Object.keys(texts).map((k) => ({ _id: `${k}-${Date.now()}-${Math.random()}`, key: k, value: texts[k] }))
+        const links = (data && data.content && data.content.links) ? data.content.links : {}
+        this.linksEditor = Object.keys(links).map((k) => ({ _id: `l-${k}-${Date.now()}-${Math.random()}`, key: k, value: links[k] }))
       } catch (err) {
         this.error = 'ページデータの取得に失敗しました'
         console.error(err)
@@ -589,6 +747,12 @@ export default {
     removeTextField(index) {
       this.textsEditor.splice(index, 1)
     },
+    addLinkField() {
+      this.linksEditor.push({ _id: `ln-${Date.now()}-${Math.random()}`, key: '', value: '' })
+    },
+    removeLinkField(index) {
+      this.linksEditor.splice(index, 1)
+    },
     hasTextKey(k) {
       const key = (k || '').trim()
       return this.textsEditor.some(r => (r.key || '').trim() === key)
@@ -602,6 +766,38 @@ export default {
     getKeyLimit(k) {
       const key = (k || '').trim()
       return TEXT_LIMITS[key] || null
+    },
+    getKeyLabel(k) {
+      const key = (k || '').trim()
+      return KEY_HELP[key]?.label || ''
+    },
+    getKeyDesc(k) {
+      const key = (k || '').trim()
+      return KEY_HELP[key]?.desc || ''
+    },
+    getKeyPlaceholder(k) {
+      const key = (k || '').trim()
+      return KEY_HELP[key]?.placeholder || ''
+    },
+    reloadFieldsFromJson() {
+      try {
+        const base = this.contentJson ? JSON.parse(this.contentJson) : {}
+        const texts = base?.texts || {}
+        const links = base?.links || {}
+        this.textsEditor = Object.keys(texts).map((k) => ({ _id: `${k}-${Date.now()}-${Math.random()}`, key: k, value: texts[k] }))
+        this.linksEditor = Object.keys(links).map((k) => ({ _id: `l-${k}-${Date.now()}-${Math.random()}`, key: k, value: links[k] }))
+      } catch(e) {
+        this.submitError = 'JSONを読み込めませんでした: ' + e.message
+      }
+    },
+    isValidLink(url) {
+      if (!url) return true
+      return /^\//.test(url) || /^https?:\/\//i.test(url)
+    },
+    addMissingLinkKeys() {
+      const defaults = ['cta_primary', 'cta_secondary']
+      const exist = new Set(this.linksEditor.map(r => (r.key||'').trim()))
+      defaults.forEach(k => { if (!exist.has(k)) this.linksEditor.push({ _id: `ln-${k}-${Date.now()}-${Math.random()}`, key: k, value: '' }) })
     },
     collectTextWarnings() {
       const warnings = []
@@ -645,7 +841,17 @@ export default {
             if (!k) continue
             texts[k] = row.value || ''
           }
-          this.formData.content = { ...(base || {}), texts }
+          const links = {}
+          for (const row of this.linksEditor) {
+            const k = (row.key || '').trim()
+            if (!k) continue
+            if (row.value && !this.isValidLink(row.value)) {
+              // 軽いガード：許可形式以外は無視
+              continue
+            }
+            links[k] = row.value || ''
+          }
+          this.formData.content = { ...(base || {}), texts, links }
         } else {
           try {
             this.formData.content = JSON.parse(this.contentJson)
@@ -902,6 +1108,15 @@ export default {
   gap: 10px;
 }
 
+.field-head {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr auto auto;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+  padding: 4px 2px;
+}
+
 .field-row {
   display: grid;
   grid-template-columns: 1.2fr 2fr auto auto;
@@ -926,6 +1141,37 @@ export default {
   border: 1px solid #e5e7eb;
   padding: 2px 6px;
   border-radius: 4px;
+}
+
+.key-help {
+  margin-top: 4px;
+  color: #6b7280;
+}
+
+.fields-guide {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.fields-guide .guide-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.fields-guide ol {
+  margin: 0 0 8px 18px;
+  padding: 0;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.fields-guide .guide-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .recommended-keys {

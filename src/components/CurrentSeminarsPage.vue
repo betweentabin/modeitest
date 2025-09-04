@@ -5,13 +5,13 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="受付中のセミナー"
-      subtitle="current seminars"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/ab5db9916398054424d59236a434310786cb8146?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', '受付中のセミナー']" />
+    <Breadcrumbs :breadcrumbs="['セミナー', pageTitle]" />
 
     <!-- CMS Body (optional) -->
     <CmsBlock page-key="seminars-current" wrapper-class="cms-body" />
@@ -163,6 +163,7 @@ import CmsBlock from './CmsBlock.vue'
 import { frame132131753022Data } from "../data";
 import apiClient from '@/services/apiClient.js'
 import MembershipBadge from './MembershipBadge.vue'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "CurrentSeminarsPage",
@@ -180,6 +181,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'seminars-current',
       frame132131753022Props: frame132131753022Data,
       currentPage: 1,
       itemsPerPage: 10,
@@ -189,8 +191,15 @@ export default {
   },
   async mounted() {
     await this.loadSeminars()
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '受付中のセミナー') || '受付中のセミナー' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'current seminars') || 'current seminars' },
     currentSeminars() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;

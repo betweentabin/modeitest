@@ -185,7 +185,7 @@
               <path d="M0 15H69" stroke="white" stroke-width="2"/>
             </svg>
           </div>
-          <div class="bottom-subtitle">様々な分野の調���研究を通じ、企業活動などをサポートします。</div>
+          <div class="bottom-subtitle">様々な分野の調査研究を通じ、企業活動などをサポートします。</div>
           <div class="bottom-cta">
             <span>お問い合わせはコチラ</span>
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -396,7 +396,7 @@
               </div>
             </div>
             <div class="company-details-bottom">
-              <div>〒839-0864　福岡県久留米市百年公園1番1��� 久留米リサーチセンタービル6階</div>
+              <div>〒839-0864　福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階</div>
               <div>電話番号. 0942-46-5081　営業時間. 平日9:00-17:00</div>
             </div>
           </div>

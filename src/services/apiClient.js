@@ -570,26 +570,26 @@ class ApiClient {
   // Admin-specific methods with token
   async getAdminSeminars(params = {}) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/seminars?${queryString}` : '/api/admin/seminars'
+    const endpoint = queryString ? `/api/seminars?${queryString}` : '/api/seminars'
     // トークンは自動的にrequestメソッドで付与される
     return this.get(endpoint)
   }
 
   // Admin seminar registrations management
   async getAdminSeminarRegistrations(seminarId, params = {}) {
-    const endpoint = `/api/admin/seminars/${seminarId}/registrations`
+    const endpoint = `/api/seminars/${seminarId}/registrations`
     return this.get(endpoint, { params })
   }
   async approveAdminSeminarRegistration(seminarId, regId) {
-    const endpoint = `/api/admin/seminars/${seminarId}/registrations/${regId}/approve`
+    const endpoint = `/api/seminars/${seminarId}/registrations/${regId}/approve`
     return this.post(endpoint)
   }
   async rejectAdminSeminarRegistration(seminarId, regId, reason = '') {
-    const endpoint = `/api/admin/seminars/${seminarId}/registrations/${regId}/reject`
+    const endpoint = `/api/seminars/${seminarId}/registrations/${regId}/reject`
     return this.post(endpoint, { reason })
   }
   async bulkApproveAdminSeminarRegistrations(seminarId, registrationIds = []) {
-    const endpoint = `/api/admin/seminars/${seminarId}/registrations/bulk-approve`
+    const endpoint = `/api/seminars/${seminarId}/registrations/bulk-approve`
     return this.post(endpoint, { registration_ids: registrationIds })
   }
 

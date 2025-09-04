@@ -4,20 +4,20 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="よくあるご質問"
-      subtitle="FAQ"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['よくあるご質問']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">よくあるご質問</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">FAQ</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -102,6 +102,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "FaqPage",
@@ -212,6 +213,17 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'よくあるご質問') || 'よくあるご質問' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'FAQ') || 'FAQ' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('faq')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   computed: {
     filteredFaqs() {

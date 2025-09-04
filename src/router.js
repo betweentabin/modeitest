@@ -229,7 +229,7 @@ const router = new Router({
       path: "/cri-consulting",
       name: "criConsulting",
       component: CriConsultingPage,
-      meta: { title: "CRI経営コンサルティング - ちくぎん地域経���研究所" }
+      meta: { title: "CRI経営コンサルティング - ちくぎん地域経済研究所" }
     },
     {
       path: "/contact",
