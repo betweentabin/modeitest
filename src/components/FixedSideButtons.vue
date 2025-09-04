@@ -37,10 +37,10 @@ export default {
   },
   methods: {
     handleLogin() {
-      this.$emit('login-click');
+      this.$router.push('/member-login');
     },
     handleContact() {
-      this.$emit('contact-click');
+      this.$router.push('/contact');
     }
   }
 };
