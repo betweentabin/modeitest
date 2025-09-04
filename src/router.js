@@ -274,7 +274,7 @@ const router = new Router({
       component: SeminarRegistrationPage,
     },
     {
-      path: "/admin/login",
+      path: "/admin",
       name: "adminLogin",
       component: AdminLoginPage,
       meta: { title: "管理者ログイン - ちくぎん地域経済研究所" }
@@ -292,49 +292,49 @@ const router = new Router({
       meta: { title: "管理ダッシュボード - ちくぎん地��経済研究所" }
     },
     {
-      path: "/admin/members",
+      path: "/admin/member-list",
       name: "memberManagement",
       component: MemberManagement,
       meta: { title: "会員管理 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/seminars",
+      path: "/admin/seminar",
       name: "seminarManagement",
       component: SeminarManagement,
       meta: { title: "セミナー管理 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/seminars/new",
+      path: "/admin/seminar/register",
       name: "seminarNew",
       component: SeminarEditForm,
       meta: { title: "セミナー新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/seminars/:id/edit",
-      name: "seminarEdit",
+      path: "/admin/seminar/edit",
+      name: "seminarEdit", 
       component: SeminarEditForm,
       meta: { title: "セミナー編集 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/seminars/:id/registrations",
+      path: "/admin/seminar/manage",
       name: "seminarRegistrations",
       component: SeminarRegistrationApproval,
       meta: { title: "セミナー申込承認 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/publications",
+      path: "/admin/publication",
       name: "publicationManagement",
       component: PublicationManagement,
       meta: { title: "刊行物管理 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/publications/new",
+      path: "/admin/publication/register",
       name: "publicationNew",
       component: PublicationEditForm,
       meta: { title: "刊行物新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/publications/:id/edit",
+      path: "/admin/publication/edit", 
       name: "publicationEdit",
       component: PublicationEditForm,
       meta: { title: "刊行物編集 - ちくぎん地域経済研究所" }
@@ -346,7 +346,7 @@ const router = new Router({
       meta: { title: "経済統計レポート管理 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/notices",
+      path: "/admin/news",
       name: "noticeManagement",
       component: NoticeManagement,
       meta: { title: "お知らせ管理 - ちくぎん地域経済研究所" }
@@ -395,14 +395,14 @@ const router = new Router({
       meta: { title: "一括メール送信グループ管理 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/notices/new",
+      path: "/admin/news/register",
       name: "noticeNew",
       component: NoticeEditForm,
       meta: { title: "お知らせ新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/notices/:id/edit",
-      name: "noticeEdit",
+      path: "/admin/news/edit",
+      name: "noticeEdit", 
       component: NoticeEditForm,
       meta: { title: "お知らせ編集 - ちくぎん地域経済研究所" }
     },
@@ -566,6 +566,55 @@ const router = new Router({
     {
       path: "/my-account",
       redirect: "/myaccount"
+    },
+    // 管理者ページの旧URLからのリダイレクト
+    {
+      path: "/admin/login",
+      redirect: "/admin"
+    },
+    {
+      path: "/admin/members",
+      redirect: "/admin/member-list"
+    },
+    {
+      path: "/admin/seminars",
+      redirect: "/admin/seminar"
+    },
+    {
+      path: "/admin/seminars/new",
+      redirect: "/admin/seminar/register"
+    },
+    {
+      path: "/admin/seminars/:id/edit",
+      redirect: "/admin/seminar/edit"
+    },
+    {
+      path: "/admin/seminars/:id/registrations",
+      redirect: "/admin/seminar/manage"
+    },
+    {
+      path: "/admin/publications",
+      redirect: "/admin/publication"
+    },
+    {
+      path: "/admin/publications/new",
+      redirect: "/admin/publication/register"
+    },
+    {
+      path: "/admin/publications/:id/edit",
+      redirect: "/admin/publication/edit"
+    },
+    {
+      path: "/admin/notices",
+      redirect: "/admin/news"
+    },
+    {
+      path: "/admin/notices/new",
+      redirect: "/admin/news/register"
+    },
+    {
+      path: "/admin/notices/:id/edit",
+      redirect: "/admin/news/edit"
     },
     {
       path: "*",

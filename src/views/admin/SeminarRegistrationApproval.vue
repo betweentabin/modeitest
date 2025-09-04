@@ -80,7 +80,7 @@ export default {
       try {
         const params = {}
         if (this.status) params.status = this.status
-        const res = await apiClient.get(`/api/admin/seminars/${this.seminarId}/registrations`, { params })
+        const res = await apiClient.get(`/api/admin/seminar/${this.seminarId}/registrations`, { params })
         if (res.success) {
           // APIはLaravelのpaginateを返す
           this.registrations = res.data.data || res.data
@@ -89,16 +89,16 @@ export default {
     },
     toggleAll(ev) { this.selected = ev.target.checked ? this.registrations.map(r=>r.id) : [] },
     async approve(r) {
-      await apiClient.post(`/api/admin/seminars/${this.seminarId}/registrations/${r.id}/approve`)
+      await apiClient.post(`/api/admin/seminar/${this.seminarId}/registrations/${r.id}/approve`)
       this.loadRegistrations()
     },
     async reject(r) {
       const reason = prompt('却下理由（任意）')
-      await apiClient.post(`/api/admin/seminars/${this.seminarId}/registrations/${r.id}/reject`, { reason })
+      await apiClient.post(`/api/admin/seminar/${this.seminarId}/registrations/${r.id}/reject`, { reason })
       this.loadRegistrations()
     },
     async bulkApprove() {
-      await apiClient.post(`/api/admin/seminars/${this.seminarId}/registrations/bulk-approve`, { registration_ids: this.selected })
+      await apiClient.post(`/api/admin/seminar/${this.seminarId}/registrations/bulk-approve`, { registration_ids: this.selected })
       this.selected = []
       this.loadRegistrations()
     }

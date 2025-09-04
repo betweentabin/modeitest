@@ -17,17 +17,17 @@
       <nav class="sidebar">
         <ul class="nav-menu">
           <li>
-            <router-link to="/admin/members" class="nav-item" :class="{ active: isActive('/admin/members') }">
+            <router-link to="/admin/member-list" class="nav-item" :class="{ active: isActive('/admin/member-list') }">
               会員管理
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/seminars" class="nav-item" :class="{ active: isActive('/admin/seminars') }">
+            <router-link to="/admin/seminar" class="nav-item" :class="{ active: isActive('/admin/seminar') }">
               セミナー管理
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/publications" class="nav-item" :class="{ active: isActive('/admin/publications') }">
+            <router-link to="/admin/publication" class="nav-item" :class="{ active: isActive('/admin/publication') }">
               刊行物管理
             </router-link>
           </li>
@@ -37,7 +37,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/notices" class="nav-item" :class="{ active: isActive('/admin/notices') }">
+            <router-link to="/admin/news" class="nav-item" :class="{ active: isActive('/admin/news') }">
               お知らせ管理
             </router-link>
           </li>
@@ -85,7 +85,7 @@ export default {
       localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
     }
   }
 }

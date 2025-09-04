@@ -263,10 +263,10 @@ export default {
       return `${year}年${month}月${day}日(${weekday})`
     },
     editNotice(notice) {
-      this.$router.push(`/admin/notices/${notice.id}/edit`)
+      this.$router.push(`/admin/news/edit?id=${notice.id}`)
     },
     createNewNotice() {
-      this.$router.push('/admin/notices/new')
+      this.$router.push('/admin/news/register')
     },
     applyFilters() {
       this.currentPage = 1

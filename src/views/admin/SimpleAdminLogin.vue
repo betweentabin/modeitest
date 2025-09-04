@@ -110,7 +110,7 @@ export default {
         
         // デバッグログインが失敗した場合、通常のログインを試みる
         try {
-          const response = await axios.post(getApiUrl('/api/admin/login'), {
+          const response = await axios.post(getApiUrl('/api/admin'), {
             email: this.email,
             password: this.password
           })

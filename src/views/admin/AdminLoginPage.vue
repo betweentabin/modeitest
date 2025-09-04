@@ -143,7 +143,7 @@ export default {
       console.log('Sending payload to API:', payload); // デバッグ用ログ
 
       try {
-        const response = await axios.post(getApiUrl('/api/admin/login'), payload);
+        const response = await axios.post(getApiUrl('/api/admin'), payload);
         console.log('API response received:', response); // デバッグ用ログ
 
         localStorage.setItem('admin_token', response.data.token)

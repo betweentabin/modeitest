@@ -66,7 +66,7 @@ export default {
         })
         if (res.data?.success) {
           this.message = 'パスワードを再設定しました。ログイン画面に戻ります。'
-          setTimeout(() => this.$router.push('/admin/login'), 1500)
+          setTimeout(() => this.$router.push('/admin'), 1500)
         } else {
           this.error = res.data?.message || '再設定に失敗しました'
         }

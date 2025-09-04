@@ -225,7 +225,7 @@ export default {
     const token = localStorage.getItem('admin_token')
     
     if (!token) {
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
       return
     }
 
@@ -284,7 +284,7 @@ export default {
       localStorage.removeItem('admin_token')
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
-      this.$router.push('/admin/login')
+      this.$router.push('/admin')
     },
     getImageUrl(type) {
       if (this.formData.content?.images?.[type]?.url) {

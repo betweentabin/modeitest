@@ -357,10 +357,10 @@ export default {
       return `${year}年${month}月${day}日(${weekday})`
     },
     editPublication(publication) {
-      this.$router.push(`/admin/publications/${publication.id}/edit`)
+      this.$router.push(`/admin/publication/edit?id=${publication.id}`)
     },
     createNewPublication() {
-      this.$router.push('/admin/publications/new')
+      this.$router.push('/admin/publication/register')
     },
     async applyFilters() {
       console.log('Applying filters:', this.filters)
