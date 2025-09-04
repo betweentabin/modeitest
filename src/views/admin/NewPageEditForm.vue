@@ -183,6 +183,7 @@
               <div class="mode-toggle">
                 <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="html" v-model="contentMode" /> HTML（全文編集）</label>
+                <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
               </div>
 
               <div v-if="contentMode==='json'" class="form-group">
@@ -214,7 +215,7 @@
                 </div>
               </div>
 
-              <div v-else class="form-group">
+              <div v-else-if="contentMode==='html'" class="form-group">
                 <label for="content_html" class="form-label">
                   コンテンツ (HTML)
                 </label>
@@ -226,6 +227,36 @@
                   placeholder="ここにHTMLを直接入力してください"
                 />
                 <p class="form-help">危険なスクリプトは入れないでください（自動サニタイズは行っていません）。</p>
+              </div>
+
+              <!-- Fields mode: key-value editor for content.texts -->
+              <div v-else class="form-group">
+                <label class="form-label">
+                  テキストフィールド（content.texts）
+                </label>
+                <div class="fields-editor">
+                  <div 
+                    v-for="(row, idx) in textsEditor" 
+                    :key="row._id"
+                    class="field-row"
+                  >
+                    <input
+                      v-model="row.key"
+                      type="text"
+                      class="form-input field-key"
+                      placeholder="キー（例: page_title, lead, cta_primary）"
+                    />
+                    <input
+                      v-model="row.value"
+                      type="text"
+                      class="form-input field-value"
+                      placeholder="値（表示テキスト）"
+                    />
+                    <button type="button" class="btn btn-secondary small" @click="removeTextField(idx)">削除</button>
+                  </div>
+                  <button type="button" class="btn btn-primary" @click="addTextField">+ フィールドを追加</button>
+                  <p class="form-help">推奨キー例: page_title, page_subtitle, lead, cta_primary, cta_secondary</p>
+                </div>
               </div>
             </div>
 
@@ -319,6 +350,7 @@
 import AdminLayout from './AdminLayout.vue'
 import mockServer from '@/mockServer'
 import axios from 'axios'
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'NewPageEditForm',
@@ -339,6 +371,7 @@ export default {
       contentMode: 'json',
       contentJson: '',
       contentHtml: '',
+      textsEditor: [],
       jsonError: '',
       loading: false,
       submitLoading: false,
@@ -403,6 +436,9 @@ export default {
           images: data.images || []
         }
         this.contentJson = JSON.stringify(data.content || data, null, 2)
+        // Initialize fields editor from content.texts if available
+        const texts = (data && data.content && data.content.texts) ? data.content.texts : {}
+        this.textsEditor = Object.keys(texts).map((k) => ({ _id: `${k}-${Date.now()}-${Math.random()}`, key: k, value: texts[k] }))
       } catch (err) {
         this.error = 'ページデータの取得に失敗しました'
         console.error(err)
@@ -504,19 +540,40 @@ export default {
         this.$refs.fileInput.value = ''
       }
     },
+    addTextField() {
+      this.textsEditor.push({ _id: `new-${Date.now()}-${Math.random()}`, key: '', value: '' })
+    },
+    removeTextField(index) {
+      this.textsEditor.splice(index, 1)
+    },
     async handleSubmit() {
       this.submitLoading = true
       this.submitError = ''
       this.successMessage = ''
 
       try {
-        // JSONデータの更新
-        try {
-          this.formData.content = JSON.parse(this.contentJson)
-        } catch (e) {
-          this.submitError = 'JSONの形式が正しくありません: ' + e.message
-          this.submitLoading = false
-          return
+        // コンテンツのモードに応じて content を設定
+        if (this.contentMode === 'html') {
+          this.formData.content = this.contentHtml || ''
+        } else if (this.contentMode === 'fields') {
+          // Merge with existing JSON if valid, else new object
+          let base = {}
+          try { base = this.contentJson ? JSON.parse(this.contentJson) : {} } catch(e) { base = {} }
+          const texts = {}
+          for (const row of this.textsEditor) {
+            const k = (row.key || '').trim()
+            if (!k) continue
+            texts[k] = row.value || ''
+          }
+          this.formData.content = { ...(base || {}), texts }
+        } else {
+          try {
+            this.formData.content = JSON.parse(this.contentJson)
+          } catch (e) {
+            this.submitError = 'JSONの形式が正しくありません: ' + e.message
+            this.submitLoading = false
+            return
+          }
         }
         
         // 送信データの準備
@@ -535,7 +592,10 @@ export default {
           }
           
           try {
-            await mockServer.createPage(submitData.page_key, submitData)
+            const res = await apiClient.request('POST', '/api/admin/pages', submitData)
+            if (!(res && (res.success || res.id || res.page || res.data))) {
+              throw new Error(res?.message || '作成に失敗しました')
+            }
             this.successMessage = 'ページを作成しました'
             setTimeout(() => {
               this.$router.push('/admin/pages')
@@ -545,7 +605,11 @@ export default {
           }
         } else {
           // 既存ページの更新
-          await mockServer.updatePage(this.pageKey, submitData)
+          const key = this.formData.page_key || this.pageKey
+          const res = await apiClient.request('PUT', `/api/admin/pages/${key}`, submitData)
+          if (!(res && (res.success || res.id || res.page || res.data))) {
+            throw new Error(res?.message || '更新に失敗しました')
+          }
           this.successMessage = 'ページを更新しました'
           
           // 画像が含まれる場合、成功メッセージを拡張

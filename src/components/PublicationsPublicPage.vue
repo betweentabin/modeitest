@@ -4,21 +4,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="刊行物"
-      subtitle="publications"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['刊行物']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
       <!-- Publications Header -->
       <div class="publications-header">
-        <h2 class="page-title">刊行物</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">publications public</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -170,8 +170,8 @@
     <!-- button Section -->
     <div class="button-section">
       <div class="button-container">
-        <button class="cta-button primary">
-          <span class="button-text">お問い合わせはコチラ</span>
+        <button class="cta-button primary" @click="goToContact">
+          <span class="button-text">{{ ctaPrimaryText }}</span>
           <div class="arrow-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
@@ -179,8 +179,8 @@
             </svg>
           </div>
         </button>
-        <button class="cta-button secondary">
-          <span class="button-text">入会はコチラ</span>
+        <button class="cta-button secondary" @click="goToRegister">
+          <span class="button-text">{{ ctaSecondaryText }}</span>
           <div class="arrow-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="24" height="24" rx="4" fill="#FFFFFF"/>
@@ -218,6 +218,7 @@ import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
 import apiClient from '../services/apiClient.js';
 import mockServer from '@/mockServer';
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "PublicationsPublicPage",
@@ -234,6 +235,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'publications',
       frame132131753022Props: frame132131753022Data,
       loading: true,
       selectedYear: 'all',
@@ -451,6 +453,25 @@ export default {
   },
   mounted() {
     this.loadPublications();
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() {
+      return this._pageText?.getText('page_title', '刊行物') || '刊行物'
+    },
+    pageSubtitle() {
+      return this._pageText?.getText('page_subtitle', 'publications') || 'publications'
+    },
+    ctaPrimaryText() {
+      return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ'
+    },
+    ctaSecondaryText() {
+      return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ'
+    }
   },
   methods: {
     async loadPublications() {
@@ -553,10 +574,12 @@ export default {
       this.$router.push(`/publications-public/${publicationId}`);
     },
     goToContact() {
-      this.$router.push('/contact');
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link);
     },
     goToRegister() {
-      this.$router.push('/register');
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link);
     }
   }
 };

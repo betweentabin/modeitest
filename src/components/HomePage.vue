@@ -9,10 +9,10 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <h1 class="hero-title">{{ text66 }}</h1>
+              <h1 class="hero-title">{{ heroTitle }}</h1>
             </div>
             <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">{{ text67 }}</div>
+              <div class="hero-subtitle">{{ heroSubtitle }}</div>
             </div>
             <div class="hero-button-wrapper">
               <div class="hero-button-text">{{ text68 }}</div>
@@ -354,6 +354,7 @@ import Footer from "./Footer";
 import Group27 from "./Group27";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
+import { usePageText } from '@/composables/usePageText'
 import { homePageData } from "../data.js";
 import mockServer from "@/mockServer";
 import apiClient from "@/services/apiClient"; // apiClientをインポート
@@ -393,6 +394,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'home',
       // Import data from homePageData
       heroImage: homePageData.heroImage,
       text66: homePageData.text66,
@@ -525,8 +527,24 @@ export default {
       } catch (error) {
         console.error('CMSデータの取得に失敗:', error);
         // エラー時は何もしない（デフォルトデータが既に表示されているため）
-      }
+    }
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    heroTitle() {
+      // CMS override: content.texts.page_title
+      return this._pageText?.getText('page_title', this.text66) || this.text66
     },
+    heroSubtitle() {
+      return this._pageText?.getText('lead', this.text67) || this.text67
+    },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
 
     updatePageData(allNews, seminars, publications, notices) {
       // ニュース枠はお知らせを使用
