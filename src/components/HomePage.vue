@@ -509,18 +509,18 @@ export default {
         console.log("Fetching data from API...");
         // APIからデータを取得
         const [newsResponse, seminarsResponse, publicationsResponse, noticesResponse] = await Promise.all([
-          apiClient.getNews({ per_page: 5 }), // 最新5件
+          apiClient.getNews({ per_page: 5 }),
           apiClient.getSeminars(),
           apiClient.getPublications(),
-          apiClient.getNotices()
+          apiClient.getNotices({ per_page: 5 })
         ]);
 
-        const allNews = newsResponse.data || [];
-        const seminars = seminarsResponse.data || [];
-        const publications = publicationsResponse.data || [];
-        const notices = noticesResponse.data || [];
+        const seminars = seminarsResponse?.data || [];
+        const publications = publicationsResponse?.data?.publications || publicationsResponse?.data || [];
+        const notices = (noticesResponse?.data?.data) || (noticesResponse?.data?.notices) || (noticesResponse?.data) || [];
 
-        this.updatePageData(allNews, seminars, publications, notices);
+        // ニュース枠は「お知らせ管理」の内容を表示する
+        this.updatePageData(/*allNews not used*/[], seminars, publications, notices);
 
       } catch (error) {
         console.error('CMSデータの取得に失敗:', error);
@@ -529,9 +529,15 @@ export default {
     },
 
     updatePageData(allNews, seminars, publications, notices) {
-      // 最新の5件を取得 - 配列チェックを追加
-      const latestNews = Array.isArray(allNews) ? allNews.slice(0, 5) : [];
-      this.dynamicNewsItems = latestNews; // ニュースデータを保存
+      // ニュース枠はお知らせを使用
+      const rawNotices = Array.isArray(notices) ? notices.slice(0, 5) : [];
+      const latestNews = rawNotices.map(n => ({
+        id: n.id,
+        date: n.published_at || n.created_at,
+        title: n.title,
+        type: 'notice'
+      }))
+      this.dynamicNewsItems = latestNews;
       
       // 既存のデータ変数に最新情報をマッピング
       if (latestNews.length > 0) {
@@ -598,9 +604,10 @@ export default {
           this.frame13213174752Props.x22  // 4番目のデフォルト画像
         ];
         
-        this.dynamicPublications = publications.slice(0, 4).map((pub, index) => ({
-          x22: pub.image_url || defaultImages[index], // CMSの画像がなければデフォルト画像
-          hotInformationVol324: pub.title
+        this.dynamicPublications = publicationArray.slice(0, 4).map((pub, index) => ({
+          x22: pub.cover_image || pub.image_url || defaultImages[index],
+          hotInformationVol324: pub.title,
+          id: pub.id
         }));
       }
       
@@ -628,7 +635,7 @@ export default {
     goToPublication(index) {
       // 指定されたインデックスの刊行物詳細ページに遷移
       if (this.allPublications.length > index) {
-        const publication = this.allPublications[index];
+        const publication = this.allPublications[index] || this.dynamicPublications[index];
         this.$router.push(`/publications/${publication.id}`);
       }
     },
