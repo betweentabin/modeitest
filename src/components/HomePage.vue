@@ -33,25 +33,25 @@
     <CmsBlock page-key="home" wrapper-class="cms-body" />
 
       <div class="frame-1321317457">
-          <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }">
+          <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }" @click="goToSeminar" style="cursor: pointer;">
             <div class="frame-1321317491">
               <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text72 }}</div>
               <div class="seminar valign-text-middle inter-bold-white-24px">{{ seminar }}</div>
             </div>
           </div>
-          <div class="frame-1321317491-1" :style="{ 'background-image': 'url(' + frame1321317491 + ')' }">
+          <div class="frame-1321317491-1" :style="{ 'background-image': 'url(' + frame1321317491 + ')' }" @click="goToPublication" style="cursor: pointer;">
             <div class="frame-1321317491-2">
               <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text69 }}</div>
               <div class="publications valign-text-middle inter-bold-white-24px">{{ publications1 }}</div>
             </div>
           </div>
-          <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }">
+          <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }" @click="goToNews" style="cursor: pointer;">
             <div class="frame-1321317491-3">
               <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text70 }}</div>
               <div class="infomation valign-text-middle inter-bold-white-24px">{{ infomation1 }}</div>
             </div>
           </div>
-          <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }">
+          <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }" @click="goToMembership" style="cursor: pointer;">
             <div class="frame-1321317491-4">
               <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text71 }}</div>
               <div class="membership valign-text-middle inter-bold-white-24px">{{ membership }}</div>
@@ -542,17 +542,21 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     heroTitle() {
-      // CMS override優先 → data.js → 最後に安全な固定文言
-      const cms = this._pageText?.getText('page_title', '') || ''
+      // CMS override優先 → data.js → 最後に規定文言
+      const cms = (this._pageText?.getText && this._pageText.getText('page_title', '')) || ''
       const base = this.text66 || ''
       const val = cms || base
-      return (typeof val === 'string' && val.trim().length) ? val : 'ページタイトル'
+      // 既定文言（白丸の上段）：
+      const fallback = '産・官・学・金（金融機関）の力で'
+      return (typeof val === 'string' && val.trim().length) ? val : fallback
     },
     heroSubtitle() {
-      const cms = this._pageText?.getText('lead', '') || ''
+      const cms = (this._pageText?.getText && this._pageText.getText('lead', '')) || ''
       const base = this.text67 || ''
       const val = cms || base
-      return (typeof val === 'string' && val.trim().length) ? val : 'サブタイトル'
+      // 既定文言（白丸の下段）：
+      const fallback = '企業活動を支援'
+      return (typeof val === 'string' && val.trim().length) ? val : fallback
     },
   },
   
@@ -729,6 +733,22 @@ export default {
     goToPublicationList() {
       // 刊行物一覧ページに遷移
       this.$router.push('/publication');
+    },
+    goToSeminar() {
+      // セミナーページに遷移
+      this.$router.push('/seminar');
+    },
+    goToPublication() {
+      // 刊行物ページに遷移
+      this.$router.push('/publication');
+    },
+    goToNews() {
+      // ニュースページに遷移
+      this.$router.push('/news');
+    },
+    goToMembership() {
+      // 会員ページに遷移
+      this.$router.push('/membership');
     },
     goToEconomicIndicators() {
       // 経済指標ページに遷移
