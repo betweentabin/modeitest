@@ -9,12 +9,14 @@ const store = {
   },
   
   setMember(member, token) {
-    this.state.currentMember = member
+    // 正規化（API/モック間のキー揺れ対策）
+    const normalized = normalizeMember(member)
+    this.state.currentMember = normalized
     this.state.memberToken = token
     
-    if (member && token) {
+    if (normalized && token) {
       localStorage.setItem('memberToken', token)
-      localStorage.setItem('memberUser', JSON.stringify(member))
+      localStorage.setItem('memberUser', JSON.stringify(normalized))
     }
   },
   
@@ -34,7 +36,7 @@ const initializeMember = () => {
   if (storedToken && storedUser) {
     try {
       store.state.memberToken = storedToken
-      store.state.currentMember = JSON.parse(storedUser)
+      store.state.currentMember = normalizeMember(JSON.parse(storedUser))
     } catch (error) {
       console.error('Failed to parse stored user data:', error)
       store.clearMember()
@@ -58,7 +60,8 @@ export function useMemberAuth() {
 
   // 会員ランクの取得
   const getMembershipType = () => {
-    return store.state.currentMember?.membershipType || 'guest'
+    const u = store.state.currentMember
+    return u?.membership_type || u?.membershipType || 'guest'
   }
 
   // 会員ランクのラベル取得
@@ -119,10 +122,7 @@ export function useMemberAuth() {
       // 今はモック実装
       const currentMember = store.state.currentMember
       if (currentMember) {
-        const updatedMember = {
-          ...currentMember,
-          membershipType: newType
-        }
+        const updatedMember = normalizeMember({ ...currentMember, membership_type: newType })
         store.setMember(updatedMember, store.state.memberToken)
         return { success: true }
       }
@@ -155,4 +155,15 @@ export function useMemberAuth() {
       return store.state.memberToken
     }
   }
+}
+
+// ユーザーオブジェクトの正規化（membership_type と membershipType を揃える）
+function normalizeMember(u) {
+  if (!u || typeof u !== 'object') return u
+  const type = u.membership_type || u.membershipType || null
+  if (type) {
+    u.membership_type = type
+    u.membershipType = type
+  }
+  return u
 }

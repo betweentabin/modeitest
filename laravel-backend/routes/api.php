@@ -197,7 +197,7 @@ Route::prefix('admin')->group(function () {
         });
 
         // 経済統計レポート管理関連のルート
-        Route::prefix('economic-reports')->group(function () {
+        Route::prefix('economic-reports')->middleware('can:manage-content')->group(function () {
             Route::get('/', [EconomicReportManagementController::class, 'index']);
             Route::get('/{id}', [EconomicReportManagementController::class, 'show']);
             Route::post('/', [EconomicReportManagementController::class, 'store']);
@@ -312,7 +312,7 @@ Route::prefix('admin')->group(function () {
         });
         
         // メディア管理API
-        Route::prefix('media')->group(function () {
+        Route::prefix('media')->middleware('can:manage-content')->group(function () {
             Route::get('/', [MediaController::class, 'index']);
             Route::post('/upload', [MediaController::class, 'upload']);
             Route::delete('/delete', [MediaController::class, 'destroy']);
@@ -372,6 +372,10 @@ Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::get('/seminar-favorites', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'index']);
     Route::post('/seminar-favorites/{seminar_id}', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'store']);
     Route::delete('/seminar-favorites/{seminar_id}', [App\Http\Controllers\Api\MemberSeminarFavoritesController::class, 'destroy']);
+
+    // セミナー（会員向け）
+    Route::get('/seminars', [App\Http\Controllers\Api\MemberSeminarController::class, 'list']);
+    Route::get('/seminar-registrations', [App\Http\Controllers\Api\MemberSeminarController::class, 'registrations']);
     
     // 会員名簿（standard以上）
     Route::get('/directory', [App\Http\Controllers\Api\MemberDirectoryController::class, 'index']);

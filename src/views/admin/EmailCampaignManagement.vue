@@ -18,6 +18,9 @@
               <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }} ({{ g.members_count || 0 }})</option>
             </select>
           </div>
+          <div class="form-group" style="align-self:flex-end;">
+            <button class="small-btn" @click="openTemplates">テンプレートから作成</button>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group full">
@@ -78,6 +81,7 @@
                   <button class="small-btn" @click="preview(c)">プレビュー</button>
                   <button class="small-btn" @click="openAttachments(c)">添付</button>
                   <button class="small-btn" @click="duplicate(c)">複製</button>
+                  <button class="small-btn" @click="toggleTemplate(c)">{{ c.is_template ? 'テンプレ解除' : 'テンプレ化' }}</button>
                   <button class="small-btn" @click="schedule(c)">予約</button>
                   <button class="small-btn danger" @click="sendNow(c)">即時送信</button>
                 </td>
@@ -187,6 +191,31 @@
       </div>
     </div>
 
+    <!-- テンプレートモーダル -->
+    <div v-if="showTemplates" class="modal-overlay" @click="closeTemplates">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>テンプレート一覧</h3>
+          <button class="close-btn" @click="closeTemplates">×</button>
+        </div>
+        <div class="modal-body">
+          <div v-if="templatesLoading" class="loading">読み込み中...</div>
+          <div v-else>
+            <table class="data-table" v-if="templates.length">
+              <thead><tr><th>ID</th><th>件名</th><th>更新日</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr v-for="t in templates" :key="t.id">
+                  <td>{{ t.id }}</td><td>{{ t.subject }}</td><td>{{ formatDateTime(t.updated_at) }}</td>
+                  <td><button class="small-btn" @click="createFromTemplate(t)">このテンプレで作成</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div v-else class="error">テンプレートがありません</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </AdminLayout>
 </template>
 
@@ -217,6 +246,9 @@ export default {
       attachments: [],
       attachmentFile: null,
       uploadingAttachment: false,
+      showTemplates: false,
+      templatesLoading: false,
+      templates: [],
     }
   },
   computed: {
@@ -338,6 +370,30 @@ export default {
         if (res.success) this.attachments = this.attachments.filter(x => x.id !== a.id)
       } catch(e) { alert('削除に失敗しました') }
     },
+    async toggleTemplate(c) {
+      try {
+        const res = c.is_template ? await apiClient.unmarkEmailTemplate(c.id) : await apiClient.markEmailTemplate(c.id)
+        if (res.success) { await this.loadCampaigns(this.pagination.current_page) }
+      } catch(e) { alert('更新に失敗しました') }
+    },
+    openTemplates() {
+      this.showTemplates = true
+      this.loadTemplates()
+    },
+    closeTemplates() { this.showTemplates = false; this.templates = [] },
+    async loadTemplates() {
+      this.templatesLoading = true
+      try {
+        const res = await apiClient.listEmailTemplates()
+        if (res.success) this.templates = res.data || []
+      } catch(e) { console.warn('Failed to load templates', e) } finally { this.templatesLoading = false }
+    },
+    async createFromTemplate(t) {
+      try {
+        const res = await apiClient.createCampaignFromTemplate(t.id)
+        if (res.success) { alert('テンプレートから作成しました'); this.closeTemplates(); this.loadCampaigns(1) }
+      } catch(e) { alert('作成に失敗しました') }
+    },
     formatDateTime(s) { return s ? new Date(s).toLocaleString('ja-JP') : '-' }
     ,formatSize(n) { if (!n && n!==0) return '-' ; const u=['B','KB','MB','GB']; let i=0; let v=n; while(v>=1024 && i<u.length-1){v/=1024;i++} return `${v.toFixed(v>=100?0: v>=10?1:2)} ${u[i]}` }
   }
@@ -354,8 +410,10 @@ export default {
 .form-group.full { flex: 1 1 100%; }
 .form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
 .form-actions { display: flex; gap: 12px; }
-.save-btn { padding: 8px 16px; border: 1px solid #28a745; background: #28a745; color: white; border-radius: 4px; }
-.refresh-btn { padding: 8px 16px; border: 1px solid #007bff; background: #007bff; color: white; border-radius: 4px; }
+.save-btn { padding: 8px 16px; border: 1px solid #DA5761; background: #DA5761; color: white; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+.save-btn:hover { background: #9C3940; border-color: #9C3940; }
+.refresh-btn { padding: 8px 16px; border: 1px solid #1A1A1A; background: #1A1A1A; color: white; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+.refresh-btn:hover { background: #333333; border-color: #333333; }
 .filters-section { padding: 16px 24px; display: flex; gap: 16px; align-items: center; border-bottom: 1px solid #e5e5e5; }
 .filter-select { padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
 .table-container { overflow-x: auto; }
@@ -363,8 +421,10 @@ export default {
 .error { color: #da5761; }
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table th, .data-table td { border-bottom: 1px solid #e5e5e5; padding: 12px 16px; text-align: left; }
-.small-btn { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer; margin-right: 6px; }
-.small-btn.danger { border-color: #dc3545; color: #dc3545; }
+.small-btn { padding: 6px 10px; border: 1px solid #DA5761; border-radius: 4px; background: #DA5761; color: white; cursor: pointer; margin-right: 6px; transition: background-color 0.2s; }
+.small-btn:hover { background: #9C3940; border-color: #9C3940; }
+.small-btn.danger { border-color: #1A1A1A; background: #1A1A1A; color: white; }
+.small-btn.danger:hover { background: #333333; border-color: #333333; }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; }
 .modal-content { background: white; border-radius: 8px; width: 720px; max-width: 95%; overflow: hidden; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; }

@@ -5,6 +5,9 @@
       <div class="page-header">
         <h1 class="page-title">会員管理</h1>
         <div class="header-actions">
+          <button @click="showAddMemberModal" class="add-btn">
+            新規会員追加
+          </button>
           <button @click="refreshMembers" class="refresh-btn" :disabled="loading">
             {{ loading ? '読み込み中...' : '更新' }}
           </button>
@@ -256,6 +259,139 @@
         </div>
       </div>
     </div>
+
+    <!-- 新規会員追加モーダル -->
+    <div v-if="showAddModal" class="modal-overlay" @click="closeAddModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>新規会員追加</h3>
+          <button @click="closeAddModal" class="close-btn">×</button>
+        </div>
+        
+        <div class="modal-body">
+          <form @submit.prevent="addMember">
+            <div class="form-row">
+              <div class="form-group">
+                <label>会社名 <span class="required">*</span></label>
+                <input 
+                  v-model="addForm.company_name" 
+                  type="text" 
+                  class="form-input"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label>代表者名 <span class="required">*</span></label>
+                <input 
+                  v-model="addForm.representative_name" 
+                  type="text" 
+                  class="form-input"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>メールアドレス <span class="required">*</span></label>
+                <input 
+                  v-model="addForm.email" 
+                  type="email" 
+                  class="form-input"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label>電話番号</label>
+                <input 
+                  v-model="addForm.phone" 
+                  type="text" 
+                  class="form-input"
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>パスワード <span class="required">*</span></label>
+                <input 
+                  v-model="addForm.password" 
+                  type="password" 
+                  class="form-input"
+                  required
+                  minlength="8"
+                >
+              </div>
+              <div class="form-group">
+                <label>パスワード確認 <span class="required">*</span></label>
+                <input 
+                  v-model="addForm.password_confirmation" 
+                  type="password" 
+                  class="form-input"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>会員種別</label>
+                <select v-model="addForm.membership_type" class="form-select">
+                  <option value="free">無料</option>
+                  <option value="basic">ベーシック</option>
+                  <option value="standard">スタンダード</option>
+                  <option value="premium">プレミアム</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>ステータス</label>
+                <select v-model="addForm.status" class="form-select">
+                  <option value="pending">承認待ち</option>
+                  <option value="active">アクティブ</option>
+                  <option value="suspended">停止中</option>
+                  <option value="cancelled">解約</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>有効期限</label>
+                <input 
+                  v-model="addForm.membership_expires_at" 
+                  type="datetime-local" 
+                  class="form-input"
+                >
+              </div>
+              <div class="form-group">
+                <label>アクティブ</label>
+                <input 
+                  v-model="addForm.is_active" 
+                  type="checkbox" 
+                  class="form-checkbox"
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>住所</label>
+              <textarea 
+                v-model="addForm.address" 
+                class="form-textarea"
+                rows="3"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        
+        <div class="modal-footer">
+          <button @click="closeAddModal" class="cancel-btn">キャンセル</button>
+          <button @click="addMember" class="save-btn" :disabled="adding">
+            {{ adding ? '追加中...' : '追加' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </AdminLayout>
 </template>
 
@@ -295,7 +431,24 @@ export default {
       // 期限延長関連
       showExtendModal: false,
       extendMonths: 12,
-      extending: false
+      extending: false,
+      
+      // 新規追加関連
+      showAddModal: false,
+      addForm: {
+        company_name: '',
+        representative_name: '',
+        email: '',
+        phone: '',
+        password: '',
+        password_confirmation: '',
+        membership_type: 'free',
+        status: 'active',
+        membership_expires_at: '',
+        is_active: true,
+        address: ''
+      },
+      adding: false
     }
   },
   computed: {
@@ -469,6 +622,60 @@ export default {
       if (!dateString) return '-'
       const date = new Date(dateString)
       return date.toLocaleDateString('ja-JP')
+    },
+    
+    // 新規会員追加関連メソッド
+    showAddMemberModal() {
+      this.showAddModal = true
+      this.resetAddForm()
+    },
+    
+    closeAddModal() {
+      this.showAddModal = false
+      this.resetAddForm()
+    },
+    
+    resetAddForm() {
+      this.addForm = {
+        company_name: '',
+        representative_name: '',
+        email: '',
+        phone: '',
+        password: '',
+        password_confirmation: '',
+        membership_type: 'free',
+        status: 'active',
+        membership_expires_at: '',
+        is_active: true,
+        address: ''
+      }
+    },
+    
+    async addMember() {
+      // パスワード確認
+      if (this.addForm.password !== this.addForm.password_confirmation) {
+        alert('パスワードが一致しません')
+        return
+      }
+      
+      this.adding = true
+      
+      try {
+        const response = await apiClient.createAdminMember(this.addForm)
+        
+        if (response.success) {
+          alert('新規会員を追加しました')
+          this.closeAddModal()
+          this.loadMembers(1) // 最初のページに戻る
+        } else {
+          alert(response.message || '会員追加に失敗しました')
+        }
+      } catch (error) {
+        alert('サーバーエラーが発生しました')
+        console.error('Failed to add member:', error)
+      } finally {
+        this.adding = false
+      }
     }
   }
 }
@@ -694,9 +901,24 @@ export default {
   gap: 12px;
 }
 
+.add-btn {
+  padding: 8px 16px;
+  background-color: #DA5761;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #9C3940;
+}
+
 .refresh-btn {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   border-radius: 4px;
@@ -875,6 +1097,11 @@ export default {
   width: auto;
 }
 
+.required {
+  color: #da5761;
+  font-weight: bold;
+}
+
 .cancel-btn, .save-btn, .extend-btn {
   padding: 8px 16px;
   border: 1px solid;
@@ -884,39 +1111,67 @@ export default {
 }
 
 .cancel-btn {
-  background-color: white;
-  color: #6c757d;
-  border-color: #6c757d;
+  background-color: #1A1A1A;
+  color: white;
+  border-color: #1A1A1A;
 }
 
 .save-btn {
-  background-color: #28a745;
+  background-color: #DA5761;
   color: white;
-  border-color: #28a745;
+  border-color: #DA5761;
 }
 
 .extend-btn {
-  background-color: #ffc107;
-  color: #212529;
-  border-color: #ffc107;
+  background-color: #9C3940;
+  color: white;
+  border-color: #9C3940;
 }
 
 .cancel-btn:hover {
-  background-color: #6c757d;
+  background-color: #333333;
   color: white;
 }
 
 .save-btn:hover {
-  background-color: #218838;
+  background-color: #9C3940;
 }
 
 .extend-btn:hover {
-  background-color: #e0a800;
+  background-color: #7a2d32;
 }
 
 .save-btn:disabled, .extend-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.edit-btn, .detail-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 8px;
+  transition: background-color 0.2s;
+}
+
+.edit-btn {
+  background-color: #DA5761;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #9C3940;
+}
+
+.detail-btn {
+  background-color: #1A1A1A;
+  color: white;
+}
+
+.detail-btn:hover {
+  background-color: #333333;
 }
 
 .extend-modal {

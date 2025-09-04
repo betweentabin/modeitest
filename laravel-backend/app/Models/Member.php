@@ -33,6 +33,7 @@ class Member extends Authenticatable
         'expiry_date',
         'membership_expires_at',
         'is_active',
+        'email_verified_at',
     ];
 
     protected $hidden = [
