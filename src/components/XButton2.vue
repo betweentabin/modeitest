@@ -1,12 +1,47 @@
 <template>
-  <router-link to="/login" class="button-2">
+  <button v-if="loggedIn" class="button-2" @click="handleLogout">
+    <div class="text-62 valign-text-middle inter-bold-white-13px">ログアウト</div>
+  </button>
+  <router-link v-else to="/login" class="button-2">
     <div class="text-62 valign-text-middle inter-bold-white-13px">ログイン</div>
   </router-link>
+  
 </template>
 
 <script>
+import apiClient from '@/services/apiClient'
+import { useMemberAuth } from '@/composables/useMemberAuth'
 export default {
   name: "XButton2",
+  data() {
+    return {
+      forceKey: 0
+    }
+  },
+  computed: {
+    loggedIn() {
+      try {
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        const user = localStorage.getItem('memberUser')
+        return !!token && !!user
+      } catch (e) {
+        return false
+      }
+    }
+  },
+  methods: {
+    async handleLogout() {
+      try { await apiClient.post('/api/member-auth/logout') } catch (e) {}
+      try {
+        const { logout } = useMemberAuth()
+        logout && logout()
+      } catch (e) {}
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('memberToken')
+      localStorage.removeItem('memberUser')
+      this.$router.push('/')
+    }
+  }
 };
 </script>
 

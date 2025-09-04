@@ -193,6 +193,14 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.seminarsFromServer.length / this.itemsPerPage) || 1;
+    },
+    // ローカルキャッシュベースの簡易ログイン判定
+    loggedInCached() {
+      try {
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        const user = localStorage.getItem('memberUser')
+        return !!token && !!user
+      } catch (e) { return false }
     }
   },
   methods: {
@@ -246,14 +254,15 @@ export default {
     },
     canAccessSeminar(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
-      return this.$store.getters['auth/canAccess'](requiredLevel);
+      // ストアの判定がfalseでも、ログインキャッシュがあればボタンは有効化
+      return this.$store.getters['auth/canAccess'](requiredLevel) || this.loggedInCached;
     },
     getReservationButtonText(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
       const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
       
-      if (canAccess) {
+      if (canAccess || this.loggedInCached) {
         return 'セミナーを予約する';
       } else if (isRestricted) {
         return `${this.getMembershipText(requiredLevel)}会員限定`;
@@ -273,7 +282,7 @@ export default {
     },
     handleReservation(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
-      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel) || this.loggedInCached;
       
       if (canAccess) {
         this.goToSeminarDetail(seminar);
