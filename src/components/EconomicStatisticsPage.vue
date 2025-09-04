@@ -434,13 +434,13 @@ export default {
       this.$router.push('/contact');
     },
     goToRegister() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     },
     handleContactClick() {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/join');
+      this.$router.push('/membership');
     }
   }
 };

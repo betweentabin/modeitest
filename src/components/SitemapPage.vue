@@ -48,7 +48,7 @@
                 <h4 class="category-title">サービス</h4>
                 <ul class="link-list">
                   <li><router-link to="/seminar" class="sitemap-link">セミナー</router-link></li>
-                  <li><router-link to="/publications" class="sitemap-link">刊行物</router-link></li>
+                  <li><router-link to="/publication" class="sitemap-link">刊行物</router-link></li>
                   <li><router-link to="/consulting" class="sitemap-link">経営コンサルティング</router-link></li>
                   <li><router-link to="/research" class="sitemap-link">調査・研究</router-link></li>
                   <li><router-link to="/training" class="sitemap-link">人材育成</router-link></li>
@@ -84,9 +84,9 @@
               <div class="sitemap-category">
                 <h4 class="category-title">法的情報</h4>
                 <ul class="link-list">
-                  <li><router-link to="/privacy-policy" class="sitemap-link">プライバシーポリシー</router-link></li>
-                  <li><router-link to="/terms-of-service" class="sitemap-link">利用規約</router-link></li>
-                  <li><router-link to="/transaction-law" class="sitemap-link">特定商取引法に関する表記</router-link></li>
+                  <li><router-link to="/privacy" class="sitemap-link">プライバシーポリシー</router-link></li>
+                  <li><router-link to="/terms" class="sitemap-link">利用規約</router-link></li>
+                  <li><router-link to="/legal" class="sitemap-link">特定商取引法に関する表記</router-link></li>
                 </ul>
               </div>
             </div>

@@ -159,10 +159,12 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
-  methods: {
+  computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '利用規約') || '利用規約' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'terms of service') || 'terms of service' },
+  },
+  methods: {
     adjustRectangleHeight() {
       this.$nextTick(() => {
         const frame1321317466 = this.$el.querySelector('.frame-1321317466');

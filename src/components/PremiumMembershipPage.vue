@@ -126,7 +126,7 @@ export default {
     },
     handleJoinClick() {
       // Navigate to join page or handle join action
-      this.$router.push('/join');
+      this.$router.push('/application-form');
     }
   }
 };

@@ -401,7 +401,7 @@ export default {
       this.$router.push('/contact');
     },
     goToMember() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     },
     scrollToContact() {
       this.$router.push('/contact');
@@ -410,7 +410,7 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     }
   }
 };

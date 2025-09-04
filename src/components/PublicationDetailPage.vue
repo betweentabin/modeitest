@@ -220,7 +220,7 @@ export default {
     },
     
     goToMember() {
-      this.$router.push('/member');
+      this.$router.push('/membership');
     },
     handleContactClick() {
       const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'

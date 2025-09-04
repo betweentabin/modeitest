@@ -343,7 +343,7 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      this.$router.push('/application-form');
     }
   }
 };
