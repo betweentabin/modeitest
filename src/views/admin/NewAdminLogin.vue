@@ -116,7 +116,7 @@ export default {
           }
           
           console.log('Login successful with token:', data.token.substring(0, 20) + '...')
-          this.$router.push('/admin/dashboard')
+          this.$router.push('/admin/member-list')
         } else {
           // デバッグログインが失敗した場合のフォールバック
           if (this.email === 'admin@example.com' && this.password === 'password123') {
@@ -134,7 +134,7 @@ export default {
             localStorage.setItem('admin_token', mockAdminData.token)
             localStorage.setItem('adminUser', JSON.stringify(mockAdminData.user))
             
-            this.$router.push('/admin/dashboard')
+            this.$router.push('/admin/member-list')
           } else {
             this.error = data.message || 'ログインに失敗しました。管理者アカウントが存在しない可能性があります。'
           }
