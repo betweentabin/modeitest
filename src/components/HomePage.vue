@@ -5,7 +5,7 @@
     
     <!-- Hero Section -->
     <div class="hero-section">
-      <div class="hero-image" :style="{ 'background-image': 'url(' + heroImage + ')' }">
+      <div class="hero-image" :style="{ 'background-image': 'url(' + resolvedHomeHero + ')' }">
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
@@ -542,6 +542,17 @@ export default {
     },
     heroSubtitle() {
       return this._pageText?.getText('lead', this.text67) || this.text67
+    },
+    resolvedHomeHero() {
+      // Try global media key first, fallback to existing heroImage
+      try {
+        const mod = require('@/composables/useMedia')
+        const media = mod.useMedia()
+        media.ensure()
+        return media.getImage('hero_home', this.heroImage) || this.heroImage
+      } catch (e) {
+        return this.heroImage
+      }
     },
   },
   mounted() {

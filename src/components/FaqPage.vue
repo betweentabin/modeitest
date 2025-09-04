@@ -7,6 +7,7 @@
       :title="pageTitle"
       :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
+      mediaKey="hero_faq"
     />
     
     <!-- Breadcrumbs -->

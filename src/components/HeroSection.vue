@@ -24,13 +24,38 @@ export default {
     },
     heroImage: {
       type: String,
-      required: true
+      required: false,
+      default: ''
+    },
+    mediaKey: {
+      type: String,
+      required: false,
+      default: ''
+    }
+  },
+  async mounted() {
+    // lazy load media registry if mediaKey is provided
+    if (this.mediaKey) {
+      try {
+        const mod = await import('@/composables/useMedia')
+        const { useMedia } = mod
+        this._media = useMedia()
+        this._media.ensure()
+      } catch (e) { /* noop */ }
     }
   },
   computed: {
+    resolvedImage() {
+      const key = this.mediaKey
+      if (key && this._media && this._media.getImage) {
+        const v = this._media.getImage(key, this.heroImage)
+        return v || this.heroImage
+      }
+      return this.heroImage
+    },
     heroStyle() {
       return {
-        backgroundImage: `url('${this.heroImage}')`
+        backgroundImage: `url('${this.resolvedImage || ''}')`
       };
     }
   }

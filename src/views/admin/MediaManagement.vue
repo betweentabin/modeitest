@@ -34,37 +34,36 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>ファイル名</th>
-                <th>アップロード日時</th>
-                <th>alt</th>
+                <th style="width: 160px;">プレビュー</th>
+                <th>キー</th>
                 <th>URL</th>
-                <th>管理</th>
-                <th></th>
+                <th style="width: 120px;">操作</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="media in filteredMedia" :key="media.id">
-                <td class="file-name">{{ media.filename }}</td>
-                <td class="upload-date">
-                  {{ formatDate(media.date) }}<br>
-                  <span class="time">16:00～ 17:00</span>
-                </td>
-                <td class="alt-text">{{ media.alt }}</td>
-                <td class="file-url">{{ media.url }}</td>
+              <tr v-for="(row, idx) in rows" :key="row._id">
                 <td>
-                  <button @click="editMedia(media)" class="edit-btn">編集</button>
+                  <img :src="row.value" alt="preview" style="max-width:140px; max-height:70px; object-fit:cover; border-radius:4px;" v-if="row.value" />
+                  <div v-else style="color:#888; font-size:12px;">（未設定）</div>
                 </td>
                 <td>
-                  <input 
-                    type="checkbox" 
-                    :value="media.id" 
-                    v-model="selectedMedia"
-                    class="checkbox"
-                  >
+                  <input v-model="row.key" class="form-input" placeholder="例）hero_home" />
+                </td>
+                <td>
+                  <input v-model="row.value" class="form-input" placeholder="/img/hero.jpg または https://..." />
+                </td>
+                <td>
+                  <button class="edit-btn" @click="pickFile(idx)">選択</button>
+                  <button class="delete-btn" @click="removeRow(idx)">削除</button>
                 </td>
               </tr>
             </tbody>
           </table>
+          <div class="table-actions">
+            <button class="add-btn" @click="addRow">+ 追加</button>
+            <button class="save-btn" @click="save">保存</button>
+            <input ref="file" type="file" accept="image/*" style="display:none" @change="onFileSelected" />
+          </div>
         </div>
       </div>
 
@@ -78,6 +77,7 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MediaManagement',
@@ -86,87 +86,40 @@ export default {
   },
   data() {
     return {
-      media: [
-        {
-          id: 1,
-          filename: 'a.jpg',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 2,
-          filename: 'a.png',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 3,
-          filename: 'a.jpg',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 4,
-          filename: 'a.png',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 5,
-          filename: 'a.png',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 6,
-          filename: 'a.jpg',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 7,
-          filename: 'a.png',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        },
-        {
-          id: 8,
-          filename: 'a.jpg',
-          date: '2025-04-23',
-          alt: 'XXXXXXXX',
-          url: 'https://www.chikugin-ri.co.jp/'
-        }
-      ],
+      rows: [], // { _id, key, value }
       loading: false,
       error: '',
       searchKeyword: '',
-      selectedMedia: []
+      selectedMedia: [],
+      filePickIndex: -1,
     }
   },
-  computed: {
-    filteredMedia() {
-      let result = this.media
-      
-      if (this.searchKeyword) {
-        const keyword = this.searchKeyword.toLowerCase()
-        result = result.filter(item => 
-          item.filename.toLowerCase().includes(keyword) ||
-          item.alt.toLowerCase().includes(keyword) ||
-          item.url.toLowerCase().includes(keyword)
-        )
-      }
-      
-      return result
-    }
+  async mounted() {
+    await this.load()
   },
   methods: {
+    async load() {
+      this.loading = true
+      this.error = ''
+      try {
+        const res = await apiClient.getPageContent('media')
+        const page = res?.data?.page || res?.data?.data?.page
+        const images = page?.content?.images || {}
+        this.rows = Object.keys(images).map(k => ({ _id: `m-${k}-${Date.now()}-${Math.random()}`, key: k, value: images[k] }))
+      } catch (e) {
+        // fallback: mock localStorage
+        try {
+          const str = localStorage.getItem('cms_mock_data')
+          const json = str ? JSON.parse(str) : null
+          const images = json?.media?.images || {}
+          this.rows = Object.keys(images).map(k => ({ _id: `m-${k}-${Date.now()}-${Math.random()}`, key: k, value: images[k] }))
+        } catch(err) {
+          this.error = 'メディアの取得に失敗しました'
+        }
+      } finally {
+        this.loading = false
+      }
+    },
     formatDate(dateString) {
       const date = new Date(dateString)
       const year = date.getFullYear()
@@ -177,18 +130,71 @@ export default {
       
       return `${year}年${month}月${day}日(${weekday})`
     },
-    editMedia(media) {
-      this.$router.push(`/admin/media/${media.id}/edit`)
+    addRow() {
+      this.rows.push({ _id: `new-${Date.now()}-${Math.random()}`, key: '', value: '' })
     },
-    createNewMedia() {
-      this.$router.push('/admin/media/new')
+    removeRow(idx) {
+      this.rows.splice(idx, 1)
     },
-    uploadNewMedia() {
-      console.log('Upload new media')
+    pickFile(idx) {
+      this.filePickIndex = idx
+      const el = this.$refs.file
+      if (el) el.click()
+    },
+    onFileSelected(e) {
+      const file = e.target.files[0]
+      if (!file) return
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        if (this.filePickIndex >= 0) {
+          this.$set(this.rows[this.filePickIndex], 'value', ev.target.result)
+          this.filePickIndex = -1
+        }
+        if (this.$refs.file) this.$refs.file.value = ''
+      }
+      reader.readAsDataURL(file)
+    },
+    async save() {
+      const images = {}
+      for (const row of this.rows) {
+        const k = (row.key || '').trim()
+        if (!k) continue
+        images[k] = row.value || ''
+      }
+      const payload = {
+        page_key: 'media',
+        title: 'Media Registry',
+        content: { images },
+        is_published: true,
+      }
+      // Try update, fallback to create
+      let saved = false
+      try {
+        let res = await apiClient.request('PUT', '/api/admin/pages/media', payload)
+        if (!(res && (res.success || res.id || res.page || res.data))) {
+          res = await apiClient.request('POST', '/api/admin/pages', payload)
+        }
+        saved = !!(res && (res.success || res.id || res.page || res.data))
+      } catch(e) {}
+      if (!saved) {
+        // fallback: save to localStorage mock
+        try {
+          const str = localStorage.getItem('cms_mock_data')
+          const json = str ? JSON.parse(str) : {}
+          json.media = { images }
+          localStorage.setItem('cms_mock_data', JSON.stringify(json))
+          saved = true
+        } catch(e) {}
+      }
+      alert(saved ? '保存しました' : '保存に失敗しました')
     },
     performSearch() {
-      console.log('Searching for:', this.searchKeyword)
-    }
+      // キー/URLを対象にクライアントフィルタ（簡易）
+      const kw = (this.searchKeyword || '').toLowerCase()
+      if (!kw) return
+      this.rows = this.rows.filter(r => (r.key||'').toLowerCase().includes(kw) || (r.value||'').toLowerCase().includes(kw))
+    },
+    uploadNewMedia() { this.addRow() }
   }
 }
 </script>

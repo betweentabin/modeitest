@@ -8,6 +8,7 @@
       :title="pageTitle"
       :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ba0640caf634ea83255fc6ebd7dda9734c97932?width=2880"
+      mediaKey="hero_membership"
     />
 
     <!-- Breadcrumbs -->

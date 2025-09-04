@@ -8,6 +8,7 @@
       :title="pageTitle"
       :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
+      mediaKey="hero_transaction_law"
     />
 
     <!-- Breadcrumbs -->
