@@ -118,7 +118,8 @@ class MemberController extends Controller
             'company_name' => $request->company_name,
             'representative_name' => $request->representative_name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            // Hashing is handled by Member model mutator
+            'password' => $request->password,
             'phone' => $request->phone,
             'address' => $request->address,
             'membership_type' => $request->membership_type,
@@ -179,7 +180,8 @@ class MemberController extends Controller
         ]);
 
         if ($request->password) {
-            $updateData['password'] = Hash::make($request->password);
+            // Hashing is handled by Member model mutator
+            $updateData['password'] = $request->password;
         }
 
         $member->update($updateData);

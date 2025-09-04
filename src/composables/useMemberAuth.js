@@ -30,7 +30,7 @@ const store = {
 
 // 初期化時にlocalStorageから会員情報を復元
 const initializeMember = () => {
-  const storedToken = localStorage.getItem('memberToken')
+  const storedToken = localStorage.getItem('memberToken') || localStorage.getItem('auth_token')
   const storedUser = localStorage.getItem('memberUser')
   
   if (storedToken && storedUser) {
@@ -55,7 +55,8 @@ export function useMemberAuth() {
 
   // ログイン状態の確認
   const isLoggedIn = () => {
-    return !!store.state.currentMember && !!store.state.memberToken
+    const token = store.state.memberToken || localStorage.getItem('memberToken') || localStorage.getItem('auth_token')
+    return !!store.state.currentMember && !!token
   }
 
   // 会員ランクの取得
