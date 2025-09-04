@@ -5,7 +5,7 @@
     
     <!-- Hero Section -->
     <div class="hero-section">
-      <div class="hero-image" :style="{ 'background-image': 'url(' + resolvedHomeHero + ')' }">
+      <div class="hero-image" :style="{ 'background-image': 'url(' + heroImage + ')' }">
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
@@ -503,12 +503,6 @@ export default {
       this._pageText = usePageText(this.pageKey)
       await this._pageText.load()
     } catch(e) { /* noop */ }
-    // メディアレジストリ
-    try {
-      const mod = await import('@/composables/useMedia')
-      this._media = mod.useMedia()
-      await this._media.ensure()
-    } catch(e) { /* noop */ }
   },
   methods: {
     async loadLatestData() {
@@ -553,12 +547,6 @@ export default {
     },
     heroSubtitle() {
       return this._pageText?.getText('lead', this.text67) || this.text67
-    },
-    resolvedHomeHero() {
-      if (this._media && this._media.getImage) {
-        return this._media.getImage('hero_home', this.heroImage) || this.heroImage
-      }
-      return this.heroImage
     },
   },
   

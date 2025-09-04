@@ -219,31 +219,26 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'よくあるご質問') || 'よくあるご質問' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'FAQ') || 'FAQ' },
+    filteredFaqs() {
+      let filtered = this.faqs;
+      if (this.selectedCategory !== 'all') {
+        filtered = filtered.filter(faq => faq.category === this.selectedCategory);
+      }
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        filtered = filtered.filter(faq => 
+          faq.question.toLowerCase().includes(query) ||
+          (faq.answer || '').toLowerCase().includes(query)
+        );
+      }
+      return filtered;
+    }
   },
   mounted() {
     try {
       this._pageText = usePageText('faq')
       this._pageText.load()
     } catch(e) { /* noop */ }
-  },
-  computed: {
-    filteredFaqs() {
-      let filtered = this.faqs;
-      
-      if (this.selectedCategory !== 'all') {
-        filtered = filtered.filter(faq => faq.category === this.selectedCategory);
-      }
-      
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        filtered = filtered.filter(faq => 
-          faq.question.toLowerCase().includes(query) ||
-          faq.answer.toLowerCase().includes(query)
-        );
-      }
-      
-      return filtered;
-    }
   },
   methods: {
     toggleAnswer(index) {

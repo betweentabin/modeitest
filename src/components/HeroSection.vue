@@ -15,12 +15,12 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
-      default: "ページタイトル"
+      required: false,
+      default: ''
     },
     subtitle: {
       type: String,
-      default: "サブタイトル"
+      default: ''
     },
     heroImage: {
       type: String,
