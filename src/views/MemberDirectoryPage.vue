@@ -55,6 +55,20 @@
                   </option>
                 </select>
               </div>
+              <div class="filter-group">
+                <select v-model="regionFilter" @change="loadMembers" class="filter-select">
+                  <option v-for="option in regionOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <select v-model="industryFilter" @change="loadMembers" class="filter-select">
+                  <option v-for="option in industryOptions" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
 
               <div class="actions-group">
                 <button @click="toggleFavoritesOnly" :class="['filter-btn', { active: showFavoritesOnly }]">
@@ -269,7 +283,40 @@ export default {
       searchTimeout: null,
       
       // 会員種別選択肢
-      membershipOptions: getMembershipOptions()
+      membershipOptions: getMembershipOptions(),
+      // 地域・業種フィルター
+      regionFilter: '',
+      industryFilter: '',
+      regionOptions: [
+        { value: '', label: '全ての地域' },
+        { value: '福岡', label: '福岡' },
+        { value: '佐賀', label: '佐賀' },
+        { value: '長崎', label: '長崎' },
+        { value: '大分', label: '大分' },
+        { value: '熊本', label: '熊本' },
+        { value: '宮崎', label: '宮崎' },
+        { value: '鹿児島', label: '鹿児島' }
+      ],
+      industryOptions: [
+        { value: '', label: '全ての業種' },
+        { value: '製造業', label: '製造業' },
+        { value: '鉱業', label: '鉱業' },
+        { value: '建設業', label: '建設業' },
+        { value: '運輸交通業', label: '運輸交通業' },
+        { value: '官公署', label: '官公署' },
+        { value: '貨物取扱業', label: '貨物取扱業' },
+        { value: '農林業', label: '農林業' },
+        { value: '畜産・水産業', label: '畜産・水産業' },
+        { value: '商業', label: '商業' },
+        { value: '金融・広告業', label: '金融・広告業' },
+        { value: '清掃・と畜業', label: '清掃・と畜業' },
+        { value: '映画・演劇業', label: '映画・演劇業' },
+        { value: '通信業', label: '通信業' },
+        { value: '教育・研究業', label: '教育・研究業' },
+        { value: '保健衛生業', label: '保健衛生業' },
+        { value: '接客娯楽業', label: '接客娯楽業' },
+        { value: 'その他の事業', label: 'その他の事業' }
+      ]
     }
   },
   computed: {
@@ -334,9 +381,9 @@ export default {
         if (this.searchQuery) {
           params.search = this.searchQuery
         }
-        if (this.membershipFilter) {
-          params.membership_type = this.membershipFilter
-        }
+        if (this.membershipFilter) params.membership_type = this.membershipFilter
+        if (this.regionFilter) params.region = this.regionFilter
+        if (this.industryFilter) params.industry = this.industryFilter
 
         const response = await apiClient.get('/api/member/directory', { params })
 
@@ -420,6 +467,8 @@ export default {
         const params = {}
         if (this.searchQuery) params.search = this.searchQuery
         if (this.membershipFilter) params.membership_type = this.membershipFilter
+        if (this.regionFilter) params.region = this.regionFilter
+        if (this.industryFilter) params.industry = this.industryFilter
 
         const response = await apiClient.get('/api/member/directory/export/csv', { params, responseType: 'blob' })
 

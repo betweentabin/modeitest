@@ -57,12 +57,12 @@
         <!-- セミナー系タブ -->
         <div v-if="activeTab==='seminars'" class="content-section">
           <h2>セミナー一覧</h2>
-          <MemberSeminarsTab @reservation-made="onReservationMade" />
+          <MemberSeminarsTab @reservation-made="onReservationMade" @seminar-favorite-updated="onSeminarFavoriteUpdated" />
         </div>
 
         <div v-if="activeTab==='seminar-favorites'" class="content-section">
           <h2>お気に入りセミナー</h2>
-          <MemberSeminarFavoritesTab />
+          <MemberSeminarFavoritesTab ref="seminarFavoritesTab" />
         </div>
 
         <div v-if="activeTab==='registrations'" class="content-section">
@@ -226,10 +226,7 @@
               <span>有効期限: {{ formatDate(memberInfo.expiryDate) }}</span>
             </div>
 
-            <div class="upgrade-section" style="margin-top: 16px;">
-              <p>個別相談の予約をご希望の方はこちらからお申し込みください。</p>
-              <button @click="openReservationModal()" class="upgrade-button">個別相談を予約する</button>
-            </div>
+            
           </div>
         </div>
         
@@ -476,6 +473,11 @@ export default {
       this.activeTab = 'registrations'
       if (this.$refs && this.$refs.registrationsTab && typeof this.$refs.registrationsTab.load === 'function') {
         this.$refs.registrationsTab.load()
+      }
+    },
+    onSeminarFavoriteUpdated() {
+      if (this.$refs && this.$refs.seminarFavoritesTab && typeof this.$refs.seminarFavoritesTab.load === 'function') {
+        this.$refs.seminarFavoritesTab.load()
       }
     },
     async fetchInitialData() {

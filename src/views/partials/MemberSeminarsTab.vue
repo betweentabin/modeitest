@@ -41,10 +41,10 @@
           <td class="actions">
             <button 
               class="fav-btn" 
-              :class="{ active: isFavorite(s.id) }" 
+              :class="{ active: isFav(s.id) }" 
               @click="toggleFavorite(s, $event)"
-              :title="isFavorite(s.id) ? 'お気に入り解除' : 'お気に入り追加'"
-            >{{ isFavorite(s.id) ? '★' : '☆' }}</button>
+              :title="isFav(s.id) ? 'お気に入り解除' : 'お気に入り追加'"
+            >{{ isFav(s.id) ? '★' : '☆' }}</button>
             <button v-if="canReserve(s)" class="reserve-btn" @click="openReservation(s)">予約する</button>
             <span v-else class="disabled-text">{{ disabledReason(s) }}</span>
           </td>
@@ -111,10 +111,11 @@ export default {
       showModal: false,
       submitting: false,
       selectedSeminar: null,
-      form: { name:'', email:'', company:'', phone:'', special_requests:'' }
+      form: { name:'', email:'', company:'', phone:'', special_requests:'' },
+      favoriteIds: new Set()
     }
   },
-  mounted() { this.load() },
+  mounted() { this.init() },
   computed: {
     filteredSeminars() {
       const list = Array.isArray(this.seminars) ? this.seminars : []
@@ -122,6 +123,9 @@ export default {
     }
   },
   methods: {
+    async init() {
+      await Promise.all([this.load(), this.loadFavorites()])
+    },
     async load() {
       this.loading = true
       this.error = ''
@@ -135,6 +139,17 @@ export default {
           this.error = res?.error || res?.message || '読み込みに失敗しました'
         }
       } catch(e) { this.error = '読み込みに失敗しました' } finally { this.loading = false }
+    },
+    async loadFavorites() {
+      try {
+        const res = await apiClient.getSeminarFavorites()
+        if (res && res.success) {
+          const list = Array.isArray(res.data) ? res.data : []
+          this.favoriteIds = new Set(list.map(x => x.id))
+        }
+      } catch (e) {
+        // noop
+      }
     },
     formatDate(d) { return d ? new Date(d).toLocaleDateString('ja-JP') : '-' },
     statusLabel(s) {
@@ -176,6 +191,33 @@ export default {
           this.error = res?.message || '予約に失敗しました'
         }
       } catch(e) { this.error = 'サーバーエラーが発生しました' } finally { this.submitting = false }
+    },
+    isFav(id) {
+      try { return !!(this.favoriteIds && this.favoriteIds.has(id)) } catch(e) { return false }
+    },
+    // Backward-compat alias in case an older compiled template calls isFavorite
+    isFavorite(id) {
+      return this.isFav(id)
+    },
+    async toggleFavorite(s, ev) {
+      if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation()
+      try {
+        if (this.isFav(s.id)) {
+          const res = await apiClient.removeSeminarFavorite(s.id)
+          if (!res || res.success === false) return
+          this.favoriteIds.delete(s.id)
+          this.favoriteIds = new Set(this.favoriteIds)
+          this.$emit('seminar-favorite-updated', { id: s.id, favorited: false })
+        } else {
+          const res = await apiClient.addSeminarFavorite(s.id)
+          if (!res || res.success === false) return
+          this.favoriteIds.add(s.id)
+          this.favoriteIds = new Set(this.favoriteIds)
+          this.$emit('seminar-favorite-updated', { id: s.id, favorited: true })
+        }
+      } catch (e) {
+        // ignore
+      }
     }
   }
 }
@@ -192,6 +234,8 @@ export default {
 .error { color:#da5761; padding:12px 0; }
 .actions-col { width: 140px; }
 .actions { white-space: nowrap; }
+.fav-btn { padding: 4px 8px; margin-right: 8px; background:#fff; border:1px solid #ddd; border-radius:6px; cursor:pointer; }
+.fav-btn.active { color:#f5a623; border-color:#f5a623; }
 .reserve-btn { padding: 6px 12px; background: var(--mandy, #DA5761); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px; }
 .reserve-btn:hover { background: var(--hot-pink, #E56B75); }
 .disabled-text { color:#999; font-size:12px; }
