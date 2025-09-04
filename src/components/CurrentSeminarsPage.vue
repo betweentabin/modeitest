@@ -177,6 +177,7 @@ export default {
     return {
       frame132131753022Props: frame132131753022Data,
       currentPage: 1,
+      itemsPerPage: 10,
       allCurrentSeminars: [],
       seminarsFromServer: []
     };
@@ -235,12 +236,12 @@ export default {
       }
     },
     goToSeminarDetail(seminar) {
-      // セミナーのIDを生成（実際のアプリケーションではデータベースから取得）
-      const seminarId = this.generateSeminarId(seminar);
+      // 実際のIDを使用（APIからのデータに含まれている）
+      const seminarId = seminar.id || this.generateSeminarId(seminar);
       this.$router.push(`/seminars/${seminarId}`);
     },
     generateSeminarId(seminar) {
-      // セミナーのタイトルと日付からIDを生成
+      // セミナーのタイトルと日付からIDを生成（フォールバック用）
       return encodeURIComponent(seminar.title + '-' + seminar.date);
     },
     canAccessSeminar(seminar) {
