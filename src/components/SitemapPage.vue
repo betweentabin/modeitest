@@ -5,21 +5,21 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="サイトマップ"
-      subtitle="sitemap"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ed4aab7cb9aa3b95164dd2e5f305cafc76aa530?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['サイトマップ']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">サイトマップ</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">sitemap</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -96,8 +96,8 @@
 
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはコチラ"
-      secondary-text="入会はコチラ"
+      :primaryText="ctaPrimaryText"
+      :secondaryText="ctaSecondaryText"
       max-width="1200px"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
@@ -123,6 +123,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import { usePageText } from '@/composables/usePageText'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -146,12 +147,27 @@ export default {
       
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'サイトマップ') || 'サイトマップ' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'sitemap') || 'sitemap' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('sitemap')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
+  },
   methods: {
     handleContactClick() {
-      this.$router.push('/contact');
+      const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
+      this.$router.push(link);
     },
     handleJoinClick() {
-      this.$router.push('/register');
+      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      this.$router.push(link);
     }
   }
 

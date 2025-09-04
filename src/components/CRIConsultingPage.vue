@@ -4,13 +4,13 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="CRI 経営コンサルティング"
-      subtitle="consulting"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/db22880ee1d73553a2fa432da82e4e20fe5c43c9?width=2880"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['CRI 経営コンサルティング']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
     
     <!-- What is CRI Consulting Section -->
     <div class="what-is-section">
@@ -264,6 +264,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import { usePageText } from '@/composables/usePageText'
 
 import Group27 from "./Group27";
 import { homePageData, frame132131753022Data } from "../data";
@@ -283,17 +284,24 @@ export default {
   },
   data() {
     return {
-      // Access section data
-      
-      // Footer data
+      pageKey: 'consulting',
       frame132131753022Props: homePageData.frame132131753022Props,
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'consulting') || 'consulting' },
   },
   mounted() {
     this.adjustImageHeight();
     this.adjustRectangleHeight();
     window.addEventListener('resize', this.adjustImageHeight);
     window.addEventListener('resize', this.adjustRectangleHeight);
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustImageHeight);

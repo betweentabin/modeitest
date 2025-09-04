@@ -7,7 +7,7 @@
       <div class="hero-overlay">
         <div class="hero-content">
           <h1 class="hero-title">{{ pageTitle || '会社概要' }}</h1>
-          <p class="hero-subtitle">ABOUT US</p>
+          <p class="hero-subtitle">{{ pageSubtitle }}</p>
         </div>
       </div>
     </div>
@@ -238,6 +238,7 @@ import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
 import axios from 'axios';
 import { getApiUrl } from '@/config/api';
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "AboutPage",
@@ -250,6 +251,7 @@ export default {
   },
   data() {
     return {
+      pageKey: 'about',
       pageData: null,
       loading: true,
       error: null,
@@ -258,13 +260,19 @@ export default {
   },
   computed: {
     pageTitle() {
-      return this.pageData?.title || '';
+      const fallback = this.pageData?.title || '会社概要'
+      return this._pageText?.getText('page_title', fallback) || fallback;
+    },
+    pageSubtitle() {
+      return this._pageText?.getText('page_subtitle', 'ABOUT US') || 'ABOUT US'
     },
     missionTitle() {
-      return this.pageData?.content?.missionTitle || '';
+      const fallback = this.pageData?.content?.missionTitle || ''
+      return this._pageText?.getText('mission_title', fallback) || fallback
     },
     missionText() {
-      return this.pageData?.content?.missionText || '';
+      const fallback = this.pageData?.content?.missionText || ''
+      return this._pageText?.getText('mission_body', fallback) || fallback
     },
     heroBackgroundStyle() {
       const heroImage = this.getImageUrl('hero');
@@ -288,6 +296,10 @@ export default {
       this.error = 'ページデータの取得に失敗しました';
       this.loading = false;
     }
+    try {
+      this._pageText = usePageText(this.pageKey)
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   methods: {
     scrollToContact() {
