@@ -77,6 +77,7 @@
                 <td>
                   <button class="small-btn" @click="preview(c)">プレビュー</button>
                   <button class="small-btn" @click="openAttachments(c)">添付</button>
+                  <button class="small-btn" @click="duplicate(c)">複製</button>
                   <button class="small-btn" @click="schedule(c)">予約</button>
                   <button class="small-btn danger" @click="sendNow(c)">即時送信</button>
                 </td>
@@ -290,6 +291,13 @@ export default {
         if (res.success) { alert('送信しました'); this.loadCampaigns(this.pagination.current_page) }
         else alert(res.error || '送信に失敗しました')
       } catch (e) { alert('送信に失敗しました') }
+    },
+    async duplicate(c) {
+      if (!confirm('このキャンペーンを複製しますか？（受信者はコピーされません）')) return
+      try {
+        const res = await apiClient.duplicateEmailCampaign(c.id)
+        if (res.success) { alert('複製しました'); this.loadCampaigns(this.pagination.current_page) }
+      } catch(e) { alert('複製に失敗しました') }
     },
     openAttachments(c) {
       this.currentCampaign = c

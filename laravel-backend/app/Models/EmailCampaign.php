@@ -10,7 +10,7 @@ class EmailCampaign extends Model
     use HasFactory;
 
     protected $fillable = [
-        'subject', 'body_html', 'body_text', 'status', 'scheduled_at', 'created_by'
+        'subject', 'body_html', 'body_text', 'status', 'scheduled_at', 'created_by', 'is_template'
     ];
 
     protected $casts = [

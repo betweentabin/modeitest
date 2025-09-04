@@ -178,7 +178,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/mfa/enable', [AdminAuthController::class, 'mfaEnable']);
         Route::post('/mfa/disable', [AdminAuthController::class, 'mfaDisable']);
         
-        Route::prefix('pages')->group(function () {
+        Route::prefix('pages')->middleware('can:manage-content')->group(function () {
             Route::get('/', [PageContentController::class, 'index']);
             Route::post('/', [PageContentController::class, 'store']);
             Route::get('/{pageKey}', [PageContentController::class, 'show']);
@@ -188,7 +188,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
         });
         
-        Route::prefix('publications')->group(function () {
+        Route::prefix('publications')->middleware('can:manage-content')->group(function () {
             Route::get('/', [PublicationsController::class, 'index']);
             Route::post('/', [PublicationsController::class, 'store']);
             Route::get('/{id}', [PublicationsController::class, 'show']);
@@ -256,6 +256,12 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/send-now', [App\Http\Controllers\Admin\EmailCampaignController::class, 'sendNow']);
             Route::post('/{id}/resend-failed', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendFailed']);
             Route::post('/{id}/recipients/{recipientId}/resend', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendRecipient']);
+            Route::post('/{id}/duplicate', [App\Http\Controllers\Admin\EmailCampaignController::class, 'duplicate']);
+            // templates
+            Route::get('/templates', [App\Http\Controllers\Admin\EmailCampaignController::class, 'templates']);
+            Route::post('/{id}/mark-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'markTemplate']);
+            Route::post('/{id}/unmark-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'unmarkTemplate']);
+            Route::post('/{id}/create-from-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'createFromTemplate']);
             // attachments
             Route::get('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'attachments']);
             Route::post('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'uploadAttachment']);
@@ -294,7 +300,7 @@ Route::prefix('admin')->group(function () {
         });
         
         // お知らせ管理API
-        Route::prefix('notices')->group(function () {
+        Route::prefix('notices')->middleware('can:manage-content')->group(function () {
             Route::get('/', [NoticeController::class, 'index']);
             Route::post('/', [NoticeController::class, 'store']);
             Route::get('/stats', [NoticeController::class, 'stats']);

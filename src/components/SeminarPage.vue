@@ -135,7 +135,7 @@
         <div class="past-seminars-content">
           <!-- 過去セミナーがある場合 -->
           <template v-if="pastSeminars.length > 0">
-            <div class="past-seminar-card" v-for="(seminar, index) in pastSeminars" :key="index">
+            <div class="past-seminar-card" v-for="(seminar, index) in pastSeminars" :key="index" @click="goToSeminarDetail(seminar)">
               <div class="past-seminar-info">
                 <div class="past-info-row">
                   <div class="info-label info-label-date">
@@ -224,7 +224,10 @@ export default {
     };
   },
   async mounted() {
-    await this.loadCurrentSeminars();
+    await Promise.all([
+      this.loadCurrentSeminars(),
+      this.loadPastSeminars()
+    ]);
   },
   methods: {
     async loadCurrentSeminars() {
@@ -258,6 +261,23 @@ export default {
         console.error('セミナーの読み込みに失敗:', e);
       }
     },
+    async loadPastSeminars() {
+      try {
+        // 完了ステータスのセミナーを取得
+        const res = await apiClient.getSeminars({ status: 'completed', per_page: 4 });
+        if (res.success && res.data && Array.isArray(res.data.seminars)) {
+          this.pastSeminars = res.data.seminars.map(s => ({
+            id: s.id,
+            date: this.formatToJaDate(s.date),
+            title: s.title,
+            content: s.description || ''
+          }));
+        }
+      } catch (e) {
+        console.error('過去セミナーの読み込みに失敗:', e);
+        this.pastSeminars = [];
+      }
+    },
     formatToJaDate(dateString) {
       if (!dateString) return '';
       const d = new Date(dateString);
@@ -271,12 +291,12 @@ export default {
       this.$router.push('/seminars/past');
     },
     goToSeminarDetail(seminar) {
-      // セミナーのIDを生成（実際のアプリケーションではデータベースから取得）
-      const seminarId = this.generateSeminarId(seminar);
+      // 実際のIDを使用（APIからのデータに含まれている）
+      const seminarId = seminar.id || this.generateSeminarId(seminar);
       this.$router.push(`/seminars/${seminarId}`);
     },
     generateSeminarId(seminar) {
-      // セミナーのタイトルと日付からIDを生成
+      // セミナーのタイトルと日付からIDを生成（フォールバック用）
       return encodeURIComponent(seminar.title + '-' + seminar.date);
     }
   }
@@ -661,6 +681,7 @@ export default {
   border-radius: 20px;
   background: #F6F6F6;
   width: 100%;
+  cursor: pointer;
 }
 
 .past-seminar-info {

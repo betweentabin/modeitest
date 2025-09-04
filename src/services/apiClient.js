@@ -366,6 +366,26 @@ class ApiClient {
     return this.post(`/api/admin/emails/${id}/recipients/${recipientId}/resend`)
   }
 
+  async duplicateEmailCampaign(id) {
+    return this.post(`/api/admin/emails/${id}/duplicate`)
+  }
+
+  async listEmailTemplates() {
+    return this.get('/api/admin/emails/templates')
+  }
+
+  async markEmailTemplate(id) {
+    return this.post(`/api/admin/emails/${id}/mark-template`)
+  }
+
+  async unmarkEmailTemplate(id) {
+    return this.post(`/api/admin/emails/${id}/unmark-template`)
+  }
+
+  async createCampaignFromTemplate(id) {
+    return this.post(`/api/admin/emails/${id}/create-from-template`)
+  }
+
   async listEmailAttachments(id) {
     return this.get(`/api/admin/emails/${id}/attachments`)
   }

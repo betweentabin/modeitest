@@ -82,6 +82,62 @@ class EmailCampaignController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // Templates: list
+    public function templates()
+    {
+        $templates = EmailCampaign::where('is_template', true)
+            ->orderBy('updated_at', 'desc')
+            ->select('id','subject','updated_at')
+            ->get();
+        return response()->json(['success' => true, 'data' => $templates]);
+    }
+
+    public function markTemplate($id)
+    {
+        $c = EmailCampaign::findOrFail($id);
+        $c->update(['is_template' => true]);
+        return response()->json(['success' => true]);
+    }
+
+    public function unmarkTemplate($id)
+    {
+        $c = EmailCampaign::findOrFail($id);
+        $c->update(['is_template' => false]);
+        return response()->json(['success' => true]);
+    }
+
+    public function createFromTemplate($id)
+    {
+        // same behavior as duplicate
+        return $this->duplicate($id);
+    }
+
+    // Duplicate campaign (content + attachments; recipients are not copied)
+    public function duplicate($id)
+    {
+        $orig = EmailCampaign::with('attachments')->findOrFail($id);
+        $copy = EmailCampaign::create([
+            'subject' => $orig->subject,
+            'body_html' => $orig->body_html,
+            'body_text' => $orig->body_text,
+            'status' => 'draft',
+            'created_by' => optional(request()->user())->id,
+        ]);
+
+        foreach ($orig->attachments as $att) {
+            EmailAttachment::create([
+                'campaign_id' => $copy->id,
+                'disk' => $att->disk,
+                'path' => $att->path,
+                'filename' => $att->filename,
+                'mime' => $att->mime,
+                'size' => $att->size,
+            ]);
+        }
+
+        return response()->json(['success' => true, 'data' => $copy], 201);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
