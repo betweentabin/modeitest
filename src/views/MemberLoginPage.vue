@@ -131,7 +131,8 @@ export default {
         const res = await apiClient.login({ email: this.email, password: this.password })
         if (res && res.success && (res.access_token || res.token || res.data?.access_token)) {
           const token = res.access_token || res.token || res.data?.access_token
-          const user = res.user || res.data?.user || null
+          // Backend returns `member` for member auth
+          const user = res.member || res.data?.member || res.user || res.data?.user || null
           // 永続化
           localStorage.setItem('auth_token', token)
           // useMemberAuth互換

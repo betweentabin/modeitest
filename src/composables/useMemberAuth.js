@@ -54,19 +54,36 @@ const initializeMember = () => {
 initializeMember()
 
 export function useMemberAuth() {
+  const ensureLoaded = () => {
+    if (!store.state.currentMember) {
+      const token = localStorage.getItem('memberToken') || localStorage.getItem('auth_token')
+      const raw = localStorage.getItem('memberUser')
+      if (token && raw) {
+        try {
+          store.state.memberToken = token
+          store.state.currentMember = normalizeMember(JSON.parse(raw))
+        } catch (e) {
+          console.warn('Failed to refresh member from localStorage:', e)
+        }
+      }
+    }
+  }
   // 会員情報の取得
   const getMemberInfo = () => {
+    ensureLoaded()
     return store.state.currentMember
   }
 
   // ログイン状態の確認
   const isLoggedIn = () => {
+    ensureLoaded()
     const token = store.state.memberToken || localStorage.getItem('memberToken') || localStorage.getItem('auth_token')
     return !!store.state.currentMember && !!token
   }
 
   // 会員ランクの取得
   const getMembershipType = () => {
+    ensureLoaded()
     const u = store.state.currentMember
     return u?.membership_type || u?.membershipType || 'guest'
   }

@@ -15,6 +15,10 @@
         <option value="">月</option>
         <option v-for="m in 12" :key="m" :value="m">{{ m }}月</option>
       </select>
+      <label class="toggle">
+        <input type="checkbox" v-model="onlyReservable" />
+        <span>予約可能のみ</span>
+      </label>
     </div>
     <div v-if="loading" class="loading">読み込み中...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
@@ -25,18 +29,62 @@
           <th>タイトル</th>
           <th>会場</th>
           <th>ステータス</th>
+          <th class="actions-col">操作</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="s in seminars" :key="s.id" :class="{ completed: s.status==='completed' }">
+        <tr v-for="s in filteredSeminars" :key="s.id" :class="{ completed: s.status==='completed' }">
           <td>{{ formatDate(s.date) }}</td>
           <td>{{ s.title }}</td>
           <td>{{ s.location || '-' }}</td>
           <td>{{ statusLabel(s.status) }}</td>
+          <td class="actions">
+            <button v-if="canReserve(s)" class="reserve-btn" @click="openReservation(s)">予約する</button>
+            <span v-else class="disabled-text">{{ disabledReason(s) }}</span>
+          </td>
         </tr>
-        <tr v-if="seminars.length===0"><td colspan="4" class="empty">該当するセミナーがありません</td></tr>
+        <tr v-if="filteredSeminars.length===0"><td colspan="5" class="empty">該当するセミナーがありません</td></tr>
       </tbody>
     </table>
+    
+    <!-- 予約モーダル -->
+    <div v-if="showModal" class="modal-backdrop" @click.self="closeModal">
+      <div class="modal">
+        <h3>セミナー予約</h3>
+        <p class="modal-sub" v-if="selectedSeminar">{{ selectedSeminar.title }}（{{ formatDate(selectedSeminar.date) }}）</p>
+        <form @submit.prevent="submitReservation">
+          <div class="form-row">
+            <div class="form-group">
+              <label>お名前 *</label>
+              <input v-model="form.name" type="text" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label>メールアドレス *</label>
+              <input v-model="form.email" type="email" class="form-input" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>会社名</label>
+              <input v-model="form.company" type="text" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label>電話番号</label>
+              <input v-model="form.phone" type="text" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>ご要望・備考</label>
+            <textarea v-model="form.special_requests" class="form-textarea" rows="4"></textarea>
+          </div>
+          <p v-if="error" class="error">{{ error }}</p>
+          <div class="form-actions">
+            <button type="button" class="cancel-button" @click="closeModal" :disabled="submitting">キャンセル</button>
+            <button type="submit" class="save-button" :disabled="submitting">{{ submitting ? '送信中...' : '送信する' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -52,7 +100,12 @@ export default {
       error: '',
       seminars: [],
       years: Array.from({length: 6}).map((_,i)=> now.getFullYear()-i),
-      filters: { status: 'scheduled', year: '', month: '' }
+      filters: { status: 'scheduled', year: '', month: '' },
+      onlyReservable: true,
+      showModal: false,
+      submitting: false,
+      selectedSeminar: null,
+      form: { name:'', email:'', company:'', phone:'', special_requests:'' }
     }
   },
   mounted() { this.load() },
@@ -69,6 +122,41 @@ export default {
     formatDate(d) { return d ? new Date(d).toLocaleDateString('ja-JP') : '-' },
     statusLabel(s) {
       return { scheduled:'募集中', ongoing:'開催中', completed:'終了', cancelled:'中止' }[s] || s
+    },
+    canReserve(s) { return s && s.status==='scheduled' && s.can_register_for_user },
+    disabledReason(s) {
+      if (s.status==='completed') return '終了'
+      if (s.status==='cancelled') return '中止'
+      return '申込不可'
+    },
+    openReservation(s) {
+      this.selectedSeminar = s
+      try {
+        const u = JSON.parse(localStorage.getItem('memberUser') || 'null')
+        this.form.name = u?.representative_name || u?.name || ''
+        this.form.email = u?.email || ''
+        this.form.company = u?.company_name || ''
+        this.form.phone = u?.phone || ''
+      } catch(e) {}
+      this.form.special_requests = ''
+      this.error = ''
+      this.showModal = true
+    },
+    closeModal() { if (!this.submitting) this.showModal = false },
+    async submitReservation() {
+      if (!this.selectedSeminar) return
+      this.submitting = true
+      this.error = ''
+      try {
+        const res = await apiClient.registerForSeminar(this.selectedSeminar.id, this.form)
+        if (res && res.success) {
+          alert('予約を受け付けました')
+          this.showModal = false
+          this.load()
+        } else {
+          this.error = res?.message || '予約に失敗しました'
+        }
+      } catch(e) { this.error = 'サーバーエラーが発生しました' } finally { this.submitting = false }
     }
   }
 }
@@ -77,10 +165,26 @@ export default {
 <style scoped>
 .filters { display:flex; gap:8px; margin-bottom:12px; }
 .filter-select { padding:6px 10px; }
+.toggle { display:flex; align-items:center; gap:6px; color:#333; font-size:14px; }
 .data-table { width:100%; border-collapse: collapse; }
 .data-table th, .data-table td { border-bottom:1px solid #eee; padding:10px; text-align:left; }
 .completed { color:#777; background:#fafafa; }
 .empty { color:#777; text-align:center; }
 .error { color:#da5761; padding:12px 0; }
-</style>
+.actions-col { width: 140px; }
+.actions { white-space: nowrap; }
+.reserve-btn { padding: 6px 12px; background: var(--mandy, #DA5761); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px; }
+.reserve-btn:hover { background: var(--hot-pink, #E56B75); }
+.disabled-text { color:#999; font-size:12px; }
 
+/* モーダル */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:1000; }
+.modal { background:#fff; width:min(680px, 92vw); border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); }
+.modal-sub { margin: 6px 0 12px; color:#555; }
+.form-row { display:flex; gap:16px; }
+.form-group { flex:1; display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+.form-input, .form-textarea { border:1px solid #ddd; border-radius:6px; padding:8px 10px; font-size:14px; }
+.form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:8px; }
+.cancel-button { padding:8px 16px; background:#fff; border:1px solid #ddd; border-radius:6px; cursor:pointer; }
+.save-button { padding:8px 16px; background: var(--mandy, #DA5761); color:#fff; border:none; border-radius:6px; cursor:pointer; }
+</style>
