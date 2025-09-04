@@ -112,7 +112,7 @@
                    <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
                  </div>
                </div>
-               <x-button3 class="desktop-button" />
+               <x-button3 class="desktop-button" @click="goToNewsList" />
              </div>
              <div class="frame-1321317467">
                               <article 
@@ -141,7 +141,7 @@
                   </div>
                                 </article>
                </div>
-               <x-button3 class="mobile-button" />
+               <x-button3 class="mobile-button" @click="goToNewsList" />
              </div>
            </div>
         
@@ -185,7 +185,7 @@
                     style="cursor: pointer;"
                   />
                 </div>
-                <x-button3 />
+                <x-button3 @click="goToPublicationList" />
               </div>
               <div class="frame-1321317486">
                 <div class="publication-item-wrapper" @click="goToPublication(0)">
@@ -639,7 +639,7 @@ export default {
       const len = this.allPublications.length
       if (!len) return
       const mainPublication = this.allPublications[this.currentIndex % len]
-      if (mainPublication && mainPublication.id) this.$router.push(`/publications/${mainPublication.id}`)
+      if (mainPublication && mainPublication.id) this.$router.push(`/publication/${mainPublication.id}`)
     },
     goToPublication(index) {
       // 右側の相対インデックスから遷移
@@ -647,7 +647,7 @@ export default {
       if (!len) return
       const absolute = (this.currentIndex + 1 + index) % len
       const publication = this.allPublications[absolute]
-      if (publication && publication.id) this.$router.push(`/publications/${publication.id}`)
+      if (publication && publication.id) this.$router.push(`/publication/${publication.id}`)
     },
     prevPublication() {
       const len = this.allPublications.length
@@ -721,6 +721,14 @@ export default {
         const newsItem = this.dynamicNewsItems[index];
         this.$router.push(`/news/${newsItem.id}`);
       }
+    },
+    goToNewsList() {
+      // ニュース一覧ページに遷移
+      this.$router.push('/news');
+    },
+    goToPublicationList() {
+      // 刊行物一覧ページに遷移
+      this.$router.push('/publication');
     }
   }
 };
