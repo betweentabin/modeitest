@@ -62,6 +62,11 @@ class MemberSeminarController extends Controller
         $member = Auth::guard('sanctum')->user();
         if (!$member) return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
 
+        \Log::info('申込状況取得:', [
+            'member_id' => $member->id,
+            'member_email' => $member->email
+        ]);
+
         $query = SeminarRegistration::where('member_id', $member->id)
             ->join('seminars', 'seminar_registrations.seminar_id', '=', 'seminars.id')
             ->select(
@@ -81,6 +86,23 @@ class MemberSeminarController extends Controller
 
         $perPage = (int)$request->get('per_page', 10);
         $p = $query->paginate($perPage);
+
+        // デバッグ: 全セミナー登録レコードも確認
+        $allRegistrations = SeminarRegistration::all();
+        \Log::info('申込状況取得結果:', [
+            'member_id' => $member->id,
+            'found_registrations_count' => $p->total(),
+            'all_registrations_in_db' => $allRegistrations->count(),
+            'recent_registrations' => $allRegistrations->take(5)->map(function($reg) {
+                return [
+                    'id' => $reg->id,
+                    'member_id' => $reg->member_id,
+                    'email' => $reg->email,
+                    'seminar_id' => $reg->seminar_id,
+                    'created_at' => $reg->created_at
+                ];
+            })
+        ]);
 
         return response()->json(['success' => true, 'data' => $p]);
     }

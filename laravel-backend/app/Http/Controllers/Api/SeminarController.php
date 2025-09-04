@@ -316,13 +316,22 @@ class SeminarController extends Controller
             ], 400);
         }
 
-        $registration = SeminarRegistration::create(array_merge($validator->validated(), [
+        // デバッグログを追加
+        $registrationData = array_merge($validator->validated(), [
             'seminar_id' => $seminar->id,
             'member_id' => $member ? $member->id : null,
             'registration_number' => $this->generateRegistrationNumber(),
             'attendance_status' => 'registered',
             'payment_status' => $seminar->fee > 0 ? 'pending' : 'paid',
-        ]));
+        ]);
+        
+        \Log::info('セミナー登録データ:', [
+            'user_info' => $member ? ['id' => $member->id, 'email' => $member->email] : 'guest',
+            'seminar_id' => $seminar->id,
+            'registration_data' => $registrationData
+        ]);
+        
+        $registration = SeminarRegistration::create($registrationData);
 
         // 参加者数更新
         $seminar->updateParticipantCount();
