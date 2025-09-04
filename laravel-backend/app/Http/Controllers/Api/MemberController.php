@@ -80,40 +80,44 @@ class MemberController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'company_name' => 'required|string|max:255',
+            'representative_name' => 'required|string|max:100',
+            'email' => 'required|string|email|max:255|unique:members',
             'password' => 'required|string|min:8',
-            'company' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'membership_type' => 'required|in:standard,premium',
-            'status' => 'required|in:active,inactive,suspended',
+            'membership_type' => 'required|in:free,basic,standard,premium',
+            'status' => 'required|in:pending,active,suspended,cancelled',
+            'membership_expires_at' => 'nullable|date',
+            'is_active' => 'boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'message' => 'バリデーションエラー',
                 'errors' => $validator->errors()
             ], 422);
         }
 
-        $member = User::create([
-            'name' => $request->name,
+        $member = Member::create([
+            'company_name' => $request->company_name,
+            'representative_name' => $request->representative_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'company' => $request->company,
-            'position' => $request->position,
             'phone' => $request->phone,
             'address' => $request->address,
             'membership_type' => $request->membership_type,
             'status' => $request->status ?? 'active',
+            'membership_expires_at' => $request->membership_expires_at,
+            'is_active' => $request->boolean('is_active', true),
             'email_verified_at' => now(),
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => '会員を作成しました',
-            'member' => $member
+            'data' => $member
         ], 201);
     }
 

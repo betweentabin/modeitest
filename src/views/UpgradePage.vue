@@ -12,47 +12,6 @@
       </div>
       
       <div class="plans-grid">
-        <!-- ベーシックプラン -->
-        <div class="plan-card" :class="{ current: currentMembershipType === 'basic', disabled: isHigherPlan('basic') }">
-          <div class="plan-header">
-            <h2>ベーシック会員</h2>
-            <div class="plan-price">
-              <span class="price">無料</span>
-              <span class="period">永年</span>
-            </div>
-          </div>
-          
-          <div class="plan-description">
-            <p>基本的な刊行物へのアクセス</p>
-          </div>
-          
-          <ul class="plan-features">
-            <li>✓ ベーシック向け刊行物</li>
-            <li>✓ 月次レポート（簡易版）</li>
-            <li>✓ セミナー情報の閲覧</li>
-            <li>✓ メールニュースレター</li>
-            <li class="disabled">✗ 四半期レポート</li>
-            <li class="disabled">✗ 業界分析レポート</li>
-            <li class="disabled">✗ セミナー動画</li>
-            <li class="disabled">✗ データダウンロード</li>
-          </ul>
-          
-          <button 
-            v-if="currentMembershipType === 'basic'"
-            class="plan-button current-plan"
-            disabled
-          >
-            現在のプラン
-          </button>
-          <button 
-            v-else-if="!isHigherPlan('basic')"
-            @click="selectPlan('basic')"
-            class="plan-button"
-          >
-            このプランを選択
-          </button>
-        </div>
-        
         <!-- スタンダードプラン -->
         <div class="plan-card recommended" :class="{ current: currentMembershipType === 'standard', disabled: isHigherPlan('standard') }">
           <div class="recommended-badge">おすすめ</div>
@@ -60,8 +19,8 @@
             <h2>スタンダード会員</h2>
             <div class="plan-price">
               <span class="currency">&yen;</span>
-              <span class="price">3,000</span>
-              <span class="period">/月</span>
+              <span class="price">1,000</span>
+              <span class="period">/月（税別）</span>
             </div>
           </div>
           
@@ -70,7 +29,7 @@
           </div>
           
           <ul class="plan-features">
-            <li>✓ ベーシック会員の全機能</li>
+            <li>✓ 基本機能</li>
             <li>✓ 四半期レポート</li>
             <li>✓ 業界分析レポート</li>
             <li>✓ セミナー資料（一部）</li>
@@ -102,8 +61,8 @@
             <h2>プレミアム会員</h2>
             <div class="plan-price">
               <span class="currency">&yen;</span>
-              <span class="price">10,000</span>
-              <span class="period">/月</span>
+              <span class="price">3,000</span>
+              <span class="period">/月（税別）</span>
             </div>
           </div>
           
@@ -145,7 +104,6 @@
           <thead>
             <tr>
               <th>機能</th>
-              <th>ベーシック</th>
               <th class="highlighted">スタンダード</th>
               <th>プレミアム</th>
             </tr>
@@ -153,49 +111,41 @@
           <tbody>
             <tr>
               <td>月次レポート</td>
-              <td><span class="check partial">簡易版</span></td>
               <td><span class="check">✓</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>四半期レポート</td>
-              <td><span class="cross">✗</span></td>
               <td><span class="check">✓</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>業界分析レポート</td>
-              <td><span class="cross">✗</span></td>
               <td><span class="check">✓</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>特別調査レポート</td>
               <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>セミナー資料</td>
-              <td><span class="cross">✗</span></td>
               <td><span class="check partial">一部</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>セミナー動画</td>
               <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>データダウンロード</td>
               <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
               <td><span class="check">✓</span></td>
             </tr>
             <tr>
               <td>サポート</td>
-              <td>メール</td>
               <td>優先サポート</td>
               <td>専任コンサルタント</td>
             </tr>

@@ -410,8 +410,10 @@ export default {
 .form-group.full { flex: 1 1 100%; }
 .form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
 .form-actions { display: flex; gap: 12px; }
-.save-btn { padding: 8px 16px; border: 1px solid #28a745; background: #28a745; color: white; border-radius: 4px; }
-.refresh-btn { padding: 8px 16px; border: 1px solid #007bff; background: #007bff; color: white; border-radius: 4px; }
+.save-btn { padding: 8px 16px; border: 1px solid #DA5761; background: #DA5761; color: white; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+.save-btn:hover { background: #9C3940; border-color: #9C3940; }
+.refresh-btn { padding: 8px 16px; border: 1px solid #1A1A1A; background: #1A1A1A; color: white; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+.refresh-btn:hover { background: #333333; border-color: #333333; }
 .filters-section { padding: 16px 24px; display: flex; gap: 16px; align-items: center; border-bottom: 1px solid #e5e5e5; }
 .filter-select { padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
 .table-container { overflow-x: auto; }
@@ -419,8 +421,10 @@ export default {
 .error { color: #da5761; }
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table th, .data-table td { border-bottom: 1px solid #e5e5e5; padding: 12px 16px; text-align: left; }
-.small-btn { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer; margin-right: 6px; }
-.small-btn.danger { border-color: #dc3545; color: #dc3545; }
+.small-btn { padding: 6px 10px; border: 1px solid #DA5761; border-radius: 4px; background: #DA5761; color: white; cursor: pointer; margin-right: 6px; transition: background-color 0.2s; }
+.small-btn:hover { background: #9C3940; border-color: #9C3940; }
+.small-btn.danger { border-color: #1A1A1A; background: #1A1A1A; color: white; }
+.small-btn.danger:hover { background: #333333; border-color: #333333; }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; }
 .modal-content { background: white; border-radius: 8px; width: 720px; max-width: 95%; overflow: hidden; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; }

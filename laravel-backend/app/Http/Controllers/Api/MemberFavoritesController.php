@@ -27,8 +27,7 @@ class MemberFavoritesController extends Controller
             }
 
             $favorites = $member->favoriteMembers()
-                ->select(['id', 'company_name', 'representative_name', 'email', 'phone', 'address', 'membership_type'])
-                ->with('pivot')
+                ->select(['members.id', 'company_name', 'representative_name', 'email', 'phone', 'address', 'membership_type'])
                 ->orderBy('member_favorites.created_at', 'desc')
                 ->get();
 

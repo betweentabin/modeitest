@@ -231,6 +231,10 @@ class ApiClient {
     return this.get('/api/admin/members', { params })
   }
 
+  async createAdminMember(data) {
+    return this.post('/api/admin/members', data)
+  }
+
   async updateAdminMember(id, data) {
     return this.put(`/api/admin/members/${id}`, data)
   }
