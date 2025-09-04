@@ -79,6 +79,17 @@ class MemberDirectoryController extends Controller
                 }
             }
 
+            // お気に入りのみ（現在のユーザーが登録したお気に入りに限定）
+            if ($request->boolean('favorites_only')) {
+                $favoriteIds = MemberFavorite::where('member_id', $member->id)
+                    ->pluck('favorite_member_id');
+                if ($favoriteIds->isNotEmpty()) {
+                    $query->whereIn('id', $favoriteIds);
+                } else {
+                    $query->whereRaw('1=0');
+                }
+            }
+
             // ソート
             $sortBy = $request->get('sort', 'company_name');
             $sortOrder = $request->get('order', 'asc');
@@ -246,6 +257,12 @@ class MemberDirectoryController extends Controller
 
             if ($request->filled('region')) {
                 $query->where('address', 'LIKE', "%{$request->region}%");
+            }
+
+            if ($request->filled('industry')) {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'industry')) {
+                    $query->where('industry', $request->industry);
+                }
             }
 
             $members = $query->orderBy('company_name')->get();

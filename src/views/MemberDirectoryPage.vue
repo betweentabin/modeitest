@@ -469,6 +469,7 @@ export default {
         if (this.membershipFilter) params.membership_type = this.membershipFilter
         if (this.regionFilter) params.region = this.regionFilter
         if (this.industryFilter) params.industry = this.industryFilter
+        if (this.showFavoritesOnly) params.favorites_only = 1
 
         const response = await apiClient.get('/api/member/directory/export/csv', { params, responseType: 'blob' })
 

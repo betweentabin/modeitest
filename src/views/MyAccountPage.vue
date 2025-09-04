@@ -265,7 +265,6 @@
           <div v-else-if="favoritesError" class="error">{{ favoritesError }}</div>
           <div v-else>
             <div v-if="favoriteMembers.length === 0" class="empty-state">
-              <div class="empty-icon">⭐</div>
               <h3>お気に入り会員はまだありません</h3>
               <p>会員名簿からお気に入りの会員を登録してみましょう。</p>
               <button @click="$router.push('/member-directory')" class="directory-btn">
@@ -452,14 +451,14 @@ export default {
     },
     menuItems() {
       return [
-        { id: 'profile', label: 'アカウント情報', icon: '👤' },
-        { id: 'seminars', label: 'セミナー', icon: '🎫' },
-        { id: 'seminar-favorites', label: 'セミナーお気に入り', icon: '⭐' },
-        { id: 'registrations', label: '申込状況', icon: '📝' },
-        { id: 'membership', label: '会員プラン', icon: '★' },
-        { id: 'downloads', label: 'ダウンロード履歴', icon: '↓' },
-        { id: 'favorites', label: 'お気に入り', icon: '♥' },
-        { id: 'settings', label: '設定', icon: '⚙' }
+        { id: 'profile', label: 'アカウント情報', icon: '' },
+        { id: 'seminars', label: 'セミナー', icon: '' },
+        { id: 'seminar-favorites', label: 'セミナーお気に入り', icon: '' },
+        { id: 'registrations', label: '申込状況', icon: '' },
+        { id: 'membership', label: '会員プラン', icon: '' },
+        { id: 'downloads', label: 'ダウンロード履歴', icon: '' },
+        { id: 'favorites', label: 'お気に入り', icon: '' },
+        { id: 'settings', label: '設定', icon: '' }
       ]
     }
   },
@@ -469,11 +468,13 @@ export default {
   },
   methods: {
     onReservationMade(payload) {
-      // 申込状況タブに切替え、一覧をリロード
+      // 申込状況タブに切替え、描画後にリロード
       this.activeTab = 'registrations'
-      if (this.$refs && this.$refs.registrationsTab && typeof this.$refs.registrationsTab.load === 'function') {
-        this.$refs.registrationsTab.load()
-      }
+      this.$nextTick(() => {
+        if (this.$refs && this.$refs.registrationsTab && typeof this.$refs.registrationsTab.load === 'function') {
+          this.$refs.registrationsTab.load()
+        }
+      })
     },
     onSeminarFavoriteUpdated() {
       if (this.$refs && this.$refs.seminarFavoritesTab && typeof this.$refs.seminarFavoritesTab.load === 'function') {
