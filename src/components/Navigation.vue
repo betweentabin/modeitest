@@ -27,7 +27,7 @@
 <script>
 import ViewComponent from "./ViewComponent";
 import Group1 from "./Group1";
-import XButton from "./XButtonPhone";
+import XButton from "./XButton";
 import XButton2 from "./XButton2";
 import Items from "./ItemsNav";
 import PcMenuModal from "./PcMenuModal.vue";

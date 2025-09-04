@@ -22,7 +22,7 @@ export default {
 
 <style>
 .button-1 {
-  background: #9C3940;
+  background: #1A1A1A;
   border-radius: 8px;
   padding: 0 20px 0 24px;
   height: 40px;

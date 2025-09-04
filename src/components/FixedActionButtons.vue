@@ -79,7 +79,47 @@ export default {
 /* Responsive Design */
 @media (max-width: 768px) {
   .fixed-side-buttons {
-    display: none;
+    right: 10px;
+    gap: 8px;
+  }
+  
+  .side-button {
+    width: 80px;
+    height: 80px;
+    font-size: 11px;
+  }
+  
+  .side-button svg {
+    width: 20px;
+    height: 19px;
+  }
+  
+  .contact-side svg {
+    width: 14px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixed-side-buttons {
+    right: 8px;
+    gap: 6px;
+  }
+  
+  .side-button {
+    width: 70px;
+    height: 70px;
+    font-size: 10px;
+  }
+  
+  .side-button svg {
+    width: 18px;
+    height: 17px;
+  }
+  
+  .contact-side svg {
+    width: 12px;
+    height: 19px;
   }
 }
 </style>
