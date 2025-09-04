@@ -254,7 +254,7 @@
             <div class="frame-1321317473">
               <div class="frame-1321317473-1">
                 <div class="overlap-group-container">
-                  <div class="overlap-group3-1">
+                  <div class="overlap-group3-1" @click="goToEconomicIndicators" style="cursor: pointer;">
                     <img class="x2-2-1" :src="x222" alt="2 2" />
                     <div class="overlap-group2">
                       <div class="flex-col-2">
@@ -271,7 +271,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="overlap-group-1">
+                  <div class="overlap-group-1" @click="goToFinancialReport" style="cursor: pointer;">
                     <img class="x2-3" :src="x23" alt="2 3" />
                     <div class="overlap-group-2">
                       <div class="flex-col">
@@ -729,6 +729,14 @@ export default {
     goToPublicationList() {
       // 刊行物一覧ページに遷移
       this.$router.push('/publication');
+    },
+    goToEconomicIndicators() {
+      // 経済指標ページに遷移
+      this.$router.push('/economic-indicators');
+    },
+    goToFinancialReport() {
+      // 決算報告ページに遷移
+      this.$router.push('/financial-report');
     }
   }
 };
@@ -2157,6 +2165,7 @@ export default {
   .hero-title,
   .hero-subtitle {
     font-size: 40px;
+    color: #1A1A1A;
   }
   
   .hero-title-wrapper,
@@ -2393,6 +2402,7 @@ export default {
   .hero-title,
   .hero-subtitle {
     font-size: 28px;
+    color: #1A1A1A;
   }
   
   .hero-button-text {
@@ -2961,6 +2971,7 @@ export default {
   .hero-title,
   .hero-subtitle {
     font-size: 18px;
+    color: #1A1A1A;
   }
   
   .hero-button-wrapper {
