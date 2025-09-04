@@ -21,9 +21,14 @@
             <h3>🔒 アクセス制限</h3>
             <p>会員名簿の閲覧はスタンダード会員以上でご利用いただけます。</p>
             <p>現在の会員種別: {{ getMembershipLabel(memberInfo?.membership_type) }}</p>
-            <button @click="$router.push('/upgrade')" class="upgrade-btn">
-              アップグレードする
-            </button>
+            <div class="actions">
+              <button v-if="!memberInfo" @click="$router.push('/login?redirect=/member-directory')" class="login-btn">
+                ログインする
+              </button>
+              <button @click="$router.push('/upgrade')" class="upgrade-btn">
+                アップグレードする
+              </button>
+            </div>
           </div>
         </div>
 
@@ -288,7 +293,9 @@ export default {
       const { getMemberInfo, isLoggedIn } = useMemberAuth()
       
       if (!isLoggedIn()) {
-        this.$router.push('/login?redirect=/member-directory')
+        // 未ログイン時はリダイレクトせず、アクセス制限カードを表示
+        this.memberInfo = null
+        this.canAccess = false
         return
       }
 
@@ -297,7 +304,8 @@ export default {
         this.canAccess = this.memberInfo && ['standard', 'premium'].includes(this.memberInfo.membership_type)
       } catch (error) {
         console.error('認証情報の取得に失敗:', error)
-        this.$router.push('/login')
+        this.memberInfo = null
+        this.canAccess = false
       }
     },
 
