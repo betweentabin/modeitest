@@ -262,7 +262,7 @@ export default {
     },
     
     goToLogin() {
-      this.$router.push('/login');
+      this.$router.push('/member-login');
     },
     
     goToContact() {

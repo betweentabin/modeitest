@@ -397,7 +397,7 @@ export default {
         } else if (response.requires_login) {
           // ログインが必要な場合
           alert('このレポートは会員限定です。ログインしてください。');
-          this.$router.push('/login');
+          this.$router.push('/member-login');
         } else {
           throw new Error(response.message || 'ダウンロードに失敗しました');
         }

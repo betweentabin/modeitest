@@ -302,7 +302,7 @@ export default {
       if (canAccess) {
         this.goToSeminarDetail(seminar);
       } else if (!this.$store.getters['auth/isAuthenticated']) {
-        this.$router.push('/login');
+        this.$router.push('/member-login');
       } else {
         alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');
