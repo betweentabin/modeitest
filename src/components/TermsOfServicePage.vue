@@ -333,6 +333,10 @@ export default {
     padding: 50px 30px !important;
   }
   
+  .content-container {
+    padding: 30px 20px !important;
+  }
+  
   .content-header {
     gap: 25px !important;
   }
@@ -395,6 +399,10 @@ export default {
     padding: 30px 20px !important;
   }
   
+  .content-container {
+    padding: 30px 20px !important;
+  }
+  
   .content-header {
     gap: 22px !important;
   }
@@ -446,6 +454,10 @@ export default {
 
 @media (max-width: 768px) {
   .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-container {
     padding: 30px 20px !important;
   }
   
@@ -543,6 +555,10 @@ export default {
   }
   
   .main-content {
+    padding: 20px 15px !important;
+  }
+  
+  .content-container {
     padding: 20px 15px !important;
   }
   

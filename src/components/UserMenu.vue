@@ -201,7 +201,7 @@ export default {
 }
 
 .login-btn:hover {
-  background-color: #f5f5f5;
+  opacity: 0.8;
 }
 
 .register-btn {

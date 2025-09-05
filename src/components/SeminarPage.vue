@@ -379,6 +379,7 @@ export default {
   border: none;
   cursor: pointer;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .intro-btn span {
@@ -390,7 +391,7 @@ export default {
 }
 
 .intro-btn:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 .btn-arrow {
@@ -616,6 +617,7 @@ export default {
   border: none;
   cursor: pointer;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .reserve-btn span {
@@ -627,7 +629,7 @@ export default {
 }
 
 .reserve-btn:hover {
-  background: var(--color-accent);
+  opacity: 0.8;
 }
 
 .show-more-btn {
@@ -643,6 +645,7 @@ export default {
   cursor: pointer;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   color: #ffffff;
+  transition: all 0.3s ease;
 }
 
 .show-more-btn span {
@@ -654,7 +657,7 @@ export default {
 }
 
 .show-more-btn:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 /* Past Seminars Section */

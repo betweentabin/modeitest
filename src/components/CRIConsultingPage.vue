@@ -666,6 +666,7 @@ export default {
   border: none;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .contact-btn span {
@@ -674,6 +675,10 @@ export default {
   font-size: 15px;
   font-weight: 700;
   line-height: 150%;
+}
+
+.contact-btn:hover {
+  opacity: 0.8;
 }
 
 /* Achievements Section */

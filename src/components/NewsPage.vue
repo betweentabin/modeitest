@@ -472,8 +472,7 @@ export default {
 }
 
 .news-item:hover {
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
+  background-color: #FDF6F7;
 }
 
 .news-meta {
@@ -579,9 +578,8 @@ export default {
 }
 
 .pagination-btn:hover {
-  background: var(--color-accent);
-  color: #FFFFFF;
-  border-color: var(--color-accent);
+  background: #F5F5F5;
+  border-color: #B0B0B0;
 }
 
 .pagination-btn.active {

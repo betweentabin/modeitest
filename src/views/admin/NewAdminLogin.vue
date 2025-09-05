@@ -283,8 +283,7 @@ export default {
 }
 
 .login-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+  opacity: 0.8;
 }
 
 .login-btn:disabled {

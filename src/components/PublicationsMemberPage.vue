@@ -723,7 +723,7 @@ export default {
 }
 
 .filter-download-btn:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 .icon-box {
@@ -940,7 +940,7 @@ export default {
 }
 
 .download-btn:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 /* Publications Container */
@@ -1081,7 +1081,7 @@ export default {
 }
 
 .publication-download:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 .loading {

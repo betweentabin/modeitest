@@ -516,7 +516,7 @@ export default {
 }
 
 .filter-download-btn:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 .icon-box {

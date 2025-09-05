@@ -116,7 +116,7 @@ export default {
 }
 
 .news-item:hover {
-  background-color: #f8f9fa;
+  background-color: #FDF6F7;
 }
 
 .news-item:last-child {

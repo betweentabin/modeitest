@@ -322,11 +322,18 @@
       <!-- Partner Companies Section -->
       <div class="content-view-3">
         <div class="frame-1321317457-1">
-          <img class="image-1" :src="image2" alt="image" /><img class="image-2" :src="image3" alt="image" /><img
-            class="image-3"
-            :src="image4"
-            alt="image"
-          /><img class="image-4" :src="image5" alt="image" />
+          <a href="https://www.chikugin.co.jp/" target="_blank" rel="noopener noreferrer">
+            <img class="image-1" :src="image2" alt="筑邦銀行" />
+          </a>
+          <a href="https://www.chikugin-lease.co.jp/" target="_blank" rel="noopener noreferrer">
+            <img class="image-2" :src="image3" alt="ちくぎんリース" />
+          </a>
+          <a href="https://www.chikugin-ts.co.jp/" target="_blank" rel="noopener noreferrer">
+            <img class="image-3" :src="image4" alt="ちくぎんテクノシステムズ" />
+          </a>
+          <a href="https://afpjp.com/" target="_blank" rel="noopener noreferrer">
+            <img class="image-4" :src="image5" alt="アジア福岡パートナーズ" />
+          </a>
         </div>
         <img
           class="vector-5-1"
@@ -1392,8 +1399,8 @@ export default {
 }
 
 .news-item:hover {
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
+  background-color: #FDF6F7;
+
 }
 
 .news-meta {
@@ -2062,11 +2069,17 @@ export default {
   box-sizing: border-box;
 }
 
+.content-view-3 a {
+  display: block;
+  width: calc((100% - 66px) / 4);
+  text-decoration: none;
+}
+
 .image-1 {
   height: auto;
   object-fit: cover;
   position: relative;
-  width: calc((100% - 66px) / 4);
+  width: 100%;
   aspect-ratio: 318 / 118;
 }
 
@@ -2074,7 +2087,7 @@ export default {
   height: auto;
   object-fit: cover;
   position: relative;
-  width: calc((100% - 66px) / 4);
+  width: 100%;
   aspect-ratio: 319 / 96;
 }
 
@@ -2082,7 +2095,7 @@ export default {
   height: auto;
   object-fit: cover;
   position: relative;
-  width: calc((100% - 66px) / 4);
+  width: 100%;
   aspect-ratio: 319 / 129;
 }
 
@@ -2090,7 +2103,7 @@ export default {
   height: auto;
   object-fit: cover;
   position: relative;
-  width: calc((100% - 66px) / 4);
+  width: 100%;
   aspect-ratio: 318 / 129;
 }
 
@@ -2655,11 +2668,15 @@ export default {
     align-items: flex-start;
   }
   
+  .content-view-3 a {
+    width: calc(50% - 7.5px) !important;
+  }
+  
   .image-1,
   .image-2,
   .image-3,
   .image-4 {
-    width: calc(50% - 7.5px) !important;
+    width: 100% !important;
     height: auto;
     flex-shrink: 0;
   }
@@ -3047,6 +3064,10 @@ export default {
     justify-content: center;
   }
   
+  .content-view-3 a {
+    width: 100%;
+  }
+  
   .image-1,
   .image-2,
   .image-3,
@@ -3268,6 +3289,10 @@ export default {
   
   .frame-1321317457-1 {
     gap: 10px;
+  }
+  
+  .content-view-3 a {
+    width: 100%;
   }
   
   .image-1,

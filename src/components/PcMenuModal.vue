@@ -335,7 +335,7 @@ export default {
 }
 
 .contact-button:hover {
-  background: #8a3237;
+  opacity: 0.8;
 }
 
 .login-button span,
