@@ -49,6 +49,8 @@ export default {
 .button-2 {
   align-items: center;
   background-color: #DA5761;
+  border: none !important;
+  outline: none !important;
   border-radius: 8px;
   box-shadow: 0px 1px 2px #0000000d;
   display: inline-flex;
