@@ -2,42 +2,12 @@
   <div v-if="isOpen" class="pc-menu-modal" @click="closeModal">
     <div class="modal-container" @click.stop>
       <!-- Header Section -->
-      <div class="modal-header">
+      <div class="modal-header" :style="{ height: navigationHeight }">
         <div class="logo-section">
-          <svg 
-            class="company-logo" 
-            width="434" 
-            height="47" 
-            viewBox="0 0 434 47" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g clip-path="url(#clip0_196_14)">
-              <path d="M53.9584 6.8266C53.9294 6.09366 53.7476 5.37505 53.4247 4.71744C53.1018 4.05984 52.6452 3.47793 52.0843 3.00954C51.3033 2.38308 50.342 2.02736 49.3438 1.99536C49.3377 1.99536 44.5648 1.99536 44.5378 1.99536C44.9514 2.00771 43.8015 2.39436 44.2224 2.38942C47.2072 2.35977 48.2295 3.03918 49.08 3.69759C50.0325 4.39337 50.705 5.41044 50.9749 6.56348C51.6634 9.86418 49.4052 15.8813 45.932 21.2882H48.8296C52.2451 15.8813 54.2922 10.4744 53.9547 6.8266" fill="#FC68A5"/>
-              <path d="M39.5587 30.79C33.4223 37.5842 26.7349 42.24 21.5399 43.6803C21.2269 43.768 21.049 43.8224 20.7471 43.8866C25.9765 44.4808 35.1197 38.9652 42.757 30.5146C44.4274 28.6564 45.9824 26.6964 47.4133 24.6457H44.4567C42.953 26.7947 41.3171 28.8468 39.5587 30.79Z" fill="#FC68A5"/>
-              <path d="M45.1243 6.43871C45.8128 9.73942 43.5534 15.8813 40.0814 21.2882H42.9803C46.3945 15.8813 48.3925 10.4176 48.0513 6.77348C48.032 6.05177 47.8596 5.34256 47.5457 4.69339C47.2318 4.04423 46.7837 3.4701 46.2313 3.00954C45.4508 2.38294 44.4899 2.02718 43.492 1.99536C43.492 1.99536 38.713 1.99536 38.6873 1.99536C39.1008 2.00895 42.5875 2.38942 42.5875 2.38942C43.3101 2.80039 43.9201 3.38527 44.363 4.09172C44.806 4.79817 45.0679 5.60414 45.1255 6.43748" fill="#FC68A5"/>
-              <path d="M33.1363 30.79C27 37.5842 20.315 42.24 15.12 43.6803C14.8046 43.768 14.6291 43.8224 14.3247 43.8866C19.5529 44.4808 28.6973 38.9652 36.3383 30.5146C38.0069 28.6559 39.5607 26.6959 40.9909 24.6457H38.0368C36.5319 26.7944 34.8952 28.8465 33.1363 30.79Z" fill="#FC68A5"/>
-              <path d="M38.9599 6.56348C39.6471 9.86418 37.3877 15.8801 33.9158 21.2882H36.8146C40.2289 15.8801 42.2342 10.5152 41.8967 6.8686C41.8767 6.13247 41.7036 5.40874 41.3886 4.74407C41.0736 4.07939 40.6238 3.48852 40.0681 3.00954C39.2866 2.38298 38.325 2.02727 37.3264 1.99536C37.3264 1.99536 34.7651 1.99536 34.7393 1.99536C35.1516 2.00771 35.4474 2.38942 35.861 2.38942C36.7255 2.70558 37.4795 3.26904 38.0302 4.01057C38.5809 4.7521 38.9033 5.6394 38.9599 6.56348Z" fill="#FC68A5"/>
-              <path d="M26.66 30.79C20.5237 37.5842 13.8399 42.24 8.6449 43.6803C8.32703 43.768 8.15399 43.8224 7.84717 43.8866C13.0754 44.4808 22.221 38.9652 29.862 30.5146C31.5308 28.6554 33.0854 26.6955 34.517 24.6457H31.5605C30.0556 26.7941 28.4181 28.8461 26.66 30.79Z" fill="#FC68A5"/>
-              <path d="M33.0762 1.99908H49.0185C48.5602 2.25072 48.0315 2.34115 47.5163 2.25603C43.1951 1.80514 32.8872 7.41956 23.744 18.7731C17.7243 26.2479 14.9445 34.05 14.9445 37.9498C15.0322 39.3988 15.6575 40.7617 16.6965 41.7685C17.7356 42.7752 19.1125 43.3522 20.5544 43.3852C21.4081 43.3798 22.254 43.2204 23.0519 42.9145L22.3364 43.8039C21.3975 43.9622 20.4455 44.0272 19.494 43.9979H5.15455C3.86046 44.0413 2.60009 43.5778 1.6387 42.7048C0.677303 41.8318 0.0898593 40.6175 0 39.3173C0 31.7116 4.95941 23.4549 11.1805 16.1753C18.846 7.20462 28.0456 1.91386 33.1008 2.00156" fill="#FC68A5"/>
-              <text fill="#1A1A1A" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="15" font-weight="bold" letter-spacing="0em">
-                <tspan x="73.9907" y="13.4545">筑邦銀行グループ</tspan>
-              </text>
-              <text fill="#1A1A1A" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="24" font-weight="bold" letter-spacing="0em">
-                <tspan x="73.9907" y="43.2273">株式会社ちくぎん地域経済研究所</tspan>
-              </text>
-            </g>
-            <defs>
-              <clipPath id="clip0_196_14">
-                <rect width="434" height="46" fill="white" transform="translate(0 0.5)"/>
-              </clipPath>
-            </defs>
-          </svg>
+          <view-component />
+          <group1 />
         </div>
         <div class="header-controls">
-          <button class="eng-button">
-            <span>ENG</span>
-          </button>
           <button class="close-button" @click="closeModal">
             <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M21.8182 2.68182L2.18182 22.3182" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -50,7 +20,7 @@
       <!-- Navigation Section -->
       <div class="navigation-section">
         <div class="nav-grid">
-          <!-- Top Row -->
+          <!-- Single nav-row with all 5 items that will wrap -->
           <div class="nav-row">
             <div class="nav-item" @click="navigateToRoute('/')">
               <svg class="nav-icon" width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -72,10 +42,7 @@
               </svg>
               <span class="nav-text">会社概要</span>
             </div>
-          </div>
-
-          <!-- Bottom Row -->
-          <div class="nav-row">
+            
             <div class="nav-item" @click="navigateToRoute('/news')">
               <svg class="nav-icon" width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.5 0C18.0499 0 13.6998 1.3196 9.99968 3.79193C6.29957 6.26426 3.41569 9.77828 1.71272 13.8896C0.0097489 18.001 -0.435826 22.525 0.432341 26.8895C1.30051 31.2541 3.44342 35.2632 6.59011 38.4099C9.73679 41.5566 13.7459 43.6995 18.1105 44.5677C22.475 45.4358 26.999 44.9902 31.1104 43.2873C35.2217 41.5843 38.7357 38.7004 41.2081 35.0003C43.6804 31.3002 45 26.9501 45 22.5C44.9937 16.5346 42.6211 10.8153 38.4029 6.59705C34.1847 2.37885 28.4654 0.00629961 22.5 0ZM32.3784 23.7245L25.4553 30.6476C25.1305 30.9724 24.6901 31.1548 24.2308 31.1548C23.7715 31.1548 23.331 30.9724 23.0063 30.6476C22.6815 30.3228 22.499 29.8824 22.499 29.4231C22.499 28.9638 22.6815 28.5233 23.0063 28.1985L26.9762 24.2308H13.8462C13.3871 24.2308 12.9469 24.0484 12.6223 23.7238C12.2977 23.3993 12.1154 22.959 12.1154 22.5C12.1154 22.041 12.2977 21.6007 12.6223 21.2762C12.9469 20.9516 13.3871 20.7692 13.8462 20.7692H26.9762L23.0063 16.8014C22.6815 16.4767 22.499 16.0362 22.499 15.5769C22.499 15.1176 22.6815 14.6772 23.0063 14.3524C23.331 14.0276 23.7715 13.8452 24.2308 13.8452C24.6901 13.8452 25.1305 14.0276 25.4553 14.3524L32.3784 21.2755C32.5393 21.4362 32.667 21.6271 32.754 21.8372C32.8411 22.0473 32.886 22.2725 32.886 22.5C32.886 22.7274 32.8411 22.9527 32.754 23.1628C32.667 23.3729 32.5393 23.5638 32.3784 23.7245Z" fill="#DA5761"/>
@@ -128,8 +95,15 @@
 </template>
 
 <script>
+import ViewComponent from "./ViewComponent";
+import Group1 from "./Group1";
+
 export default {
   name: "PcMenuModal",
+  components: {
+    ViewComponent,
+    Group1,
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -137,6 +111,28 @@ export default {
     }
   },
   emits: ['close'],
+  data() {
+    return {
+      navigationHeight: 'auto'
+    };
+  },
+  mounted() {
+    this.updateNavigationHeight();
+    window.addEventListener('resize', this.updateNavigationHeight);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateNavigationHeight);
+  },
+  watch: {
+    isOpen(newVal) {
+      if (newVal) {
+        // モーダルが開かれた時に高さを更新
+        this.$nextTick(() => {
+          this.updateNavigationHeight();
+        });
+      }
+    }
+  },
   methods: {
     closeModal() {
       this.$emit('close');
@@ -144,6 +140,13 @@ export default {
     navigateToRoute(path) {
       this.$router.push(path);
       this.closeModal();
+    },
+    updateNavigationHeight() {
+      // Navigationコンポーネントの高さを取得
+      const navigationElement = document.querySelector('.navigation');
+      if (navigationElement) {
+        this.navigationHeight = navigationElement.offsetHeight + 'px';
+      }
     }
   }
 };
@@ -161,63 +164,74 @@ export default {
   justify-content: center;
   align-items: flex-start;
   z-index: 2147483647;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-container {
   width: 100%;
-  height: 557px;
+  min-height: 700px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 57px;
-  padding-bottom: 50px;
+  gap: 55px;
+  padding-bottom: 55px;
   margin-top: 0;
   align-self: flex-start;
   z-index: 2147483647;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-header {
   width: 100%;
-  height: 115px;
-  padding: 15px 40px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #bebebe;
+  flex-shrink: 0;
+  transition: height 0.3s ease;
 }
 
-.company-logo {
-  height: 46px;
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+  flex-shrink: 1;
+  transition: gap 0.3s ease;
+  height: auto;
+  min-height: auto;
 }
+
 
 .header-controls {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 27px 0;
 }
 
-.eng-button {
-  height: 40px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 30px;
-  background: #1A1A1A;
-  border: none;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-}
-
-.eng-button span {
-  color: #ffffff;
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 150%;
-}
 
 .close-button {
   width: 24px;
@@ -231,17 +245,20 @@ export default {
 }
 
 .navigation-section {
-  height: 335px;
+  min-height: 335px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 50px;
+  flex: 1;
+  width: 100%;
+  padding: 0 50px;
 }
 
 .nav-grid {
-  width: 1150px;
-  height: 210px;
+  width: 1000px;
+  min-height: 210px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -251,24 +268,18 @@ export default {
 
 .nav-row {
   width: 100%;
-  height: 95px;
+  min-height: 95px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 50px;
-}
-
-.nav-row:first-child {
-  width: 100%;
-}
-
-.nav-row:last-child {
-  width: 750px;
+  flex-wrap: wrap;
 }
 
 .nav-item {
-  width: 350px;
-  height: 95px;
+  width: 300px;
+  flex: 0 0 auto;
+  min-height: 95px;
   padding: 25px 0;
   display: flex;
   align-items: center;
@@ -304,15 +315,20 @@ export default {
   display: flex;
   align-items: center;
   gap: 20px;
-  width: 538px;
-  height: 75px;
+  width: 100%;
+  max-width: 538px;
+  min-height: 75px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .login-button,
 .contact-button {
-  width: 259px;
-  height: 75px;
-  padding: 20px 20px 20px 40px;
+  min-width: 200px;
+  max-width: 260px;
+  flex: 1;
+  min-height: 75px;
+  padding: 20px 40px 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -351,5 +367,177 @@ export default {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
+}
+
+/* タブレット対応 (768px - 1150px) */
+@media (max-width: 1150px) {
+  .modal-container {
+    margin: 0;
+    min-height: auto;
+  }
+
+  .nav-grid {
+    width: 850px;
+  }
+
+  .modal-header {
+    padding: 15px 30px;
+  }
+  
+  .logo-section {
+    gap: 12px;
+    height: auto;
+    min-height: auto;
+  }
+
+  .nav-text {
+    font-size: 18px;
+  }
+
+  .nav-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .nav-row {
+    min-height: 80px;
+  }
+  
+  .nav-item {
+    width: 250px;
+  }
+  
+  .action-buttons {
+    max-width: 100%;
+    gap: 15px;
+  }
+  
+  .login-button span,
+  .contact-button span {
+    font-size: 18px;
+  }
+}
+
+/* タブレット対応 (768px - 1024px) */
+@media (max-width: 1024px) {
+  .nav-grid {
+    width: 600px;
+  }
+  
+  .nav-grid {
+    width: 550px;
+  }
+}
+
+
+@media (max-width: 800px) {
+  .modal-header {
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 650px) {
+  .nav-grid {
+    width: 470px;
+  }
+
+  .nav-row {
+    gap: 30px;
+  }
+
+  .nav-text {
+    font-size: 16px;
+  }
+
+  .login-button span,
+  .contact-button span {
+    font-size: 16px;
+  }
+
+  .nav-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav-item {
+    width: 220px;
+  }
+
+  .modal-container {
+    gap: 30px;
+    padding-bottom: 30px;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .modal-header {
+    padding: 10px 10px;
+  }
+}
+
+@media (max-width: 550px) {
+  .nav-grid {
+    width: 100%;
+  }
+  
+  .nav-row {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+
+  .action-buttons {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  
+  .login-button,
+  .contact-button {
+    flex: 1;
+    width: auto;
+    min-width: 50%;
+    padding: 10px 20px;
+    min-height: 60px;
+  }
+}
+
+/* 小さいモバイル対応 (480px以下) */
+@media (max-width: 480px) {
+  .modal-container {
+    gap: 0px;
+  }
+
+  .navigation-section {
+    gap: 30px;
+    padding: 0 30px;
+  }
+  
+  .modal-header {
+    padding: 8px 8px;
+  }
+  
+  .nav-row {
+    gap: 10px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .login-button,
+  .contact-button {
+    width: 100%;
+    flex: none;
+    min-height: 50px;
+    min-width: 100%;
+  }
+  
 }
 </style>

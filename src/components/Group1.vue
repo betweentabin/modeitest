@@ -86,7 +86,7 @@ export default {
     width: auto !important;
     height: auto !important;
     min-height: 35px !important;
-    gap: 10px !important;
+    gap: 5px !important;
   }
   .text-59 {
     font-size: 13px !important;

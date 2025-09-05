@@ -1,5 +1,5 @@
 <template>
-  <div class="navigation">
+  <div class="navigation" :class="{ 'menu-open': isMenuOpen }">
     <div class="logo-section">
       <view-component />
       <group1 />
@@ -52,19 +52,32 @@ export default {
     this.checkScreenSize();
     window.addEventListener('resize', this.checkScreenSize);
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.checkScreenSize);
-  },
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
+      this.toggleBodyScroll();
       console.log('Menu toggled:', this.isMenuOpen);
     },
     closeMenu() {
       this.isMenuOpen = false;
+      this.toggleBodyScroll();
     },
     checkScreenSize() {
       this.isMobile = window.innerWidth <= 800;
+    },
+    toggleBodyScroll() {
+      if (this.isMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkScreenSize);
+    // メニューが開いている状態でコンポーネントが破棄される場合の処理
+    if (this.isMenuOpen) {
+      document.body.style.overflow = '';
     }
   }
 };
@@ -129,6 +142,7 @@ export default {
   height: 24px;
   justify-content: center;
   align-items: center;
+  transition: all 0.3s ease;
 }
 
 .hamburger-line {
@@ -136,10 +150,24 @@ export default {
   height: 2px;
   background-color: #1A1A1A;
   transition: all 0.3s ease;
+  transform-origin: center;
 }
 
 .hamburger-menu:hover .hamburger-line {
   background-color: #DA5761;
+}
+
+/* メニューが開いている時のアニメーション */
+.navigation.menu-open .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.navigation.menu-open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.navigation.menu-open .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
 }
 
 /* サブナビのレスポンシブ対応 */

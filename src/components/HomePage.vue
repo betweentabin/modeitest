@@ -185,7 +185,7 @@
                     style="cursor: pointer;"
                   />
                 </div>
-                <x-button3 @click="goToPublicationList" />
+                <x-button3 class="desktop-publication-button" @click="goToPublicationList" />
               </div>
               <div class="frame-1321317486">
                 <div class="publication-item-wrapper" @click="goToPublication(0)">
@@ -212,6 +212,10 @@
                     :hotInformationVol324="dynamicPublications[3] ? dynamicPublications[3].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
                   />
                 </div>
+              </div>
+              <!-- モバイル用のボタン（768px以下で表示） -->
+              <div class="mobile-publication-button-wrapper">
+                <x-button3 class="mobile-publication-button" @click="goToPublicationList" />
               </div>
             </div>
           </div>
@@ -1689,6 +1693,16 @@ export default {
   width: 100%;
 }
 
+/* frame-1321317487のボタンを横並びに（768px以上のみ） */
+@media (min-width: 769px) {
+  .frame-1321317487 .button-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
 .group-18 {
   height: 43px;
   position: relative;
@@ -2663,9 +2677,37 @@ export default {
   .frame-1321317457-1 {
     display: flex !important;
     gap: 15px;
-    flex-wrap: wrap !important;
+  }
+  
+  /* 768px以下で出版物ボタンの表示制御 */
+  .desktop-publication-button {
+    display: none !important;
+  }
+  
+  /* frame-1321317487の中のボタンを確実に非表示 */
+  .frame-1321317487 .desktop-publication-button,
+  .frame-1321317487 .button-4,
+  .frame-1321317487 x-button3 {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  
+  .mobile-publication-button-wrapper {
+    display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .mobile-publication-button {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 auto;
   }
   
   .content-view-3 a {
@@ -3367,6 +3409,21 @@ export default {
 
   .vector-13 {
     margin-top: 20px;
+  }
+}
+
+/* 768px以上で出版物ボタンの表示制御 */
+@media (min-width: 769px) {
+  .desktop-publication-button {
+    display: block;
+  }
+  
+  .mobile-publication-button-wrapper {
+    display: none;
+  }
+  
+  .mobile-publication-button {
+    display: none;
   }
 }
 
