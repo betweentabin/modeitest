@@ -37,7 +37,7 @@
             :key="seminar.id || index"
             v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }"
           >
-            <div class="seminar-image">
+            <div class="seminar-image" :class="{ blurred: shouldBlur(seminar) }">
               <img :src="seminar.image" :alt="seminar.title" />
               <MembershipBadge 
                 v-if="seminar.membershipRequirement && seminar.membershipRequirement !== 'free'" 
@@ -83,7 +83,6 @@
               <button 
                 class="reserve-btn" 
                 @click="handleReservation(seminar)"
-                :disabled="!canAccessSeminar(seminar)"
               >
                 <span>{{ getReservationButtonText(seminar) }}</span>
                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
@@ -269,8 +268,7 @@ export default {
     },
     canAccessSeminar(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
-      // ストアの判定がfalseでも、ログインキャッシュがあればボタンは有効化
-      return this.$store.getters['auth/canAccess'](requiredLevel) || this.loggedInCached;
+      return this.$store.getters['auth/canAccess'](requiredLevel);
     },
     getReservationButtonText(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
@@ -282,8 +280,14 @@ export default {
       } else if (isRestricted) {
         return `${this.getMembershipText(requiredLevel)}会員限定`;
       } else {
-        return 'ログインが必要';
+        return 'ログインする';
       }
+    },
+    shouldBlur(seminar) {
+      const requiredLevel = seminar.membershipRequirement || 'free'
+      if (requiredLevel === 'free') return false
+      // 会員限定でアクセス権がない場合のみぼかす（画像のみ）
+      return !this.$store.getters['auth/canAccess'](requiredLevel)
     },
     getMembershipText(level) {
       switch (level) {
@@ -298,15 +302,77 @@ export default {
     handleReservation(seminar) {
       const requiredLevel = seminar.membershipRequirement || 'free';
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel) || this.loggedInCached;
-      
+
+      if (requiredLevel === 'free') {
+        // 一般公開は申込フロー（入力→確認→完了）へ
+        const id = seminar.id || this.generateSeminarId(seminar)
+        this.$router.push(`/seminars/${id}/apply`)
+        return
+      }
+
       if (canAccess) {
-        this.goToSeminarDetail(seminar);
+        // 会員限定で権限あり：フォームを介さず即時申込
+        this.directRegister(seminar)
       } else if (!this.$store.getters['auth/isAuthenticated']) {
         this.$router.push('/member-login');
       } else {
         alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');
       }
+    },
+    async directRegister(seminar) {
+      try {
+        const profile = this.getLoggedInProfile()
+        if (!profile || !profile.email) {
+          this.$router.push('/member-login');
+          return
+        }
+        const payload = {
+          name: profile.name || '会員',
+          email: profile.email,
+          company: profile.company || '',
+          phone: profile.phone || '',
+          special_requests: ''
+        }
+        const id = seminar.id || this.generateSeminarId(seminar)
+        const res = await apiClient.registerForSeminar(id, payload)
+        if (res && res.success) {
+          alert('予約を受け付けました。マイページで確認できます。')
+          // マイページに反映：バックエンド登録済みなので、必要ならリロード後に遷移
+          // this.$router.push('/myaccount')
+        } else {
+          throw new Error(res?.error || '予約に失敗しました')
+        }
+      } catch (e) {
+        console.error('directRegister error', e)
+        alert('予約に失敗しました。時間をおいて再度お試しください。')
+      }
+    },
+    getLoggedInProfile() {
+      try {
+        // Vuexにユーザーがある場合はそちらを優先
+        const user = this.$store?.state?.auth?.user || this.$store?.state?.auth?.member
+        if (user && user.email) {
+          return {
+            name: user.full_name || user.name || user.company_name || '会員',
+            email: user.email,
+            company: user.company_name || '',
+            phone: user.phone || ''
+          }
+        }
+        // localStorage フォールバック
+        const ls = localStorage.getItem('memberUser')
+        if (ls) {
+          const u = JSON.parse(ls)
+          return {
+            name: u.full_name || u.name || u.company_name || '会員',
+            email: u.email,
+            company: u.company_name || '',
+            phone: u.phone || ''
+          }
+        }
+      } catch (_) {}
+      return null
     }
   }
 };
@@ -635,6 +701,11 @@ export default {
 
 .seminar-image {
   position: relative;
+}
+
+/* 会員限定で未アクセス時は画像のみぼかす */
+.seminar-image.blurred img {
+  filter: blur(6px);
 }
 
 /* Pagination Styles */

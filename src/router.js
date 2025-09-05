@@ -42,6 +42,9 @@ import PastSeminarsPage from "./components/PastSeminarsPage";
 import SeminarDetailPage from "./components/SeminarDetailPage";
 import SeminarDetailReservedPage from "./components/SeminarDetailReservedPage";
 import SeminarDetailJoinPage from "./components/SeminarDetailJoinPage";
+import SeminarApplicationFormPage from "./components/SeminarApplicationFormPage.vue";
+import SeminarApplicationConfirmPage from "./components/SeminarApplicationConfirmPage.vue";
+import SeminarApplicationCompletePage from "./components/SeminarApplicationCompletePage.vue";
 import GlossaryPage from "./components/GlossaryPage";
 import EconomicIndicatorsPage from "./components/EconomicIndicatorsPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
@@ -154,6 +157,30 @@ const router = new Router({
       name: "seminar",
       component: SeminarPage,
       meta: { title: "セミナー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/current",
+      name: "currentSeminars",
+      component: CurrentSeminarsPage,
+      meta: { title: "受付中のセミナー - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/seminars/:id/apply",
+      name: "seminarApplyForm",
+      component: SeminarApplicationFormPage,
+      meta: { title: "セミナー申し込み - 入力" }
+    },
+    {
+      path: "/seminars/:id/apply/confirm",
+      name: "seminarApplyConfirm",
+      component: SeminarApplicationConfirmPage,
+      meta: { title: "セミナー申し込み - 確認" }
+    },
+    {
+      path: "/seminars/:id/apply/complete",
+      name: "seminarApplyComplete",
+      component: SeminarApplicationCompletePage,
+      meta: { title: "セミナー申し込み - 完了" }
     },
     {
       path: "/seminar/archive",
