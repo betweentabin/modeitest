@@ -274,10 +274,9 @@ export default {
       return '予約する';
     },
     shouldBlur(seminar) {
-      const requiredLevel = seminar.membershipRequirement || 'free'
-      if (requiredLevel === 'free') return false
-      // 会員限定でアクセス権がない場合のみぼかす（画像のみ）
-      return !this.$store.getters['auth/canAccess'](requiredLevel)
+      const level = seminar.membershipRequirement || 'free'
+      if (!['premium','standard'].includes(level)) return false
+      return !this.$store.getters['auth/canAccess'](level)
     },
     getMembershipText(level) {
       switch (level) {

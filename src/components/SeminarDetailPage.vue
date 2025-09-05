@@ -207,6 +207,10 @@ export default {
       return this.$store.getters['auth/canAccess'](requiredLevel)
     },
     shouldBlur() {
+      // プレミアム・スタンダードは厳格に会員限定扱い
+      const level = this.seminar?.membershipRequirement || 'free'
+      const strict = ['premium','standard'].includes(level)
+      if (!strict && this.serverCanRegister) return false
       return this.isMembersOnly && !this.canAccessSeminar
     },
     canRegister() {
@@ -216,6 +220,9 @@ export default {
     },
     registrationButtonText() {
       if (!this.seminar) return '予約する';
+      const level = this.seminar.membershipRequirement || 'free'
+      const strict = ['premium','standard'].includes(level)
+      if (!strict && this.serverCanRegister) return '予約する';
       const requiredLevel = this.seminar.membershipRequirement || 'free';
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
       const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
@@ -226,8 +233,17 @@ export default {
     },
     authState() {
       if (!this.seminar) return { type: 'loading', message: '読み込み中...' };
+      // サーバーが申込可 かつ プレミアム/ベーシック以外は一般扱い
+      const level = this.seminar.membershipRequirement || 'free'
+      const strict = ['premium','standard'].includes(level)
+      if (this.serverCanRegister && !strict) {
+        return {
+          type: 'member_logged_in',
+          message: 'このセミナーに参加するには予約が必要です。'
+        }
+      }
       
-      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const requiredLevel = level;
       const isAuthenticated = this.$store.getters['auth/isAuthenticated'];
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
       
@@ -459,8 +475,9 @@ export default {
     handleRegistration() {
       if (!this.seminar) return;
       const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const strict = ['premium','standard'].includes(requiredLevel)
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
-      if (requiredLevel === 'free') {
+      if (requiredLevel === 'free' || (!strict && this.serverCanRegister)) {
         // 一般公開：申込フォームへ遷移
         this.$router.push(`/seminars/${this.seminar.id}/apply`)
         return

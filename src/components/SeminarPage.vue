@@ -287,16 +287,21 @@ export default {
       return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
     },
     canAccessSeminar(seminar) {
-      const requiredLevel = seminar.membershipRequirement || 'free';
-      return this.$store.getters['auth/canAccess'](requiredLevel);
+      const level = seminar.membershipRequirement || 'free'
+      if (['premium','standard'].includes(level)) {
+        return this.$store.getters['auth/canAccess'](level)
+      }
+      return true
     },
     isRestricted(seminar) {
-      const requiredLevel = seminar.membershipRequirement || 'free';
-      if (requiredLevel === 'free') return false;
-      return !this.$store.getters['auth/canAccess'](requiredLevel);
+      const level = seminar.membershipRequirement || 'free'
+      if (!['premium','standard'].includes(level)) return false
+      return !this.$store.getters['auth/canAccess'](level)
     },
     shouldBlur(seminar) {
-      return this.isRestricted(seminar);
+      const level = seminar.membershipRequirement || 'free'
+      if (!['premium','standard'].includes(level)) return false
+      return !this.$store.getters['auth/canAccess'](level)
     },
     getReservationButtonText() {
       return '予約する';
