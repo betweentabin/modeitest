@@ -849,7 +849,8 @@ export default {
   width: fit-content;
 }
 
-.hero-title {
+/* InlineEditable renders inside a child component, so use :deep to style it */
+:deep(.hero-title) {
   font-family: var(--font-family-inter);
   font-size: 48px;
   font-weight: 700;
@@ -871,7 +872,7 @@ export default {
   width: fit-content;
 }
 
-.hero-subtitle {
+:deep(.hero-subtitle) {
   font-family: var(--font-family-inter);
   font-size: 48px;
   font-weight: 700;
@@ -2225,8 +2226,8 @@ export default {
     gap: 18px;
   }
   
-  .hero-title,
-  .hero-subtitle {
+  :deep(.hero-title),
+  :deep(.hero-subtitle) {
     font-size: 40px;
     color: #1A1A1A;
   }
@@ -2462,8 +2463,8 @@ export default {
     padding: 250px 40px;
   }
   
-  .hero-title,
-  .hero-subtitle {
+  :deep(.hero-title),
+  :deep(.hero-subtitle) {
     font-size: 28px;
     color: #1A1A1A;
   }
@@ -2653,8 +2654,8 @@ export default {
     padding: 130px 30px;
   }
   
-  .hero-title,
-  .hero-subtitle {
+  :deep(.hero-title),
+  :deep(.hero-subtitle) {
     font-size: 22px;
   }
   
@@ -3063,8 +3064,8 @@ export default {
     font-size: 13px !important;
   }
   
-  .hero-title,
-  .hero-subtitle {
+  :deep(.hero-title),
+  :deep(.hero-subtitle) {
     font-size: 18px;
     color: #1A1A1A;
   }
