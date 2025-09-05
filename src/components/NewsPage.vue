@@ -218,6 +218,13 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'お知らせ') || 'お知らせ' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'information') || 'information' },
+    filteredNews() {
+      if (this.selectedCategory === 'all') {
+        return this.newsItems
+      }
+      return this.newsItems.filter(item => item.category === this.selectedCategory)
+    }
+  },
   methods: {
     async loadNews() {
       this.loading = true
@@ -259,14 +266,14 @@ export default {
         this.totalPages = 1
         this.totalItems = 0
       } finally {
-        this.loading = false
-      }
-    },
-    
-    // formatNewsItem: Notice統一のため未使用
-    
-    // フォールバックは使用しない方針
-    async changePage(page) {
+      this.loading = false
+    }
+  },
+  
+  // formatNewsItem: Notice統一のため未使用
+  
+  // フォールバックは使用しない方針
+  async changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
         await this.loadNews();
@@ -303,13 +310,6 @@ export default {
     },
     goToNewsDetail(newsId) {
       this.$router.push(`/news/${newsId}`);
-    }
-  },
-    filteredNews() {
-      if (this.selectedCategory === 'all') {
-        return this.newsItems
-      }
-      return this.newsItems.filter(item => item.category === this.selectedCategory)
     }
   }
 };

@@ -17,10 +17,14 @@
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="terms" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
+          <span class="title-english">
+            <CmsText pageKey="terms" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -29,79 +33,127 @@
       <div class="content-container">
         <!-- Introduction -->
         <div class="intro-section">
-          <p class="intro-text">
-            このウェブサイトhttp://www.chikugin-ri.co.jp/（以下｢当ウェブサイト｣といいます）は、株式会社 ちくぎん地域経済研究所（以下｢当研究所｣といいます）が運営しています。<br>
-            ご利用にあたっては、以下の注意事項等をお読みになり、ご了解いただいたうえでご利用ください。なお、当研究所は当ウェブサイトの利用条件を予告なしに変更することがありますので、最新の利用条件をご確認ください。
-          </p>
+          <CmsText
+            pageKey="terms"
+            fieldKey="intro"
+            tag="p"
+            type="html"
+            class="intro-text"
+            :fallback="`このウェブサイトhttp://www.chikugin-ri.co.jp/（以下｢当ウェブサイト｣といいます）は、株式会社 ちくぎん地域経済研究所（以下｢当研究所｣といいます）が運営しています。<br>ご利用にあたっては、以下の注意事項等をお読みになり、ご了解いただいたうえでご利用ください。なお、当研究所は当ウェブサイトの利用条件を予告なしに変更することがありますので、最新の利用条件をご確認ください。`"
+          />
         </div>
 
         <!-- Terms of Service Sections -->
         <div class="policy-section">
-          <h3 class="section-title">著作権等について</h3>
-          <p class="section-content">
-            当ウェブサイトに掲載された全ての内容（情報、商標、デザイン等）の著作権その他の知的財産権は、当研究所又は権限ある第三者に帰属します。したがって、それらを無断で使用、複製、改変することを禁じます。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="copyright_title" tag="span" :fallback="'著作権等について'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="copyright_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="'当ウェブサイトに掲載された全ての内容（情報、商標、デザイン等）の著作権その他の知的財産権は、当研究所又は権限ある第三者に帰属します。したがって、それらを無断で使用、複製、改変することを禁じます。'"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">リンクについて</h3>
-          <p class="section-content">
-            当ウェブサイトから、リンクやバナーによって他のウェブサイトへ移動できる場合があります。移動した先のウェブサイトは当研究所が運営するものではありません。したがって、その内容等について当研究所は責任を負いかねますのでご了承ください。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="link_title" tag="span" :fallback="'リンクについて'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="link_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="'当ウェブサイトから、リンクやバナーによって他のウェブサイトへ移動できる場合があります。移動した先のウェブサイトは当研究所が運営するものではありません。したがって、その内容等について当研究所は責任を負いかねますのでご了承ください。'"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">免責事項</h3>
-          <p class="section-content">
-            当ウェブサイトに掲載された情報、また、当ウェブサイトを利用することで生じたいかなるトラブル、損失、損害に対して、当研究所は責任を負いません。.6%の割合による遅延損害金を支払うものとします。<br>
-            当ウェブサイトは、予告なしに運営の中断や、内容の変更を行うことがあります。これによって生じたいかなるトラブル、損失、損害に対しても、当研究所は責任を負いません。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="disclaimer_title" tag="span" :fallback="'免責事項'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="disclaimer_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="`当ウェブサイトに掲載された情報、また、当ウェブサイトを利用することで生じたいかなるトラブル、損失、損害に対して、当研究所は責任を負いません。.6%の割合による遅延損害金を支払うものとします。<br>当ウェブサイトは、予告なしに運営の中断や、内容の変更を行うことがあります。これによって生じたいかなるトラブル、損失、損害に対しても、当研究所は責任を負いません。`"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">セキュリティについて</h3>
-          <p class="section-content">
-            当ウェブサイトでは、不正アクセス、紛失、破壊、改ざん、漏えい等のトラブルを防止するために、セキュリティを高めるための取組みを継続的に実施していますが、かかる事故が一切発生しないことを保証するものではありません。<br>
-            なお、当ウェブサイトからダウンロードする情報に含まれる可能性のあるコンピュータウィルス等への予防措置は利用者ご自身の責任でお取りください。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="security_title" tag="span" :fallback="'セキュリティについて'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="security_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="`当ウェブサイトでは、不正アクセス、紛失、破壊、改ざん、漏えい等のトラブルを防止するために、セキュリティを高めるための取組みを継続的に実施していますが、かかる事故が一切発生しないことを保証するものではありません。<br>なお、当ウェブサイトからダウンロードする情報に含まれる可能性のあるコンピュータウィルス等への予防措置は利用者ご自身の責任でお取りください。`"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">クッキー(Cookie)について</h3>
-          <p class="section-content">
-            当ウェブサイトでは、お客さまへの適切な情報の提供や、セキュリティの確保を目的に、クッキー(Cookie)を使用することがあります。<br>
-            クッキー(Cookie)とは、お客さまがウェブサイトにアクセスする際に、ウェブサイトを通じてお客さまの端末に一定のテキストファイル(情報)を格納し、次回お客さまが同一のウェブサイトにアクセスする際にお客さまを識別できるようにする技術のことです。なお、ブラウザの設定によりクッキー(Cookie)の受入れを停止することもできます。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="cookie_title" tag="span" :fallback="'クッキー(Cookie)について'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="cookie_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="`当ウェブサイトでは、お客さまへの適切な情報の提供や、セキュリティの確保を目的に、クッキー(Cookie)を使用することがあります。<br>クッキー(Cookie)とは、お客さまがウェブサイトにアクセスする際に、ウェブサイトを通じてお客さまの端末に一定のテキストファイル(情報)を格納し、次回お客さまが同一のウェブサイトにアクセスする際にお客さまを識別できるようにする技術のことです。なお、ブラウザの設定によりクッキー(Cookie)の受入れを停止することもできます。`"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">ご利用環境について</h3>
-          <p class="section-content">
-            このサイトはInternet Explorer7.0以上ならびにFirefox4.0以上のバージョンでのご利用を推奨しております。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="environment_title" tag="span" :fallback="'ご利用環境について'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="environment_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="'このサイトはInternet Explorer7.0以上ならびにFirefox4.0以上のバージョンでのご利用を推奨しております。'"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">禁止される行為</h3>
-          <p class="section-content">
-            当研究所は、利用者に通知することなく、本サービスの内容を変更しまたは本サービスの提供を中止することができるものとし、これによって利用者に生じた損害について一切の責任を負いません。
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="prohibited_title" tag="span" :fallback="'禁止される行為'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="prohibited_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="'当研究所は、利用者に通知することなく、本サービスの内容を変更しまたは本サービスの提供を中止することができるものとし、これによって利用者に生じた損害について一切の責任を負いません。'"
+          />
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">第8条（利用規約の変更）</h3>
-          <p class="section-content">
-            (1) 営利の目的で（但し、当研究所との取引を除く）、当ウェブサイト又は当ウェブサイト上の情報を使用又は複製すること<br>
-            (2) 当ウェブサイト上の情報に何らかの改変を加えること<br>
-            (3) 当研究所の事前の同意を得ることなく当ウェブサイトへのリンクを行うこと<br>
-            (4) 当ウェブサイトのうち、一般からのアクセスが意図されていない部分にアクセスすること<br>
-            (5) 当ウェブサイトのコードを複製すること<br>
-            (6) システムの脆弱性を試すこと又はセキュリティもしくは認証システムを破ること<br>
-            (7) 有害なコンピュータプログラム等を送信または書き込むこと<br>
-            (8) 当研究所または第三者を誹謗中傷し、またはその名誉・信用を害すること<br>
-            (9) 法令に違反する行為を行うこと<br>
-            (10) その他当研究所が不適切と認める行為を行うこと<br>
-          </p>
+          <h3 class="section-title">
+            <CmsText pageKey="terms" fieldKey="article8_title" tag="span" :fallback="'第8条（利用規約の変更）'" />
+          </h3>
+          <CmsText
+            pageKey="terms"
+            fieldKey="article8_body"
+            tag="p"
+            class="section-content"
+            type="html"
+            :fallback="`(1) 営利の目的で（但し、当研究所との取引を除く）、当ウェブサイト又は当ウェブサイト上の情報を使用又は複製すること<br>(2) 当ウェブサイト上の情報に何らかの改変を加えること<br>(3) 当研究所の事前の同意を得ることなく当ウェブサイトへのリンクを行うこと<br>(4) 当ウェブサイトのうち、一般からのアクセスが意図されていない部分にアクセスすること<br>(5) 当ウェブサイトのコードを複製すること<br>(6) システムの脆弱性を試すこと又はセキュリティもしくは認証システムを破ること<br>(7) 有害なコンピュータプログラム等を送信または書き込むこと<br>(8) 当研究所または第三者を誹謗中傷し、またはその名誉・信用を害すること<br>(9) 法令に違反する行為を行うこと<br>(10) その他当研究所が不適切と認める行為を行うこと`"
+          />
         </div>
       </div>
     </div>
@@ -129,6 +181,7 @@ import CmsBlock from './CmsBlock.vue'
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "TermsOfServicePage",
@@ -141,6 +194,7 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     CmsBlock,
+    CmsText,
   },
   data() {
     return {
