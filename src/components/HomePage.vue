@@ -853,7 +853,7 @@ export default {
   font-family: var(--font-family-inter);
   font-size: 48px;
   font-weight: 700;
-  color: var(--black);
+  color: #1A1A1A;
   letter-spacing: 0;
   line-height: normal;
   margin: 0;
@@ -875,7 +875,7 @@ export default {
   font-family: var(--font-family-inter);
   font-size: 48px;
   font-weight: 700;
-  color: var(--black);
+  color: #1A1A1A;
   letter-spacing: 0;
   line-height: normal;
   margin: 0;

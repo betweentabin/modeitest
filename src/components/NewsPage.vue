@@ -15,10 +15,10 @@
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">{{ pageTitle || 'お知らせ' }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
+          <span class="title-english">{{ pageSubtitle || 'information' }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -212,7 +212,6 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'お知らせ') || 'お知らせ' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'information') || 'information' },
-  },
   methods: {
     async loadNews() {
       this.loading = true
@@ -300,7 +299,6 @@ export default {
       this.$router.push(`/news/${newsId}`);
     }
   },
-  computed: {
     filteredNews() {
       if (this.selectedCategory === 'all') {
         return this.newsItems
