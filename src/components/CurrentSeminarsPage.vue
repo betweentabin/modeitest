@@ -82,6 +82,7 @@
               </div>
               <button 
                 class="reserve-btn" 
+                :class="{ disabled: shouldBlur(seminar) }"
                 @click="handleReservation(seminar)"
               >
                 <span>{{ getReservationButtonText() }}</span>
@@ -594,6 +595,12 @@ export default {
 
 .reserve-btn:hover {
   background: var(--color-accent);
+}
+
+/* Disabled visual state (clickable for navigation) */
+.reserve-btn.disabled {
+  background: #BDBDBD;
+  cursor: not-allowed;
 }
 
 .show-more-btn {
