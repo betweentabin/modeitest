@@ -382,6 +382,7 @@ Route::prefix('inquiries-v2')->group(function () {
 Route::prefix('member')->middleware('auth:sanctum')->group(function () {
     Route::get('/can-access/{type}/{id}', [MemberAccessController::class, 'canAccess']);
     Route::post('/log-access', [MemberAccessController::class, 'logAccess']);
+    Route::get('/download-history', [MemberAccessController::class, 'downloadHistory']);
     Route::get('/upgrade-history', [MemberAccessController::class, 'getUpgradeHistory']);
     
     // プロフィール管理

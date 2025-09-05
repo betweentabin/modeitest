@@ -624,24 +624,25 @@ export default {
       this.$router.push(`/member-directory?view=${favorite.id}`)
     },
 
-    // ダウンロード履歴（サンプル）
-    loadDownloadHistory() {
-      this.downloadHistory = [
-        {
-          id: 1,
-          title: 'ちくぎん地域経済レポート Vol.15',
-          downloadedAt: '2024-03-15',
-          type: 'PDF',
-          size: '2.3MB'
-        },
-        {
-          id: 2,
-          title: 'Hot Information 2024年2月号',
-          downloadedAt: '2024-02-28',
-          type: 'PDF',
-          size: '1.8MB'
+    // ダウンロード履歴（API）
+    async loadDownloadHistory() {
+      try {
+        const res = await apiClient.getMemberDownloadHistory({ limit: 50 })
+        if (res && res.success && res.data && Array.isArray(res.data.downloads)) {
+          this.downloadHistory = res.data.downloads.map(d => ({
+            id: d.content_id,
+            title: d.title,
+            downloadedAt: this.formatDate(d.downloaded_at),
+            type: 'PDF',
+            size: ''
+          }))
+        } else {
+          this.downloadHistory = []
         }
-      ]
+      } catch (e) {
+        console.error('ダウンロード履歴の取得に失敗:', e)
+        this.downloadHistory = []
+      }
     },
 
     handleLogout() {

@@ -333,7 +333,7 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
+        const res = await apiClient.get(`/api/admin/publications/${this.publicationId}`)
         if (res.success && res.data && res.data.publication) {
           const data = res.data.publication
           this.formData = {
@@ -357,14 +357,19 @@ export default {
       this.successMessage = ''
 
       try {
+        const token = localStorage.getItem('admin_token')
+        if (!token) {
+          this.$router.push('/admin')
+          return
+        }
         if (this.isNew) {
-          const res = await apiClient.post('/api/admin/publications-v2', this.formData)
-          if (!res.success) throw new Error(res.message || '作成に失敗')
+          const res = await apiClient.createPublication(this.formData, token)
+          if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
           this.successMessage = '刊行物を作成しました'
           setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
         } else {
-          const res = await apiClient.put(`/api/admin/publications-v2/${this.publicationId}`, this.formData)
-          if (!res.success) throw new Error(res.message || '更新に失敗')
+          const res = await apiClient.updatePublication(this.publicationId, this.formData, token)
+          if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
           this.successMessage = '刊行物を更新しました'
         }
       } catch (err) {

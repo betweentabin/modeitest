@@ -182,6 +182,8 @@ export default {
         const response = await apiClient.downloadPublication(publicationId)
         if (response?.success && response?.data?.download_url) {
           window.open(response.data.download_url, '_blank')
+          // ログイン済みならダウンロード履歴に記録
+          try { await apiClient.logMemberAccess({ content_type: 'publication', content_id: publicationId, access_type: 'download' }) } catch(e) { /* noop */ }
         } else {
           throw new Error('ダウンロードURLが取得できませんでした')
         }

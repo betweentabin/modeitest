@@ -298,6 +298,20 @@ class ApiClient {
     return this.delete(`/api/member/favorites/${favoriteMemberId}`)
   }
 
+  // Member activity/logs
+  async logMemberAccess({ content_type, content_id, access_type, required_level = null }) {
+    return this.post('/api/member/log-access', {
+      content_type,
+      content_id,
+      access_type,
+      ...(required_level ? { required_level } : {})
+    })
+  }
+
+  async getMemberDownloadHistory(params = {}) {
+    return this.get('/api/member/download-history', { params })
+  }
+
   // Member directory APIs
   async getMemberDirectory(params = {}) {
     return this.get('/api/member/directory', { params })

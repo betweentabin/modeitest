@@ -241,6 +241,7 @@ export default {
           // ダウンロードリンクを開く
           const url = response.data.file_url || response.data.download_url
           window.open(url, '_blank');
+          try { await apiClient.logMemberAccess({ content_type: 'economic_report', content_id: this.statistics.id, access_type: 'download' }) } catch(e) { /* noop */ }
         } else {
           // フォールバック: 直接ダウンロード
           this.downloadFallback();

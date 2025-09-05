@@ -60,7 +60,7 @@ class MemberAccessController extends Controller
     public function logAccess(Request $request)
     {
         $validated = $request->validate([
-            'content_type' => 'required|string|in:publication,seminar,news',
+            'content_type' => 'required|string|in:publication,seminar,news,economic_report',
             'content_id' => 'required|integer',
             'access_type' => 'required|string|in:view,download,denied',
             'required_level' => 'nullable|string|in:free,standard,premium'
@@ -101,6 +101,64 @@ class MemberAccessController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'アクセスログが記録されました'
+        ]);
+    }
+
+    /**
+     * ダウンロード履歴を取得
+     */
+    public function downloadHistory(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => '認証が必要です'
+            ], 401);
+        }
+
+        $limit = (int)($request->get('limit', 50));
+        $limit = max(1, min(200, $limit));
+
+        $logs = DB::table('content_access_logs')
+            ->where('member_id', $user->id)
+            ->where('access_type', 'download')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+
+        // まとめてタイトルを取得
+        $pubIds = $logs->where('content_type', 'publication')->pluck('content_id')->unique()->values();
+        $econIds = $logs->where('content_type', 'economic_report')->pluck('content_id')->unique()->values();
+        $semiIds = $logs->where('content_type', 'seminar')->pluck('content_id')->unique()->values();
+
+        $pubTitles = $pubIds->isEmpty() ? collect() : DB::table('publications')->whereIn('id', $pubIds)->pluck('title', 'id');
+        $econTitles = $econIds->isEmpty() ? collect() : DB::table('economic_reports')->whereIn('id', $econIds)->pluck('title', 'id');
+        $semiTitles = $semiIds->isEmpty() ? collect() : DB::table('seminars')->whereIn('id', $semiIds)->pluck('title', 'id');
+
+        $items = $logs->map(function ($log) use ($pubTitles, $econTitles, $semiTitles) {
+            $title = null;
+            if ($log->content_type === 'publication') {
+                $title = $pubTitles[$log->content_id] ?? null;
+            } elseif ($log->content_type === 'economic_report') {
+                $title = $econTitles[$log->content_id] ?? null;
+            } elseif ($log->content_type === 'seminar') {
+                $title = $semiTitles[$log->content_id] ?? null;
+            }
+            return [
+                'id' => $log->id,
+                'content_type' => $log->content_type,
+                'content_id' => $log->content_id,
+                'title' => $title ?? 'コンテンツ',
+                'downloaded_at' => $log->created_at,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'downloads' => $items
+            ]
         ]);
     }
     

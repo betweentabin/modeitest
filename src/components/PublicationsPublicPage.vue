@@ -555,6 +555,8 @@ export default {
         if (response.success && response.data.download_url) {
           // ダウンロードリンクを開く
           window.open(response.data.download_url, '_blank');
+          // ログイン済みなら履歴に記録（未ログイン時はサイレント）
+          try { await apiClient.logMemberAccess({ content_type: 'publication', content_id: publicationId, access_type: 'download' }) } catch(e) { /* noop */ }
         }
       } catch (err) {
         console.error('ダウンロードに失敗しました:', err);
