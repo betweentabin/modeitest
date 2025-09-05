@@ -27,6 +27,9 @@ class DatabaseSeeder extends Seeder
             PageContentsSeeder::class,
             CompletePagesSeeder::class,
             TermsPageJsonSeeder::class,
+            PrivacyPageJsonSeeder::class,
+            FaqPageJsonSeeder::class,
+            TransactionLawPageJsonSeeder::class,
             EconomicIndicatorSeeder::class,
         ]);
     }

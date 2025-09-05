@@ -237,7 +237,15 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('faq')
-      this._pageText.load()
+      this._pageText.load().then(() => {
+        try {
+          const page = this._pageText?.page?.value
+          const list = page?.content?.faqs
+          if (Array.isArray(list) && list.length) {
+            this.faqs = list
+          }
+        } catch(_) {}
+      })
     } catch(e) { /* noop */ }
   },
   methods: {

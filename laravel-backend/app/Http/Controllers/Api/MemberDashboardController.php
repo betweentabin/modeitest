@@ -112,9 +112,10 @@ class MemberDashboardController extends Controller
 
     private function canSeeSeminarForMember(Seminar $seminar, string $memberType): bool
     {
-        $priority = ['free' => 1, 'standard' => 2, 'premium' => 3];
-        $required = $seminar->membership_requirement ?? 'free';
-        if (($priority[$memberType] ?? 0) < ($priority[$required] ?? 1)) return false;
+        $priority = ['free' => 0, 'basic' => 1, 'standard' => 2, 'premium' => 3];
+        $required = $seminar->membership_requirement ?: 'free';
+        if ($required === 'none') $required = 'free';
+        if (($priority[$memberType] ?? 0) < ($priority[$required] ?? 0)) return false;
 
         // 解禁日（案A）
         switch ($memberType) {
@@ -122,6 +123,7 @@ class MemberDashboardController extends Controller
                 $open = $seminar->premium_open_at ?? $seminar->standard_open_at ?? $seminar->free_open_at;
                 break;
             case 'standard':
+            case 'basic':
                 $open = $seminar->standard_open_at ?? $seminar->free_open_at;
                 break;
             default:
@@ -133,16 +135,23 @@ class MemberDashboardController extends Controller
     private function canRegisterForMemberType(Seminar $seminar, ?string $memberType): bool
     {
         if (!$seminar->can_register) return false;
-        if (!$memberType) return $seminar->membership_requirement === 'free' && (!$seminar->free_open_at || now()->gte($seminar->free_open_at));
+        if (!$memberType) {
+            $req = $seminar->membership_requirement ?: 'free';
+            if ($req === 'none') $req = 'free';
+            return $req === 'free' && (!$seminar->free_open_at || now()->gte($seminar->free_open_at));
+        }
 
-        $priority = ['free' => 1, 'standard' => 2, 'premium' => 3];
-        $required = $priority[$seminar->membership_requirement] ?? 1;
+        $priority = ['free' => 0, 'basic' => 1, 'standard' => 2, 'premium' => 3];
+        $reqKey = $seminar->membership_requirement ?: 'free';
+        if ($reqKey === 'none') $reqKey = 'free';
+        $required = $priority[$reqKey] ?? 0;
         if (($priority[$memberType] ?? 0) < $required) return false;
 
         switch ($memberType) {
             case 'premium':
                 $open = $seminar->premium_open_at ?? $seminar->standard_open_at ?? $seminar->free_open_at; break;
             case 'standard':
+            case 'basic':
                 $open = $seminar->standard_open_at ?? $seminar->free_open_at; break;
             default:
                 $open = $seminar->free_open_at;
@@ -150,4 +159,3 @@ class MemberDashboardController extends Controller
         return !$open || now()->gte($open);
     }
 }
-

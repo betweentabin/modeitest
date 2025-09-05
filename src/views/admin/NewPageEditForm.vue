@@ -545,7 +545,10 @@ const RECOMMENDED_KEYS = {
     'environment_title', 'environment_body',
     'prohibited_title', 'prohibited_body',
     'article8_title', 'article8_body'
-  ]
+  ],
+  privacy: ['page_title', 'page_subtitle'],
+  faq: ['page_title', 'page_subtitle'],
+  'transaction-law': ['page_title', 'page_subtitle']
 }
 
 // ソフト上限（超過時に警告）
@@ -618,6 +621,10 @@ const KEY_LOCATIONS = {
   'privacy': {
     page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',
     page_subtitle: '英字のサブ見出し（PrivacyPolicyPage）',
+  },
+  'faq': {
+    page_title: 'ヒーロー・パンくず・見出し（FaqPage）',
+    page_subtitle: '英字のサブ見出し（FaqPage）',
   },
   'terms': {
     page_title: 'ヒーロー・パンくず・見出し（TermsOfServicePage）',
@@ -728,6 +735,8 @@ export default {
         'publications': '/#/publications-public',
         'terms': '/#/terms',
         'privacy': '/#/privacy',
+        'faq': '/#/faq',
+        'transaction-law': '/#/transaction-law',
         'news': '/#/news',
         'financial-reports': '/#/financial-reports'
       }

@@ -134,7 +134,8 @@ class SeminarController extends Controller
             'capacity' => 'nullable|integer|min:0',
             'fee' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:draft,scheduled,ongoing,completed,cancelled',
-            'membership_requirement' => 'nullable|in:free,standard,premium',
+            // allow legacy and new values: none/basic/free/standard/premium
+            'membership_requirement' => 'nullable|in:none,basic,free,standard,premium',
             'featured_image' => 'nullable|string|max:500',
             'application_deadline' => 'nullable|date|before_or_equal:date',
             'contact_email' => 'nullable|email',
@@ -184,7 +185,8 @@ class SeminarController extends Controller
             'capacity' => 'nullable|integer|min:0',
             'fee' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:draft,scheduled,ongoing,completed,cancelled',
-            'membership_requirement' => 'nullable|in:free,standard,premium',
+            // allow legacy and new values: none/basic/free/standard/premium
+            'membership_requirement' => 'nullable|in:none,basic,free,standard,premium',
             'featured_image' => 'nullable|string|max:500',
             'application_deadline' => 'nullable|date',
             'contact_email' => 'nullable|email',
@@ -260,7 +262,9 @@ class SeminarController extends Controller
 
         // 会員の場合の権限チェック（Sanctum トークンから取得）
         $member = $request->user();
-        if ($member && !$member->canRegisterSeminar($seminar)) {
+        // 一般公開（none/free）は誰でも申込可。必要ランクがある場合のみチェック。
+        $required = $seminar->membership_requirement ?: 'none';
+        if ($member && !in_array($required, ['none', 'free'], true) && !$member->canRegisterSeminar($seminar)) {
             return response()->json([
                 'success' => false,
                 'error' => [
@@ -272,15 +276,19 @@ class SeminarController extends Controller
 
         // 認証されたユーザーの場合、emailでmemberを検索
         if ($member) {
-            // 認証されたユーザーのemailとフォームのemailが一致するかチェック
-            if ($request->email !== $member->email) {
-                return response()->json([
-                    'success' => false,
-                    'error' => [
-                        'code' => 'EMAIL_MISMATCH',
-                        'message' => 'ログイン中のメールアドレスと入力されたメールアドレスが一致しません'
-                    ]
-                ], 400);
+            // 一般公開（none/free）の場合は異なるメールでも申込を許可
+            $reqKey = $seminar->membership_requirement ?: 'none';
+            if (!in_array($reqKey, ['none', 'free'], true)) {
+                // 認証されたユーザーのemailとフォームのemailが一致するかチェック
+                if ($request->email !== $member->email) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => [
+                            'code' => 'EMAIL_MISMATCH',
+                            'message' => 'ログイン中のメールアドレスと入力されたメールアドレスが一致しません'
+                        ]
+                    ], 400);
+                }
             }
         } else {
             // 認証されていない場合、emailでmemberを検索
@@ -414,9 +422,10 @@ class SeminarController extends Controller
             return false;
         }
 
-        // 会員要件
-        $required = $seminar->membership_requirement;
-        $priority = ['free' => 1, 'standard' => 2, 'premium' => 3];
+        // 会員要件（none は free 相当として扱う）
+        $required = $seminar->membership_requirement ?: 'free';
+        if ($required === 'none') $required = 'free';
+        $priority = ['free' => 0, 'basic' => 1, 'standard' => 2, 'premium' => 3];
 
         // 未ログインは free として扱う（要件free以外は不可）
         if (!$memberType) {
@@ -427,7 +436,7 @@ class SeminarController extends Controller
 
         // 必要ランクを満たすか
         $memberLevel = $priority[$memberType] ?? 0;
-        $requiredLevel = $priority[$required] ?? 1; // default free
+        $requiredLevel = $priority[$required] ?? 0; // default free/none
         if ($memberLevel < $requiredLevel) return false;
 
         // ランク別の解禁日
@@ -436,9 +445,10 @@ class SeminarController extends Controller
                 $effectiveOpen = $seminar->premium_open_at ?? $seminar->standard_open_at ?? $seminar->free_open_at;
                 break;
             case 'standard':
+            case 'basic':
                 $effectiveOpen = $seminar->standard_open_at ?? $seminar->free_open_at;
                 break;
-            default: // free
+            default: // free/guest
                 $effectiveOpen = $seminar->free_open_at;
         }
 

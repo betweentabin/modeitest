@@ -24,8 +24,10 @@
           <div class="decoration-line"></div>
         </div>
       </div>
+      <!-- If HTML is provided in page JSON, render it and hide the static table -->
+      <CmsBlock page-key="transaction-law" wrapper-class="cms-body" />
 
-      <div class="transaction-law-table">
+      <div v-if="!hasHtml" class="transaction-law-table">
         <div class="table-row">
           <div class="table-label">販売業者</div>
           <div class="table-value">株式会社 ちくぎん地域経済研究所</div>
@@ -216,6 +218,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import { usePageText } from '@/composables/usePageText'
 import FixedSideButtons from "./FixedSideButtons.vue";
+import CmsBlock from './CmsBlock.vue'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -230,6 +233,7 @@ export default {
     HeroSection,
     Breadcrumbs,
     FixedSideButtons,
+    CmsBlock,
   },
   data() {
     return {
@@ -247,6 +251,13 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '特定商取引法に関する表記') || '特定商取引法に関する表記' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'transaction law') || 'transaction law' },
+    hasHtml() {
+      try {
+        const page = this._pageText?.page?.value
+        const html = page?.content?.html
+        return typeof html === 'string' && html.trim().length > 0
+      } catch(_) { return false }
+    }
   },
   mounted() {
     try {

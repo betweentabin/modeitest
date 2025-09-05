@@ -211,7 +211,8 @@ class Seminar extends Model
         }
 
         if (!$member) {
-            return $this->membership_requirement === 'none';
+            // 一般公開（none / free）は未ログインでも申込可
+            return in_array($this->membership_requirement, ['none', 'free'], true);
         }
 
         return $member->canRegisterSeminar($this);
