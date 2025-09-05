@@ -80,24 +80,42 @@
           <span class="detail-value">{{ seminar.fullDescription || seminar.description }}</span>
         </div>
 
-        <!-- Members-only Notice (if restricted) -->
-        <div class="members-only-section" v-if="isMembersOnly && !canAccessSeminar">
-          <p class="members-only-notice">このセミナーは{{ getMembershipText(seminar.membershipRequirement) }}会員限定です。参加するにはログインが必要です。</p>
-        </div>
-
-        <!-- Registration Button -->
-        <div class="registration-section" v-if="showRegistrationSection">
-          <div 
-            class="registration-btn" 
-            @click="handleRegistration"
-            :class="{ disabled: !canRegister }"
-          >
-            <div class="text-44 valign-text-middle inter-bold-white-15px">{{ registrationButtonText }}</div>
-            <frame13213176122 />
+        <!-- Action Section based on Auth State -->
+        <div class="action-section">
+          <!-- 非会員の場合 -->
+          <div v-if="authState.type === 'non_member'" class="members-only-section">
+            <p class="members-only-notice">{{ authState.message }}</p>
+            <div class="login-btn arrow-dark" @click="goToLogin">
+              <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
+              <frame13213176122 />
+            </div>
+          </div>
+          
+          <!-- 会員でログイン済みの場合 -->
+          <div v-else-if="authState.type === 'member_logged_in'" class="registration-section">
+            <p class="registration-notice">{{ authState.message }}</p>
+            <div 
+              class="registration-btn arrow-red" 
+              @click="handleRegistration"
+              :class="{ disabled: !canRegister }"
+            >
+              <div class="text-44 valign-text-middle inter-bold-white-15px">{{ registrationButtonText }}</div>
+              <frame13213176122 />
+            </div>
+          </div>
+          
+          <!-- 会員だが権限不足の場合 -->
+          <div v-else-if="authState.type === 'member_insufficient'" class="members-only-section">
+            <p class="members-only-notice">{{ authState.message }}</p>
+            <div class="upgrade-btn arrow-dark" @click="goToMembership">
+              <div class="text-44 valign-text-middle inter-bold-white-15px">会員アップグレード</div>
+              <frame13213176122 />
+            </div>
           </div>
         </div>
         
-        <div class="ended-section" v-else>
+        <!-- セミナー終了時の表示 -->
+        <div v-if="seminar && seminar.status === 'ended'" class="ended-section">
           <p class="ended-notice">このセミナーは終了しました</p>
         </div>
 
@@ -205,6 +223,46 @@ export default {
       if (canAccess) return '予約する';
       if (isRestricted) return `${this.getMembershipText(requiredLevel)}会員限定`;
       return 'ログインする';
+    },
+    authState() {
+      if (!this.seminar) return { type: 'loading', message: '読み込み中...' };
+      
+      const requiredLevel = this.seminar.membershipRequirement || 'free';
+      const isAuthenticated = this.$store.getters['auth/isAuthenticated'];
+      const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      // 非会員の場合
+      if (!isAuthenticated) {
+        if (requiredLevel === 'free') {
+          return {
+            type: 'member_logged_in',
+            message: 'このセミナーに参加するには予約が必要です。'
+          };
+        } else {
+          return {
+            type: 'non_member',
+            message: `このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。参加するにはログインが必要です。`
+          };
+        }
+      }
+      
+      // 会員でログイン済みの場合
+      if (isAuthenticated && canAccess) {
+        return {
+          type: 'member_logged_in',
+          message: 'このセミナーに参加するには予約が必要です。'
+        };
+      }
+      
+      // 会員だが権限不足の場合
+      if (isAuthenticated && !canAccess) {
+        return {
+          type: 'member_insufficient',
+          message: `このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`
+        };
+      }
+      
+      return { type: 'loading', message: '読み込み中...' };
     }
   },
   methods: {
@@ -417,6 +475,13 @@ export default {
         alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');
       }
+    },
+    goToLogin() {
+      const redirect = encodeURIComponent(this.$route.fullPath);
+      this.$router.push(`/member-login?redirect=${redirect}`);
+    },
+    goToMembership() {
+      this.$router.push('/membership');
     },
     async directRegister(seminar) {
       try {
@@ -655,11 +720,6 @@ export default {
   margin: 0 auto;
 }
 
-.registration-btn:hover {
-  background: #c44853;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(218, 87, 97, 0.3);
-}
 
 .text-44 {
   letter-spacing: 0;
@@ -689,10 +749,15 @@ export default {
   font-weight: 500;
 }
 
+/* Action Section */
+.action-section {
+  margin-top: 20px;
+}
+
 /* Members-only notice */
 .members-only-section {
   text-align: center;
-  padding: 16px;
+  padding: 20px;
   background-color: #f8f9fa;
   border-radius: 10px;
   margin-top: 10px;
@@ -702,7 +767,78 @@ export default {
   color: #666;
   font-size: 0.95rem;
   font-weight: 500;
-  margin: 0;
+  margin: 0 0 15px 0;
+}
+
+/* Registration section */
+.registration-section {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.registration-notice {
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0 0 15px 0;
+}
+
+/* Button styles - EconomicStatisticsDetailPageと同じスタイル */
+.login-btn, .upgrade-btn {
+  align-items: center;
+  background-color: #1A1A1A;
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px #0000000d;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px 0px;
+  width: 380px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-family: var(--font-family-inter);
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s;
+  margin: 0 auto;
+}
+
+.login-btn:hover, .upgrade-btn:hover {
+  opacity: 0.8;
+}
+
+.registration-btn {
+  align-items: center;
+  background-color: #DA5761;
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px #0000000d;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px 0px;
+  width: 380px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-family: var(--font-family-inter);
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s;
+  margin: 0 auto;
+}
+
+.registration-btn:hover {
+  opacity: 0.8;
+}
+
+.registration-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
 }
 
 .loading {
@@ -971,6 +1107,14 @@ export default {
   .registration-btn {
     width: 100% !important;
     padding: 15px 20px !important;
+  }
+  
+  /* ボタンのレスポンシブ対応 */
+  .login-btn, .upgrade-btn, .registration-btn {
+    font-size: 13px !important;
+    padding: 12px 0px !important;
+    width: 100% !important;
+    max-width: 280px !important;
   }
 }
 
