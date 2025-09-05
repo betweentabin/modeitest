@@ -269,12 +269,11 @@ export default {
   },
   computed: {
     isNew() {
-      // /admin/news/register の場合は params.id が undefined
-      // /admin/news/:id/edit の場合は params.id が存在
-      return !this.$route.params.id || this.$route.params.id === 'new'
+      // /admin/news/register の場合は新規、/admin/news/edit/:id は編集
+      return !(this.noticeId)
     },
     noticeId() {
-      return this.$route.params.id
+      return this.$route.params.id || this.$route.query.id
     }
   },
   async mounted() {

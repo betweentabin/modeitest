@@ -503,10 +503,18 @@ export default {
       this.saving = true
       
       try {
+        // クライアント側ガード（title必須）
+        if (!this.formData.title || !String(this.formData.title).trim()) {
+          this.saving = false
+          alert('タイトルは必須です')
+          return
+        }
+
         const formData = new FormData()
         // クライアント側で最低限の整形（422対策）
         const allowedCategories = ['quarterly','annual','regional','industry']
         const payload = { ...this.formData }
+        payload.title = String(payload.title).trim()
         if (!allowedCategories.includes(String(payload.category || '').trim())) {
           payload.category = 'quarterly'
         }

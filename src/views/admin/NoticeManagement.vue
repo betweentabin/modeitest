@@ -263,7 +263,7 @@ export default {
       return `${year}年${month}月${day}日(${weekday})`
     },
     editNotice(notice) {
-      this.$router.push(`/admin/news/edit?id=${notice.id}`)
+      this.$router.push(`/admin/news/edit/${notice.id}`)
     },
     createNewNotice() {
       this.$router.push('/admin/news/register')

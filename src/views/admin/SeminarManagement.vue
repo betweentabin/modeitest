@@ -394,7 +394,7 @@ export default {
       }
     },
     editSeminar(seminar) {
-      this.$router.push(`/admin/seminar/edit?id=${seminar.id}`)
+      this.$router.push(`/admin/seminar/edit/${seminar.id}`)
     },
     createNewSeminar() {
       this.$router.push('/admin/seminar/register')

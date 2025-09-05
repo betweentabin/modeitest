@@ -343,7 +343,7 @@ const router = new Router({
       meta: { title: "セミナー新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/seminar/edit",
+      path: "/admin/seminar/edit/:id",
       name: "seminarEdit", 
       component: SeminarEditForm,
       meta: { title: "セミナー編集 - ちくぎん地域経済研究所" }
@@ -446,7 +446,7 @@ const router = new Router({
       meta: { title: "お知らせ新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/news/edit",
+      path: "/admin/news/edit/:id",
       name: "noticeEdit", 
       component: NoticeEditForm,
       meta: { title: "お知らせ編集 - ちくぎん地域経済研究所" }
@@ -659,7 +659,7 @@ const router = new Router({
     },
     {
       path: "/admin/notices/:id/edit",
-      redirect: "/admin/news/edit"
+      redirect: (to) => `/admin/news/edit/${to.params.id}`
     },
     {
       path: "*",

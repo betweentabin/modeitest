@@ -287,10 +287,10 @@ export default {
   },
   computed: {
     isNew() {
-      return this.$route.name === 'seminarNew' || !this.$route.params.id
+      return this.$route.name === 'seminarNew' || !this.seminarId
     },
     seminarId() {
-      return this.$route.params.id
+      return this.$route.params.id || this.$route.query.id
     }
   },
   async mounted() {
@@ -337,8 +337,22 @@ export default {
           return
         }
 
+        // 送信前にバリデーションに通るよう整形
+        const payload = { ...this.formData }
+        // 空文字を削除（nullable の項目で 422 にならないように）
+        if (!payload.status) delete payload.status
+        if (payload.capacity === '' || payload.capacity === null) delete payload.capacity
+        if (payload.fee === '' || payload.fee === null) delete payload.fee
+        // 数値化
+        if (payload.capacity !== undefined) payload.capacity = parseInt(payload.capacity, 10)
+        if (payload.fee !== undefined) payload.fee = parseFloat(payload.fee)
+        // 画像URLの長さ安全化
+        if (payload.featured_image && typeof payload.featured_image === 'string') {
+          payload.featured_image = payload.featured_image.substring(0, 480)
+        }
+
         if (this.isNew) {
-          const res = await apiClient.createSeminar(this.formData, token)
+          const res = await apiClient.createSeminar(payload, token)
           if (!res?.success) {
             const msg = res?.error?.message || res?.message || '作成に失敗'
             const details = res?.error?.details
@@ -353,7 +367,7 @@ export default {
           this.successMessage = 'セミナーを作成しました'
           setTimeout(() => { this.$router.push('/admin/seminar') }, 1200)
         } else {
-          const res = await apiClient.updateSeminar(this.seminarId, this.formData, token)
+          const res = await apiClient.updateSeminar(this.seminarId, payload, token)
           if (!res?.success) {
             const msg = res?.error?.message || res?.message || '更新に失敗'
             const details = res?.error?.details
