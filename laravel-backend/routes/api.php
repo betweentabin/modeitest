@@ -194,6 +194,8 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{pageKey}', [PageContentController::class, 'destroy']);
             Route::post('/{pageKey}/upload-image', [PageContentController::class, 'uploadImage']);
             Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
+            Route::post('/{pageKey}/replace-image', [PageContentController::class, 'replaceImage']);
+            Route::post('/{pageKey}/replace-html-image', [PageContentController::class, 'replaceHtmlImage']);
         });
         
         Route::prefix('publications')->middleware('can:manage-content')->group(function () {

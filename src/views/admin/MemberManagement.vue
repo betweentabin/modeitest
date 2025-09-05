@@ -983,17 +983,18 @@ export default {
 
 .edit-btn {
   padding: 4px 8px;
-  border: 1px solid #007bff;
+  border: 1px solid #1A1A1A;
   border-radius: 4px;
-  background-color: white;
-  color: #007bff;
+  background-color: #1A1A1A;
+  color: white;
   cursor: pointer;
   font-size: 12px;
+  transition: background-color 0.2s;
 }
 
 .edit-btn:hover {
-  background-color: #007bff;
-  color: white;
+  background-color: #555;
+  border-color: #555;
 }
 
 /* ページネーション */
@@ -1011,9 +1012,9 @@ export default {
 }
 
 .page-btn.active {
-  background-color: #007bff;
+  background-color: #da5761;
   color: white;
-  border-color: #007bff;
+  border-color: #da5761;
 }
 
 /* モーダル */

@@ -39,6 +39,7 @@
                 <th>種別/場所</th>
                 <th>URL</th>
                 <th>更新日</th>
+                <th style="width:140px;">操作</th>
               </tr>
             </thead>
             <tbody>
@@ -51,6 +52,9 @@
                 <td>{{ row.key }}</td>
                 <td class="file-url">{{ row.url }}</td>
                 <td>{{ formatDate(row.updated_at) }}</td>
+                <td>
+                  <button class="edit-btn" @click="pickReplace(idx)">画像で置換</button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -77,7 +81,7 @@ export default {
   },
   data() {
     return {
-      rows: [], // { _id, pageKey, key, url, updated_at }
+      rows: [], // { _id, pageKey, key, url, source, updated_at }
       loading: false,
       error: '',
       searchKeyword: '',
@@ -100,6 +104,7 @@ export default {
           pageKey: it.page_key,
           key: it.key,
           url: it.url,
+          source: it.source || 'json',
           updated_at: it.updated_at,
         }))
       } catch (e) {
@@ -107,6 +112,44 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    pickReplace(idx) {
+      this.filePickIndex = idx
+      // 動的にfile要素を起こす（1行1入力を避ける）
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = 'image/*'
+      input.onchange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+        const row = this.rows[this.filePickIndex]
+        try {
+          const fd = new FormData()
+          fd.append('image', file)
+          let endpoint = ''
+          if (row.source === 'json') {
+            fd.append('key', row.key)
+            endpoint = `/api/admin/pages/${row.pageKey}/replace-image`
+          } else {
+            fd.append('old_url', row.url)
+            endpoint = `/api/admin/pages/${row.pageKey}/replace-html-image`
+          }
+          const url = endpoint
+          const res = await apiClient.upload(url, fd)
+          if (res && (res.success || res.data)) {
+            alert('画像を置換しました')
+            this.load()
+          } else {
+            alert(res?.message || '置換に失敗しました')
+          }
+        } catch (err) {
+          console.error('replace image failed', err)
+          alert('置換に失敗しました')
+        } finally {
+          this.filePickIndex = -1
+        }
+      }
+      input.click()
     },
     formatDate(dateString) {
       const date = new Date(dateString)

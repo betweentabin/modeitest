@@ -235,3 +235,79 @@ export default {
   background-color: #f5f5f5;
 }
 </style>
+
+<style>
+/* Admin global button styling (unscoped): unify to pink or black */
+:root {
+  --admin-pink: #da5761;
+  --admin-pink-hover: #c44853;
+  --admin-black: #1A1A1A;
+  --admin-black-hover: #555555;
+}
+
+/* Primary (pink) */
+.btn.btn-primary,
+.add-btn,
+.save-btn,
+.modal .btn-save,
+.pagination .pagination-btn.active {
+  background-color: var(--admin-pink) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn.btn-primary:hover,
+.add-btn:hover,
+.save-btn:hover,
+.modal .btn-save:hover,
+.pagination .pagination-btn.active:hover {
+  background-color: var(--admin-pink-hover) !important;
+}
+
+/* Secondary/utility (black) */
+.btn.btn-secondary,
+.edit-btn,
+.delete-btn,
+.page-btn,
+.pagination-btn,
+.btn-cancel,
+.logout-btn,
+.link-btn {
+  background-color: var(--admin-black) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn.btn-secondary:hover,
+.edit-btn:hover,
+.delete-btn:hover,
+.page-btn:hover,
+.pagination-btn:hover,
+.btn-cancel:hover,
+.logout-btn:hover,
+.link-btn:hover {
+  background-color: var(--admin-black-hover) !important;
+}
+
+/* Neutral buttons that were outlines keep shape but adopt colors */
+.btn,
+.add-btn,
+.save-btn,
+.edit-btn,
+.delete-btn,
+.page-btn,
+.pagination-btn,
+.btn-cancel,
+.link-btn {
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Disabled states */
+.btn[disabled],
+button:disabled,
+.pagination-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+</style>

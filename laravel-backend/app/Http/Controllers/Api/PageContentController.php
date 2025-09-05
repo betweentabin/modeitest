@@ -254,4 +254,92 @@ class PageContentController extends Controller
 
         return response()->json(['message' => 'Image not found'], 404);
     }
+
+    // 管理: content.images[<key>] を差し替え
+    public function replaceImage(Request $request, string $pageKey): JsonResponse
+    {
+        $page = PageContent::where('page_key', $pageKey)->first();
+        if (!$page) {
+            return response()->json(['message' => 'Page not found'], 404);
+        }
+
+        $request->validate([
+            'key' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+        ]);
+
+        $file = $request->file('image');
+        $fileName = Str::slug($pageKey) . '-' . Str::slug($request->key) . '-' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('pages/' . $pageKey, $fileName, 'public');
+
+        $content = $page->content ?? [];
+        if (!is_array($content)) {
+            $content = ['html' => (string)$content];
+        }
+        $content['images'] = $content['images'] ?? [];
+        $content['images'][$request->key] = [
+            'url' => Storage::url($path),
+            'path' => $path,
+            'filename' => $fileName,
+            'uploaded_at' => now()
+        ];
+
+        $page->update([
+            'content' => $content,
+            'updated_by' => auth()->id()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Image replaced',
+            'data' => [ 'image' => $content['images'][$request->key] ]
+        ]);
+    }
+
+    // 管理: content.html 内の <img src> を置換
+    public function replaceHtmlImage(Request $request, string $pageKey): JsonResponse
+    {
+        $page = PageContent::where('page_key', $pageKey)->first();
+        if (!$page) {
+            return response()->json(['message' => 'Page not found'], 404);
+        }
+
+        $request->validate([
+            'old_url' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+        ]);
+
+        $content = $page->content ?? [];
+        $html = '';
+        if (is_string($content)) { $html = $content; $content = ['html' => $html]; }
+        elseif (is_array($content)) { $html = (string)($content['html'] ?? ''); }
+
+        if ($html === '') {
+            return response()->json(['success' => false, 'message' => 'HTML content not found'], 400);
+        }
+
+        $file = $request->file('image');
+        $fileName = Str::slug($pageKey) . '-htmlimg-' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('pages/' . $pageKey, $fileName, 'public');
+        $newUrl = Storage::url($path);
+
+        $replaced = str_replace($request->old_url, $newUrl, $html);
+        if ($replaced === $html) {
+            // URL差異で失敗した場合、クオートやエンコードの差も考慮せずそのまま返す
+            // 呼び出し側で old_url を見直す想定
+            return response()->json(['success' => false, 'message' => 'Old URL not found in HTML'], 400);
+        }
+
+        $content['html'] = $replaced;
+        $page->update([
+            'content' => $content,
+            'updated_by' => auth()->id()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'HTML image replaced',
+            'data' => ['new_url' => $newUrl]
+        ]);
+    }
 }

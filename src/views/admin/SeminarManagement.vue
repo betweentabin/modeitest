@@ -728,13 +728,18 @@ export default {
 
 .reg-btn {
   margin-left: 8px;
-  background-color: #2563eb;
+  background-color: #da5761;
   color: #fff;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
   font-size: 12px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reg-btn:hover {
+  background-color: #c44853;
 }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index: 2000; }
@@ -744,7 +749,8 @@ export default {
 .modal-header .close { background:none; border:none; font-size:18px; cursor:pointer; }
 .modal-body { padding: 16px; }
 .reg-filters { display:flex; align-items:center; gap: 12px; margin-bottom: 12px; }
-.bulk-approve { background:#10b981; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; }
+.bulk-approve { background:#da5761; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; transition: background-color 0.2s; }
+.bulk-approve:hover { background:#c44853; }
 
 .edit-btn:hover {
   background-color: #555;

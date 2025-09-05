@@ -829,10 +829,10 @@ export default {
   color: white;
 }
 
-.category-quarterly { background: #007bff; }
-.category-annual { background: #28a745; }
-.category-regional { background: #ffc107; color: #000; }
-.category-industry { background: #dc3545; }
+.category-quarterly { background: #da5761; color: white; }
+.category-annual { background: #1A1A1A; color: white; }
+.category-regional { background: #c44853; color: white; }
+.category-industry { background: #555; color: white; }
 
 .status-badge {
   display: inline-block;

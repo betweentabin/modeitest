@@ -564,17 +564,18 @@ export default {
 }
 
 .apply-btn {
-  background-color: #007bff;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  transition: background-color 0.2s;
 }
 
 .apply-btn:hover {
-  background-color: #0056b3;
+  background-color: #555;
 }
 
 .search-section {
@@ -603,7 +604,7 @@ export default {
 }
 
 .search-btn {
-  background-color: #007bff;
+  background-color: #da5761;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -612,10 +613,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.2s;
 }
 
 .search-btn:hover {
-  background-color: #0056b3;
+  background-color: #c44853;
 }
 
 .table-container {
@@ -736,12 +738,17 @@ export default {
 }
 
 .page-btn {
-  background-color: #007bff;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: #555;
 }
 
 .page-btn:disabled {
@@ -847,28 +854,30 @@ export default {
 }
 
 .respond-btn {
-  background-color: #28a745;
+  background-color: #da5761;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .respond-btn:hover {
-  background-color: #218838;
+  background-color: #c44853;
 }
 
 .cancel-btn {
-  background-color: #6c757d;
+  background-color: #1A1A1A;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .cancel-btn:hover {
-  background-color: #5a6268;
+  background-color: #555;
 }
 </style>
