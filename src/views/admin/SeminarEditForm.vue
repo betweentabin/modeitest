@@ -331,14 +331,20 @@ export default {
       this.successMessage = ''
 
       try {
+        const token = localStorage.getItem('admin_token')
+        if (!token) {
+          this.$router.push('/admin/login')
+          return
+        }
+
         if (this.isNew) {
-          const res = await apiClient.post('/api/seminars', this.formData)
-          if (!res.success) throw new Error(res.message || '作成に失敗')
+          const res = await apiClient.createSeminar(this.formData, token)
+          if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
           this.successMessage = 'セミナーを作成しました'
           setTimeout(() => { this.$router.push('/admin/seminar') }, 1200)
         } else {
-          const res = await apiClient.put(`/api/seminars/${this.seminarId}`, this.formData)
-          if (!res.success) throw new Error(res.message || '更新に失敗')
+          const res = await apiClient.updateSeminar(this.seminarId, this.formData, token)
+          if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
           this.successMessage = 'セミナーを更新しました'
         }
       } catch (err) {

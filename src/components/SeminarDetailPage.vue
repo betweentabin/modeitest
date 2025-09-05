@@ -24,7 +24,7 @@
       </div>
 
       <!-- Seminar Details Card -->
-      <div class="seminar-detail-card" v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }">
+      <div class="seminar-detail-card">
           <div class="seminar-content">
                          <div class="seminar-info">
               <div class="seminar-details">
@@ -60,7 +60,7 @@
              </div>
            </div>
            
-           <div class="seminar-image">
+           <div class="seminar-image" :class="{ blurred: shouldBlur }">
              <img :src="seminar.image || '/img/image-1.png'" :alt="seminar.title" />
              <MembershipBadge 
                v-if="seminar.membershipRequirement && seminar.membershipRequirement !== 'free'" 
@@ -78,6 +78,11 @@
         <div class="detail-row">
           <span class="detail-label">プログラム</span>
           <span class="detail-value">{{ seminar.fullDescription || seminar.description }}</span>
+        </div>
+
+        <!-- Members-only Notice (if restricted) -->
+        <div class="members-only-section" v-if="isMembersOnly && !canAccessSeminar">
+          <p class="members-only-notice">このセミナーは{{ getMembershipText(seminar.membershipRequirement) }}会員限定です。参加するにはログインが必要です。</p>
         </div>
 
         <!-- Registration Button -->
@@ -174,6 +179,17 @@ export default {
     showRegistrationSection() {
       // サーバー側の登録可否を優先（会員レベルはボタン活性で制御）
       return this.serverCanRegisterForUser || this.serverCanRegister || (this.seminar && this.seminar.status === 'current')
+    },
+    isMembersOnly() {
+      return this.seminar && (this.seminar.membershipRequirement && this.seminar.membershipRequirement !== 'free')
+    },
+    canAccessSeminar() {
+      if (!this.seminar) return false
+      const requiredLevel = this.seminar.membershipRequirement || 'free'
+      return this.$store.getters['auth/canAccess'](requiredLevel)
+    },
+    shouldBlur() {
+      return this.isMembersOnly && !this.canAccessSeminar
     },
     canRegister() {
       if (!this.seminar) return false;
@@ -558,6 +574,12 @@ export default {
   min-height: 400px;
 }
 
+/* Members-only blur (image only) */
+.seminar-image.blurred img {
+  filter: blur(4px);
+  transform: scale(1.03);
+}
+
 .seminar-info {
   width: 60%;
   flex: 1;
@@ -665,6 +687,22 @@ export default {
   color: #666;
   font-size: 1rem;
   font-weight: 500;
+}
+
+/* Members-only notice */
+.members-only-section {
+  text-align: center;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.members-only-notice {
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
 }
 
 .loading {

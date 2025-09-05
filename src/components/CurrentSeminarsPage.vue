@@ -35,7 +35,6 @@
             class="seminar-card" 
             v-for="(seminar, index) in currentSeminars" 
             :key="seminar.id || index"
-            v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }"
           >
             <div class="seminar-image" :class="{ blurred: shouldBlur(seminar) }">
               <img :src="seminar.image" :alt="seminar.title" />
@@ -684,9 +683,10 @@ export default {
   position: relative;
 }
 
-/* 会員限定で未アクセス時は画像のみぼかす */
+/* 会員限定で未アクセス時は画像のみぼかす（/seminar と同仕様） */
 .seminar-image.blurred img {
-  filter: blur(6px);
+  filter: blur(4px);
+  transform: scale(1.03);
 }
 
 /* Pagination Styles */
