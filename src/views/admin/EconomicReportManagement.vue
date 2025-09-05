@@ -504,11 +504,36 @@ export default {
       
       try {
         const formData = new FormData()
-        
-        // フォームデータを追加
-        Object.keys(this.formData).forEach(key => {
-          if (this.formData[key] !== null && this.formData[key] !== undefined) {
-            formData.append(key, this.formData[key])
+        // クライアント側で最低限の整形（422対策）
+        const allowedCategories = ['quarterly','annual','regional','industry']
+        const payload = { ...this.formData }
+        if (!allowedCategories.includes(String(payload.category || '').trim())) {
+          payload.category = 'quarterly'
+        }
+        // 発行日を YYYY-MM-DD に整形
+        const dateStr = String(payload.publication_date || '').trim()
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+          try { payload.publication_date = new Date(dateStr).toISOString().split('T')[0] } catch(_) {}
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(String(payload.publication_date||''))) {
+            payload.publication_date = new Date().toISOString().split('T')[0]
+          }
+        }
+        // 数値化
+        payload.year = parseInt(payload.year, 10) || new Date().getFullYear()
+        payload.pages = parseInt(payload.pages, 10) || 0
+        // booleanはそのままでも可だが文字列化
+        payload.is_downloadable = !!payload.is_downloadable
+        payload.is_featured = !!payload.is_featured
+        payload.is_published = !!payload.is_published
+        // 互換: members_only と membership_level の整合
+        if (payload.membership_level && !['free','standard','premium'].includes(String(payload.membership_level))) {
+          payload.membership_level = 'free'
+        }
+
+        Object.keys(payload).forEach(key => {
+          const val = payload[key]
+          if (val !== null && val !== undefined) {
+            formData.append(key, typeof val === 'boolean' ? (val ? '1' : '0') : val)
           }
         })
         
@@ -550,7 +575,16 @@ export default {
           await this.loadStats()
           alert(this.editingReport ? 'レポートを更新しました' : 'レポートを作成しました')
         } else {
-          this.error = data.message || '保存に失敗しました'
+          // バリデーション詳細を表示
+          if (data.errors) {
+            const first = Object.entries(data.errors)[0]
+            const msg = first ? `${first[0]}: ${first[1]}` : ''
+            this.error = data.message ? `${data.message} - ${msg}` : msg || '保存に失敗しました'
+            alert(this.error)
+          } else {
+            this.error = data.message || '保存に失敗しました'
+            alert(this.error)
+          }
         }
       } catch (err) {
         this.error = 'ネットワークエラーが発生しました'

@@ -185,6 +185,7 @@
                 <label><input type="radio" value="html" v-model="contentMode" /> HTML（全文編集）</label>
                 <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
+                <label><input type="radio" value="inline" v-model="contentMode" /> ページ風プレビュー（直編集）</label>
               </div>
 
               <!-- WYSIWYG editor -->
@@ -264,6 +265,38 @@
                 <label class="preview-inline"><input type="checkbox" v-model="showPreview" /> プレビューを表示</label>
                 <div v-if="showPreview" class="html-preview" v-html="contentHtml"></div>
                 <p class="form-help">危険なスクリプトは入れないでください（管理画面のみで使用、サニタイズは未実装）。</p>
+              </div>
+
+              <!-- Inline page-like editor -->
+              <div v-else-if="contentMode==='inline'" class="form-group">
+                <div class="inline-toolbar">
+                  <button type="button" class="tb-btn" @click="execInline('bold')"><b>B</b></button>
+                  <button type="button" class="tb-btn" @click="execInline('italic')"><i>I</i></button>
+                  <button type="button" class="tb-btn" @click="execInline('underline')"><u>U</u></button>
+                  <span class="sep" />
+                  <button type="button" class="tb-btn" @click="formatInline('H1')">H1</button>
+                  <button type="button" class="tb-btn" @click="formatInline('H2')">H2</button>
+                  <button type="button" class="tb-btn" @click="formatInline('P')">P</button>
+                  <span class="sep" />
+                  <button type="button" class="tb-btn" @click="insertInlineLink()">Link</button>
+                  <button type="button" class="tb-btn" @click="execInline('removeFormat')">Clear</button>
+                </div>
+                <div class="inline-surface">
+                  <div class="inline-page">
+                    <div class="inline-hero">ページヘッダー領域（プレビュー）</div>
+                    <div class="inline-body cms-body">
+                      <div 
+                        ref="inlineEditor" 
+                        class="inline-editor" 
+                        contenteditable 
+                        v-html="contentHtml"
+                        @input="onInlineInput"
+                      />
+                    </div>
+                    <div class="inline-footer">フッター領域（プレビュー）</div>
+                  </div>
+                </div>
+                <p class="form-help">実際のサイト風にレイアウトして、本文をその場で編集できます。保存でこの内容が反映されます。</p>
               </div>
 
               <!-- Fields mode: key-value editor for content.texts -->
@@ -740,6 +773,26 @@ export default {
         this.textsEditor.push({ _id: `rk-${k}-${Date.now()}-${Math.random()}`, key: k, value: v })
       }
     },
+    // Inline editor helpers
+    execInline(cmd) {
+      try { document.execCommand(cmd, false, null) } catch (_) {}
+      this.captureInline()
+    },
+    formatInline(tag) {
+      try { document.execCommand('formatBlock', false, tag) } catch (_) {}
+      this.captureInline()
+    },
+    insertInlineLink() {
+      const url = prompt('リンクURLを入力してください（https:// または / で始まる）', 'https://')
+      if (!url) return
+      try { document.execCommand('createLink', false, url) } catch (_) {}
+      this.captureInline()
+    },
+    onInlineInput() { this.captureInline() },
+    captureInline() {
+      const el = this.$refs.inlineEditor
+      if (el) this.contentHtml = el.innerHTML
+    },
     extractHtmlFromContent() {
       const c = this.formData?.content
       if (!c) return this.contentHtml || ''
@@ -994,7 +1047,7 @@ export default {
           }
         }
         // コンテンツのモードに応じて content を設定
-        if (this.contentMode === 'html' || this.contentMode === 'wysiwyg') {
+        if (this.contentMode === 'html' || this.contentMode === 'wysiwyg' || this.contentMode === 'inline') {
           this.formData.content = this.contentHtml || ''
         } else if (this.contentMode === 'fields') {
           // Merge with existing JSON if valid, else new object
@@ -1325,6 +1378,52 @@ export default {
   background: #fafafa;
 }
 .preview-inner { padding: 12px; }
+
+/* Inline page-like editor */
+.inline-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d0d0d0;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 8px;
+  background: #f7f7f7;
+  margin-top: 10px;
+}
+.inline-surface {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f3f4f6;
+  padding: 12px;
+}
+.inline-page {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.inline-hero {
+  background: #ececec;
+  padding: 24px;
+  text-align: center;
+  color: #666;
+  font-weight: 600;
+}
+.inline-body {
+  padding: 24px;
+  min-height: 260px;
+}
+.inline-editor {
+  min-height: 220px;
+  outline: none;
+}
+.inline-footer {
+  background: #f7f7f7;
+  padding: 16px;
+  text-align: center;
+  color: #777;
+}
 
 /* Fields mode styles */
 .fields-editor {
