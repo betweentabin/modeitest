@@ -105,44 +105,19 @@
            読み込み中...
          </div>
 
-                   <!-- Pagination -->
+          <!-- Pagination -->
           <div class="pagination">
             <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 1 }"
-              @click="changePage(1)"
-            >
-              1
-            </button>
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 2 }"
-              @click="changePage(2)"
-            >
-              2
-            </button>
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 3 }"
-              @click="changePage(3)"
-            >
-              3
-            </button>
-            <span class="pagination-dots">...</span>
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 10 }"
-              @click="changePage(10)"
-            >
-              10
-            </button>
+              class="pagination-btn"
+              :disabled="currentPage <= 1"
+              @click="prevPage"
+            >前へ</button>
+            <span class="pagination-info">{{ currentPage }} / {{ totalPages }}</span>
             <button 
               class="pagination-btn next-btn"
-              @click="changePage(currentPage + 1)"
-              :disabled="currentPage >= 10"
-            >
-              最後
-            </button>
+              :disabled="currentPage >= totalPages"
+              @click="nextPage"
+            >次へ</button>
           </div>
        </div>
      </div>
@@ -271,6 +246,15 @@ export default {
       this.selectedCategory = category;
       this.currentPage = 1; // リセット
       await this.loadNews();
+    },
+    prevPage() {
+      if (this.currentPage > 1) this.changePage(this.currentPage - 1)
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) this.changePage(this.currentPage + 1)
+    },
+    goToContact() {
+      this.$router.push('/contact')
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -472,8 +456,9 @@ export default {
 }
 
 .news-item:hover {
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
+  /* 浮かせず、矢印のみ動かす */
+  box-shadow: none;
+  transform: none;
 }
 
 .news-meta {
@@ -565,7 +550,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
+  min-width: 88px;
   height: 40px;
   border-radius: 5px;
   background: #FFFFFF;
@@ -585,9 +570,9 @@ export default {
 }
 
 .pagination-btn.active {
-  background: #1A1A1A;
+  background: #DA5761;
   color: #FFFFFF;
-  border-color: #1A1A1A;
+  border-color: #DA5761;
 }
 
 .pagination-btn:disabled {
@@ -604,8 +589,26 @@ export default {
 }
 
 .next-btn {
-  width: 60px;
+  min-width: 88px;
 }
+
+/* Hero CTA */
+.hero-cta {
+  background: #DA5761;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-cta:hover { background: #c44853; }
+.cta-arrow { display: inline-block; transition: transform .2s; }
+.hero-cta:hover .cta-arrow { transform: translateX(3px); }
 
 
 

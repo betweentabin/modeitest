@@ -5,6 +5,9 @@
         <div class="hero-subtitle">{{ subtitle }}</div>
         <div class="hero-title">{{ title }}</div>
       </div>
+      <div class="hero-slot">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -88,6 +91,14 @@ export default {
   color: white;
 }
 
+.hero-slot {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+
 .hero-subtitle {
   color: white;
   font-size: clamp(18px, 4vw, 24px);
@@ -115,6 +126,7 @@ export default {
   .hero-overlay {
     padding: 40px 25px;
   }
+  .hero-slot { margin-top: 12px; }
   
   .hero-subtitle {
     font-size: clamp(16px, 3.5vw, 22px);
@@ -135,6 +147,7 @@ export default {
   .hero-overlay {
     padding: 25px 20px;
   }
+  .hero-slot { margin-top: 10px; }
   
   .hero-subtitle {
     font-size: clamp(15px, 3vw, 20px);
@@ -157,6 +170,7 @@ export default {
   .hero-overlay {
     padding: 20px 15px;
   }
+  .hero-slot { margin-top: 8px; }
   
   .hero-subtitle {
     font-size: clamp(14px, 2.8vw, 18px);
@@ -179,6 +193,7 @@ export default {
   .hero-overlay {
     padding: 15px 12px;
   }
+  .hero-slot { margin-top: 6px; }
   
   .hero-subtitle {
     font-size: clamp(13px, 2.5vw, 16px);

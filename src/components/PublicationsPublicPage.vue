@@ -1015,6 +1015,8 @@ export default {
 }
 .publication-image.blurred img, .featured-image.blurred img { filter: blur(6px); }
 
+/* ぼかしは画像のみ。テキストは常に表示 */
+
 .publication-info {
   padding: 20px 0 0 0;
   flex: 1;

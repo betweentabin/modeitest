@@ -876,6 +876,7 @@ export default {
   object-fit: cover;
 }
 .publication-image.blurred img, .featured-image.blurred img { filter: blur(6px); }
+/* ぼかしは画像のみ */
 
 .publication-info {
   padding: 20px 0 0 0;

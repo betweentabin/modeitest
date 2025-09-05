@@ -13,7 +13,7 @@
             </button>
           </div>
         </div>
-        <div class="publication-content blurred-text">
+        <div class="publication-content">
           <div class="publication-date">{{ formatDate(publication.publication_date) }}</div>
           <h3>{{ publication.title }}</h3>
           <p class="publication-description">{{ publication.description }}</p>
@@ -93,10 +93,24 @@ export default {
     goToPublication() {
       this.$router.push(`/publications/${this.publication.id}`)
     },
-    downloadPDF() {
-      // PDF ダウンロード処理
-      if (this.publication.file_url) {
-        window.open(this.publication.file_url, '_blank')
+    async downloadPDF() {
+      try {
+        const mod = await import('@/services/apiClient')
+        const client = mod.default
+        const res = await client.downloadPublication(this.publication.id)
+        if (res && res.success && res.data?.download_url) {
+          window.open(res.data.download_url, '_blank')
+        } else {
+          throw new Error(res?.message || 'ダウンロードできません')
+        }
+      } catch (e) {
+        // 未ログイン or 権限不足
+        const msg = (e?.message || '').toLowerCase()
+        if (msg.includes('unauth') || msg.includes('login')) {
+          this.$router.push('/member-login')
+        } else {
+          alert('この刊行物は現在ダウンロードできません。会員プランをご確認ください。')
+        }
       }
     },
     handleRestrictedClick() {

@@ -121,6 +121,32 @@ class PublicationController extends Controller
                 ], 404);
             }
 
+            // 会員レベルのチェック（管理者はスキップ）
+            $user = request()->user();
+            $isAdmin = $user && method_exists($user, 'isAdmin') && $user->isAdmin();
+            if (!$isAdmin) {
+                // user が Member想定。メンバーモデルなら hasAccess 利用、それ以外は最低限のガード
+                if ($user && method_exists($user, 'hasAccess')) {
+                    if (!$user->hasAccess($publication->membership_level ?? 'free')) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'この刊行物はご契約の会員レベルではダウンロードできません',
+                            'requires_upgrade' => true,
+                            'required_level' => $publication->membership_level
+                        ], 403);
+                    }
+                } else {
+                    // 何らかの理由で会員情報が取得できない場合、free以外は拒否
+                    if (($publication->membership_level ?? 'free') !== 'free') {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'ダウンロードには会員ログインが必要です',
+                            'requires_login' => true
+                        ], 403);
+                    }
+                }
+            }
+
             // ダウンロード数をインクリメント
             $publication->increment('download_count');
 
