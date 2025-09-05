@@ -99,7 +99,7 @@
                 </div>
               </div>
               <button class="reserve-btn" :class="{ disabled: isRestricted(seminar) }" @click="handleReservation(seminar)">
-                <span>{{ getReservationButtonText(seminar) }}</span>
+                <span>{{ getReservationButtonText() }}</span>
                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
                   <path d="M13.7193 9.84548L10.2194 13.4453C10.1464 13.5203 10.0475 13.5625 9.94427 13.5625C9.84107 13.5625 9.74211 13.5203 9.66914 13.4453C9.59617 13.3702 9.55517 13.2684 9.55517 13.1623C9.55517 13.0562 9.59617 12.9544 9.66914 12.8793L12.5055 9.96248L4.88888 9.96248C4.78574 9.96248 4.68683 9.92034 4.6139 9.84533C4.54097 9.77032 4.5 9.66858 4.5 9.5625C4.5 9.45642 4.54097 9.35468 4.6139 9.27967C4.68683 9.20466 4.78574 9.16252 4.88888 9.16252L12.5055 9.16252L9.66914 6.24568C9.59617 6.17063 9.55517 6.06884 9.55517 5.9627C9.55517 5.85656 9.59617 5.75477 9.66914 5.67972C9.74211 5.60466 9.84107 5.5625 9.94427 5.5625C10.0475 5.5625 10.1464 5.60466 10.2194 5.67972L13.7193 9.27951C13.7554 9.31666 13.7841 9.36078 13.8037 9.40933C13.8233 9.45789 13.8333 9.50994 13.8333 9.5625C13.8333 9.61506 13.8233 9.66711 13.8037 9.71567C13.7841 9.76422 13.7554 9.80834 13.7193 9.84548Z" fill="#9C3940"/>
@@ -298,17 +298,13 @@ export default {
     shouldBlur(seminar) {
       return this.isRestricted(seminar);
     },
-    getReservationButtonText(seminar) {
-      return this.isRestricted(seminar) ? 'ログインする' : 'セミナーを予約する';
+    getReservationButtonText() {
+      return '予約する';
     },
     handleReservation(seminar) {
-      if (this.isRestricted(seminar)) {
-        const redirect = encodeURIComponent(this.$route.fullPath)
-        this.$router.push(`/member-login?redirect=${redirect}`)
-        return;
-      }
+      // 一覧からは常に詳細ページへ遷移
       const id = seminar.id || this.generateSeminarId(seminar);
-      this.$router.push(`/seminars/${id}/apply`);
+      this.$router.push(`/seminar/${id}`);
     },
     goToCurrentSeminars() {
       this.$router.push('/seminars/current');

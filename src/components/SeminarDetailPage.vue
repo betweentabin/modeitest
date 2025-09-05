@@ -181,19 +181,14 @@ export default {
       return this.$store.getters['auth/canAccess'](requiredLevel);
     },
     registrationButtonText() {
-      if (!this.seminar) return 'セミナーを予約する';
-      
+      if (!this.seminar) return '予約する';
       const requiredLevel = this.seminar.membershipRequirement || 'free';
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
       const isRestricted = this.$store.getters['auth/canViewButRestricted'](requiredLevel);
-      
-      if (canAccess) {
-        return 'セミナーを予約する';
-      } else if (isRestricted) {
-        return `${this.getMembershipText(requiredLevel)}会員限定`;
-      } else {
-        return 'ログインが必要';
-      }
+      if (requiredLevel === 'free') return 'セミナーを予約する';
+      if (canAccess) return '予約する';
+      if (isRestricted) return `${this.getMembershipText(requiredLevel)}会員限定`;
+      return 'ログインする';
     }
   },
   methods: {
@@ -389,12 +384,16 @@ export default {
     },
     handleRegistration() {
       if (!this.seminar) return;
-      
       const requiredLevel = this.seminar.membershipRequirement || 'free';
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
-      
+      if (requiredLevel === 'free') {
+        // 一般公開：申込フォームへ遷移
+        this.$router.push(`/seminars/${this.seminar.id}/apply`)
+        return
+      }
       if (canAccess) {
-        this.registerSeminar();
+        // 会員限定・権限あり：即時予約登録
+        this.directRegister(this.seminar)
       } else if (!this.$store.getters['auth/isAuthenticated']) {
         const redirect = encodeURIComponent(this.$route.fullPath)
         this.$router.push(`/member-login?redirect=${redirect}`);
@@ -403,9 +402,55 @@ export default {
         this.$router.push('/membership');
       }
     },
-    registerSeminar() {
-      // セミナー予約処理
-      alert('セミナーの予約を受け付けました。詳細は後日ご連絡いたします。');
+    async directRegister(seminar) {
+      try {
+        const profile = this.getLoggedInProfile()
+        if (!profile || !profile.email) {
+          const redirect = encodeURIComponent(this.$route.fullPath)
+          this.$router.push(`/member-login?redirect=${redirect}`)
+          return
+        }
+        const payload = {
+          name: profile.name || '会員',
+          email: profile.email,
+          company: profile.company || '',
+          phone: profile.phone || '',
+          special_requests: ''
+        }
+        const res = await apiClient.registerForSeminar(this.seminar.id, payload)
+        if (res && res.success) {
+          alert('予約を受け付けました。マイページの申込状況で確認できます。')
+        } else {
+          throw new Error(res?.error || '予約に失敗しました')
+        }
+      } catch (e) {
+        console.error('directRegister error', e)
+        alert('予約に失敗しました。時間をおいて再度お試しください。')
+      }
+    },
+    getLoggedInProfile() {
+      try {
+        const user = this.$store?.state?.auth?.user || this.$store?.state?.auth?.member
+        if (user && user.email) {
+          return {
+            name: user.full_name || user.name || user.company_name || '会員',
+            email: user.email,
+            company: user.company_name || '',
+            phone: user.phone || ''
+          }
+        }
+        const ls = localStorage.getItem('memberUser')
+        if (ls) {
+          const u = JSON.parse(ls)
+          return {
+            name: u.full_name || u.name || u.company_name || '会員',
+            email: u.email,
+            company: u.company_name || '',
+            phone: u.phone || ''
+          }
+        }
+      } catch (e) { /* noop */ }
+      return null
     },
     goToContact() {
       this.$router.push('/contact');
