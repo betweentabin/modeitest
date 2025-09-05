@@ -251,8 +251,6 @@ export default {
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
-  background: #fff;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
 }
 
 .login-form {
@@ -312,18 +310,16 @@ export default {
   align-items: center;
   gap: 10px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #da5761 0%, #ff6b9d 100%);
+  background: #1A1A1A;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.2);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .login-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(218, 87, 97, 0.3);
+  opacity: 0.8;
 }
 
 .login-button:disabled {
@@ -364,6 +360,7 @@ export default {
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
+  white-space: nowrap;
 }
 
 .password-reset-text a {
