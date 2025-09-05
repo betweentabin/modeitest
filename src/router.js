@@ -68,6 +68,10 @@ Vue.use(Router);
 
 const router = new Router({
   mode: "hash",
+  scrollBehavior(to, from, savedPosition) {
+    // ページ遷移時に常にページトップにスクロール
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: "/",

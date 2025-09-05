@@ -283,17 +283,18 @@
                   </div>
                 </div>
                 <div class="recommended-keys" v-if="recommendedKeys.length">
-                  <div class="subtitle">推奨キー</div>
+                  <div class="subtitle">推奨キー（クリックで追加/フォーカス）</div>
                   <div class="chips">
-                    <span 
+                    <button 
                       v-for="rk in recommendedKeys" 
                       :key="rk"
+                      type="button"
                       :class="['chip', hasTextKey(rk) ? 'chip-ok' : 'chip-missing']"
+                      @click="focusOrAddKey(rk)"
                     >
                       {{ rk }}
-                    </span>
+                    </button>
                   </div>
-                  <button type="button" class="btn btn-secondary small" @click="addMissingRecommendedKeys">不足キーを追加</button>
                 </div>
                 <div class="fields-editor">
                   <div class="field-head">
@@ -329,6 +330,21 @@
                   </div>
                   <button type="button" class="btn btn-primary" @click="addTextField">+ フィールドを追加</button>
                   <p class="form-help">推奨キー例: page_title, page_subtitle, lead, cta_primary, cta_secondary</p>
+                </div>
+
+                <!-- Live Preview (common placements) -->
+                <div class="fields-preview">
+                  <div class="preview-hero">
+                    <div class="preview-hero-inner">
+                      <h1 class="pv-title">{{ text('page_title') || 'ページタイトル' }}</h1>
+                      <div class="pv-subtitle">{{ text('page_subtitle') || 'sub title' }}</div>
+                      <p class="pv-lead">{{ text('lead') || '概要テキストのプレビュー（任意）' }}</p>
+                      <div class="pv-cta">
+                        <button class="btn btn-primary">{{ text('cta_primary') || 'お問い合わせはコチラ' }}</button>
+                        <button class="btn btn-secondary" style="margin-left:8px;">{{ text('cta_secondary') || '入会はコチラ' }}</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Links subsection -->
@@ -650,6 +666,9 @@ export default {
       if (newMode === 'json') {
         this.contentJson = JSON.stringify(this.formData.content || {}, null, 2)
       }
+      if (newMode === 'fields') {
+        this.ensureFieldsPreset()
+      }
     }
   },
   async mounted() {
@@ -673,6 +692,54 @@ export default {
     }
   },
   methods: {
+    text(k) {
+      const key = (k || '').trim()
+      const row = this.textsEditor.find(r => (r.key||'').trim() === key)
+      return row ? row.value : ''
+    },
+    focusOrAddKey(k) {
+      const key = (k || '').trim()
+      const idx = this.textsEditor.findIndex(r => (r.key||'').trim() === key)
+      if (idx === -1) {
+        this.textsEditor.push({ _id: `rk-${key}-${Date.now()}-${Math.random()}`, key, value: '' })
+        this.$nextTick(() => {
+          const inputs = this.$el.querySelectorAll('.field-row .field-key')
+          if (inputs && inputs.length) inputs[inputs.length-1].focus()
+        })
+      } else {
+        this.$nextTick(() => {
+          const inputs = this.$el.querySelectorAll('.field-row .field-key')
+          if (inputs && inputs[idx]) inputs[idx].focus()
+        })
+      }
+    },
+    ensureFieldsPreset() {
+      // 既存content.textsやHTMLから値を推定しつつ推奨キーをプリセット
+      const existing = {}
+      try {
+        const c = this.formData?.content
+        if (c && typeof c === 'object' && c.texts && typeof c.texts === 'object') {
+          Object.assign(existing, c.texts)
+        }
+      } catch (_) {}
+
+      // HTMLからの簡易抽出（h1, p）
+      try {
+        const html = this.extractHtmlFromContent()
+        if (html) {
+          const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [null, ''])[1]
+          const p = (html.match(/<p[^>]*>([\s\S]*?)<\/p>/i) || [null, ''])[1]
+          if (h1 && !existing.page_title) existing.page_title = h1.replace(/<[^>]+>/g, '').trim()
+          if (p && !existing.lead) existing.lead = p.replace(/<[^>]+>/g, '').trim()
+        }
+      } catch (_) {}
+
+      const toAdd = (this.recommendedKeys || []).filter(k => !this.hasTextKey(k))
+      for (const k of toAdd) {
+        const v = existing[k] || ''
+        this.textsEditor.push({ _id: `rk-${k}-${Date.now()}-${Math.random()}`, key: k, value: v })
+      }
+    },
     extractHtmlFromContent() {
       const c = this.formData?.content
       if (!c) return this.contentHtml || ''
@@ -730,6 +797,9 @@ export default {
         this.textsEditor = Object.keys(texts).map((k) => ({ _id: `${k}-${Date.now()}-${Math.random()}`, key: k, value: texts[k] }))
         const links = (data && data.content && data.content.links) ? data.content.links : {}
         this.linksEditor = Object.keys(links).map((k) => ({ _id: `l-${k}-${Date.now()}-${Math.random()}`, key: k, value: links[k] }))
+        if (this.contentMode === 'fields') {
+          this.ensureFieldsPreset()
+        }
       } catch (err) {
         this.error = 'ページデータの取得に失敗しました'
         console.error(err)
@@ -1398,6 +1468,23 @@ export default {
   border-radius: 4px;
   font-size: 12px;
 }
+
+/* Live preview for Fields mode */
+.fields-preview {
+  margin: 20px 0;
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #fafafa;
+}
+.preview-hero {
+  background: linear-gradient(180deg,#f5f5f5,#fff);
+  padding: 16px;
+  border-radius: 8px;
+}
+.pv-title { font-size: 20px; margin: 0 0 4px 0; color:#1A1A1A; }
+.pv-subtitle { font-size: 12px; color:#9c9c9c; margin-bottom: 8px; }
+.pv-lead { font-size: 13px; color:#555; margin: 0 0 12px 0; }
+.pv-cta button { font-size: 12px; }
 
 .checkbox-label {
   display: flex;
