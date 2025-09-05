@@ -142,9 +142,8 @@
             :key="publication.id"
             class="publication-card"
             @click="goToPublicationDetail(publication.id)"
-            v-restricted="{ requiredLevel: publication.membershipLevel || 'free' }"
           >
-            <div class="publication-image">
+            <div class="publication-image" :class="{ 'image-restricted': isRestricted(publication) }">
               <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
               <MembershipBadge 
                 v-if="publication.membershipLevel && publication.membershipLevel !== 'free'" 
@@ -567,6 +566,11 @@ export default {
     canAccessPublication(publication) {
       const requiredLevel = publication.membershipLevel || 'free';
       return this.canAccess(requiredLevel);
+    },
+    isRestricted(publication) {
+      const requiredLevel = publication.membershipLevel || 'free'
+      if (requiredLevel === 'free') return false
+      return !this.canAccess(requiredLevel)
     },
     getDownloadButtonText(publication) {
       const requiredLevel = publication.membershipLevel || 'free';

@@ -65,12 +65,12 @@
 
 
 
-        <!-- Login Button -->
+        <!-- Download/Login Button -->
         <div class="login-section">
-          <div class="login-btn" @click="goToLogin">
-            <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
+          <button class="login-btn" @click="handlePrimaryAction">
+            <div class="text-44 valign-text-middle inter-bold-white-15px">{{ detailButtonText }}</div>
             <frame13213176122 />
-          </div>
+          </button>
         </div>
 
       </div>
@@ -112,6 +112,7 @@ import Frame13213176122 from "./Frame13213176122.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
+import { mapGetters } from 'vuex';
 import { usePageText } from '@/composables/usePageText'
 
 export default {
@@ -145,11 +146,15 @@ export default {
     } catch(e) { /* noop */ }
   },
   computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '刊行物') || '刊行物' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はコチラ') || 'メンバー登録はコチラ' },
+    detailButtonText() {
+      return this.isAuthenticated ? 'PDFダウンロード' : 'ログインする'
+    }
   },
   methods: {
     async loadPublication() {
@@ -170,6 +175,19 @@ export default {
         this.loadFallbackData();
       } finally {
         this.loading = false;
+      }
+    },
+    async downloadPublication(publicationId) {
+      try {
+        const response = await apiClient.downloadPublication(publicationId)
+        if (response?.success && response?.data?.download_url) {
+          window.open(response.data.download_url, '_blank')
+        } else {
+          throw new Error('ダウンロードURLが取得できませんでした')
+        }
+      } catch (error) {
+        console.error('ダウンロードに失敗しました:', error)
+        alert('ダウンロードに失敗しました。しばらくしてから再度お試しください。')
       }
     },
     
@@ -211,8 +229,14 @@ export default {
       return categories[category] || 'その他';
     },
     
-    goToLogin() {
-      this.$router.push('/member-login');
+    handlePrimaryAction() {
+      if (!this.isAuthenticated) {
+        this.$router.push('/member-login')
+        return
+      }
+      if (this.publication?.id) {
+        this.downloadPublication(this.publication.id)
+      }
     },
     
     goToContact() {
