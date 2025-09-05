@@ -339,16 +339,38 @@ export default {
 
         if (this.isNew) {
           const res = await apiClient.createSeminar(this.formData, token)
-          if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
+          if (!res?.success) {
+            const msg = res?.error?.message || res?.message || '作成に失敗'
+            const details = res?.error?.details
+            if (details) {
+              const first = Object.entries(details)[0]
+              this.submitError = first ? `${msg}: ${first[0]} - ${first[1]}` : msg
+            } else {
+              this.submitError = msg
+            }
+            throw new Error(this.submitError)
+          }
           this.successMessage = 'セミナーを作成しました'
           setTimeout(() => { this.$router.push('/admin/seminar') }, 1200)
         } else {
           const res = await apiClient.updateSeminar(this.seminarId, this.formData, token)
-          if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
+          if (!res?.success) {
+            const msg = res?.error?.message || res?.message || '更新に失敗'
+            const details = res?.error?.details
+            if (details) {
+              const first = Object.entries(details)[0]
+              this.submitError = first ? `${msg}: ${first[0]} - ${first[1]}` : msg
+            } else {
+              this.submitError = msg
+            }
+            throw new Error(this.submitError)
+          }
           this.successMessage = 'セミナーを更新しました'
         }
       } catch (err) {
-        this.submitError = this.isNew ? 'セミナーの作成に失敗しました' : 'セミナーの更新に失敗しました'
+        if (!this.submitError) {
+          this.submitError = this.isNew ? 'セミナーの作成に失敗しました' : 'セミナーの更新に失敗しました'
+        }
         console.error(err)
       } finally {
         this.submitLoading = false
@@ -362,28 +384,44 @@ export default {
       localStorage.removeItem('adminUser')
       this.$router.push('/admin/login')
     },
-    handleImageUpload(event) {
+    async handleImageUpload(event) {
       const file = event.target.files[0]
       if (!file) return
 
-      // ファイルサイズチェック（5MB以下）
       if (file.size > 5 * 1024 * 1024) {
         alert('画像ファイルは5MB以下にしてください')
         return
       }
-
-      // 画像タイプチェック
       if (!file.type.startsWith('image/')) {
         alert('画像ファイルを選択してください')
         return
       }
 
-      // FileReaderで画像をData URLに変換
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        this.formData.featured_image = e.target.result
+      // 管理メディアAPIへアップロードしてURLを取得（base64は長すぎて弾かれるため）
+      try {
+        const token = localStorage.getItem('admin_token')
+        if (!token) {
+          alert('管理者ログインが必要です')
+          this.$router.push('/admin/login')
+          return
+        }
+        const form = new FormData()
+        form.append('file', file)
+        form.append('directory', 'public/media/seminars')
+        const res = await fetch((await import('../../config/api.js')).getApiUrl('/api/admin/media/upload'), {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: form
+        })
+        const data = await res.json()
+        if (!res.ok || !data?.file?.url) {
+          throw new Error(data?.message || 'アップロードに失敗しました')
+        }
+        this.formData.featured_image = data.file.url // 例: /storage/...
+      } catch (e) {
+        console.error('Image upload failed:', e)
+        alert('画像のアップロードに失敗しました')
       }
-      reader.readAsDataURL(file)
     },
     removeImage() {
       this.formData.featured_image = ''
