@@ -534,7 +534,18 @@ const RECOMMENDED_KEYS = {
   'financial-reports': ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
   'economic-indicators': ['page_title', 'page_subtitle'],
   news: ['page_title', 'page_subtitle'],
-  about: ['page_title', 'mission_title', 'mission_body', 'cta_primary']
+  about: ['page_title', 'mission_title', 'mission_body', 'cta_primary'],
+  terms: [
+    'page_title', 'page_subtitle', 'intro',
+    'copyright_title', 'copyright_body',
+    'link_title', 'link_body',
+    'disclaimer_title', 'disclaimer_body',
+    'security_title', 'security_body',
+    'cookie_title', 'cookie_body',
+    'environment_title', 'environment_body',
+    'prohibited_title', 'prohibited_body',
+    'article8_title', 'article8_body'
+  ]
 }
 
 // ソフト上限（超過時に警告）
@@ -611,6 +622,23 @@ const KEY_LOCATIONS = {
   'terms': {
     page_title: 'ヒーロー・パンくず・見出し（TermsOfServicePage）',
     page_subtitle: '英字のサブ見出し（TermsOfServicePage）',
+    intro: '導入文（ページ冒頭の説明）',
+    copyright_title: 'セクション見出し：著作権等について',
+    copyright_body: '本文：著作権等について（HTML可）',
+    link_title: 'セクション見出し：リンクについて',
+    link_body: '本文：リンクについて（HTML可）',
+    disclaimer_title: 'セクション見出し：免責事項',
+    disclaimer_body: '本文：免責事項（HTML可）',
+    security_title: 'セクション見出し：セキュリティについて',
+    security_body: '本文：セキュリティについて（HTML可）',
+    cookie_title: 'セクション見出し：クッキー(Cookie)について',
+    cookie_body: '本文：クッキー(Cookie)について（HTML可）',
+    environment_title: 'セクション見出し：ご利用環境について',
+    environment_body: '本文：ご利用環境について（HTML可）',
+    prohibited_title: 'セクション見出し：禁止される行為',
+    prohibited_body: '本文：禁止される行為（HTML可）',
+    article8_title: 'セクション見出し：第8条（利用規約の変更）',
+    article8_body: '本文：第8条（利用規約の変更）（HTML可）',
   },
   'transaction-law': {
     page_title: 'ヒーロー・パンくず・見出し（TransactionLawPage）',

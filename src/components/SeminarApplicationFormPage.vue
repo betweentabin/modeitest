@@ -14,7 +14,7 @@
           </div>
           <div class="row">
             <label>メールアドレス<span class="req">*</span></label>
-            <input v-model="form.email" type="email" required />
+            <input v-model="form.email" type="email" required :readonly="_loggedIn" />
           </div>
           <div class="row">
             <label>会社名</label>
@@ -44,6 +44,7 @@ import Navigation from './Navigation.vue'
 import Footer from './Footer.vue'
 import HeroSection from './HeroSection.vue'
 import Breadcrumbs from './Breadcrumbs.vue'
+import { useMemberAuth } from '@/composables/useMemberAuth'
 
 export default {
   name: 'SeminarApplicationFormPage',
@@ -56,8 +57,22 @@ export default {
         company: '',
         phone: '',
         special_requests: ''
-      }
+      },
+      _member: null,
+      _loggedIn: false
     }
+  },
+  mounted() {
+    // If a member is logged in, prefill and lock email to avoid EMAIL_MISMATCH on server
+    try {
+      const auth = useMemberAuth()
+      this._member = auth.getMemberInfo()
+      this._loggedIn = auth.isLoggedIn()
+      if (this._member) {
+        if (!this.form.name) this.form.name = this._member.name || this._member.full_name || ''
+        if (!this.form.email) this.form.email = this._member.email || ''
+      }
+    } catch (e) { /* noop */ }
   },
   methods: {
     goBack() { this.$router.back() },
@@ -85,4 +100,3 @@ input, textarea { border:1px solid #ddd; border-radius:6px; padding:10px; font-s
 .btn.outline { background:#fff; color:#1a1a1a; border:1px solid #ddd; }
 .btn.primary:hover { background:#c44853; }
 </style>
-

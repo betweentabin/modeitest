@@ -108,11 +108,13 @@ class ApiClient {
         try { errText = await response.text() } catch(e) {}
         let errJson = null
         try { errJson = errText ? JSON.parse(errText) : null } catch(e) {}
-        const message = errJson?.message || `HTTP error! status: ${response.status}`
+        const code = errJson?.error?.code || errJson?.code || response.status
+        const message = errJson?.error?.message || errJson?.message || `HTTP error! status: ${response.status}`
+        const details = errJson?.error?.details || null
         if (!options || !options.silent) {
           console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
         }
-        return { success: false, error: message }
+        return { success: false, error: message, code, details, raw: errJson || errText }
       }
 
       // レスポンス種別指定（blob/arraybuffer/text等）

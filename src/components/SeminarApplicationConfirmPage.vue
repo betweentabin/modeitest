@@ -63,7 +63,15 @@ export default {
           const query = num ? `?applicationNumber=${encodeURIComponent(num)}` : ''
           this.$router.replace(`/seminars/${id}/apply/complete${query}`)
         } else {
-          throw new Error(res?.error || '送信に失敗しました')
+          // Surface clearer messages based on backend error code if available
+          const code = (res && res.code) || ''
+          let msg = res?.error || '送信に失敗しました'
+          if (code === 'EMAIL_MISMATCH') msg = 'ログイン中のメールアドレスと一致していません。マイページのメールでお申込みください。'
+          else if (code === 'REGISTRATION_CLOSED') msg = 'このセミナーは現在申込受付を行っていません。'
+          else if (code === 'CAPACITY_EXCEEDED') msg = '定員に達したためお申込みできません。'
+          else if (code === 'ALREADY_REGISTERED') msg = 'すでにこのセミナーにお申込み済みです。'
+          else if (String(code) === '403') msg = '申込に必要な会員レベルに達していません。ログイン状態をご確認ください。'
+          throw new Error(msg)
         }
       } catch (e) {
         alert(e.message || '送信に失敗しました')
@@ -89,4 +97,3 @@ export default {
 .btn.outline { background:#fff; color:#1a1a1a; border:1px solid #ddd; }
 .btn.primary:hover { background:#c44853; }
 </style>
-
