@@ -328,6 +328,7 @@ export default {
   box-shadow: none;
 }
 
+
 .content-header {
   display: flex;
   flex-direction: column;

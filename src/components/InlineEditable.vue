@@ -1,0 +1,163 @@
+<template>
+  <component
+    :is="tag"
+    :class="wrapperClass"
+    :contenteditable="isEditing ? (type === 'html' ? 'true' : 'plaintext-only') : undefined"
+    :data-cms-key="fieldKey"
+    :data-cms-type="type"
+    :spellcheck="false"
+    ref="el"
+    @input="onInput"
+    @blur="onBlur"
+    @keydown="onKeydown"
+  >
+    <slot>{{ displayValue }}</slot>
+  </component>
+  <div v-if="isEditing && dirty" class="inline-toolbar">
+    <button class="btn btn-save" @click.prevent="save" :disabled="saving">保存</button>
+    <button class="btn btn-cancel" @click.prevent="cancel" :disabled="saving">キャンセル</button>
+    <span v-if="error" class="error">{{ error }}</span>
+  </div>
+</template>
+
+<script>
+import { ref, computed, onMounted, watch } from 'vue'
+import { useEditMode } from '@/composables/useEditMode'
+import { useAdminAuth } from '@/composables/useAdminAuth'
+import usePageText from '@/composables/usePageText'
+import apiClient from '@/services/apiClient'
+
+export default {
+  name: 'InlineEditable',
+  props: {
+    pageKey: { type: String, required: true },
+    fieldKey: { type: String, required: true },
+    type: { type: String, default: 'text' }, // 'text' | 'html' | 'link'
+    tag: { type: String, default: 'span' },
+    value: { type: String, default: '' }, // optional fallback display
+    placeholder: { type: String, default: '' },
+    class: { type: String, default: '' },
+  },
+  setup(props) {
+    const { enabled } = useEditMode()
+    const { checkAuth } = useAdminAuth()
+    const el = ref(null)
+    const saving = ref(false)
+    const error = ref('')
+    const dirty = ref(false)
+    const local = ref('')
+
+    const pageText = usePageText(props.pageKey)
+
+    const isEditing = computed(() => enabled.value && checkAuth())
+    const wrapperClass = computed(() => [
+      'inline-editable',
+      props.class,
+      isEditing.value ? 'is-editing' : null,
+      dirty.value ? 'is-dirty' : null,
+    ].filter(Boolean).join(' '))
+
+    const cmsValue = computed(() => {
+      if (props.type === 'html') return pageText.getHtml(props.fieldKey, '')
+      if (props.type === 'link') return pageText.getLink(props.fieldKey, '')
+      return pageText.getText(props.fieldKey, '')
+    })
+
+    const displayValue = computed(() => {
+      const v = cmsValue.value || props.value || props.placeholder || ''
+      return v
+    })
+
+    const syncFromDisplay = () => {
+      local.value = displayValue.value
+      if (el.value) {
+        if (props.type === 'html') el.value.innerHTML = local.value
+        else el.value.innerText = local.value
+      }
+      dirty.value = false
+      error.value = ''
+    }
+
+    onMounted(async () => {
+      try { await pageText.load() } catch (_) {}
+      syncFromDisplay()
+    })
+
+    watch(() => cmsValue.value, () => {
+      if (!dirty.value) syncFromDisplay()
+    })
+
+    const onInput = (e) => {
+      const tgt = e?.target
+      const raw = props.type === 'html' ? (tgt?.innerHTML ?? '') : (tgt?.innerText ?? '')
+      local.value = raw.trimStart()
+      dirty.value = (local.value !== (cmsValue.value || props.value || ''))
+    }
+    const onBlur = () => {/* keep toolbar visible until save/cancel */}
+    const onKeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        save()
+      } else if (e.key === 'Escape') {
+        e.preventDefault()
+        cancel()
+      }
+    }
+
+    const save = async () => {
+      if (!dirty.value || saving.value) return
+      saving.value = true
+      error.value = ''
+      try {
+        const page = pageText.page?.value
+        const content = (page?.content && typeof page.content === 'object') ? { ...page.content } : {}
+        const bucket = props.type === 'html' ? 'htmls' : (props.type === 'link' ? 'links' : 'texts')
+        content[bucket] = { ...(content[bucket] || {}) }
+        content[bucket][props.fieldKey] = local.value
+
+        const res = await apiClient.put(`/api/admin/pages/${props.pageKey}`, { content })
+        if (res && res.success === false) throw new Error(res.error || '保存に失敗しました')
+        // Reload page content cache and reset
+        await pageText.load()
+        syncFromDisplay()
+      } catch (e) {
+        error.value = e?.message || '保存に失敗しました'
+      } finally {
+        saving.value = false
+      }
+    }
+
+    const cancel = () => {
+      syncFromDisplay()
+    }
+
+    return { el, isEditing, wrapperClass, displayValue, onInput, onBlur, onKeydown, save, cancel, saving, error, dirty }
+  }
+}
+</script>
+
+<style scoped>
+.inline-editable {
+  position: relative;
+}
+.inline-editable.is-editing {
+  outline: 1px dashed #409eff;
+  outline-offset: 2px;
+  cursor: text;
+  background: rgba(64, 158, 255, 0.06);
+}
+.inline-toolbar {
+  position: absolute;
+  z-index: 5;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 4px 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.btn { font-size: 12px; padding: 4px 8px; border-radius: 4px; margin-right: 4px; cursor: pointer; }
+.btn-save { background: #409eff; color: #fff; border: 1px solid #409eff; }
+.btn-cancel { background: #fff; color: #666; border: 1px solid #ddd; }
+.error { color: #d33; margin-left: 6px; font-size: 12px; }
+</style>

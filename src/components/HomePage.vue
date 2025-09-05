@@ -9,10 +9,24 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <h1 class="hero-title">{{ heroTitle }}</h1>
+              <InlineEditable
+                class="hero-title"
+                tag="h1"
+                pageKey="home"
+                type="text"
+                fieldKey="page_title"
+                :value="heroTitle"
+              />
             </div>
             <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">{{ heroSubtitle }}</div>
+              <InlineEditable
+                class="hero-subtitle"
+                tag="div"
+                pageKey="home"
+                type="text"
+                fieldKey="lead"
+                :value="heroSubtitle"
+              />
             </div>
             <div class="hero-button-wrapper">
               <div class="hero-button-text">{{ text68 }}</div>
@@ -388,11 +402,13 @@ import vector61 from "../../public/img/vector-61.svg";
 import vector5 from "../../public/img/vector-5.svg";
 import vector7 from "../../public/img/vector-7.svg";
 import CmsBlock from './CmsBlock.vue'
+import InlineEditable from '@/components/InlineEditable.vue'
 export default {
   name: "HomePage",
   components: {
     Navigation,
     CmsBlock,
+    InlineEditable,
     ContactSection,
     Card,
     Frame1321317481,
