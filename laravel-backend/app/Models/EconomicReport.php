@@ -25,6 +25,7 @@ class EconomicReport extends Model
         'pages',
         'is_downloadable',
         'members_only',
+        'membership_level',
         'is_featured',
         'is_published',
         'download_count',
@@ -35,6 +36,7 @@ class EconomicReport extends Model
         'publication_date' => 'date',
         'is_downloadable' => 'boolean',
         'members_only' => 'boolean',
+        'membership_level' => 'string',
         'is_featured' => 'boolean',
         'is_published' => 'boolean',
     ];

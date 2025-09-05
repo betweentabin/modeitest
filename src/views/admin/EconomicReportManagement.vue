@@ -301,16 +301,21 @@
           </div>
 
           <div class="form-row">
+            <div class="form-group half">
+              <label>対象会員レベル</label>
+              <select v-model="formData.membership_level" class="form-select">
+                <option value="free">一般公開（無料）</option>
+                <option value="standard">スタンダード会員以上</option>
+                <option value="premium">プレミアム会員のみ</option>
+              </select>
+            </div>
             <div class="form-group">
               <div class="checkbox-group">
                 <label class="checkbox-label">
                   <input v-model="formData.is_downloadable" type="checkbox">
                   ダウンロード可能
                 </label>
-                <label class="checkbox-label">
-                  <input v-model="formData.members_only" type="checkbox">
-                  会員限定
-                </label>
+                
                 <label class="checkbox-label">
                   <input v-model="formData.is_featured" type="checkbox">
                   特集レポート
@@ -380,7 +385,7 @@ export default {
         keywords: '',
         pages: 0,
         is_downloadable: true,
-        members_only: true,
+        membership_level: 'free',
         is_featured: false,
         is_published: false
       },
@@ -488,7 +493,7 @@ export default {
         keywords: '',
         pages: 0,
         is_downloadable: true,
-        members_only: true,
+        membership_level: 'free',
         is_featured: false,
         is_published: false
       }
@@ -513,6 +518,9 @@ export default {
         }
         if (this.reportFile) {
           formData.append('file', this.reportFile)
+        }
+        if (this.formData.membership_level) {
+          formData.append('membership_level', this.formData.membership_level)
         }
         
         const endpoint = this.editingReport 

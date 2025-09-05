@@ -39,11 +39,14 @@ class PublicationController extends Controller
                 });
             }
 
-            // 一般公開APIでは会員限定を除外。管理者APIは常に全件。
+            // 一般公開APIでは会員レベルに応じてフィルタ（デフォルト: free のみ）
             if (!$isAdminContext) {
-                if (!$request->boolean('members_only_included')) {
-                    $query->where('members_only', false);
-                }
+                $allowedLevels = ['free'];
+                // 将来的に会員トークンが渡された場合は拡張可
+                $query->where(function ($q) use ($allowedLevels) {
+                    $q->whereIn('membership_level', $allowedLevels)
+                      ->orWhereNull('membership_level');
+                });
             }
 
             // ページネーション
@@ -154,13 +157,22 @@ class PublicationController extends Controller
                 'price' => 'nullable|numeric|min:0',
                 'tags' => 'nullable|string',
                 'is_downloadable' => 'boolean',
-                'members_only' => 'boolean'
+                'members_only' => 'boolean',
+                'membership_level' => 'nullable|string|in:free,standard,premium'
             ]);
 
-            $publication = Publication::create([
-                ...$validatedData,
+            // 互換: members_only が true で membership_level 未指定なら 'standard' とみなす
+            if (!isset($validatedData['membership_level'])) {
+                if (isset($validatedData['members_only']) && $validatedData['members_only']) {
+                    $validatedData['membership_level'] = 'standard';
+                } else {
+                    $validatedData['membership_level'] = 'free';
+                }
+            }
+
+            $publication = Publication::create(array_merge($validatedData, [
                 'is_published' => true
-            ]);
+            ]));
 
             return response()->json([
                 'success' => true,
@@ -196,8 +208,14 @@ class PublicationController extends Controller
                 'tags' => 'nullable|string',
                 'is_published' => 'boolean',
                 'is_downloadable' => 'boolean',
-                'members_only' => 'boolean'
+                'members_only' => 'boolean',
+                'membership_level' => 'nullable|string|in:free,standard,premium'
             ]);
+
+            // 互換: members_only のみ渡ってきた場合の補完
+            if (!isset($validatedData['membership_level']) && array_key_exists('members_only', $validatedData)) {
+                $validatedData['membership_level'] = $validatedData['members_only'] ? 'standard' : 'free';
+            }
 
             $publication->update($validatedData);
 

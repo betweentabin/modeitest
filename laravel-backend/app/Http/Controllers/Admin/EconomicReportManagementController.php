@@ -132,6 +132,7 @@ class EconomicReportManagementController extends Controller
                 'pages' => 'nullable|integer|min:0',
                 'is_downloadable' => 'boolean',
                 'members_only' => 'boolean',
+                'membership_level' => 'nullable|string|in:free,standard,premium',
                 'is_featured' => 'boolean',
                 'is_published' => 'boolean',
                 'sort_order' => 'nullable|integer',
@@ -150,7 +151,7 @@ class EconomicReportManagementController extends Controller
             $data = $request->only([
                 'title', 'description', 'category', 'year', 'publication_date',
                 'author', 'publisher', 'keywords', 'pages',
-                'is_downloadable', 'members_only', 'is_featured', 'is_published',
+                'is_downloadable', 'members_only', 'membership_level', 'is_featured', 'is_published',
                 'sort_order'
             ]);
 
@@ -161,6 +162,10 @@ class EconomicReportManagementController extends Controller
             $data['members_only'] = $request->boolean('members_only', true);
             $data['is_featured'] = $request->boolean('is_featured');
             $data['is_published'] = $request->boolean('is_published');
+            // 互換：members_onlyからmembership_levelを補完
+            if (!isset($data['membership_level'])) {
+                $data['membership_level'] = $data['members_only'] ? 'standard' : 'free';
+            }
 
             // カバー画像のアップロード
             if ($request->hasFile('cover_image')) {
@@ -215,6 +220,7 @@ class EconomicReportManagementController extends Controller
                 'pages' => 'nullable|integer|min:0',
                 'is_downloadable' => 'boolean',
                 'members_only' => 'boolean',
+                'membership_level' => 'nullable|string|in:free,standard,premium',
                 'is_featured' => 'boolean',
                 'is_published' => 'boolean',
                 'sort_order' => 'nullable|integer',
@@ -233,7 +239,7 @@ class EconomicReportManagementController extends Controller
             $data = $request->only([
                 'title', 'description', 'category', 'year', 'publication_date',
                 'author', 'publisher', 'keywords', 'pages',
-                'is_downloadable', 'members_only', 'is_featured', 'is_published',
+                'is_downloadable', 'members_only', 'membership_level', 'is_featured', 'is_published',
                 'sort_order'
             ]);
 
@@ -241,6 +247,9 @@ class EconomicReportManagementController extends Controller
             $data['members_only'] = $request->boolean('members_only', true);
             $data['is_featured'] = $request->boolean('is_featured');
             $data['is_published'] = $request->boolean('is_published');
+            if (!isset($data['membership_level']) && $request->has('members_only')) {
+                $data['membership_level'] = $request->boolean('members_only') ? 'standard' : 'free';
+            }
 
             // カバー画像の更新
             if ($request->hasFile('cover_image')) {

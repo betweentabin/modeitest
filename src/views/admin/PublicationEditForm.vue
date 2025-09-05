@@ -206,6 +206,24 @@
 
             <!-- 公開設定 -->
             <div class="form-section">
+              <h3 class="section-title">公開範囲</h3>
+              <div class="form-group">
+                <label for="membership_level" class="form-label">
+                  対象会員レベル <span class="required">*</span>
+                </label>
+                <select
+                  id="membership_level"
+                  v-model="formData.membership_level"
+                  required
+                  class="form-input"
+                >
+                  <option value="free">一般公開（無料）</option>
+                  <option value="standard">スタンダード会員以上</option>
+                  <option value="premium">プレミアム会員のみ</option>
+                </select>
+                <p class="form-help">選択したレベル以上の会員に表示・ダウンロードが可能になります</p>
+              </div>
+
               <div class="form-group">
                 <label class="checkbox-label">
                   <input
@@ -279,7 +297,8 @@ export default {
         file_url: '',
         file_size: null,
         download_count: 0,
-        is_published: false
+        is_published: false,
+        membership_level: 'free'
       },
       loading: false,
       submitLoading: false,

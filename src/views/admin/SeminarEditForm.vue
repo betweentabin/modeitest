@@ -181,6 +181,27 @@
 
             <!-- ステータス -->
             <div class="form-section">
+              <h3 class="section-title">公開範囲</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="membership_requirement" class="form-label">
+                    対象会員レベル <span class="required">*</span>
+                  </label>
+                  <select
+                    id="membership_requirement"
+                    v-model="formData.membership_requirement"
+                    required
+                    class="form-input"
+                  >
+                    <option value="free">一般公開（無料）</option>
+                    <option value="standard">スタンダード会員以上</option>
+                    <option value="premium">プレミアム会員のみ</option>
+                  </select>
+                  <p class="form-help">選択したレベル以上の会員に表示・申込が可能になります</p>
+                </div>
+              </div>
+
+              <h3 class="section-title">ステータス</h3>
               <div class="form-group">
                 <label for="status" class="form-label">
                   ステータス <span class="required">*</span>
@@ -254,6 +275,7 @@ export default {
         capacity: null,
         fee: null,
         status: '',
+        membership_requirement: 'free',
         featured_image: ''
       },
       loading: false,

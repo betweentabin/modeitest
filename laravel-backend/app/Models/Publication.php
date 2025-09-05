@@ -30,6 +30,7 @@ class Publication extends Model
         'is_published',
         'is_downloadable',
         'members_only',
+        'membership_level',
         'download_count',
         'view_count',
     ];
@@ -44,6 +45,7 @@ class Publication extends Model
         'is_published' => 'boolean',
         'is_downloadable' => 'boolean',
         'members_only' => 'boolean',
+        'membership_level' => 'string',
         'pages' => 'integer',
         'download_count' => 'integer',
         'view_count' => 'integer',
