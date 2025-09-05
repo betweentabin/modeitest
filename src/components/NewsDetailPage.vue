@@ -411,7 +411,7 @@ export default {
 }
 
  .download-btn:hover {
-   background-color: #0056b3;
+   opacity: 0.8;
  }
 
   /* Filter Download Button */
@@ -448,7 +448,7 @@ export default {
 }
 
 .filter-download-btn:hover {
-  background: var(--color-secondary);
+  opacity: 0.8;
 }
 
 

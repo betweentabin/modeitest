@@ -404,7 +404,7 @@ export default {
 }
 
 .login-btn:hover {
-  background-color: #0056b3;
+  opacity: 0.8;
 }
 
 /* お気に入りヘッダー */
@@ -635,7 +635,7 @@ export default {
 }
 
 .contact-btn:hover {
-  background: #0056b3;
+  opacity: 0.8;
 }
 
 /* モーダル */

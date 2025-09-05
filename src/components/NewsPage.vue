@@ -456,9 +456,7 @@ export default {
 }
 
 .news-item:hover {
-  /* 浮かせず、矢印のみ動かす */
-  box-shadow: none;
-  transform: none;
+  background-color: #FDF6F7;
 }
 
 .news-meta {
@@ -564,9 +562,8 @@ export default {
 }
 
 .pagination-btn:hover {
-  background: var(--color-accent);
-  color: #FFFFFF;
-  border-color: var(--color-accent);
+  background: #F5F5F5;
+  border-color: #B0B0B0;
 }
 
 .pagination-btn.active {

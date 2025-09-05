@@ -183,7 +183,9 @@ export default {
   flex-direction: column;
   gap: 8px;
   position: relative;
-  width: 160px;
+  width: auto;
+  min-width: 160px;
+  max-width: 200px;
   flex-shrink: 0;
 }
 
@@ -236,8 +238,8 @@ export default {
   align-items: flex-start;
   display: flex;
   gap: 10px;
-  height: 18px;
-  width: 210px;
+  height: auto;
+  width: auto;
 }
 
 .cri {
@@ -295,11 +297,12 @@ export default {
 .frame-132131752-2 {
   align-items: flex-start;
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 6px;
   position: relative;
-  width: 160px;
+  width: 100%;
+  min-width: 0;
 }
 
 .frame-132131752-4-1 {
@@ -327,10 +330,11 @@ export default {
 
 .footer-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 6px;
   min-height: 18px;
+  width: 100%;
 }
 
 .footer-text {
@@ -339,6 +343,9 @@ export default {
   font-weight: 400;
   color: #000000;
   line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .footer-item img.vector-27 {

@@ -21,7 +21,7 @@ export default {
   align-self: stretch;
   height: 18px;
   position: relative;
-  width: 100%;
+  width: auto;
 }
 
 .vector-29 {

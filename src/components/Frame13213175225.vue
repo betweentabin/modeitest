@@ -18,27 +18,29 @@ export default {
 
 <style>
 .frame-132131752 {
-  align-self: stretch;
+  align-items: center;
+  display: flex;
   height: 18px;
   position: relative;
   width: 100%;
+  min-width: 0;
 }
 
 .vector-28 {
   height: 17px;
-  left: 0;
-  position: absolute;
-  top: 0;
   width: 10px;
+  flex-shrink: 0;
+  margin-right: 10px;
 }
 
 .text-1-1 {
-  height: 12px;
-  left: 20px;
+  height: auto;
   letter-spacing: 0;
-  line-height: 32px;
-  position: absolute;
-  top: 2px;
-  white-space: nowrap;
+  line-height: 1.2;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  flex: 1;
+  min-width: 0;
 }
 </style>

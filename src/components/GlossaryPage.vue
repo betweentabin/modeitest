@@ -582,9 +582,8 @@ export default {
 }
 
 .pagination-btn:hover {
-  background: #DA5761;
-  color: #FFFFFF;
-  border-color: #DA5761;
+  background: #F5F5F5;
+  border-color: #B0B0B0;
 }
 
 .pagination-btn.active {

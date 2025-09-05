@@ -457,9 +457,7 @@ export default {
 }
 
 .login-btn:hover {
-  background: #333333;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(26, 26, 26, 0.3);
+  opacity: 0.8;
 }
 
 .download-section {
@@ -497,9 +495,7 @@ export default {
 }
 
 .download-btn:hover {
-  background: #333333;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(26, 26, 26, 0.3);
+  opacity: 0.8;
 }
 
 .text-44 {

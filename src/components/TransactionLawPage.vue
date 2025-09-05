@@ -394,7 +394,7 @@ export default {
 }
 
 .contact-button:hover {
-  background: #c54a54;
+  opacity: 0.8;
 }
 
 .fee-description {

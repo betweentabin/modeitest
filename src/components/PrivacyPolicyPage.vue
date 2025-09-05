@@ -224,6 +224,7 @@ export default {
   margin: 0 auto;
 }
 
+
 .intro-section {
   display: flex;
   flex-direction: column;
@@ -281,6 +282,10 @@ export default {
     padding: 50px 30px !important;
   }
   
+  .content-container {
+    padding: 30px 20px !important;
+  }
+  
   .content-header {
     gap: 25px !important;
   }
@@ -316,6 +321,10 @@ export default {
 
 @media (max-width: 900px) {
   .main-content {
+    padding: 30px 20px !important;
+  }
+  
+  .content-container {
     padding: 30px 20px !important;
   }
   
@@ -357,6 +366,10 @@ export default {
     padding: 30px 20px !important;
   }
   
+  .content-container {
+    padding: 30px 20px !important;
+  }
+  
   .content-header {
     gap: 20px !important;
   }
@@ -392,6 +405,10 @@ export default {
 
 @media (max-width: 480px) {
   .main-content {
+    padding: 20px 15px !important;
+  }
+  
+  .content-container {
     padding: 20px 15px !important;
   }
   

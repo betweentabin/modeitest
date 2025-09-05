@@ -319,6 +319,6 @@ export default {
 }
 
 .download-btn:hover {
-  background: #c44853;
+  opacity: 0.8;
 }
 </style>
