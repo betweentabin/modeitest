@@ -1,5 +1,17 @@
 <template>
-  <div v-if="html" :class="wrapperClass" v-html="html"></div>
+  <div v-if="html">
+    <!-- 編集モード（ライブプレビューで直接編集） -->
+    <div 
+      v-if="isEditMode"
+      :class="wrapperClass"
+      ref="editable"
+      contenteditable
+      v-html="html"
+      @input="onEditInput"
+    ></div>
+    <!-- 通常表示 -->
+    <div v-else :class="wrapperClass" v-html="html"></div>
+  </div>
   <div v-else>
     <slot></slot>
   </div>
@@ -55,11 +67,35 @@ export default {
         return params.has('cmsPreview')
       } catch (_) { return false }
     },
+    _hasCmsEditFlag() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+      } catch (_) { return false }
+    },
     _loadPreviewFromStorage() {
       try {
         const v = localStorage.getItem(this._lsKey())
         if (typeof v === 'string') this.html = v
       } catch(_) {}
+    },
+    onEditInput() {
+      try {
+        const current = this.$refs.editable ? this.$refs.editable.innerHTML : ''
+        // 親（管理画面）へ送信
+        if (window.parent) {
+          window.parent.postMessage({ type: 'cms-edit', pageKey: this.pageKey, html: current }, '*')
+        }
+        // ローカルにも保存
+        try { localStorage.setItem(this._lsKey(), current) } catch(_) {}
+      } catch(_) {}
+    }
+  },
+  computed: {
+    isEditMode() {
+      return this._hasCmsPreviewFlag() && this._hasCmsEditFlag()
     }
   }
 }

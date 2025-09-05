@@ -708,7 +708,8 @@ export default {
     previewUrl() {
       const base = this.previewPath
       const sep = base.includes('?') ? '&' : '?'
-      return `${base}${sep}cmsPreview=1`
+      // cmsEdit=1 を付けるとプレビュー側が contenteditable になり、逆方向に編集が反映されます
+      return `${base}${sep}cmsPreview=1&cmsEdit=1`
     },
     recommendedKeys() {
       const key = this.formData.page_key || this.pageKey || ''
