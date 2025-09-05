@@ -303,7 +303,8 @@ export default {
     },
     handleReservation(seminar) {
       if (this.isRestricted(seminar)) {
-        this.$router.push('/member-login');
+        const redirect = encodeURIComponent(this.$route.fullPath)
+        this.$router.push(`/member-login?redirect=${redirect}`)
         return;
       }
       const id = seminar.id || this.generateSeminarId(seminar);

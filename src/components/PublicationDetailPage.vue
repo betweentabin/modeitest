@@ -231,7 +231,8 @@ export default {
     
     handlePrimaryAction() {
       if (!this.isAuthenticated) {
-        this.$router.push('/member-login')
+        const redirect = encodeURIComponent(this.$route.fullPath)
+        this.$router.push(`/member-login?redirect=${redirect}`)
         return
       }
       if (this.publication?.id) {

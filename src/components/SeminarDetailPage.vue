@@ -396,7 +396,8 @@ export default {
       if (canAccess) {
         this.registerSeminar();
       } else if (!this.$store.getters['auth/isAuthenticated']) {
-        this.$router.push('/member-login');
+        const redirect = encodeURIComponent(this.$route.fullPath)
+        this.$router.push(`/member-login?redirect=${redirect}`);
       } else {
         alert(`このセミナーは${this.getMembershipText(requiredLevel)}会員限定です。アップグレードをご検討ください。`);
         this.$router.push('/membership');

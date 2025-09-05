@@ -188,7 +188,8 @@ export default {
     },
     
     goToLogin() {
-      this.$router.push('/member-login');
+      const redirect = encodeURIComponent(this.$route.fullPath)
+      this.$router.push(`/member-login?redirect=${redirect}`)
     },
     
     goToContact() {
