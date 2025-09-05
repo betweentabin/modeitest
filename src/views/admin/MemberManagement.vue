@@ -546,7 +546,23 @@ export default {
       this.saving = true
       
       try {
-        const response = await apiClient.updateAdminMember(this.editingMember.id, this.editForm)
+        // サーバーの期待フォーマットに合わせて整形
+        const payload = { ...this.editForm }
+        if (payload.membership_expires_at) {
+          // 受け取りは "YYYY-MM-DDTHH:mm" or Date なので "YYYY-MM-DD HH:mm:ss" に変換
+          const dt = new Date(payload.membership_expires_at)
+          if (!isNaN(dt.getTime())) {
+            const pad = n => String(n).padStart(2, '0')
+            const y = dt.getFullYear()
+            const m = pad(dt.getMonth() + 1)
+            const d = pad(dt.getDate())
+            const hh = pad(dt.getHours())
+            const mm = pad(dt.getMinutes())
+            const ss = pad(dt.getSeconds())
+            payload.membership_expires_at = `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+          }
+        }
+        const response = await apiClient.updateAdminMember(this.editingMember.id, payload)
         
         if (response.success) {
           alert('会員情報を更新しました')

@@ -561,7 +561,12 @@ export default {
           : '/api/admin/economic-reports'
         const url = getApiUrl(endpoint)
         
-        const method = this.editingReport ? 'PUT' : 'POST'
+        // Laravelのmultipart PUTは環境によりパースされない場合があるため
+        // 編集時もPOSTに統一し、_method=PUT を付与（メソッド擬似）
+        const method = 'POST'
+        if (this.editingReport) {
+          formData.append('_method', 'PUT')
+        }
         
         const authToken = apiClient.getCurrentToken()
         const headers = {

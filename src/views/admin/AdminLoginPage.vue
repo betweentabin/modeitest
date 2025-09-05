@@ -151,7 +151,13 @@ export default {
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
         
-        this.$router.push('/admin/member-list')
+        // すでに同一URLの場合の冗長ナビゲーションを回避
+        const target = '/admin/member-list'
+        if (this.$route?.path === target) {
+          this.$router.replace(target)
+        } else {
+          try { await this.$router.push(target) } catch (e) {/* Vue Router v3 NavigationDuplicated 回避 */}
+        }
       } catch (err) {
         console.error('Login API error:', err); // デバッグ用エラーログ
         if (err.response) {
