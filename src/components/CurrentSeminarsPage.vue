@@ -34,7 +34,7 @@
           <div 
             class="seminar-card" 
             v-for="(seminar, index) in currentSeminars" 
-            :key="index"
+            :key="seminar.id || index"
             v-restricted="{ requiredLevel: seminar.membershipRequirement || 'free' }"
           >
             <div class="seminar-image">

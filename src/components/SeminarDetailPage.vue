@@ -81,7 +81,7 @@
         </div>
 
         <!-- Registration Button -->
-        <div class="registration-section" v-if="seminar.status === 'current'">
+        <div class="registration-section" v-if="showRegistrationSection">
           <div 
             class="registration-btn" 
             @click="handleRegistration"
@@ -162,13 +162,19 @@ export default {
       frame132131753022Props: frame132131753022Data,
       seminar: null,
       loading: true,
-      error: null
+      error: null,
+      serverCanRegister: false,
+      serverCanRegisterForUser: false
     };
   },
   async mounted() {
     await this.loadSeminar();
   },
   computed: {
+    showRegistrationSection() {
+      // サーバー側の登録可否を優先（会員レベルはボタン活性で制御）
+      return this.serverCanRegisterForUser || this.serverCanRegister || (this.seminar && this.seminar.status === 'current')
+    },
     canRegister() {
       if (!this.seminar) return false;
       const requiredLevel = this.seminar.membershipRequirement || 'free';
@@ -200,27 +206,30 @@ export default {
         try {
           const response = await apiClient.getSeminar(seminarId);
           if (response && response.data) {
-            const seminar = response.data;
+            const payload = response.data
+            const s = payload.seminar || payload
+            this.serverCanRegister = !!(payload.can_register ?? s?.can_register)
+            this.serverCanRegisterForUser = !!(payload.can_register_for_user)
             this.seminar = {
-              id: seminar.id,
-              title: seminar.title,
-              description: seminar.description,
-              fullDescription: seminar.detailed_description || seminar.description,
-            date: seminar.date,
-            start_time: seminar.start_time,
-            end_time: seminar.end_time,
-            venue: seminar.location,
-            location: seminar.location,
-            capacity: seminar.capacity ? `${seminar.capacity}名` : '30名',
-            fee: seminar.fee === 0 || seminar.fee === '0' ? '会員無料' : `${seminar.fee}円`,
-            status: seminar.status === 'scheduled' || seminar.status === 'ongoing' ? 'current' : seminar.status,
-            image: seminar.featured_image || '/img/image-1.png',
-            instructor: seminar.instructor || 'ちくぎん地域経済研究所',
-            notes: seminar.notes,
-            application_deadline: seminar.application_deadline,
-            membershipRequirement: seminar.membership_requirement || 'free'
-            };
-            return;
+              id: s.id,
+              title: s.title,
+              description: s.description,
+              fullDescription: s.detailed_description || s.description,
+              date: s.date,
+              start_time: s.start_time,
+              end_time: s.end_time,
+              venue: s.location,
+              location: s.location,
+              capacity: s.capacity ? `${s.capacity}名` : '',
+              fee: payload.formatted_fee || s.formatted_fee || (s.fee == 0 ? '無料' : (s.fee != null ? `${s.fee}円` : '')),
+              status: (s.status === 'scheduled' || s.status === 'ongoing') ? 'current' : s.status,
+              image: s.featured_image || '/img/image-1.png',
+              instructor: s.instructor || 'ちくぎん地域経済研究所',
+              notes: s.notes,
+              application_deadline: s.application_deadline,
+              membershipRequirement: s.membership_requirement || 'free'
+            }
+            return
           }
         } catch (apiError) {
           console.log('API failed, trying mockServer:', apiError.message);
