@@ -15,10 +15,14 @@
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle || 'お知らせ' }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="news" fieldKey="page_title" tag="span" :fallback="pageTitle || 'お知らせ'" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle || 'information' }}</span>
+          <span class="title-english">
+            <CmsText pageKey="news" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle || 'information'" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -174,6 +178,7 @@ import apiClient from '../services/apiClient.js';
 import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "NewsPage",
@@ -186,7 +191,8 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons,
-    CmsBlock
+    CmsBlock,
+    CmsText
   },
   data() {
     return {
