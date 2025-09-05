@@ -4,7 +4,7 @@
       <!-- ページヘッダー -->
       <div class="page-header">
         <h1 class="page-title">各ページ管理</h1>
-        <button @click="createNewPage" class="add-btn">アップロード</button>
+        <button @click="createNewPage" class="add-btn">新規ページ作成</button>
       </div>
 
       <!-- フィルターセクション -->
@@ -82,7 +82,10 @@
             </thead>
             <tbody>
               <tr v-for="page in paginatedPages" :key="page.pageKey">
-                <td class="page-name">{{ page.title || page.pageKey }}</td>
+                <td class="page-name">
+                  <div>{{ page.title || page.pageKey }}</div>
+                  <div style="font-size:12px;color:#666;">key: {{ page.pageKey }}</div>
+                </td>
                 <td class="upload-date">
                   {{ formatDate(page.lastUpdated) }}<br>
                   <span class="time">16:00～ 17:00</span>

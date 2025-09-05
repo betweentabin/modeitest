@@ -181,9 +181,44 @@
             <div class="form-section">
               <h3 class="section-title">コンテンツ</h3>
               <div class="mode-toggle">
-                <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
+                <label><input type="radio" value="wysiwyg" v-model="contentMode" /> エディタ（おすすめ）</label>
                 <label><input type="radio" value="html" v-model="contentMode" /> HTML（全文編集）</label>
+                <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
+              </div>
+
+              <!-- WYSIWYG editor -->
+              <div v-if="contentMode==='wysiwyg'" class="form-group">
+                <div class="editor-toolbar">
+                  <button type="button" class="tb-btn" @click="execCmd('bold')"><b>B</b></button>
+                  <button type="button" class="tb-btn" @click="execCmd('italic')"><i>I</i></button>
+                  <button type="button" class="tb-btn" @click="execCmd('underline')"><u>U</u></button>
+                  <span class="sep" />
+                  <button type="button" class="tb-btn" @click="formatBlock('H1')">H1</button>
+                  <button type="button" class="tb-btn" @click="formatBlock('H2')">H2</button>
+                  <button type="button" class="tb-btn" @click="formatBlock('H3')">H3</button>
+                  <span class="sep" />
+                  <button type="button" class="tb-btn" @click="execCmd('insertUnorderedList')">• List</button>
+                  <button type="button" class="tb-btn" @click="execCmd('insertOrderedList')">1. List</button>
+                  <span class="sep" />
+                  <button type="button" class="tb-btn" @click="insertLink()">Link</button>
+                  <button type="button" class="tb-btn" @click="execCmd('removeFormat')">Clear</button>
+                  <div class="flex-spacer" />
+                  <label class="preview-toggle"><input type="checkbox" v-model="showPreview" /> プレビュー</label>
+                </div>
+                <div :class="['editor-split', showPreview ? 'with-preview' : '']">
+                  <div 
+                    class="wysiwyg-editor" 
+                    ref="wysiwyg"
+                    contenteditable
+                    @input="onWysiwygInput"
+                    v-html="contentHtml"
+                  />
+                  <div v-if="showPreview" class="wysiwyg-preview">
+                    <div class="preview-inner" v-html="contentHtml"></div>
+                  </div>
+                </div>
+                <p class="form-help">簡易エディタです。装飾は基本的な太字・見出し・リスト・リンクに対応しています。</p>
               </div>
 
               <div v-if="contentMode==='json'" class="form-group">
@@ -226,7 +261,9 @@
                   class="html-editor"
                   placeholder="ここにHTMLを直接入力してください"
                 />
-                <p class="form-help">危険なスクリプトは入れないでください（自動サニタイズは行っていません）。</p>
+                <label class="preview-inline"><input type="checkbox" v-model="showPreview" /> プレビューを表示</label>
+                <div v-if="showPreview" class="html-preview" v-html="contentHtml"></div>
+                <p class="form-help">危険なスクリプトは入れないでください（管理画面のみで使用、サニタイズは未実装）。</p>
               </div>
 
               <!-- Fields mode: key-value editor for content.texts -->
@@ -562,9 +599,10 @@ export default {
         is_published: false,
         images: []
       },
-      contentMode: 'json',
+      contentMode: 'wysiwyg',
       contentJson: '',
       contentHtml: '',
+      showPreview: true,
       textsEditor: [],
       linksEditor: [],
       jsonError: '',
@@ -604,6 +642,14 @@ export default {
       } catch (e) {
         this.jsonError = 'JSONの形式が正しくありません: ' + e.message
       }
+    },
+    contentMode(newMode, oldMode) {
+      if ((newMode === 'html' || newMode === 'wysiwyg') && oldMode !== newMode) {
+        this.contentHtml = this.extractHtmlFromContent()
+      }
+      if (newMode === 'json') {
+        this.contentJson = JSON.stringify(this.formData.content || {}, null, 2)
+      }
     }
   },
   async mounted() {
@@ -617,13 +663,51 @@ export default {
     if (!this.isNew) {
       await this.fetchPageData()
     } else {
-      this.contentJson = JSON.stringify({
-        "title": "新しいページ",
-        "description": "ページの説明をここに入力してください"
-      }, null, 2)
+      const initial = {
+        title: '新しいページ',
+        description: 'ページの説明をここに入力してください'
+      }
+      this.formData.content = initial
+      this.contentJson = JSON.stringify(initial, null, 2)
+      this.contentHtml = ''
     }
   },
   methods: {
+    extractHtmlFromContent() {
+      const c = this.formData?.content
+      if (!c) return this.contentHtml || ''
+      if (typeof c === 'string') return c
+      if (typeof c.html === 'string') return c.html
+      if (c.texts && typeof c.texts === 'object') {
+        const title = c.texts.page_title || c.title || ''
+        const lead = c.texts.lead || ''
+        let html = ''
+        if (title) html += `<h1>${title}</h1>`
+        if (lead) html += `<p>${lead}</p>`
+        return html
+      }
+      return this.contentHtml || ''
+    },
+    execCmd(cmd) {
+      document.execCommand(cmd, false, null)
+      this.onWysiwygInput()
+    },
+    formatBlock(block) {
+      document.execCommand('formatBlock', false, block)
+      this.onWysiwygInput()
+    },
+    insertLink() {
+      const url = prompt('リンクURLを入力してください (https:// または / から開始)')
+      if (!url) return
+      document.execCommand('createLink', false, url)
+      this.onWysiwygInput()
+    },
+    onWysiwygInput() {
+      const el = this.$refs.wysiwyg
+      if (el) {
+        this.contentHtml = el.innerHTML
+      }
+    },
     async fetchPageData() {
       this.loading = true
       this.error = ''
@@ -635,6 +719,12 @@ export default {
           images: data.images || []
         }
         this.contentJson = JSON.stringify(data.content || data, null, 2)
+        // HTML/WYSIWYG 初期値
+        try {
+          this.contentHtml = this.extractHtmlFromContent()
+        } catch (e) {
+          this.contentHtml = ''
+        }
         // Initialize fields editor from content.texts if available
         const texts = (data && data.content && data.content.texts) ? data.content.texts : {}
         this.textsEditor = Object.keys(texts).map((k) => ({ _id: `${k}-${Date.now()}-${Math.random()}`, key: k, value: texts[k] }))
@@ -834,7 +924,7 @@ export default {
           }
         }
         // コンテンツのモードに応じて content を設定
-        if (this.contentMode === 'html') {
+        if (this.contentMode === 'html' || this.contentMode === 'wysiwyg') {
           this.formData.content = this.contentHtml || ''
         } else if (this.contentMode === 'fields') {
           // Merge with existing JSON if valid, else new object
@@ -1105,6 +1195,66 @@ export default {
   box-sizing: border-box;
   transition: border-color 0.2s;
 }
+
+/* HTML/WYSIWYG editor styles */
+.html-editor {
+  width: 100%;
+  border: 2px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 13px;
+}
+.html-preview {
+  margin-top: 12px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 16px;
+  background: #fafafa;
+}
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d0d0d0;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 8px;
+  background: #f7f7f7;
+}
+.tb-btn {
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tb-btn:hover { background: #f0f0f0; }
+.sep { width: 1px; height: 18px; background: #ddd; display: inline-block; margin: 0 4px; }
+.flex-spacer { flex: 1; }
+.preview-toggle, .preview-inline { font-size: 13px; color: #555; }
+.editor-split {
+  display: flex;
+  border: 1px solid #d0d0d0;
+  border-radius: 0 0 6px 6px;
+  min-height: 240px;
+}
+.editor-split.with-preview .wysiwyg-editor { width: 50%; }
+.editor-split.with-preview .wysiwyg-preview { width: 50%; display: block; }
+.wysiwyg-editor {
+  width: 100%;
+  padding: 12px;
+  min-height: 240px;
+  outline: none;
+  background: white;
+}
+.wysiwyg-preview {
+  display: none;
+  border-left: 1px solid #eee;
+  background: #fafafa;
+}
+.preview-inner { padding: 12px; }
 
 /* Fields mode styles */
 .fields-editor {

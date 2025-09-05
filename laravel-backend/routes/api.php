@@ -187,6 +187,7 @@ Route::prefix('admin')->group(function () {
         
         Route::prefix('pages')->middleware('can:manage-content')->group(function () {
             Route::get('/', [PageContentController::class, 'index']);
+            Route::get('/media-usage', [PageContentController::class, 'mediaUsage']);
             Route::post('/', [PageContentController::class, 'store']);
             Route::get('/{pageKey}', [PageContentController::class, 'show']);
             Route::put('/{pageKey}', [PageContentController::class, 'update']);

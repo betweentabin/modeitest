@@ -402,6 +402,35 @@ class CompletePagesSeeder extends Seeder
                 'is_published' => true,
                 'published_at' => now(),
             ],
+
+            // 27. メディアレジストリ（Hero等の画像キー保管用）
+            [
+                'page_key' => 'media',
+                'title' => 'メディアレジストリ',
+                'content' => [
+                    'images' => [
+                        // ヒーロー画像のデフォルト
+                        'hero_economic_indicators' => '/img/hero-image.png',
+                        'hero_economic_statistics' => '/img/hero-image.png',
+                        'hero_publications' => '/img/hero-image.png',
+                        'hero_company_profile' => '/img/hero-image.png',
+                        'hero_privacy' => '/img/hero-image.png',
+                        'hero_terms' => '/img/hero-image.png',
+                        'hero_transaction_law' => '/img/hero-image.png',
+                        'hero_contact' => '/img/hero-image.png',
+                        'hero_glossary' => '/img/hero-image.png',
+                        'hero_membership' => '/img/hero-image.png',
+                        'hero_seminars_current' => '/img/hero-image.png',
+                        'hero_financial_reports' => '/img/hero-image.png',
+                        'hero_sitemap' => '/img/hero-image.png',
+                        'hero_consulting' => '/img/hero-image.png'
+                    ]
+                ],
+                'meta_description' => 'サイト内で使用するメディア参照のレジストリ。',
+                'meta_keywords' => 'メディア,画像,ヒーロー',
+                'is_published' => true,
+                'published_at' => now(),
+            ],
         ];
 
         foreach ($pages as $page) {

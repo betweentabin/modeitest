@@ -11,6 +11,74 @@ use Illuminate\Support\Str;
 
 class PageContentController extends Controller
 {
+    public function mediaUsage(): JsonResponse
+    {
+        $pages = PageContent::all();
+        $items = [];
+
+        foreach ($pages as $page) {
+            $content = $page->content;
+
+            // 1) JSON images registry: content.images[<type>] = { url, ... } or string
+            if (is_array($content) && isset($content['images']) && is_array($content['images'])) {
+                foreach ($content['images'] as $key => $val) {
+                    $url = null;
+                    $path = null;
+                    $filename = null;
+                    if (is_string($val)) {
+                        $url = $val;
+                    } elseif (is_array($val)) {
+                        $url = $val['url'] ?? null;
+                        $path = $val['path'] ?? null;
+                        $filename = $val['filename'] ?? null;
+                    }
+                    if ($url) {
+                        $items[] = [
+                            'page_key' => $page->page_key,
+                            'key' => (string)$key,
+                            'url' => $url,
+                            'path' => $path,
+                            'filename' => $filename,
+                            'source' => 'json',
+                            'updated_at' => $page->updated_at,
+                        ];
+                    }
+                }
+            }
+
+            // 2) HTML body: scan for <img src="...">
+            $html = null;
+            if (is_string($content)) {
+                $html = $content;
+            } elseif (is_array($content) && isset($content['html']) && is_string($content['html'])) {
+                $html = $content['html'];
+            }
+            if (is_string($html) && strlen($html)) {
+                // Lightweight regex to extract image sources
+                if (preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $html, $m)) {
+                    foreach ($m[1] as $src) {
+                        $items[] = [
+                            'page_key' => $page->page_key,
+                            'key' => 'html',
+                            'url' => $src,
+                            'path' => null,
+                            'filename' => null,
+                            'source' => 'html',
+                            'updated_at' => $page->updated_at,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'items' => $items,
+                'count' => count($items),
+            ]
+        ]);
+    }
     public function index(): JsonResponse
     {
         $pages = PageContent::all();

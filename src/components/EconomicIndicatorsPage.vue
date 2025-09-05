@@ -168,33 +168,6 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Economic Indicators') || 'Economic Indicators' },
   },
   async mounted() {
-    try {
-      this._pageText = usePageText(this.pageKey)
-      await this._pageText.load()
-      const p = this._pageText?.page?.value
-      this.pageBodyHtml = (p && p.content && typeof p.content.html === 'string') ? p.content.html : ''
-    } catch(e) { /* noop */ }
-  },
-  computed: {
-    filteredIndicators() {
-      let filtered = this.indicators;
-      
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        filtered = filtered.filter(item => 
-          item.term.toLowerCase().includes(query) ||
-          item.definition.toLowerCase().includes(query)
-        );
-      }
-      
-      return filtered;
-    },
-    
-    paginatedIndicators() {
-      return this.filteredIndicators;
-    }
-  },
-  async mounted() {
     // CMSからHTMLが設定されていれば優先表示 + カテゴリ/指標の読込
     try {
       const [pageRes, catRes, indRes] = await Promise.all([

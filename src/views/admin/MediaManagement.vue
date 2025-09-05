@@ -4,7 +4,7 @@
       <!-- ページヘッダー -->
       <div class="page-header">
         <h1 class="page-title">メディア管理</h1>
-        <button @click="uploadNewMedia" class="add-btn">アップロード</button>
+        <button @click="load" class="add-btn">再読み込み</button>
       </div>
 
       <!-- 検索セクション -->
@@ -35,42 +35,26 @@
             <thead>
               <tr>
                 <th style="width: 160px;">プレビュー</th>
-                <th>キー</th>
-                <th>表示箇所</th>
+                <th>ページキー</th>
+                <th>種別/場所</th>
                 <th>URL</th>
-                <th style="width: 120px;">操作</th>
+                <th>更新日</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(row, idx) in rows" :key="row._id">
                 <td>
-                  <img :src="row.value" alt="preview" style="max-width:140px; max-height:70px; object-fit:cover; border-radius:4px;" v-if="row.value" />
+                  <img :src="row.url" alt="preview" style="max-width:140px; max-height:70px; object-fit:cover; border-radius:4px;" v-if="row.url" />
                   <div v-else style="color:#888; font-size:12px;">（未設定）</div>
                 </td>
-                <td>
-                  <input v-model="row.key" class="form-input" placeholder="例）hero_home" />
-                </td>
-                <td>
-                  <div class="usage">
-                    <div class="usage-label">{{ getUsage(row.key).label }}</div>
-                    <button v-if="getUsage(row.key).path" class="link-btn" @click="openUsage(row.key)">ページを開く</button>
-                  </div>
-                </td>
-                <td>
-                  <input v-model="row.value" class="form-input" placeholder="/img/hero.jpg または https://..." />
-                </td>
-                <td>
-                  <button class="edit-btn" @click="pickFile(idx)">選択</button>
-                  <button class="delete-btn" @click="removeRow(idx)">削除</button>
-                </td>
+                <td>{{ row.pageKey }}</td>
+                <td>{{ row.key }}</td>
+                <td class="file-url">{{ row.url }}</td>
+                <td>{{ formatDate(row.updated_at) }}</td>
               </tr>
             </tbody>
           </table>
-          <div class="table-actions">
-            <button class="add-btn" @click="addRow">+ 追加</button>
-            <button class="save-btn" @click="save">保存</button>
-            <input ref="file" type="file" accept="image/*" style="display:none" @change="onFileSelected" />
-          </div>
+          
         </div>
       </div>
 
@@ -93,7 +77,7 @@ export default {
   },
   data() {
     return {
-      rows: [], // { _id, key, value }
+      rows: [], // { _id, pageKey, key, url, updated_at }
       loading: false,
       error: '',
       searchKeyword: '',
@@ -105,52 +89,21 @@ export default {
     await this.load()
   },
   methods: {
-    getUsage(key) {
-      const map = {
-        hero_home: { label: 'ホーム：ファーストビュー背景', path: '/' },
-        hero_publications: { label: '刊行物：ヒーロー', path: '/publications-public' },
-        hero_financial_reports: { label: '決算報告：ヒーロー', path: '/financial-reports' },
-        hero_economic_indicators: { label: '経済指標一覧：ヒーロー', path: '/economic-indicators' },
-        hero_economic_statistics: { label: '経済・調査統計：ヒーロー', path: '/statistics' },
-        hero_news: { label: 'お知らせ：ヒーロー', path: '/news' },
-        hero_contact: { label: 'お問い合わせ：ヒーロー', path: '/contact' },
-        hero_privacy: { label: 'プライバシーポリシー：ヒーロー', path: '/privacy-policy' },
-        hero_terms: { label: '利用規約：ヒーロー', path: '/terms-of-service' },
-        hero_transaction_law: { label: '特定商取引法：ヒーロー', path: '/transaction-law' },
-        hero_sitemap: { label: 'サイトマップ：ヒーロー', path: '/sitemap' },
-        hero_company_profile: { label: '会社概要：ヒーロー', path: '/company-profile' },
-        hero_consulting: { label: 'CRIコンサルティング：ヒーロー', path: '/cri-consulting' },
-        hero_membership: { label: '入会案内：ヒーロー', path: '/services' },
-        hero_seminars_current: { label: '受付中のセミナー：ヒーロー', path: '/seminars/current' },
-        hero_glossary: { label: '用語集：ヒーロー', path: '/glossary' },
-        hero_faq: { label: 'FAQ：ヒーロー', path: '/faq' },
-      }
-      return map[key] || { label: '（未定義）', path: '' }
-    },
-    openUsage(key) {
-      const u = this.getUsage(key)
-      if (u.path) this.$router.push(u.path)
-    },
     async load() {
       this.loading = true
       this.error = ''
       try {
-        // Admin側は非公開でも取得できる管理APIを優先
-        const res = await apiClient.get('/api/admin/pages/media', { silent: true })
-        const d = res?.data || {}
-        const page = d?.page || d
-        const images = page?.content?.images || {}
-        this.rows = Object.keys(images).map(k => ({ _id: `m-${k}-${Date.now()}-${Math.random()}`, key: k, value: images[k] }))
+        const res = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
+        const items = res?.data?.data?.items || res?.data?.items || []
+        this.rows = items.map(it => ({
+          _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
+          pageKey: it.page_key,
+          key: it.key,
+          url: it.url,
+          updated_at: it.updated_at,
+        }))
       } catch (e) {
-        // fallback: mock localStorage
-        try {
-          const str = localStorage.getItem('cms_mock_data')
-          const json = str ? JSON.parse(str) : null
-          const images = json?.media?.images || {}
-          this.rows = Object.keys(images).map(k => ({ _id: `m-${k}-${Date.now()}-${Math.random()}`, key: k, value: images[k] }))
-        } catch(err) {
-          this.error = 'メディアの取得に失敗しました'
-        }
+        this.error = 'メディアの取得に失敗しました'
       } finally {
         this.loading = false
       }
@@ -165,71 +118,13 @@ export default {
       
       return `${year}年${month}月${day}日(${weekday})`
     },
-    addRow() {
-      this.rows.push({ _id: `new-${Date.now()}-${Math.random()}`, key: '', value: '' })
-    },
-    removeRow(idx) {
-      this.rows.splice(idx, 1)
-    },
-    pickFile(idx) {
-      this.filePickIndex = idx
-      const el = this.$refs.file
-      if (el) el.click()
-    },
-    onFileSelected(e) {
-      const file = e.target.files[0]
-      if (!file) return
-      const reader = new FileReader()
-      reader.onload = (ev) => {
-        if (this.filePickIndex >= 0) {
-          this.$set(this.rows[this.filePickIndex], 'value', ev.target.result)
-          this.filePickIndex = -1
-        }
-        if (this.$refs.file) this.$refs.file.value = ''
-      }
-      reader.readAsDataURL(file)
-    },
-    async save() {
-      const images = {}
-      for (const row of this.rows) {
-        const k = (row.key || '').trim()
-        if (!k) continue
-        images[k] = row.value || ''
-      }
-      const payload = {
-        page_key: 'media',
-        title: 'Media Registry',
-        content: { images },
-        is_published: true,
-      }
-      // Try update, fallback to create
-      let saved = false
-      try {
-        let res = await apiClient.request('PUT', '/api/admin/pages/media', payload)
-        if (!(res && (res.success || res.id || res.page || res.data))) {
-          res = await apiClient.request('POST', '/api/admin/pages', payload)
-        }
-        saved = !!(res && (res.success || res.id || res.page || res.data))
-      } catch(e) {}
-      if (!saved) {
-        // fallback: save to localStorage mock
-        try {
-          const str = localStorage.getItem('cms_mock_data')
-          const json = str ? JSON.parse(str) : {}
-          json.media = { images }
-          localStorage.setItem('cms_mock_data', JSON.stringify(json))
-          saved = true
-        } catch(e) {}
-      }
-      alert(saved ? '保存しました' : '保存に失敗しました')
-    },
     performSearch() {
       // キー/URLを対象にクライアントフィルタ（簡易）
       const kw = (this.searchKeyword || '').toLowerCase()
       if (!kw) return
-      this.rows = this.rows.filter(r => (r.key||'').toLowerCase().includes(kw) || (r.value||'').toLowerCase().includes(kw))
+      this.rows = this.rows.filter(r => (r.pageKey||'').toLowerCase().includes(kw) || (r.key||'').toLowerCase().includes(kw) || (r.url||'').toLowerCase().includes(kw))
     },
-    uploadNewMedia() { this.addRow() }
+    uploadNewMedia() {}
   }
 }
 </script>
