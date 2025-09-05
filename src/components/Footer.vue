@@ -263,7 +263,6 @@ group27 {
 
 .frame-1321317524-1 {
   height: auto;
-  min-height: 170px;
   position: relative;
   width: auto;
   min-width: 200px;
@@ -356,6 +355,7 @@ group27 {
     width: auto !important;
     min-width: 160px !important;
     max-width: 200px !important;
+    height: auto !important;
   }
   
   .navigation-footer {
@@ -445,6 +445,7 @@ group27 {
     min-width: 120px !important;
     max-width: 280px !important;
     text-align: left !important;
+    height: auto !important;
   }
   
   .frame-container,
@@ -501,6 +502,7 @@ group27 {
     width: auto !important;
     min-width: 100px !important;
     max-width: 260px !important;
+    height: auto !important;
   }
   
   .frame-container,
@@ -548,6 +550,7 @@ group27 {
     width: auto !important;
     min-width: 90px !important;
     max-width: 240px !important;
+    height: auto !important;
   }
   
   .frame-container,
@@ -574,7 +577,7 @@ group27 {
 
 @media (max-width: 350px) {
   .footer-container {
-    padding: 10px 15px !important;
+    padding: 40px 15px !important;
     gap: 10px !important;
   }
   
@@ -597,6 +600,7 @@ group27 {
     min-width: 80px !important;
     max-width: 220px !important;
     text-align: left !important;
+    height: auto !important;
   }
   
   .frame-container,
