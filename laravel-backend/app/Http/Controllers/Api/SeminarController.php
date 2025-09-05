@@ -350,6 +350,38 @@ class SeminarController extends Controller
         
         $registration = SeminarRegistration::create($registrationData);
 
+        // お問い合わせ管理に集約するため、申込情報を問い合わせとしても登録
+        try {
+            \App\Models\Inquiry::create([
+                'name' => $registration->name,
+                'email' => $registration->email,
+                'phone' => $registration->phone,
+                'company' => $registration->company,
+                'subject' => 'セミナー申込: ' . ($seminar->title ?? ('ID:' . $seminar->id)),
+                'message' => sprintf(
+                    "申込番号: %s\nセミナーID: %d\n氏名: %s\nメール: %s\n会社: %s\n電話: %s\n要望: %s",
+                    $registration->registration_number,
+                    $seminar->id,
+                    $registration->name,
+                    $registration->email,
+                    $registration->company ?? '-',
+                    $registration->phone ?? '-',
+                    $registration->special_requests ?? '-'
+                ),
+                'inquiry_type' => 'seminar',
+                'status' => \App\Models\Inquiry::STATUS_NEW,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+        } catch (\Throwable $e) {
+            // ログに残すが、申込自体は成功として扱う
+            \Log::warning('Inquiry create failed for seminar registration', [
+                'error' => $e->getMessage(),
+                'seminar_id' => $seminar->id,
+                'registration_id' => $registration->id ?? null,
+            ]);
+        }
+
         // 参加者数更新
         $seminar->updateParticipantCount();
 

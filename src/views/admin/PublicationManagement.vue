@@ -357,7 +357,7 @@ export default {
       return `${year}年${month}月${day}日(${weekday})`
     },
     editPublication(publication) {
-      this.$router.push(`/admin/publication/edit?id=${publication.id}`)
+      this.$router.push(`/admin/publication/edit/${publication.id}`)
     },
     createNewPublication() {
       this.$router.push('/admin/publication/register')

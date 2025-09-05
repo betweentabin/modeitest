@@ -367,7 +367,7 @@ const router = new Router({
       meta: { title: "刊行物新規作成 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/publication/edit", 
+      path: "/admin/publication/edit/:id", 
       name: "publicationEdit",
       component: PublicationEditForm,
       meta: { title: "刊行物編集 - ちくぎん地域経済研究所" }
@@ -647,7 +647,7 @@ const router = new Router({
     },
     {
       path: "/admin/publications/:id/edit",
-      redirect: "/admin/publication/edit"
+      redirect: (to) => `/admin/publication/edit/${to.params.id}`
     },
     {
       path: "/admin/notices",

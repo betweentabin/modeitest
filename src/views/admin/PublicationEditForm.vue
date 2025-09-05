@@ -309,10 +309,10 @@ export default {
   },
   computed: {
     isNew() {
-      return this.$route.name === 'publicationNew' || !this.$route.params.id
+      return this.$route.name === 'publicationNew' || !this.publicationId
     },
     publicationId() {
-      return this.$route.params.id
+      return this.$route.params.id || this.$route.query.id
     }
   },
   async mounted() {

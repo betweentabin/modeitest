@@ -186,6 +186,7 @@
                 <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
                 <label><input type="radio" value="inline" v-model="contentMode" /> ページ風プレビュー（直編集）</label>
+                <label><input type="radio" value="live" v-model="contentMode" /> 現在のページそのままプレビュー</label>
               </div>
 
               <!-- WYSIWYG editor -->
@@ -297,6 +298,17 @@
                   </div>
                 </div>
                 <p class="form-help">実際のサイト風にレイアウトして、本文をその場で編集できます。保存でこの内容が反映されます。</p>
+              </div>
+              <!-- Live page preview (actual page in iframe) -->
+              <div v-else-if="contentMode==='live'" class="form-group">
+                <div class="preview-toolbar">
+                  <span>プレビューURL: {{ previewUrl }}</span>
+                  <button type="button" class="btn btn-secondary small" @click="refreshPreview">リロード</button>
+                </div>
+                <div class="live-preview-wrap">
+                  <iframe ref="liveFrame" class="live-preview" :src="previewUrl"></iframe>
+                </div>
+                <p class="form-help">このプレビューは実際のページをそのまま表示します。入力内容は即座に反映されます（保存前は閲覧者には見えません）。</p>
               </div>
 
               <!-- Fields mode: key-value editor for content.texts -->
@@ -678,6 +690,26 @@ export default {
     pageKey() {
       return this.$route.params.pageKey
     },
+    previewPath() {
+      const key = this.formData.page_key || this.pageKey || ''
+      const map = {
+        'home': '/#/',
+        'about': '/#/about',
+        'economic-statistics': '/#/economic-statistics',
+        'seminars-current': '/#/seminars/current',
+        'publications': '/#/publications-public',
+        'terms': '/#/terms',
+        'privacy': '/#/privacy',
+        'news': '/#/news',
+        'financial-reports': '/#/financial-reports'
+      }
+      return map[key] || '/#/'
+    },
+    previewUrl() {
+      const base = this.previewPath
+      const sep = base.includes('?') ? '&' : '?'
+      return `${base}${sep}cmsPreview=1`
+    },
     recommendedKeys() {
       const key = this.formData.page_key || this.pageKey || ''
       return RECOMMENDED_KEYS[key] || []
@@ -691,6 +723,7 @@ export default {
       } catch (e) {
         this.jsonError = 'JSONの形式が正しくありません: ' + e.message
       }
+      this.postToPreview()
     },
     contentMode(newMode, oldMode) {
       if ((newMode === 'html' || newMode === 'wysiwyg') && oldMode !== newMode) {
@@ -701,6 +734,9 @@ export default {
       }
       if (newMode === 'fields') {
         this.ensureFieldsPreset()
+      }
+      if (newMode === 'live') {
+        this.$nextTick(() => this.postToPreview())
       }
     }
   },
@@ -723,6 +759,7 @@ export default {
       this.contentJson = JSON.stringify(initial, null, 2)
       this.contentHtml = ''
     }
+    this.$nextTick(() => this.postToPreview())
   },
   methods: {
     text(k) {
@@ -792,6 +829,28 @@ export default {
     captureInline() {
       const el = this.$refs.inlineEditor
       if (el) this.contentHtml = el.innerHTML
+    },
+    postToPreview() {
+      let html = this.contentHtml || ''
+      if (!html) {
+        try {
+          const base = this.contentJson ? JSON.parse(this.contentJson) : {}
+          if (typeof base.html === 'string') html = base.html
+          if (!html && base.texts) {
+            html = Object.keys(base.texts).map(k => `<p>${base.texts[k]}</p>`).join('')
+          }
+        } catch(_) {}
+      }
+      try { localStorage.setItem(`cms_preview_${this.pageKey}`, html || '') } catch(_) {}
+      const frame = this.$refs.liveFrame
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ type: 'cms-preview', pageKey: this.pageKey, html }, '*')
+      }
+    },
+    refreshPreview() {
+      const frame = this.$refs.liveFrame
+      if (frame) frame.src = this.previewUrl
+      setTimeout(() => this.postToPreview(), 300)
     },
     extractHtmlFromContent() {
       const c = this.formData?.content
