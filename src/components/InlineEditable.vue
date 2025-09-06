@@ -117,9 +117,21 @@ export default {
         content[bucket] = { ...(content[bucket] || {}) }
         content[bucket][props.fieldKey] = local.value
 
-        const res = await apiClient.put(`/api/admin/pages/${props.pageKey}`, { content })
+        // 一部のページキーがスネークケースで渡るケースがあるため安全に正規化
+        const normalizedKey = (props.pageKey || '').replace(/_/g, '-').trim() || props.pageKey
+
+        const res = await apiClient.put(`/api/admin/pages/${normalizedKey}`, { content })
         if (res && res.success === false) throw new Error(res.error || '保存に失敗しました')
-        // Reload page content cache and reset
+        // 極力即時反映：現在のpageTextに反映（サーバー再取得は副次的に）
+        try {
+          if (!pageText.page.value) pageText.page.value = { content: {} }
+          const current = (typeof pageText.page.value.content === 'object') ? pageText.page.value.content : {}
+          const next = { ...(current || {}) }
+          next[bucket] = { ...(next[bucket] || {}) }
+          next[bucket][props.fieldKey] = local.value
+          pageText.page.value = { ...(pageText.page.value || {}), content: next }
+        } catch (_) { /* noop */ }
+        // 背景で再取得（props.pageKeyで404でもUIは上書き済み）
         await pageText.load()
         syncFromDisplay()
       } catch (e) {
