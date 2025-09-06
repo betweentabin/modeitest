@@ -333,4 +333,107 @@ class MemberController extends Controller
             'new_expiry' => $newExpiry->format('Y-m-d H:i:s')
         ]);
     }
+
+    /**
+     * 会員をCSVで一括エクスポート（管理者用）
+     * フィルタは index と同等のパラメータをサポート
+     */
+    public function exportCsv(Request $request)
+    {
+        $query = Member::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('representative_name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%")
+                  ->orWhere('company_name', 'LIKE', "%{$search}%");
+            });
+        }
+        if ($request->filled('membership_type')) {
+            $query->where('membership_type', $request->membership_type);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->has('is_active')) {
+            $query->where('is_active', $request->boolean('is_active'));
+        }
+
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortDirection = $request->get('sort_direction', 'desc');
+        $query->orderBy($sortBy, $sortDirection);
+
+        $rows = $query->get([
+            'company_name', 'representative_name', 'email', 'phone', 'postal_code', 'address',
+            'membership_type', 'status', 'joined_date', 'membership_expires_at', 'created_at'
+        ]);
+
+        $csv = "会社名,代表者名,メールアドレス,電話番号,郵便番号,住所,会員種別,状態,入会日,会員期限,登録日\n";
+
+        foreach ($rows as $r) {
+            $line = [
+                $r->company_name,
+                $r->representative_name,
+                $r->email,
+                $r->phone,
+                $r->postal_code,
+                $r->address,
+                $r->membership_type,
+                $r->status,
+                optional($r->joined_date)->format('Y-m-d'),
+                optional($r->membership_expires_at)->timezone('Asia/Tokyo')->format('Y-m-d H:i:s'),
+                optional($r->created_at)->timezone('Asia/Tokyo')->format('Y-m-d H:i:s'),
+            ];
+            $csv .= implode(',', array_map(function($v){
+                $v = (string)($v ?? '');
+                $v = str_replace(["\r","\n"], ' ', $v);
+                if (strpos($v, ',') !== false || strpos($v, '"') !== false) {
+                    $v = '"' . str_replace('"', '""', $v) . '"';
+                }
+                return $v;
+            }, $line)) . "\n";
+        }
+
+        $filename = 'members_' . now()->format('Ymd_His') . '.csv';
+        $bom = "\xEF\xBB\xBF"; // UTF-8 BOM for Excel
+        return response($bom . $csv, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * パスワードを自動生成してリセット（管理者用）
+     */
+    public function resetPassword(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'length' => 'nullable|integer|min:8|max:64',
+            'send_mail' => 'nullable|boolean',
+        ]);
+
+        $member = Member::findOrFail($id);
+        $length = (int)($request->length ?? 12);
+
+        // 生成ポリシー: 英大小/数字（記号は省く）
+        $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+        $pwd = '';
+        for ($i=0; $i<$length; $i++) {
+            $pwd .= $chars[random_int(0, strlen($chars)-1)];
+        }
+
+        $member->password = $pwd; // mutator でハッシュ化
+        $member->save();
+
+        // ここで通知メール送信を行いたい場合は Notification 実装を追加
+        // if ($request->boolean('send_mail')) { ... }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'パスワードをリセットしました',
+            'generated_password' => $pwd,
+            'member_id' => $member->id,
+        ]);
+    }
 }

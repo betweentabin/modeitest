@@ -61,6 +61,11 @@ class Seminar extends Model
         return $this->hasMany(SeminarRegistration::class);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(SeminarCategory::class, 'category_id');
+    }
+
     public function activeRegistrations()
     {
         return $this->hasMany(SeminarRegistration::class)

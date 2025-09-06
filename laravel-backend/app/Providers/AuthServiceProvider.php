@@ -37,5 +37,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-members', function ($user) {
             return in_array($user->role ?? null, ['super_admin','admin']);
         });
+
+        // 管理者ユーザーの管理はスーパ管理者のみ
+        Gate::define('manage-admins', function ($user) {
+            return in_array($user->role ?? null, ['super_admin']);
+        });
     }
 }

@@ -253,6 +253,15 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/registrations/{regId}/approve', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'approve']);
             Route::post('/{id}/registrations/{regId}/reject', [App\Http\Controllers\Admin\SeminarRegistrationApprovalController::class, 'reject']);
         });
+
+        // セミナーカテゴリ管理
+        Route::prefix('seminar-categories')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\SeminarCategoryController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\SeminarCategoryController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\SeminarCategoryController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\SeminarCategoryController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\SeminarCategoryController::class, 'destroy']);
+        });
         
         // 管理者用ニュースAPI
         Route::prefix('news-v2')->group(function () {
@@ -304,6 +313,15 @@ Route::prefix('admin')->group(function () {
             Route::put('/{id}', [PublicationController::class, 'update']);
             Route::delete('/{id}', [PublicationController::class, 'destroy']);
         });
+
+        // 刊行物カテゴリ管理
+        Route::prefix('publication-categories')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\PublicationCategoryController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\PublicationCategoryController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\PublicationCategoryController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\PublicationCategoryController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\PublicationCategoryController::class, 'destroy']);
+        });
         
         // 管理者用お問い合わせAPI
         Route::prefix('inquiries-v2')->group(function () {
@@ -318,6 +336,7 @@ Route::prefix('admin')->group(function () {
         Route::prefix('members')->group(function () {
             Route::get('/', [MemberController::class, 'index']);
             Route::post('/', [MemberController::class, 'store']);
+            Route::get('/export/csv', [MemberController::class, 'exportCsv']);
             Route::get('/stats', [MemberController::class, 'stats']);
             Route::get('/{id}', [MemberController::class, 'show']);
             Route::put('/{id}', [MemberController::class, 'update']);
@@ -325,6 +344,7 @@ Route::prefix('admin')->group(function () {
             Route::patch('/{id}/status', [MemberController::class, 'updateStatus']);
             Route::patch('/{id}/membership', [MemberController::class, 'updateMembership']);
             Route::patch('/{id}/extend', [MemberController::class, 'extendMembership']);
+            Route::post('/{id}/reset-password', [MemberController::class, 'resetPassword']);
         });
         
         // お知らせ管理API
@@ -338,6 +358,15 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [NoticeController::class, 'destroy']);
             Route::patch('/{id}/status', [NoticeController::class, 'updateStatus']);
         });
+
+        // お知らせカテゴリ管理API
+        Route::prefix('notice-categories')->middleware('can:manage-content')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\NoticeCategoryController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\NoticeCategoryController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Admin\NoticeCategoryController::class, 'show']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\NoticeCategoryController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\NoticeCategoryController::class, 'destroy']);
+        });
         
         // メディア管理API
         Route::prefix('media')->middleware('can:manage-content')->group(function () {
@@ -348,6 +377,14 @@ Route::prefix('admin')->group(function () {
             Route::get('/directories', [MediaController::class, 'directories']);
             Route::post('/directories', [MediaController::class, 'createDirectory']);
             Route::get('/stats', [MediaController::class, 'stats']);
+        });
+
+        // 管理者ユーザー管理（super_admin限定）
+        Route::prefix('admin-users')->middleware('can:manage-admins')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\AdminUserController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\AdminUserController::class, 'store']);
+            Route::put('/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'destroy']);
         });
     });
 });

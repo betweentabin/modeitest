@@ -247,6 +247,15 @@ class ApiClient {
     return this.request('PATCH', `/api/admin/members/${id}/extend`, { extend_months: extendMonths })
   }
 
+  async exportAdminMembersCsv(params = {}) {
+    // text response; we'll turn it into a Blob in the caller if needed
+    return this.get('/api/admin/members/export/csv', { params, responseType: 'text' })
+  }
+
+  async resetAdminMemberPassword(id, length = 12) {
+    return this.post(`/api/admin/members/${id}/reset-password`, { length })
+  }
+
   // Seminar API methods
   async getSeminars(params = {}) {
     const queryString = new URLSearchParams(params).toString()
@@ -674,12 +683,14 @@ class ApiClient {
 
   // News categories API methods
   async getNewsCategories() {
-    return this.get('/api/news-categories')
+    // Backward compat: prefer admin notice categories
+    return this.get('/api/admin/notice-categories')
   }
 
   // Publication categories API methods
   async getPublicationCategories() {
-    return this.get('/api/publication-categories')
+    // Use admin route for category management
+    return this.get('/api/admin/publication-categories')
   }
 
   // Notices API methods
