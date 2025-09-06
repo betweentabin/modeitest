@@ -122,7 +122,7 @@
           </div>
 
           <!-- Button -->
-          <button class="filter-download-btn">プレミアム会員の特典詳細
+          <button class="filter-download-btn" @click="goToPremiumMembership">プレミアム会員の特典詳細
           <div class="icon-box">
             <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="23" height="23" rx="5" fill="white"/>
@@ -256,8 +256,11 @@ export default {
       this.$router.push(link);
     },
     handleJoinClick() {
-      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      const link = this._pageText?.getLink('cta_secondary', '/membership/apply') || '/membership/apply'
       this.$router.push(link);
+    },
+    goToPremiumMembership() {
+      this.$router.push('/premium-membership');
     }
   }
 };

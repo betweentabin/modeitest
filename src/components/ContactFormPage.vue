@@ -381,7 +381,7 @@ export default {
 
 /* Form Section */
 .form-section {
-  padding: 70px 50px 50px;
+  padding: 70px 50px 70px;
 }
 
 .form-container {
@@ -547,6 +547,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .terms-article {
@@ -746,6 +748,12 @@ export default {
   fill: #DA5761;
 }
 
+/* Form Fields */
+.contact-form {
+  padding: 50px;
+  border-radius: 20px;
+}
+
 /* Responsive Design */
 @media (max-width: 1150px) {
   .form-section {
@@ -840,6 +848,10 @@ export default {
   /* テキストエリアの調整 */
   .textarea-input {
     padding: 16px !important;
+  }
+
+  .contact-form {
+    padding: 30px 20px !important;
   }
 }
 
@@ -1155,6 +1167,10 @@ export default {
 
   .form-divider {
     gap: 10px !important;
+  }
+
+  .contact-form {
+    padding: 20px 15px !important;
   }
 
   /* フォームフィールドの詳細調整 */

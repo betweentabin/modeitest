@@ -46,6 +46,10 @@ import SeminarDetailJoinPage from "./components/SeminarDetailJoinPage";
 import SeminarApplicationFormPage from "./components/SeminarApplicationFormPage.vue";
 import SeminarApplicationConfirmPage from "./components/SeminarApplicationConfirmPage.vue";
 import SeminarApplicationCompletePage from "./components/SeminarApplicationCompletePage.vue";
+import MembershipApplicationFormPage from "./components/MembershipApplicationFormPage.vue";
+import MembershipApplicationConfirmPage from "./components/MembershipApplicationConfirmPage.vue";
+import MembershipApplicationCompletePage from "./components/MembershipApplicationCompletePage.vue";
+import PremiumMembershipPage from "./components/PremiumMembershipPage.vue";
 import GlossaryPage from "./components/GlossaryPage";
 import EconomicIndicatorsPage from "./components/EconomicIndicatorsPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
@@ -66,7 +70,6 @@ import MemberLoginPage from "./views/MemberLoginPage";
 import MyAccountPage from "./views/MyAccountPage";
 import UpgradePage from "./views/UpgradePage";
 import MembershipPage from "./components/MembershipPage";
-import PremiumMembershipPage from "./components/PremiumMembershipPage.vue";
 
 Vue.use(Router);
 
@@ -182,6 +185,24 @@ const router = new Router({
       name: "seminarApplyComplete",
       component: SeminarApplicationCompletePage,
       meta: { title: "セミナー申し込み - 完了" }
+    },
+    {
+      path: "/membership/apply",
+      name: "membershipApplyForm",
+      component: MembershipApplicationFormPage,
+      meta: { title: "入会申し込み - 入力" }
+    },
+    {
+      path: "/membership/apply/confirm",
+      name: "membershipApplyConfirm",
+      component: SeminarApplicationConfirmPage,
+      meta: { title: "入会申し込み - 確認" }
+    },
+    {
+      path: "/membership/apply/complete",
+      name: "membershipApplyComplete",
+      component: MembershipApplicationCompletePage,
+      meta: { title: "入会申し込み - 完了" }
     },
     {
       path: "/seminar/archive",
@@ -519,6 +540,12 @@ const router = new Router({
       meta: { title: "入会案内 - ちくぎん地域経済研究所" }
     },
     {
+      path: "/premium-membership",
+      name: "premiumMembership",
+      component: PremiumMembershipPage,
+      meta: { title: "プレミアム会員 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/membership/standard",
       name: "standardMembership",
       component: MembershipPage,
@@ -526,7 +553,7 @@ const router = new Router({
     },
     {
       path: "/membership/premium",
-      name: "premiumMembership",
+      name: "premiumMembershipOld",
       component: PremiumMembershipPage,
       meta: { title: "プレミアム会員の特典 - ちくぎん地域経済研究所" }
     },
@@ -573,11 +600,15 @@ const router = new Router({
     },
     {
       path: "/seminars/current",
-      redirect: "/seminar"
+      name: "currentSeminars",
+      component: CurrentSeminarsPage,
+      meta: { title: "受付中のセミナー - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminars/past",
-      redirect: "/seminar/archive"
+      name: "pastSeminars",
+      component: PastSeminarsPage,
+      meta: { title: "過去のセミナー - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminars/:id",

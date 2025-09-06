@@ -4,26 +4,26 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="セミナー申し込み"
-      subtitle="seminar application"
+      title="入会申し込み"
+      subtitle="membership"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', '申し込み', '確認']" />
+    <Breadcrumbs :breadcrumbs="['入会申し込み', '確認']" />
 
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">セミナー申し込み</h1>
+          <h1 class="form-title">入会申し込み</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">seminar application</span>
+            <span class="divider-text">membership</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
-            <span class="step-inactive">①お客様情報の入力</span>
+            <span class="step-inactive">①入会情報の入力</span>
             <span class="step-active">　- ②記入内容のご確認　</span>
             <span class="step-inactive">- ③完了</span>
           </div>
@@ -88,7 +88,7 @@
 
           <!-- Inquiry Content -->
           <div class="form-field">
-            <label class="field-label">参加希望内容・特記事項</label>
+            <label class="field-label">入会希望内容・特記事項</label>
             <div class="field-input">
               <div class="confirm-value content-value">{{ formData.content }}</div>
             </div>
@@ -131,7 +131,7 @@ import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 
 export default {
-  name: 'SeminarApplicationConfirmPage',
+  name: 'MembershipApplicationConfirmPage',
   components: {
     Navigation,
     Footer,
@@ -170,13 +170,11 @@ export default {
         this.formData = JSON.parse(decodeURIComponent(params.get('formData')));
       } catch (e) {
         console.error('フォームデータの解析に失敗しました:', e);
-        const seminarId = this.$route.params.id;
-        this.$router.push(`/seminars/${seminarId}/apply`);
+        this.$router.push('/membership/apply');
       }
     } else {
       // フォームデータがない場合は入力ページにリダイレクト
-      const seminarId = this.$route.params.id;
-      this.$router.push(`/seminars/${seminarId}/apply`);
+      this.$router.push('/membership/apply');
     }
   },
   methods: {
@@ -225,10 +223,9 @@ export default {
           || (res?.application_id ? `APP-${String(res.application_id).padStart(6, '0')}` : null)
           || `APP-${Date.now()}`
 
-        const seminarId = this.$route.params.id;
-        this.$router.push(`/seminars/${seminarId}/apply/complete?applicationNumber=${encodeURIComponent(applicationNumber)}`)
+        this.$router.push(`/membership/apply/complete?applicationNumber=${encodeURIComponent(applicationNumber)}`)
       } catch (err) {
-        console.error('セミナー申し込み送信エラー:', err)
+        console.error('入会申し込み送信エラー:', err)
         this.submitError = err.message || 'エラーが発生しました。再度お試しください。'
         alert(this.submitError)
       } finally {

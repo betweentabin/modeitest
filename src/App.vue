@@ -1,7 +1,8 @@
 <template>
-  <router-view />
-  <EditModeToggle />
-  
+  <div>
+    <router-view />
+    <EditModeToggle />
+  </div>
 </template>
 
 <script>

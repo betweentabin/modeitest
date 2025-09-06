@@ -700,6 +700,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .terms-article {

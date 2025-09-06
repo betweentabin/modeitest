@@ -3,9 +3,13 @@
     <div class="frame-1321317467-2">
       <group10 />
       <div class="frame-1321317467-1">
-        <a :href="mapUrl" target="_blank" rel="noopener noreferrer" aria-label="Googleマップで開く" class="map-link-image">
-          <img class="rectangle-3" :src="rectangle3" alt="アクセスマップ" />
-        </a>
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3333.8918862916157!2d130.5312406760479!3d33.32164182344082!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z56aP5bKh55yM5LmF55WZ57Gz5biC55m-5bm05YWs5ZySMeeVqjHlj7fkuYXnlZnnsbPjg6rjgrXjg7zjg4Hjgrvjg7Pjgr_jg7zjg5Pjg6s26ZqO!5e0!3m2!1sja!2sjp!4v1757141499018!5m2!1sja!2sjp" 
+          class="rectangle-3" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
         <div class="frame-1321317466">
           <div class="group-container">
             <div class="group-12">
@@ -18,13 +22,13 @@
             <div class="group-12">
               <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
               <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">
-                <a :href="stationLinks[0]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x12Km141 }}</a>
+                <a href="https://maps.app.goo.gl/L8xgusobgPJdpPbp9" target="_blank" class="station-link">{{ x12Km141 }}</a>
               </p>
               <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">
-                <a :href="stationLinks[1]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x12Km142 }}</a>
+                <a href="https://maps.app.goo.gl/StTHwPn9fJzSDemF8" target="_blank" class="station-link">{{ x12Km142 }}</a>
               </p>
               <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">
-                <a :href="stationLinks[2]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x19Km23 }}</a>
+                <a href="https://maps.app.goo.gl/z5LoBXRdCUbaSYRS9" target="_blank" class="station-link">{{ x19Km23 }}</a>
               </p>
             </div>
             <div class="group-12">
@@ -66,12 +70,6 @@ export default {
       x497M6: homePageData.x497M6,
       x811M10: homePageData.x811M10,
       d1830M10: homePageData.d1830M10,
-      mapUrl: 'https://maps.app.goo.gl/Z5wA7ds8zVBa6N7x8',
-      stationLinks: [
-        'https://maps.app.goo.gl/L8xgusobgPJdpPbp9', // 宮の陣
-        'https://maps.app.goo.gl/StTHwPn9fJzSDemF8', // 櫛原
-        'https://maps.app.goo.gl/z5LoBXRdCUbaSYRS9'  // 五郎丸
-      ],
     };
   },
   mounted() {
@@ -89,7 +87,9 @@ export default {
         
         if (frame1321317466 && rectangle3) {
           const frameHeight = frame1321317466.offsetHeight;
-          rectangle3.style.height = frameHeight + 'px';
+          // iframeの場合は最小高さを設定
+          const minHeight = Math.max(frameHeight, 400);
+          rectangle3.style.height = minHeight + 'px';
         }
       });
     }
@@ -117,7 +117,7 @@ export default {
   background-color: var(--white);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
   position: relative;
   width: 100%;
   max-width: 2000px;
@@ -137,21 +137,15 @@ export default {
   min-height: auto;
 }
 
-.map-link-image {
-  display: block;
+.rectangle-3 {
+  height: 100%;
+  position: relative;
   width: 45%;
   max-width: 692px;
   flex-shrink: 0;
-}
-
-.rectangle-3 {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: relative;
   border-radius: 10px;
   aspect-ratio: 692 / 400;
+  border: 0;
 }
 
 .frame-1321317466 {
@@ -199,6 +193,18 @@ export default {
   line-height: 1.6;
 }
 
+.station-link {
+  color: #3F3F3F;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.station-link:hover {
+  color: #DA5761;
+  text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 1150px) {
   .content-view-2 {
@@ -207,8 +213,8 @@ export default {
   }
   
   .frame-1321317467-2 {
-    padding: 0 40px !important;
-    gap: 20px !important;
+    padding: 0 30px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -242,7 +248,7 @@ export default {
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .content-view-2 {
     padding: 50px 30px !important;
     gap: 18px !important;
@@ -250,7 +256,7 @@ export default {
   
   .frame-1321317467-2 {
     padding: 0 30px !important;
-    gap: 18px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -283,7 +289,7 @@ export default {
   
   .frame-1321317467-2 {
     padding: 0 25px !important;
-    gap: 16px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -316,7 +322,7 @@ export default {
   
   .frame-1321317467-2 {
     padding: 0 !important;
-    gap: 14px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -344,11 +350,6 @@ export default {
 @media (max-width: 400px) {
   .content-view-2 {
     padding: 25px 15px !important;
-    gap: 12px !important;
-  }
-  
-  .frame-1321317467-2 {
-    padding: 0 !important;
     gap: 12px !important;
   }
   

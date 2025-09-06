@@ -755,5 +755,10 @@ export default {
   .form-divider {
     gap: 10px !important;
   }
+
+  .form-field {
+    gap: 12px !important;
+    padding: 12px 0 !important;
+  }
 }
 </style>

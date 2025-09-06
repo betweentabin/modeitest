@@ -112,9 +112,9 @@
           <!-- Pagination (dynamic) -->
           <div class="pagination" v-if="totalPages > 1">
             <button class="pagination-btn" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">‹</button>
-            <template v-for="(p, i) in pagesToShow" :key="`p-${i}`">
-              <span v-if="p === '…'" class="pagination-dots">…</span>
-              <button v-else class="pagination-btn" :class="{ active: currentPage === p }" @click="changePage(p)">{{ p }}</button>
+            <template v-for="(p, i) in pagesToShow">
+              <span v-if="p === '…'" class="pagination-dots" :key="`dots-${i}`">…</span>
+              <button v-else class="pagination-btn" :class="{ active: currentPage === p }" @click="changePage(p)" :key="`page-${p}`">{{ p }}</button>
             </template>
             <button class="pagination-btn" @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">›</button>
             <button class="pagination-btn next-btn" @click="changePage(totalPages)" :disabled="currentPage === totalPages">最後</button>
