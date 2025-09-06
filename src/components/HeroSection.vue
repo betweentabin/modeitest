@@ -82,6 +82,8 @@ export default {
   align-items: flex-start;
   padding: 50px 30px;
   box-sizing: border-box;
+  position: relative; /* allow stacking above following sections */
+  z-index: 3;
 }
 
 .hero-content {

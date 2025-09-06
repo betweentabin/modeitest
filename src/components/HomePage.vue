@@ -803,6 +803,8 @@ export default {
   justify-content: flex-end;
   align-items: flex-start;
   padding: 170px 70px;
+  position: relative; /* ensure z-index works */
+  z-index: 3; /* keep texts above overlapping cards */
 }
 
 .hero-content {

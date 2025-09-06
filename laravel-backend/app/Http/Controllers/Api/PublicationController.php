@@ -7,6 +7,7 @@ use App\Models\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
 
 class PublicationController extends Controller
 {
@@ -188,6 +189,12 @@ class PublicationController extends Controller
                 'message' => '刊行物が作成されました。',
                 'data' => ['publication' => $publication]
             ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'バリデーションに失敗しました。',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -233,6 +240,12 @@ class PublicationController extends Controller
                 'message' => '刊行物が更新されました。',
                 'data' => ['publication' => $publication]
             ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'バリデーションに失敗しました。',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
