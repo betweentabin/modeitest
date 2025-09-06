@@ -303,6 +303,9 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'attachments']);
             Route::post('/{id}/attachments', [App\Http\Controllers\Admin\EmailCampaignController::class, 'uploadAttachment']);
             Route::delete('/{id}/attachments/{attachmentId}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'deleteAttachment']);
+
+            // 即時送信用のシンプルエンドポイント
+            Route::post('/send-simple', [App\Http\Controllers\Admin\EmailImmediateController::class, 'send']);
         });
         
         // 管理者用刊行物API
