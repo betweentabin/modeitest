@@ -60,7 +60,7 @@ export default {
 .overlap-group-6 {
   align-items: flex-start;
   background-color: var(--white);
-  border-radius: 10px 0px 0px 0px;
+  border-radius: 15px 15px 0px 0px;
   display: flex;
   flex-direction: column;
   left: 76px;
@@ -87,6 +87,7 @@ export default {
   width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  font-size: 16px;
 }
 
 .viwe-more-2 {
@@ -111,7 +112,14 @@ export default {
   overflow: unset;
 }
 
-/* 768px以下の画面用のレスポンシブスタイル */
+/* レスポンシブスタイル */
+@media (max-width: 1100px) {
+  .text-8 {
+    font-size: 15px !important;
+    line-height: 22px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .frame-1321317474 {
     width: 100%;
@@ -139,6 +147,45 @@ export default {
     right: 0px;
     left: auto;
     padding: 15px 20px;
+  }
+  
+  .text-8 {
+    font-size: 14px !important;
+    line-height: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .frame-1321317474 {
+    height: auto !important;
+  }
+  
+  .frame-1321317474.frame-1321317472-1 {
+    height: auto !important;
+  }
+  
+  .frame-1321317473-2 {
+    height: auto !important;
+  }
+  
+  .overlap-group1 {
+    height: 300px !important;
+  }
+  
+  .x2-2-2 {
+    height: 250px !important;
+  }
+  
+  .overlap-group-6 {
+    top: 200px !important;
+    min-height: 0px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .text-8 {
+    font-size: 13px !important;
+    line-height: 18px !important;
   }
 }
 </style>
