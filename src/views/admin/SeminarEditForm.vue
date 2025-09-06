@@ -355,11 +355,10 @@ export default {
           const res = await apiClient.createSeminar(payload, token)
           if (!res?.success) {
             const msg = res?.error?.message || res?.message || '作成に失敗'
-            const details = res?.details || res?.error?.details || res?.raw?.error?.details
+            const details = res?.error?.details
             if (details) {
               const first = Object.entries(details)[0]
-              const val = Array.isArray(first?.[1]) ? first[1][0] : first?.[1]
-              this.submitError = first ? `${msg}: ${first[0]} - ${val}` : msg
+              this.submitError = first ? `${msg}: ${first[0]} - ${first[1]}` : msg
             } else {
               this.submitError = msg
             }
@@ -371,19 +370,16 @@ export default {
           const res = await apiClient.updateSeminar(this.seminarId, payload, token)
           if (!res?.success) {
             const msg = res?.error?.message || res?.message || '更新に失敗'
-            const details = res?.details || res?.error?.details || res?.raw?.error?.details
+            const details = res?.error?.details
             if (details) {
               const first = Object.entries(details)[0]
-              const val = Array.isArray(first?.[1]) ? first[1][0] : first?.[1]
-              this.submitError = first ? `${msg}: ${first[0]} - ${val}` : msg
+              this.submitError = first ? `${msg}: ${first[0]} - ${first[1]}` : msg
             } else {
               this.submitError = msg
             }
             throw new Error(this.submitError)
           }
           this.successMessage = 'セミナーを更新しました'
-          // 反映確認のため直後に再取得
-          await this.fetchSeminarData()
         }
       } catch (err) {
         if (!this.submitError) {

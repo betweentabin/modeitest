@@ -18,29 +18,18 @@ class PublicationManagementController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            // 公開側と揃えて発行日の新しい順で表示
-            $query = Publication::orderBy('publication_date', 'desc');
+            $query = Publication::orderBy('created_at', 'desc');
 
             // フィルタリング
-            // 空文字は無視するため filled を利用（has だと category="" で全件除外される）
-            if ($request->filled('category')) {
+            if ($request->has('category')) {
                 $query->where('category', $request->category);
             }
 
-            // is_published は0/1を扱いたいので has を維持（ただし空文字は無視）
             if ($request->has('is_published')) {
-                $raw = $request->input('is_published');
-                if ($raw !== '' && $raw !== null) {
-                    $query->where('is_published', filter_var($raw, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false);
-                }
+                $query->where('is_published', $request->boolean('is_published'));
             }
 
-            // 会員レベル（free/standard/premium）でのフィルタ
-            if ($request->filled('membership_level')) {
-                $query->where('membership_level', $request->membership_level);
-            }
-
-            if ($request->filled('search')) {
+            if ($request->has('search')) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -80,9 +69,7 @@ class PublicationManagementController extends Controller
             
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'publication' => $publication
-                ]
+                'data' => $publication
             ]);
         } catch (\Exception $e) {
             return response()->json([

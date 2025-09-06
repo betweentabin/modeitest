@@ -45,14 +45,6 @@
           </div>
           <button @click="applyFilters" class="apply-btn">絞り込み</button>
         </div>
-        <div class="filter-row" style="margin-top:8px; align-items:center; gap:12px;">
-          <select v-model="filters.membership_level" class="filter-select" title="会員レベル">
-            <option value="">会員レベル</option>
-            <option value="free">無料公開</option>
-            <option value="standard">スタンダード以上</option>
-            <option value="premium">プレミアム限定</option>
-          </select>
-        </div>
         <!-- カテゴリ管理 -->
         <div class="category-manager">
           <div class="cat-header">
@@ -326,19 +318,54 @@ export default {
     async loadPublications() {
       this.loading = true
       try {
-        // 管理API固定で取得（お知らせと同様の運用）
-        this.authToken = localStorage.getItem('admin_token')
-        if (!this.authToken) {
-          const debugToken = await apiClient.getDebugAdminToken()
-          if (debugToken) { this.authToken = debugToken } else { throw new Error('管理者認証が必要です') }
+        // まずmockServerから取得を試みる
+        try {
+          const allPublications = await mockServer.getPublications()
+          if (allPublications && allPublications.length > 0) {
+            const start = (this.currentPage - 1) * this.itemsPerPage
+            const end = start + this.itemsPerPage
+            
+            this.publications = allPublications.map(pub => ({
+              id: pub.id,
+              title: pub.title,
+              date: pub.publication_date,
+              category: this.getCategoryText(pub.category),
+              userType: this.getUserTypeText(pub.membership_level),
+              description: pub.description,
+              author: pub.author,
+              is_published: pub.is_published,
+              is_downloadable: pub.file_url ? true : false
+            }))
+            
+            this.totalPages = Math.ceil(this.publications.length / this.itemsPerPage)
+            return
+          }
+        } catch (mockError) {
+          console.log('MockServer failed, trying API')
         }
 
-        const params = { page: this.currentPage, per_page: this.itemsPerPage }
-        if (this.filters && this.filters.category) params.category = this.filters.category
-        if (this.filters && this.filters.membership_level) params.membership_level = this.filters.membership_level
-        if (this.searchKeyword && this.searchKeyword.trim()) params.search = this.searchKeyword.trim()
-
-        const response = await apiClient.getAdminPublications(params)
+        // APIから取得
+        this.authToken = localStorage.getItem('admin_token')
+        if (!this.authToken) {
+          console.log('No admin token found, getting debug token...')
+          // デバッグ用: トークンが無い場合は自動取得
+          const debugToken = await apiClient.getDebugAdminToken()
+          if (debugToken) {
+            this.authToken = debugToken
+            console.log('Debug token obtained successfully')
+          } else {
+            throw new Error('管理者認証が必要です')
+          }
+        }
+        
+        const params = {
+          page: this.currentPage,
+          per_page: this.itemsPerPage,
+          ...this.filters
+        }
+        
+        const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
+        console.log('Admin publications API response:', response)
         if (response.success && response.data) {
           this.publications = response.data.publications.map(pub => ({
             id: pub.id,

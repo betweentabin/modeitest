@@ -308,13 +308,13 @@ Route::prefix('admin')->group(function () {
             Route::post('/send-simple', [App\Http\Controllers\Admin\EmailImmediateController::class, 'send']);
         });
         
-        // 管理者用刊行物API（管理専用の機能・バリデーションを提供）
+        // 管理者用刊行物API
         Route::prefix('publications-v2')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\PublicationManagementController::class, 'index']);
-            Route::post('/', [App\Http\Controllers\Admin\PublicationManagementController::class, 'store']);
-            Route::get('/{id}', [App\Http\Controllers\Admin\PublicationManagementController::class, 'show']);
-            Route::put('/{id}', [App\Http\Controllers\Admin\PublicationManagementController::class, 'update']);
-            Route::delete('/{id}', [App\Http\Controllers\Admin\PublicationManagementController::class, 'destroy']);
+            Route::get('/', [PublicationController::class, 'index']);
+            Route::post('/', [PublicationController::class, 'store']);
+            Route::get('/{id}', [PublicationController::class, 'show']);
+            Route::put('/{id}', [PublicationController::class, 'update']);
+            Route::delete('/{id}', [PublicationController::class, 'destroy']);
         });
 
         // 刊行物カテゴリ管理

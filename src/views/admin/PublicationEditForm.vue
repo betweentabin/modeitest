@@ -328,54 +328,6 @@ export default {
     }
   },
   methods: {
-    normalizePayload(data) {
-      const toNum = (v) => (v === '' || v === null || v === undefined ? null : Number(v))
-      const toStr = (v) => (v === undefined ? '' : v)
-      return {
-        title: toStr(data.title).trim(),
-        description: toStr(data.description).trim(),
-        category: toStr(data.category).trim(),
-        type: toStr(data.type).trim(),
-        publication_date: toStr(data.publication_date).trim(),
-        issue_number: data.issue_number ? String(data.issue_number).trim() : null,
-        author: data.author ? String(data.author).trim() : null,
-        pages: toNum(data.pages),
-        file_url: data.file_url ? String(data.file_url).trim() : null,
-        file_size: toNum(data.file_size),
-        cover_image: data.cover_image ? String(data.cover_image).trim() : null,
-        price: toNum(data.price),
-        tags: data.tags ? String(data.tags).trim() : null,
-        is_published: !!data.is_published,
-        is_downloadable: !!data.is_downloadable,
-        membership_level: data.membership_level || 'free'
-      }
-    },
-    formatErrors(errs) {
-      if (!errs || typeof errs !== 'object') return ''
-      const lines = []
-      for (const [field, messages] of Object.entries(errs)) {
-        const label = {
-          title: 'タイトル',
-          description: '概要説明',
-          category: 'カテゴリー',
-          type: '種別',
-          publication_date: '発行日',
-          issue_number: '号数',
-          author: '著者・編集者',
-          pages: 'ページ数',
-          file_url: 'ファイルURL',
-          cover_image: 'カバー画像',
-          price: '価格',
-          tags: 'タグ',
-          is_published: '公開設定',
-          is_downloadable: 'ダウンロード可否',
-          membership_level: '会員レベル'
-        }[field] || field
-        const msg = Array.isArray(messages) ? messages.join(', ') : String(messages)
-        lines.push(`${label}: ${msg}`)
-      }
-      return lines.join('\n')
-    },
     async fetchPublicationData() {
       this.loading = true
       this.error = ''
@@ -384,13 +336,10 @@ export default {
         const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
         if (res && res.success && res.data && res.data.publication) {
           const data = res.data.publication
-          const ymd = data.publication_date ? String(data.publication_date).slice(0, 10) : ''
           this.formData = {
             ...data,
-            publication_date: ymd,
             issue_number: data.issue_number || '',
-            download_count: data.download_count || 0,
-            membership_level: data.membership_level || 'free'
+            download_count: data.download_count || 0
           }
         } else {
           throw new Error('Publication not found')
@@ -413,29 +362,23 @@ export default {
           this.$router.push('/admin')
           return
         }
-        const payload = this.normalizePayload(this.formData)
         if (this.isNew) {
-          const res = await apiClient.createPublication(payload, token)
-          if (!res?.success) {
-            // バリデーション詳細を表示
-            const details = this.formatErrors(res?.raw?.errors || res?.errors)
-            this.submitError = details || (res?.message || res?.error || '作成に失敗しました')
-            return
-          }
+          const res = await apiClient.createPublication(this.formData, token)
+          if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
           this.successMessage = '刊行物を作成しました'
           setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
         } else {
-          const res = await apiClient.updatePublication(this.publicationId, payload, token)
-          if (!res?.success) {
-            const details = this.formatErrors(res?.raw?.errors || res?.errors)
-            this.submitError = details || (res?.message || res?.error || '更新に失敗しました')
-            return
-          }
+          const res = await apiClient.updatePublication(this.publicationId, this.formData, token)
+          if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
           this.successMessage = '刊行物を更新しました'
         }
       } catch (err) {
+        if (err.response?.data?.errors) {
+          this.submitError = Object.values(err.response.data.errors).flat().join(', ')
+        } else {
+          this.submitError = this.isNew ? '刊行物の作成に失敗しました' : '刊行物の更新に失敗しました'
+        }
         console.error(err)
-        this.submitError = this.isNew ? '刊行物の作成に失敗しました' : '刊行物の更新に失敗しました'
       } finally {
         this.submitLoading = false
       }

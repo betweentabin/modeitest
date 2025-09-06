@@ -123,12 +123,11 @@ class SeminarController extends Controller
      */
     public function store(Request $request)
     {
-        // 管理画面からは過去日程の登録（実績入力）も想定するため、dateの制約を緩和
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:200',
             'description' => 'nullable|string',
             'detailed_description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'location' => 'nullable|string|max:200',
