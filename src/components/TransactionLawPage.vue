@@ -481,6 +481,8 @@ export default {
   flex-direction: column;
   gap: 30px;
   width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .terms-article {

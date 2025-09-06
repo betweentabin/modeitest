@@ -216,6 +216,10 @@ export default {
     canRegister() {
       if (!this.seminar) return false;
       const requiredLevel = this.seminar.membershipRequirement || 'free';
+      // 無料セミナーまたは一般公開セミナーの場合は常に有効
+      if (requiredLevel === 'free' || (!['premium','standard'].includes(requiredLevel) && this.serverCanRegister)) {
+        return true;
+      }
       return this.$store.getters['auth/canAccess'](requiredLevel);
     },
     registrationButtonText() {
