@@ -10,6 +10,7 @@
 
 <script>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useEditMode } from '@/composables/useEditMode'
 import { useAdminAuth } from '@/composables/useAdminAuth'
 
@@ -18,7 +19,11 @@ export default {
   setup() {
     const { enabled, toggle } = useEditMode()
     const { checkAuth } = useAdminAuth()
-    const show = computed(() => checkAuth())
+    const route = useRoute()
+    const show = computed(() => {
+      // 管理ログイン済み かつ /admin 配下のみ表示
+      return !!checkAuth() && String(route.path || '').startsWith('/admin')
+    })
     return { enabled, toggle, show }
   }
 }
@@ -47,4 +52,3 @@ export default {
 .dot.off { background: #9ca3af; }
 .label { font-size: 12px; color: #333; }
 </style>
-

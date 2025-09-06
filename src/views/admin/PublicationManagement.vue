@@ -330,31 +330,7 @@ export default {
     async loadPublications() {
       this.loading = true
       try {
-        // まずmockServerから取得を試みる
-        try {
-          const allPublications = await mockServer.getPublications()
-          if (allPublications && allPublications.length > 0) {
-            const start = (this.currentPage - 1) * this.itemsPerPage
-            const end = start + this.itemsPerPage
-            
-            this.publications = allPublications.map(pub => ({
-              id: pub.id,
-              title: pub.title,
-              date: pub.publication_date,
-              category: this.getCategoryText(pub.category),
-              userType: this.getUserTypeText(pub.membership_level),
-              description: pub.description,
-              author: pub.author,
-              is_published: pub.is_published,
-              is_downloadable: pub.file_url ? true : false
-            }))
-            
-            this.totalPages = Math.ceil(this.publications.length / this.itemsPerPage)
-            return
-          }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API')
-        }
+        // API優先（公開セット or 管理全件）
 
         // APIから取得（公開セット or 管理全件）
         const params = { page: this.currentPage, per_page: this.itemsPerPage }
