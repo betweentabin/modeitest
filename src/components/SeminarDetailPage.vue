@@ -474,14 +474,18 @@ export default {
     },
     handleRegistration() {
       if (!this.seminar) return;
+      
       const requiredLevel = this.seminar.membershipRequirement || 'free';
       const strict = ['premium','standard'].includes(requiredLevel)
       const canAccess = this.$store.getters['auth/canAccess'](requiredLevel);
+      
+      // 無料セミナーまたは一般公開セミナーの場合は申込フォームへ遷移
       if (requiredLevel === 'free' || (!strict && this.serverCanRegister)) {
-        // 一般公開：申込フォームへ遷移
         this.$router.push(`/seminars/${this.seminar.id}/apply`)
         return
       }
+      
+      // 会員限定セミナーの場合
       if (canAccess) {
         // 会員限定・権限あり：即時予約登録
         this.directRegister(this.seminar)

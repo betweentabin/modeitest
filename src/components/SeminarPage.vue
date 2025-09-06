@@ -22,7 +22,7 @@
             セミナー・イベントの情報や、スペシャリストレポートへの出演情報をご紹介します。
           </div>
           <div class="intro-buttons">
-            <button class="intro-btn upcoming-btn">
+            <button class="intro-btn upcoming-btn" @click="goToCurrentSeminars">
               <span>開催予定のセミナー</span>
               <div class="btn-arrow">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -31,7 +31,7 @@
                 </svg>
               </div>
             </button>
-            <button class="intro-btn past-btn">
+            <button class="intro-btn past-btn" @click="goToPastSeminars">
               <span>過去の開催されたセミナー</span>
               <div class="btn-arrow">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -325,6 +325,12 @@ export default {
     generateSeminarId(seminar) {
       // セミナーのタイトルと日付からIDを生成（フォールバック用）
       return encodeURIComponent(seminar.title + '-' + seminar.date);
+    },
+    goToCurrentSeminars() {
+      this.$router.push('/seminars/current');
+    },
+    goToPastSeminars() {
+      this.$router.push('/seminar/archive');
     }
   }
 };
@@ -652,7 +658,7 @@ export default {
 }
 
 .reserve-btn.disabled {
-  background: #BDBDBD;
+  background: #9C3940;
   cursor: not-allowed;
 }
 

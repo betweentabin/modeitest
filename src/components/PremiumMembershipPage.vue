@@ -71,8 +71,8 @@
 
          <!-- CTA Section -->
      <ActionButton 
-       primary-text="プレミアム会員特典についてお問い合わせ"
-       secondary-text="プレミアム会員入会はコチラ"
+       primary-text="会員についてお問い合わせ"
+       secondary-text="入会はコチラ"
        @primary-click="handleContactClick"
        @secondary-click="handleJoinClick"
      />
@@ -125,8 +125,8 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      // Navigate to join page or handle join action
-      this.$router.push('/application-form');
+      // Navigate to membership application form
+      this.$router.push('/membership/apply');
     }
   }
 };

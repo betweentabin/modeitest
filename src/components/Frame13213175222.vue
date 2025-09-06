@@ -41,7 +41,7 @@ export default {
   height: auto;
   letter-spacing: 0;
   line-height: 1.2;
-  white-space: normal;
+  white-space: nowrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
   flex: 1;

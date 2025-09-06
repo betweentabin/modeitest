@@ -82,6 +82,12 @@ export default {
   width: 380px;
   position: relative;
   z-index: 2;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.button-3:hover {
+  background-color: #e67e7e;
 }
 
 .text-44 {

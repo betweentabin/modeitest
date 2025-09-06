@@ -14,7 +14,7 @@
             <div class="hero-subtitle-wrapper">
               <div class="hero-subtitle">{{ heroSubtitle }}</div>
             </div>
-            <div class="hero-button-wrapper">
+            <div class="hero-button-wrapper" @click="goToContact">
               <div class="hero-button-text">{{ text68 }}</div>
               <div class="hero-button-icon">
                 <img
@@ -619,28 +619,20 @@ export default {
         }
       }
       
-      // 最新のセミナー数を更新 - 配列チェックを追加
-      const seminarArray = Array.isArray(seminars) ? seminars : [];
-      const upcomingSeminars = seminarArray.filter(s => s.status === 'ongoing' || s.status === 'scheduled');
-      if (upcomingSeminars.length > 0) {
-        this.seminar = `セミナー(${upcomingSeminars.length}件)`;
-      }
+      // セミナー件数表示を削除
+      this.seminar = 'SEMINAR';
       
-      // 最新の刊行物数を更新 - 配列チェックを追加
+      // 刊行物件数表示を削除
+      this.publications1 = 'PUBLICATIONS';
       const publicationArray = Array.isArray(publications) ? publications : [];
       if (publicationArray.length > 0) {
-        this.publications1 = `刊行物(${publicationArray.length}件)`;
         this.allPublications = publicationArray; // 全データを保存
         this.currentIndex = 0;
         this.refreshVisiblePublications();
       }
       
-      // お知らせ数を更新 - 配列チェックを追加
-      const noticeArray = Array.isArray(notices) ? notices : [];
-      const importantNotices = noticeArray.filter(n => n.isImportant);
-      if (noticeArray.length > 0) {
-        this.infomation1 = `お知らせ(${importantNotices.length > 0 ? importantNotices.length : noticeArray.length}件)`;
-      }
+      // お知らせ件数表示を削除
+      this.infomation1 = 'INFOMATION';
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -768,6 +760,10 @@ export default {
     goToFinancialReport() {
       // 決算報告ページに遷移
       this.$router.push('/financial-report');
+    },
+    goToContact() {
+      // お問い合わせページに遷移
+      this.$router.push('/contact');
     }
   }
 };
@@ -875,6 +871,12 @@ export default {
   overflow: hidden;
   padding: 15px 25px;
   width: fit-content;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-button-wrapper:hover {
+  opacity: 0.8;
 }
 
 .hero-button-text {
@@ -983,6 +985,12 @@ export default {
   width: calc(25% - 15px);
   flex-shrink: 0;
   aspect-ratio: 284 / 148;
+  transition: all 0.3s ease;
+}
+
+.frame-1321317490:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .frame-1321317491 {
@@ -1026,6 +1034,12 @@ export default {
   width: calc(25% - 15px);
   flex-shrink: 0;
   aspect-ratio: 284 / 148;
+  transition: all 0.3s ease;
+}
+
+.frame-1321317491-1:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .frame-1321317491-2 {
@@ -1050,6 +1064,12 @@ export default {
   width: calc(25% - 15px);
   flex-shrink: 0;
   aspect-ratio: 283 / 148;
+  transition: all 0.3s ease;
+}
+
+.frame-1321317490-1:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .frame-1321317491-3 {
@@ -1082,6 +1102,12 @@ export default {
   width: calc(25% - 15px);
   flex-shrink: 0;
   aspect-ratio: 284 / 148;
+  transition: all 0.3s ease;
+}
+
+.frame-1321317492:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .frame-1321317491-4 {

@@ -48,6 +48,7 @@ import SeminarApplicationCompletePage from "./components/SeminarApplicationCompl
 import MembershipApplicationFormPage from "./components/MembershipApplicationFormPage.vue";
 import MembershipApplicationConfirmPage from "./components/MembershipApplicationConfirmPage.vue";
 import MembershipApplicationCompletePage from "./components/MembershipApplicationCompletePage.vue";
+import PremiumMembershipPage from "./components/PremiumMembershipPage.vue";
 import GlossaryPage from "./components/GlossaryPage";
 import EconomicIndicatorsPage from "./components/EconomicIndicatorsPage";
 import EconomicStatisticsPage from "./components/EconomicStatisticsPage";
@@ -68,7 +69,6 @@ import MemberLoginPage from "./views/MemberLoginPage";
 import MyAccountPage from "./views/MyAccountPage";
 import UpgradePage from "./views/UpgradePage";
 import MembershipPage from "./components/MembershipPage";
-import PremiumMembershipPage from "./components/PremiumMembershipPage.vue";
 
 Vue.use(Router);
 
@@ -194,7 +194,7 @@ const router = new Router({
     {
       path: "/membership/apply/confirm",
       name: "membershipApplyConfirm",
-      component: MembershipApplicationConfirmPage,
+      component: SeminarApplicationConfirmPage,
       meta: { title: "入会申し込み - 確認" }
     },
     {
@@ -533,6 +533,12 @@ const router = new Router({
       meta: { title: "入会案内 - ちくぎん地域経済研究所" }
     },
     {
+      path: "/premium-membership",
+      name: "premiumMembership",
+      component: PremiumMembershipPage,
+      meta: { title: "プレミアム会員 - ちくぎん地域経済研究所" }
+    },
+    {
       path: "/membership/standard",
       name: "standardMembership",
       component: MembershipPage,
@@ -540,7 +546,7 @@ const router = new Router({
     },
     {
       path: "/membership/premium",
-      name: "premiumMembership",
+      name: "premiumMembershipOld",
       component: PremiumMembershipPage,
       meta: { title: "プレミアム会員の特典 - ちくぎん地域経済研究所" }
     },
@@ -587,11 +593,15 @@ const router = new Router({
     },
     {
       path: "/seminars/current",
-      redirect: "/seminar"
+      name: "currentSeminars",
+      component: CurrentSeminarsPage,
+      meta: { title: "受付中のセミナー - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminars/past",
-      redirect: "/seminar/archive"
+      name: "pastSeminars",
+      component: PastSeminarsPage,
+      meta: { title: "過去のセミナー - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminars/:id",

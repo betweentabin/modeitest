@@ -37,10 +37,6 @@
               申し込み内容の詳細は、後日メールにてご連絡いたします。<br>
               ご不明な点がございましたら、お気軽にお問い合わせください。
             </p>
-            <div v-if="applicationNumber" class="application-number">
-              <p class="number-label">申し込み番号</p>
-              <p class="number-value">{{ applicationNumber }}</p>
-            </div>
           </div>
         </div>
       </div>
@@ -75,14 +71,8 @@ export default {
   },
   data() {
     return {
-      applicationNumber: null,
       frame132131753022Props: frame132131753022Data
     };
-  },
-  mounted() {
-    // URLパラメータから申し込み番号を取得
-    const params = new URLSearchParams(this.$route.query);
-    this.applicationNumber = params.get('applicationNumber');
   }
 };
 </script>

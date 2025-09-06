@@ -26,6 +26,11 @@ export default {
   gap: 10px;
   padding: 10px 40px;
   position: relative;
+  transition: opacity 0.3s ease;
+}
+
+.button-4:hover {
+  opacity: 0.8;
 }
 
 .text-7 {
