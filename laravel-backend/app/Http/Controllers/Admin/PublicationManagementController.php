@@ -18,7 +18,8 @@ class PublicationManagementController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $query = Publication::orderBy('created_at', 'desc');
+            // 公開側と揃えて発行日の新しい順で表示
+            $query = Publication::orderBy('publication_date', 'desc');
 
             // フィルタリング
             // 空文字は無視するため filled を利用（has だと category="" で全件除外される）

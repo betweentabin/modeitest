@@ -4,21 +4,24 @@
 
     <!-- Hero Section -->
     <HeroSection 
-      title="ちくぎん地域経済研究所について"
-      subtitle="for you"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/df7ca8cd2f554040b151c3c0f960f06d9826cc19?width=2880"
+      mediaKey="hero_about_institute"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['ちくぎん地域経済研究所について']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- About Section -->
     <div class="about-section">
       <div class="section-header">
-        <h2 class="section-title">ちくぎん地域経済研究所について</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="about-institute" fieldKey="about_title" tag="span" :fallback="'ちくぎん地域経済研究所について'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">FOR YOU</span>
+          <span class="divider-text"><CmsText pageKey="about-institute" fieldKey="about_subtitle" tag="span" :fallback="'FOR YOU'" /></span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -30,9 +33,7 @@
             <h3 class="main-headline" v-html="mainHeadlineText"></h3>
           </div>
           <div class="about-description">
-            当研究所は、産・官・学・金(金融)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>
-            経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。<br>
-            今後とも地元企業や地域の皆様をはじめ行政等との連携を緊密にし、様々な事業展開を図り地域の発展に寄与してまいりたいと考えております。
+            <CmsText pageKey="about-institute" fieldKey="about_body" tag="div" type="html" :fallback="`当研究所は、産・官・学・金(金融)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。<br>今後とも地元企業や地域の皆様をはじめ行政等との連携を緊密にし、様々な事業展開を図り地域の発展に寄与してまいりたいと考えております。`" />
           </div>
         </div>
       </div>
@@ -41,10 +42,10 @@
     <!-- Service Overview Section -->
     <div class="service-section">
       <div class="section-header">
-        <h2 class="section-title">サービス概要</h2>
+        <h2 class="section-title"><CmsText pageKey="about-institute" fieldKey="service_title" tag="span" :fallback="'サービス概要'" /></h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">service</span>
+          <span class="divider-text"><CmsText pageKey="about-institute" fieldKey="service_subtitle" tag="span" :fallback="'service'" /></span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -53,13 +54,10 @@
         <div class="service-card">
           <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870" alt="開発・研究" />
           <div class="service-content">
-            <h3 class="service-title">開発・研究</h3>
-            <p class="service-description">ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。</p>
+            <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service1_title" tag="span" :fallback="'開発・研究'" /></h3>
+            <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service1_desc" tag="span" :fallback="'ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。'" /></p>
             <div class="service-details">
-              主な定期刊行物<br>
-              ちくぎん地域経済レポート（四半期毎）<br>
-              Hot Information（1ヶ月に2回）<br>
-              メールマガジン（毎週2回）
+              <CmsText pageKey="about-institute" fieldKey="service1_list" tag="div" type="html" :fallback="'主な定期刊行物<br>ちくぎん地域経済レポート（四半期毎）<br>Hot Information（1ヶ月に2回）<br>メールマガジン（毎週2回）'" />
             </div>
           </div>
         </div>
@@ -67,8 +65,8 @@
         <div class="service-card">
           <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870" alt="人材開発、セミナー" />
           <div class="service-content">
-            <h3 class="service-title">人材開発、セミナー</h3>
-            <p class="service-description">企業幹部、従業員または後継者(次世代育成)にマッチする効果的な研修を行います。ご要望に合わせて各種講演会、セミナー等の企画・運営を行うほか、様々なニーズに合わせて、外部専門家等の紹介・斡旋をいたします。</p>
+            <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service2_title" tag="span" :fallback="'人材開発、セミナー'" /></h3>
+            <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service2_desc" tag="span" :fallback="'企業幹部、従業員または後継者(次世代育成)にマッチする効果的な研修を行います。ご要望に合わせて各種講演会、セミナー等の企画・運営を行うほか、様々なニーズに合わせて、外部専門家等の紹介・斡旋をいたします。'" /></p>
             <div class="service-details">
               人材紹介、斡旋<br>
               外部専門家の紹介、斡旋<br>
@@ -83,8 +81,8 @@
         <div class="service-card">
           <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870" alt="経営支援" />
           <div class="service-content">
-            <h3 class="service-title">経営支援(経営サポート)</h3>
-            <p class="service-description">企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。</p>
+            <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service3_title" tag="span" :fallback="'経営支援(経営サポート)'" /></h3>
+            <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service3_desc" tag="span" :fallback="'企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。'" /></p>
             <div class="service-details">
               コンサルティング<br>
               経営課題解決サポート<br>
@@ -100,8 +98,8 @@
 
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはコチラ"
-      secondary-text="入会はコチラ"
+      :primary-text="ctaPrimaryText"
+      :secondary-text="ctaSecondaryText"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
     />
@@ -132,6 +130,8 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
+import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "AboutInstitutePage",
@@ -144,14 +144,26 @@ export default {
     HeroSection,
     Breadcrumbs,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsText
   },
   data() {
     return {
+      pageKey: 'about-institute',
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       mainHeadlineText: '産 官 学 金 を<br>繋ぐ架け橋へ',
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'ちくぎん地域経済研究所について') || 'ちくぎん地域経済研究所について' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'for you') || 'for you' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+  },
+  mounted() {
+    try { this._pageText = usePageText(this.pageKey); this._pageText.load() } catch (_) {}
   },
   mounted() {
     this.adjustRectangleHeight();
