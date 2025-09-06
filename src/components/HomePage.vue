@@ -271,7 +271,6 @@
                           :src="vector65"
                           alt="Vector"
                         />
-                        <img class="vector-17" :src="vector17" alt="Vector" />
                       </div>
                     </div>
                   </div>
@@ -284,11 +283,10 @@
                       </div>
                       <div class="caret-right">
                         <img
-                          class="vector-1"
+                          class="vector-14"
                           :src="vector61"
                           alt="Vector"
                         />
-                        <img class="vector-18" :src="vector19" alt="Vector" />
                       </div>
                     </div>
                   </div>
@@ -301,11 +299,10 @@
                       </div>
                       <div class="caret-right">
                         <img
-                          class="vector-1"
+                          class="vector-14"
                           src="/img/vector-61.svg"
                           alt="Vector"
                         />
-                        <img class="vector-19" :src="vector21" alt="Vector" />
                       </div>
                     </div>
                   </div>
@@ -1929,6 +1926,11 @@ export default {
   height: 122px;
   position: relative;
   width: 100%;
+  transition: all 0.3s ease;
+}
+
+.overlap-group3-1:hover {
+  opacity: 0.8;
 }
 
 .x2-2-1,
@@ -1993,7 +1995,8 @@ export default {
   width: 17px;
 }
 
-.vector-14 {
+.vector-14,
+.vector-1 {
   align-self: center;
   height: 13px;
   margin-left: 5px;
@@ -2012,6 +2015,11 @@ export default {
   position: relative;
   width: 100%;
   aspect-ratio: 318 / 123;
+  transition: all 0.3s ease;
+}
+
+.overlap-group-1:hover {
+  opacity: 0.8;
 }
 
 .overlap-group-2 {
@@ -2476,7 +2484,22 @@ export default {
   .group-10-2 {
     gap: 15px !important;
   }
+
+  .overlap-group2,
+  .overlap-group-2 {
+    width: 250px !important;
+    min-width: 0px !important;
+  }
 }
+
+@media (max-width: 1100px) {
+  .overlap-group2,
+  .overlap-group-2 {
+    width: 300px !important;
+    min-width: 0px !important;
+  }
+}
+
 
 @media (max-width: 900px) {
   .hero-section {
@@ -2672,7 +2695,7 @@ export default {
     aspect-ratio: auto;
   }
   
-  .overlap-group-1 img {
+  .overlap-group-1 img:not(.vector-14):not(.vector-17):not(.vector-18):not(.vector-19) {
     height: 122px !important;
     width: 100% !important;
     object-fit: cover !important;
@@ -2861,7 +2884,7 @@ export default {
     aspect-ratio: auto;
   }
   
-  .overlap-group-1 img {
+  .overlap-group-1 img:not(.vector-14):not(.vector-17):not(.vector-18):not(.vector-19) {
     height: 122px !important;
     width: 100% !important;
     object-fit: cover !important;
@@ -3024,7 +3047,7 @@ export default {
     aspect-ratio: auto;
   }
   
-  .overlap-group-1 img {
+  .overlap-group-1 img:not(.vector-14):not(.vector-17):not(.vector-18):not(.vector-19) {
     height: 122px !important;
     width: 100% !important;
     object-fit: cover !important;
@@ -3047,15 +3070,15 @@ export default {
   
   .vector-14,
   .vector-1 {
-    height: 8px;
-    width: 4px;
+    height: 8px !important;
+    width: 4px !important;
   }
   
   .vector-17,
   .vector-18,
   .vector-19 {
-    height: 10px;
-    width: 10px;
+    height: 10px !important;
+    width: 10px !important;
   }
   
   .content-view-3 {
@@ -3232,7 +3255,7 @@ export default {
   .frame-1321317491-2,
   .frame-1321317491-3,
   .frame-1321317491-4 {
-    padding: 0px 15px;
+    padding: 0px;
   }
   
   .frame-1321317490 .text-1,
@@ -3385,7 +3408,7 @@ export default {
   .overlap-group2,
   .overlap-group-2 {
     padding: 8px 12px;
-    width: 210px;
+    width: 70% !important;
   }
   
   .text-4 {
@@ -3400,15 +3423,15 @@ export default {
   
   .vector-14,
   .vector-1 {
-    height: 8px;
-    width: 4px;
+    height: 8px !important;
+    width: 4px !important;
   }
   
   .vector-17,
   .vector-18,
   .vector-19 {
-    height: 10px;
-    width: 10px;
+    height: 10px !important;
+    width: 10px !important;
   }
   
   .content-view-3 {
@@ -3564,6 +3587,30 @@ export default {
   .publication-item-wrapper:hover {
     transform: none;
     opacity: 1;
+  }
+  
+  .main-publication-wrapper {
+    height: auto !important;
+  }
+}
+
+/* 336px以下の画面用の追加設定 */
+@media (max-width: 336px) {
+  .frame-1321317457 {
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 5px;
+    margin-top: -60px;
+  }
+  
+  .frame-1321317490,
+  .frame-1321317491-1,
+  .frame-1321317490-1,
+  .frame-1321317492 {
+    width: calc(50% - 2.5px);
+    min-width: calc(50% - 2.5px);
+    max-width: calc(50% - 2.5px);
+    flex: 0 0 calc(50% - 2.5px);
   }
 }
 
