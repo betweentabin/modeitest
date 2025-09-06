@@ -631,6 +631,12 @@ class ApiClient {
     return this.post(endpoint, { registration_ids: registrationIds })
   }
 
+  // Admin: Seminar Categories
+  async getSeminarCategories() { return this.get('/api/admin/seminar-categories') }
+  async createSeminarCategory(data) { return this.post('/api/admin/seminar-categories', data) }
+  async updateSeminarCategory(id, data) { return this.put(`/api/admin/seminar-categories/${id}`, data) }
+  async deleteSeminarCategory(id) { return this.delete(`/api/admin/seminar-categories/${id}`) }
+
   async getAdminNews(params = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'
@@ -686,12 +692,15 @@ class ApiClient {
     // Backward compat: prefer admin notice categories
     return this.get('/api/admin/notice-categories')
   }
+  async createNoticeCategory(data) { return this.post('/api/admin/notice-categories', data) }
+  async updateNoticeCategory(id, data) { return this.put(`/api/admin/notice-categories/${id}`, data) }
+  async deleteNoticeCategory(id) { return this.delete(`/api/admin/notice-categories/${id}`) }
 
   // Publication categories API methods
-  async getPublicationCategories() {
-    // Use admin route for category management
-    return this.get('/api/admin/publication-categories')
-  }
+  async getPublicationCategories() { return this.get('/api/admin/publication-categories') }
+  async createPublicationCategory(data) { return this.post('/api/admin/publication-categories', data) }
+  async updatePublicationCategory(id, data) { return this.put(`/api/admin/publication-categories/${id}`, data) }
+  async deletePublicationCategory(id) { return this.delete(`/api/admin/publication-categories/${id}`) }
 
   // Notices API methods
   async getNotices(params = {}) {

@@ -298,10 +298,10 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/news/${this.noticeId}`)
-        // NoticeController returns raw model
-        if (res && res.id || res?.data?.id) {
-          const data = res.id ? res : res.data
+        const res = await apiClient.get(`/api/admin/notices/${this.noticeId}`)
+        // NoticeController returns raw model or {notice:...} depending on wrapper
+        const data = (res && res.id) ? res : (res?.notice || res?.data || res)
+        if (data && data.id) {
           this.formData = {
             title: data.title,
             content: data.content,
@@ -343,7 +343,7 @@ export default {
           this.successMessage = 'お知らせを作成しました'
           setTimeout(() => { this.$router.push('/admin/news') }, 1200)
         } else {
-          const res = await apiClient.put(`/api/admin/news/${this.noticeId}`, payload)
+          const res = await apiClient.put(`/api/admin/notices/${this.noticeId}`, payload)
           if (!res || res.status === 'error') throw new Error(res.message || '更新に失敗')
           this.successMessage = 'お知らせを更新しました'
         }

@@ -8,6 +8,9 @@
           <button @click="showAddMemberModal" class="add-btn">
             新規会員追加
           </button>
+          <button @click="exportCsv" class="refresh-btn" :disabled="loading">
+            CSV一括DL
+          </button>
           <button @click="refreshMembers" class="refresh-btn" :disabled="loading">
             {{ loading ? '読み込み中...' : '更新' }}
           </button>
@@ -95,6 +98,7 @@
                 <td class="actions">
                   <button @click="editMember(member)" class="edit-btn">編集</button>
                   <button @click="viewDetails(member)" class="detail-btn">詳細</button>
+                  <button @click="autoPassword(member)" class="detail-btn">PW自動生成</button>
                 </td>
               </tr>
             </tbody>
@@ -507,6 +511,49 @@ export default {
         console.error('Failed to load members:', error)
       } finally {
         this.loading = false
+      }
+    },
+    async exportCsv() {
+      try {
+        const params = {}
+        if (this.searchQuery) params.search = this.searchQuery
+        if (this.selectedMembershipType) params.membership_type = this.selectedMembershipType
+        if (this.selectedStatus) params.status = this.selectedStatus
+        const res = await apiClient.exportAdminMembersCsv(params)
+        if (!res || res.success === false) {
+          alert(res?.message || 'CSVの生成に失敗しました')
+          return
+        }
+        const csvText = typeof res.data === 'string' ? res.data : (res || '')
+        const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        const ts = new Date().toISOString().replace(/[:T]/g,'-').slice(0,19)
+        a.download = `members_${ts}.csv`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } catch (e) {
+        console.error('export csv failed', e)
+        alert('CSV出力に失敗しました')
+      }
+    },
+    async autoPassword(member) {
+      if (!confirm(`${member.company_name} のパスワードを自動生成して更新しますか？`)) return
+      try {
+        const res = await apiClient.resetAdminMemberPassword(member.id, 12)
+        if (res && res.success) {
+          const pwd = res.generated_password || '(取得不可)'
+          try { await navigator.clipboard.writeText(pwd) } catch(e) {}
+          alert(`新しいパスワード: ${pwd}\nクリップボードにコピーしました。`)
+        } else {
+          alert(res?.message || '自動生成に失敗しました')
+        }
+      } catch(e) {
+        console.error('auto password failed', e)
+        alert('サーバーエラーが発生しました')
       }
     },
     

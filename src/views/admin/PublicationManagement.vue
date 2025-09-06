@@ -45,6 +45,32 @@
           </div>
           <button @click="applyFilters" class="apply-btn">絞り込み</button>
         </div>
+        <!-- カテゴリ管理 -->
+        <div class="category-manager">
+          <div class="cat-header">
+            <h3>カテゴリー管理</h3>
+            <div class="cat-actions">
+              <input v-model="cat.newName" type="text" class="cat-input" placeholder="新しいカテゴリー名" />
+              <button @click="addCategory" class="cat-add-btn">追加</button>
+            </div>
+          </div>
+          <div class="cat-list" v-if="categories && categories.length">
+            <div class="cat-item" v-for="c in categories" :key="c.id">
+              <template v-if="cat.editingId===c.id">
+                <input v-model="cat.editingName" class="cat-input" />
+                <button @click="saveCategory(c)" class="cat-save-btn">保存</button>
+                <button @click="cancelEditCategory" class="cat-cancel-btn">取消</button>
+              </template>
+              <template v-else>
+                <span class="cat-name">{{ c.name }}</span>
+                <button @click="startEditCategory(c)" class="cat-edit-btn">編集</button>
+                <button @click="deleteCategory(c)" class="cat-del-btn">削除</button>
+              </template>
+            </div>
+          </div>
+          <div v-else class="cat-empty">カテゴリーがありません</div>
+          <p v-if="cat.error" class="cat-error">{{ cat.error }}</p>
+        </div>
       </div>
 
       <!-- 検索セクション -->
@@ -181,7 +207,8 @@ export default {
       currentPage: 1,
       totalPages: 1,
       itemsPerPage: 20,
-      authToken: null
+      authToken: null,
+      cat: { newName: '', editingId: null, editingName: '', saving:false, error:'' }
     }
   },
   async mounted() {
@@ -233,8 +260,8 @@ export default {
 
         // APIから取得
         const response = await apiClient.getPublicationCategories()
-        if (response.success && response.data) {
-          this.categories = response.data.categories
+        if (response && response.success) {
+          this.categories = Array.isArray(response.data) ? response.data : (response.data?.categories || [])
         } else {
           throw new Error('カテゴリーデータの取得に失敗しました')
         }
@@ -248,6 +275,44 @@ export default {
           { id: 4, name: '統計資料', slug: 'statistics', sort_order: 4 }
         ]
       }
+    },
+    async addCategory() {
+      if (!this.cat.newName.trim()) return
+      try {
+        const res = await apiClient.createPublicationCategory({ name: this.cat.newName })
+        if (res && res.success) {
+          this.cat.newName = ''
+          await this.loadCategories()
+        } else {
+          alert(res?.message || '追加に失敗しました')
+        }
+      } catch(e) { alert('追加に失敗しました') }
+    },
+    startEditCategory(c) {
+      this.cat.editingId = c.id
+      this.cat.editingName = c.name
+    },
+    cancelEditCategory() {
+      this.cat.editingId = null
+      this.cat.editingName = ''
+    },
+    async saveCategory(c) {
+      try {
+        const res = await apiClient.updatePublicationCategory(c.id, { name: this.cat.editingName })
+        if (res && res.success) {
+          this.cancelEditCategory()
+          await this.loadCategories()
+        } else { alert(res?.message || '更新に失敗しました') }
+      } catch(e){ alert('更新に失敗しました') }
+    },
+    async deleteCategory(c) {
+      if (!confirm(`${c.name} を削除しますか？`)) return
+      try {
+        const res = await apiClient.deletePublicationCategory(c.id)
+        if (res && res.success) {
+          await this.loadCategories()
+        } else { alert(res?.message || '削除に失敗しました') }
+      } catch(e){ alert('削除に失敗しました') }
     },
 
     async loadPublications() {
@@ -458,6 +523,21 @@ export default {
   background-color: #f8f8f8;
   border-bottom: 1px solid #e5e5e5;
 }
+.category-manager { margin-top: 12px; background:#fff; border:1px solid #eee; border-radius:8px; padding:12px; }
+.cat-header { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.cat-header h3 { margin:0; font-size:15px; color:#1A1A1A; }
+.cat-actions { display:flex; gap:8px; }
+.cat-input { padding:6px 10px; border:1px solid #d0d0d0; border-radius:6px; font-size:13px; }
+.cat-add-btn, .cat-save-btn, .cat-cancel-btn, .cat-edit-btn, .cat-del-btn { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; font-size:12px; }
+.cat-add-btn, .cat-save-btn { background:#da5761; color:#fff; }
+.cat-edit-btn { background:#1A1A1A; color:#fff; }
+.cat-del-btn { background:#fff; color:#da5761; border:1px solid #da5761; }
+.cat-del-btn:hover { background:#da5761; color:#fff; }
+.cat-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.cat-item { background:#fafafa; border:1px solid #eee; border-radius:8px; padding:8px; display:flex; gap:8px; align-items:center; }
+.cat-name { font-size:13px; color:#333; }
+.cat-empty { color:#777; font-size:13px; margin-top:8px; }
+.cat-error { color:#da5761; font-size:12px; margin-top:8px; }
 
 .filter-row {
   display: flex;

@@ -333,8 +333,8 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/publications/${this.publicationId}`)
-        if (res.success && res.data && res.data.publication) {
+        const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
+        if (res && res.success && res.data && res.data.publication) {
           const data = res.data.publication
           this.formData = {
             ...data,
