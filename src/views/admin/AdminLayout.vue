@@ -80,13 +80,16 @@
       </main>
     </div>
   </div>
+  <EditModeToggle />
 </template>
 
 <script>
 import axios from 'axios'
+import EditModeToggle from '@/components/EditModeToggle.vue'
 
 export default {
   name: 'AdminLayout',
+  components: { EditModeToggle },
   methods: {
     isActive(path) {
       return this.$route.path === path || this.$route.path.startsWith(path + '/')
