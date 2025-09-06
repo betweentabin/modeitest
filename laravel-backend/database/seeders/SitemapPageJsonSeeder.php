@@ -15,6 +15,7 @@ class SitemapPageJsonSeeder extends Seeder
             'page_subtitle' => 'SITEMAP',
             'cta_primary' => 'お問い合わせ',
             'cta_secondary' => '入会はこちら',
+            'intro' => '当サイトの構造をご案内いたします。',
         ];
 
         $page = PageContent::where('page_key', $key)->first();
@@ -35,4 +36,3 @@ class SitemapPageJsonSeeder extends Seeder
         $page->update(['title' => $page->title ?: 'サイトマップ', 'content' => $content]);
     }
 }
-

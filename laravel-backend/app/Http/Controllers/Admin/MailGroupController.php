@@ -21,7 +21,39 @@ class MailGroupController extends Controller
         }
 
         $groups = $query->orderBy('created_at', 'desc')->paginate($request->get('per_page', 20));
-        return response()->json(['success' => true, 'data' => $groups]);
+
+        // 既定の仮想グループを先頭に付加（全会員 / プレミアム会員 / セミナー参加者）
+        try {
+            $allMembers = Member::query();
+            // active + 有効期限内（無料は is_active のみ）
+            $allCount = Member::activeWithValidMembership()->count();
+
+            $premiumCount = Member::where('is_active', true)
+                ->where('membership_type', 'premium')
+                ->where(function ($q) {
+                    $q->whereNull('membership_expires_at')
+                      ->orWhere('membership_expires_at', '>', now());
+                })
+                ->count();
+
+            $seminarParticipants = \App\Models\SeminarRegistration::active()
+                ->whereNotNull('member_id')
+                ->distinct('member_id')
+                ->count('member_id');
+
+            $prepend = [
+                [ 'id' => -1, 'name' => '全会員', 'description' => '全ての有効な会員', 'members_count' => $allCount ],
+                [ 'id' => -2, 'name' => 'プレミアム会員', 'description' => 'プレミアム会員のみ', 'members_count' => $premiumCount ],
+                [ 'id' => -3, 'name' => 'セミナー参加者', 'description' => 'これまでに申込のあった会員', 'members_count' => $seminarParticipants ],
+            ];
+
+            $arr = $groups->toArray();
+            $arr['data'] = array_merge($prepend, $arr['data'] ?? []);
+            return response()->json(['success' => true, 'data' => $arr]);
+        } catch (\Throwable $e) {
+            // フォールバック：従来のレスポンス
+            return response()->json(['success' => true, 'data' => $groups]);
+        }
     }
 
     public function store(Request $request)

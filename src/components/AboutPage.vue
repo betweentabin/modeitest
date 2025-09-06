@@ -53,23 +53,13 @@
         
         <div class="message-content">
           <div class="message-text">
-            <p>
-              変化の激しい経済環境の中で、企業が持続的な成長を遂げるためには、
-              正確な情報と深い洞察に基づく戦略的な意思決定が不可欠です。
-            </p>
-            <p>
-              私たちちくぎん地域経済研究所は、長年培ってきた調査研究の知見と
-              幅広いネットワークを活用し、地域の皆様の課題解決と成長を
-              全力でサポートしてまいります。
-            </p>
-            <p>
-              産・官・学・金の連携を深め、地域経済の活性化に貢献することで、
-              九州地域の明るい未来を共に創造していきたいと考えております。
-            </p>
-            <div class="message-signature">
-              <p>株式会社ちくぎん地域経済研究所</p>
-              <p>代表取締役社長</p>
-            </div>
+            <CmsText
+              pageKey="about"
+              fieldKey="message_body"
+              tag="div"
+              type="html"
+              :fallback="defaultAboutMessage"
+            />
           </div>
           <div class="message-image">
             <img src="/img/image-2.png" alt="代表挨拶" />
@@ -278,6 +268,15 @@ export default {
       loading: true,
       error: null,
       frame132131753022Props: frame132131753022Data,
+      defaultAboutMessage: `
+        <p>変化の激しい経済環境の中で、企業が持続的な成長を遂げるためには、正確な情報と深い洞察に基づく戦略的な意思決定が不可欠です。</p>
+        <p>私たちちくぎん地域経済研究所は、長年培ってきた調査研究の知見と幅広いネットワークを活用し、地域の皆様の課題解決と成長を全力でサポートしてまいります。</p>
+        <p>産・官・学・金の連携を深め、地域経済の活性化に貢献することで、九州地域の明るい未来を共に創造していきたいと考えております。</p>
+        <div class="message-signature">
+          <p>株式会社ちくぎん地域経済研究所</p>
+          <p>代表取締役社長</p>
+        </div>
+      `,
     };
   },
   computed: {

@@ -163,12 +163,52 @@ class EmailCampaignController extends Controller
 
             // From groups
             if (!empty($validated['groups'])) {
-                $memberIds = MailGroupMember::whereIn('group_id', $validated['groups'])->pluck('member_id')->unique();
-                if ($memberIds->isNotEmpty()) {
-                    $rows = DB::table('members')->whereIn('id', $memberIds)->pluck('email', 'id');
-                    foreach ($rows as $memberId => $email) {
-                        if ($email) {
-                            $emails->push(['email' => $email, 'member_id' => $memberId]);
+                $groupIds = collect($validated['groups']);
+
+                // 1) 通常グループ（正のID）
+                $normalIds = $groupIds->filter(fn($id) => (int)$id > 0)->all();
+                if (!empty($normalIds)) {
+                    $memberIds = MailGroupMember::whereIn('group_id', $normalIds)->pluck('member_id')->unique();
+                    if ($memberIds->isNotEmpty()) {
+                        $rows = DB::table('members')->whereIn('id', $memberIds)->pluck('email', 'id');
+                        foreach ($rows as $memberId => $email) {
+                            if ($email) $emails->push(['email' => $email, 'member_id' => $memberId]);
+                        }
+                    }
+                }
+
+                // 2) 仮想グループ（負のID）
+                $virtualIds = $groupIds->filter(fn($id) => (int)$id < 0)->map(fn($id) => (int)$id)->values();
+                if ($virtualIds->isNotEmpty()) {
+                    $virtualMemberIds = collect();
+                    foreach ($virtualIds as $vid) {
+                        if ($vid === -1) {
+                            // 全会員（有効）
+                            $ids = DB::table('members')->where('is_active', true)->pluck('id');
+                            $virtualMemberIds = $virtualMemberIds->merge($ids);
+                        } elseif ($vid === -2) {
+                            // プレミアム会員（有効期限内）
+                            $ids = DB::table('members')
+                                ->where('is_active', true)
+                                ->where('membership_type', 'premium')
+                                ->where(function($q){ $q->whereNull('membership_expires_at')->orWhere('membership_expires_at', '>', now()); })
+                                ->pluck('id');
+                            $virtualMemberIds = $virtualMemberIds->merge($ids);
+                        } elseif ($vid === -3) {
+                            // セミナー参加者（キャンセル以外）
+                            $ids = DB::table('seminar_registrations')
+                                ->whereNotNull('member_id')
+                                ->where('attendance_status', '!=', 'cancelled')
+                                ->distinct()
+                                ->pluck('member_id');
+                            $virtualMemberIds = $virtualMemberIds->merge($ids);
+                        }
+                    }
+                    $virtualMemberIds = $virtualMemberIds->filter()->unique();
+                    if ($virtualMemberIds->isNotEmpty()) {
+                        $rows = DB::table('members')->whereIn('id', $virtualMemberIds)->pluck('email', 'id');
+                        foreach ($rows as $memberId => $email) {
+                            if ($email) $emails->push(['email' => $email, 'member_id' => $memberId]);
                         }
                     }
                 }

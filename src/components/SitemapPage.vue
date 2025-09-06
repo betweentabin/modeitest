@@ -30,7 +30,7 @@
          <div class="sitemap-section">
            <div class="sitemap-content">
             <p class="section-content">
-              当サイトの構造をご案内いたします。
+              <CmsText pageKey="sitemap" fieldKey="intro" tag="span" :fallback="'当サイトの構造をご案内いたします。'" />
             </p>
             
             <!-- Sitemap Links -->
@@ -122,6 +122,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
 
 import vector7 from "../../public/img/vector-7.svg";
@@ -137,7 +138,8 @@ export default {
     HeroSection,
     Breadcrumbs,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsText
   },
   data() {
     return {
