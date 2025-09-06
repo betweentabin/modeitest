@@ -534,7 +534,10 @@ const RECOMMENDED_KEYS = {
   'financial-reports': ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
   'economic-indicators': ['page_title', 'page_subtitle'],
   news: ['page_title', 'page_subtitle'],
-  about: ['page_title', 'mission_title', 'mission_body', 'cta_primary'],
+  // Aboutページ：ご挨拶の本文/署名までCMS化
+  about: ['page_title', 'mission_title', 'mission_body', 'message_title', 'message_subtitle', 'message_body', 'message_signature', 'cta_primary'],
+  // CompanyProfile：ご挨拶、ミッション、会社概要見出しまで
+  'company-profile': ['page_title', 'page_subtitle', 'philosophy_title', 'philosophy_subtitle', 'message_title', 'message_subtitle', 'message_label', 'message_signature', 'mission_title', 'mission_body', 'profile_title', 'profile_subtitle'],
   terms: [
     'page_title', 'page_subtitle', 'intro',
     'copyright_title', 'copyright_body',
@@ -572,6 +575,13 @@ const KEY_HELP = {
   form_title: { label: 'フォーム見出し', desc: 'お問い合わせフォーム上部の見出し', placeholder: 'お問い合わせ' },
   mission_title: { label: 'ミッション見出し', desc: '会社/団体紹介の小見出し', placeholder: '産学官金のネットワークを活かした地域創生' },
   mission_body: { label: 'ミッション本文', desc: '紹介の本文', placeholder: '私たちは、〜〜〜' },
+  // ご挨拶（共通）
+  message_title: { label: 'ご挨拶見出し', desc: 'セクション見出し（例：ご挨拶）', placeholder: 'ご挨拶' },
+  message_subtitle: { label: 'ご挨拶英字', desc: '英字の小見出し（例：MESSAGE）', placeholder: 'MESSAGE' },
+  message_label: { label: '左側ラベル', desc: 'セクション左側の大きなラベル', placeholder: 'MESSAGE' },
+  message_body: { label: 'ご挨拶本文（HTML可）', desc: '複数段落・リンク等も可（安全にサニタイズ表示）', placeholder: '本文を入力' },
+  message_signature: { label: 'ご挨拶の署名', desc: '末尾の署名（役職・氏名など）', placeholder: '株式会社〜 代表取締役〜' },
+  mission_label: { label: 'ミッション英字', desc: 'ミッションの英字ラベル', placeholder: 'OUR MISSION' },
 }
 
 // キーの表示箇所（ページ別）
@@ -625,6 +635,11 @@ const KEY_LOCATIONS = {
     message_signature: 'ご挨拶の署名',
     profile_title: '会社概要セクション見出し',
     profile_subtitle: '会社概要セクション英字',
+    mission_label: 'ミッション英字（OUR MISSION）',
+    mission_title: 'ミッションの見出し',
+    mission_body: 'ミッションの本文（HTML可）',
+    history_title: '沿革セクション見出し',
+    history_subtitle: '沿革セクション英字',
   },
   'privacy': {
     page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',
@@ -674,6 +689,9 @@ const KEY_LOCATIONS = {
     page_subtitle: 'ヒーロー英字（AboutPage）',
     mission_title: '経営理念セクションの見出し',
     mission_body: '経営理念セクションの本文',
+    message_title: 'ご挨拶セクション見出し',
+    message_subtitle: 'ご挨拶セクション英字',
+    message_signature: 'ご挨拶の署名',
   },
   'membership': {
     page_title: 'ヒーロー・パンくず（MembershipPage）',
