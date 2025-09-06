@@ -730,6 +730,12 @@ export default {
       const map = {
         'home': '/#/',
         'about': '/#/about',
+        'company-profile': '/#/company-profile',
+        'sitemap': '/#/sitemap',
+        'contact': '/#/contact',
+        'consulting': '/#/consulting',
+        'membership': '/#/membership',
+        'glossary': '/#/glossary',
         'economic-statistics': '/#/economic-statistics',
         'seminars-current': '/#/seminars/current',
         'publications': '/#/publications-public',

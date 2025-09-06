@@ -30,6 +30,14 @@ class DatabaseSeeder extends Seeder
             PrivacyPageJsonSeeder::class,
             FaqPageJsonSeeder::class,
             TransactionLawPageJsonSeeder::class,
+            AboutPageJsonSeeder::class,
+            CompanyProfilePageJsonSeeder::class,
+            SitemapPageJsonSeeder::class,
+            ContactPageJsonSeeder::class,
+            ConsultingPageJsonSeeder::class,
+            MembershipPageJsonSeeder::class,
+            GlossaryPageJsonSeeder::class,
+            FinancialReportsPageJsonSeeder::class,
             EconomicIndicatorSeeder::class,
         ]);
     }
