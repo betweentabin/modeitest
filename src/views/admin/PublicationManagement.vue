@@ -358,11 +358,15 @@ export default {
           }
         }
         
+        // クエリに空文字を載せない（category="" 等で全件除外を防止）
         const params = {
           page: this.currentPage,
           per_page: this.itemsPerPage,
-          ...this.filters
         }
+        if (this.filters && this.filters.category) params.category = this.filters.category
+        if (this.filters && this.filters.year) params.year = this.filters.year
+        if (this.filters && this.filters.month) params.month = this.filters.month
+        if (this.searchKeyword && this.searchKeyword.trim()) params.search = this.searchKeyword.trim()
         
         const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
         console.log('Admin publications API response:', response)
