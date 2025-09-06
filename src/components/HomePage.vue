@@ -549,25 +549,12 @@ export default {
   },
   computed: {
     _pageRef() { return this._pageText?.page?.value },
+    // ヒーロー文言は固定（CMSからは編集不可）
     heroTitle() {
-      // 優先順: CMS(texts.hero_title → texts.page_title → content.hero.title) → data.js → 既定文言
-      const get = key => (this._pageText?.getText && this._pageText.getText(key, '')) || ''
-      const fromTexts = get('hero_title') || get('page_title')
-      const fromStruct = this._pageRef?.content?.hero?.title || ''
-      const base = this.text66 || ''
-      const val = fromTexts || fromStruct || base
-      const fallback = '産・官・学・金（金融機関）の力で'
-      return (typeof val === 'string' && val.trim().length) ? val : fallback
+      return (this.text66 && this.text66.trim()) || '産・官・学・金（金融機関）の力で'
     },
     heroSubtitle() {
-      // 優先順: CMS(texts.hero_subtitle → texts.lead → content.hero.subtitle) → data.js → 既定文言
-      const get = key => (this._pageText?.getText && this._pageText.getText(key, '')) || ''
-      const fromTexts = get('hero_subtitle') || get('lead')
-      const fromStruct = this._pageRef?.content?.hero?.subtitle || ''
-      const base = this.text67 || ''
-      const val = fromTexts || fromStruct || base
-      const fallback = '企業活動を支援'
-      return (typeof val === 'string' && val.trim().length) ? val : fallback
+      return (this.text67 && this.text67.trim()) || '企業活動を支援'
     },
   },
   
