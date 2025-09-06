@@ -49,6 +49,7 @@ export default {
 <style scoped>
 .fixed-side-buttons {
   position: fixed;
+  top: 350px;
   right: 20px;
   display: flex;
   flex-direction: column;
@@ -105,10 +106,30 @@ export default {
   height: 28px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .fixed-side-buttons {
+@media (max-width: 1150px) {
+  .side-button {
+  width: 85px;
+  height: 85px;
+  font-size: 10px;
+  font-weight: 500;
+  gap: 4px;
+  }
+
+  .side-button svg {
+    width: 20px;
+    height: 25px;
+  }
+
+  .contact-side svg {
+    width: 16px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 800px) {
+  .side-button {
     display: none;
   }
 }
+
 </style>

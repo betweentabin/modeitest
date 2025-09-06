@@ -11,7 +11,7 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['トップ', 'セミナー（一覧）']" />
+    <Breadcrumbs :breadcrumbs="['セミナー（一覧）']" />
 
     <!-- Introduction Section -->
     <div class="intro-section">

@@ -274,7 +274,7 @@ export default {
 
 .sitemap-links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
 }
 
@@ -282,6 +282,22 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  position: relative;
+  padding-right: 20px;
+}
+
+/* 3列の時: 1列目と2列目に縦線 */
+@media (min-width: 500px) {
+  .sitemap-category:nth-child(3n+1):not(:last-child)::after,
+  .sitemap-category:nth-child(3n+2)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #E0E0E0;
+  }
 }
 
 .category-title {
@@ -383,11 +399,61 @@ export default {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
   }
+  
+  .sitemap-category {
+    padding-right: 15px;
+  }
+  
+  /* 2列の時: 1、3、5個目に縦線 */
+  .sitemap-category:nth-child(1)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #F0F0F0;
+  }
+  
+  .sitemap-category:nth-child(3)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #F0F0F0;
+  }
+  
+  .sitemap-category:nth-child(5)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #F0F0F0;
+  }
+  
+  /* 2、4番目の縦線を非表示 */
+  .sitemap-category:nth-child(2)::after,
+  .sitemap-category:nth-child(4)::after {
+    display: none;
+  }
 }
 
  @media (max-width: 768px) {
   .main-content {
     padding: 30px 20px !important;
+  }
+  
+  .sitemap-category {
+    padding-right: 0;
+  }
+  
+  .sitemap-category:nth-child(3n+1):not(:last-child)::after,
+  .sitemap-category:nth-child(3n+2)::after {
+    display: none;
   }
   
   .content-header {
