@@ -120,8 +120,28 @@ export default {
         // 一部のページキーがスネークケースで渡るケースがあるため安全に正規化
         const normalizedKey = (props.pageKey || '').replace(/_/g, '-').trim() || props.pageKey
 
-        const res = await apiClient.put(`/api/admin/pages/${normalizedKey}`, { content })
-        if (res && res.success === false) throw new Error(res.error || '保存に失敗しました')
+        let res = await apiClient.put(`/api/admin/pages/${normalizedKey}`, { content })
+        if (res && res.success === false) {
+          // ページが存在しない（404）の場合は作成を試みる
+          if (String(res.code || '').startsWith('404')) {
+            const nowIso = new Date().toISOString()
+            const title = (page?.title || normalizedKey || 'ページ')
+            const createPayload = {
+              page_key: normalizedKey,
+              title,
+              content,
+              is_published: true,
+              published_at: nowIso,
+            }
+            const created = await apiClient.post('/api/admin/pages', createPayload)
+            if (created && created.success === false) {
+              throw new Error(created.error || '保存に失敗しました（作成）')
+            }
+            res = created
+          } else {
+            throw new Error(res.error || '保存に失敗しました')
+          }
+        }
         // 極力即時反映：現在のpageTextに反映（サーバー再取得は副次的に）
         try {
           if (!pageText.page.value) pageText.page.value = { content: {} }
