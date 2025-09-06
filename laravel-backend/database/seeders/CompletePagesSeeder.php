@@ -366,7 +366,65 @@ class CompletePagesSeeder extends Seeder
                 'title' => 'マイアカウント',
                 'content' => [
                     'description' => '会員様専用のアカウント管理ページです',
-                    'features' => ['プロフィール管理', '会員情報更新', '利用履歴', '設定変更']
+                    'features' => ['プロフィール管理', '会員情報更新', '利用履歴', '設定変更'],
+                    'labels' => [
+                        'tabs' => [
+                            'profile' => 'アカウント情報',
+                            'seminars' => 'セミナー',
+                            'seminarFavorites' => 'セミナーお気に入り',
+                            'registrations' => '申込状況',
+                            'membership' => '会員プラン',
+                            'downloads' => 'ダウンロード履歴',
+                            'favorites' => 'お気に入り',
+                            'settings' => '設定'
+                        ],
+                        'headings' => [
+                            'profile' => 'アカウント情報',
+                            'seminars' => 'セミナー一覧',
+                            'seminarFavorites' => 'お気に入りセミナー',
+                            'registrations' => '申込状況',
+                            'membership' => '会員プラン',
+                            'downloads' => 'ダウンロード履歴',
+                            'favoriteMembers' => 'お気に入り会員',
+                            'settings' => '設定'
+                        ],
+                        'buttons' => [
+                            'editProfile' => 'プロフィールを編集',
+                            'changePassword' => 'パスワード変更',
+                            'save' => '保存する',
+                            'saving' => '保存中...',
+                            'cancel' => 'キャンセル',
+                            'submit' => '送信する',
+                            'submitting' => '送信中...',
+                            'upgrade' => 'プランをアップグレード',
+                            'redownload' => '再ダウンロード',
+                            'viewDirectory' => '会員名簿を見る',
+                            'goFavorites' => 'お気に入り一覧ページへ',
+                            'detail' => '詳細',
+                            'remove' => '削除'
+                        ],
+                        'texts' => [
+                            'upgradeNotice' => 'より多くのコンテンツにアクセスしたい場合は、プランをアップグレードしてください。'
+                        ],
+                        'empty' => [
+                            'favoriteMembersTitle' => 'お気に入り会員はまだありません',
+                            'favoriteMembersText' => '会員名簿からお気に入りの会員を登録してみましょう。'
+                        ],
+                        'tables' => [
+                            'seminars' => [
+                                'thDate' => '日付', 'thTitle' => 'タイトル', 'thVenue' => '会場', 'thStatus' => 'ステータス', 'thActions' => '操作',
+                                'btnReserve' => '予約する', 'empty' => '該当するセミナーがありません'
+                            ],
+                            'seminarFavorites' => [
+                                'thDate' => '日付', 'thTitle' => 'タイトル', 'thStatus' => 'ステータス', 'thFavoritedAt' => 'お気に入り日時',
+                                'btnRemove' => '削除', 'empty' => 'お気に入りセミナーはありません'
+                            ],
+                            'registrations' => [
+                                'thDate' => '日付', 'thTitle' => 'タイトル', 'thNumber' => '申込番号', 'thApproval' => '承認状態', 'thSeminarStatus' => '開催状態',
+                                'empty' => '申込履歴はありません'
+                            ]
+                        ]
+                    ]
                 ],
                 'meta_description' => '会員様専用のアカウント管理ページです。',
                 'meta_keywords' => 'マイアカウント,会員管理,プロフィール,利用履歴',

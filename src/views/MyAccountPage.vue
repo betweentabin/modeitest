@@ -56,23 +56,33 @@
 
         <!-- セミナー系タブ -->
         <div v-if="activeTab==='seminars'" class="content-section">
-          <h2>セミナー一覧</h2>
-          <MemberSeminarsTab @reservation-made="onReservationMade" @seminar-favorite-updated="onSeminarFavoriteUpdated" />
+          <h2>{{ cms?.labels?.headings?.seminars || 'セミナー一覧' }}</h2>
+          <MemberSeminarsTab 
+            :labels="cms?.labels?.tables?.seminars || null"
+            @reservation-made="onReservationMade" 
+            @seminar-favorite-updated="onSeminarFavoriteUpdated" 
+          />
         </div>
 
         <div v-if="activeTab==='seminar-favorites'" class="content-section">
-          <h2>お気に入りセミナー</h2>
-          <MemberSeminarFavoritesTab ref="seminarFavoritesTab" />
+          <h2>{{ cms?.labels?.headings?.seminarFavorites || 'お気に入りセミナー' }}</h2>
+          <MemberSeminarFavoritesTab 
+            ref="seminarFavoritesTab" 
+            :labels="cms?.labels?.tables?.seminarFavorites || null"
+          />
         </div>
 
         <div v-if="activeTab==='registrations'" class="content-section">
-          <h2>申込状況</h2>
-          <MemberSeminarRegistrationsTab ref="registrationsTab" />
+          <h2>{{ cms?.labels?.headings?.registrations || '申込状況' }}</h2>
+          <MemberSeminarRegistrationsTab 
+            ref="registrationsTab"
+            :labels="cms?.labels?.tables?.registrations || null"
+          />
         </div>
 
         <!-- アカウント情報タブ -->
         <div v-if="activeTab === 'profile'" class="content-section">
-          <h2>アカウント情報</h2>
+          <h2>{{ cms?.labels?.headings?.profile || 'アカウント情報' }}</h2>
           
           <!-- 表示モード -->
           <div v-if="!editMode" class="info-card">
@@ -181,24 +191,24 @@
 
               <div class="form-actions">
                 <button type="button" @click="cancelEdit" class="cancel-button">
-                  キャンセル
+                  {{ cms?.labels?.buttons?.cancel || 'キャンセル' }}
                 </button>
                 <button type="submit" class="save-button" :disabled="saving">
-                  {{ saving ? '保存中...' : '保存する' }}
+                  {{ saving ? (cms?.labels?.buttons?.saving || '保存中...') : (cms?.labels?.buttons?.save || '保存する') }}
                 </button>
               </div>
             </form>
           </div>
           
           <div v-if="!editMode" class="profile-actions">
-            <button @click="startEdit" class="edit-button">プロフィールを編集</button>
-            <button @click="showPasswordForm = true" class="password-button">パスワード変更</button>
+            <button @click="startEdit" class="edit-button">{{ cms?.labels?.buttons?.editProfile || 'プロフィールを編集' }}</button>
+            <button @click="showPasswordForm = true" class="password-button">{{ cms?.labels?.buttons?.changePassword || 'パスワード変更' }}</button>
           </div>
         </div>
         
         <!-- 会員プランタブ -->
         <div v-if="activeTab === 'membership'" class="content-section">
-          <h2>会員プラン</h2>
+          <h2>{{ cms?.labels?.headings?.membership || '会員プラン' }}</h2>
           
           <div class="membership-card" :class="`membership-${memberInfo?.membershipType}`">
             <div class="membership-header">
@@ -216,9 +226,9 @@
             </div>
             
             <div v-if="memberInfo?.membershipType !== 'premium'" class="upgrade-section">
-              <p>より多くのコンテンツにアクセスしたい場合は、プランをアップグレードしてください。</p>
+              <p>{{ cms?.labels?.texts?.upgradeNotice || 'より多くのコンテンツにアクセスしたい場合は、プランをアップグレードしてください。' }}</p>
               <button @click="goToUpgrade" class="upgrade-button">
-                プランをアップグレード
+                {{ cms?.labels?.buttons?.upgrade || 'プランをアップグレード' }}
               </button>
             </div>
             
@@ -232,7 +242,7 @@
         
         <!-- ダウンロード履歴タブ -->
         <div v-if="activeTab === 'downloads'" class="content-section">
-          <h2>ダウンロード履歴</h2>
+          <h2>{{ cms?.labels?.headings?.downloads || 'ダウンロード履歴' }}</h2>
           
           <div class="downloads-list">
             <div class="download-item" v-for="item in downloadHistory" :key="item.id">
@@ -240,8 +250,8 @@
                 <h4>{{ item.title }}</h4>
                 <span class="download-date">{{ formatDate(item.downloadedAt) }}</span>
               </div>
-              <button @click="redownload(item)" class="redownload-button">
-                再ダウンロード
+              <button @click="redownload(item)" class="secondary-button">
+                {{ cms?.labels?.buttons?.redownload || '再ダウンロード' }}
               </button>
             </div>
             
@@ -254,10 +264,10 @@
         <!-- お気に入りタブ -->
         <div v-if="activeTab === 'favorites'" class="content-section">
           <div class="favorites-header">
-            <h2>お気に入り会員</h2>
+            <h2>{{ cms?.labels?.headings?.favoriteMembers || 'お気に入り会員' }}</h2>
             <div class="header-actions">
-              <button @click="$router.push('/member-favorites')" class="go-page-btn">お気に入り一覧ページへ</button>
-              <button @click="$router.push('/member-directory')" class="directory-link-btn">会員名簿を見る</button>
+              <button @click="$router.push('/member-favorites')" class="primary-button">{{ cms?.labels?.buttons?.goFavorites || 'お気に入り一覧ページへ' }}</button>
+              <button @click="$router.push('/member-directory')" class="secondary-button">{{ cms?.labels?.buttons?.viewDirectory || '会員名簿を見る' }}</button>
             </div>
           </div>
           
@@ -265,10 +275,10 @@
           <div v-else-if="favoritesError" class="error">{{ favoritesError }}</div>
           <div v-else>
             <div v-if="favoriteMembers.length === 0" class="empty-state">
-              <h3>お気に入り会員はまだありません</h3>
-              <p>会員名簿からお気に入りの会員を登録してみましょう。</p>
-              <button @click="$router.push('/member-directory')" class="directory-btn">
-                会員名簿を見る
+              <h3>{{ cms?.labels?.empty?.favoriteMembersTitle || 'お気に入り会員はまだありません' }}</h3>
+              <p>{{ cms?.labels?.empty?.favoriteMembersText || '会員名簿からお気に入りの会員を登録してみましょう。' }}</p>
+              <button @click="$router.push('/member-directory')" class="primary-button">
+                {{ cms?.labels?.buttons?.viewDirectory || '会員名簿を見る' }}
               </button>
             </div>
             
@@ -284,8 +294,8 @@
                   <span class="membership-type">{{ getMembershipLabel(favorite.membership_type) }}</span>
                 </div>
                 <div class="favorite-actions">
-                  <button @click="viewFavoriteDetail(favorite)" class="view-btn">詳細</button>
-                  <button @click="removeFavorite(favorite)" class="remove-btn">削除</button>
+                  <button @click="viewFavoriteDetail(favorite)" class="secondary-button">{{ cms?.labels?.buttons?.detail || '詳細' }}</button>
+                  <button @click="removeFavorite(favorite)" class="danger-outline-button">{{ cms?.labels?.buttons?.remove || '削除' }}</button>
                 </div>
               </div>
             </div>
@@ -294,7 +304,7 @@
         
         <!-- 設定タブ -->
         <div v-if="activeTab === 'settings'" class="content-section">
-          <h2>設定</h2>
+          <h2>{{ cms?.labels?.headings?.settings || '設定' }}</h2>
           
           <div class="settings-card">
             <h3>メール通知設定</h3>
@@ -321,7 +331,7 @@
             </div>
             
             <button @click="saveSettings" class="save-button">
-              設定を保存
+              {{ cms?.labels?.buttons?.save || '設定を保存' }}
             </button>
           </div>
           
@@ -367,8 +377,8 @@
           <p v-if="reservationError" class="error-text">{{ reservationError }}</p>
 
           <div class="form-actions">
-            <button type="button" class="cancel-button" @click="closeReservationModal" :disabled="reservationLoading">キャンセル</button>
-            <button type="submit" class="save-button" :disabled="reservationLoading">{{ reservationLoading ? '送信中...' : '送信する' }}</button>
+            <button type="button" class="cancel-button" @click="closeReservationModal" :disabled="reservationLoading">{{ cms?.labels?.buttons?.cancel || 'キャンセル' }}</button>
+            <button type="submit" class="save-button" :disabled="reservationLoading">{{ reservationLoading ? (cms?.labels?.buttons?.submitting || '送信中...') : (cms?.labels?.buttons?.submit || '送信する') }}</button>
           </div>
         </form>
       </div>
@@ -401,6 +411,7 @@ export default {
       activeTab: 'profile',
       memberInfo: null,
       dashboard: null,
+      cms: null,
       downloadHistory: [],
       favoriteMembers: [],
       settings: {
@@ -450,15 +461,16 @@ export default {
       return this.memberInfo?.name?.charAt(0) || 'G'
     },
     menuItems() {
+      const t = (key, def) => this.cms?.labels?.tabs?.[key] || def
       return [
-        { id: 'profile', label: 'アカウント情報', icon: '' },
-        { id: 'seminars', label: 'セミナー', icon: '' },
-        { id: 'seminar-favorites', label: 'セミナーお気に入り', icon: '' },
-        { id: 'registrations', label: '申込状況', icon: '' },
-        { id: 'membership', label: '会員プラン', icon: '' },
-        { id: 'downloads', label: 'ダウンロード履歴', icon: '' },
-        { id: 'favorites', label: 'お気に入り', icon: '' },
-        { id: 'settings', label: '設定', icon: '' }
+        { id: 'profile', label: t('profile', 'アカウント情報'), icon: '' },
+        { id: 'seminars', label: t('seminars', 'セミナー'), icon: '' },
+        { id: 'seminar-favorites', label: t('seminarFavorites', 'セミナーお気に入り'), icon: '' },
+        { id: 'registrations', label: t('registrations', '申込状況'), icon: '' },
+        { id: 'membership', label: t('membership', '会員プラン'), icon: '' },
+        { id: 'downloads', label: t('downloads', 'ダウンロード履歴'), icon: '' },
+        { id: 'favorites', label: t('favorites', 'お気に入り'), icon: '' },
+        { id: 'settings', label: t('settings', '設定'), icon: '' }
       ]
     }
   },
@@ -483,10 +495,11 @@ export default {
     },
     async fetchInitialData() {
       try {
-        const [profileRes, dashboardRes, favoritesRes] = await Promise.all([
+        const [profileRes, dashboardRes, favoritesRes, cmsRes] = await Promise.all([
           apiClient.get('/api/member/my-profile'),
           apiClient.get('/api/member/dashboard'),
-          apiClient.get('/api/member/favorites')
+          apiClient.get('/api/member/favorites'),
+          apiClient.getPageContent('my-account')
         ])
 
         // プロフィール
@@ -507,6 +520,13 @@ export default {
           this.favoriteMembers = favoritesRes.data
         } else if (favoritesRes && !favoritesRes.success) {
           this.favoritesError = favoritesRes.message || 'お気に入り一覧の取得に失敗しました'
+        }
+
+        // CMS（文言/ラベル類）
+        if (cmsRes && cmsRes.success) {
+          const page = cmsRes.data?.page || cmsRes.data?.data?.page || null
+          const content = page?.content || null
+          this.cms = (content && content.labels) ? content : { labels: content?.labels || {} }
         }
 
         // ダウンロード履歴（API未提供のためダミー）
@@ -989,6 +1009,71 @@ export default {
   background: var(--hot-pink);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(218, 87, 97, 0.3);
+}
+
+/* ボタン統一（黒/ピンク） */
+.primary-button,
+.save-button,
+.edit-button,
+.upgrade-button {
+  background: var(--mandy, #DA5761);
+  color: #fff;
+}
+
+.primary-button:hover,
+.save-button:hover,
+.edit-button:hover,
+.upgrade-button:hover {
+  background: var(--hot-pink, #E56B75);
+}
+
+.secondary-button,
+.password-button,
+.redownload-button,
+.view-btn,
+.directory-link-btn {
+  background: #fff;
+  color: var(--black, #1A1A1A);
+  border: 1px solid var(--black, #1A1A1A);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.secondary-button:hover,
+.password-button:hover,
+.redownload-button:hover,
+.view-btn:hover,
+.directory-link-btn:hover {
+  background: var(--black, #1A1A1A);
+  color: #fff;
+}
+
+.cancel-button {
+  background: #fff;
+  color: var(--black, #1A1A1A);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.cancel-button:hover {
+  border-color: var(--black, #1A1A1A);
+}
+
+.danger-outline-button,
+.remove-btn {
+  background: #fff;
+  color: var(--mandy, #DA5761);
+  border: 1px solid var(--mandy, #DA5761);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.danger-outline-button:hover,
+.remove-btn:hover {
+  background: var(--mandy, #DA5761);
+  color: #fff;
 }
 
 /* 会員プラン */

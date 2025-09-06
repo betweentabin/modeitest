@@ -20,11 +20,11 @@
     <table v-else class="data-table">
       <thead>
         <tr>
-          <th>日付</th>
-          <th>タイトル</th>
-          <th>申込番号</th>
-          <th>承認状態</th>
-          <th>開催状態</th>
+          <th>{{ labels?.thDate || '日付' }}</th>
+          <th>{{ labels?.thTitle || 'タイトル' }}</th>
+          <th>{{ labels?.thNumber || '申込番号' }}</th>
+          <th>{{ labels?.thApproval || '承認状態' }}</th>
+          <th>{{ labels?.thSeminarStatus || '開催状態' }}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@
           <td>{{ approvalLabel(r.approval_status) }}</td>
           <td>{{ statusLabel(r.seminar_status) }}</td>
         </tr>
-        <tr v-if="rows.length===0"><td colspan="5" class="empty">申込履歴はありません</td></tr>
+        <tr v-if="rows.length===0"><td colspan="5" class="empty">{{ labels?.empty || '申込履歴はありません' }}</td></tr>
       </tbody>
     </table>
   </div>
@@ -46,6 +46,9 @@ import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MemberSeminarRegistrationsTab',
+  props: {
+    labels: { type: Object, default: () => ({}) }
+  },
   data() {
     const now = new Date()
     return { loading:false, error:'', rows:[], years:Array.from({length:6}).map((_,i)=> now.getFullYear()-i), filters:{status:'',year:'',month:''} }
@@ -76,4 +79,3 @@ export default {
 .error { color:#da5761; padding:12px 0; }
 .empty { color:#777; text-align:center; }
 </style>
-

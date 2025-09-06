@@ -25,11 +25,11 @@
     <table v-else class="data-table">
       <thead>
         <tr>
-          <th>日付</th>
-          <th>タイトル</th>
-          <th>会場</th>
-          <th>ステータス</th>
-          <th class="actions-col">操作</th>
+          <th>{{ labels?.thDate || '日付' }}</th>
+          <th>{{ labels?.thTitle || 'タイトル' }}</th>
+          <th>{{ labels?.thVenue || '会場' }}</th>
+          <th>{{ labels?.thStatus || 'ステータス' }}</th>
+          <th class="actions-col">{{ labels?.thActions || '操作' }}</th>
         </tr>
       </thead>
       <tbody>
@@ -45,11 +45,11 @@
               @click="toggleFavorite(s, $event)"
               :title="isFav(s.id) ? 'お気に入り解除' : 'お気に入り追加'"
             >{{ isFav(s.id) ? '★' : '☆' }}</button>
-            <button v-if="canReserve(s)" class="reserve-btn" @click="openReservation(s)">予約する</button>
+            <button v-if="canReserve(s)" class="reserve-btn" @click="openReservation(s)">{{ labels?.btnReserve || '予約する' }}</button>
             <span v-else class="disabled-text">{{ disabledReason(s) }}</span>
           </td>
         </tr>
-        <tr v-if="filteredSeminars.length===0"><td colspan="5" class="empty">該当するセミナーがありません</td></tr>
+        <tr v-if="filteredSeminars.length===0"><td colspan="5" class="empty">{{ labels?.empty || '該当するセミナーがありません' }}</td></tr>
       </tbody>
     </table>
     
@@ -99,6 +99,9 @@ import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MemberSeminarsTab',
+  props: {
+    labels: { type: Object, default: () => ({}) }
+  },
   data() {
     const now = new Date()
     return {
