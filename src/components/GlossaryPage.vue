@@ -48,44 +48,15 @@
         </div>
       </div>
       
-      <!-- Pagination -->
-      <div class="pagination">
-        <button 
-          class="pagination-btn" 
-          :class="{ active: currentPage === 1 }"
-          @click="goToPage(1)"
-        >
-          1
-        </button>
-        <button 
-          class="pagination-btn" 
-          :class="{ active: currentPage === 2 }"
-          @click="goToPage(2)"
-        >
-          2
-        </button>
-        <button 
-          class="pagination-btn" 
-          :class="{ active: currentPage === 3 }"
-          @click="goToPage(3)"
-        >
-          3
-        </button>
-        <span class="pagination-dots">...</span>
-        <button 
-          class="pagination-btn" 
-          :class="{ active: currentPage === totalPages }"
-          @click="goToPage(totalPages)"
-        >
-          {{ totalPages }}
-        </button>
-        <button 
-          class="pagination-btn next-btn"
-          @click="goToPage(currentPage + 1)"
-          :disabled="currentPage >= totalPages"
-        >
-          最後
-        </button>
+      <!-- Pagination (dynamic) -->
+      <div class="pagination" v-if="totalPages > 1">
+        <button class="pagination-btn" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">‹</button>
+        <template v-for="(p, i) in pagesToShow" :key="`p-${i}`">
+          <span v-if="p === '…'" class="pagination-dots">…</span>
+          <button v-else class="pagination-btn" :class="{ active: currentPage === p }" @click="goToPage(p)">{{ p }}</button>
+        </template>
+        <button class="pagination-btn" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">›</button>
+        <button class="pagination-btn next-btn" @click="goToPage(totalPages)" :disabled="currentPage === totalPages">最後</button>
       </div>
     </div>
 
@@ -192,6 +163,28 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '用語集') || '用語集' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Glossary') || 'Glossary' },
+    totalPages() {
+      return Math.ceil(this.glossary.length / this.itemsPerPage) || 1
+    },
+    paginatedGlossary() {
+      const start = (this.currentPage - 1) * this.itemsPerPage
+      return this.glossary.slice(start, start + this.itemsPerPage)
+    },
+    pagesToShow() {
+      const total = this.totalPages
+      const current = this.currentPage
+      if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+      const pages = []
+      const push = v => pages.push(v)
+      push(1)
+      if (current > 4) push('…')
+      const start = Math.max(2, current - 1)
+      const end = Math.min(total - 1, current + 1)
+      for (let p = start; p <= end; p++) push(p)
+      if (current < total - 3) push('…')
+      push(total)
+      return pages
+    }
   },
   mounted() {
     try {
@@ -225,6 +218,9 @@ export default {
     }
   },
   methods: {
+    goToPage(p) {
+      if (p >= 1 && p <= this.totalPages) this.currentPage = p
+    },
     toggleDefinition(index) {
       const itemIndex = this.openItems.indexOf(index);
       if (itemIndex > -1) {
