@@ -3,7 +3,9 @@
     <div class="frame-1321317467-2">
       <group10 />
       <div class="frame-1321317467-1">
-        <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
+        <a :href="mapUrl" target="_blank" rel="noopener noreferrer" aria-label="Googleマップで開く">
+          <img class="rectangle-3" :src="rectangle3" alt="アクセスマップ" />
+        </a>
         <div class="frame-1321317466">
           <div class="group-container">
             <div class="group-12">
@@ -15,9 +17,15 @@
             </div>
             <div class="group-12">
               <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
-              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
-              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
-              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
+              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">
+                <a :href="stationLinks[0]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x12Km141 }}</a>
+              </p>
+              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">
+                <a :href="stationLinks[1]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x12Km142 }}</a>
+              </p>
+              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">
+                <a :href="stationLinks[2]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x19Km23 }}</a>
+              </p>
             </div>
             <div class="group-12">
               <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
@@ -58,6 +66,12 @@ export default {
       x497M6: homePageData.x497M6,
       x811M10: homePageData.x811M10,
       d1830M10: homePageData.d1830M10,
+      mapUrl: 'https://maps.app.goo.gl/Z5wA7ds8zVBa6N7x8',
+      stationLinks: [
+        'https://maps.app.goo.gl/L8xgusobgPJdpPbp9', // 宮の陣
+        'https://maps.app.goo.gl/StTHwPn9fJzSDemF8', // 櫛原
+        'https://maps.app.goo.gl/z5LoBXRdCUbaSYRS9'  // 五郎丸
+      ],
     };
   },
   mounted() {
