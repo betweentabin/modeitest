@@ -383,7 +383,7 @@
         </form>
       </div>
     </div>
-    <FooterComplete />
+    <Footer v-bind="frame132131753022Props" />
   </div>
 </template>
 
@@ -391,16 +391,17 @@
 import { ref, computed, onMounted } from 'vue'
 // import { useRouter } from 'vue-router' // Vue 2では利用不可
 import Navigation from '@/components/Navigation.vue'
-import FooterComplete from '@/components/FooterComplete.vue'
+import Footer from '@/components/Footer.vue'
 import PublicationCard from '@/components/PublicationCard.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
 import apiClient from '@/services/apiClient.js'
+import { frame132131753022Data } from '../data.js'
 
 export default {
   name: 'MyAccountPage',
   components: {
     Navigation,
-    FooterComplete,
+    Footer,
     PublicationCard,
     MemberSeminarsTab: () => import('./partials/MemberSeminarsTab.vue'),
     MemberSeminarFavoritesTab: () => import('./partials/MemberSeminarFavoritesTab.vue'),
@@ -412,6 +413,7 @@ export default {
       memberInfo: null,
       dashboard: null,
       cms: null,
+      frame132131753022Props: frame132131753022Data,
       downloadHistory: [],
       favoriteMembers: [],
       settings: {
@@ -805,7 +807,7 @@ export default {
 }
 
 .account-container {
-  max-width: 1200px;
+  max-width: 2000px;
   margin: 0 auto;
   padding: 40px 20px;
   display: grid;
