@@ -3,7 +3,7 @@
     <div class="frame-1321317467-2">
       <group10 />
       <div class="frame-1321317467-1">
-        <a :href="mapUrl" target="_blank" rel="noopener noreferrer" aria-label="Googleマップで開く">
+        <a :href="mapUrl" target="_blank" rel="noopener noreferrer" aria-label="Googleマップで開く" class="map-link-image">
           <img class="rectangle-3" :src="rectangle3" alt="アクセスマップ" />
         </a>
         <div class="frame-1321317466">
@@ -137,13 +137,19 @@ export default {
   min-height: auto;
 }
 
-.rectangle-3 {
-  height: 100%;
-  object-fit: cover;
-  position: relative;
+.map-link-image {
+  display: block;
   width: 45%;
   max-width: 692px;
   flex-shrink: 0;
+}
+
+.rectangle-3 {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
   border-radius: 10px;
   aspect-ratio: 692 / 400;
 }

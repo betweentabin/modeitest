@@ -109,44 +109,15 @@
            読み込み中...
          </div>
 
-                   <!-- Pagination -->
-          <div class="pagination">
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 1 }"
-              @click="changePage(1)"
-            >
-              1
-            </button>
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 2 }"
-              @click="changePage(2)"
-            >
-              2
-            </button>
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 3 }"
-              @click="changePage(3)"
-            >
-              3
-            </button>
-            <span class="pagination-dots">...</span>
-            <button 
-              class="pagination-btn" 
-              :class="{ active: currentPage === 10 }"
-              @click="changePage(10)"
-            >
-              10
-            </button>
-            <button 
-              class="pagination-btn next-btn"
-              @click="changePage(currentPage + 1)"
-              :disabled="currentPage >= 10"
-            >
-              最後
-            </button>
+          <!-- Pagination (dynamic) -->
+          <div class="pagination" v-if="totalPages > 1">
+            <button class="pagination-btn" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">‹</button>
+            <template v-for="(p, i) in pagesToShow" :key="`p-${i}`">
+              <span v-if="p === '…'" class="pagination-dots">…</span>
+              <button v-else class="pagination-btn" :class="{ active: currentPage === p }" @click="changePage(p)">{{ p }}</button>
+            </template>
+            <button class="pagination-btn" @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">›</button>
+            <button class="pagination-btn next-btn" @click="changePage(totalPages)" :disabled="currentPage === totalPages">最後</button>
           </div>
        </div>
      </div>
@@ -223,6 +194,23 @@ export default {
         return this.newsItems
       }
       return this.newsItems.filter(item => item.category === this.selectedCategory)
+    },
+    pagesToShow() {
+      const total = this.totalPages || 1
+      const current = this.currentPage || 1
+      if (total <= 7) {
+        return Array.from({ length: total }, (_, i) => i + 1)
+      }
+      const pages = []
+      const push = v => pages.push(v)
+      push(1)
+      if (current > 4) push('…')
+      const start = Math.max(2, current - 1)
+      const end = Math.min(total - 1, current + 1)
+      for (let p = start; p <= end; p++) push(p)
+      if (current < total - 3) push('…')
+      push(total)
+      return pages
     }
   },
   methods: {
