@@ -166,6 +166,7 @@ class PublicationController extends Controller
                 'cover_image' => 'nullable|string',
                 'price' => 'nullable|numeric|min:0',
                 'tags' => 'nullable|string',
+                'is_published' => 'sometimes|boolean',
                 'is_downloadable' => 'boolean',
                 'members_only' => 'boolean',
                 'membership_level' => 'nullable|string|in:free,standard,premium'
@@ -180,9 +181,9 @@ class PublicationController extends Controller
                 }
             }
 
-            $publication = Publication::create(array_merge($validatedData, [
-                'is_published' => true
-            ]));
+            $publication = Publication::create(array_merge([
+                'is_published' => array_key_exists('is_published', $validatedData) ? (bool)$validatedData['is_published'] : true,
+            ], $validatedData));
 
             return response()->json([
                 'success' => true,
