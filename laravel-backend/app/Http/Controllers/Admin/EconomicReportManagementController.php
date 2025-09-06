@@ -180,7 +180,8 @@ class EconomicReportManagementController extends Controller
                 $fileName = Str::slug($data['title']) . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('economic-reports/files', $fileName, 'public');
                 $data['file_url'] = $filePath;
-                $data['file_size'] = $file->getSize();
+                // バイト数を専用カラムに保存（10MB超でも安全）
+                $data['file_size_bytes'] = $file->getSize();
             }
 
             $report = EconomicReport::create($data);
@@ -274,7 +275,7 @@ class EconomicReportManagementController extends Controller
                 $fileName = Str::slug($data['title']) . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('economic-reports/files', $fileName, 'public');
                 $data['file_url'] = $filePath;
-                $data['file_size'] = $file->getSize();
+                $data['file_size_bytes'] = $file->getSize();
             }
 
             $report->update($data);
