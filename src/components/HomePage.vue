@@ -206,12 +206,6 @@
                     :hotInformationVol324="dynamicPublications[2] ? dynamicPublications[2].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
                   />
                 </div>
-                <div class="publication-item-wrapper" @click="goToPublication(3)">
-                  <frame1321317475
-                    :x22="dynamicPublications[3] ? dynamicPublications[3].x22 : frame13213174752Props.x22"
-                    :hotInformationVol324="dynamicPublications[3] ? dynamicPublications[3].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
-                  />
-                </div>
               </div>
               <!-- モバイル用のボタン（768px以下で表示） -->
               <div class="mobile-publication-button-wrapper">
@@ -481,9 +475,9 @@ export default {
       frame132131753022Props: homePageData.frame132131753022Props,
       // Dynamic CMS data for publications
       dynamicMainPublication: homePageData.frame13213174741Props, // デフォルト値
-      dynamicPublications: [], // 表示用の4件（循環）
+      dynamicPublications: [], // 右側に表示する3件（循環）
       allPublications: [], // 全ての刊行物データ（ID参照用）
-      currentIndex: 0, // メイン表示の先頭インデックス
+      currentIndex: 0, // 右側リストの先頭オフセット（メインは常に最新=0）
       // Dynamic news data
       dynamicNewsItems: [], // CMSから取得したニュースデータ（カテゴリー情報含む）
       // Vector images for UI elements
@@ -629,48 +623,56 @@ export default {
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
     goToMainPublication() {
-      // 現在のメイン刊行物へ遷移
-      const len = this.allPublications.length
-      if (!len) return
-      const mainPublication = this.allPublications[this.currentIndex % len]
-      if (mainPublication && mainPublication.id) this.$router.push(`/publication/${mainPublication.id}`)
+      // メインは常に最新の1件目（allPublications[0]）
+      const main = this.allPublications[0]
+      if (main && main.id) this.$router.push(`/publication/${main.id}`)
     },
     goToPublication(index) {
-      // 右側の相対インデックスから遷移
+      // 右側の相対インデックスから遷移（others配列から）
       const len = this.allPublications.length
-      if (!len) return
-      const absolute = (this.currentIndex + 1 + index) % len
+      if (len <= 1) return
+      const othersLen = len - 1
+      const absolute = 1 + ((this.currentIndex + index) % othersLen + othersLen) % othersLen
       const publication = this.allPublications[absolute]
       if (publication && publication.id) this.$router.push(`/publication/${publication.id}`)
     },
     prevPublication() {
       const len = this.allPublications.length
-      if (!len) return
-      this.currentIndex = (this.currentIndex - 1 + len) % len
+      if (len <= 1) return
+      const othersLen = len - 1
+      this.currentIndex = (this.currentIndex - 1 + othersLen) % othersLen
       this.refreshVisiblePublications()
     },
     nextPublication() {
       const len = this.allPublications.length
-      if (!len) return
-      this.currentIndex = (this.currentIndex + 1) % len
+      if (len <= 1) return
+      const othersLen = len - 1
+      this.currentIndex = (this.currentIndex + 1) % othersLen
       this.refreshVisiblePublications()
     },
     refreshVisiblePublications() {
       const len = this.allPublications.length
       if (!len) return
-      const main = this.allPublications[this.currentIndex % len]
+      // メイン: 常に最新（配列の先頭）
+      const main = this.allPublications[0]
       this.dynamicMainPublication = {
         x22: main?.cover_image || main?.image_url || this.frame13213174741Props.x22
       }
+      // 右側: 先頭を除いたothersを循環で3件表示
+      const othersLen = Math.max(0, len - 1)
       const defaultImages = [
         this.frame13213174751Props.x22,
-        this.frame13213174752Props.x22,
         this.frame13213174752Props.x22,
         this.frame13213174752Props.x22
       ]
       const list = []
-      for (let i = 0; i < 4; i++) {
-        const item = this.allPublications[(this.currentIndex + 1 + i) % len]
+      for (let i = 0; i < 3; i++) {
+        if (!othersLen) {
+          list.push({ x22: defaultImages[i], hotInformationVol324: '' })
+          continue
+        }
+        const absolute = 1 + ((this.currentIndex + i) % othersLen)
+        const item = this.allPublications[absolute]
         list.push({
           x22: item?.cover_image || item?.image_url || defaultImages[i],
           hotInformationVol324: item?.title || '',

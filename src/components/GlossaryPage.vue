@@ -4,8 +4,8 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      :title="pageTitle"
-      :subtitle="pageSubtitle"
+      :title="pageTitle || '用語集'"
+      :subtitle="pageSubtitle || 'glossary'"
       heroImage="/img/hero-image.png"
       mediaKey="hero_glossary"
     />
