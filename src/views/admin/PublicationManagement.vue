@@ -46,10 +46,7 @@
           <button @click="applyFilters" class="apply-btn">絞り込み</button>
         </div>
         <div class="filter-row" style="margin-top:8px; align-items:center; gap:12px;">
-          <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:#333;">
-            <input type="checkbox" v-model="showAll" /> 管理用: 全件表示（会員限定も含む）
-          </label>
-          <select v-model="filters.membership_level" class="filter-select" :disabled="!showAll">
+          <select v-model="filters.membership_level" class="filter-select" title="会員レベル">
             <option value="">会員レベル</option>
             <option value="free">無料公開</option>
             <option value="standard">スタンダード以上</option>
@@ -218,7 +215,6 @@ export default {
       currentPage: 1,
       totalPages: 1,
       itemsPerPage: 20,
-      showAll: false,
       authToken: null,
       cat: { newName: '', editingId: null, editingName: '', saving:false, error:'' }
     }
@@ -330,29 +326,19 @@ export default {
     async loadPublications() {
       this.loading = true
       try {
-        // API優先（公開セット or 管理全件）
+        // 管理API固定で取得（お知らせと同様の運用）
+        this.authToken = localStorage.getItem('admin_token')
+        if (!this.authToken) {
+          const debugToken = await apiClient.getDebugAdminToken()
+          if (debugToken) { this.authToken = debugToken } else { throw new Error('管理者認証が必要です') }
+        }
 
-        // APIから取得（公開セット or 管理全件）
         const params = { page: this.currentPage, per_page: this.itemsPerPage }
         if (this.filters && this.filters.category) params.category = this.filters.category
+        if (this.filters && this.filters.membership_level) params.membership_level = this.filters.membership_level
         if (this.searchKeyword && this.searchKeyword.trim()) params.search = this.searchKeyword.trim()
-        
-        let response
-        if (this.showAll) {
-          // 管理全件（会員限定含む）
-          this.authToken = localStorage.getItem('admin_token')
-          if (!this.authToken) {
-            const debugToken = await apiClient.getDebugAdminToken()
-            if (debugToken) { this.authToken = debugToken } else { throw new Error('管理者認証が必要です') }
-          }
-          if (this.filters && this.filters.membership_level) params.membership_level = this.filters.membership_level
-          response = await apiClient.getAdminPublications(params)
-          console.log('Admin publications API response:', response)
-        } else {
-          // 公開セット（freeの一般公開分）
-          response = await apiClient.getPublications(params)
-          console.log('Public publications API response:', response)
-        }
+
+        const response = await apiClient.getAdminPublications(params)
         if (response.success && response.data) {
           this.publications = response.data.publications.map(pub => ({
             id: pub.id,

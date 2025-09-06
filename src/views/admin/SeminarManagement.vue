@@ -320,10 +320,11 @@ export default {
     async loadSeminars() {
       this.loading = true
       try {
-        // 1) APIから取得（本番優先）
+        // 管理API固定（お知らせと同様の運用）
         this.authToken = localStorage.getItem('admin_token')
         if (!this.authToken) {
-          throw new Error('管理者認証が必要です')
+          const debugToken = await apiClient.getDebugAdminToken()
+          if (debugToken) { this.authToken = debugToken } else { throw new Error('管理者認証が必要です') }
         }
 
         const params = { page: this.currentPage, per_page: this.itemsPerPage }
@@ -332,7 +333,7 @@ export default {
         if (this.filters.year) params.year = this.filters.year
         if (this.filters.month) params.month = this.filters.month
 
-        const response = await apiClient.getAdminSeminars(params) // トークンは自動付与
+        const response = await apiClient.getAdminSeminars(params)
         if (response && response.success && response.data) {
           this.seminars = response.data.seminars.map(seminar => ({
             id: seminar.id,
@@ -351,32 +352,6 @@ export default {
           this.totalPages = response.data.pagination.total_pages
           return
         }
-
-        // 2) フォールバック: mockデータ
-        try {
-          const allSeminars = await mockServer.getSeminars()
-          if (allSeminars && allSeminars.length > 0) {
-            const start = (this.currentPage - 1) * this.itemsPerPage
-            const end = start + this.itemsPerPage
-            this.seminars = allSeminars.slice(start, end).map(seminar => ({
-              id: seminar.id,
-              title: seminar.title,
-              date: seminar.date,
-              time: `${seminar.start_time || '16:00'}～${seminar.end_time || '17:00'}`,
-              venue: seminar.location || 'ZOOM（福岡県）',
-              status: seminar.status || 'scheduled',
-              membership: this.getMembershipText(seminar.membership_requirement),
-              capacity: seminar.capacity || 30,
-              current_participants: seminar.current_participants || 0,
-              description: seminar.description,
-              detailed_description: seminar.detailed_description,
-              featured_image: seminar.featured_image
-            }))
-            this.totalPages = Math.ceil(allSeminars.length / this.itemsPerPage)
-            return
-          }
-        } catch (_) {}
-
         throw new Error('セミナーデータの取得に失敗しました')
       } catch (err) {
         this.error = err.message || 'セミナーデータの読み込みに失敗しました'
