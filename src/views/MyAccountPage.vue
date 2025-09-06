@@ -267,7 +267,7 @@
             <h2>{{ cms?.labels?.headings?.favoriteMembers || 'お気に入り会員' }}</h2>
             <div class="header-actions">
               <button @click="$router.push('/member-favorites')" class="primary-button">{{ cms?.labels?.buttons?.goFavorites || 'お気に入り一覧ページへ' }}</button>
-              <button @click="$router.push('/member-directory')" class="secondary-button">{{ cms?.labels?.buttons?.viewDirectory || '会員名簿を見る' }}</button>
+              <button @click="$router.push('/member-directory')" class="primary-button">{{ cms?.labels?.buttons?.viewDirectory || '会員名簿を見る' }}</button>
             </div>
           </div>
           
@@ -1018,6 +1018,14 @@ export default {
 .upgrade-button {
   background: var(--mandy, #DA5761);
   color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: 0px 1px 2px #0000000d;
+  padding: 12px 24px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .primary-button:hover,
@@ -1025,6 +1033,8 @@ export default {
 .edit-button:hover,
 .upgrade-button:hover {
   background: var(--hot-pink, #E56B75);
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .secondary-button,
@@ -1034,10 +1044,13 @@ export default {
 .directory-link-btn {
   background: #fff;
   color: var(--black, #1A1A1A);
-  border: 1px solid var(--black, #1A1A1A);
+  border: none;
+  outline: none;
   border-radius: 8px;
   padding: 10px 16px;
   font-weight: 600;
+  box-shadow: 0px 1px 2px #0000000d;
+  transition: all 0.3s ease;
 }
 
 .secondary-button:hover,
@@ -1045,19 +1058,21 @@ export default {
 .redownload-button:hover,
 .view-btn:hover,
 .directory-link-btn:hover {
-  background: var(--black, #1A1A1A);
-  color: #fff;
+  background: #f2f2f2;
+  transform: translateY(-1px);
 }
 
 .cancel-button {
-  background: #fff;
-  color: var(--black, #1A1A1A);
-  border: 1px solid #ddd;
+  background: #f2f2f2;
+  color: #333;
+  border: none;
   border-radius: 8px;
+  padding: 12px 20px;
+  box-shadow: 0px 1px 2px #0000000d;
 }
 
 .cancel-button:hover {
-  border-color: var(--black, #1A1A1A);
+  background: #e8e8e8;
 }
 
 .danger-outline-button,
@@ -1082,6 +1097,25 @@ export default {
   padding: 24px;
   background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
 }
+
+/* 編集フォーム（２枚目の画像の改善） */
+.edit-form .form-row { display: flex; gap: 16px; }
+.edit-form .form-group { flex: 1; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.edit-form label { font-size: 14px; color: #555; font-weight: 600; }
+.edit-form .form-input, .edit-form .form-textarea {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.edit-form .form-input:focus, .edit-form .form-textarea:focus {
+  border-color: var(--mandy, #DA5761);
+  box-shadow: 0 0 0 3px rgba(218,87,97,0.15);
+}
+.edit-form .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+@media (max-width: 768px) { .edit-form .form-row { flex-direction: column; } }
 
 .membership-card.membership-basic {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
@@ -1209,22 +1243,7 @@ export default {
   color: #666;
 }
 
-.redownload-button {
-  padding: 8px 16px;
-  background: white;
-  color: var(--mandy);
-  border: 1px solid var(--mandy);
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.redownload-button:hover {
-  background: var(--mandy);
-  color: white;
-}
+/* redownloadはsecondary-buttonの共通ルールを使用 */
 
 /* お気に入り */
 .favorites-grid {
