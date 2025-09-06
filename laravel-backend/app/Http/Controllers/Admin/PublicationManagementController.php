@@ -74,7 +74,9 @@ class PublicationManagementController extends Controller
             
             return response()->json([
                 'success' => true,
-                'data' => $publication
+                'data' => [
+                    'publication' => $publication
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
