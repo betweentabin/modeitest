@@ -26,7 +26,7 @@
       </div>
 
       <CmsBlock page-key="privacy" wrapper-class="cms-body" />
-      <div class="content-container">
+      <div class="content-container" v-if="!hasHtml">
         <!-- Introduction -->
         <div class="intro-section">
           <p class="intro-text">
@@ -143,6 +143,13 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'プライバシーポリシー') || 'プライバシーポリシー' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'privacy policy') || 'privacy policy' },
+    hasHtml() {
+      try {
+        const page = this._pageText?.page?.value
+        const html = page?.content?.html
+        return typeof html === 'string' && html.trim().length > 0
+      } catch(_) { return false }
+    }
   },
   mounted() {
     try {
@@ -271,6 +278,25 @@ export default {
   line-height: normal;
   margin: 0;
 }
+
+/* CMS body safe defaults (prevent layout break) */
+.cms-body {
+  width: 100%;
+  max-width: 2000px;
+  background: #FFF;
+  border-radius: 20px;
+  padding: 30px;
+  overflow-wrap: anywhere;
+}
+.cms-body h1, .cms-body h2, .cms-body h3, .cms-body h4, .cms-body h5, .cms-body h6 {
+  margin: 0.6em 0 0.4em;
+  line-height: 1.3;
+}
+.cms-body p { margin: 0.6em 0; line-height: 1.6; }
+.cms-body ul, .cms-body ol { padding-left: 1.4em; margin: 0.6em 0; }
+.cms-body img { max-width: 100%; height: auto; }
+.cms-body table { width: 100%; border-collapse: collapse; margin: 0.8em 0; }
+.cms-body th, .cms-body td { border: 1px solid #E5E5E5; padding: 8px 10px; text-align: left; vertical-align: top; }
 
 /* Footer Navigation */
 

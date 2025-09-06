@@ -584,6 +584,25 @@ export default {
 
 
 
+/* CMS body safe defaults (prevent layout break) */
+.cms-body {
+  width: 100%;
+  max-width: 2000px;
+  background: #FFF;
+  border-radius: 20px;
+  padding: 30px;
+  overflow-wrap: anywhere;
+}
+.cms-body h1, .cms-body h2, .cms-body h3, .cms-body h4, .cms-body h5, .cms-body h6 {
+  margin: 0.6em 0 0.4em;
+  line-height: 1.3;
+}
+.cms-body p { margin: 0.6em 0; line-height: 1.6; }
+.cms-body ul, .cms-body ol { padding-left: 1.4em; margin: 0.6em 0; }
+.cms-body img { max-width: 100%; height: auto; }
+.cms-body table { width: 100%; border-collapse: collapse; margin: 0.8em 0; }
+.cms-body th, .cms-body td { border: 1px solid #E5E5E5; padding: 8px 10px; text-align: left; vertical-align: top; }
+
 /* Footer Section */
 .footer-section {
   width: 100%;

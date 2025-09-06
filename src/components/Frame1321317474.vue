@@ -112,6 +112,16 @@ export default {
   overflow: unset;
 }
 
+.frame-1321317474.frame-1321317472-1 {
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.frame-1321317474.frame-1321317472-1:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
 /* レスポンシブスタイル */
 @media (max-width: 1100px) {
   .text-8 {
@@ -162,6 +172,11 @@ export default {
   
   .frame-1321317474.frame-1321317472-1 {
     height: auto !important;
+  }
+  
+  .frame-1321317474.frame-1321317472-1:hover {
+    transform: none;
+    opacity: 1;
   }
   
   .frame-1321317473-2 {

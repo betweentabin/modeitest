@@ -24,7 +24,14 @@
       </div>
       
       <div class="glossary-description">
-        <p>経済をより深く知るために必要な用語集となります。</p>
+        <CmsText
+          pageKey="glossary"
+          fieldKey="intro"
+          tag="p"
+          type="html"
+          :fallback="'経済をより深く知るために必要な用語集となります。'"
+          class="intro-text"
+        />
       </div>
       
       <div class="glossary-list">
@@ -85,6 +92,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "GlossaryPage",
@@ -96,7 +104,8 @@ export default {
     Breadcrumbs,
     ContactSection,
     AccessSection,
-    FixedSideButtons
+    FixedSideButtons,
+    CmsText,
   },
   data() {
     return {
@@ -189,7 +198,17 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('glossary')
-      this._pageText.load()
+      this._pageText.load().then(() => {
+        try {
+          const items = this._pageText?.page?.value?.content?.items
+          if (Array.isArray(items) && items.length) {
+            // Validate shape and apply defensively
+            this.glossary = items
+              .filter(it => it && typeof it.term === 'string' && typeof it.definition === 'string')
+              .map(it => ({ term: it.term, definition: it.definition, category: it.category || '' }))
+          }
+        } catch (_) {}
+      })
     } catch(e) { /* noop */ }
   },
   computed: {
@@ -386,6 +405,7 @@ export default {
   color: #666;
   line-height: 1.6;
   margin-bottom: 15px;
+  overflow-wrap: anywhere;
 }
 
 /* Slide Animation */
