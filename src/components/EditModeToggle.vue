@@ -10,19 +10,19 @@
 
 <script>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import { useEditMode } from '@/composables/useEditMode'
 import { useAdminAuth } from '@/composables/useAdminAuth'
+import router from '@/router'
 
 export default {
   name: 'EditModeToggle',
   setup() {
     const { enabled, toggle } = useEditMode()
     const { checkAuth } = useAdminAuth()
-    const route = useRoute()
     const show = computed(() => {
-      // 管理ログイン済み かつ /admin 配下のみ表示
-      return !!checkAuth() && String(route.path || '').startsWith('/admin')
+      // 管理ログイン済み かつ /admin 配下のみ表示（hashモード対応）
+      const path = (router?.currentRoute && router.currentRoute.path) || ''
+      return !!checkAuth() && path.startsWith('/admin')
     })
     return { enabled, toggle, show }
   }
