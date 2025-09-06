@@ -21,6 +21,29 @@ class CompanyProfilePageJsonSeeder extends Seeder
             'profile_subtitle' => 'company profile',
             'message_label' => 'MESSAGE',
             'message_signature' => '株式会社 ちくぎん地域経済研究所代表取締役社長 空閑 重信',
+            // OUR MISSIONブロック（本文は htmls へ）
+            'mission_label' => 'OUR MISSION',
+            'mission_title' => '産官学金のネットワーク活用による地域貢献',
+            // 会社概要テーブル（ラベル・値を個別キーで管理）
+            'profile_company_name_label' => '会社名',
+            'profile_company_name_value' => '株式会社 ちくぎん地域経済研究所',
+            'profile_established_label' => '設立',
+            'profile_established_value' => '平成23年7月1日',
+            'profile_address_label' => '住所',
+            'profile_address_value' => '〒839-0864<br>福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階',
+            'profile_representative_label' => '代表者',
+            'profile_representative_value' => '代表取締役社長　空閑 重信',
+            'profile_capital_label' => '資本金',
+            'profile_capital_value' => '3,000万円',
+            'profile_shareholders_label' => '株主',
+            'profile_shareholders_value' => '筑邦銀行　および筑邦銀行グループ会社 （ちくぎんリース(株)、昭光(株)、筑邦信用保証(株)）',
+            'profile_organization_label' => '組織体制',
+            'profile_organization_value' => '企画部、調査部',
+            // 見出し（沿革・所員紹介）
+            'history_title' => '沿革',
+            'history_subtitle' => 'history',
+            'staff_title' => '所員紹介',
+            'staff_subtitle' => 'About us',
         ];
 
         $defaultHtmls = [
@@ -30,6 +53,8 @@ class CompanyProfilePageJsonSeeder extends Seeder
 <p>また、こうした研究成果や様々なネットワークを活用し経営コンサルティング機能を十分に発揮することなどにより、多様な企業の生産・販売活動や医療・介護活動などのサポートを行ってまいります。</p>
 <p>以上のような活動を通じ、皆さま方と緊密な連携のもと、ヒト・モノ・カネ・情報を最大限に活かし、地域の振興・発展にお役にたてるよう努めてまいる所存です。</p>
 <p>当研究所へのご支援、ご愛顧をよろしくお願い申し上げます。</p>'
+            ,
+            'mission_body' => '<ul><li>地域に根差した経済・産業の調査・研究</li><li>地域経済を担う企業・医療・農業・学術研究活動のサポート</li><li>未来を支える「人」づくり</li></ul>'
         ];
 
         $page = PageContent::where('page_key', $key)->first();

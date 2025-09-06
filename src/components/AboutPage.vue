@@ -60,6 +60,13 @@
               type="html"
               :fallback="defaultAboutMessage"
             />
+            <CmsText
+              pageKey="about"
+              fieldKey="message_signature"
+              tag="div"
+              class="message-signature"
+              :fallback="'株式会社ちくぎん地域経済研究所 代表取締役社長'"
+            />
           </div>
           <div class="message-image">
             <img src="/img/image-2.png" alt="代表挨拶" />

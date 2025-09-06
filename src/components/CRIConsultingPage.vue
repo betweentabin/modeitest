@@ -16,10 +16,12 @@
     <!-- What is CRI Consulting Section -->
     <div class="what-is-section">
       <div class="section-header">
-        <h2 class="section-title">CRI 経営コンサルティングとは？</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="consulting" fieldKey="what_title" tag="span" :fallback="'CRI 経営コンサルティングとは？'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">consulting</span>
+          <span class="divider-text"><CmsText pageKey="consulting" fieldKey="what_subtitle" tag="span" :fallback="'consulting'" /></span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -27,12 +29,11 @@
       <div class="content-container">
         <img src="https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940" alt="Consulting Image" class="content-image" />
         <div class="content-text">
-          <h3 class="content-subtitle">What's CRI Management Consulting</h3>
-          <h4 class="content-heading">CRI経営コンサルティングとは、事業でお悩みの皆様に対し、アドバイス、サポートするサービスです</h4>
-          <p class="content-description">
-            日常の企業活動の中で、まず自社が抱える様々な問題や課題・顧客ニーズなどに気付き、それらを整理して対応策を講じることができれば、改善に向けて新たなスタートを切ったと言えましょう。
-            しかし、「何か変だ。」と思いながらもとりあえず一日の業務を無事に終えたことに安心していては、身近に存在する重要なことに気付くのが遅れることもあります。
-          </p>
+          <h3 class="content-subtitle"><CmsText pageKey="consulting" fieldKey="what_content_subtitle" tag="span" :fallback="`What's CRI Management Consulting`" /></h3>
+          <h4 class="content-heading"><CmsText pageKey="consulting" fieldKey="what_content_heading" tag="span" :fallback="'CRI経営コンサルティングとは、事業でお悩みの皆様に対し、アドバイス、サポートするサービスです'" /></h4>
+          <div class="content-description">
+            <CmsText pageKey="consulting" fieldKey="what_content_body" tag="div" type="html" :fallback="`日常の企業活動の中で、まず自社が抱える様々な問題や課題・顧客ニーズなどに気付き、それらを整理して対応策を講じることができれば、改善に向けて新たなスタートを切ったと言えましょう。<br>しかし、「何か変だ。」と思いながらもとりあえず一日の業務を無事に終えたことに安心していては、身近に存在する重要なことに気付くのが遅れることもあります。`" />
+          </div>
         </div>
       </div>
     </div>
@@ -40,28 +41,21 @@
     <!-- Main Duties Section -->
     <div class="main-duties-section">
       <div class="section-header">
-        <h2 class="section-title">CRI経営コンサルティングの主な業務</h2>
+        <h2 class="section-title"><CmsText pageKey="consulting" fieldKey="duties_title" tag="span" :fallback="'CRI経営コンサルティングの主な業務'" /></h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">main duties</span>
+          <span class="divider-text"><CmsText pageKey="consulting" fieldKey="duties_subtitle" tag="span" :fallback="'main duties'" /></span>
           <div class="divider-line"></div>
         </div>
-        <p class="section-subtitle">事業にまつわる様々をサポート行います。<br>当研究所のネットワークを活かし、御社の実情に合う専門家もご紹介できます。</p>
+        <p class="section-subtitle"><CmsText pageKey="consulting" fieldKey="duties_intro" tag="span" type="html" :fallback="'事業にまつわる様々をサポート行います。<br>当研究所のネットワークを活かし、御社の実情に合う専門家もご紹介できます。'" /></p>
       </div>
       
       <div class="duties-container">
         <div class="duties-content">
-          <h3 class="duties-title">MAIN DUTIES</h3>
-          <h4 class="duties-heading">事業にまつわる様々な悩みを一緒に解決します</h4>
+          <h3 class="duties-title"><CmsText pageKey="consulting" fieldKey="duties_label" tag="span" :fallback="'MAIN DUTIES'" /></h3>
+          <h4 class="duties-heading"><CmsText pageKey="consulting" fieldKey="duties_heading" tag="span" :fallback="'事業にまつわる様々な悩みを一緒に解決します'" /></h4>
           <div class="duties-list">
-            <p>経営戦略策定のサポート</p>
-            <p>ビジネスマッチィングの支援</p>
-            <p>事業継承の支援（後継者育成支援）</p>
-            <p>社員研修、経営計画策定のための人材育成</p>
-            <p>税務、財務、事務など各業務の課題解決力の育成</p>
-            <p>事務省力化のサポート</p>
-            <p>人事制度の策定</p>
-            <p>ワンストップのよろず差相談</p>
+            <CmsText pageKey="consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<p>経営戦略策定のサポート</p><p>ビジネスマッチィングの支援</p><p>事業継承の支援（後継者育成支援）</p><p>社員研修、経営計画策定のための人材育成</p><p>税務、財務、事務など各業務の課題解決力の育成</p><p>事務省力化のサポート</p><p>人事制度の策定</p><p>ワンストップのよろず差相談</p>`" />
           </div>
         </div>
         <img src="https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304" alt="Main Duties Image" class="duties-image" />
@@ -78,18 +72,18 @@
     <!-- Support Content and Costs Section -->
     <div class="support-section">
       <div class="section-header">
-        <h2 class="section-title">サポート内容と費用に関して</h2>
+        <h2 class="section-title"><CmsText pageKey="consulting" fieldKey="support_title" tag="span" :fallback="'サポート内容と費用に関して'" /></h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">contents and costs</span>
+          <span class="divider-text"><CmsText pageKey="consulting" fieldKey="support_subtitle_en" tag="span" :fallback="'contents and costs'" /></span>
           <div class="divider-line"></div>
         </div>
-        <p class="section-subtitle">経営改善とは会社の中の「人」が変わることです。<br>ご相談と問題点・課題の整理は無料です。まずは、お気軽にご相談ください。</p>
+        <p class="section-subtitle"><CmsText pageKey="consulting" fieldKey="support_intro" tag="span" type="html" :fallback="'経営改善とは会社の中の「人」が変わることです。<br>ご相談と問題点・課題の整理は無料です。まずは、お気軽にご相談ください。'" /></p>
       </div>
       
       <div class="support-content">
         <div class="support-category">
-          <h3 class="category-title">無料 -FREE-</h3>
+          <h3 class="category-title"><CmsText pageKey="consulting" fieldKey="support_free_title" tag="span" :fallback="'無料 -FREE-'" /></h3>
           <div class="service-grid">
             <div class="service-card">
               <img src="https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590" alt="Consultation" class="service-image" />
@@ -111,7 +105,7 @@
         <div class="support-divider"></div>
         
         <div class="support-category">
-          <h3 class="category-title">有料 -PAID-</h3>
+          <h3 class="category-title"><CmsText pageKey="consulting" fieldKey="support_paid_title" tag="span" :fallback="'有料 -PAID-'" /></h3>
           <div class="service-grid">
             <div class="service-card">
               <img src="https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590" alt="Strategy Planning" class="service-image" />
@@ -162,10 +156,14 @@
     <!-- Achievements Section -->
     <div class="achievements-section">
       <div class="section-header">
-        <h2 class="section-title">CRI経営コンサルティングの実績紹介</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="consulting" fieldKey="achievements_title" tag="span" :fallback="'CRI経営コンサルティングの実績紹介'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">achievements</span>
+          <span class="divider-text">
+            <CmsText pageKey="consulting" fieldKey="achievements_subtitle" tag="span" :fallback="'achievements'" />
+          </span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -266,6 +264,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 import Group27 from "./Group27";
 import { homePageData, frame132131753022Data } from "../data";
@@ -281,7 +280,8 @@ export default {
     HeroSection,
     Breadcrumbs,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsText
   },
   data() {
     return {
@@ -293,6 +293,8 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'consulting') || 'consulting' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
   },
   mounted() {
     this.adjustImageHeight();

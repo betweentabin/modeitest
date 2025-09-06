@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             SitemapPageJsonSeeder::class,
             ContactPageJsonSeeder::class,
             ConsultingPageJsonSeeder::class,
+            AboutInstitutePageJsonSeeder::class,
             MembershipPageJsonSeeder::class,
             GlossaryPageJsonSeeder::class,
             FinancialReportsPageJsonSeeder::class,

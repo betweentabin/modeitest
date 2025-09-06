@@ -22,6 +22,7 @@ class EconomicReport extends Model
         'cover_image',
         'file_url',
         'file_size',
+        'file_size_bytes',
         'pages',
         'is_downloadable',
         'members_only',
@@ -94,15 +95,24 @@ class EconomicReport extends Model
      */
     public function getFormattedFileSizeAttribute()
     {
-        if (!$this->file_size) {
-            return null;
+        // 優先: バイトカラム
+        if (!is_null($this->file_size_bytes) && $this->file_size_bytes > 0) {
+            $bytes = (int) $this->file_size_bytes;
+            $units = ['B', 'KB', 'MB', 'GB'];
+            $factor = 0;
+            while ($bytes >= 1024 && $factor < count($units) - 1) {
+                $bytes /= 1024;
+                $factor++;
+            }
+            return sprintf('%.2f %s', $bytes, $units[$factor]);
         }
 
-        $units = ['B', 'KB', 'MB', 'GB'];
-        $bytes = $this->file_size;
-        $factor = floor((strlen($bytes) - 1) / 3);
-        
-        return sprintf("%.2f", $bytes / pow(1024, $factor)) . ' ' . $units[$factor];
+        // 後方互換: 旧decimal(8,2)のMB値
+        if (!is_null($this->file_size) && $this->file_size > 0) {
+            return sprintf('%.2f MB', (float) $this->file_size);
+        }
+
+        return null;
     }
 
     /**

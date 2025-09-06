@@ -12,13 +12,18 @@
 import { computed } from 'vue'
 import { useEditMode } from '@/composables/useEditMode'
 import { useAdminAuth } from '@/composables/useAdminAuth'
+import router from '@/router'
 
 export default {
   name: 'EditModeToggle',
   setup() {
     const { enabled, toggle } = useEditMode()
     const { checkAuth } = useAdminAuth()
-    const show = computed(() => checkAuth())
+    const show = computed(() => {
+      // 管理ログイン済み かつ /admin 配下のみ表示（hashモード対応）
+      const path = (router?.currentRoute && router.currentRoute.path) || ''
+      return !!checkAuth() && path.startsWith('/admin')
+    })
     return { enabled, toggle, show }
   }
 }
@@ -47,4 +52,3 @@ export default {
 .dot.off { background: #9ca3af; }
 .label { font-size: 12px; color: #333; }
 </style>
-

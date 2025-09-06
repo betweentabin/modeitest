@@ -14,7 +14,7 @@ async function loadMedia() {
   state.error = null
   try {
     // 1) Prefer admin endpoint if available (works for unpublished drafts too)
-    const adminRes = await apiClient.get('/api/admin/pages/media', { silent: true })
+    const adminRes = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
     if (adminRes && (adminRes.data || adminRes.page)) {
       const d = adminRes.data || adminRes
       const page = d?.page || d
@@ -31,17 +31,41 @@ async function loadMedia() {
     // 2) Public endpoint (requires published page)
     const res = await apiClient.get('/api/public/pages/media', { silent: true })
     const page = res?.data?.page || res?.data?.data?.page
-    const images = page?.content?.images || {}
-    state.images = images || {}
-    state.loaded = true
-    return
+    const images = page?.content?.images || null
+    if (images) {
+      state.images = images
+      state.loaded = true
+      return
+    }
+    throw new Error('media page not found')
   } catch (e) {
     // 3) Fallback: try localStorage mock
     try {
       const str = localStorage.getItem('cms_mock_data')
       const json = str ? JSON.parse(str) : null
-      const images = json?.media?.images || {}
-      state.images = images || {}
+      const images = json?.media?.images || null
+      if (images) {
+        state.images = images
+        state.loaded = true
+        return
+      }
+      // Built-in defaults
+      state.images = {
+        hero_economic_indicators: '/img/hero-image.png',
+        hero_economic_statistics: '/img/hero-image.png',
+        hero_publications: '/img/hero-image.png',
+        hero_company_profile: '/img/hero-image.png',
+        hero_privacy: '/img/hero-image.png',
+        hero_terms: '/img/hero-image.png',
+        hero_transaction_law: '/img/hero-image.png',
+        hero_contact: '/img/hero-image.png',
+        hero_glossary: '/img/hero-image.png',
+        hero_membership: '/img/hero-image.png',
+        hero_seminars_current: '/img/hero-image.png',
+        hero_financial_reports: '/img/hero-image.png',
+        hero_sitemap: '/img/hero-image.png',
+        hero_consulting: '/img/hero-image.png',
+      }
       state.loaded = true
     } catch (err) {
       state.error = err?.message || 'Failed to load media registry'

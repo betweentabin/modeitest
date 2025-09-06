@@ -5,11 +5,27 @@ const state = reactive({
   enabled: false,
 })
 
+function _hasCmsEditFlag() {
+  try {
+    const hash = window.location.hash || ''
+    const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+    const params = new URLSearchParams(qs)
+    // cmsEdit=1 または cmsPreview=edit などで有効化
+    if (params.has('cmsEdit')) return params.get('cmsEdit') !== '0'
+    if (params.get('cmsPreview') === 'edit') return true
+  } catch (_) {}
+  return false
+}
+
 // Restore previous session state
 try {
   const saved = sessionStorage.getItem('cms_edit_mode')
   if (saved === '1') state.enabled = true
-} catch (_) {}
+  else if (_hasCmsEditFlag()) state.enabled = true
+} catch (_) {
+  // fallback: cmsEdit フラグがあれば有効
+  if (_hasCmsEditFlag()) state.enabled = true
+}
 
 export function useEditMode() {
   const enable = () => {
@@ -31,4 +47,3 @@ export function useEditMode() {
 }
 
 export default useEditMode
-

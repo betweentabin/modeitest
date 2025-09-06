@@ -30,14 +30,29 @@
       <div class="philosophy-content">
         <img class="philosophy-image" src="https://api.builder.io/api/v1/image/assets/TEMP/01501a28725d762f4b766643e9bcd235f2e43e2e?width=1340" alt="Philosophy" />
         <div class="philosophy-text">
-          <div class="mission-title">OUR MISSION</div>
+          <CmsText
+            pageKey="company-profile"
+            fieldKey="mission_label"
+            tag="div"
+            class="mission-title"
+            :fallback="'OUR MISSION'"
+          />
           <div class="mission-content">
-            <h3 class="mission-heading">産官学金のネットワーク活用による地域貢献</h3>
-            <p class="mission-description">
-              <span class="mission-line">・地域に根差した経済 / 産業の調査 / 研究</span><br>
-              <span class="mission-line">・地域経済を担う企業 / 医療 / 農業 / 学術研究活動のサポート</span><br>
-              <span class="mission-line">・未来を支える「人」づくり</span>
-            </p>
+            <CmsText
+              pageKey="company-profile"
+              fieldKey="mission_title"
+              tag="h3"
+              class="mission-heading"
+              :fallback="'産官学金のネットワーク活用による地域貢献'"
+            />
+            <CmsText
+              pageKey="company-profile"
+              fieldKey="mission_body"
+              tag="div"
+              type="html"
+              class="mission-description"
+              :fallback="defaultMissionBody"
+            />
           </div>
         </div>
       </div>
@@ -98,32 +113,60 @@
       </div>
       <div class="profile-table">
         <div class="profile-row">
-          <div class="profile-label">会社名</div>
-          <div class="profile-value">株式会社 ちくぎん地域経済研究所</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_company_name_label" tag="span" :fallback="'会社名'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_company_name_value" tag="span" :fallback="'株式会社 ちくぎん地域経済研究所'" />
+          </div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">設立</div>
-          <div class="profile-value">平成23年7月1日</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_established_label" tag="span" :fallback="'設立'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_established_value" tag="span" :fallback="'平成23年7月1日'" />
+          </div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">住所</div>
-          <div class="profile-value">〒839-0864<br>福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_address_label" tag="span" :fallback="'住所'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_address_value" tag="div" type="html" :fallback="'〒839-0864<br>福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階'" />
+          </div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">代表者</div>
-          <div class="profile-value">代表取締役社長　空閑 重信</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_representative_label" tag="span" :fallback="'代表者'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_representative_value" tag="span" :fallback="'代表取締役社長　空閑 重信'" />
+          </div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">資本金</div>
-          <div class="profile-value">3,000万円</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_capital_label" tag="span" :fallback="'資本金'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_capital_value" tag="span" :fallback="'3,000万円'" />
+          </div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">株主</div>
-          <div class="profile-value">筑邦銀行　および筑邦銀行グループ会社 （ちくぎんリース(株)、昭光(株)、筑邦信用保証(株)）</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_shareholders_label" tag="span" :fallback="'株主'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_shareholders_value" tag="span" :fallback="'筑邦銀行　および筑邦銀行グループ会社 （ちくぎんリース(株)、昭光(株)、筑邦信用保証(株)）'" />
+          </div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">組織体制</div>
-          <div class="profile-value">企画部、調査部</div>
+          <div class="profile-label">
+            <CmsText pageKey="company-profile" fieldKey="profile_organization_label" tag="span" :fallback="'組織体制'" />
+          </div>
+          <div class="profile-value">
+            <CmsText pageKey="company-profile" fieldKey="profile_organization_value" tag="span" :fallback="'企画部、調査部'" />
+          </div>
         </div>
       </div>
     </section>
@@ -131,10 +174,14 @@
     <!-- History Section -->
     <section class="history-section">
       <div class="section-header">
-        <h2 class="section-title">沿革</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="history_title" tag="span" :fallback="'沿革'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">history</span>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="history_subtitle" tag="span" :fallback="'history'" />
+          </span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -166,10 +213,14 @@
     <!-- Staff Section -->
     <section class="staff-section">
       <div class="section-header">
-        <h2 class="section-title">所員紹介</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="staff_title" tag="span" :fallback="'所員紹介'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">About us</span>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="staff_subtitle" tag="span" :fallback="'About us'" />
+          </span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -278,6 +329,13 @@ export default {
         <p>また、こうした研究成果や様々なネットワークを活用し経営コンサルティング機能を十分に発揮することなどにより、多様な企業の生産・販売活動や医療・介護活動などのサポートを行ってまいります。</p>
         <p>以上のような活動を通じ、皆さま方と緊密な連携のもと、ヒト・モノ・カネ・情報を最大限に活かし、地域の振興・発展にお役にたてるよう努めてまいる所存です。</p>
         <p>当研究所へのご支援、ご愛顧をよろしくお願い申し上げます。</p>
+      `,
+      defaultMissionBody: `
+        <ul>
+          <li>地域に根差した経済・産業の調査・研究</li>
+          <li>地域経済を担う企業・医療・農業・学術研究活動のサポート</li>
+          <li>未来を支える「人」づくり</li>
+        </ul>
       `,
     };
   },

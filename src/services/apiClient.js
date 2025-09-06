@@ -504,7 +504,7 @@ class ApiClient {
   }
 
   async createPublication(publicationData, token) {
-    return this.post('/api/admin/publications', publicationData, {
+    return this.post('/api/admin/publications-v2', publicationData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -512,7 +512,7 @@ class ApiClient {
   }
 
   async updatePublication(id, publicationData, token) {
-    return this.put(`/api/admin/publications/${id}`, publicationData, {
+    return this.put(`/api/admin/publications-v2/${id}`, publicationData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -520,7 +520,7 @@ class ApiClient {
   }
 
   async deletePublication(id, token) {
-    return this.delete(`/api/admin/publications/${id}`, {
+    return this.delete(`/api/admin/publications-v2/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

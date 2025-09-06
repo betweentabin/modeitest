@@ -20,15 +20,17 @@ return new class extends Migration
 
         if (Schema::hasTable('seminars')) {
             Schema::table('seminars', function (Blueprint $table) {
-                $table->unsignedBigInteger('category_id')->nullable()->after('status');
-                $table->foreign('category_id')->references('id')->on('seminar_categories')->onDelete('set null');
+                if (!Schema::hasColumn('seminars', 'category_id')) {
+                    $table->unsignedBigInteger('category_id')->nullable()->after('status');
+                    $table->foreign('category_id')->references('id')->on('seminar_categories')->onDelete('set null');
+                }
             });
         }
     }
 
     public function down(): void
     {
-        if (Schema::hasTable('seminars')) {
+        if (Schema::hasTable('seminars') && Schema::hasColumn('seminars', 'category_id')) {
             Schema::table('seminars', function (Blueprint $table) {
                 $table->dropForeign(['category_id']);
                 $table->dropColumn('category_id');
@@ -37,4 +39,3 @@ return new class extends Migration
         Schema::dropIfExists('seminar_categories');
     }
 };
-

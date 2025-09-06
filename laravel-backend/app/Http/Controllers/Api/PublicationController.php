@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
 
 class PublicationController extends Controller
 {
@@ -40,13 +42,21 @@ class PublicationController extends Controller
             }
 
             // 一般公開APIでは会員レベルに応じてフィルタ（デフォルト: free のみ）
+            // ただし環境により membership_level カラムが無い場合があるため安全に分岐
             if (!$isAdminContext) {
-                $allowedLevels = ['free'];
-                // 将来的に会員トークンが渡された場合は拡張可
-                $query->where(function ($q) use ($allowedLevels) {
-                    $q->whereIn('membership_level', $allowedLevels)
-                      ->orWhereNull('membership_level');
-                });
+                if (Schema::hasColumn('publications', 'membership_level')) {
+                    $allowedLevels = ['free'];
+                    $query->where(function ($q) use ($allowedLevels) {
+                        $q->whereIn('membership_level', $allowedLevels)
+                          ->orWhereNull('membership_level');
+                    });
+                } elseif (Schema::hasColumn('publications', 'members_only')) {
+                    // 旧スキーマ: members_only=false を公開とみなす
+                    $query->where(function ($q) {
+                        $q->where('members_only', false)
+                          ->orWhereNull('members_only');
+                    });
+                }
             }
 
             // ページネーション
@@ -156,6 +166,7 @@ class PublicationController extends Controller
                 'cover_image' => 'nullable|string',
                 'price' => 'nullable|numeric|min:0',
                 'tags' => 'nullable|string',
+                'is_published' => 'sometimes|boolean',
                 'is_downloadable' => 'boolean',
                 'members_only' => 'boolean',
                 'membership_level' => 'nullable|string|in:free,standard,premium'
@@ -170,15 +181,21 @@ class PublicationController extends Controller
                 }
             }
 
-            $publication = Publication::create(array_merge($validatedData, [
-                'is_published' => true
-            ]));
+            $publication = Publication::create(array_merge([
+                'is_published' => array_key_exists('is_published', $validatedData) ? (bool)$validatedData['is_published'] : true,
+            ], $validatedData));
 
             return response()->json([
                 'success' => true,
                 'message' => '刊行物が作成されました。',
                 'data' => ['publication' => $publication]
             ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'バリデーションに失敗しました。',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -224,6 +241,12 @@ class PublicationController extends Controller
                 'message' => '刊行物が更新されました。',
                 'data' => ['publication' => $publication]
             ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'バリデーションに失敗しました。',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

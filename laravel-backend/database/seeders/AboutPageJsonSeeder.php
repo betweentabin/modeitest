@@ -20,6 +20,9 @@ class AboutPageJsonSeeder extends Seeder
             'philosophy_subtitle' => 'OUR MISSION',
             'message_title' => 'ご挨拶',
             'message_subtitle' => 'MESSAGE',
+            // 署名/ラベル（CompanyProfileの実装に準拠）
+            'message_signature' => '株式会社ちくぎん地域経済研究所 代表取締役社長',
+            'message_label' => 'MESSAGE',
             'company_title' => '会社概要',
             'company_subtitle' => 'COMPANY PROFILE',
             'history_title' => '沿革',
