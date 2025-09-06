@@ -3,9 +3,7 @@
     <div class="frame-1321317467-2">
       <group10 />
       <div class="frame-1321317467-1">
-        <a :href="mapUrl" target="_blank" rel="noopener noreferrer" aria-label="Googleマップで開く" class="map-link-image">
-          <img class="rectangle-3" :src="rectangle3" alt="アクセスマップ" />
-        </a>
+        <img class="rectangle-3" :src="rectangle3" alt="Rectangle 3" />
         <div class="frame-1321317466">
           <div class="group-container">
             <div class="group-12">
@@ -17,15 +15,9 @@
             </div>
             <div class="group-12">
               <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
-              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">
-                <a :href="stationLinks[0]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x12Km141 }}</a>
-              </p>
-              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">
-                <a :href="stationLinks[1]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x12Km142 }}</a>
-              </p>
-              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">
-                <a :href="stationLinks[2]" target="_blank" rel="noopener noreferrer" class="map-link">{{ x19Km23 }}</a>
-              </p>
+              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km141 }}</p>
+              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x12Km142 }}</p>
+              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x19Km23 }}</p>
             </div>
             <div class="group-12">
               <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
@@ -66,12 +58,6 @@ export default {
       x497M6: homePageData.x497M6,
       x811M10: homePageData.x811M10,
       d1830M10: homePageData.d1830M10,
-      mapUrl: 'https://maps.app.goo.gl/Z5wA7ds8zVBa6N7x8',
-      stationLinks: [
-        'https://maps.app.goo.gl/L8xgusobgPJdpPbp9', // 宮の陣
-        'https://maps.app.goo.gl/StTHwPn9fJzSDemF8', // 櫛原
-        'https://maps.app.goo.gl/z5LoBXRdCUbaSYRS9'  // 五郎丸
-      ],
     };
   },
   mounted() {
@@ -117,7 +103,7 @@ export default {
   background-color: var(--white);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
   position: relative;
   width: 100%;
   max-width: 2000px;
@@ -137,19 +123,13 @@ export default {
   min-height: auto;
 }
 
-.map-link-image {
-  display: block;
-  width: 45%;
-  max-width: 692px;
-  flex-shrink: 0;
-}
-
 .rectangle-3 {
-  display: block;
-  width: 100%;
   height: 100%;
   object-fit: cover;
   position: relative;
+  width: 45%;
+  max-width: 692px;
+  flex-shrink: 0;
   border-radius: 10px;
   aspect-ratio: 692 / 400;
 }
@@ -207,8 +187,8 @@ export default {
   }
   
   .frame-1321317467-2 {
-    padding: 0 40px !important;
-    gap: 20px !important;
+    padding: 0 30px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -242,7 +222,7 @@ export default {
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .content-view-2 {
     padding: 50px 30px !important;
     gap: 18px !important;
@@ -250,7 +230,7 @@ export default {
   
   .frame-1321317467-2 {
     padding: 0 30px !important;
-    gap: 18px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -283,7 +263,7 @@ export default {
   
   .frame-1321317467-2 {
     padding: 0 25px !important;
-    gap: 16px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -316,7 +296,7 @@ export default {
   
   .frame-1321317467-2 {
     padding: 0 !important;
-    gap: 14px !important;
+    gap: 30px !important;
   }
   
   .frame-1321317467-1 {
@@ -344,11 +324,6 @@ export default {
 @media (max-width: 400px) {
   .content-view-2 {
     padding: 25px 15px !important;
-    gap: 12px !important;
-  }
-  
-  .frame-1321317467-2 {
-    padding: 0 !important;
     gap: 12px !important;
   }
   

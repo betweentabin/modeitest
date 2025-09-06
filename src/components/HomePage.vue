@@ -9,24 +9,10 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <CmsText
-                class="hero-title"
-                tag="h1"
-                pageKey="home"
-                type="text"
-                fieldKey="page_title"
-                :fallback="heroTitle"
-              />
+              <h1 class="hero-title">{{ heroTitle }}</h1>
             </div>
             <div class="hero-subtitle-wrapper">
-              <CmsText
-                class="hero-subtitle"
-                tag="div"
-                pageKey="home"
-                type="text"
-                fieldKey="lead"
-                :fallback="heroSubtitle"
-              />
+              <div class="hero-subtitle">{{ heroSubtitle }}</div>
             </div>
             <div class="hero-button-wrapper">
               <div class="hero-button-text">{{ text68 }}</div>
@@ -116,8 +102,7 @@
                      <div class="content-view">
              <div class="frame-1321317480">
                <div class="group-10">
-                 <div class="infomation-1 valign-text-middle inter-bold-black-48px">{{ infomation2 }}</div>
-                 <div class="flex-row">
+                 <div class="group-20">
                    <img
                      class="vector-6"
                      :src="vector63"
@@ -125,6 +110,7 @@
                    />
                    <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
                  </div>
+                 <div class="infomation-1 valign-text-middle inter-bold-black-48px">{{ infomation2 }}</div>
                </div>
                <x-button3 class="desktop-button" @click="goToNewsList" />
              </div>
@@ -402,15 +388,11 @@ import vector61 from "../../public/img/vector-61.svg";
 import vector5 from "../../public/img/vector-5.svg";
 import vector7 from "../../public/img/vector-7.svg";
 import CmsBlock from './CmsBlock.vue'
-import InlineEditable from '@/components/InlineEditable.vue'
-import CmsText from '@/components/CmsText.vue'
 export default {
   name: "HomePage",
   components: {
     Navigation,
     CmsBlock,
-    InlineEditable,
-    CmsText,
     ContactSection,
     Card,
     Frame1321317481,
@@ -851,12 +833,11 @@ export default {
   width: fit-content;
 }
 
-/* InlineEditable renders inside a child component, so use :deep to style it */
-:deep(.hero-title) {
+.hero-title {
   font-family: var(--font-family-inter);
   font-size: 48px;
   font-weight: 700;
-  color: #1A1A1A;
+  color: var(--black);
   letter-spacing: 0;
   line-height: normal;
   margin: 0;
@@ -874,11 +855,11 @@ export default {
   width: fit-content;
 }
 
-:deep(.hero-subtitle) {
+.hero-subtitle {
   font-family: var(--font-family-inter);
   font-size: 48px;
   font-weight: 700;
-  color: #1A1A1A;
+  color: var(--black);
   letter-spacing: 0;
   line-height: normal;
   margin: 0;
@@ -1349,20 +1330,23 @@ export default {
   width: 100%;
 }
 
-.group-10 {
-  height: 120px;
-  position: relative;
-  width: 313px;
+.group-10,
+.group-10-1,
+.group-10-2 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: auto;
+  width: auto;
 }
 
 .infomation-1 {
-  height: 72px;
-  left: 0;
+  height: auto;
   letter-spacing: 0;
   line-height: 72px;
-  position: absolute;
-  top: 48px;
   white-space: nowrap;
+  font-size: 48px;
 }
 
 .flex-row {
@@ -1379,7 +1363,7 @@ export default {
 .vector-6 {
   height: 1px;
   object-fit: cover;
-  width: 91px;
+  width: 60px;
 }
 
 .text-56 {
@@ -1388,6 +1372,12 @@ export default {
   line-height: 36px;
   min-width: 95px;
   white-space: nowrap;
+}
+
+.text-56,
+.text-36,
+.text-39 {
+  font-size: 24px !important;
 }
 
 .frame-1321317467 {
@@ -1641,18 +1631,9 @@ export default {
 
 
 .group-25 {
-  height: 126px;
+  height: auto;
   position: relative;
-  width: 356px;
-}
-
-.group-10-1 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-height: 126px;
-  width: 358px;
+  width: auto;
 }
 
 .group-20 {
@@ -1671,10 +1652,10 @@ export default {
 }
 
 .ation {
-  height: 72px;
   letter-spacing: 0;
   line-height: 72px;
   white-space: nowrap;
+  font-size: 48px;
 }
 
 .frame-1321317472 {
@@ -1860,18 +1841,9 @@ export default {
 }
 
 .group-25-1 {
-  height: 126px;
+  height: auto;
   position: relative;
-  width: 485px;
-}
-
-.group-10-2 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-height: 126px;
-  width: 487px;
+  width: auto;
 }
 
 .group-20-1 {
@@ -2228,8 +2200,8 @@ export default {
     gap: 18px;
   }
   
-  :deep(.hero-title),
-  :deep(.hero-subtitle) {
+  .hero-title,
+  .hero-subtitle {
     font-size: 40px;
     color: #1A1A1A;
   }
@@ -2450,8 +2422,30 @@ export default {
     font-size: 32px !important;
   }
   
+  .ation {
+    font-size: 44px !important;
+    line-height: 52px !important;
+  }
+
+  .infomation-1 {
+    font-size: 44px !important;
+    line-height: 52px !important;
+  }
+  
   .divider-text {
     font-size: 18px !important;
+  }
+
+  .text-56,
+  .text-36,
+  .text-39 {
+    font-size: 22px !important;
+  }
+
+  .group-10,
+  .group-10-1,
+  .group-10-2 {
+    gap: 15px !important;
   }
 }
 
@@ -2465,10 +2459,24 @@ export default {
     padding: 250px 40px;
   }
   
-  :deep(.hero-title),
-  :deep(.hero-subtitle) {
+  .hero-title,
+  .hero-subtitle {
     font-size: 28px;
     color: #1A1A1A;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .ation {
+    font-size: 40px !important;
+    line-height: 48px !important;
+  }
+
+  .infomation-1 {
+    font-size: 40px !important;
+    line-height: 48px !important;
   }
   
   .hero-button-text {
@@ -2644,6 +2652,12 @@ export default {
   .frame-1321317487 {
     height: auto;
   }
+
+  .text-56,
+  .text-36,
+  .text-39 {
+    font-size: 20px !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2656,9 +2670,23 @@ export default {
     padding: 130px 30px;
   }
   
-  :deep(.hero-title),
-  :deep(.hero-subtitle) {
+  .hero-title,
+  .hero-subtitle {
     font-size: 22px;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
+  .ation {
+    font-size: 36px !important;
+    line-height: 44px !important;
+  }
+
+  .infomation-1 {
+    font-size: 36px;
+    line-height: 44px;
   }
   
   .hero-button-wrapper {
@@ -2873,11 +2901,6 @@ export default {
     gap: 20px;
   }
   
-  .infomation-1 {
-    font-size: 36px;
-    line-height: 48px;
-  }
-  
   .text-56 {
     font-size: 20px;
     line-height: 28px;
@@ -2938,17 +2961,6 @@ export default {
   .frame-1321317484 {
     padding: 20px 10px;
     gap: 20px;
-  }
-  
-  .ation {
-    font-size: 28px;
-    line-height: 36px;
-  }
-  
-  .text-36,
-  .text-39 {
-    font-size: 18px;
-    line-height: 24px;
   }
   
   .frame-1321317485 {
@@ -3037,6 +3049,33 @@ export default {
     width: 100%;
     max-width: 100%;
   }
+
+  .text-56,
+  .text-36,
+  .text-39 {
+    font-size: 19px !important;
+  }
+
+
+
+  .group-10,
+  .group-10-1,
+  .group-10-2 {
+    gap: 15px;
+  }
+
+  .group-20 {
+    margin-bottom: 0px;
+  }
+
+  .group-25,
+  .group-25-1 {
+    height: auto;
+  }
+
+  .content-view {
+    gap: 30px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -3053,6 +3092,20 @@ export default {
     padding: 90px 10px;
   }
   
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .ation {
+    font-size: 32px !important;
+    line-height: 40px !important;
+  }
+
+  .infomation-1 {
+    font-size: 32px !important;
+    line-height: 40px !important;
+  }
+  
   .section-header {
     gap: 18px !important;
     margin-bottom: 20px !important;
@@ -3066,8 +3119,8 @@ export default {
     font-size: 13px !important;
   }
   
-  :deep(.hero-title),
-  :deep(.hero-subtitle) {
+  .hero-title,
+  .hero-subtitle {
     font-size: 18px;
     color: #1A1A1A;
   }
@@ -3178,6 +3231,7 @@ export default {
   
   .content-view {
     padding: 15px 10px;
+    gap: 30px;
   }
   
   .text-48 {
@@ -3206,11 +3260,6 @@ export default {
   
   .frame-1321317480 {
     gap: 15px;
-  }
-  
-  .infomation-1 {
-    font-size: 28px;
-    line-height: 36px;
   }
   
   .text-56 {
@@ -3273,17 +3322,6 @@ export default {
   .frame-1321317484 {
     padding: 20px 10px;
     gap: 20px;
-  }
-  
-  .ation {
-    font-size: 28px;
-    line-height: 36px;
-  }
-  
-  .text-36,
-  .text-39 {
-    font-size: 18px;
-    line-height: 24px;
   }
   
   .frame-1321317485 {
@@ -3428,6 +3466,22 @@ export default {
 
   .vector-13 {
     margin-top: 20px;
+  }
+
+  .text-56,
+  .text-36,
+  .text-39 {
+    font-size: 18px !important;
+  }
+
+  .vector-6 {
+    width: 40px !important;
+  }
+
+  .group-10,
+  .group-10-1,
+  .group-10-2 {
+    gap: 10px !important;
   }
 }
 

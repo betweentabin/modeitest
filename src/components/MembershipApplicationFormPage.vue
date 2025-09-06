@@ -23,25 +23,25 @@
             <span class="divider-text">{{ pageSubtitle }}</span>
             <div class="divider-line"></div>
           </div>
-          <div class="form-steps">
-            <span class="step-active">①お客様情報の入力</span>
-            <span class="step-inactive">　- ②記入内容のご確認　</span>
-            <span class="step-inactive">- ③完了</span>
-          </div>
+           <div class="form-steps">
+             <span class="step-active">①入会情報の入力</span>
+             <span class="step-inactive">　- ②記入内容のご確認　</span>
+             <span class="step-inactive">- ③完了</span>
+           </div>
         </div>
 
         <form class="contact-form" @submit.prevent="submitForm">
           <!-- Subject -->
           <div class="form-field">
-            <label class="field-label">件名</label>
+             <label class="field-label">会員タイプ</label>
             <div class="field-input">
-              <select v-model="formData.subject" class="select-field">
-                <option value="">選択してください</option>
-                <option value="inquiry">サービスに関するお問い合わせ</option>
-                <option value="membership">会員に関するお問い合わせ</option>
-                <option value="seminar">セミナーに関するお問い合わせ</option>
-                <option value="other">その他</option>
-              </select>
+               <select v-model="formData.subject" class="select-field">
+                 <option value="">選択してください</option>
+                 <option value="standard">スタンダード会員</option>
+                 <option value="premium">プレミアムネット会員</option>
+                 <option value="inquiry">会員に関するお問い合わせ</option>
+                 <option value="other">その他</option>
+               </select>
               <svg class="select-arrow" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.0312 10.0306L12.5312 17.5306C12.4616 17.6004 12.3788 17.6557 12.2878 17.6934C12.1967 17.7312 12.0992 17.7506 12.0006 17.7506C11.902 17.7506 11.8044 17.7312 11.7134 17.6934C11.6223 17.6557 11.5396 17.6004 11.47 17.5306L3.96997 10.0306C3.86496 9.92573 3.79343 9.79204 3.76444 9.64648C3.73546 9.50092 3.75031 9.35002 3.80712 9.21291C3.86394 9.07579 3.96016 8.95861 4.0836 8.87621C4.20705 8.79381 4.35217 8.74988 4.50059 8.75H19.5006C19.649 8.74988 19.7941 8.79381 19.9176 8.87621C20.041 8.95861 20.1372 9.07579 20.1941 9.21291C20.2509 9.35002 20.2657 9.50092 20.2367 9.64648C20.2078 9.79204 20.1362 9.92573 20.0312 10.0306Z" fill="#727272"/>
               </svg>
@@ -102,13 +102,13 @@
             </div>
           </div>
 
-          <!-- Inquiry Content -->
-          <div class="form-field">
-            <label class="field-label">お問い合わせ内容</label>
-            <div class="field-input">
-              <textarea v-model="formData.content" class="textarea-input" placeholder="お問い合わせ内容をご記入ください"></textarea>
-            </div>
-          </div>
+           <!-- Inquiry Content -->
+           <div class="form-field">
+             <label class="field-label">入会希望内容・特記事項</label>
+             <div class="field-input">
+               <textarea v-model="formData.content" class="textarea-input" placeholder="入会希望内容や特記事項をご記入ください"></textarea>
+             </div>
+           </div>
 
           <!-- Terms Section -->
           <div class="terms-section">
@@ -213,7 +213,7 @@ import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
 
 export default {
-  name: 'ContactFormPage',
+  name: 'MembershipApplicationFormPage',
   components: {
     Navigation,
     Footer,
@@ -224,7 +224,7 @@ export default {
   },
   data() {
     return {
-      pageKey: 'contact',
+      pageKey: 'membership',
       formData: {
         subject: '',
         lastName: '',
@@ -256,8 +256,8 @@ export default {
              !this.isSubmitting;
     },
     _pageRef() { return this._pageText?.page?.value },
-    pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'contact') || 'contact' },
+    pageTitle() { return this._pageText?.getText('page_title', '入会申し込み') || '入会申し込み' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
   },
   mounted() {
@@ -282,7 +282,7 @@ export default {
       
       // 確認ページに遷移（フォームデータをURLパラメータで渡す）
       const formDataParam = encodeURIComponent(JSON.stringify(this.formData));
-      this.$router.push(`/contact/confirm?formData=${formDataParam}`);
+      this.$router.push(`/membership/apply/confirm?formData=${formDataParam}`);
     },
     
     resetForm() {
@@ -309,6 +309,12 @@ export default {
   background-color: #ECECEC;
   min-height: 100vh;
   font-family: 'Inter', -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+/* Form Fields */
+.contact-form {
+  padding: 50px;
+  border-radius: 20px;
 }
 
 /* Navigation */
@@ -377,11 +383,13 @@ export default {
   }
 }
 
-
+.contact-form {
+    padding: 30px 20px !important;
+  }
 
 /* Form Section */
 .form-section {
-  padding: 70px 50px 70px;
+  padding: 70px 50px 50px;
 }
 
 .form-container {
@@ -746,12 +754,6 @@ export default {
   fill: #DA5761;
 }
 
-/* Form Fields */
-.contact-form {
-  padding: 50px;
-  border-radius: 20px;
-}
-
 /* Responsive Design */
 @media (max-width: 1150px) {
   .form-section {
@@ -846,10 +848,6 @@ export default {
   /* テキストエリアの調整 */
   .textarea-input {
     padding: 16px !important;
-  }
-
-  .contact-form {
-    padding: 30px 20px !important;
   }
 }
 
@@ -1167,10 +1165,6 @@ export default {
     gap: 10px !important;
   }
 
-  .contact-form {
-    padding: 20px 15px !important;
-  }
-
   /* フォームフィールドの詳細調整 */
   .form-field {
     padding: 12px 0 !important;
@@ -1201,6 +1195,10 @@ export default {
   .download-link svg {
     width: 25px !important;
     height: 25px !important;
+  }
+
+  .contact-form {
+    padding: 20px 15px !important;
   }
 }
 </style>

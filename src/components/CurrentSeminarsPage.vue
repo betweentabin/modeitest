@@ -573,14 +573,17 @@ export default {
 
 .reserve-btn {
   display: flex;
-  padding: 10px 100px;
+  width: 300px;
+  padding: 10px 0;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   border-radius: 10px;
   background: #9C3940;
   border: none;
   cursor: pointer;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .reserve-btn span {
@@ -597,7 +600,7 @@ export default {
 
 /* Disabled visual state (clickable for navigation) */
 .reserve-btn.disabled {
-  background: #BDBDBD;
+  background: #9C3940;
   cursor: not-allowed;
 }
 
@@ -753,43 +756,49 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 1150px) {
+  /* セクションのパディング調整 */
   .current-seminars-section {
     padding: 50px 30px !important;
   }
-  
+
   .seminars-content {
-    padding: 50px 30px !important;
+    padding: 40px !important;
+  }
+
+  /* レイアウトの縦並び化 */
+  .seminar-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
+    width: 100% !important;
   }
   
+  /* 画像の高さ固定 */
+  .seminar-image {
+    height: 300px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 20px 20px !important;
+    padding: 40px !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 32px !important;
   }
-  
+
   .divider-text {
     font-size: 18px !important;
   }
-  
+
   .section-description {
     font-size: 18px !important;
-  }
-  
-  .seminar-card {
-    gap: 30px !important;
-  }
-  
-  .seminar-image {
-    height: 300px !important;
-  }
-  
-  .pagination-btn {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 13px !important;
-  }
-  
-  /* セクションヘッダーのギャップ調整 */
-  .section-header {
-    gap: 25px !important;
   }
   
   .label-text {
@@ -803,35 +812,114 @@ export default {
   .reserve-btn span {
     font-size: 18px !important;
   }
+  
+  /* 情報行の縦並び化 */
+  .info-row {
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 20px 0 !important;
+    align-items: flex-start !important;
+  }
+
+  .info-row-first,
+  .info-row-second,
+  .info-row-third,
+  .info-row-fourth {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .info-label {
+    width: 250px !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-label-date,
+  .info-label-title {
+    width: 250px !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-value {
+    width: 100% !important;
+    padding-left: 0 !important;
+    text-align: left !important;
+  }
+  
+  .pagination-btn {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 13px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 25px !important;
+  }
 }
 
 @media (max-width: 900px) {
+  /* セクションのパディング調整 */
   .current-seminars-section {
     padding: 30px 20px !important;
   }
-  
+
   .seminars-content {
     padding: 35px !important;
   }
+
+  /* レイアウトの縦並び化 */
+  .seminar-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
+    width: 100% !important;
+  }
   
+  /* 画像の高さ固定 */
+  .seminar-image {
+    height: 280px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  
+  .seminar-details {
+    border-radius: 0 0 20px 20px !important;
+    padding: 35px !important;
+  }
+  
+  /* フォントサイズ調整 */
   .section-title {
     font-size: 29px !important;
   }
-  
+
   .divider-text {
     font-size: 17px !important;
   }
-  
+
   .section-description {
     font-size: 17px !important;
   }
   
-  .seminar-card {
-    gap: 25px !important;
+  .label-text {
+    font-size: 17px !important;
   }
   
-  .seminar-image {
-    height: 280px !important;
+  .info-value {
+    font-size: 17px !important;
+  }
+  
+  .reserve-btn span {
+    font-size: 17px !important;
   }
   
   .pagination-btn {
@@ -845,67 +933,91 @@ export default {
     gap: 22px !important;
   }
   
-  .label-text {
-    font-size: 17px !important;
+  /* 情報行の縦並び化 */
+  .info-row {
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 20px 0 !important;
+    align-items: flex-start !important;
   }
-  
+
+  .info-row-first,
+  .info-row-second,
+  .info-row-third,
+  .info-row-fourth {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .info-label {
+    width: 250px !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
+  .info-label-date,
+  .info-label-title {
+    width: 250px !important;
+    flex-shrink: 0 !important;
+    min-width: 250px !important;
+  }
+
   .info-value {
-    font-size: 17px !important;
-  }
-  
-  .reserve-btn span {
-    font-size: 17px !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    text-align: left !important;
   }
 }
 
 @media (max-width: 768px) {
+  /* セクションのパディング調整 */
   .current-seminars-section {
     padding: 30px 20px !important;
   }
-  
+
   .seminars-content {
     padding: 30px !important;
   }
-  
-  .section-title {
-    font-size: 27px !important;
-  }
-  
-  .divider-text {
-    font-size: 16px !important;
-  }
-  
-  .section-description {
-    width: 100% !important;
-    font-size: 16px !important;
-  }
-  
+
+  /* レイアウトの縦並び化 */
   .seminar-card {
     flex-direction: column !important;
-    gap: 20px !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
+    width: 100% !important;
   }
   
+  /* 画像の高さ固定 */
   .seminar-image {
-    width: 100% !important;
     height: 250px !important;
     border-radius: 20px 20px 0 0 !important;
   }
   
   .seminar-details {
-    width: 100% !important;
     border-radius: 0 0 20px 20px !important;
     padding: 30px !important;
   }
   
-  .pagination-btn {
-    width: 34px !important;
-    height: 34px !important;
-    font-size: 11px !important;
+  /* フォントサイズ調整 */
+  .section-title {
+    font-size: 27px !important;
   }
-  
-  /* セクションヘッダーのギャップ調整 */
-  .section-header {
-    gap: 20px !important;
+
+  .divider-text {
+    font-size: 16px !important;
+  }
+
+  .section-description {
+    width: 100% !important;
+    font-size: 16px !important;
   }
   
   .label-text {
@@ -923,33 +1035,42 @@ export default {
   .reserve-btn {
     padding: 10px 80px !important;
   }
+  
+  .pagination-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 11px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 20px !important;
+  }
 }
 
 @media (max-width: 480px) {
+  /* セクションのパディング調整 */
   .current-seminars-section {
     padding: 20px 15px !important;
   }
-  
+
   .seminars-content {
     padding: 20px !important;
   }
-  
-  .section-title {
-    font-size: 22px !important;
-  }
-  
-  .divider-text {
-    font-size: 13px !important;
-  }
-  
-  .section-description {
-    font-size: 13px !important;
-  }
-  
+
+  /* レイアウトの縦並び化 */
   .seminar-card {
-    gap: 18px !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* 要素の幅調整 */
+  .seminar-image,
+  .seminar-details {
+    width: 100% !important;
   }
   
+  /* 画像の高さ固定 */
   .seminar-image {
     height: 200px !important;
     border-radius: 15px 15px 0 0 !important;
@@ -960,15 +1081,17 @@ export default {
     padding: 20px !important;
   }
   
-  .pagination-btn {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 10px !important;
+  /* フォントサイズ調整 */
+  .section-title {
+    font-size: 22px !important;
   }
-  
-  /* セクションヘッダーのギャップ調整 */
-  .section-header {
-    gap: 18px !important;
+
+  .divider-text {
+    font-size: 13px !important;
+  }
+
+  .section-description {
+    font-size: 13px !important;
   }
   
   .label-text {
@@ -984,11 +1107,39 @@ export default {
   }
   
   .reserve-btn {
-    padding: 8px 60px !important;
+    width: 100% !important;
+    padding: 8px 0 !important;
+  }
+  
+  .pagination-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 10px !important;
+  }
+  
+  /* セクションヘッダーのギャップ調整 */
+  .section-header {
+    gap: 18px !important;
+  }
+  
+  /* 情報行のギャップ調整 */
+  .info-row {
+    gap: 20px !important;
+    padding: 10px 0 !important;
   }
   
   .info-label {
     padding: 8px 20px !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+  }
+  
+  .info-label-date,
+  .info-label-title {
+    width: auto !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
   }
 }
 </style>

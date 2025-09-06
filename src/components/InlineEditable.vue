@@ -1,22 +1,24 @@
 <template>
-  <component
-    :is="tag"
-    :class="wrapperClass"
-    :contenteditable="isEditing ? (type === 'html' ? 'true' : 'plaintext-only') : undefined"
-    :data-cms-key="fieldKey"
-    :data-cms-type="type"
-    :spellcheck="false"
-    ref="el"
-    @input="onInput"
-    @blur="onBlur"
-    @keydown="onKeydown"
-  >
-    <slot>{{ displayValue }}</slot>
-  </component>
-  <div v-if="isEditing && dirty" class="inline-toolbar">
-    <button class="btn btn-save" @click.prevent="save" :disabled="saving">保存</button>
-    <button class="btn btn-cancel" @click.prevent="cancel" :disabled="saving">キャンセル</button>
-    <span v-if="error" class="error">{{ error }}</span>
+  <div>
+    <component
+      :is="tag"
+      :class="wrapperClass"
+      :contenteditable="isEditing ? (type === 'html' ? 'true' : 'plaintext-only') : undefined"
+      :data-cms-key="fieldKey"
+      :data-cms-type="type"
+      :spellcheck="false"
+      ref="el"
+      @input="onInput"
+      @blur="onBlur"
+      @keydown="onKeydown"
+    >
+      <slot>{{ displayValue }}</slot>
+    </component>
+    <div v-if="isEditing && dirty" class="inline-toolbar">
+      <button class="btn btn-save" @click.prevent="save" :disabled="saving">保存</button>
+      <button class="btn btn-cancel" @click.prevent="cancel" :disabled="saving">キャンセル</button>
+      <span v-if="error" class="error">{{ error }}</span>
+    </div>
   </div>
 </template>
 

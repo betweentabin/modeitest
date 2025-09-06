@@ -4,26 +4,26 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="お問い合わせ確認"
-      subtitle="contact confirm"
+      title="入会申し込み"
+      subtitle="membership"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['お問い合わせ', '確認']" />
+    <Breadcrumbs :breadcrumbs="['入会申し込み', '確認']" />
 
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">お問い合わせ</h1>
+          <h1 class="form-title">入会申し込み</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">contact</span>
+            <span class="divider-text">membership</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
-            <span class="step-inactive">①お客様情報の入力</span>
+            <span class="step-inactive">①入会情報の入力</span>
             <span class="step-active">　- ②記入内容のご確認　</span>
             <span class="step-inactive">- ③完了</span>
           </div>
@@ -32,7 +32,7 @@
         <div class="contact-form">
           <!-- Subject -->
           <div class="form-field">
-            <label class="field-label">件名</label>
+            <label class="field-label">会員タイプ</label>
             <div class="field-input">
               <div class="confirm-value">{{ getSubjectText(formData.subject) }}</div>
             </div>
@@ -88,7 +88,7 @@
 
           <!-- Inquiry Content -->
           <div class="form-field">
-            <label class="field-label">お問い合わせ内容</label>
+            <label class="field-label">入会希望内容・特記事項</label>
             <div class="field-input">
               <div class="confirm-value content-value">{{ formData.content }}</div>
             </div>
@@ -131,7 +131,7 @@ import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 
 export default {
-  name: 'ContactConfirmPage',
+  name: 'MembershipApplicationConfirmPage',
   components: {
     Navigation,
     Footer,
@@ -170,19 +170,19 @@ export default {
         this.formData = JSON.parse(decodeURIComponent(params.get('formData')));
       } catch (e) {
         console.error('フォームデータの解析に失敗しました:', e);
-        this.$router.push('/contact');
+        this.$router.push('/membership/apply');
       }
     } else {
       // フォームデータがない場合は入力ページにリダイレクト
-      this.$router.push('/contact');
+      this.$router.push('/membership/apply');
     }
   },
   methods: {
     getSubjectText(value) {
       const subjects = {
-        'inquiry': 'サービスに関するお問い合わせ',
-        'membership': '会員に関するお問い合わせ',
-        'seminar': 'セミナーに関するお問い合わせ',
+        'standard': 'スタンダード会員',
+        'premium': 'プレミアムネット会員',
+        'inquiry': '会員に関するお問い合わせ',
         'other': 'その他'
       };
       return subjects[value] || value;
@@ -196,9 +196,9 @@ export default {
       try {
         // subject表示用テキストとtypeコードを分離
         const subjectMap = {
-          inquiry: 'サービスに関するお問い合わせ',
-          membership: '会員に関するお問い合わせ',
-          seminar: 'セミナーに関するお問い合わせ',
+          standard: 'スタンダード会員',
+          premium: 'プレミアムネット会員',
+          inquiry: '会員に関するお問い合わせ',
           other: 'その他'
         }
 
@@ -217,15 +217,15 @@ export default {
           throw new Error(res?.message || res?.error || '送信に失敗しました')
         }
 
-        // v2: res.data.inquiry_number or fallback to id from either v1/v2
-        const inquiryNumber = res?.data?.inquiry_number
-          || (res?.data?.inquiry_id ? `INQ-${String(res.data.inquiry_id).padStart(6, '0')}` : null)
-          || (res?.inquiry_id ? `INQ-${String(res.inquiry_id).padStart(6, '0')}` : null)
-          || `INQ-${Date.now()}`
+        // v2: res.data.application_number or fallback to id from either v1/v2
+        const applicationNumber = res?.data?.application_number
+          || (res?.data?.application_id ? `APP-${String(res.data.application_id).padStart(6, '0')}` : null)
+          || (res?.application_id ? `APP-${String(res.application_id).padStart(6, '0')}` : null)
+          || `APP-${Date.now()}`
 
-        this.$router.push(`/contact/complete?inquiryNumber=${encodeURIComponent(inquiryNumber)}`)
+        this.$router.push(`/membership/apply/complete?applicationNumber=${encodeURIComponent(applicationNumber)}`)
       } catch (err) {
-        console.error('お問い合わせ送信エラー:', err)
+        console.error('入会申し込み送信エラー:', err)
         this.submitError = err.message || 'エラーが発生しました。再度お試しください。'
         alert(this.submitError)
       } finally {
@@ -629,6 +629,11 @@ export default {
   .action-section {
     padding-top: 35px !important;
   }
+
+    /* フォームフィールドの調整 */
+    .form-field {
+    padding: 20px 0 !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -656,6 +661,10 @@ export default {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 15px !important;
+  }
+
+  .form-field {
+    padding: 18px 0 !important;
   }
   
   .field-label {
@@ -698,6 +707,13 @@ export default {
 @media (max-width: 480px) {
   .form-section {
     padding: 20px 15px 30px !important;
+  }
+
+  .form-field {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 15px 0 !important;
   }
   
   .contact-form {
@@ -756,8 +772,8 @@ export default {
     gap: 10px !important;
   }
 
-  .form-field {
-    gap: 12px !important;
+    /* フォームフィールドの詳細調整 */
+    .form-field {
     padding: 12px 0 !important;
   }
 }
