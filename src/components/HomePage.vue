@@ -165,7 +165,7 @@
           </div>
           <div class="frame-1321317472">
             <div class="main-publication-wrapper" @click="goToMainPublication">
-              <frame1321317474 :x22="dynamicMainPublication.x22" />
+              <frame1321317474 :x22="dynamicMainPublication.x22" :date="dynamicMainPublication.date" :title="dynamicMainPublication.title" />
             </div>
             <div class="frame-1321317485">
               <div class="frame-1321317487">
@@ -192,18 +192,21 @@
                   <frame1321317475
                     :x22="dynamicPublications[0] ? dynamicPublications[0].x22 : frame13213174751Props.x22"
                     :hotInformationVol324="dynamicPublications[0] ? dynamicPublications[0].hotInformationVol324 : frame13213174751Props.hotInformationVol324"
+                    :date="dynamicPublications[0] ? dynamicPublications[0].date : undefined"
                   />
                 </div>
                 <div class="publication-item-wrapper" @click="goToPublication(1)">
                   <frame1321317475
                     :x22="dynamicPublications[1] ? dynamicPublications[1].x22 : frame13213174752Props.x22"
                     :hotInformationVol324="dynamicPublications[1] ? dynamicPublications[1].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[1] ? dynamicPublications[1].date : undefined"
                   />
                 </div>
                 <div class="publication-item-wrapper" @click="goToPublication(2)">
                   <frame1321317475
                     :x22="dynamicPublications[2] ? dynamicPublications[2].x22 : frame13213174752Props.x22"
                     :hotInformationVol324="dynamicPublications[2] ? dynamicPublications[2].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[2] ? dynamicPublications[2].date : undefined"
                   />
                 </div>
               </div>
@@ -656,7 +659,9 @@ export default {
       // メイン: 常に最新（配列の先頭）
       const main = this.allPublications[0]
       this.dynamicMainPublication = {
-        x22: main?.cover_image || main?.image_url || this.frame13213174741Props.x22
+        x22: main?.cover_image || main?.image_url || this.frame13213174741Props.x22,
+        title: main?.title || '',
+        date: main?.publication_date ? this.formatDate(main.publication_date) : ''
       }
       // 右側: 先頭を除いたothersを循環で3件表示
       const othersLen = Math.max(0, len - 1)
@@ -668,7 +673,7 @@ export default {
       const list = []
       for (let i = 0; i < 3; i++) {
         if (!othersLen) {
-          list.push({ x22: defaultImages[i], hotInformationVol324: '' })
+          list.push({ x22: defaultImages[i], hotInformationVol324: '', date: '' })
           continue
         }
         const absolute = 1 + ((this.currentIndex + i) % othersLen)
@@ -676,6 +681,7 @@ export default {
         list.push({
           x22: item?.cover_image || item?.image_url || defaultImages[i],
           hotInformationVol324: item?.title || '',
+          date: item?.publication_date ? this.formatDate(item.publication_date) : '',
           id: item?.id
         })
       }
