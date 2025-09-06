@@ -169,15 +169,33 @@ export default {
     };
   },
   computed: {
+    // Page text helpers
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '用語集') || '用語集' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Glossary') || 'Glossary' },
+
+    // Filtering
+    filteredGlossary() {
+      let filtered = this.glossary
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase()
+        filtered = filtered.filter(item =>
+          (item.term || '').toLowerCase().includes(query) ||
+          (item.definition || '').toLowerCase().includes(query)
+        )
+      }
+      return filtered
+    },
+
+    // Pagination
     totalPages() {
-      return Math.ceil(this.glossary.length / this.itemsPerPage) || 1
+      const len = this.filteredGlossary.length
+      return Math.max(1, Math.ceil(len / this.itemsPerPage))
     },
     paginatedGlossary() {
       const start = (this.currentPage - 1) * this.itemsPerPage
-      return this.glossary.slice(start, start + this.itemsPerPage)
+      const end = start + this.itemsPerPage
+      return this.filteredGlossary.slice(start, end)
     },
     pagesToShow() {
       const total = this.totalPages
@@ -202,39 +220,23 @@ export default {
         try {
           const items = this._pageText?.page?.value?.content?.items
           if (Array.isArray(items) && items.length) {
-            // Validate shape and apply defensively
-            this.glossary = items
-              .filter(it => it && typeof it.term === 'string' && typeof it.definition === 'string')
-              .map(it => ({ term: it.term, definition: it.definition, category: it.category || '' }))
+            // Validate/normalize; only override when at least one valid item exists
+            const normalized = items
+              .map(it => it || {})
+              .map(it => ({
+                term: typeof it.term === 'string' ? it.term : (typeof it.title === 'string' ? it.title : ''),
+                definition: typeof it.definition === 'string' ? it.definition : (typeof it.content === 'string' ? it.content : ''),
+                category: typeof it.category === 'string' ? it.category : ''
+              }))
+              .filter(it => it.term && it.definition)
+
+            if (normalized.length) {
+              this.glossary = normalized
+            }
           }
         } catch (_) {}
       })
     } catch(e) { /* noop */ }
-  },
-  computed: {
-    filteredGlossary() {
-      let filtered = this.glossary;
-      
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        filtered = filtered.filter(item => 
-          item.term.toLowerCase().includes(query) ||
-          item.definition.toLowerCase().includes(query)
-        );
-      }
-      
-      return filtered;
-    },
-    
-    paginatedGlossary() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.filteredGlossary.slice(start, end);
-    },
-    
-    totalPages() {
-      return Math.ceil(this.filteredGlossary.length / this.itemsPerPage);
-    }
   },
   methods: {
     goToPage(p) {
@@ -248,12 +250,7 @@ export default {
         this.openItems.push(index);
       }
     },
-    
-    goToPage(page) {
-      if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
-      }
-    }
+    // remove duplicate method (kept single goToPage above)
   }
 };
 </script>

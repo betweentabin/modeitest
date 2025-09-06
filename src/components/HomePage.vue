@@ -553,19 +553,22 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     heroTitle() {
-      // CMS override優先 → data.js → 最後に規定文言
-      const cms = (this._pageText?.getText && this._pageText.getText('page_title', '')) || ''
+      // 優先順: CMS(texts.hero_title → texts.page_title → content.hero.title) → data.js → 既定文言
+      const get = key => (this._pageText?.getText && this._pageText.getText(key, '')) || ''
+      const fromTexts = get('hero_title') || get('page_title')
+      const fromStruct = this._pageRef?.content?.hero?.title || ''
       const base = this.text66 || ''
-      const val = cms || base
-      // 既定文言（白丸の上段）：
+      const val = fromTexts || fromStruct || base
       const fallback = '産・官・学・金（金融機関）の力で'
       return (typeof val === 'string' && val.trim().length) ? val : fallback
     },
     heroSubtitle() {
-      const cms = (this._pageText?.getText && this._pageText.getText('lead', '')) || ''
+      // 優先順: CMS(texts.hero_subtitle → texts.lead → content.hero.subtitle) → data.js → 既定文言
+      const get = key => (this._pageText?.getText && this._pageText.getText(key, '')) || ''
+      const fromTexts = get('hero_subtitle') || get('lead')
+      const fromStruct = this._pageRef?.content?.hero?.subtitle || ''
       const base = this.text67 || ''
-      const val = cms || base
-      // 既定文言（白丸の下段）：
+      const val = fromTexts || fromStruct || base
       const fallback = '企業活動を支援'
       return (typeof val === 'string' && val.trim().length) ? val : fallback
     },
