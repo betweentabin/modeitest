@@ -605,6 +605,11 @@ class ApiClient {
     })
   }
 
+  // Admin: Immediate simple email send
+  async sendSimpleEmail(data) {
+    return this.post('/api/admin/emails/send-simple', data)
+  }
+
   // Admin-specific methods with token
   async getAdminSeminars(params = {}) {
     const queryString = new URLSearchParams(params).toString()

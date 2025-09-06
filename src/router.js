@@ -34,6 +34,7 @@ import NoticeEditForm from "./views/admin/NoticeEditForm";
 import MediaEditForm from "./views/admin/MediaEditForm";
 import MailGroupManagement from "./views/admin/MailGroupManagement";
 import EmailCampaignManagement from "./views/admin/EmailCampaignManagement";
+import EmailSendNow from "./views/admin/EmailSendNow.vue";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
 import SeminarPage from "./components/SeminarPage";
@@ -407,6 +408,12 @@ const router = new Router({
       name: "emailCampaignManagement",
       component: EmailCampaignManagement,
       meta: { title: "メール配信 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/emails/send-now",
+      name: "emailSendNow",
+      component: EmailSendNow,
+      meta: { title: "即時メール送信 - ちくぎん地域経済研究所" }
     },
     // Mail magazine route aliases
     {
