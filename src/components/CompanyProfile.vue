@@ -16,10 +16,14 @@
     <!-- Philosophy Section -->
     <section class="philosophy-section">
       <div class="section-header">
-        <h2 class="section-title">経営理念</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="philosophy_title" tag="span" :fallback="'経営理念'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">philosophy</span>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="philosophy_subtitle" tag="span" :fallback="'philosophy'" />
+          </span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -42,25 +46,34 @@
     <!-- Message Section -->
     <section class="message-section">
       <div class="section-header">
-        <h2 class="section-title">ご挨拶</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="message_title" tag="span" :fallback="'ご挨拶'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">message</span>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="message_subtitle" tag="span" :fallback="'message'" />
+          </span>
           <div class="divider-line"></div>
         </div>
       </div>
       <div class="message-content">
         <div class="message-text">
-          <div class="message-title">MESSAGE</div>
-          <div class="message-body">
-            <p>皆さま方には、平素より筑邦銀行グループをご利用お引き立ていただき誠にありがとうございます。</p>
-            <p>私どもは「地域社会へのご奉仕」という基本理念のもと、総合金融サービスの向上・充実に努めてまいりました。こうした中で、地元のさらなる発展に貢献するため、「(株)ちくぎん地域経済研究所」を設立いたしました。</p>
-            <p>当研究所では、産・官・学・金（金融機関）のネットワークの構築などにより、今後一層発展の可能性を秘めたバイオ・アグリ・医療・介護をはじめ様々な分野の調査研究をより専門的に行うことといたします。</p>
-            <p>また、こうした研究成果や様々なネットワークを活用し経営コンサルティング機能を十分に発揮することなどにより、多様な企業の生産・販売活動や医療・介護活動などのサポートを行ってまいります。</p>
-            <p>以上のような活動を通じ、皆さま方と緊密な連携のもと、ヒト・モノ・カネ・情報を最大限に活かし、地域の振興・発展にお役にたてるよう努めてまいる所存です。</p>
-            <p>当研究所へのご支援、ご愛顧をよろしくお願い申し上げます。</p>
+          <div class="message-title">
+            <CmsText pageKey="company-profile" fieldKey="message_label" tag="div" :fallback="'MESSAGE'" />
           </div>
-          <div class="message-signature">株式会社 ちくぎん地域経済研究所代表取締役社長 空閑 重信</div>
+          <div class="message-body">
+            <CmsText
+              pageKey="company-profile"
+              fieldKey="message_body"
+              tag="div"
+              type="html"
+              :fallback="defaultMessageBody"
+            />
+          </div>
+          <div class="message-signature">
+            <CmsText pageKey="company-profile" fieldKey="message_signature" tag="div" :fallback="'株式会社 ちくぎん地域経済研究所代表取締役社長 空閑 重信'" />
+          </div>
         </div>
         <img class="message-image" src="https://api.builder.io/api/v1/image/assets/TEMP/20aa75cfa1be4c2096a1f47bf126cf240173b231?width=1340" alt="Message" />
       </div>
@@ -72,10 +85,14 @@
     <!-- Company Profile Section -->
     <section class="company-profile-section">
       <div class="section-header">
-        <h2 class="section-title">会社概要</h2>
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="profile_title" tag="span" :fallback="'会社概要'" />
+        </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">company profile</span>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="profile_subtitle" tag="span" :fallback="'company profile'" />
+          </span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -231,6 +248,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -246,13 +264,21 @@ export default {
     HeroSection,
     Breadcrumbs,
     FixedSideButtons,
+    CmsText,
   },
   data() {
     return {
       pageKey: 'company-profile',
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      
+      defaultMessageBody: `
+        <p>皆さま方には、平素より筑邦銀行グループをご利用お引き立ていただき誠にありがとうございます。</p>
+        <p>私どもは「地域社会へのご奉仕」という基本理念のもと、総合金融サービスの向上・充実に努めてまいりました。こうした中で、地元のさらなる発展に貢献するため、「(株)ちくぎん地域経済研究所」を設立いたしました。</p>
+        <p>当研究所では、産・官・学・金（金融機関）のネットワークの構築などにより、今後一層発展の可能性を秘めたバイオ・アグリ・医療・介護をはじめ様々な分野の調査研究をより専門的に行うことといたします。</p>
+        <p>また、こうした研究成果や様々なネットワークを活用し経営コンサルティング機能を十分に発揮することなどにより、多様な企業の生産・販売活動や医療・介護活動などのサポートを行ってまいります。</p>
+        <p>以上のような活動を通じ、皆さま方と緊密な連携のもと、ヒト・モノ・カネ・情報を最大限に活かし、地域の振興・発展にお役にたてるよう努めてまいる所存です。</p>
+        <p>当研究所へのご支援、ご愛顧をよろしくお願い申し上げます。</p>
+      `,
     };
   },
   computed: {

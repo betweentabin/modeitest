@@ -16,6 +16,16 @@ class AboutPageJsonSeeder extends Seeder
             'page_subtitle' => 'ABOUT US',
             'mission_title' => '産学官金のネットワークを活かした地域創生',
             'mission_body' => '私たちは、産・官・学・金（金融機関）のネットワークを活用し、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。',
+            'philosophy_title' => '経営理念',
+            'philosophy_subtitle' => 'OUR MISSION',
+            'message_title' => 'ご挨拶',
+            'message_subtitle' => 'MESSAGE',
+            'company_title' => '会社概要',
+            'company_subtitle' => 'COMPANY PROFILE',
+            'history_title' => '沿革',
+            'history_subtitle' => 'HISTORY',
+            'staff_title' => '所属紹介',
+            'staff_subtitle' => 'OUR TEAM',
         ];
 
         $content = [ 'texts' => $texts, 'images' => [] ];
@@ -38,4 +48,3 @@ class AboutPageJsonSeeder extends Seeder
         $page->update(['title' => $page->title ?: '会社概要', 'content' => $existing]);
     }
 }
-

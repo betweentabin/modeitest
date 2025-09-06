@@ -17,8 +17,12 @@
     <section class="section mission-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">経営理念</h2>
-          <p class="section-subtitle">OUR MISSION</p>
+          <h2 class="section-title">
+            <CmsText pageKey="about" fieldKey="philosophy_title" tag="span" :fallback="'経営理念'" />
+          </h2>
+          <p class="section-subtitle">
+            <CmsText pageKey="about" fieldKey="philosophy_subtitle" tag="span" :fallback="'OUR MISSION'" />
+          </p>
         </div>
         
         <div class="mission-content">
@@ -39,8 +43,12 @@
     <section class="section message-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">ご挨拶</h2>
-          <p class="section-subtitle">MESSAGE</p>
+          <h2 class="section-title">
+            <CmsText pageKey="about" fieldKey="message_title" tag="span" :fallback="'ご挨拶'" />
+          </h2>
+          <p class="section-subtitle">
+            <CmsText pageKey="about" fieldKey="message_subtitle" tag="span" :fallback="'MESSAGE'" />
+          </p>
         </div>
         
         <div class="message-content">
@@ -85,8 +93,12 @@
     <section class="section company-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">会社概要</h2>
-          <p class="section-subtitle">COMPANY PROFILE</p>
+          <h2 class="section-title">
+            <CmsText pageKey="about" fieldKey="company_title" tag="span" :fallback="'会社概要'" />
+          </h2>
+          <p class="section-subtitle">
+            <CmsText pageKey="about" fieldKey="company_subtitle" tag="span" :fallback="'COMPANY PROFILE'" />
+          </p>
         </div>
         
         <div class="company-table">
@@ -124,8 +136,12 @@
     <section class="section history-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">沿革</h2>
-          <p class="section-subtitle">HISTORY</p>
+          <h2 class="section-title">
+            <CmsText pageKey="about" fieldKey="history_title" tag="span" :fallback="'沿革'" />
+          </h2>
+          <p class="section-subtitle">
+            <CmsText pageKey="about" fieldKey="history_subtitle" tag="span" :fallback="'HISTORY'" />
+          </p>
         </div>
         
         <div class="history-timeline">
@@ -163,8 +179,12 @@
     <section class="section staff-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">所属紹介</h2>
-          <p class="section-subtitle">OUR TEAM</p>
+          <h2 class="section-title">
+            <CmsText pageKey="about" fieldKey="staff_title" tag="span" :fallback="'所属紹介'" />
+          </h2>
+          <p class="section-subtitle">
+            <CmsText pageKey="about" fieldKey="staff_subtitle" tag="span" :fallback="'OUR TEAM'" />
+          </p>
         </div>
         
         <div class="staff-grid">
@@ -239,6 +259,7 @@ import CmsBlock from './CmsBlock.vue'
 import axios from 'axios';
 import { getApiUrl } from '@/config/api';
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "AboutPage",
@@ -247,7 +268,8 @@ export default {
     Footer,
     Group27,
     AccessSection,
-    CmsBlock
+    CmsBlock,
+    CmsText
   },
   data() {
     return {

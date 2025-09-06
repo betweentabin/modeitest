@@ -617,6 +617,14 @@ const KEY_LOCATIONS = {
   'company-profile': {
     page_title: 'ヒーロー・パンくず（CompanyProfile）',
     page_subtitle: '英字のサブ見出し（CompanyProfile）',
+    philosophy_title: '哲学セクション見出し（CompanyProfile）',
+    philosophy_subtitle: '哲学セクション英字（CompanyProfile）',
+    message_title: 'ご挨拶セクション見出し（CompanyProfile）',
+    message_subtitle: 'ご挨拶セクション英字（CompanyProfile）',
+    message_label: '左側ラベル「MESSAGE」',
+    message_signature: 'ご挨拶の署名',
+    profile_title: '会社概要セクション見出し',
+    profile_subtitle: '会社概要セクション英字',
   },
   'privacy': {
     page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',
