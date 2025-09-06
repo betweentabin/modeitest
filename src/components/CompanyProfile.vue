@@ -226,11 +226,6 @@
       </div>
       <div class="staff-carousel">
         <div class="carousel-container">
-          <button class="carousel-prev">
-            <svg width="16" height="44" viewBox="0 0 16 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0.544218 24.0321L12.8448 43.1583C13.1914 43.6972 13.6615 44 14.1517 44C14.6419 44 15.112 43.6972 15.4587 43.1583C15.8053 42.6193 16 41.8883 16 41.1261C16 40.3639 15.8053 39.6329 15.4587 39.094L4.46349 22.0024L15.4556 4.90604C15.6272 4.63918 15.7633 4.32236 15.8562 3.97368C15.9491 3.62501 15.9969 3.2513 15.9969 2.87389C15.9969 2.49649 15.9491 2.12278 15.8562 1.7741C15.7633 1.42542 15.6272 1.10861 15.4556 0.841744C15.2839 0.574878 15.0802 0.363189 14.8559 0.218762C14.6317 0.0743358 14.3914 -2.81188e-09 14.1486 0C13.9059 2.81189e-09 13.6656 0.0743357 13.4413 0.218762C13.2171 0.363189 13.0133 0.574878 12.8417 0.841744L0.541144 19.9678C0.369335 20.2347 0.233092 20.5517 0.14023 20.9005C0.047369 21.2494 -0.000284195 21.6234 9.53674e-07 22.001C0.000287056 22.3786 0.0485067 22.7524 0.141896 23.1009C0.235286 23.4495 0.372005 23.7659 0.544218 24.0321Z" fill="#1A1A1A"/>
-            </svg>
-          </button>
           <div class="staff-members">
             <div class="staff-member">
               <img class="staff-photo" src="https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452" alt="森田 祥子" />
@@ -269,9 +264,81 @@
               </div>
             </div>
           </div>
-          <button class="carousel-next">
-            <svg width="16" height="44" viewBox="0 0 16 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.4558 24.0321L3.15522 43.1583C2.8086 43.6972 2.33848 44 1.84828 44C1.35809 44 0.88797 43.6972 0.54135 43.1583C0.194729 42.6193 3.65224e-09 41.8883 0 41.1261C-3.65224e-09 40.3639 0.194729 39.6329 0.54135 39.094L11.5365 22.0024L0.544425 4.90604C0.372796 4.63918 0.236652 4.32236 0.143767 3.97368C0.0508821 3.62501 0.00307463 3.2513 0.00307462 2.87389C0.00307462 2.49649 0.0508821 2.12278 0.143767 1.7741C0.236652 1.42542 0.372796 1.10861 0.544425 0.841744C0.716055 0.574878 0.919808 0.363189 1.14405 0.218762C1.3683 0.0743358 1.60864 -2.81188e-09 1.85136 0C2.09408 2.81189e-09 2.33442 0.0743357 2.55867 0.218762C2.78291 0.363189 2.98667 0.574878 3.15829 0.841744L15.4589 19.9678C15.6307 20.2347 15.7669 20.5517 15.8598 20.9005C15.9526 21.2494 16.0003 21.6234 16 22.001C15.9997 22.3786 15.9515 22.7524 15.8581 23.1009C15.7647 23.4495 15.628 23.7659 15.4558 24.0321Z" fill="#1A1A1A"/>
+          <div class="carousel-controls">
+            <button class="carousel-prev">
+              <svg width="16" height="16" viewBox="0 0 16 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.544218 24.0321L12.8448 43.1583C13.1914 43.6972 13.6615 44 14.1517 44C14.6419 44 15.112 43.6972 15.4587 43.1583C15.8053 42.6193 16 41.8883 16 41.1261C16 40.3639 15.8053 39.6329 15.4587 39.094L4.46349 22.0024L15.4556 4.90604C15.6272 4.63918 15.7633 4.32236 15.8562 3.97368C15.9491 3.62501 15.9969 3.2513 15.9969 2.87389C15.9969 2.49649 15.9491 2.12278 15.8562 1.7741C15.7633 1.42542 15.6272 1.10861 15.4556 0.841744C15.2839 0.574878 15.0802 0.363189 14.8559 0.218762C14.6317 0.0743358 14.3914 -2.81188e-09 14.1486 0C13.9059 2.81189e-09 13.6656 0.0743357 13.4413 0.218762C13.2171 0.363189 13.0133 0.574878 12.8417 0.841744L0.541144 19.9678C0.369335 20.2347 0.233092 20.5517 0.14023 20.9005C0.047369 21.2494 -0.000284195 21.6234 9.53674e-07 22.001C0.000287056 22.3786 0.0485067 22.7524 0.141896 23.1009C0.235286 23.4495 0.372005 23.7659 0.544218 24.0321Z" fill="#1A1A1A"/>
+              </svg>
+            </button>
+            <div class="carousel-indicators">
+              <span 
+                v-for="(indicator, index) in carouselIndicators" 
+                :key="index"
+                class="indicator"
+                :class="{ active: index === currentCarouselIndex }"
+                @click="scrollToCarouselIndex(index)"
+              ></span>
+            </div>
+            <button class="carousel-next">
+              <svg width="16" height="16" viewBox="0 0 16 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.4558 24.0321L3.15522 43.1583C2.8086 43.6972 2.33848 44 1.84828 44C1.35809 44 0.88797 43.6972 0.54135 43.1583C0.194729 42.6193 3.65224e-09 41.8883 0 41.1261C-3.65224e-09 40.3639 0.194729 39.6329 0.54135 39.094L11.5365 22.0024L0.544425 4.90604C0.372796 4.63918 0.236652 4.32236 0.143767 3.97368C0.0508821 3.62501 0.00307463 3.2513 0.00307462 2.87389C0.00307462 2.49649 0.0508821 2.12278 0.143767 1.7741C0.236652 1.42542 0.372796 1.10861 0.544425 0.841744C0.716055 0.574878 0.919808 0.363189 1.14405 0.218762C1.3683 0.0743358 1.60864 -2.81188e-09 1.85136 0C2.09408 2.81189e-09 2.33442 0.0743357 2.55867 0.218762C2.78291 0.363189 2.98667 0.574878 3.15829 0.841744L15.4589 19.9678C15.6307 20.2347 15.7669 20.5517 15.8598 20.9005C15.9526 21.2494 16.0003 21.6234 16 22.001C15.9997 22.3786 15.9515 22.7524 15.8581 23.1009C15.7647 23.4495 15.628 23.7659 15.4558 24.0321Z" fill="#1A1A1A"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Financial Reports Section -->
+    <section class="financial-reports-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="financial_reports_title" tag="span" :fallback="'決算報告'" />
+        </h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="financial_reports_subtitle" tag="span" :fallback="'financial reports'" />
+          </span>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+      <div class="financial-reports-content">
+        <div v-if="loadingReports" class="loading-message">
+          決算報告を読み込み中...
+        </div>
+        <div v-else-if="financialReports.length === 0" class="no-reports-message">
+          決算報告はありません
+        </div>
+        <div v-else class="report-content">
+          <div class="report-card">
+            <div 
+              v-for="report in financialReports" 
+              :key="report.id" 
+              class="report-year-section"
+            >
+              <h2 class="year-title">{{ report.fiscal_year }}</h2>
+              <div class="report-info">
+                <div class="report-date">{{ report.report_info }}</div>
+                <div class="report-links">
+                  <div 
+                    v-for="(link, index) in report.report_links" 
+                    :key="index" 
+                    class="link-text"
+                  >
+                    {{ link }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Show More Button -->
+          <button class="show-more-btn" @click="goToFinancialReports">
+            <span>さらに表示</span>
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
+              <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
+              <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
             </svg>
           </button>
         </div>
@@ -322,6 +389,10 @@ export default {
       pageKey: 'company-profile',
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
+      financialReports: [],
+      loadingReports: false,
+      carouselIndicators: [],
+      currentCarouselIndex: 0,
       defaultMessageBody: `
         <p>皆さま方には、平素より筑邦銀行グループをご利用お引き立ていただき誠にありがとうございます。</p>
         <p>私どもは「地域社会へのご奉仕」という基本理念のもと、総合金融サービスの向上・充実に努めてまいりました。こうした中で、地元のさらなる発展に貢献するため、「(株)ちくぎん地域経済研究所」を設立いたしました。</p>
@@ -349,16 +420,202 @@ export default {
     this.adjustRectangleHeight();
     window.addEventListener('resize', this.adjustImageHeight);
     window.addEventListener('resize', this.adjustRectangleHeight);
+    this.setupCarouselScroll();
     try {
       this._pageText = usePageText(this.pageKey)
       this._pageText.load()
     } catch(e) { /* noop */ }
+    this.loadFinancialReports();
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustImageHeight);
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
+    calculateCarouselIndicators() {
+      const screenWidth = window.innerWidth;
+      const totalStaffCount = 5; // 実際のstaff-memberの数
+      
+      if (screenWidth > 1400) {
+        // 1400px以上は全員表示で横スクロールなし
+        this.carouselIndicators = [];
+      } else if (screenWidth > 900) {
+        // 900px〜1400pxは4人表示で1人ずつスクロール
+        const visibleCount = 4;
+        const scrollableCount = totalStaffCount - visibleCount + 1; // 5 - 4 + 1 = 2
+        this.carouselIndicators = Array(scrollableCount).fill(null);
+      } else if (screenWidth > 600) {
+        // 600px〜900pxは3人表示で1人ずつスクロール
+        const visibleCount = 3;
+        const scrollableCount = totalStaffCount - visibleCount + 1; // 5 - 3 + 1 = 3
+        this.carouselIndicators = Array(scrollableCount).fill(null);
+      } else {
+        // 600px以下は2人表示で1人ずつスクロール
+        const visibleCount = 2;
+        const scrollableCount = totalStaffCount - visibleCount + 1; // 5 - 2 + 1 = 4
+        this.carouselIndicators = Array(scrollableCount).fill(null);
+      }
+    },
+    scrollToCarouselIndex(index) {
+      const staffMembers = document.querySelector('.staff-members');
+      if (!staffMembers) return;
+
+      const screenWidth = window.innerWidth;
+      if (screenWidth <= 1400) {
+        let scrollAmount;
+        if (screenWidth > 900) {
+          // 900px〜1400px: 4人表示なので1人分の幅
+          scrollAmount = (staffMembers.offsetWidth - 30) / 4 + 10;
+        } else if (screenWidth > 600) {
+          // 600px〜900px: 3人表示なので1人分の幅
+          scrollAmount = (staffMembers.offsetWidth - 20) / 3 + 10;
+        } else {
+          // 600px以下: 2人表示なので1人分の幅
+          scrollAmount = (staffMembers.offsetWidth - 10) / 2 + 10;
+        }
+        
+        staffMembers.scrollTo({
+          left: index * scrollAmount,
+          behavior: 'smooth'
+        });
+        
+        this.currentCarouselIndex = index;
+      }
+    },
+    setupCarouselScroll() {
+      this.$nextTick(() => {
+        const prevButton = document.querySelector('.carousel-prev');
+        const nextButton = document.querySelector('.carousel-next');
+        const staffMembers = document.querySelector('.staff-members');
+        
+        if (prevButton && nextButton && staffMembers) {
+          // インジケーター数を計算
+          this.calculateCarouselIndicators();
+          
+          const getScrollAmount = () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth > 900) {
+              // 900px〜1400px: 4人表示なので1人分の幅
+              return (staffMembers.offsetWidth - 30) / 4 + 10; // 4等分 + gap
+            } else if (screenWidth > 600) {
+              // 600px〜900px: 3人表示なので1人分の幅
+              return (staffMembers.offsetWidth - 20) / 3 + 10; // 3等分 + gap
+            } else {
+              // 600px以下: 2人表示なので1人分の幅
+              return (staffMembers.offsetWidth - 10) / 2 + 10; // 2等分 + gap
+            }
+          };
+
+          const updateIndicators = () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 1400) {
+              const scrollLeft = staffMembers.scrollLeft;
+              const scrollAmount = getScrollAmount();
+              const currentIndex = Math.round(scrollLeft / scrollAmount);
+              this.currentCarouselIndex = Math.min(currentIndex, this.carouselIndicators.length - 1);
+            }
+          };
+          
+          prevButton.addEventListener('click', () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 1400 && this.currentCarouselIndex > 0) {
+              this.currentCarouselIndex--;
+              const scrollAmount = getScrollAmount();
+              staffMembers.scrollTo({
+                left: this.currentCarouselIndex * scrollAmount,
+                behavior: 'smooth'
+              });
+            }
+          });
+          
+          nextButton.addEventListener('click', () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 1400 && this.currentCarouselIndex < this.carouselIndicators.length - 1) {
+              this.currentCarouselIndex++;
+              const scrollAmount = getScrollAmount();
+              staffMembers.scrollTo({
+                left: this.currentCarouselIndex * scrollAmount,
+                behavior: 'smooth'
+              });
+            }
+          });
+
+          // スクロール時のインジケーター更新
+          staffMembers.addEventListener('scroll', updateIndicators);
+          
+          // リサイズ時のインジケーター再計算
+          window.addEventListener('resize', () => {
+            this.calculateCarouselIndicators();
+            this.currentCarouselIndex = 0;
+          });
+        }
+      });
+    },
+    async loadFinancialReports() {
+      this.loadingReports = true;
+      try {
+        // 既存の決算報告ページと同じデータを表示
+        this.financialReports = [
+          {
+            id: 1,
+            fiscal_year: '2025年3月期',
+            report_type: '年次決算',
+            report_date: '2020-05-12',
+            revenue: null,
+            net_income: null,
+            file_path: null,
+            report_info: '決算情報（2020年5月12日）',
+            report_links: [
+              '決算情報（2020年5月12日）',
+              '決算要旨（PDF ： 1.28MB／全31ページ）',
+              '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 384KB／全22ページ）',
+              '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 620KB／全11ページ）',
+              'メディア向け決算説明会の模様をご覧いただけます'
+            ]
+          },
+          {
+            id: 2,
+            fiscal_year: '2024年3月期',
+            report_type: '年次決算',
+            report_date: '2020-05-12',
+            revenue: null,
+            net_income: null,
+            file_path: null,
+            report_info: '決算情報（2020年5月12日）',
+            report_links: [
+              '決算情報（2020年5月12日）',
+              '決算要旨（PDF ： 1.28MB／全31ページ）',
+              '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 384KB／全22ページ）',
+              '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 620KB／全11ページ）',
+              'メディア向け決算説明会の模様をご覧いただけます'
+            ]
+          }
+        ];
+      } catch (error) {
+        console.error('Error loading financial reports:', error);
+        this.financialReports = [];
+      } finally {
+        this.loadingReports = false;
+      }
+    },
+    formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    },
+    formatCurrency(amount) {
+      if (!amount) return '';
+      return new Intl.NumberFormat('ja-JP', {
+        style: 'currency',
+        currency: 'JPY',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(amount);
+    },
     adjustImageHeight() {
       this.$nextTick(() => {
         const messageText = this.$el.querySelector('.message-text');
@@ -388,6 +645,9 @@ export default {
           rectangle3.style.height = frameHeight + 'px';
         }
       });
+    },
+    goToFinancialReports() {
+      this.$router.push('/financial-report');
     }
   }
 };
@@ -454,6 +714,7 @@ section {
   background: #ECECEC;
   width: 100%;
   overflow: hidden;
+  padding: 70px 50px 50px;
 }
 
 .philosophy-content {
@@ -523,6 +784,7 @@ section {
   background: #ECECEC;
   width: 100%;
   overflow: hidden;
+  padding: 70px 50px 50px;
 }
 
 .message-content {
@@ -582,6 +844,7 @@ section {
 /* Company Profile Section */
 .company-profile-section {
   background: #ECECEC;
+  padding: 70px 50px 50px;
 }
 
 .profile-table {
@@ -626,6 +889,7 @@ section {
 /* History Section */
 .history-section {
   background: #ECECEC;
+  padding: 70px 50px 50px;
 }
 
 .history-content {
@@ -703,7 +967,131 @@ section {
 /* Staff Section */
 .staff-section {
   background: #ECECEC;
+  padding: 70px 50px 50px;
 }
+
+/* Financial Reports Section */
+.financial-reports-section {
+  background: #ECECEC;
+  padding: 70px 50px 50px;
+}
+
+.financial-reports-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.loading-message,
+.no-reports-message {
+  text-align: center;
+  color: #3F3F3F;
+  font-size: 18px;
+  padding: 40px 0;
+}
+
+.report-content {
+  display: flex;
+  padding: 50px;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 2000px;
+  border-radius: 20px;
+  background: #FFF;
+}
+
+.report-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.report-year-section {
+  width: 100%;
+  padding: 30px 0;
+  border-bottom: 0.5px dashed #B0B0B0;
+}
+
+.report-year-section:first-child {
+  border-top: 0.5px dashed #B0B0B0;
+}
+
+.year-title {
+  font-size: 24px;
+  color: #1A1A1A;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.report-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.report-date {
+  color: #666;
+  font-family: Inter;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.report-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link-text {
+  color: #0066cc;
+  font-family: Inter;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: normal;
+  text-indent: -1em;
+  padding-left: 1em;
+}
+
+.link-text::before {
+  content: "・";
+  margin-right: 4px;
+}
+
+
+.show-more-btn {
+  display: flex;
+  width: 300px;
+  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: #1A1A1A;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.show-more-btn span {
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 150%;
+}
+
+.show-more-btn:hover {
+  opacity: 0.8;
+}
+
 
 .staff-carousel {
   background: white;
@@ -718,11 +1106,28 @@ section {
 }
 
 .carousel-prev, .carousel-next {
-  background: transparent;
-  border: none;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
   cursor: pointer;
-  width: 16px;
-  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-prev:hover, .carousel-next:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-prev:active, .carousel-next:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .staff-carousel {
@@ -733,17 +1138,68 @@ section {
 
 .carousel-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 50px;
+  gap: 20px;
   width: 100%;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 10px;
+}
+
+.carousel-indicators {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.indicator.active {
+  background: #3b82f6;
+  transform: scale(1.2);
+}
+
+.indicator:hover {
+  background: #9ca3af;
 }
 
 .staff-members {
   display: flex;
   gap: 10px;
-  overflow-x: hidden;
-  width: 90%;
+  overflow-x: auto;
+  width: 100%;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+@media (min-width: 1401px) {
+  .staff-members {
+    overflow-x: hidden;
+  }
+  
+  .carousel-controls {
+    display: none;
+  }
+}
+
+.staff-members::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .staff-member {
@@ -945,12 +1401,40 @@ section {
 
 
 /* Responsive Design */
+@media (max-width: 1400px) {
+  .staff-member {
+    width: calc((100% - 30px) / 4);
+    min-width: calc((100% - 30px) / 4);
+  }
+}
+
+@media (max-width: 900px) {
+  .staff-member {
+    width: calc((100% - 20px) / 3) !important;
+    min-width: calc((100% - 20px) / 3) !important;
+  }
+}
+
 @media (max-width: 1150px) {
   .frame-1321317467-1 {
     flex-direction: column;
     gap: 20px;
   }
-  
+}
+
+@media (max-width: 1050px) {
+  .staff-name {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .staff-reading {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 1150px) {
   .rectangle-3 {
     width: 100%;
     max-width: none;
@@ -965,8 +1449,9 @@ section {
   .message-section,
   .company-profile-section,
   .history-section,
-  .staff-section {
-    padding: 50px 30px;
+  .staff-section,
+  .financial-reports-section {
+    padding: 50px 30px !important;
   }
 
   .philosophy-text,
@@ -1038,12 +1523,6 @@ section {
   .staff-name {
     font-size: 22px !important;
   }
-
-  .staff-position,
-  .staff-note,
-  .staff-reading {
-    font-size: 18px !important;
-  }
   
   .history-item,
   .profile-row {
@@ -1079,6 +1558,21 @@ section {
 }
 
 @media (max-width: 900px) {
+  .staff-member {
+    width: calc((100% - 20px) / 3) !important;
+    min-width: calc((100% - 20px) / 3) !important;
+  }
+
+  .staff-name {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  .staff-reading {
+    align-self: center;
+  }
+
   .company-profile {
     overflow-x: hidden;
   }
@@ -1103,6 +1597,26 @@ section {
   .message-content {
     width: 100%;
     max-width: 100%;
+  }
+
+  .report-content {
+    padding: 30px 20px !important;
+  }
+
+  .report-year-section {
+    padding: 20px !important;
+  }
+  
+  .year-title {
+    font-size: 22px !important;
+  }
+  
+  .report-date {
+    font-size: 16px !important;
+  }
+
+  .link-text {
+    font-size: 17px !important;
   }
 
   .section-header {
@@ -1137,30 +1651,25 @@ section {
     font-size: 20px !important;
   }
 
-  .staff-position,
-  .staff-note,
-  .staff-reading {
-    font-size: 17px !important;
-  }
-
   .history-year {
     font-size: 42px !important;
   }
 
   .staff-members {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: flex;
+    gap: 10px;
     width: 100%;
-    overflow-x: visible;
+    overflow-x: auto;
+    scroll-behavior: smooth;
   }
 
   .philosophy-section,
   .message-section,
   .company-profile-section,
   .history-section,
-  .staff-section {
-    padding: 30px 20px;
+  .staff-section,
+  .financial-reports-section {
+    padding: 30px 20px !important;
     gap: 30px;
   }
   
@@ -1176,19 +1685,43 @@ section {
   }
 
   .staff-member {
-    width: 100%;
+    width: 200px;
+    min-width: 200px;
+  }
+
+  .carousel-controls {
+    max-width: 300px;
   }
 
   .carousel-prev,
   .carousel-next {
-    display: none;
+    width: 35px;
+    height: 35px;
+  }
+
+  .indicator {
+    width: 6px;
+    height: 6px;
   }
 }
 
 @media (max-width: 768px) {
+  .staff-name {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .staff-reading {
+    align-self: flex-start;
+  }
   
   .staff-members {
-    overflow-x: scroll;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
   }
 
   .philosophy-content,
@@ -1215,8 +1748,9 @@ section {
   .message-section,
   .company-profile-section,
   .history-section,
-  .staff-section {
-    padding: 30px 20px;
+  .staff-section,
+  .financial-reports-section {
+    padding: 30px 20px !important;
     gap: 30px;
   }
   
@@ -1244,6 +1778,18 @@ section {
     font-size: 16px !important;
   }
 
+  .link-text {
+    font-size: 16px !important;
+  }
+
+  .year-title {
+    font-size: 19px !important;
+  }
+
+  .report-content {
+    padding: 30px 20px !important;
+  }
+
   .mission-title,
   .message-title {
     font-size: 38px !important;
@@ -1263,12 +1809,6 @@ section {
     font-size: 19px !important;
   }
 
-  .staff-position,
-  .staff-note,
-  .staff-reading {
-    font-size: 16px !important;
-  }
-
   .history-year {
     font-size: 38px !important;
   }
@@ -1276,6 +1816,19 @@ section {
   .footer-links {
     flex-wrap: wrap;
     gap: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .staff-note {
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .staff-member {
+    width: calc((100% - 10px) / 2) !important;
+    min-width: calc((100% - 10px) / 2) !important;
   }
 }
 
@@ -1290,8 +1843,9 @@ section {
   .message-section,
   .company-profile-section,
   .history-section,
-  .staff-section {
-    padding: 30px 20px;
+  .staff-section,
+  .financial-reports-section {
+    padding: 20px 15px !important;
     gap: 20px;
   }
   
@@ -1380,6 +1934,73 @@ section {
 
   .divider-text {
     font-size: 13px !important;
+  }
+
+  .link-text {
+    font-size: 13px !important;
+  }
+
+  .year-title {
+    font-size: 18px !important;
+  }
+
+  .report-content {
+    padding: 20px 15px !important;
+  }
+
+  .report-year-section {
+    padding: 15px 5px !important;
+  }
+  
+  .year-title {
+    font-size: 18px !important;
+  }
+  
+  .report-date {
+    font-size: 13px !important;
+  }
+
+  .year-title {
+    font-size: 20px !important;
+  }
+
+  .report-content {
+    padding: 30px 20px !important;
+  }
+}
+
+/* Show More Button Responsive Styles */
+@media (max-width: 1150px) {
+  .show-more-btn span {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .show-more-btn span {
+    font-size: 17px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .show-more-btn span {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .show-more-btn {
+    width: 250px !important;
+  }
+  
+  .show-more-btn span {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .show-more-btn {
+    width: 100% !important;
   }
 }
 </style>

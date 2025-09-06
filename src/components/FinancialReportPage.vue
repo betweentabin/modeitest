@@ -97,16 +97,16 @@
           </ul>
         </div>
       </div>
-
-      <!-- Action Buttons -->
-      <ActionButton 
-        :primaryText="ctaPrimaryText"
-        :secondaryText="ctaSecondaryText"
-        maxWidth="1500px"
-        @primary-click="goToContact"
-        @secondary-click="goToMember"
-      />
     </div>
+
+    <!-- Action Buttons -->
+    <ActionButton 
+      :primaryText="ctaPrimaryText"
+      :secondaryText="ctaSecondaryText"
+      maxWidth="1500px"
+      @primary-click="goToContact"
+      @secondary-click="goToMember"
+    />
 
     <!-- Contact CTA Section -->
     <ContactSection />
@@ -238,7 +238,7 @@ export default {
 .reports-container {
   background: white;
   max-width: 1500px;
-  margin: 0 auto 50px;
+  margin: 0 auto;
   padding: 50px;
   border-radius: 15px;
 }
@@ -415,7 +415,7 @@ export default {
   }
   
   .report-section {
-    padding: 15px !important;
+    padding: 15px 5px !important;
   }
   
   .report-year {

@@ -687,7 +687,7 @@ export default {
   align-self: stretch;
   color: var(--black-text);
   font-family: Inter;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   line-height: normal;
   margin: 0;
@@ -703,7 +703,7 @@ export default {
 .report-date {
   color: var(--dark-text);
   font-family: Inter;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   line-height: normal;
 }
@@ -993,6 +993,26 @@ export default {
 }
 
 /* Responsive Design */
+@media (max-width: 1150px) {
+  .year-title {
+    font-size: 22px !important;
+  }
+
+  .report-date {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .year-title {
+    font-size: 20px !important;
+  }
+
+  .report-date {
+    font-size: 17px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .financial-report-page {
     width: 100%;
@@ -1005,8 +1025,26 @@ export default {
     gap: 10px;
   }
 
+  .year-title {
+    font-size: 19px !important;
+  }
+
+  .report-date {
+    font-size: 16px !important;
+  }
+
   .nav-menu {
     justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .year-title {
+    font-size: 18px !important;
+  }
+
+  .report-date {
+    font-size: 13px !important;
   }
 
   .hero-section {
