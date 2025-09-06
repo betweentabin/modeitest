@@ -45,6 +45,17 @@
           </div>
           <button @click="applyFilters" class="apply-btn">絞り込み</button>
         </div>
+        <div class="filter-row" style="margin-top:8px; align-items:center; gap:12px;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:#333;">
+            <input type="checkbox" v-model="showAll" /> 管理用: 全件表示（会員限定も含む）
+          </label>
+          <select v-model="filters.membership_level" class="filter-select" :disabled="!showAll">
+            <option value="">会員レベル</option>
+            <option value="free">無料公開</option>
+            <option value="standard">スタンダード以上</option>
+            <option value="premium">プレミアム限定</option>
+          </select>
+        </div>
         <!-- カテゴリ管理 -->
         <div class="category-manager">
           <div class="cat-header">
@@ -207,6 +218,7 @@ export default {
       currentPage: 1,
       totalPages: 1,
       itemsPerPage: 20,
+      showAll: false,
       authToken: null,
       cat: { newName: '', editingId: null, editingName: '', saving:false, error:'' }
     }
@@ -344,32 +356,27 @@ export default {
           console.log('MockServer failed, trying API')
         }
 
-        // APIから取得
-        this.authToken = localStorage.getItem('admin_token')
-        if (!this.authToken) {
-          console.log('No admin token found, getting debug token...')
-          // デバッグ用: トークンが無い場合は自動取得
-          const debugToken = await apiClient.getDebugAdminToken()
-          if (debugToken) {
-            this.authToken = debugToken
-            console.log('Debug token obtained successfully')
-          } else {
-            throw new Error('管理者認証が必要です')
-          }
-        }
-        
-        // クエリに空文字を載せない（category="" 等で全件除外を防止）
-        const params = {
-          page: this.currentPage,
-          per_page: this.itemsPerPage,
-        }
+        // APIから取得（公開セット or 管理全件）
+        const params = { page: this.currentPage, per_page: this.itemsPerPage }
         if (this.filters && this.filters.category) params.category = this.filters.category
-        if (this.filters && this.filters.year) params.year = this.filters.year
-        if (this.filters && this.filters.month) params.month = this.filters.month
         if (this.searchKeyword && this.searchKeyword.trim()) params.search = this.searchKeyword.trim()
         
-        const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
-        console.log('Admin publications API response:', response)
+        let response
+        if (this.showAll) {
+          // 管理全件（会員限定含む）
+          this.authToken = localStorage.getItem('admin_token')
+          if (!this.authToken) {
+            const debugToken = await apiClient.getDebugAdminToken()
+            if (debugToken) { this.authToken = debugToken } else { throw new Error('管理者認証が必要です') }
+          }
+          if (this.filters && this.filters.membership_level) params.membership_level = this.filters.membership_level
+          response = await apiClient.getAdminPublications(params)
+          console.log('Admin publications API response:', response)
+        } else {
+          // 公開セット（freeの一般公開分）
+          response = await apiClient.getPublications(params)
+          console.log('Public publications API response:', response)
+        }
         if (response.success && response.data) {
           this.publications = response.data.publications.map(pub => ({
             id: pub.id,

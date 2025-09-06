@@ -35,6 +35,11 @@ class PublicationManagementController extends Controller
                 }
             }
 
+            // 会員レベル（free/standard/premium）でのフィルタ
+            if ($request->filled('membership_level')) {
+                $query->where('membership_level', $request->membership_level);
+            }
+
             if ($request->filled('search')) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
