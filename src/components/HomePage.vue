@@ -9,10 +9,10 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <h1 class="hero-title">{{ heroTitle }}</h1>
+              <h1 class="hero-title">{{ text66 }}</h1>
             </div>
             <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">{{ heroSubtitle }}</div>
+              <div class="hero-subtitle">{{ text67 }}</div>
             </div>
             <div class="hero-button-wrapper" @click="goToContact">
               <div class="hero-button-text">{{ text68 }}</div>
@@ -363,7 +363,6 @@ import Footer from "./Footer";
 import Group27 from "./Group27";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
-import { usePageText } from '@/composables/usePageText'
 import { homePageData } from "../data.js";
 import mockServer from "@/mockServer";
 import apiClient from "@/services/apiClient"; // apiClientをインポート
@@ -403,7 +402,6 @@ export default {
   },
   data() {
     return {
-      pageKey: 'home',
       // Import data from homePageData
       heroImage: homePageData.heroImage,
       text66: homePageData.text66,
@@ -503,11 +501,6 @@ export default {
   async mounted() {
     // データをロード
     await this.loadLatestData();
-    // ページテキスト
-    try {
-      this._pageText = usePageText(this.pageKey)
-      await this._pageText.load()
-    } catch(e) { /* noop */ }
   },
   methods: {
     async loadLatestData() {
@@ -542,32 +535,8 @@ export default {
       } catch (error) {
         console.error('CMSデータの取得に失敗:', error);
         // エラー時は何もしない（デフォルトデータが既に表示されているため）
-    }
-  },
-  computed: {
-    _pageRef() { return this._pageText?.page?.value },
-    heroTitle() {
-      // 優先順: CMS(texts.hero_title → texts.page_title → content.hero.title) → data.js → 既定文言
-      const get = key => (this._pageText?.getText && this._pageText.getText(key, '')) || ''
-      const fromTexts = get('hero_title') || get('page_title')
-      const fromStruct = this._pageRef?.content?.hero?.title || ''
-      const base = this.text66 || ''
-      const val = fromTexts || fromStruct || base
-      const fallback = '産・官・学・金（金融機関）の力で'
-      return (typeof val === 'string' && val.trim().length) ? val : fallback
+      }
     },
-    heroSubtitle() {
-      // 優先順: CMS(texts.hero_subtitle → texts.lead → content.hero.subtitle) → data.js → 既定文言
-      const get = key => (this._pageText?.getText && this._pageText.getText(key, '')) || ''
-      const fromTexts = get('hero_subtitle') || get('lead')
-      const fromStruct = this._pageRef?.content?.hero?.subtitle || ''
-      const base = this.text67 || ''
-      const val = fromTexts || fromStruct || base
-      const fallback = '企業活動を支援'
-      return (typeof val === 'string' && val.trim().length) ? val : fallback
-    },
-  },
-  
 
     updatePageData(allNews, seminars, publications, notices) {
       // ニュース枠はお知らせを使用
