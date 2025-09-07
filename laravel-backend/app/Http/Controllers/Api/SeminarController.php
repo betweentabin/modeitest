@@ -123,6 +123,13 @@ class SeminarController extends Controller
      */
     public function store(Request $request)
     {
+        // Fallback: handle raw JSON when Content-Type header is missing
+        if (empty($request->all())) {
+            $raw = json_decode($request->getContent(), true);
+            if (is_array($raw)) {
+                $request->merge($raw);
+            }
+        }
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:200',
             'description' => 'nullable|string',
@@ -173,6 +180,14 @@ class SeminarController extends Controller
     public function update(Request $request, $id)
     {
         $seminar = Seminar::findOrFail($id);
+
+        // Fallback: handle raw JSON when Content-Type header is missing
+        if (empty($request->all())) {
+            $raw = json_decode($request->getContent(), true);
+            if (is_array($raw)) {
+                $request->merge($raw);
+            }
+        }
 
         $validator = Validator::make($request->all(), [
             'title' => 'sometimes|required|string|max:200',
