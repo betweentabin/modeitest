@@ -212,24 +212,23 @@ export default {
   methods: {
     async loadCategories() {
       try {
-        // まずmockServerから取得を試みる
+        // 管理画面ではAPIを優先（最新を反映）。失敗時のみモックにフォールバック。
+        const response = await apiClient.getPublicationCategories()
+        if (response && response.success) {
+          this.categories = Array.isArray(response.data) ? response.data : (response.data?.categories || [])
+          return
+        }
+
+        // APIが失敗・未提供の場合のみモック
         try {
           const categories = await mockServer.getPublicationCategories()
           if (categories && categories.length > 0) {
             this.categories = categories
             return
           }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API')
-        }
+        } catch (_) { /* noop */ }
 
-        // APIから取得
-        const response = await apiClient.getPublicationCategories()
-        if (response && response.success) {
-          this.categories = Array.isArray(response.data) ? response.data : (response.data?.categories || [])
-        } else {
-          throw new Error('カテゴリーデータの取得に失敗しました')
-        }
+        throw new Error('カテゴリーデータの取得に失敗しました')
       } catch (err) {
         console.error('カテゴリー読み込みエラー:', err)
         // フォールバック: デフォルトカテゴリー
@@ -249,7 +248,11 @@ export default {
           this.cat.newName = ''
           await this.loadCategories()
         } else {
-          alert(res?.message || '追加に失敗しました')
+          const msg = (res?.raw?.errors?.slug && res.raw.errors.slug[0])
+            || (res?.raw?.errors?.name && res.raw.errors.name[0])
+            || res?.message
+            || '追加に失敗しました'
+          alert(`カテゴリー追加エラー: ${msg}`)
         }
       } catch(e) { alert('追加に失敗しました') }
     },
@@ -267,7 +270,13 @@ export default {
         if (res && res.success) {
           this.cancelEditCategory()
           await this.loadCategories()
-        } else { alert(res?.message || '更新に失敗しました') }
+        } else {
+          const msg = (res?.raw?.errors?.slug && res.raw.errors.slug[0])
+            || (res?.raw?.errors?.name && res.raw.errors.name[0])
+            || res?.message
+            || '更新に失敗しました'
+          alert(`カテゴリー更新エラー: ${msg}`)
+        }
       } catch(e){ alert('更新に失敗しました') }
     },
     async deleteCategory(c) {
