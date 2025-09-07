@@ -71,7 +71,8 @@ export default {
   },
   computed: {
     cmsKey() {
-      return this.cmsPageKey || 'site'
+      // No 'site' page exists in backend; use an existing page as a safe default
+      return this.cmsPageKey || 'contact'
     },
     resolvedBg() {
       const key = this.mediaKey

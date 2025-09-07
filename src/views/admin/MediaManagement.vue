@@ -43,7 +43,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(row, idx) in rows" :key="row._id">
+              <tr v-for="(row, idx) in pagedRows" :key="row._id">
                 <td>
                   <img :src="row.url" alt="preview" style="max-width:140px; max-height:70px; object-fit:cover; border-radius:4px;" v-if="row.url" />
                   <div v-else style="color:#888; font-size:12px;">（未設定）</div>
@@ -55,7 +55,7 @@
                 <td>
                   <button 
                     class="edit-btn" 
-                    @click="pickReplace(idx)"
+                    @click="pickReplace((currentPage - 1) * pageSize + idx)"
                     :disabled="row.model !== 'page_content'"
                     :title="row.model !== 'page_content' ? 'ページ管理以外は置換未対応' : '画像で置換'"
                   >画像で置換</button>
@@ -68,8 +68,21 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination">
-        <span class="page-info">1 2 3 .... 99 最後</span>
+      <div class="pagination" v-if="!loading && !error && totalPages > 1">
+        <button class="page-btn" :disabled="currentPage===1" @click="goToPage(1)">最初</button>
+        <button class="page-btn" :disabled="currentPage===1" @click="prevPage">前へ</button>
+        <span class="page-info">
+          <button 
+            v-for="n in pageButtons" 
+            :key="n.key" 
+            class="page-number"
+            :class="{ active: n.page === currentPage, ellipsis: n.ellipsis }"
+            :disabled="n.ellipsis"
+            @click="!n.ellipsis && goToPage(n.page)"
+          >{{ n.label }}</button>
+        </span>
+        <button class="page-btn" :disabled="currentPage===totalPages" @click="nextPage">次へ</button>
+        <button class="page-btn" :disabled="currentPage===totalPages" @click="goToPage(totalPages)">最後</button>
       </div>
     </div>
   </AdminLayout>
@@ -87,12 +100,15 @@ export default {
   },
   data() {
     return {
-      rows: [], // { _id, pageKey, key, url, source, updated_at }
+      allRows: [], // 全件
+      rows: [], // 互換のため残すが、描画はpagedRowsを使用
       loading: false,
       error: '',
       searchKeyword: '',
       selectedMedia: [],
       filePickIndex: -1,
+      currentPage: 1,
+      pageSize: 20,
     }
   },
   async mounted() {
@@ -106,7 +122,7 @@ export default {
         const res = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
         const items = res?.data?.data?.items || res?.data?.items || []
         const apiBase = getApiBaseUrl()
-        this.rows = items.map(it => {
+        const mapped = items.map(it => {
           const rawUrl = it.url || ''
           let url = rawUrl
           // 絶対URLはそのまま
@@ -131,6 +147,9 @@ export default {
           updated_at: it.updated_at,
           })
         })
+        this.allRows = mapped
+        this.rows = mapped
+        this.currentPage = 1
       } catch (e) {
         this.error = 'メディアの取得に失敗しました'
       } finally {
@@ -146,7 +165,7 @@ export default {
       input.onchange = async (e) => {
         const file = e.target.files[0]
         if (!file) return
-        const row = this.rows[this.filePickIndex]
+        const row = this.allRows[this.filePickIndex]
         try {
           const fd = new FormData()
           fd.append('image', file)
@@ -186,12 +205,54 @@ export default {
       return `${year}年${month}月${day}日(${weekday})`
     },
     performSearch() {
-      // キー/URLを対象にクライアントフィルタ（簡易）
-      const kw = (this.searchKeyword || '').toLowerCase()
-      if (!kw) return
-      this.rows = this.rows.filter(r => (r.pageKey||'').toLowerCase().includes(kw) || (r.key||'').toLowerCase().includes(kw) || (r.url||'').toLowerCase().includes(kw))
+      // キー/URLを対象にクライアントフィルタ（簡易）: ページを先頭に戻す
+      this.currentPage = 1
     },
-    uploadNewMedia() {}
+    uploadNewMedia() {},
+    goToPage(n) {
+      if (n < 1 || n > this.totalPages) return
+      this.currentPage = n
+    },
+    nextPage() { this.goToPage(this.currentPage + 1) },
+    prevPage() { this.goToPage(this.currentPage - 1) },
+  }
+,
+  computed: {
+    filteredRows() {
+      const kw = (this.searchKeyword || '').toLowerCase().trim()
+      if (!kw) return this.allRows
+      return this.allRows.filter(r =>
+        (r.pageKey||'').toLowerCase().includes(kw) ||
+        (r.key||'').toLowerCase().includes(kw) ||
+        (r.url||'').toLowerCase().includes(kw)
+      )
+    },
+    totalPages() {
+      return Math.max(1, Math.ceil(this.filteredRows.length / this.pageSize))
+    },
+    pagedRows() {
+      const start = (this.currentPage - 1) * this.pageSize
+      return this.filteredRows.slice(start, start + this.pageSize)
+    },
+    pageButtons() {
+      const buttons = []
+      const TP = this.totalPages
+      const CP = this.currentPage
+      const add = (page, label = null) => buttons.push({ key: `p-${page}-${label||page}` , page, label: label || page })
+      const ell = () => buttons.push({ key: `e-${buttons.length}` , page: 0, label: '…', ellipsis: true })
+      if (TP <= 9) {
+        for (let i=1;i<=TP;i++) add(i)
+      } else {
+        add(1); add(2)
+        if (CP > 5) ell()
+        const start = Math.max(3, CP - 2)
+        const end = Math.min(TP - 2, CP + 2)
+        for (let i=start; i<=end; i++) add(i)
+        if (CP < TP - 4) ell()
+        add(TP-1); add(TP)
+      }
+      return buttons
+    }
   }
 }
 </script>
@@ -364,4 +425,25 @@ export default {
   font-size: 14px;
   color: #da5761;
 }
+
+.page-btn {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.page-btn:disabled { opacity: .5; cursor: default; }
+
+.page-number {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.page-number.active { background: #1A1A1A; color: #fff; border-color: #1A1A1A; }
+.page-number.ellipsis { cursor: default; background: transparent; border-color: transparent; }
 </style>

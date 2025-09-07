@@ -113,6 +113,13 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
+  computed: {
+    // Use explicit page key if provided; otherwise fall back to an existing page
+    // to avoid 404 (no 'site' page exists in backend). 'contact' exists and is safe.
+    cmsKey() {
+      return this.cmsPageKey || 'contact'
+    }
+  },
   methods: {
     adjustRectangleHeight() {
       this.$nextTick(() => {

@@ -246,6 +246,7 @@ export default {
 .title {
   margin: 0 0 8px 0;
   color: var(--black);
+  text-align: center; /* 見出しを中央寄せ */
 }
 
 .subtitle {
