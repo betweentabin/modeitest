@@ -39,6 +39,7 @@ export default {
     value: { type: String, default: '' }, // optional fallback display
     placeholder: { type: String, default: '' },
     class: { type: String, default: '' },
+    allowEmpty: { type: Boolean, default: false },
   },
   setup(props) {
     const { enabled } = useEditMode()
@@ -60,9 +61,9 @@ export default {
     ].filter(Boolean).join(' '))
 
     const cmsValue = computed(() => {
-      if (props.type === 'html') return pageText.getHtml(props.fieldKey, '')
-      if (props.type === 'link') return pageText.getLink(props.fieldKey, '')
-      return pageText.getText(props.fieldKey, '')
+      if (props.type === 'html') return pageText.getHtml(props.fieldKey, '', { allowEmpty: props.allowEmpty })
+      if (props.type === 'link') return pageText.getLink(props.fieldKey, '', { allowEmpty: props.allowEmpty })
+      return pageText.getText(props.fieldKey, '', { allowEmpty: props.allowEmpty })
     })
 
     const displayValue = computed(() => {

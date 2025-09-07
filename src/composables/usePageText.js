@@ -102,14 +102,19 @@ export function usePageText(pageKey) {
     }
   }
 
-  const getText = (key, fallback = '') => {
+  const getText = (key, fallback = '', options = {}) => {
+    const allowEmpty = !!options.allowEmpty
     const page = state.pages[pageKey]?.page
     const texts = page?.content?.texts
     const val = texts && Object.prototype.hasOwnProperty.call(texts, key) ? texts[key] : undefined
-    return typeof val === 'string' && val.length > 0 ? val : fallback
+    if (allowEmpty) {
+      return typeof val === 'string' ? val : fallback
+    }
+    return (typeof val === 'string' && val.length > 0) ? val : fallback
   }
 
-  const getHtml = (key, fallback = '') => {
+  const getHtml = (key, fallback = '', options = {}) => {
+    const allowEmpty = !!options.allowEmpty
     const page = state.pages[pageKey]?.page
     const htmls = page?.content?.htmls || page?.content?.rich || null
     let raw = htmls && Object.prototype.hasOwnProperty.call(htmls, key) ? htmls[key] : undefined
@@ -117,15 +122,18 @@ export function usePageText(pageKey) {
     if ((raw === undefined || raw === null || raw === '') && typeof page?.content?.html === 'string') {
       raw = page.content.html
     }
-    const chosen = (typeof raw === 'string' && raw.length > 0) ? raw : fallback
+    const chosen = allowEmpty ? (typeof raw === 'string' ? raw : fallback)
+                              : ((typeof raw === 'string' && raw.length > 0) ? raw : fallback)
     return sanitizeHtml(chosen)
   }
 
-  const getLink = (key, fallback = '') => {
+  const getLink = (key, fallback = '', options = {}) => {
+    const allowEmpty = !!options.allowEmpty
     const page = state.pages[pageKey]?.page
     const links = page?.content?.links
     const val = links && Object.prototype.hasOwnProperty.call(links, key) ? links[key] : undefined
     if (typeof val !== 'string') return fallback
+    if (allowEmpty && val === '') return ''
     // Allow only app-relative or http(s)
     return val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://') ? val : fallback
   }
