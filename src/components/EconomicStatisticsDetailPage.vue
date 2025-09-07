@@ -440,7 +440,7 @@ export default {
 
 .login-btn {
   align-items: center;
-  background-color: #1A1A1A;
+  background-color: var(--mandy);
   border-radius: 10px;
   box-shadow: 0px 1px 2px #0000000d;
   display: flex;

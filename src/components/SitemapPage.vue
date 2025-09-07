@@ -25,6 +25,8 @@
           <div class="line-right"></div>
         </div>
       </div>
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="sitemap" wrapper-class="cms-body" />
 
       <div class="content-container">
                  <!-- Sitemap Content -->
@@ -124,6 +126,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import CmsText from '@/components/CmsText.vue'
+import CmsBlock from '@/components/CmsBlock.vue'
 import { usePageText } from '@/composables/usePageText'
 
 import vector7 from "../../public/img/vector-7.svg";
@@ -140,7 +143,8 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ActionButton,
-    CmsText
+    CmsText,
+    CmsBlock
   },
   data() {
     return {

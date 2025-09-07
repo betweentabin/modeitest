@@ -99,8 +99,12 @@ export function usePageText(pageKey) {
   const getHtml = (key, fallback = '') => {
     const page = state.pages[pageKey]?.page
     const htmls = page?.content?.htmls || page?.content?.rich || null
-    const raw = htmls && Object.prototype.hasOwnProperty.call(htmls, key) ? htmls[key] : undefined
-    const chosen = typeof raw === 'string' && raw.length > 0 ? raw : fallback
+    let raw = htmls && Object.prototype.hasOwnProperty.call(htmls, key) ? htmls[key] : undefined
+    // フォールバック: 単体の content.html を本文として扱う
+    if ((raw === undefined || raw === null || raw === '') && typeof page?.content?.html === 'string') {
+      raw = page.content.html
+    }
+    const chosen = (typeof raw === 'string' && raw.length > 0) ? raw : fallback
     return sanitizeHtml(chosen)
   }
 

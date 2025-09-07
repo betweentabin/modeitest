@@ -14,6 +14,9 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
     
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="consulting" wrapper-class="cms-body" />
+    
     <!-- What is CRI Consulting Section -->
     <div class="what-is-section">
       <div class="section-header">
@@ -265,6 +268,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { usePageText } from '@/composables/usePageText'
+import CmsBlock from '@/components/CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
 
 import Group27 from "./Group27";
@@ -282,7 +286,8 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ActionButton,
-    CmsText
+    CmsText,
+    CmsBlock
   },
   data() {
     return {

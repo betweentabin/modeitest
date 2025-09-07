@@ -1024,26 +1024,30 @@ export default {
       this.error = ''
 
       try {
-        const data = await mockServer.getPage(this.pageKey)
+        // 管理APIから取得（未公開でも取得可能）
+        const res = await apiClient.request('GET', `/api/admin/pages/${this.pageKey}`, null, { silent: true })
+        const body = res?.data || res
+        const page = body?.page || body?.data?.page || body
+        if (!page) throw new Error('no page data')
+
         this.formData = {
-          ...data,
-          images: data.images || []
+          page_key: page.page_key || this.pageKey,
+          title: page.title || '',
+          content: page.content || {},
+          meta_description: page.meta_description || '',
+          meta_keywords: page.meta_keywords || '',
+          is_published: !!page.is_published,
+          images: Array.isArray(page.images) ? page.images : (page.content?.images || [])
         }
-        this.contentJson = JSON.stringify(data.content || data, null, 2)
+        this.contentJson = JSON.stringify(this.formData.content || {}, null, 2)
         // HTML/WYSIWYG 初期値
-        try {
-          this.contentHtml = this.extractHtmlFromContent()
-        } catch (e) {
-          this.contentHtml = ''
-        }
-        // Initialize fields editor from content.texts if available
-        const texts = (data && data.content && data.content.texts) ? data.content.texts : {}
+        try { this.contentHtml = this.extractHtmlFromContent() } catch (_) { this.contentHtml = '' }
+        // Fields初期化
+        const texts = (this.formData.content && this.formData.content.texts) ? this.formData.content.texts : {}
         this.textsEditor = Object.keys(texts).map((k) => ({ _id: `${k}-${Date.now()}-${Math.random()}`, key: k, value: texts[k] }))
-        const links = (data && data.content && data.content.links) ? data.content.links : {}
+        const links = (this.formData.content && this.formData.content.links) ? this.formData.content.links : {}
         this.linksEditor = Object.keys(links).map((k) => ({ _id: `l-${k}-${Date.now()}-${Math.random()}`, key: k, value: links[k] }))
-        if (this.contentMode === 'fields') {
-          this.ensureFieldsPreset()
-        }
+        if (this.contentMode === 'fields') this.ensureFieldsPreset()
       } catch (err) {
         this.error = 'ページデータの取得に失敗しました'
         console.error(err)
@@ -1239,7 +1243,13 @@ export default {
         }
         // コンテンツのモードに応じて content を設定
         if (this.contentMode === 'html' || this.contentMode === 'wysiwyg' || this.contentMode === 'inline') {
-          this.formData.content = this.contentHtml || ''
+          // フルHTML本文として保存。互換性のため単体 'html' と 'htmls.body' 両方に格納
+          const html = this.contentHtml || ''
+          let base = {}
+          try { base = this.contentJson ? JSON.parse(this.contentJson) : {} } catch(e) { base = {} }
+          const htmls = { ...(base.htmls || {}) }
+          htmls.body = html
+          this.formData.content = { ...(base || {}), html, htmls }
         } else if (this.contentMode === 'fields') {
           // Merge with existing JSON if valid, else new object
           let base = {}

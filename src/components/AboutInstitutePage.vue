@@ -14,6 +14,9 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="about-institute" wrapper-class="cms-body" />
+
     <!-- About Section -->
     <div class="about-section">
       <div class="section-header">
@@ -133,6 +136,7 @@ import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
 import CmsText from '@/components/CmsText.vue'
+import CmsBlock from '@/components/CmsBlock.vue'
 
 export default {
   name: "AboutInstitutePage",
@@ -146,7 +150,8 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ActionButton,
-    CmsText
+    CmsText,
+    CmsBlock
   },
   data() {
     return {

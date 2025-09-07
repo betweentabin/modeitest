@@ -24,6 +24,9 @@
         </div>
       </div>
       
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="glossary" wrapper-class="cms-body" />
+      
       <div class="glossary-description">
         <CmsText
           pageKey="glossary"

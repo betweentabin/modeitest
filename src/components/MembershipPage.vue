@@ -14,6 +14,9 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="membership" wrapper-class="cms-body" />
+
     <!-- Introduction Section -->
     <section class="introduction-section">
       <div class="container">
@@ -220,6 +223,7 @@ import ActionButton from "./ActionButton.vue";
 import HeroSection from "./HeroSection.vue";
 import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
+import CmsBlock from './CmsBlock.vue'
 
 export default {
   name: "MembershipPage",
@@ -232,7 +236,8 @@ export default {
     Group27,
     FixedSideButtons,
     ActionButton,
-    HeroSection
+    HeroSection,
+    CmsBlock
   },
   data() {
     return {

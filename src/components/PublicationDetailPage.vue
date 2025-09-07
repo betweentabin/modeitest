@@ -67,6 +67,8 @@
 
         <!-- Download/Login Button -->
         <div class="login-section">
+          <!-- Show notice for members-only when not logged in -->
+          <p v-if="!isAuthenticated && publication?.membersOnly" class="members-only-notice">会員登録が必要です</p>
           <button class="login-btn" @click="handlePrimaryAction">
             <div class="text-44 valign-text-middle inter-bold-white-15px">{{ detailButtonText }}</div>
             <frame13213176122 />
@@ -443,6 +445,14 @@ export default {
   font-family: var(--font-family-inter);
   font-size: 15px;
   font-weight: 700;
+}
+
+/* Members-only notice */
+.members-only-notice {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 12px;
 }
 
 .loading {

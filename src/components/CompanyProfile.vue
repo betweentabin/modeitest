@@ -13,6 +13,9 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- CMS Body (optional full HTML override) -->
+    <CmsBlock page-key="company-profile" wrapper-class="cms-body" />
+
     <!-- Philosophy Section -->
     <section class="philosophy-section">
       <div class="section-header">
@@ -366,6 +369,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { usePageText } from '@/composables/usePageText'
+import CmsBlock from '@/components/CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
 
 import vector7 from "../../public/img/vector-7.svg";
@@ -383,6 +387,7 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     CmsText,
+    CmsBlock,
   },
   data() {
     return {
