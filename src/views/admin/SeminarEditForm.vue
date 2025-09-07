@@ -312,7 +312,8 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/seminars/${this.seminarId}`)
+        // 管理APIから取得（draft等でも取得可能）
+        const res = await apiClient.get(`/api/admin/seminars/${this.seminarId}`)
         if (res.success && res.data && res.data.seminar) {
           this.formData = res.data.seminar
         } else {
