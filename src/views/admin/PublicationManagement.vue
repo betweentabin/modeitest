@@ -135,48 +135,11 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination" v-if="totalPages > 1">
-        <button 
-          @click="currentPage > 1 && (currentPage--)"
-          :disabled="currentPage === 1"
-          class="page-btn"
-        >
-          前へ
-        </button>
-        
-        <template v-for="page in totalPages">
-          <button 
-            v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
-            :key="'btn-' + page"
-            @click="currentPage = page"
-            :class="['page-number', { active: page === currentPage }]"
-          >
-            {{ page }}
-          </button>
-          <span 
-            v-else-if="page === 4 && currentPage > 5"
-            :key="'dots-start-' + page"
-            class="page-dots"
-          >
-            ...
-          </span>
-          <span 
-            v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
-            :key="'dots-end-' + page"
-            class="page-dots"
-          >
-            ...
-          </span>
-        </template>
-
-        <button 
-          @click="currentPage < totalPages && (currentPage++)"
-          :disabled="currentPage === totalPages"
-          class="page-btn"
-        >
-          次へ
-        </button>
-      </div>
+      <AdminPagination
+        :page.sync="currentPage"
+        :last-page="totalPages"
+        @change="changePage"
+      />
     </div>
   </AdminLayout>
 </template>
@@ -185,11 +148,13 @@
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
 import mockServer from '@/mockServer'
+import AdminPagination from '@/components/admin/AdminPagination.vue'
 
 export default {
   name: 'PublicationManagement',
   components: {
-    AdminLayout
+    AdminLayout,
+    AdminPagination
   },
   data() {
     return {

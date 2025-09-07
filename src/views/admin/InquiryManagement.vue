@@ -162,23 +162,11 @@
       </div>
 
       <!-- ページネーション -->
-      <div v-if="totalPages > 1" class="pagination">
-        <button 
-          @click="changePage(currentPage - 1)" 
-          :disabled="currentPage === 1"
-          class="page-btn"
-        >
-          前へ
-        </button>
-        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-        <button 
-          @click="changePage(currentPage + 1)" 
-          :disabled="currentPage === totalPages"
-          class="page-btn"
-        >
-          次へ
-        </button>
-      </div>
+      <AdminPagination
+        :page.sync="currentPage"
+        :last-page="totalPages"
+        @change="changePage"
+      />
     </div>
 
     <!-- 詳細モーダル -->
@@ -252,11 +240,13 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '@/services/apiClient'
+import AdminPagination from '@/components/admin/AdminPagination.vue'
 
 export default {
   name: 'InquiryManagement',
   components: {
-    AdminLayout
+    AdminLayout,
+    AdminPagination
   },
   data() {
     return {

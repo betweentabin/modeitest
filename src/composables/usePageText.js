@@ -64,8 +64,23 @@ export function usePageText(pageKey) {
     entry.loading = true
     entry.error = null
     try {
-      const res = await apiClient.getPageContent(pageKey)
-      const page = res?.data?.page || res?.data?.data?.page || null
+      // In preview mode with admin auth, fetch via admin endpoint to see unpublished changes
+      const isBrowser = typeof window !== 'undefined'
+      const isPreview = isBrowser && (window.location.search || '').includes('cmsPreview=1')
+      const adminToken = isBrowser ? (localStorage.getItem('admin_token') || '') : ''
+
+      let res
+      if (isPreview && adminToken) {
+        // Use admin endpoint for preview to bypass is_published filter
+        res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true })
+      } else {
+        // Public endpoint for normal visitors
+        res = await apiClient.getPageContent(pageKey)
+      }
+
+      // Accept both wrapped and direct payload shapes
+      const body = res?.data || res
+      const page = body?.page || body?.data?.page || null
       entry.page = page
     } catch (e) {
       entry.error = e?.message || 'Failed to load page content'
@@ -108,4 +123,3 @@ export function usePageText(pageKey) {
 }
 
 export default usePageText
-

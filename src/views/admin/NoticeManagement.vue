@@ -132,48 +132,11 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination" v-if="totalPages > 1">
-        <button 
-          @click="currentPage > 1 && (currentPage--)"
-          :disabled="currentPage === 1"
-          class="page-btn"
-        >
-          前へ
-        </button>
-        
-        <template v-for="page in totalPages">
-          <button 
-            v-if="page <= 3 || page > totalPages - 3 || Math.abs(page - currentPage) <= 1"
-            :key="'btn-' + page"
-            @click="currentPage = page"
-            :class="['page-number', { active: page === currentPage }]"
-          >
-            {{ page }}
-          </button>
-          <span 
-            v-else-if="page === 4 && currentPage > 5"
-            :key="'dots-start-' + page"
-            class="page-dots"
-          >
-            ...
-          </span>
-          <span 
-            v-else-if="page === totalPages - 3 && currentPage < totalPages - 4"
-            :key="'dots-end-' + page"
-            class="page-dots"
-          >
-            ...
-          </span>
-        </template>
-
-        <button 
-          @click="currentPage < totalPages && (currentPage++)"
-          :disabled="currentPage === totalPages"
-          class="page-btn"
-        >
-          次へ
-        </button>
-      </div>
+      <AdminPagination
+        :page.sync="currentPage"
+        :last-page="totalPages"
+        @change="changePage"
+      />
     </div>
   </AdminLayout>
 </template>
@@ -181,11 +144,13 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import AdminPagination from '@/components/admin/AdminPagination.vue'
 
 export default {
   name: 'NoticeManagement',
   components: {
-    AdminLayout
+    AdminLayout,
+    AdminPagination
   },
   data() {
     return {
@@ -317,6 +282,12 @@ export default {
     getCategoryColor(slug) {
       const category = this.categories.find(c => c.slug === slug)
       return category ? category.color : '#da5761'
+    },
+    async changePage(page) {
+      if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+        this.currentPage = page
+        await this.loadNotices()
+      }
     }
   }
 }

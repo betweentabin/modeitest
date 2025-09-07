@@ -107,17 +107,12 @@
       </div>
 
       <!-- ページネーション -->
-      <div class="pagination" v-if="pagination.total > pagination.per_page">
-        <button 
-          v-for="page in paginationPages" 
-          :key="page"
-          @click="loadMembers(page)"
-          :class="['page-btn', { active: page === pagination.current_page }]"
-          :disabled="loading"
-        >
-          {{ page }}
-        </button>
-      </div>
+      <AdminPagination
+        :page="pagination.current_page"
+        :last-page="pagination.last_page"
+        @update:page="p => (pagination.current_page = p)"
+        @change="loadMembers"
+      />
     </div>
 
     <!-- 会員編集モーダル -->
@@ -402,12 +397,14 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
+import AdminPagination from '@/components/admin/AdminPagination.vue'
 import { getMembershipOptions, getMembershipLabel } from '@/utils/membershipTypes'
 
 export default {
   name: 'MemberManagement',
   components: {
-    AdminLayout
+    AdminLayout,
+    AdminPagination
   },
   data() {
     return {
