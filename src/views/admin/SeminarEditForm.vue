@@ -352,35 +352,43 @@ export default {
           payload.featured_image = payload.featured_image.substring(0, 480)
         }
 
-        if (this.isNew) {
-          const res = await apiClient.createSeminar(payload, token)
-          if (!res?.success) {
-            const msg = res?.error?.message || res?.message || '作成に失敗'
-            const details = res?.error?.details
-            if (details) {
-              const first = Object.entries(details)[0]
-              this.submitError = first ? `${msg}: ${first[0]} - ${first[1]}` : msg
-            } else {
-              this.submitError = msg
-            }
-            throw new Error(this.submitError)
+        // CORS/環境差異を考慮し、multipart + _method=PUT で送信（JSONより堅牢）
+        const toStr = v => (v === undefined || v === null ? '' : String(v))
+        const fd = new FormData()
+        Object.entries(payload).forEach(([k, v]) => {
+          if (v !== undefined && v !== null) fd.append(k, toStr(v))
+        })
+
+        let url = (await import('../../config/api.js')).getApiUrl('/api/admin/seminars')
+        let method = 'POST'
+        if (!this.isNew) {
+          url = (await import('../../config/api.js')).getApiUrl(`/api/admin/seminars/${this.seminarId}`)
+          fd.append('_method', 'PUT')
+        }
+
+        const resp = await fetch(url, {
+          method,
+          headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: fd
+        })
+        const data = await resp.json().catch(() => ({}))
+        if (!resp.ok || !data?.success) {
+          const msg = data?.message || (this.isNew ? '作成に失敗' : '更新に失敗')
+          const det = data?.errors || data?.error?.details
+          if (det) {
+            const first = Object.entries(det)[0]
+            const val = Array.isArray(first?.[1]) ? first[1][0] : first?.[1]
+            this.submitError = first ? `${msg}: ${first[0]} - ${val}` : msg
+          } else {
+            this.submitError = msg
           }
-          this.successMessage = 'セミナーを作成しました'
+          throw new Error(this.submitError)
+        }
+        this.successMessage = this.isNew ? 'セミナーを作成しました' : 'セミナーを更新しました'
+        if (this.isNew) {
           setTimeout(() => { this.$router.push('/admin/seminar') }, 1200)
         } else {
-          const res = await apiClient.updateSeminar(this.seminarId, payload, token)
-          if (!res?.success) {
-            const msg = res?.error?.message || res?.message || '更新に失敗'
-            const details = res?.error?.details
-            if (details) {
-              const first = Object.entries(details)[0]
-              this.submitError = first ? `${msg}: ${first[0]} - ${first[1]}` : msg
-            } else {
-              this.submitError = msg
-            }
-            throw new Error(this.submitError)
-          }
-          this.successMessage = 'セミナーを更新しました'
+          await this.fetchSeminarData()
         }
       } catch (err) {
         if (!this.submitError) {
