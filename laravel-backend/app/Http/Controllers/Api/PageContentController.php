@@ -111,6 +111,26 @@ class PageContentController extends Controller
         ]);
     }
 
+    // 管理者向け: 公開状態に関わらず取得
+    public function adminShow(string $pageKey): JsonResponse
+    {
+        $page = PageContent::where('page_key', $pageKey)->first();
+
+        if (!$page) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Page not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'page' => $page
+            ]
+        ]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([

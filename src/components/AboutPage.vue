@@ -6,8 +6,12 @@
     <div class="hero-section" :style="heroBackgroundStyle">
       <div class="hero-overlay">
         <div class="hero-content">
-          <h1 class="hero-title">{{ pageTitle || '会社概要' }}</h1>
-          <p class="hero-subtitle">{{ pageSubtitle }}</p>
+          <h1 class="hero-title">
+            <CmsText pageKey="about" fieldKey="page_title" tag="span" :fallback="pageTitle || '会社概要'" />
+          </h1>
+          <p class="hero-subtitle">
+            <CmsText pageKey="about" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle || ''" />
+          </p>
         </div>
       </div>
     </div>

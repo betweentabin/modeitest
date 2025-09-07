@@ -43,6 +43,15 @@ export default {
         }
       }
       window.addEventListener('message', this._previewHandler)
+      // Also try to fetch latest from admin endpoint when admin token exists
+      try {
+        const token = localStorage.getItem('admin_token')
+        if (token) {
+          const res = await apiClient.get(`/api/admin/pages/${this.pageKey}`, { silent: true })
+          const html = res?.data?.content?.html || res?.data?.page?.content?.html
+          if (typeof html === 'string' && html.trim().length) this.html = html
+        }
+      } catch (_) { /* ignore */ }
       return
     }
     try {

@@ -2,14 +2,28 @@
   <div class="hero-section" :style="heroStyle">
     <div class="hero-overlay">
       <div class="hero-content">
-        <div class="hero-subtitle">{{ subtitle }}</div>
-        <div class="hero-title">{{ title }}</div>
+        <!-- When cmsPageKey provided, render inline-editable texts -->
+        <template v-if="cmsPageKey">
+          <div class="hero-subtitle">
+            <CmsText :pageKey="cmsPageKey" :fieldKey="subtitleFieldKey" tag="span" :fallback="subtitle || ''" />
+          </div>
+          <div class="hero-title">
+            <CmsText :pageKey="cmsPageKey" :fieldKey="titleFieldKey" tag="span" :fallback="title || ''" />
+          </div>
+        </template>
+        <template v-else>
+          <div class="hero-subtitle">{{ subtitle }}</div>
+          <div class="hero-title">{{ title }}</div>
+        </template>
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
+import CmsText from '@/components/CmsText.vue'
+
 export default {
   name: "HeroSection",
   props: {
@@ -22,6 +36,22 @@ export default {
       type: String,
       default: ''
     },
+    // Enable inline CMS on hero by providing page key + field keys
+    cmsPageKey: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    titleFieldKey: {
+      type: String,
+      required: false,
+      default: 'page_title'
+    },
+    subtitleFieldKey: {
+      type: String,
+      required: false,
+      default: 'page_subtitle'
+    },
     heroImage: {
       type: String,
       required: false,
@@ -33,6 +63,7 @@ export default {
       default: ''
     }
   },
+  components: { CmsText },
   async mounted() {
     // lazy load media registry if mediaKey is provided
     if (this.mediaKey) {

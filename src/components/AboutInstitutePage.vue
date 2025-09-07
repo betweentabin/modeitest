@@ -6,6 +6,7 @@
     <HeroSection 
       :title="pageTitle"
       :subtitle="pageSubtitle"
+      cms-page-key="about-institute"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/df7ca8cd2f554040b151c3c0f960f06d9826cc19?width=2880"
       mediaKey="hero_about_institute"
     />

@@ -6,6 +6,7 @@
     <HeroSection 
       :title="pageTitle || '用語集'"
       :subtitle="pageSubtitle || 'glossary'"
+      cms-page-key="glossary"
       heroImage="/img/hero-image.png"
       mediaKey="hero_glossary"
     />

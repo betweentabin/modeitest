@@ -6,6 +6,7 @@
     <HeroSection 
       :title="pageTitle"
       :subtitle="pageSubtitle"
+      cms-page-key="cri-consulting"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/db22880ee1d73553a2fa432da82e4e20fe5c43c9?width=2880"
       mediaKey="hero_consulting"
     />

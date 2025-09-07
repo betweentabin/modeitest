@@ -189,7 +189,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [PageContentController::class, 'index']);
             Route::get('/media-usage', [PageContentController::class, 'mediaUsage']);
             Route::post('/', [PageContentController::class, 'store']);
-            Route::get('/{pageKey}', [PageContentController::class, 'show']);
+            // 管理者は公開フラグに関係なく参照可能
+            Route::get('/{pageKey}', [PageContentController::class, 'adminShow']);
             Route::put('/{pageKey}', [PageContentController::class, 'update']);
             Route::delete('/{pageKey}', [PageContentController::class, 'destroy']);
             Route::post('/{pageKey}/upload-image', [PageContentController::class, 'uploadImage']);
