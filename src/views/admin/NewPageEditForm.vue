@@ -301,13 +301,23 @@
               </div>
               <!-- Live page preview (actual page in iframe) -->
               <div v-else-if="contentMode==='live'" class="form-group">
-                <div class="preview-toolbar">
-                  <span>プレビューURL: {{ previewUrl }}</span>
-                  <button type="button" class="btn btn-secondary small" @click="refreshPreview">リロード</button>
+              <div class="preview-toolbar">
+                <span>プレビューURL: {{ previewUrl }}</span>
+                <div class="device-toggle">
+                  <label>デバイス:</label>
+                  <select v-model="previewDevice" class="device-select" @change="$nextTick(() => refreshPreview())">
+                    <option value="desktop">Desktop (1200px)</option>
+                    <option value="tablet">Tablet (900px)</option>
+                    <option value="mobile">Mobile (375px)</option>
+                  </select>
                 </div>
-                <div class="live-preview-wrap">
+                <button type="button" class="btn btn-secondary small" @click="refreshPreview">リロード</button>
+              </div>
+              <div class="live-preview-wrap">
+                <div class="live-preview-frame" :style="{ width: previewWidthPx + 'px' }">
                   <iframe ref="liveFrame" class="live-preview" :src="previewUrl"></iframe>
                 </div>
+              </div>
                 <p class="form-help">このプレビューは実際のページをそのまま表示します。入力内容は即座に反映されます（保存前は閲覧者には見えません）。</p>
               </div>
 
@@ -783,7 +793,9 @@ export default {
         description: '',
         url: ''
       },
-      editingImageIndex: -1
+      editingImageIndex: -1,
+      // ライブプレビューのデバイス幅切替
+      previewDevice: 'desktop'
     }
   },
   computed: {
@@ -825,6 +837,14 @@ export default {
     recommendedKeys() {
       const key = this.formData.page_key || this.pageKey || ''
       return RECOMMENDED_KEYS[key] || []
+    },
+    previewWidthPx() {
+      switch (this.previewDevice) {
+        case 'mobile': return 375
+        case 'tablet': return 900
+        case 'desktop':
+        default: return 1200
+      }
     }
   },
   watch: {
@@ -1549,6 +1569,32 @@ export default {
   background: #fafafa;
 }
 .preview-inner { padding: 12px; }
+
+/* Live preview (iframe) */
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 12px 0;
+  font-size: 13px;
+  color: #555;
+}
+.device-toggle { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.device-select { padding: 6px 8px; border: 1px solid #d0d0d0; border-radius: 4px; font-size: 13px; }
+.live-preview-wrap {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.live-preview-frame {
+  margin: 0 auto;
+}
+.live-preview {
+  width: 100%;
+  min-height: 700px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+}
 
 /* Inline page-like editor */
 .inline-toolbar {

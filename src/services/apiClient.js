@@ -90,13 +90,18 @@ class ApiClient {
       console.log('Using auth token:', authHeader.substring(0, 30) + '...')
     }
     
+    // Build headers: avoid sending Content-Type on GET without a body to prevent unnecessary preflight
+    const baseHeaders = {
+      'Accept': 'application/json',
+      ...(authHeader ? { Authorization: authHeader } : {}),
+      ...(options.headers || {})
+    }
+    if (body) {
+      baseHeaders['Content-Type'] = baseHeaders['Content-Type'] || 'application/json'
+    }
+
     const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        ...(authHeader ? { Authorization: authHeader } : {}),
-        ...options.headers
-      },
+      headers: baseHeaders,
       mode: 'cors', // CORSモードを明示的に指定
       method,
       ...(body ? { body: typeof body === 'string' ? body : JSON.stringify(body) } : {}),
