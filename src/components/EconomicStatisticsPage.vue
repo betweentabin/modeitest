@@ -75,7 +75,7 @@
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
-          <div class="featured-image" :class="{ blurred: shouldBlur }">
+          <div class="featured-image" :class="{ blurred: isRestricted(featuredPublication) }">
             <img :src="featuredPublication.image || '/img/image-1.png'" :alt="featuredPublication.title" />
           </div>
           <div class="featured-info">
@@ -88,7 +88,7 @@
                <div class="content-text">{{ featuredPublication.description }}</div>
              </div>
 
-            <button class="download-btn" @click="goToStatisticsDetail(featuredPublication.id)">詳細を見る
+            <button class="download-btn" @click="handleDownloadOrNavigate(featuredPublication)">{{ isRestricted(featuredPublication) ? '詳細を見る' : 'PDFダウンロード' }}
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -109,7 +109,7 @@
             class="publication-card"
             @click="goToPublicationDetail(publication.id)"
           >
-            <div class="publication-image" :class="{ blurred: shouldBlur }">
+            <div class="publication-image" :class="{ blurred: isRestricted(publication) }">
               <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
             </div>
             <div class="publication-info">
@@ -118,7 +118,7 @@
                 <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
-              <button class="publication-download" @click.stop="goToStatisticsDetail(publication.id)">PDFダウンロード
+              <button class="publication-download" @click.stop="handleDownloadOrNavigate(publication)">PDFダウンロード
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -202,6 +202,7 @@ export default {
       categories: [ { id: 'all', name: '全て' } ],
       featuredPublication: null,
       publications: [],
+      // レガシー: 全体ブラーの既定値（個別判定に移行）
       shouldBlur: true
     };
   },
@@ -289,6 +290,23 @@ export default {
         this.shouldBlur = true
       }
     },
+    // 現在の閲覧者が有料会員か判定
+    viewerHasPaidMembership() {
+      try {
+        const raw = localStorage.getItem('memberUser')
+        if (!raw) return false
+        const u = JSON.parse(raw)
+        const t = u?.membership_type
+        return t === 'standard' || t === 'premium'
+      } catch(e) { return false }
+    },
+
+    // 個別アイテムの制限判定：members_only かつ 閲覧者が有料会員でない
+    isRestricted(item) {
+      if (!item) return false
+      return !!item.members_only && !this.viewerHasPaidMembership()
+    },
+
     async loadPublications() {
       this.loading = true;
       try {
@@ -377,10 +395,21 @@ export default {
         publisher: item.publisher,
         pages: item.pages,
         is_downloadable: item.is_downloadable,
-        members_only: item.members_only,
+        // 真偽値に正規化（undefined/null対策）
+        members_only: !!item.members_only,
         publication_date: item.publication_date,
         keywords: item.keywords
       };
+    },
+
+    // 無料公開ならダウンロード、会員限定なら詳細/ログインへ
+    handleDownloadOrNavigate(item) {
+      if (!item) return
+      if (this.isRestricted(item)) {
+        this.goToStatisticsDetail(item.id)
+      } else {
+        this.downloadPublication(item.id)
+      }
     },
     
     async downloadPublication(publicationId) {

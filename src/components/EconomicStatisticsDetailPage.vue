@@ -66,20 +66,20 @@
 
         <!-- Action Section based on Auth State -->
         <div class="action-section">
-          <!-- 非会員の場合 -->
-          <div v-if="authState.type === 'non_member'" class="members-only-section">
-            <p class="members-only-notice">{{ authState.message }}</p>
-            <div class="login-btn arrow-dark" @click="goToLogin">
-              <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
-              <frame13213176122 />
-            </div>
-          </div>
-          
-          <!-- 会員でログイン済みの場合 -->
-          <div v-else-if="authState.type === 'member_logged_in'" class="download-section">
+          <!-- ダウンロード可能（一般公開 または ログイン済み会員） -->
+          <div v-if="authState.canDownload" class="download-section">
             <p class="download-notice">{{ authState.message }}</p>
             <div class="download-btn arrow-dark" @click="downloadStatistics">
               <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
+              <frame13213176122 />
+            </div>
+          </div>
+
+          <!-- 非会員で会員限定 -->
+          <div v-else class="members-only-section">
+            <p class="members-only-notice">{{ authState.message }}</p>
+            <div class="login-btn arrow-dark" @click="goToLogin">
+              <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
               <frame13213176122 />
             </div>
           </div>
@@ -149,13 +149,22 @@ export default {
     };
   },
   computed: {
-    // 会員認証状態の取得
+    // 会員認証状態の取得（無料公開を優先）
     authState() {
-      const { isLoggedIn, getMembershipType, getMembershipLabel } = useMemberAuth();
+      const { isLoggedIn, getMembershipLabel } = useMemberAuth();
       const loggedIn = isLoggedIn();
-      const membershipType = getMembershipType();
       const membershipLabel = getMembershipLabel();
-      
+
+      // 統計が無料公開の場合はログイン不要でDL可
+      if (this.statistics && this.statistics.members_only === false) {
+        return {
+          type: 'public_free',
+          label: '一般公開',
+          canDownload: true,
+          message: '一般公開のレポートです。PDFをダウンロードできます。'
+        }
+      }
+
       if (!loggedIn) {
         return {
           type: 'non_member',

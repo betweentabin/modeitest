@@ -482,6 +482,9 @@ class CompletePagesSeeder extends Seeder
                         'hero_financial_reports' => '/img/hero-image.png',
                         'hero_sitemap' => '/img/hero-image.png',
                         'hero_consulting' => '/img/hero-image.png'
+                        ,
+                        // その他のセクション背景など
+                        'contact_section_bg' => '/img/-----1-1.png'
                     ]
                 ],
                 'meta_description' => 'サイト内で使用するメディア参照のレジストリ。',

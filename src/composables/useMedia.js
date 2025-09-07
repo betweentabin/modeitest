@@ -65,6 +65,8 @@ async function loadMedia() {
         hero_financial_reports: '/img/hero-image.png',
         hero_sitemap: '/img/hero-image.png',
         hero_consulting: '/img/hero-image.png',
+        // Other common section backgrounds
+        contact_section_bg: '/img/-----1-1.png',
       }
       state.loaded = true
     } catch (err) {
