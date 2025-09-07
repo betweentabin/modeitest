@@ -115,7 +115,20 @@ export default {
         const content = (page?.content && typeof page.content === 'object') ? { ...page.content } : {}
         const bucket = props.type === 'html' ? 'htmls' : (props.type === 'link' ? 'links' : 'texts')
         content[bucket] = { ...(content[bucket] || {}) }
+
+        // Keep previous value for potential rollback
+        const prevValue = content[bucket][props.fieldKey]
+
+        // Optimistic update: reflect immediately across the page
         content[bucket][props.fieldKey] = local.value
+        try {
+          if (!pageText.page.value) pageText.page.value = { content: {} }
+          const current = (typeof pageText.page.value.content === 'object') ? pageText.page.value.content : {}
+          const next = { ...(current || {}) }
+          next[bucket] = { ...(next[bucket] || {}) }
+          next[bucket][props.fieldKey] = local.value
+          pageText.page.value = { ...(pageText.page.value || {}), content: next }
+        } catch (_) { /* noop */ }
 
         // 一部のページキーがスネークケースで渡るケースがあるため安全に正規化
         const normalizedKey = (props.pageKey || '').replace(/_/g, '-').trim() || props.pageKey
@@ -142,19 +155,23 @@ export default {
             throw new Error(res.error || '保存に失敗しました')
           }
         }
-        // 極力即時反映：現在のpageTextに反映（サーバー再取得は副次的に）
-        try {
-          if (!pageText.page.value) pageText.page.value = { content: {} }
-          const current = (typeof pageText.page.value.content === 'object') ? pageText.page.value.content : {}
-          const next = { ...(current || {}) }
-          next[bucket] = { ...(next[bucket] || {}) }
-          next[bucket][props.fieldKey] = local.value
-          pageText.page.value = { ...(pageText.page.value || {}), content: next }
-        } catch (_) { /* noop */ }
         // 背景で再取得（props.pageKeyで404でもUIは上書き済み）
         await pageText.load()
         syncFromDisplay()
       } catch (e) {
+        // Rollback optimistic change on error
+        try {
+          const page = pageText.page?.value
+          const current = (typeof page?.content === 'object') ? { ...page.content } : {}
+          const bucket = props.type === 'html' ? 'htmls' : (props.type === 'link' ? 'links' : 'texts')
+          if (!current[bucket]) current[bucket] = {}
+          // Note: prevValue may be undefined; that is fine
+          const prevVal = (page && page.content && page.content[bucket]) ? page.content[bucket][props.fieldKey] : undefined
+          current[bucket][props.fieldKey] = prevVal
+          if (pageText.page.value) {
+            pageText.page.value = { ...(pageText.page.value || {}), content: current }
+          }
+        } catch (_) { /* noop */ }
         error.value = e?.message || '保存に失敗しました'
       } finally {
         saving.value = false

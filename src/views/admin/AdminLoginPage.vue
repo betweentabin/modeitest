@@ -9,7 +9,6 @@
             alt="Logo"
           />
           <h1 class="title inter-bold-black-24px">管理者ログイン</h1>
-          <p class="subtitle inter-normal-ship-gray-16px">コンテンツ管理システムへようこそ</p>
         </div>
         
         <form @submit.prevent="handleLogin" class="login-form">

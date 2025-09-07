@@ -678,7 +678,7 @@ export default {
     },
     
     goToUpgrade() {
-      this.$router.push('/upgrade')
+      this.$router.push('/premium')
     },
     
     async redownload(item) {

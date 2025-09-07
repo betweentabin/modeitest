@@ -156,7 +156,7 @@ export default {
       const membershipLabel = getMembershipLabel();
 
       // 統計が無料公開の場合はログイン不要でDL可
-      if (this.statistics && this.statistics.members_only === false) {
+      if (this.statistics && (this.statistics.members_only === false || String(this.statistics.membership_level || '').toLowerCase() === 'free')) {
         return {
           type: 'public_free',
           label: '一般公開',
@@ -234,7 +234,8 @@ export default {
         publication_date: statisticsData.publication_date,
         year: statisticsData.year,
         is_downloadable: statisticsData.is_downloadable,
-        members_only: statisticsData.members_only
+        members_only: statisticsData.members_only,
+        membership_level: statisticsData.membership_level || statisticsData.membershipLevel || null
       };
     },
     

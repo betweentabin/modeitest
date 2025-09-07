@@ -545,6 +545,13 @@ const router = new Router({
       component: PremiumMembershipPage,
       meta: { title: "プレミアム会員 - ちくぎん地域経済研究所" }
     },
+    // Short alias for premium page
+    {
+      path: "/premium",
+      name: "premiumMembershipShort",
+      component: PremiumMembershipPage,
+      meta: { title: "プレミアム会員 - ちくぎん地域経済研究所" }
+    },
     {
       path: "/membership/standard",
       name: "standardMembership",
