@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class EconomicReport extends Model
 {
@@ -150,18 +151,28 @@ class EconomicReport extends Model
         // 正規化（先頭スラッシュ除去）
         $normalized = ltrim($path, '/');
 
-        // 既に 'storage/' を含む場合は asset() でそのまま解決
+        // 既に 'storage/' を含む場合は Storage相対に変換
+        $storageRelative = $normalized;
         if (str_starts_with($normalized, 'storage/')) {
-            return asset($normalized);
+            $storageRelative = substr($normalized, 8); // 'storage/' を除去
         }
 
         // 'public/' から始まる場合は symlink公開側のパスに合わせて削る
-        if (str_starts_with($normalized, 'public/')) {
-            $normalized = substr($normalized, 7); // 'public/' を除去
+        if (str_starts_with($storageRelative, 'public/')) {
+            $storageRelative = substr($storageRelative, 7); // 'public/' を除去
         }
 
-        // Storage::disk('public') に保存された相対パスを想定
-        return asset('storage/' . $normalized);
+        // Storage::disk('public') に存在確認（本番でファイルが消えている場合のフォールバックに有効）
+        try {
+            if (Storage::disk('public')->exists($storageRelative)) {
+                return asset('storage/' . $storageRelative);
+            }
+        } catch (\Throwable $e) {
+            // ストレージが未設定等でも安全にフォールバック
+        }
+
+        // 最後のフォールバック（デフォルト画像）
+        return '/img/image-1.png';
     }
 
     /**

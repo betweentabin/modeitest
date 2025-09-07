@@ -369,12 +369,16 @@ export default {
     },
     
     getCategoryText(category) {
+      // まずカテゴリーマスタから名前を引く
+      const hit = this.categories && this.categories.find(c => c.slug === category)
+      if (hit) return hit.name
+      // フォールバック（旧固定マッピング）
       switch (category) {
         case 'research': return 'ちくぎん地域経済レポート'
         case 'quarterly': return 'Hot Information'
         case 'special': return '経営参考BOOK'
         case 'annual': return '年次レポート'
-        default: return 'その他'
+        default: return category || 'その他'
       }
     },
     

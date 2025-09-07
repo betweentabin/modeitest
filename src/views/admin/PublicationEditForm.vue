@@ -319,9 +319,22 @@ export default {
     categoryOptions() {
       if (!this.categories || this.categories.length === 0) return []
       // is_active が存在する場合は true のみ表示
-      return this.categories
+      const opts = this.categories
         .filter(c => (typeof c.is_active === 'boolean' ? c.is_active : true))
         .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || (a.id - b.id))
+
+      // 編集時に現在の値が非アクティブ等で表示対象外の場合は追加しておく
+      const current = this.formData?.category
+      if (current && !opts.some(c => c.slug === current)) {
+        const found = this.categories.find(c => c.slug === current)
+        if (found) {
+          opts.unshift(found)
+        } else {
+          // カテゴリーマスタに存在しないスラッグの場合のフォールバック表示
+          opts.unshift({ id: 0, name: `現在の値: ${current}`, slug: current, sort_order: -999 })
+        }
+      }
+      return opts
     }
   },
   async mounted() {
@@ -367,7 +380,7 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/publications/${this.publicationId}`)
+        const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
         // 旧ルートは publication オブジェクトを直接返す（success ラッパーのみ）
         if (res && res.success && res.data) {
           const data = res.data.publication || res.data
@@ -398,12 +411,14 @@ export default {
           return
         }
         if (this.isNew) {
-          const res = await apiClient.createPublication(this.formData, token)
+          // v2エンドポイントを利用（任意のスラッグを許容）
+          const res = await apiClient.post('/api/admin/publications-v2', this.formData)
           if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
           this.successMessage = '刊行物を作成しました'
           setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
         } else {
-          const res = await apiClient.updatePublication(this.publicationId, this.formData, token)
+          // v2エンドポイントを利用（任意のスラッグを許容）
+          const res = await apiClient.put(`/api/admin/publications-v2/${this.publicationId}`, this.formData)
           if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
           this.successMessage = '刊行物を更新しました'
         }
