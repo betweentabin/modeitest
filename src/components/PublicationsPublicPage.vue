@@ -91,7 +91,14 @@
             <div class="featured-info">
             <div class="featured-meta">
               <span class="featured-year">{{ formatDate(featuredPublication.publication_date) }}</span>
-              <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
+              <span 
+                class="featured-category clickable"
+                role="button"
+                @click="selectCategory(featuredPublication.category)"
+                :title="`カテゴリで絞り込み: ${getCategoryName(featuredPublication.category)}`"
+              >
+                {{ getCategoryName(featuredPublication.category) }}
+              </span>
             </div>
             <div class="featured-details">
               <div class="past-info-row">
@@ -146,7 +153,14 @@
             </div>
             <div class="publication-info">
               <div class="publication-meta">
-                <span class="featured-category">{{ getCategoryName(publication.category) }}</span>
+                <span 
+                  class="featured-category clickable"
+                  role="button"
+                  @click.stop="selectCategory(publication.category)"
+                  :title="`カテゴリで絞り込み: ${getCategoryName(publication.category)}`"
+                >
+                  {{ getCategoryName(publication.category) }}
+                </span>
                 <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
@@ -600,15 +614,22 @@ export default {
         alert('ダウンロードに失敗しました。');
       }
     },
-    selectYear(year) {
+    async selectYear(year) {
       this.selectedYear = year;
+      this.currentPage = 1;
+      await this.loadPublications();
     },
-    selectCategory(categoryId) {
+    async selectCategory(categoryId) {
       this.selectedCategory = categoryId;
+      this.currentPage = 1;
+      await this.loadPublications();
     },
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
-      return category ? category.name : 'ちくぎん地域経済レポート';
+      // カテゴリーが未取得/未登録でも静的文言にならないようにフォールバック
+      if (category && category.name) return category.name
+      if (typeof categoryId === 'string' && categoryId) return categoryId
+      return 'その他'
     },
     goToPublicationDetail(publicationId) {
       this.$router.push(`/publications-public/${publicationId}`);

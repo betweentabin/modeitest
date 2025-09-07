@@ -1,6 +1,6 @@
 <template>
   <div class="contact-section">
-    <div class="overlap-group6">
+    <div class="overlap-group6" :style="bgStyle">
       <div class="rectangle-9"></div>
       <div class="text-45 valign-text-middle">株式会社ちくぎん地域経済研究所</div>
       <div class="group-30-1">
@@ -34,6 +34,41 @@ export default {
   components: {
     Frame13213176122,
   },
+  props: {
+    // Optional: override background image via media registry key
+    mediaKey: {
+      type: String,
+      default: 'contact_section_bg'
+    },
+    // Fallback image path
+    backgroundImage: {
+      type: String,
+      default: '/img/-----1-1.png'
+    }
+  },
+  async mounted() {
+    if (this.mediaKey) {
+      try {
+        const mod = await import('@/composables/useMedia')
+        const { useMedia } = mod
+        this._media = useMedia()
+        this._media.ensure()
+      } catch (e) { /* noop */ }
+    }
+  },
+  computed: {
+    resolvedBg() {
+      const key = this.mediaKey
+      if (key && this._media && this._media.getImage) {
+        const v = this._media.getImage(key, this.backgroundImage)
+        return v || this.backgroundImage
+      }
+      return this.backgroundImage
+    },
+    bgStyle() {
+      return { backgroundImage: `url('${this.resolvedBg}')` }
+    }
+  },
   methods: {
     goToContact() {
       this.$router.push('/contact');
@@ -44,7 +79,6 @@ export default {
 
 <style>
 .overlap-group6 {
-  background-image: url(/img/-----1-1.png);
   background-position: 50% 50%;
   background-size: cover;
   height: auto;

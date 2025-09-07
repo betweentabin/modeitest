@@ -66,7 +66,20 @@ export function usePageText(pageKey) {
     try {
       // In preview mode with admin auth, fetch via admin endpoint to see unpublished changes
       const isBrowser = typeof window !== 'undefined'
-      const isPreview = isBrowser && (window.location.search || '').includes('cmsPreview=1')
+      // Detect preview/edit flags from hash or search (hash-mode friendly)
+      let isPreview = false
+      if (isBrowser) {
+        try {
+          const hash = window.location.hash || ''
+          const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+          const params = new URLSearchParams(qs)
+          const hasPreview = params.has('cmsPreview')
+          const isEdit = params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+          isPreview = !!(hasPreview || isEdit)
+        } catch (_) {
+          isPreview = (window.location.search || '').includes('cmsPreview=1')
+        }
+      }
       const adminToken = isBrowser ? (localStorage.getItem('admin_token') || '') : ''
 
       let res

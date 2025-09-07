@@ -11,6 +11,123 @@ use Illuminate\Support\Str;
 
 class PageContentController extends Controller
 {
+    /**
+     * Recursively collect image references from nested JSON content.
+     * Supports structures like nested 'images' maps and common single image fields.
+     * Returns a flat list of items with dot-notation keys.
+     */
+    private function collectNestedImages(array $content, string $pageKey, $pageUpdatedAt): array
+    {
+        $items = [];
+        $stack = [ [ 'node' => $content, 'path' => [] ] ];
+        $singleFields = ['image', 'image_url', 'img', 'src', 'background', 'background_image', 'backgroundImage'];
+
+        while (!empty($stack)) {
+            $frame = array_pop($stack);
+            $node = $frame['node'];
+            $path = $frame['path'];
+
+            if (!is_array($node)) {
+                continue;
+            }
+
+            if (isset($node['images']) && is_array($node['images'])) {
+                foreach ($node['images'] as $k => $val) {
+                    $url = null; $p = null; $filename = null;
+                    if (is_string($val)) {
+                        $url = $val;
+                    } elseif (is_array($val)) {
+                        $url = $val['url'] ?? null;
+                        $p = $val['path'] ?? null;
+                        $filename = $val['filename'] ?? null;
+                    }
+                    if ($url) {
+                        $items[] = [
+                            'page_key' => $pageKey,
+                            'model' => 'page_content',
+                            'id' => null,
+                            'key' => (count($path) ? implode('.', $path) . '.' : '') . 'images.' . (string)$k,
+                            'url' => $url,
+                            'path' => $p,
+                            'filename' => $filename,
+                            'source' => 'json',
+                            'updated_at' => $pageUpdatedAt,
+                        ];
+                    }
+                }
+            }
+
+            foreach ($singleFields as $field) {
+                if (array_key_exists($field, $node)) {
+                    $val = $node[$field];
+                    $url = null; $p = null; $filename = null;
+                    if (is_string($val)) {
+                        $url = $val;
+                    } elseif (is_array($val)) {
+                        $url = $val['url'] ?? null;
+                        $p = $val['path'] ?? null;
+                        $filename = $val['filename'] ?? null;
+                    }
+                    if ($url) {
+                        $items[] = [
+                            'page_key' => $pageKey,
+                            'model' => 'page_content',
+                            'id' => null,
+                            'key' => (count($path) ? implode('.', $path) . '.' : '') . $field,
+                            'url' => $url,
+                            'path' => $p,
+                            'filename' => $filename,
+                            'source' => 'json',
+                            'updated_at' => $pageUpdatedAt,
+                        ];
+                    }
+                }
+            }
+
+            foreach ($node as $k => $child) {
+                if (is_array($child)) {
+                    $nextPath = $path;
+                    $nextPath[] = (string)$k;
+                    $stack[] = [ 'node' => $child, 'path' => $nextPath ];
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    private function setByPath(array $array, string $path, $value): array
+    {
+        $segments = explode('.', $path);
+        $ref =& $array;
+        foreach ($segments as $seg) {
+            $index = ctype_digit((string)$seg) ? (int)$seg : $seg;
+            if (!is_array($ref)) {
+                $ref = [];
+            }
+            if (!array_key_exists($index, $ref) || !is_array($ref[$index])) {
+                $ref[$index] = [];
+            }
+            $ref =& $ref[$index];
+        }
+        $ref = $value;
+        return $array;
+    }
+
+    private function getByPath($array, string $path): array
+    {
+        $segments = explode('.', $path);
+        $ref = $array;
+        foreach ($segments as $seg) {
+            $index = ctype_digit((string)$seg) ? (int)$seg : $seg;
+            if (is_array($ref) && array_key_exists($index, $ref)) {
+                $ref = $ref[$index];
+            } else {
+                return [false, null];
+            }
+        }
+        return [true, $ref];
+    }
     public function mediaUsage(): JsonResponse
     {
         $pages = PageContent::all();
@@ -71,6 +188,24 @@ class PageContentController extends Controller
                             'updated_at' => $page->updated_at,
                         ];
                     }
+                }
+            }
+        }
+
+        // Deep scan nested image fields inside PageContent JSON (child components etc.)
+        foreach ($pages as $page) {
+            $content = $page->content;
+            if (is_array($content)) {
+                $nested = $this->collectNestedImages($content, $page->page_key, $page->updated_at);
+                // Avoid duplicates (page_key + key + url)
+                foreach ($nested as $n) {
+                    $exists = false;
+                    foreach ($items as $it) {
+                        if ($it['page_key'] === $n['page_key'] && $it['key'] === $n['key'] && (string)$it['url'] === (string)$n['url']) {
+                            $exists = true; break;
+                        }
+                    }
+                    if (!$exists) { $items[] = $n; }
                 }
             }
         }
@@ -362,8 +497,27 @@ class PageContentController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        if (array_key_exists('content', $validated) && is_string($validated['content'])) {
-            $validated['content'] = [ 'html' => $validated['content'] ];
+        // Normalize and deep-merge content to avoid wiping unrelated keys
+        if (array_key_exists('content', $validated)) {
+            // Normalize incoming content if it's a raw HTML string
+            if (is_string($validated['content'])) {
+                $validated['content'] = [ 'html' => $validated['content'] ];
+            }
+
+            // Existing content from DB (ensure array form)
+            $existing = $page->content;
+            if (is_string($existing)) {
+                $existing = [ 'html' => (string)$existing ];
+            }
+            if (!is_array($existing)) {
+                $existing = [];
+            }
+
+            // Only merge when incoming is array; otherwise leave as-is
+            if (is_array($validated['content'])) {
+                // array_replace_recursive keeps existing keys and replaces only provided ones
+                $validated['content'] = array_replace_recursive($existing, $validated['content']);
+            }
         }
 
         $validated['updated_by'] = auth()->id();
@@ -481,16 +635,31 @@ class PageContentController extends Controller
         $path = $file->storeAs('pages/' . $pageKey, $fileName, 'public');
 
         $content = $page->content ?? [];
-        if (!is_array($content)) {
-            $content = ['html' => (string)$content];
-        }
-        $content['images'] = $content['images'] ?? [];
-        $content['images'][$request->key] = [
+        if (!is_array($content)) { $content = ['html' => (string)$content]; }
+
+        $newValue = [
             'url' => Storage::url($path),
             'path' => $path,
             'filename' => $fileName,
             'uploaded_at' => now()
         ];
+
+        $key = $request->key;
+        if (strpos($key, '.') !== false) {
+            [$exists, $current] = $this->getByPath($content, $key);
+            if ($exists) {
+                if (is_array($current)) {
+                    $content = $this->setByPath($content, $key, array_merge($current, $newValue));
+                } else {
+                    $content = $this->setByPath($content, $key, $newValue['url']);
+                }
+            } else {
+                $content = $this->setByPath($content, $key, $newValue);
+            }
+        } else {
+            $content['images'] = $content['images'] ?? [];
+            $content['images'][$key] = $newValue;
+        }
 
         $page->update([
             'content' => $content,
@@ -500,7 +669,7 @@ class PageContentController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Image replaced',
-            'data' => [ 'image' => $content['images'][$request->key] ]
+            'data' => [ 'image' => $newValue ]
         ]);
     }
 
