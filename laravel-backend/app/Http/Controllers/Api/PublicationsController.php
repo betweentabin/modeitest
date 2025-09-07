@@ -48,6 +48,13 @@ class PublicationsController extends Controller
      */
     public function store(Request $request)
     {
+        // Fallback: handle JSON body even if Content-Type header is missing
+        if (empty($request->all())) {
+            $raw = json_decode($request->getContent(), true);
+            if (is_array($raw)) {
+                $request->merge($raw);
+            }
+        }
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -93,6 +100,13 @@ class PublicationsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Fallback: handle JSON body even if Content-Type header is missing
+        if (empty($request->all())) {
+            $raw = json_decode($request->getContent(), true);
+            if (is_array($raw)) {
+                $request->merge($raw);
+            }
+        }
         $publication = Publication::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
