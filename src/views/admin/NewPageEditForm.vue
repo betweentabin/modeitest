@@ -830,9 +830,13 @@ export default {
         // Consulting
         'consulting': '/#/cri-consulting',
         'cri-consulting': '/#/cri-consulting',
+        // Services
+        'services': '/#/services',
         // Membership
         'membership': '/#/membership',
         'register': '/#/membership',
+        'premium-membership': '/#/premium-membership',
+        'membership-premium': '/#/premium-membership',
         // Glossary
         'glossary': '/#/glossary',
         // Economics sections
@@ -840,10 +844,13 @@ export default {
         'economic-research': '/#/economic-research',
         'economic-indicators': '/#/economic-indicators',
         // Seminars
+        'seminars': '/#/seminar',
         'seminars-current': '/#/seminars/current',
         // Publications / News
         'publications': '/#/publications-public',
         'news': '/#/news',
+        // FAQ
+        'faq': '/#/faq',
         // Financial reports
         'financial-report': '/#/financial-report',
         'financial-reports': '/#/financial-report'
