@@ -235,6 +235,9 @@ export default {
 .logo-section {
   text-align: center;
   margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo {
@@ -247,6 +250,8 @@ export default {
   margin: 0 0 8px 0;
   color: var(--black);
   text-align: center; /* 見出しを中央寄せ */
+  width: 100%;
+  display: block;
 }
 
 .subtitle {

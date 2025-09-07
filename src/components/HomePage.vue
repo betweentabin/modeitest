@@ -9,13 +9,19 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <h1 class="hero-title">{{ text66 }}</h1>
+              <h1 class="hero-title">
+                <CmsText pageKey="home" fieldKey="page_title" tag="span" :fallback="text66" />
+              </h1>
             </div>
             <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">{{ text67 }}</div>
+              <div class="hero-subtitle">
+                <CmsText pageKey="home" fieldKey="page_subtitle" tag="span" :fallback="text67" />
+              </div>
             </div>
             <div class="hero-button-wrapper" @click="goToContact">
-              <div class="hero-button-text">{{ text68 }}</div>
+              <div class="hero-button-text">
+                <CmsText pageKey="home" fieldKey="cta_primary" tag="span" :fallback="text68" />
+              </div>
               <div class="hero-button-icon">
                 <img
                   class="vector-2"
@@ -69,14 +75,20 @@
           <div class="about">
             <div class="flex-col-1">
               <div class="section-header">
-                <h2 class="section-title">ちくぎん地域経済研究所について</h2>
+                <h2 class="section-title">
+                  <CmsText pageKey="home" fieldKey="about_title" tag="span" :fallback="'ちくぎん地域経済研究所について'" />
+                </h2>
                 <div class="section-divider">
                   <div class="divider-line"></div>
-                  <span class="divider-text">FOR YOU</span>
+                  <span class="divider-text">
+                    <CmsText pageKey="home" fieldKey="about_subtitle" tag="span" :fallback="'FOR YOU'" />
+                  </span>
                   <div class="divider-line"></div>
                 </div>
               </div>
-              <div class="text-48" v-html="text113"></div>
+              <div class="text-48">
+                <CmsText pageKey="home" fieldKey="about_body" tag="div" type="html" :fallback="text113" />
+              </div>
             </div>
           </div>
           <div class="frame-1321317462">
@@ -94,7 +106,9 @@
                 />
               </div>
               <div class="button arrow-dark" @click="$router.push('/aboutus')" style="cursor: pointer;">
-                <div class="text-55 valign-text-middle inter-bold-white-15px">{{ text120 }}</div>
+                <div class="text-55 valign-text-middle inter-bold-white-15px">
+                  <CmsText pageKey="home" fieldKey="cta_secondary" tag="span" :fallback="text120" />
+                </div>
                 <frame13213176122 />
               </div>
             </div>
@@ -381,6 +395,7 @@ import vector61 from "../../public/img/vector-61.svg";
 import vector5 from "../../public/img/vector-5.svg";
 import vector7 from "../../public/img/vector-7.svg";
 import CmsBlock from './CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 export default {
   name: "HomePage",
   components: {
@@ -399,6 +414,7 @@ export default {
     Group27,
     AccessSection,
     FixedSideButtons,
+    CmsText,
   },
   data() {
     return {

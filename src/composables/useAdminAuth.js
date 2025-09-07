@@ -9,14 +9,20 @@ export function useAdminAuth() {
   const checkAuth = () => {
     const token = localStorage.getItem('admin_token');
     const userStr = localStorage.getItem('adminUser');
-    
-    if (token && userStr) {
-      isAuthenticated.value = true;
-      adminUser.value = JSON.parse(userStr);
+
+    if (token) {
+      // Accept token presence for inline edit enablement; hydrate user if available
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      if (userStr) {
+        isAuthenticated.value = true;
+        try { adminUser.value = JSON.parse(userStr) } catch (_) { adminUser.value = null }
+      } else {
+        isAuthenticated.value = true;
+        adminUser.value = null;
+      }
       return true;
     }
-    
+
     isAuthenticated.value = false;
     adminUser.value = null;
     return false;

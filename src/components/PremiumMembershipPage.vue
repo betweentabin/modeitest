@@ -7,8 +7,12 @@
     <div class="hero-section">
       <div class="hero-overlay">
         <div class="hero-content">
-          <p class="hero-subtitle">premium membership</p>
-          <h1 class="hero-title">プレミアム会員</h1>
+          <p class="hero-subtitle">
+            <CmsText pageKey="premium-membership" fieldKey="page_subtitle" tag="span" :fallback="'premium membership'" />
+          </p>
+          <h1 class="hero-title">
+            <CmsText pageKey="premium-membership" fieldKey="page_title" tag="span" :fallback="'プレミアム会員'" />
+          </h1>
         </div>
       </div>
     </div>
@@ -32,10 +36,14 @@
     <section class="publications-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">話題の特典</h2>
+          <h2 class="section-title">
+            <CmsText pageKey="premium-membership" fieldKey="benefits_title" tag="span" :fallback="'話題の特典'" />
+          </h2>
           <div class="section-decoration">
             <div class="decoration-line"></div>
-            <span class="decoration-text">benefits</span>
+            <span class="decoration-text">
+              <CmsText pageKey="premium-membership" fieldKey="benefits_label" tag="span" :fallback="'benefits'" />
+            </span>
             <div class="decoration-line"></div>
           </div>
         </div>
@@ -48,14 +56,16 @@
             </div>
                          <div class="featured-info">
                <div class="content-box">
-                 <h3 class="content-title">日経トップリーダービジネスで勝ち抜くヒント集
-                    毎月、日経トップリーダーをお届けします。</h3>
+                 <h3 class="content-title">
+                   <CmsText pageKey="premium-membership" fieldKey="featured_title" tag="span" :fallback="'日経トップリーダービジネスで勝ち抜くヒント集 毎月、日経トップリーダーをお届けします。'" />
+                 </h3>
                  <div class="content-body">
-                   <p>経営トップに役立つ実践的な情報を厳選し、混迷の時代を勝ち 抜き、未来を切り開くヒントとなる情報を提供する月刊誌です。毎 月、月初に郵送にてお届けします。</p>
+                   <CmsText pageKey="premium-membership" fieldKey="featured_body" tag="p" :fallback="'経営トップに役立つ実践的な情報を厳選し、混迷の時代を勝ち抜き、未来を切り開くヒントとなる情報を提供する月刊誌です。毎月、月初に郵送にてお届けします。'" />
                  </div>
                </div>
 
-              <button class="download-btn">日経トップリーダーを確認する
+              <button class="download-btn">
+                <CmsText pageKey="premium-membership" fieldKey="featured_cta" tag="span" :fallback="'日経トップリーダーを確認する'" />
                 <div class="icon-box">
                   <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="23" height="23" rx="5" fill="white"/>
@@ -101,6 +111,7 @@ import Group27 from "./Group27";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "PremiumMembershipPage",
@@ -112,7 +123,8 @@ export default {
     Footer,
     Group27,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsText,
   },
   data() {
     return {
