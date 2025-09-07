@@ -340,7 +340,13 @@ export default {
     },
     getImageUrl(type) {
       if (this.pageData?.content?.images?.[type]?.url) {
-        return getApiUrl(this.pageData.content.images[type].url);
+        const u = this.pageData.content.images[type].url
+        if (!u) return null
+        if (u.startsWith('http://') || u.startsWith('https://') || u.startsWith('//')) return u
+        if (u.startsWith('/storage/') || u.startsWith('storage/')) return u.startsWith('/storage/') ? u : `/${u}`
+        if (u.startsWith('/img/') || u.startsWith('/images/') || u.startsWith('/assets/') || u.startsWith('/favicon')) return u
+        if (u.startsWith('/')) return u
+        return `/storage/${u.replace(/^public\//,'')}`
       }
       return null;
     }

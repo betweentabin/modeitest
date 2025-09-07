@@ -410,6 +410,7 @@ Route::prefix('news-v2')->group(function () {
 // 新しい刊行物API
 Route::prefix('publications-v2')->group(function () {
     Route::get('/', [PublicationController::class, 'index']);
+    Route::get('/categories', [PublicationController::class, 'categories']);
     Route::get('/{id}', [PublicationController::class, 'show']);
     Route::get('/{id}/download', [PublicationController::class, 'download']);
 });

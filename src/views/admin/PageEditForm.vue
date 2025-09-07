@@ -288,7 +288,14 @@ export default {
     },
     getImageUrl(type) {
       if (this.formData.content?.images?.[type]?.url) {
-        return getApiUrl(this.formData.content.images[type].url)
+        const u = this.formData.content.images[type].url
+        // 画像URLはAPI基点ではなく表示用に解決
+        if (u.startsWith('http://') || u.startsWith('https://') || u.startsWith('//')) return u
+        if (u.startsWith('/storage/') || u.startsWith('storage/')) return u.startsWith('/storage/') ? u : `/${u}`
+        if (u.startsWith('/img/') || u.startsWith('/images/') || u.startsWith('/assets/') || u.startsWith('/favicon')) return u
+        if (u.startsWith('/')) return u
+        // fallback: assume storage relative
+        return `/storage/${u.replace(/^public\//,'')}`
       }
       return null
     },

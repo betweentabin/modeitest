@@ -716,6 +716,9 @@ class ApiClient {
   async updatePublicationCategory(id, data) { return this.put(`/api/admin/publication-categories/${id}`, data) }
   async deletePublicationCategory(id) { return this.delete(`/api/admin/publication-categories/${id}`) }
 
+  // Public publication categories (for frontend filters)
+  async getPublicPublicationCategories() { return this.get('/api/publications-v2/categories') }
+
   // Notices API methods
   async getNotices(params = {}) {
     const queryString = new URLSearchParams(params).toString()

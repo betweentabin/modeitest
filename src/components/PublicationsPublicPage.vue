@@ -91,7 +91,7 @@
             <div class="featured-info">
             <div class="featured-meta">
               <span class="featured-year">{{ formatDate(featuredPublication.publication_date) }}</span>
-              <span class="featured-category">一般公開</span>
+              <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
             </div>
             <div class="featured-details">
               <div class="past-info-row">
@@ -146,7 +146,7 @@
             </div>
             <div class="publication-info">
               <div class="publication-meta">
-                <span class="featured-category">一般公開</span>
+                <span class="featured-category">{{ getCategoryName(publication.category) }}</span>
                 <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
@@ -472,7 +472,16 @@ export default {
   methods: {
     async loadCategories() {
       try {
-        // まずmockServerから（フロントのみで可）
+        // 公開APIから取得（管理で設定したカテゴリが反映される）
+        const res = await apiClient.getPublicPublicationCategories()
+        if (res && res.success && Array.isArray(res.data)) {
+          this.categories = [
+            { id: 'all', name: '全て' },
+            ...res.data.map(c => ({ id: c.slug, name: c.name }))
+          ]
+          return
+        }
+        // モックにフォールバック
         try {
           const cats = await mockServer.getPublicationCategories()
           if (cats && cats.length) {
@@ -483,7 +492,7 @@ export default {
             return
           }
         } catch (_) { /* noop */ }
-        // フォールバック: 代表的なカテゴリ
+        // 最後のフォールバック
         this.categories = [
           { id: 'all', name: '全て' },
           { id: 'research', name: '調査研究' },

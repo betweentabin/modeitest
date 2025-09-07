@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Publication;
+use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Schema;
@@ -131,6 +132,42 @@ class PublicationController extends Controller
                 'success' => false,
                 'message' => 'ダウンロードに失敗しました。',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * 公開用: 刊行物カテゴリー一覧
+     */
+    public function categories(): JsonResponse
+    {
+        try {
+            $cats = PublicationCategory::query()
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get(['id','name','slug','sort_order','is_active']);
+
+            // is_active が存在する場合は true のみ返す（カラムが無い環境ではそのまま）
+            if (Schema::hasColumn('publication_categories', 'is_active')) {
+                $cats = $cats->where('is_active', true)->values();
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $cats->map(function ($c) {
+                    return [
+                        'id' => $c->id,
+                        'name' => $c->name,
+                        'slug' => $c->slug,
+                        'sort_order' => $c->sort_order,
+                    ];
+                })->values()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'カテゴリーの取得に失敗しました',
+                'error' => config('app.debug') ? $e->getMessage() : null
             ], 500);
         }
     }
