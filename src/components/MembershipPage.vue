@@ -7,6 +7,7 @@
     <HeroSection 
       :title="pageTitle"
       :subtitle="pageSubtitle"
+      cms-page-key="membership"
       heroImage="https://api.builder.io/api/v1/image/assets/TEMP/6ba0640caf634ea83255fc6ebd7dda9734c97932?width=2880"
       mediaKey="hero_membership"
     />
@@ -21,9 +22,11 @@
     <section class="introduction-section">
       <div class="container">
         <div class="intro-content">
-          <h2 class="intro-title">ご入会に際しまして</h2>
+          <h2 class="intro-title">
+            <CmsText pageKey="membership" fieldKey="intro_title" tag="span" :fallback="'ご入会に際しまして'" />
+          </h2>
           <p class="intro-text">
-            ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報誌「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。
+            <CmsText pageKey="membership" fieldKey="intro_text" tag="span" :fallback="'ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報誌「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。'" />
           </p>
         </div>
       </div>
@@ -33,10 +36,14 @@
     <section class="services-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">主な会員が受けられるサービス内容</h2>
+          <h2 class="section-title">
+            <CmsText pageKey="membership" fieldKey="services_title" tag="span" :fallback="'主な会員が受けられるサービス内容'" />
+          </h2>
           <div class="section-decoration">
             <div class="decoration-line"></div>
-            <span class="decoration-text">service</span>
+            <span class="decoration-text">
+              <CmsText pageKey="membership" fieldKey="services_label" tag="span" :fallback="'service'" />
+            </span>
             <div class="decoration-line"></div>
           </div>
         </div>
@@ -224,6 +231,7 @@ import HeroSection from "./HeroSection.vue";
 import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
 import CmsBlock from './CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "MembershipPage",
@@ -237,7 +245,8 @@ export default {
     FixedSideButtons,
     ActionButton,
     HeroSection,
-    CmsBlock
+    CmsBlock,
+    CmsText,
   },
   data() {
     return {

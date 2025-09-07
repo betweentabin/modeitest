@@ -21,10 +21,14 @@
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">{{ formTitle }}</h1>
+          <h1 class="form-title">
+            <CmsText pageKey="contact" fieldKey="form_title" tag="span" :fallback="formTitle" />
+          </h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">{{ pageSubtitle }}</span>
+            <span class="divider-text">
+              <CmsText pageKey="contact" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+            </span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
@@ -216,6 +220,7 @@ import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
 import CmsBlock from '@/components/CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: 'ContactFormPage',
@@ -226,7 +231,8 @@ export default {
     AccessSection,
     HeroSection,
     Breadcrumbs,
-    CmsBlock
+    CmsBlock,
+    CmsText
   },
   data() {
     return {

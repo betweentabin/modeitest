@@ -6,6 +6,7 @@
     <HeroSection 
       :title="pageTitle || 'よくあるご質問'"
       :subtitle="pageSubtitle || 'FAQ'"
+      cms-page-key="faq"
       heroImage="/img/hero-image.png"
       mediaKey="hero_faq"
     />
@@ -15,10 +16,14 @@
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="faq" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
+          <span class="title-english">
+            <CmsText pageKey="faq" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -108,6 +113,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
 import CmsBlock from '@/components/CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "FaqPage",
@@ -121,7 +127,7 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons
-    , CmsBlock
+    , CmsBlock, CmsText
   },
   data() {
     return {
