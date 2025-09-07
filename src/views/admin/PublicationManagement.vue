@@ -361,13 +361,16 @@ export default {
         const params = {
           page: this.currentPage,
           per_page: this.itemsPerPage,
-          ...this.filters
         }
+        if (this.filters && this.filters.category) params.category = this.filters.category
+        if (this.searchKeyword && this.searchKeyword.trim()) params.search = this.searchKeyword.trim()
         
         const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
         console.log('Admin publications API response:', response)
         if (response.success && response.data) {
-          this.publications = response.data.publications.map(pub => ({
+          const pag = response.data
+          const items = (pag && (pag.publications || pag.data)) || []
+          this.publications = items.map(pub => ({
             id: pub.id,
             title: pub.title,
             date: pub.publication_date,
@@ -375,11 +378,10 @@ export default {
             userType: this.getUserTypeText(pub.membership_level),
             description: pub.description,
             author: pub.author,
-            is_published: pub.is_published,
-            is_downloadable: pub.file_url ? true : false
+            is_published: !!pub.is_published,
+            is_downloadable: !!pub.file_url
           }))
-          
-          this.totalPages = response.data.pagination.total_pages
+          this.totalPages = (pag?.pagination?.total_pages) || pag?.last_page || 1
           console.log('Publications loaded:', this.publications.length, 'items')
         } else {
           throw new Error('刊行物データの取得に失敗しました')

@@ -333,9 +333,10 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
-        if (res && res.success && res.data && res.data.publication) {
-          const data = res.data.publication
+        const res = await apiClient.get(`/api/admin/publications/${this.publicationId}`)
+        // 旧ルートは publication オブジェクトを直接返す（success ラッパーのみ）
+        if (res && res.success && res.data) {
+          const data = res.data.publication || res.data
           this.formData = {
             ...data,
             issue_number: data.issue_number || '',

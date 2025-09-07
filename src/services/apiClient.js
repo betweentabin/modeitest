@@ -651,7 +651,7 @@ class ApiClient {
 
   async getAdminPublications(params = {}) {
     const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/api/admin/publications-v2?${queryString}` : '/api/admin/publications-v2'
+    const endpoint = queryString ? `/api/admin/publications?${queryString}` : '/api/admin/publications'
     // トークンは自動的にrequestメソッドで付与される
     return this.get(endpoint)
   }
