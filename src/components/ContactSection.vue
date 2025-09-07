@@ -35,10 +35,12 @@
 
 <script>
 import Frame13213176122 from "./Frame13213176122";
+import CmsText from '@/components/CmsText.vue'
 export default {
   name: "ContactSection",
   components: {
     Frame13213176122,
+    CmsText,
   },
   props: {
     // Optional: override background image via media registry key
@@ -50,6 +52,11 @@ export default {
     backgroundImage: {
       type: String,
       default: '/img/-----1-1.png'
+    },
+    // Optional: page-specific override key. When omitted, falls back to 'site'
+    cmsPageKey: {
+      type: String,
+      default: ''
     }
   },
   async mounted() {
@@ -63,6 +70,9 @@ export default {
     }
   },
   computed: {
+    cmsKey() {
+      return this.cmsPageKey || 'site'
+    },
     resolvedBg() {
       const key = this.mediaKey
       if (key && this._media && this._media.getImage) {

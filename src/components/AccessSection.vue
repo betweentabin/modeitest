@@ -13,45 +13,72 @@
         <div class="frame-1321317466">
           <div class="group-container">
             <div class="group-12">
-              <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text75 }}</div>
-              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ text77 }}</p>
-              <div class="text-11 valign-text-middle inter-normal-ship-gray-16px" v-html="text76"></div>
-              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ phone }}</p>
-              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ x900 }}</p>
-            </div>
-            <div class="group-12">
-              <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text74 }}</div>
+              <div class="text-3 valign-text-middle inter-bold-mandy-20px">
+                <CmsText :pageKey="cmsKey" fieldKey="access_title_1" tag="span" :fallback="text75" />
+              </div>
               <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">
-                <a href="https://maps.app.goo.gl/L8xgusobgPJdpPbp9" target="_blank" class="station-link">{{ x12Km141 }}</a>
+                <CmsText :pageKey="cmsKey" fieldKey="access_subtitle_1" tag="span" :fallback="text77" />
               </p>
+              <CmsText :pageKey="cmsKey" fieldKey="access_body_1" tag="div" class="text-11 valign-text-middle inter-normal-ship-gray-16px" type="html" :fallback="text76" />
               <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">
-                <a href="https://maps.app.goo.gl/StTHwPn9fJzSDemF8" target="_blank" class="station-link">{{ x12Km142 }}</a>
+                <CmsText :pageKey="cmsKey" fieldKey="access_phone" tag="span" :fallback="phone" />
               </p>
               <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">
-                <a href="https://maps.app.goo.gl/z5LoBXRdCUbaSYRS9" target="_blank" class="station-link">{{ x19Km23 }}</a>
+                <CmsText :pageKey="cmsKey" fieldKey="access_hours" tag="span" :fallback="x900" />
               </p>
             </div>
             <div class="group-12">
-              <div class="text-3 valign-text-middle inter-bold-mandy-20px">{{ text78 }}</div>
-              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">{{ x497M6 }}</p>
-              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">{{ x811M10 }}</p>
-              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">{{ d1830M10 }}</p>
+              <div class="text-3 valign-text-middle inter-bold-mandy-20px">
+                <CmsText :pageKey="cmsKey" fieldKey="access_title_2" tag="span" :fallback="text74" />
+              </div>
+              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">
+                <a href="https://maps.app.goo.gl/L8xgusobgPJdpPbp9" target="_blank" class="station-link">
+                  <CmsText :pageKey="cmsKey" fieldKey="access_station_1" tag="span" :fallback="x12Km141" />
+                </a>
+              </p>
+              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">
+                <a href="https://maps.app.goo.gl/StTHwPn9fJzSDemF8" target="_blank" class="station-link">
+                  <CmsText :pageKey="cmsKey" fieldKey="access_station_2" tag="span" :fallback="x12Km142" />
+                </a>
+              </p>
+              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">
+                <a href="https://maps.app.goo.gl/z5LoBXRdCUbaSYRS9" target="_blank" class="station-link">
+                  <CmsText :pageKey="cmsKey" fieldKey="access_bus_1" tag="span" :fallback="x19Km23" />
+                </a>
+              </p>
+            </div>
+            <div class="group-12">
+              <div class="text-3 valign-text-middle inter-bold-mandy-20px">
+                <CmsText :pageKey="cmsKey" fieldKey="access_title_3" tag="span" :fallback="text78" />
+              </div>
+              <p class="x12km-14 valign-text-middle inter-normal-ship-gray-16px">
+                <CmsText :pageKey="cmsKey" fieldKey="access_route_1" tag="span" :fallback="x497M6" />
+              </p>
+              <p class="x12km-14-1 valign-text-middle inter-normal-ship-gray-16px">
+                <CmsText :pageKey="cmsKey" fieldKey="access_route_2" tag="span" :fallback="x811M10" />
+              </p>
+              <p class="x19km-23 valign-text-middle inter-normal-ship-gray-16px">
+                <CmsText :pageKey="cmsKey" fieldKey="access_route_3" tag="span" :fallback="d1830M10" />
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
 import Group10 from "./Group10";
 import { homePageData } from "../data";
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "AccessSection",
   components: {
     Group10,
+    CmsText,
   },
   data() {
     return {
@@ -71,6 +98,13 @@ export default {
       x811M10: homePageData.x811M10,
       d1830M10: homePageData.d1830M10,
     };
+  },
+  props: {
+    // Optional: page-specific override key. When omitted, falls back to 'site'
+    cmsPageKey: {
+      type: String,
+      default: ''
+    }
   },
   mounted() {
     this.adjustRectangleHeight();

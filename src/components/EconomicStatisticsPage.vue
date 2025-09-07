@@ -145,10 +145,10 @@
     />
 
     <!-- Contact CTA Section -->
-    <ContactSection />
+    <ContactSection cms-page-key="economic-statistics" />
 
     <!-- Access Section -->
-    <AccessSection />
+    <AccessSection cms-page-key="economic-statistics" />
 
     <!-- Footer Navigation -->
     <Footer v-bind="frame132131753022Props" />
