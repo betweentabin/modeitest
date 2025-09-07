@@ -245,13 +245,7 @@ export default {
       currentPage: 1,
       totalPages: 1,
       years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
-      categories: [
-        { id: 'all', name: '全て' },
-        { id: 'economics', name: 'ちくぎん地域経済レポート' },
-        { id: 'quarterly', name: 'ちくぎん地域経済レポート' },
-        { id: 'special', name: 'ちくぎん地域経済レポート' },
-        { id: 'free', name: 'ちくぎん地域経済レポート' }
-      ],
+      categories: [ { id: 'all', name: '全て' } ],
       featuredPublication: {
         id: 1,
         title: '一般向け刊行物',
@@ -453,6 +447,7 @@ export default {
     }
   },
   mounted() {
+    this.loadCategories();
     this.loadPublications();
     try {
       this._pageText = usePageText(this.pageKey)
@@ -475,6 +470,37 @@ export default {
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        // まずmockServerから（フロントのみで可）
+        try {
+          const cats = await mockServer.getPublicationCategories()
+          if (cats && cats.length) {
+            this.categories = [
+              { id: 'all', name: '全て' },
+              ...cats.map(c => ({ id: c.slug, name: c.name }))
+            ]
+            return
+          }
+        } catch (_) { /* noop */ }
+        // フォールバック: 代表的なカテゴリ
+        this.categories = [
+          { id: 'all', name: '全て' },
+          { id: 'research', name: '調査研究' },
+          { id: 'quarterly', name: '定期刊行物' },
+          { id: 'special', name: '特別企画' },
+          { id: 'statistics', name: '統計資料' }
+        ]
+      } catch(e) {
+        this.categories = [
+          { id: 'all', name: '全て' },
+          { id: 'research', name: '調査研究' },
+          { id: 'quarterly', name: '定期刊行物' },
+          { id: 'special', name: '特別企画' },
+          { id: 'statistics', name: '統計資料' }
+        ]
+      }
+    },
     formatDate(dateString) {
       if (!dateString) return ''
       const d = new Date(dateString)

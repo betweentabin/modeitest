@@ -20,31 +20,57 @@ class PublicationCategoryController extends Controller
     }
     public function store(Request $request)
     {
-        $v = Validator::make($request->all(), [
+        // 先に最終的な slug を決定してからバリデーション（重複を422に）
+        $name = $request->input('name');
+        $slug = $request->input('slug');
+        if (!$slug && $name) { $slug = Str::slug($name); }
+        // 日本語などで slug が生成できないケースのフォールバック
+        if (!$slug) { $slug = 'cat-' . substr(md5(($name ?? '') . microtime(true)), 0, 8); }
+
+        $payload = [
+            'name' => $name,
+            'slug' => $slug,
+            'sort_order' => $request->input('sort_order'),
+            'is_active' => $request->input('is_active'),
+        ];
+
+        $v = Validator::make($payload, [
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:publication_categories,slug',
+            'slug' => 'required|string|max:255|unique:publication_categories,slug',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
         ]);
         if ($v->fails()) return response()->json(['success'=>false,'errors'=>$v->errors()], 422);
-        $data = $request->only(['name','slug','sort_order','is_active']);
-        if (empty($data['slug'])) $data['slug'] = Str::slug($data['name']);
-        $item = PublicationCategory::create($data);
+
+        $item = PublicationCategory::create($payload);
         return response()->json(['success'=>true,'data'=>$item], 201);
     }
     public function update(Request $request, $id)
     {
         $item = PublicationCategory::findOrFail($id);
-        $v = Validator::make($request->all(), [
+        // name の変更に伴い slug 未指定なら自動生成し、その値で重複チェック
+        $name = $request->has('name') ? $request->input('name') : $item->name;
+        $slug = $request->has('slug') ? $request->input('slug') : null;
+        if ($slug === null && $request->has('name')) { $slug = Str::slug($name); }
+        if ($slug === null) { $slug = $item->slug; }
+        if (!$slug) { $slug = 'cat-' . substr(md5(($name ?? '') . microtime(true)), 0, 8); }
+
+        $payload = [
+            'name' => $name,
+            'slug' => $slug,
+            'sort_order' => $request->input('sort_order', $item->sort_order),
+            'is_active' => $request->input('is_active', $item->is_active),
+        ];
+
+        $v = Validator::make($payload, [
             'name' => 'sometimes|required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:publication_categories,slug,' . $item->id,
+            'slug' => 'required|string|max:255|unique:publication_categories,slug,' . $item->id,
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
         ]);
         if ($v->fails()) return response()->json(['success'=>false,'errors'=>$v->errors()], 422);
-        $data = $request->only(['name','slug','sort_order','is_active']);
-        if (isset($data['name']) && empty($data['slug'])) $data['slug'] = Str::slug($data['name']);
-        $item->update($data);
+
+        $item->update($payload);
         return response()->json(['success'=>true,'data'=>$item]);
     }
     public function destroy($id)
@@ -55,4 +81,3 @@ class PublicationCategoryController extends Controller
         return response()->json(['success'=>true]);
     }
 }
-

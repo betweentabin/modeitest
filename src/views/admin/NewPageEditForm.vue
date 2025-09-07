@@ -806,25 +806,47 @@ export default {
       return this.$route.params.pageKey
     },
     previewPath() {
-      const key = this.formData.page_key || this.pageKey || ''
+      // ルーティングの別名・旧キーも吸収し、誤ったページが開かないよう包括的に対応
+      const key = (this.formData.page_key || this.pageKey || '').trim()
       const map = {
+        // Top/Home
         'home': '/#/',
-        'about': '/#/about',
-        'company-profile': '/#/company-profile',
+        'top': '/#/',
+        // Company/About
+        'about': '/#/company',
+        'company': '/#/company',
+        'company-profile': '/#/company',
+        // About institute (aboutus)
+        'aboutus': '/#/aboutus',
+        'about-institute': '/#/aboutus',
+        // Static info pages
         'sitemap': '/#/sitemap',
-        'contact': '/#/contact',
-        'consulting': '/#/consulting',
-        'membership': '/#/membership',
-        'glossary': '/#/glossary',
-        'economic-statistics': '/#/economic-statistics',
-        'seminars-current': '/#/seminars/current',
-        'publications': '/#/publications-public',
-        'terms': '/#/terms',
         'privacy': '/#/privacy',
-        'faq': '/#/faq',
-        'transaction-law': '/#/transaction-law',
+        'terms': '/#/terms',
+        'legal': '/#/legal',
+        'transaction-law': '/#/legal',
+        // Contact
+        'contact': '/#/contact',
+        // Consulting
+        'consulting': '/#/cri-consulting',
+        'cri-consulting': '/#/cri-consulting',
+        // Membership
+        'membership': '/#/membership',
+        'register': '/#/membership',
+        // Glossary
+        'glossary': '/#/glossary',
+        // Economics sections
+        'economic-statistics': '/#/economic-research',
+        'economic-research': '/#/economic-research',
+        'economic-indicators': '/#/economic-indicators',
+        // Seminars
+        'seminars-current': '/#/seminars/current',
+        // Publications / News
+        'publications': '/#/publications-public',
         'news': '/#/news',
-        'financial-reports': '/#/financial-reports'
+        // Financial reports
+        'financial-report': '/#/financial-report',
+        'financial-reports': '/#/financial-report'
       }
       return map[key] || '/#/'
     },
