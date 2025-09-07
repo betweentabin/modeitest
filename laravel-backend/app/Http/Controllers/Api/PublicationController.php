@@ -41,23 +41,8 @@ class PublicationController extends Controller
                 });
             }
 
-            // 一般公開APIでは会員レベルに応じてフィルタ（デフォルト: free のみ）
-            // ただし環境により membership_level カラムが無い場合があるため安全に分岐
-            if (!$isAdminContext) {
-                if (Schema::hasColumn('publications', 'membership_level')) {
-                    $allowedLevels = ['free'];
-                    $query->where(function ($q) use ($allowedLevels) {
-                        $q->whereIn('membership_level', $allowedLevels)
-                          ->orWhereNull('membership_level');
-                    });
-                } elseif (Schema::hasColumn('publications', 'members_only')) {
-                    // 旧スキーマ: members_only=false を公開とみなす
-                    $query->where(function ($q) {
-                        $q->where('members_only', false)
-                          ->orWhereNull('members_only');
-                    });
-                }
-            }
+            // 会員レベルに関わらず「公開済み」のものを一覧表示する
+            // 旧仕様では free のみ返していたが、要件に合わせて解除
 
             // ページネーション
             $perPage = $request->get('per_page', 12);
