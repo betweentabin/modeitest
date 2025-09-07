@@ -9,10 +9,10 @@
         <div class="hero-overlay">
           <div class="hero-content">
             <div class="hero-title-wrapper">
-              <h1 class="hero-title">{{ heroTitle }}</h1>
+              <h1 class="hero-title">{{ text66 }}</h1>
             </div>
             <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">{{ heroSubtitle }}</div>
+              <div class="hero-subtitle">{{ text67 }}</div>
             </div>
             <div class="hero-button-wrapper" @click="goToContact">
               <div class="hero-button-text">{{ text68 }}</div>
