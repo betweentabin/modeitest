@@ -88,9 +88,9 @@
           <div class="featured-image" :class="{ blurred: shouldBlur }">
             <img src="/img/image-1.png" alt="一般向け刊行物" />
           </div>
-          <div class="featured-info">
+            <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">2025.4.28</span>
+              <span class="featured-year">{{ formatDate(featuredPublication.publish_date || featuredPublication.publication_date) }}</span>
               <span class="featured-category">一般公開</span>
             </div>
             <div class="featured-details">
@@ -147,7 +147,7 @@
             <div class="publication-info">
               <div class="publication-meta">
                 <span class="featured-category">一般公開</span>
-                <span class="featured-year">{{ publication.year }}.4.28</span>
+                <span class="featured-year">{{ formatDate(publication.publish_date || publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
               <button class="publication-download">入会してダウンロード
@@ -475,6 +475,14 @@ export default {
     }
   },
   methods: {
+    formatDate(dateString) {
+      if (!dateString) return ''
+      const d = new Date(dateString)
+      if (isNaN(d.getTime())) return dateString
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}/${mm}/${dd}`
+    },
     async loadPublications() {
       this.loading = true;
       try {
@@ -539,6 +547,8 @@ export default {
         id: item.id,
         title: item.title,
         year: new Date(item.publication_date).getFullYear(),
+        publish_date: item.publication_date,
+        publication_date: item.publication_date,
         category: item.category,
         image: item.cover_image || '/img/image-1.png',
         description: item.description,

@@ -23,6 +23,9 @@
         </div>
       </div>
       
+      <!-- CMS Body (optional) -->
+      <CmsBlock page-key="faq" wrapper-class="cms-body" />
+      
       <div class="faq-categories">
         <button 
           v-for="category in categories" 
@@ -104,6 +107,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
+import CmsBlock from '@/components/CmsBlock.vue'
 
 export default {
   name: "FaqPage",
@@ -117,6 +121,7 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons
+    , CmsBlock
   },
   data() {
     return {

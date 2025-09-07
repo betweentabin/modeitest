@@ -14,6 +14,9 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- CMS Body (optional) -->
+    <CmsBlock page-key="contact" wrapper-class="cms-body" />
+
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
@@ -212,6 +215,7 @@ import HeroSection from './HeroSection.vue';
 import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
+import CmsBlock from '@/components/CmsBlock.vue'
 
 export default {
   name: 'ContactFormPage',
@@ -221,7 +225,8 @@ export default {
     Group27,
     AccessSection,
     HeroSection,
-    Breadcrumbs
+    Breadcrumbs,
+    CmsBlock
   },
   data() {
     return {

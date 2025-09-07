@@ -97,6 +97,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
 import CmsText from '@/components/CmsText.vue'
+import CmsBlock from '@/components/CmsBlock.vue'
 
 export default {
   name: "GlossaryPage",
@@ -110,6 +111,7 @@ export default {
     AccessSection,
     FixedSideButtons,
     CmsText,
+    CmsBlock,
   },
   data() {
     return {
