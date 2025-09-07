@@ -53,7 +53,12 @@
                 <td class="file-url">{{ row.url }}</td>
                 <td>{{ formatDate(row.updated_at) }}</td>
                 <td>
-                  <button class="edit-btn" @click="pickReplace(idx)">画像で置換</button>
+                  <button 
+                    class="edit-btn" 
+                    @click="pickReplace(idx)"
+                    :disabled="row.model !== 'page_content'"
+                    :title="row.model !== 'page_content' ? 'ページ管理以外は置換未対応' : '画像で置換'"
+                  >画像で置換</button>
                 </td>
               </tr>
             </tbody>
@@ -104,6 +109,7 @@ export default {
         this.rows = items.map(it => ({
           _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
           pageKey: it.page_key,
+          model: it.model || 'page_content',
           key: it.key,
           url: (it.url && it.url.startsWith('/')) ? `${apiBase}${it.url}` : it.url,
           source: it.source || 'json',

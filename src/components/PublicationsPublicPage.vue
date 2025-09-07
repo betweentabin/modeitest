@@ -512,16 +512,28 @@ export default {
     async loadPublications() {
       this.loading = true;
       try {
-        // まずmockServerから取得を試みる
+        // まずAPIから取得（本番データを優先）
+        const params = {
+          page: this.currentPage,
+          year: this.selectedYear !== 'all' ? this.selectedYear : null,
+          category: this.selectedCategory !== 'all' ? this.selectedCategory : null
+        }
+        
+        const response = await apiClient.getPublications(params);
+        
+        if (response && response.success && response.data && response.data.publications) {
+          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
+          this.totalPages = response.data.pagination.total_pages;
+          return
+        }
+
+        // フォールバック: mockServer
         try {
           const allPublications = await mockServer.getPublications();
-          
           if (allPublications && allPublications.length > 0) {
-            // 無料公開の刊行物のみフィルタリング
             const freePublications = allPublications.filter(item => 
               item.membership_level === 'free' || item.membershipLevel === 'free' || !item.membership_level
             );
-            
             this.publications = freePublications.map(item => ({
               id: item.id,
               title: item.title,
@@ -537,28 +549,8 @@ export default {
               membershipLevel: 'free'
             }));
             this.totalPages = Math.ceil(this.publications.length / 12);
-            return;
           }
-        } catch (mockError) {
-          console.log('MockServer failed, trying API');
-        }
-        
-        // APIから取得
-        const params = {
-          page: this.currentPage,
-          year: this.selectedYear !== 'all' ? this.selectedYear : null,
-          category: this.selectedCategory !== 'all' ? this.selectedCategory : null
-        }
-        
-        const response = await apiClient.getPublications(params);
-        
-        if (response && response.success && response.data && response.data.publications) {
-          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
-          this.totalPages = response.data.pagination.total_pages;
-        } else {
-          // フォールバック: 既存データを使用
-          console.log('APIからデータを取得できませんでした。フォールバックデータを使用します。');
-        }
+        } catch (_) { /* noop */ }
       } catch (err) {
         console.error('刊行物の読み込みに失敗しました:', err);
         this.error = '刊行物の読み込みに失敗しました。';

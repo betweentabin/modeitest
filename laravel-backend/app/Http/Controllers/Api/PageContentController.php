@@ -35,6 +35,8 @@ class PageContentController extends Controller
                     if ($url) {
                         $items[] = [
                             'page_key' => $page->page_key,
+                            'model' => 'page_content',
+                            'id' => $page->id,
                             'key' => (string)$key,
                             'url' => $url,
                             'path' => $path,
@@ -59,6 +61,8 @@ class PageContentController extends Controller
                     foreach ($m[1] as $src) {
                         $items[] = [
                             'page_key' => $page->page_key,
+                            'model' => 'page_content',
+                            'id' => $page->id,
                             'key' => 'html',
                             'url' => $src,
                             'path' => null,
@@ -68,6 +72,175 @@ class PageContentController extends Controller
                         ];
                     }
                 }
+            }
+        }
+
+        // 追加: 他モデルの画像参照も集計
+        try {
+            // News (CMS版)
+            if (class_exists(\App\Models\News::class)) {
+                $allNews = \App\Models\News::query()->get();
+                foreach ($allNews as $news) {
+                    // featured_image
+                    if (!empty($news->featured_image)) {
+                        $items[] = [
+                            'page_key' => 'news',
+                            'model' => 'news',
+                            'id' => $news->id,
+                            'key' => 'featured_image',
+                            'url' => (string)$news->featured_image,
+                            'path' => null,
+                            'filename' => null,
+                            'source' => 'column',
+                            'updated_at' => $news->updated_at,
+                        ];
+                    }
+                    // content の <img>
+                    $html = (string)($news->content ?? '');
+                    if ($html && preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $html, $m)) {
+                        foreach ($m[1] as $src) {
+                            $items[] = [
+                                'page_key' => 'news',
+                                'model' => 'news',
+                                'id' => $news->id,
+                                'key' => 'html',
+                                'url' => $src,
+                                'path' => null,
+                                'filename' => null,
+                                'source' => 'html',
+                                'updated_at' => $news->updated_at,
+                            ];
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // 例外は握りつぶして続行（環境差異吸収）
+        }
+
+        try {
+            // Notice (NewsArticle)
+            if (class_exists(\App\Models\NewsArticle::class)) {
+                $articles = \App\Models\NewsArticle::query()->get();
+                foreach ($articles as $a) {
+                    if (!empty($a->featured_image)) {
+                        $items[] = [
+                            'page_key' => 'notice',
+                            'model' => 'news_article',
+                            'id' => $a->id,
+                            'key' => 'featured_image',
+                            'url' => (string)$a->featured_image,
+                            'path' => null,
+                            'filename' => null,
+                            'source' => 'column',
+                            'updated_at' => $a->updated_at,
+                        ];
+                    }
+                    $html = (string)($a->content ?? '');
+                    if ($html && preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $html, $m)) {
+                        foreach ($m[1] as $src) {
+                            $items[] = [
+                                'page_key' => 'notice',
+                                'model' => 'news_article',
+                                'id' => $a->id,
+                                'key' => 'html',
+                                'url' => $src,
+                                'path' => null,
+                                'filename' => null,
+                                'source' => 'html',
+                                'updated_at' => $a->updated_at,
+                            ];
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            // Publications
+            if (class_exists(\App\Models\Publication::class)) {
+                $pubs = \App\Models\Publication::query()->get();
+                foreach ($pubs as $p) {
+                    if (!empty($p->cover_image)) {
+                        $items[] = [
+                            'page_key' => 'publications',
+                            'model' => 'publication',
+                            'id' => $p->id,
+                            'key' => 'cover_image',
+                            'url' => (string)$p->cover_image,
+                            'path' => null,
+                            'filename' => null,
+                            'source' => 'column',
+                            'updated_at' => $p->updated_at,
+                        ];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            // Economic Reports
+            if (class_exists(\App\Models\EconomicReport::class)) {
+                $reps = \App\Models\EconomicReport::query()->get();
+                foreach ($reps as $r) {
+                    if (!empty($r->cover_image)) {
+                        $items[] = [
+                            'page_key' => 'economic-reports',
+                            'model' => 'economic_report',
+                            'id' => $r->id,
+                            'key' => 'cover_image',
+                            'url' => (string)$r->cover_image,
+                            'path' => null,
+                            'filename' => null,
+                            'source' => 'column',
+                            'updated_at' => $r->updated_at,
+                        ];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            // Seminars
+            if (class_exists(\App\Models\Seminar::class)) {
+                $sems = \App\Models\Seminar::query()->get();
+                foreach ($sems as $s) {
+                    if (!empty($s->featured_image)) {
+                        $items[] = [
+                            'page_key' => 'seminars',
+                            'model' => 'seminar',
+                            'id' => $s->id,
+                            'key' => 'featured_image',
+                            'url' => (string)$s->featured_image,
+                            'path' => null,
+                            'filename' => null,
+                            'source' => 'column',
+                            'updated_at' => $s->updated_at,
+                        ];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        // URL正規化: 相対パスを /storage/* に揃え、absoluteはそのまま
+        foreach ($items as &$it) {
+            $u = (string)($it['url'] ?? '');
+            if ($u === '') continue;
+            $lower = strtolower($u);
+            if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://') || str_starts_with($u, '//')) {
+                // absolute: keep
+            } else {
+                // '/storage/...' or 'storage/...'
+                if (str_starts_with($u, '/storage/')) {
+                    // ok
+                } elseif (str_starts_with($u, 'storage/')) {
+                    $u = '/' . $u; // -> '/storage/...'
+                } else {
+                    // treat as public disk path
+                    $path = ltrim(preg_replace('/^public\//', '', $u), '/');
+                    $u = Storage::url($path);
+                }
+                $it['url'] = $u;
             }
         }
 
