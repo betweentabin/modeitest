@@ -2,14 +2,18 @@
   <div class="contact-section">
     <div class="overlap-group6" :style="bgStyle">
       <div class="rectangle-9"></div>
-      <div class="text-45 valign-text-middle">株式会社ちくぎん地域経済研究所</div>
+      <div class="text-45 valign-text-middle">
+        <CmsText :pageKey="cmsKey" fieldKey="contact_title" tag="span" :fallback="'株式会社ちくぎん地域経済研究所'" />
+      </div>
       <div class="group-30-1">
         <img
           class="vector-16-1"
           src="/img/vector-15-1.svg"
           alt="Vector 16"
         />
-        <div class="about-us valign-text-middle inter-bold-white-20px">About us</div>
+        <div class="about-us valign-text-middle inter-bold-white-20px">
+          <CmsText :pageKey="cmsKey" fieldKey="contact_label" tag="span" :fallback="'About us'" />
+        </div>
         <img
           class="vector-15-1"
           src="/img/vector-15-1.svg"
@@ -17,10 +21,12 @@
         />
       </div>
       <div class="text-46 valign-text-middle inter-bold-white-20px">
-        様々な分野の調査研究を通じ、企業活動などをサポートします。
+        <CmsText :pageKey="cmsKey" fieldKey="contact_subtitle" tag="span" :fallback="'様々な分野の調査研究を通じ、企業活動などをサポートします。'" />
       </div>
       <div class="button-3" @click="goToContact">
-        <div class="text-44 valign-text-middle inter-bold-white-15px">お問い合わせはコチラ</div>
+        <div class="text-44 valign-text-middle inter-bold-white-15px">
+          <CmsText :pageKey="cmsKey" fieldKey="contact_cta" tag="span" :fallback="'お問い合わせはコチラ'" />
+        </div>
         <frame13213176122 />
       </div>
     </div>
