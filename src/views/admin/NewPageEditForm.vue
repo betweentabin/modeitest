@@ -181,11 +181,11 @@
             <div class="form-section">
               <h3 class="section-title">コンテンツ</h3>
               <div class="mode-toggle">
-                <label><input type="radio" value="wysiwyg" v-model="contentMode" /> エディタ（おすすめ）</label>
-                <label><input type="radio" value="html" v-model="contentMode" /> HTML（全文編集）</label>
+                <!-- <label><input type="radio" value="wysiwyg" v-model="contentMode" /> エディタ（おすすめ）</label> -->
+                <!-- <label><input type="radio" value="html" v-model="contentMode" /> HTML（全文編集）</label> -->
                 <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
-                <label><input type="radio" value="inline" v-model="contentMode" /> ページ風プレビュー（直編集）</label>
+                <!-- <label><input type="radio" value="inline" v-model="contentMode" /> ページ風プレビュー（直編集）</label> -->
                 <label><input type="radio" value="live" v-model="contentMode" /> 現在のページそのままプレビュー</label>
               </div>
 

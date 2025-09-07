@@ -18,10 +18,14 @@
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="transaction-law" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+        </h2>
         <div class="title-decoration">
           <div class="decoration-line"></div>
-          <span class="decoration-text">{{ pageSubtitle }}</span>
+          <span class="decoration-text">
+            <CmsText pageKey="transaction-law" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+          </span>
           <div class="decoration-line"></div>
         </div>
       </div>
@@ -220,6 +224,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import { usePageText } from '@/composables/usePageText'
 import FixedSideButtons from "./FixedSideButtons.vue";
 import CmsBlock from './CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -235,6 +240,7 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     CmsBlock,
+    CmsText,
   },
   data() {
     return {
