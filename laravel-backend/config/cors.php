@@ -36,7 +36,8 @@ return [
 
     'exposed_headers' => [],
 
-    'max_age' => 0,
+    // ブラウザにプリフライト結果をキャッシュさせ、不要なOPTIONSを減らす
+    'max_age' => 600,
 
     'supports_credentials' => true,
 

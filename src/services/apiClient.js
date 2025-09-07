@@ -68,9 +68,13 @@ class ApiClient {
     const memberTokenLS = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
     const isAdminEndpoint = typeof endpoint === 'string' && endpoint.startsWith('/api/admin')
     const isMemberEndpoint = typeof endpoint === 'string' && (endpoint.startsWith('/api/member') || endpoint.startsWith('/api/member-auth'))
+    const isPublicEndpoint = typeof endpoint === 'string' && endpoint.startsWith('/api/public')
 
     let chosenToken = null
-    if (isAdminEndpoint) {
+    if (isPublicEndpoint) {
+      // 公開エンドポイントには認証ヘッダを付けない（プリフライト抑制・キャッシュ最適化）
+      chosenToken = null
+    } else if (isAdminEndpoint) {
       chosenToken = this.token || adminTokenLS || null
     } else if (isMemberEndpoint) {
       chosenToken = this.token || memberTokenLS || null
