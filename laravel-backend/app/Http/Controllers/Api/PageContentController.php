@@ -222,26 +222,41 @@ class PageContentController extends Controller
             }
         } catch (\Throwable $e) {}
 
-        // URL正規化: 相対パスを /storage/* に揃え、absoluteはそのまま
+        // URL正規化
         foreach ($items as &$it) {
             $u = (string)($it['url'] ?? '');
             if ($u === '') continue;
             $lower = strtolower($u);
-            if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://') || str_starts_with($u, '//')) {
-                // absolute: keep
-            } else {
-                // '/storage/...' or 'storage/...'
-                if (str_starts_with($u, '/storage/')) {
-                    // ok
-                } elseif (str_starts_with($u, 'storage/')) {
-                    $u = '/' . $u; // -> '/storage/...'
-                } else {
-                    // treat as public disk path
-                    $path = ltrim(preg_replace('/^public\//', '', $u), '/');
-                    $u = Storage::url($path);
-                }
-                $it['url'] = $u;
+            $isAbsolute = str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://') || str_starts_with($u, '//');
+            if ($isAbsolute) {
+                // keep absolute URLs
+                continue;
             }
+
+            // keep app-root relative assets as-is (e.g. '/img/...', '/assets/...')
+            if (str_starts_with($u, '/img/') || str_starts_with($u, '/images/') || str_starts_with($u, '/assets/') || str_starts_with($u, '/favicon')) {
+                continue;
+            }
+
+            // already normalized storage path
+            if (str_starts_with($u, '/storage/')) {
+                continue;
+            }
+
+            // 'storage/...'
+            if (str_starts_with($u, 'storage/')) {
+                $it['url'] = '/' . $u;
+                continue;
+            }
+
+            // other relative paths without leading slash: try public disk mapping
+            if (!str_starts_with($u, '/')) {
+                $path = ltrim(preg_replace('/^public\//', '', $u), '/');
+                $it['url'] = Storage::url($path); // '/storage/...'
+                continue;
+            }
+
+            // default: leave as-is (other root-relative, e.g. '/pages/...')
         }
 
         return response()->json([

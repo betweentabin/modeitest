@@ -106,15 +106,31 @@ export default {
         const res = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
         const items = res?.data?.data?.items || res?.data?.items || []
         const apiBase = getApiBaseUrl()
-        this.rows = items.map(it => ({
+        this.rows = items.map(it => {
+          const rawUrl = it.url || ''
+          let url = rawUrl
+          // 絶対URLはそのまま
+          if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') || rawUrl.startsWith('//')) {
+            url = rawUrl
+          } else if (rawUrl.startsWith('/storage/') || rawUrl.startsWith('storage/')) {
+            // ストレージはバックエンドに向ける（先頭に/を統一）
+            const path = rawUrl.startsWith('/storage/') ? rawUrl : `/${rawUrl}`
+            url = `${apiBase}${path}`
+          } else {
+            // それ以外（/img 等）は現在オリジンで解決させるため、そのまま
+            url = rawUrl
+          }
+
+          return ({
           _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
           pageKey: it.page_key,
           model: it.model || 'page_content',
           key: it.key,
-          url: (it.url && it.url.startsWith('/')) ? `${apiBase}${it.url}` : it.url,
+          url,
           source: it.source || 'json',
           updated_at: it.updated_at,
-        }))
+          })
+        })
       } catch (e) {
         this.error = 'メディアの取得に失敗しました'
       } finally {

@@ -30,6 +30,18 @@ export default {
     return { html: '', _previewHandler: null }
   },
   async mounted() {
+    const pickHtml = (payload) => {
+      const body = payload?.data || payload
+      const page = body?.page || body?.data?.page || null
+      const content = page?.content || body?.content || null
+      if (!content) return ''
+      // 優先: content.html → content.htmls.body → content.htmls（文字列互換）
+      if (typeof content.html === 'string' && content.html.trim()) return content.html
+      if (content.htmls && typeof content.htmls.body === 'string' && content.htmls.body.trim()) return content.htmls.body
+      if (typeof content.htmls === 'string' && content.htmls.trim()) return content.htmls
+      return ''
+    }
+
     const hasPreview = this._hasCmsPreviewFlag()
     if (hasPreview) {
       this._loadPreviewFromStorage()
@@ -48,7 +60,7 @@ export default {
         const token = localStorage.getItem('admin_token')
         if (token) {
           const res = await apiClient.get(`/api/admin/pages/${this.pageKey}`, { silent: true })
-          const html = res?.data?.content?.html || res?.data?.page?.content?.html
+          const html = pickHtml(res)
           if (typeof html === 'string' && html.trim().length) this.html = html
         }
       } catch (_) { /* ignore */ }
@@ -56,7 +68,7 @@ export default {
     }
     try {
       const res = await apiClient.getPageContent(this.pageKey)
-      const html = res?.data?.page?.content?.html
+      const html = pickHtml(res)
       if (typeof html === 'string') this.html = html
     } catch (e) { /* noop */ }
   },

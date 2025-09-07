@@ -42,6 +42,9 @@ class EconomicReport extends Model
         'is_published' => 'boolean',
     ];
 
+    // JSONレスポンスに含めたいアクセサ
+    protected $appends = ['cover_image_url'];
+
     // カテゴリの定数
     const CATEGORIES = [
         'quarterly' => '四半期経済レポート',
