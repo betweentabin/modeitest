@@ -73,6 +73,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '@/services/apiClient.js'
+import { getApiBaseUrl } from '@/config/api.js'
 
 export default {
   name: 'MediaManagement',
@@ -99,11 +100,12 @@ export default {
       try {
         const res = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
         const items = res?.data?.data?.items || res?.data?.items || []
+        const apiBase = getApiBaseUrl()
         this.rows = items.map(it => ({
           _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
           pageKey: it.page_key,
           key: it.key,
-          url: it.url,
+          url: (it.url && it.url.startsWith('/')) ? `${apiBase}${it.url}` : it.url,
           source: it.source || 'json',
           updated_at: it.updated_at,
         }))

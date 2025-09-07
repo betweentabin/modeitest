@@ -39,7 +39,8 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            // Prefer dedicated public storage base URL if provided; fallback to APP_URL
+            'url' => env('PUBLIC_STORAGE_URL', env('APP_URL').'/storage'),
             'visibility' => 'public',
             'throw' => false,
         ],

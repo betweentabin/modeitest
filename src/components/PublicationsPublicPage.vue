@@ -90,7 +90,7 @@
           </div>
             <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">{{ formatDate(featuredPublication.publish_date || featuredPublication.publication_date) }}</span>
+              <span class="featured-year">{{ formatDate(featuredPublication.publication_date) }}</span>
               <span class="featured-category">一般公開</span>
             </div>
             <div class="featured-details">
@@ -147,7 +147,7 @@
             <div class="publication-info">
               <div class="publication-meta">
                 <span class="featured-category">一般公開</span>
-                <span class="featured-year">{{ formatDate(publication.publish_date || publication.publication_date) }}</span>
+                <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
               <button class="publication-download">入会してダウンロード
@@ -528,7 +528,7 @@ export default {
               image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
               description: item.description,
               category: item.category || 'special',
-              publish_date: item.publication_date,
+              publication_date: item.publication_date,
               author: item.author || 'ちくぎん地域経済研究所',
               pages: item.pages,
               file_size: item.file_size,

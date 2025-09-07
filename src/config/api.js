@@ -29,8 +29,13 @@ export const getApiBaseUrl = () => {
 
 // 完全なAPIエンドポイントURLを生成
 export const getApiUrl = (endpoint) => {
+  if (!endpoint) return getApiBaseUrl()
+  const lower = String(endpoint).toLowerCase()
+  // 絶対URLはそのまま返す（http/https/プロトコル相対）
+  if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('//')) {
+    return endpoint
+  }
   const baseUrl = getApiBaseUrl()
-  // エンドポイントが/で始まっていない場合は追加
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   return `${baseUrl}${normalizedEndpoint}`
 }

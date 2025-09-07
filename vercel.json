@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/storage/(.*)",
+      "destination": "https://heroic-celebration-production.up.railway.app/storage/$1"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }

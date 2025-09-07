@@ -86,7 +86,7 @@
           </div>
           <div class="featured-info">
             <div class="featured-meta">
-              <span class="featured-year">{{ formatDate(featuredPublication.publish_date || featuredPublication.publication_date) }}</span>
+              <span class="featured-year">{{ formatDate(featuredPublication.publication_date) }}</span>
               <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
               <MembershipBadge v-if="featuredPublication.membershipLevel && featuredPublication.membershipLevel !== 'free'" :level="featuredPublication.membershipLevel" />
             </div>
@@ -154,7 +154,7 @@
             <div class="publication-info">
               <div class="publication-meta">
                 <span class="featured-category">{{ getCategoryName(publication.category) }}</span>
-                <span class="featured-year">{{ formatDate(publication.publish_date || publication.publication_date) }}</span>
+                <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
               <button 
@@ -487,7 +487,7 @@ export default {
             image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
             description: item.description,
             category: item.category || 'special',
-            publish_date: item.publication_date,
+            publication_date: item.publication_date,
             author: item.author || 'ちくぎん地域経済研究所',
             pages: item.pages,
             file_size: item.file_size,
@@ -506,6 +506,7 @@ export default {
       return {
         id: item.id,
         title: item.title,
+        publication_date: item.publication_date,
         year: new Date(item.publication_date).getFullYear(),
         category: item.category,
         image: item.cover_image || '/img/image-1.png',
