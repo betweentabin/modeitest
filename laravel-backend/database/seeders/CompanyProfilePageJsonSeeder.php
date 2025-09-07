@@ -57,12 +57,23 @@ class CompanyProfilePageJsonSeeder extends Seeder
             'mission_body' => '<ul><li>地域に根差した経済・産業の調査・研究</li><li>地域経済を担う企業・医療・農業・学術研究活動のサポート</li><li>未来を支える「人」づくり</li></ul>'
         ];
 
+        // 初期画像（メディア管理に出すため、絶対URLのままでもOK）
+        $images = [
+            'company_profile_philosophy' => 'https://api.builder.io/api/v1/image/assets/TEMP/01501a28725d762f4b766643e9bcd235f2e43e2e?width=1340',
+            'company_profile_message' => 'https://api.builder.io/api/v1/image/assets/TEMP/20aa75cfa1be4c2096a1f47bf126cf240173b231?width=1340',
+            'company_profile_staff_morita' => 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452',
+            'company_profile_staff_mizokami' => 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451',
+            'company_profile_staff_kuga' => 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451',
+            'company_profile_staff_takada' => 'https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451',
+            'company_profile_staff_nakamura' => 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451',
+        ];
+
         $page = PageContent::where('page_key', $key)->first();
         if (!$page) {
             PageContent::create([
                 'page_key' => $key,
                 'title' => '会社概要',
-                'content' => ['texts' => $texts, 'htmls' => $defaultHtmls],
+                'content' => ['texts' => $texts, 'htmls' => $defaultHtmls, 'images' => $images],
                 'is_published' => true,
                 'published_at' => now(),
             ]);
@@ -74,6 +85,8 @@ class CompanyProfilePageJsonSeeder extends Seeder
         $content['texts'] = array_merge($texts, $content['texts'] ?? []);
         $htmls = isset($content['htmls']) && is_array($content['htmls']) ? $content['htmls'] : [];
         $content['htmls'] = array_merge($defaultHtmls, $htmls);
+        $imgs = isset($content['images']) && is_array($content['images']) ? $content['images'] : [];
+        $content['images'] = array_merge($images, $imgs);
         $page->update(['title' => $page->title ?: '会社概要', 'content' => $content]);
     }
 }

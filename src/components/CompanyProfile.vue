@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="philosophy-content">
-        <img class="philosophy-image" src="https://api.builder.io/api/v1/image/assets/TEMP/01501a28725d762f4b766643e9bcd235f2e43e2e?width=1340" alt="Philosophy" />
+        <img class="philosophy-image" :src="media('company_profile_philosophy', 'https://api.builder.io/api/v1/image/assets/TEMP/01501a28725d762f4b766643e9bcd235f2e43e2e?width=1340')" alt="Philosophy" />
         <div class="philosophy-text">
           <CmsText
             pageKey="company-profile"
@@ -93,7 +93,7 @@
             <CmsText pageKey="company-profile" fieldKey="message_signature" tag="div" :fallback="'株式会社 ちくぎん地域経済研究所代表取締役社長 空閑 重信'" />
           </div>
         </div>
-        <img class="message-image" src="https://api.builder.io/api/v1/image/assets/TEMP/20aa75cfa1be4c2096a1f47bf126cf240173b231?width=1340" alt="Message" />
+        <img class="message-image" :src="media('company_profile_message', 'https://api.builder.io/api/v1/image/assets/TEMP/20aa75cfa1be4c2096a1f47bf126cf240173b231?width=1340')" alt="Message" />
       </div>
     </section>
 
@@ -231,7 +231,7 @@
         <div class="carousel-container">
           <div class="staff-members">
             <div class="staff-member">
-              <img class="staff-photo" src="https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452" alt="森田 祥子" />
+              <img class="staff-photo" :src="media('company_profile_staff_morita', 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452')" alt="森田 祥子" />
               <div class="staff-info">
                 <div class="staff-position">企画部　部長代理</div>
                 <div class="staff-name">森田 祥子 <span class="staff-reading">- もりた さちこ -</span></div>
@@ -239,28 +239,28 @@
               </div>
             </div>
             <div class="staff-member">
-              <img class="staff-photo" src="https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451" alt="溝上 浩文" />
+              <img class="staff-photo" :src="media('company_profile_staff_mizokami', 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451')" alt="溝上 浩文" />
               <div class="staff-info">
                 <div class="staff-position">取締役企画部長　兼調査部長</div>
                 <div class="staff-name">溝上 浩文 <span class="staff-reading">- みぞかみ ひろふみ -</span></div>
               </div>
             </div>
             <div class="staff-member">
-              <img class="staff-photo" src="https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451" alt="空閑 重信" />
+              <img class="staff-photo" :src="media('company_profile_staff_kuga', 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451')" alt="空閑 重信" />
               <div class="staff-info">
                 <div class="staff-position">代表取締役社長</div>
                 <div class="staff-name">空閑 重信 <span class="staff-reading">- くが しげのぶ -</span></div>
               </div>
             </div>
             <div class="staff-member">
-              <img class="staff-photo" src="https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451" alt="髙田 友里恵" />
+              <img class="staff-photo" :src="media('company_profile_staff_takada', 'https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451')" alt="髙田 友里恵" />
               <div class="staff-info">
                 <div class="staff-position">調査部　主任</div>
                 <div class="staff-name">髙田 友里恵 <span class="staff-reading">- たかだ ゆりえ -</span></div>
               </div>
             </div>
             <div class="staff-member">
-              <img class="staff-photo" src="https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451" alt="中村 公栄" />
+              <img class="staff-photo" :src="media('company_profile_staff_nakamura', 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451')" alt="中村 公栄" />
               <div class="staff-info">
                 <div class="staff-position"></div>
                 <div class="staff-name">中村 公栄 <span class="staff-reading">- なかむら きえみ -</span></div>
@@ -431,12 +431,28 @@ export default {
       this._pageText.load()
     } catch(e) { /* noop */ }
     this.loadFinancialReports();
+    // lazy media registry (for staff/philosophy/message images)
+    import('@/composables/useMedia').then(mod => {
+      try {
+        const { useMedia } = mod
+        this._media = useMedia()
+        this._media.ensure()
+      } catch(e) { /* noop */ }
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustImageHeight);
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
+    media(key, fallback = '') {
+      try {
+        if (this._media && this._media.getImage) {
+          return this._media.getImage(key, fallback) || fallback
+        }
+      } catch(e) {}
+      return fallback
+    },
     calculateCarouselIndicators() {
       const screenWidth = window.innerWidth;
       const totalStaffCount = 5; // 実際のstaff-memberの数
