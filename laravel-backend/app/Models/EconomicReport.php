@@ -120,19 +120,48 @@ class EconomicReport extends Model
 
     /**
      * カバー画像のフルURLを取得
+     *
+     * 想定される保存形式の例:
+     * - フルURL:        https://example.com/path/to/img.jpg
+     * - 絶対パス:       /img/image-1.png (フロントのビルド済み静的画像)
+     * - storage相対:    economic-reports/covers/xxx.jpg （Storage::disk('public')）
+     * - 既にstorage含み: storage/economic-reports/covers/xxx.jpg
      */
     public function getCoverImageUrlAttribute()
     {
-        if (!$this->cover_image) {
-            return '/img/image-1.png'; // デフォルト画像
+        $path = $this->cover_image;
+
+        // 未設定時はフロント側のダミー画像
+        if (!$path) {
+            return '/img/image-1.png';
         }
-        
-        // すでにフルURLの場合はそのまま返す
-        if (str_starts_with($this->cover_image, 'http')) {
-            return $this->cover_image;
+
+        // すでにフルURLの場合はそのまま
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
         }
-        
-        return asset('storage/' . $this->cover_image);
+
+        // 先頭スラッシュから始まる絶対パス（例: /img/...、/storage/...）はそのまま返す
+        // フロント側のオリジン相対で解決される
+        if (str_starts_with($path, '/')) {
+            return $path;
+        }
+
+        // 正規化（先頭スラッシュ除去）
+        $normalized = ltrim($path, '/');
+
+        // 既に 'storage/' を含む場合は asset() でそのまま解決
+        if (str_starts_with($normalized, 'storage/')) {
+            return asset($normalized);
+        }
+
+        // 'public/' から始まる場合は symlink公開側のパスに合わせて削る
+        if (str_starts_with($normalized, 'public/')) {
+            $normalized = substr($normalized, 7); // 'public/' を除去
+        }
+
+        // Storage::disk('public') に保存された相対パスを想定
+        return asset('storage/' . $normalized);
     }
 
     /**

@@ -66,10 +66,9 @@
                     class="form-input"
                   >
                     <option value="">カテゴリーを選択</option>
-                    <option value="research">研究レポート</option>
-                    <option value="quarterly">季報</option>
-                    <option value="special">特別レポート</option>
-                    <option value="survey">調査資料</option>
+                    <option v-for="c in categoryOptions" :key="c.id" :value="c.slug">
+                      {{ c.name }}
+                    </option>
                   </select>
                 </div>
                 
@@ -300,6 +299,8 @@ export default {
         is_published: false,
         membership_level: 'free'
       },
+      // カテゴリー選択肢（管理のカテゴリー管理と同期）
+      categories: [],
       loading: false,
       submitLoading: false,
       error: '',
@@ -313,6 +314,14 @@ export default {
     },
     publicationId() {
       return this.$route.params.id || this.$route.query.id
+    },
+    // 表示用に is_active を考慮、ソート順も維持
+    categoryOptions() {
+      if (!this.categories || this.categories.length === 0) return []
+      // is_active が存在する場合は true のみ表示
+      return this.categories
+        .filter(c => (typeof c.is_active === 'boolean' ? c.is_active : true))
+        .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || (a.id - b.id))
     }
   },
   async mounted() {
@@ -323,11 +332,36 @@ export default {
       return
     }
 
+    // カテゴリーの読み込み（最初に実行）
+    await this.loadCategories()
+
     if (!this.isNew) {
       await this.fetchPublicationData()
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        // 管理APIからカテゴリー一覧を取得
+        const res = await apiClient.getPublicationCategories()
+        if (res && res.success) {
+          // data 直下 or data.categories いずれにも対応
+          this.categories = Array.isArray(res.data) ? res.data : (res.data?.categories || [])
+          // 正常取得できたら終了
+          return
+        }
+        throw new Error('カテゴリー取得に失敗しました')
+      } catch (e) {
+        console.warn('カテゴリー読み込みに失敗。デフォルトにフォールバックします。', e)
+        // フォールバック（旧固定値）
+        this.categories = [
+          { id: 1, name: '研究レポート', slug: 'research', sort_order: 1, is_active: true },
+          { id: 2, name: '季報', slug: 'quarterly', sort_order: 2, is_active: true },
+          { id: 3, name: '特別レポート', slug: 'special', sort_order: 3, is_active: true },
+          { id: 4, name: '調査資料', slug: 'survey', sort_order: 4, is_active: true },
+        ]
+      }
+    },
     async fetchPublicationData() {
       this.loading = true
       this.error = ''
