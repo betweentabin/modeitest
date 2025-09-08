@@ -38,7 +38,7 @@
           :class="['category-btn', { active: selectedCategory === category.id }]"
           @click="selectedCategory = category.id"
         >
-          {{ category.name }}
+          <CmsText pageKey="faq" :fieldKey="`cat_${category.id}`" tag="span" :fallback="category.name" />
         </button>
       </div>
       
@@ -49,10 +49,10 @@
           @change="selectedCategory = selectedCategory"
           class="category-select"
         >
-          <option value="all">全て</option>
-          <option value="service">各種サービスについて</option>
-          <option value="membership">会員について</option>
-          <option value="research">調査研究について</option>
+          <option value="all">{{ _label('all', '全て') }}</option>
+          <option value="service">{{ _label('service', '各種サービスについて') }}</option>
+          <option value="membership">{{ _label('membership', '会員について') }}</option>
+          <option value="research">{{ _label('research', '調査研究について') }}</option>
         </select>
       </div>
       
@@ -62,7 +62,9 @@
             <div class="q-circle">
               <span class="q-mark">Q</span>
             </div>
-            <span class="question-text">{{ item.question }}</span>
+            <span class="question-text">
+              <CmsText pageKey="faq" :fieldKey="`faq_q_${item._id}`" tag="span" :fallback="item.question" />
+            </span>
             <span class="toggle-icon" :class="{ open: openItems.includes(index) }">
               <svg width="20" height="20" viewBox="0 0 20 20">
                 <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -78,8 +80,10 @@
                 <div v-if="item.tags && item.tags.length" class="answer-tags">
                   <span v-for="tag in item.tags" :key="tag" class="tag">{{ tag }}</span>
                 </div>
-                <div class="answer-text" v-html="item.answer"></div>
-              </div>
+                <div class="answer-text">
+                  <CmsText pageKey="faq" :fieldKey="`faq_a_${item._id}`" tag="div" type="html" :fallback="item.answer" />
+                </div>
+                </div>
             </div>
           </transition>
         </div>
@@ -255,11 +259,20 @@ export default {
           if (Array.isArray(list) && list.length) {
             this.faqs = list
           }
+          this.ensureFaqIds()
         } catch(_) {}
       })
     } catch(e) { /* noop */ }
   },
   methods: {
+    _label(id, fallback) {
+      try { return this._pageText?.getText(`cat_${id}`, fallback) || fallback } catch(_) { return fallback }
+    },
+    ensureFaqIds() {
+      // 安定したキーで保存できるよう、各FAQに連番の _id を付与
+      const arr = Array.isArray(this.faqs) ? this.faqs : []
+      this.faqs = arr.map((it, idx) => (typeof it === 'object' ? { _id: (it._id ?? idx), ...it } : it))
+    },
     toggleAnswer(index) {
       const itemIndex = this.openItems.indexOf(index);
       if (itemIndex > -1) {

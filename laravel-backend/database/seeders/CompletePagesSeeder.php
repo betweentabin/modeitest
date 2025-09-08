@@ -486,7 +486,16 @@ class CompletePagesSeeder extends Seeder
                         'hero_news' => '/img/hero-image.png',
                         'hero_faq' => '/img/hero-image.png',
                         'hero_about_institute' => '/img/hero-image.png',
-                        'hero_seminar' => '/img/hero-image.png'
+                        'hero_seminar' => '/img/hero-image.png',
+                        
+                        // 子コンポーネント内で useMedia 参照している画像キー（CompanyProfile など）
+                        'company_profile_philosophy' => '/img/hero-image.png',
+                        'company_profile_message' => '/img/hero-image.png',
+                        'company_profile_staff_morita' => '/img/hero-image.png',
+                        'company_profile_staff_mizokami' => '/img/hero-image.png',
+                        'company_profile_staff_kuga' => '/img/hero-image.png',
+                        'company_profile_staff_takada' => '/img/hero-image.png',
+                        'company_profile_staff_nakamura' => '/img/hero-image.png'
                         ,
                         // その他のセクション背景など
                         'contact_section_bg' => '/img/-----1-1.png'

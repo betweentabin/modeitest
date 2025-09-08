@@ -367,6 +367,13 @@ class PageContentController extends Controller
                 'hero_financial_reports', 'hero_sitemap', 'hero_consulting',
                 // 追加分（使用中だがSeederで漏れがち）
                 'hero_news', 'hero_faq', 'hero_about_institute', 'hero_seminar',
+                // 子コンポーネント（CompanyProfile など）で参照されるメディアキー
+                'company_profile_philosophy', 'company_profile_message',
+                'company_profile_staff_morita', 'company_profile_staff_mizokami',
+                'company_profile_staff_kuga', 'company_profile_staff_takada',
+                'company_profile_staff_nakamura',
+                // セクション背景
+                'contact_section_bg',
             ];
             $hasItem = function($k) use ($items) {
                 foreach ($items as $it) {

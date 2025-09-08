@@ -6,6 +6,7 @@
     <HeroSection 
       :title="pageTitle"
       :subtitle="pageSubtitle"
+      cms-page-key="financial-reports"
       heroImage="/img/Image_fx10.jpg"
       mediaKey="hero_financial_reports"
     />
@@ -15,10 +16,14 @@
 
     <div class="page-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="financial-reports" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
+          <span class="title-english">
+            <CmsText pageKey="financial-reports" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -134,6 +139,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: "FinancialReportPage",
@@ -146,7 +152,8 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons,
-    ActionButton
+    ActionButton,
+    CmsText
   },
   mounted() {
     try {
