@@ -79,7 +79,7 @@ export default {
 .x-vol.shrink-2lines {
   height: auto;
   line-height: 1.15em;
-  font-size: 0.98em;
+  font-size: 0.9em;  /* slightly smaller when wrapping */
 }
 
 .viwe-more-3 {

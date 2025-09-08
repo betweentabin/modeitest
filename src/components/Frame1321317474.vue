@@ -89,19 +89,19 @@ export default {
 .text-8 {
   height: 24px;
   letter-spacing: 0;
-  line-height: 24px;
+  line-height: 18px;
   margin-top: 6px;
   width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 /* When the title wraps to 2+ lines, gently shrink */
 .text-8.shrink-2lines {
   height: auto;            /* allow 2 lines without overlap */
-  line-height: 1.15em;     /* tighter line spacing on wrap */
-  font-size: 0.98em;       /* keep size nearly same */
+  line-height: 1.2em;      /* tighter line spacing on wrap */
+  font-size: 12px;         /* keep at ~12px when wrapping */
 }
 
 .viwe-more-2 {
@@ -139,8 +139,8 @@ export default {
 /* レスポンシブスタイル */
 @media (max-width: 1100px) {
   .text-8 {
-    font-size: 15px !important;
-    line-height: 22px !important;
+    font-size: 12px !important;
+    line-height: 18px !important;
   }
 }
 
@@ -174,8 +174,8 @@ export default {
   }
   
   .text-8 {
-    font-size: 14px !important;
-    line-height: 20px !important;
+    font-size: 12px !important;
+    line-height: 18px !important;
   }
 }
 
@@ -213,7 +213,7 @@ export default {
   }
   
   .text-8 {
-    font-size: 13px !important;
+    font-size: 12px !important;
     line-height: 18px !important;
   }
 }
