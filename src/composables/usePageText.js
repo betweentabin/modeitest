@@ -1,6 +1,7 @@
 // Small utility to load page content and safely read structured texts/links/images
 // Provides fallback-first getters to avoid layout/XSS risks.
 import { reactive, toRefs } from 'vue'
+import { useEditMode } from '@/composables/useEditMode'
 import apiClient from '@/services/apiClient'
 
 // Simple sanitizer: allowlisted tags and attributes only
@@ -55,14 +56,26 @@ const state = reactive({
 
 export function usePageText(pageKey) {
   if (!state.pages[pageKey]) {
-    state.pages[pageKey] = { loading: false, error: null, page: null }
+    state.pages[pageKey] = { loading: false, error: null, page: null, _loadingPromise: null }
   }
 
-  const load = async () => {
+  const load = async (options = {}) => {
+    const { preferAdmin = false, force = false } = options || {}
     const entry = state.pages[pageKey]
-    if (entry.loading) return
+
+    // If a request is in-flight, reuse it unless force is explicitly requested
+    if (entry._loadingPromise && !force) {
+      try { await entry._loadingPromise } catch (_) {}
+      return
+    }
+
+    // If already loading without a tracked promise, short-circuit unless force
+    if (entry.loading && !force) return
+
     entry.loading = true
     entry.error = null
+    const { enabled } = useEditMode()
+    entry._loadingPromise = (async () => {
     try {
       // In preview mode with admin auth, fetch via admin endpoint to see unpublished changes
       const isBrowser = typeof window !== 'undefined'
@@ -81,9 +94,11 @@ export function usePageText(pageKey) {
         }
       }
       const adminToken = isBrowser ? (localStorage.getItem('admin_token') || '') : ''
+      const isEditing = !!(enabled && enabled.value)
 
       let res
-      if (isPreview && adminToken) {
+      // Prefer admin endpoint when: explicit preferAdmin, or URL preview/edit, or edit mode, and token present
+      if ((preferAdmin || isPreview || isEditing) && adminToken) {
         // Use admin endpoint for preview to bypass is_published filter
         // Add cache-buster to avoid any intermediate caching returning stale data
         res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
@@ -100,7 +115,10 @@ export function usePageText(pageKey) {
       entry.error = e?.message || 'Failed to load page content'
     } finally {
       state.pages[pageKey].loading = false
+      entry._loadingPromise = null
     }
+    })()
+    await entry._loadingPromise
   }
 
   const getText = (key, fallback = '', options = {}) => {

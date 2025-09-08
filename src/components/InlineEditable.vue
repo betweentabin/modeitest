@@ -156,8 +156,19 @@ export default {
             throw new Error(res.error || '保存に失敗しました')
           }
         }
-        // 背景で再取得（props.pageKeyで404でもUIは上書き済み）
-        await pageText.load()
+        // API応答から更新後のページを反映（形状の差異に対応）
+        try {
+          const body = res?.data || res
+          const updatedPage = body?.page || body?.data?.page || null
+          if (updatedPage) {
+            pageText.page.value = updatedPage
+          } else {
+            // 念のため管理APIで再取得（公開APIで上書きされないようpreferAdmin + force）
+            await pageText.load({ preferAdmin: true, force: true })
+          }
+        } catch (_) {
+          await pageText.load({ preferAdmin: true, force: true })
+        }
         syncFromDisplay()
       } catch (e) {
         // Rollback optimistic change on error
