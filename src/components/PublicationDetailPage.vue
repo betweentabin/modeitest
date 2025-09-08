@@ -148,27 +148,38 @@ export default {
     } catch(e) { /* noop */ }
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'canAccess']),
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '刊行物') || '刊行物' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はコチラ') || 'メンバー登録はコチラ' },
-    // freeレベルの刊行物は未ログインでもPDFダウンロード表示
+    // 必要会員レベル（members_only=true かつ level未指定はstandardとみなす）
+    requiredLevel() {
+      if (!this.publication) return 'free'
+      const lvl = this.publication.membership_level || this.publication.membershipLevel
+      if (lvl) return lvl
+      return this.publication.membersOnly ? 'standard' : 'free'
+    },
+    // freeは未ログインでもDL可。その他はログインかつ会員レベル満たす場合にDL可
     canDownloadByAccess() {
       if (!this.publication) return false
-      const level = this.publication.membershipLevel || this.publication.membership_level || 'free'
       const canDownload = !!this.publication.canDownload || !!this.publication.isDownloadable
-      return canDownload && (this.isAuthenticated || level === 'free')
+      if (!canDownload) return false
+      const level = this.requiredLevel
+      if (level === 'free') return true
+      if (!this.isAuthenticated) return false
+      return typeof this.canAccess === 'function' ? this.canAccess(level) : false
     },
     detailButtonText() {
       return this.canDownloadByAccess ? 'PDFダウンロード' : 'ログインする'
     },
     shouldShowMembersNotice() {
       if (!this.publication) return false
-      const level = this.publication.membershipLevel || this.publication.membership_level || 'free'
-      // 無料レベルは未ログインでもダウンロード可のため注意書きは非表示
-      return !this.isAuthenticated && level !== 'free'
+      const level = this.requiredLevel
+      if (level === 'free') return false
+      if (!this.isAuthenticated) return true
+      return typeof this.canAccess === 'function' ? !this.canAccess(level) : true
     }
   },
   methods: {
@@ -228,7 +239,7 @@ export default {
         ...publicationData,
         isDownloadable: publicationData.is_downloadable || false,
         membersOnly: publicationData.members_only || false,
-        membershipLevel: publicationData.membership_level || 'free',
+        membershipLevel: publicationData.membership_level || (publicationData.members_only ? 'standard' : 'free'),
         canDownload: typeof meta.can_download !== 'undefined'
           ? !!meta.can_download
           : !!(publicationData.is_downloadable && publicationData.file_url)
@@ -251,10 +262,13 @@ export default {
     },
     
     handlePrimaryAction() {
-      // 無料レベルは未ログインでもダウンロード可
       if (!this.canDownloadByAccess) {
         const redirect = encodeURIComponent(this.$route.fullPath)
-        this.$router.push(`/member-login?redirect=${redirect}`)
+        if (!this.isAuthenticated) {
+          this.$router.push(`/member-login?redirect=${redirect}`)
+        } else {
+          this.$router.push('/membership')
+        }
         return
       }
       if (this.publication?.id) {
