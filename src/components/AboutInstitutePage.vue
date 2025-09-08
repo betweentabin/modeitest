@@ -34,7 +34,14 @@
         <img class="about-image" src="https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340" alt="会社画像" />
         <div class="about-text">
           <div class="about-headline">
-            <h3 class="main-headline" v-html="mainHeadlineText"></h3>
+            <CmsText 
+              pageKey="about-institute" 
+              fieldKey="main_headline" 
+              tag="h3" 
+              type="html"
+              class="main-headline"
+              :fallback="mainHeadlineText"
+            />
           </div>
           <div class="about-description">
             <CmsText pageKey="about-institute" fieldKey="about_body" tag="div" type="html" :fallback="`当研究所は、産・官・学・金(金融)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。<br>今後とも地元企業や地域の皆様をはじめ行政等との連携を緊密にし、様々な事業展開を図り地域の発展に寄与してまいりたいと考えております。`" />

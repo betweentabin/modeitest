@@ -18,10 +18,14 @@
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="sitemap" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
+          <span class="title-english">
+            <CmsText pageKey="sitemap" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>

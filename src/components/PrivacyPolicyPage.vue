@@ -18,16 +18,20 @@
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="privacy" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
+          <span class="title-english">
+            <CmsText pageKey="privacy" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>
 
       <CmsBlock page-key="privacy" wrapper-class="cms-body" />
-      <div class="content-container" v-if="!hasHtml">
+      <div class="content-container" v-if="!hasHtml && !isEditPreview">
         <!-- Introduction -->
         <div class="intro-section">
           <p class="intro-text">
@@ -118,6 +122,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import CmsBlock from './CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
@@ -133,6 +138,7 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     CmsBlock,
+    CmsText,
   },
   data() {
     return {
@@ -144,6 +150,14 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'プライバシーポリシー') || 'プライバシーポリシー' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'privacy policy') || 'privacy policy' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') && (params.has('cmsEdit') || params.get('cmsPreview') === 'edit')
+      } catch (_) { return false }
+    },
     hasHtml() {
       try {
         const page = this._pageText?.page?.value

@@ -34,9 +34,11 @@
             <img :src="getImageUrl('content') || '/img/image-1.png'" alt="ネットワークイメージ" />
           </div>
           <div class="mission-text">
-            <h3>{{ missionTitle || '産学官金のネットワークを活かした地域創生' }}</h3>
+            <h3>
+              <CmsText pageKey="about" fieldKey="mission_title" tag="span" :fallback="missionTitle || '産学官金のネットワークを活かした地域創生'" />
+            </h3>
             <p>
-              {{ missionText || '私たちは、産・官・学・金（金融機関）のネットワークを活用し、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。1991年の設立以来、福岡県久留米市を拠点に、九州地域の経済発展に貢献してまいりました。' }}
+              <CmsText pageKey="about" fieldKey="mission_text" tag="span" :fallback="missionText || '私たちは、産・官・学・金（金融機関）のネットワークを活用し、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。1991年の設立以来、福岡県久留米市を拠点に、九州地域の経済発展に貢献してまいりました。'" />
             </p>
           </div>
         </div>

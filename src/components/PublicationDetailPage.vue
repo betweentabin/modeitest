@@ -67,10 +67,16 @@
 
         <!-- Download/Login Button -->
         <div class="login-section">
-          <!-- Show notice for members-only when not logged in -->
-          <p v-if="shouldShowMembersNotice" class="members-only-notice">会員登録が必要です</p>
-          <button class="login-btn" @click="handlePrimaryAction">
-            <div class="text-44 valign-text-middle inter-bold-white-15px">{{ detailButtonText }}</div>
+          <!-- Show notice for members-only when not permitted (includes not logged in) -->
+          <p v-if="shouldShowMembersNotice" class="members-only-notice">この刊行物は会員限定です。ダウンロードするにはログインが必要です。</p>
+          <!-- Download button when allowed -->
+          <button v-if="canDownloadByAccess" class="login-btn" @click="publication?.id && downloadPublication(publication.id)">
+            <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
+            <frame13213176122 />
+          </button>
+          <!-- Login button when not permitted -->
+          <button v-else class="login-btn" @click="handlePrimaryAction">
+            <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
             <frame13213176122 />
           </button>
         </div>
@@ -444,6 +450,9 @@ export default {
 .login-section {
   text-align: center;
   margin-top: 30px;
+  background: #f6f7f8;
+  border-radius: 10px;
+  padding: 24px 16px;
 }
 
 .login-btn {
