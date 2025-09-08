@@ -128,9 +128,11 @@ export function usePageText(pageKey) {
     const primary = (typeof raw === 'string' && raw.trim().length > 0) ? raw : fallback
     let sanitized = sanitizeHtml(primary)
 
-    // 許容しない場合、サニタイズ後に実質空ならフォールバックを使用
+    // 許容しない場合、サニタイズ後の中身が「テキスト無し（タグのみ）」ならフォールバック
     if (!allowEmpty) {
-      const isEffectivelyEmpty = (typeof sanitized === 'string') && sanitized.replace(/[\s\u00A0]/g, '').length === 0
+      const noWhitespace = (typeof sanitized === 'string') ? sanitized.replace(/[\s\u00A0]/g, '') : ''
+      const textOnly = noWhitespace.replace(/<[^>]*>/g, '')
+      const isEffectivelyEmpty = textOnly.length === 0
       if (isEffectivelyEmpty) {
         sanitized = sanitizeHtml(typeof fallback === 'string' ? fallback : '')
       }

@@ -294,7 +294,9 @@ export default {
       try {
         if (!this._pageText) return false
         const html = this._pageText.getHtml(`faq_a_${item._id}`, '', { allowEmpty: true }) || ''
-        return String(html).replace(/[\s\u00A0]/g, '').length > 0
+        const noWs = String(html).replace(/[\s\u00A0]/g, '')
+        const textOnly = noWs.replace(/<[^>]*>/g, '')
+        return textOnly.length > 0
       } catch(_) { return false }
     },
     applyCmsFaqs(list) {
