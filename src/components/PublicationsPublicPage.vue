@@ -85,7 +85,7 @@
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
         <div class="featured-content">
-          <div class="featured-image" :class="{ blurred: shouldBlur }">
+          <div class="featured-image" :class="{ blurred: isRestricted(featuredPublication) }">
             <img src="/img/image-1.png" alt="一般向け刊行物" />
           </div>
             <div class="featured-info">
@@ -148,7 +148,7 @@
             class="publication-card"
             @click="goToPublicationDetail(publication.id)"
           >
-            <div class="publication-image" :class="{ blurred: shouldBlur }">
+            <div class="publication-image" :class="{ blurred: isRestricted(publication) }">
               <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
             </div>
             <div class="publication-info">
@@ -554,10 +554,9 @@ export default {
         try {
           const allPublications = await mockServer.getPublications();
           if (allPublications && allPublications.length > 0) {
-            const freePublications = allPublications.filter(item => 
-              item.membership_level === 'free' || item.membershipLevel === 'free' || !item.membership_level
-            );
-            this.publications = freePublications.map(item => ({
+            // APIが取得できない場合でも、一般向け一覧は「全件表示」。
+            // モックの会員レベルは item.membership_level もしくは membershipLevel に入る想定。
+            this.publications = allPublications.map(item => ({
               id: item.id,
               title: item.title,
               image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
@@ -569,7 +568,8 @@ export default {
               file_size: item.file_size,
               download_count: item.download_count,
               is_published: item.is_published,
-              membershipLevel: 'free'
+              // モックでも会員レベル情報を保持
+              membershipLevel: item.membership_level || item.membershipLevel || 'free'
             }));
             this.totalPages = Math.ceil(this.publications.length / 12);
           }
@@ -596,8 +596,17 @@ export default {
         author: item.author,
         pages: item.pages,
         is_downloadable: item.is_downloadable,
-        members_only: item.members_only
+        members_only: item.members_only,
+        // 明示的な会員レベル（未設定は free とみなす）
+        membership_level: (item.membership_level || 'free')
       };
+    },
+    // 一般向け一覧では、会員限定（standard/premium）は常にサムネイルをぼかす
+    // 無料（free）はぼかし無し
+    isRestricted(item) {
+      if (!item) return false
+      const level = String(item.membership_level || item.membershipLevel || '').toLowerCase()
+      return !!level && level !== 'free'
     },
     
     async downloadPublication(publicationId) {
