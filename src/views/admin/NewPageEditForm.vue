@@ -915,11 +915,35 @@ export default {
       const row = this.textsEditor.find(r => (r.key||'').trim() === key)
       return row ? row.value : ''
     },
+    getExistingTextValue(k) {
+      const key = (k || '').trim()
+      try {
+        const c = this.formData?.content
+        if (c && typeof c === 'object' && c.texts && typeof c.texts === 'object') {
+          const v = c.texts[key]
+          if (typeof v === 'string') return v
+        }
+      } catch(_) {}
+      // Heuristic from current HTML preview
+      try {
+        const html = this.extractHtmlFromContent()
+        if (key === 'page_title') {
+          const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [null, ''])[1]
+          if (h1) return h1.replace(/<[^>]+>/g, '').trim()
+        }
+        if (key === 'lead') {
+          const p = (html.match(/<p[^>]*>([\s\S]*?)<\/p>/i) || [null, ''])[1]
+          if (p) return p.replace(/<[^>]+>/g, '').trim()
+        }
+      } catch(_) {}
+      return ''
+    },
     focusOrAddKey(k) {
       const key = (k || '').trim()
       const idx = this.textsEditor.findIndex(r => (r.key||'').trim() === key)
       if (idx === -1) {
-        this.textsEditor.push({ _id: `rk-${key}-${Date.now()}-${Math.random()}`, key, value: '' })
+        const preset = this.getExistingTextValue(key)
+        this.textsEditor.push({ _id: `rk-${key}-${Date.now()}-${Math.random()}`, key, value: preset })
         this.$nextTick(() => {
           const inputs = this.$el.querySelectorAll('.field-row .field-key')
           if (inputs && inputs.length) inputs[inputs.length-1].focus()
@@ -1227,7 +1251,13 @@ export default {
     addMissingLinkKeys() {
       const defaults = ['cta_primary', 'cta_secondary']
       const exist = new Set(this.linksEditor.map(r => (r.key||'').trim()))
-      defaults.forEach(k => { if (!exist.has(k)) this.linksEditor.push({ _id: `ln-${k}-${Date.now()}-${Math.random()}`, key: k, value: '' }) })
+      defaults.forEach(k => {
+        if (!exist.has(k)) {
+          let v = ''
+          try { v = (this.formData?.content?.links?.[k] || '') } catch(_) {}
+          this.linksEditor.push({ _id: `ln-${k}-${Date.now()}-${Math.random()}`, key: k, value: v })
+        }
+      })
     },
     collectTextWarnings() {
       const warnings = []
