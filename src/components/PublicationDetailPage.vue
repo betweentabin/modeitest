@@ -68,7 +68,7 @@
         <!-- Download/Login Button -->
         <div class="login-section">
           <!-- Show notice for members-only when not logged in -->
-          <p v-if="!isAuthenticated && publication?.membersOnly" class="members-only-notice">会員登録が必要です</p>
+          <p v-if="shouldShowMembersNotice" class="members-only-notice">会員登録が必要です</p>
           <button class="login-btn" @click="handlePrimaryAction">
             <div class="text-44 valign-text-middle inter-bold-white-15px">{{ detailButtonText }}</div>
             <frame13213176122 />
@@ -154,8 +154,21 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はコチラ') || 'メンバー登録はコチラ' },
+    // freeレベルの刊行物は未ログインでもPDFダウンロード表示
+    canDownloadByAccess() {
+      if (!this.publication) return false
+      const level = this.publication.membershipLevel || this.publication.membership_level || 'free'
+      const canDownload = !!this.publication.canDownload || !!this.publication.isDownloadable
+      return canDownload && (this.isAuthenticated || level === 'free')
+    },
     detailButtonText() {
-      return this.isAuthenticated ? 'PDFダウンロード' : 'ログインする'
+      return this.canDownloadByAccess ? 'PDFダウンロード' : 'ログインする'
+    },
+    shouldShowMembersNotice() {
+      if (!this.publication) return false
+      const level = this.publication.membershipLevel || this.publication.membership_level || 'free'
+      // 無料レベルは未ログインでもダウンロード可のため注意書きは非表示
+      return !this.isAuthenticated && level !== 'free'
     }
   },
   methods: {
@@ -167,7 +180,7 @@ export default {
         const response = await apiClient.getPublication(publicationId);
         
         if (response.success && response.data && response.data.publication) {
-          this.publication = this.formatPublicationData(response.data.publication);
+          this.publication = this.formatPublicationData(response.data.publication, { can_download: response.data.can_download });
         } else {
           // Fallback to mock data
           this.loadFallbackData();
@@ -210,11 +223,15 @@ export default {
        };
     },
     
-    formatPublicationData(publicationData) {
+    formatPublicationData(publicationData, meta = {}) {
       return {
         ...publicationData,
         isDownloadable: publicationData.is_downloadable || false,
-        membersOnly: publicationData.members_only || false
+        membersOnly: publicationData.members_only || false,
+        membershipLevel: publicationData.membership_level || 'free',
+        canDownload: typeof meta.can_download !== 'undefined'
+          ? !!meta.can_download
+          : !!(publicationData.is_downloadable && publicationData.file_url)
       };
     },
     
@@ -234,7 +251,8 @@ export default {
     },
     
     handlePrimaryAction() {
-      if (!this.isAuthenticated) {
+      // 無料レベルは未ログインでもダウンロード可
+      if (!this.canDownloadByAccess) {
         const redirect = encodeURIComponent(this.$route.fullPath)
         this.$router.push(`/member-login?redirect=${redirect}`)
         return
