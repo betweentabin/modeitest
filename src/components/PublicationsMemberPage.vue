@@ -6,7 +6,7 @@
     <HeroSection 
       title="刊行物"
       subtitle="publications"
-      heroImage="/img/hero-image.png"
+      heroImage="/img/Image_fx5.jpg"
     />
     
     <!-- Breadcrumbs -->

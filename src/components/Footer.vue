@@ -8,6 +8,9 @@
       <router-link to="/company" class="footer-link">
         <frame13213175225 :text14="frame132131752252Props.text14" />
       </router-link>
+      <router-link to="/about-institute" class="footer-link">
+        <frame13213175225 :text14="'私たちについて'" />
+      </router-link>
       <router-link to="/news" class="footer-link">
         <frame13213175225 :text14="frame132131752253Props.text14" />
       </router-link>

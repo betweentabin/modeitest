@@ -4,18 +4,12 @@
     <Navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <p class="hero-subtitle">
-            <CmsText pageKey="premium-membership" fieldKey="page_subtitle" tag="span" :fallback="'premium membership'" />
-          </p>
-          <h1 class="hero-title">
-            <CmsText pageKey="premium-membership" fieldKey="page_title" tag="span" :fallback="'プレミアム会員'" />
-          </h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
+      heroImage="/img/Image_fx7.jpg"
+      mediaKey="hero_premium_membership"
+    />
 
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="['入会案内', 'プレミアム会員の特典']" />
@@ -103,6 +97,7 @@
 
 <script>
 import Navigation from "./Navigation.vue";
+import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import AccessSection from "./AccessSection.vue";
 import ContactSection from "./ContactSection.vue";
@@ -117,6 +112,7 @@ export default {
   name: "PremiumMembershipPage",
   components: {
     Navigation,
+    HeroSection,
     Breadcrumbs,
     AccessSection,
     ContactSection,
@@ -129,6 +125,8 @@ export default {
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
+      pageTitle: 'プレミアム会員',
+      pageSubtitle: 'premium membership',
     };
   },
   methods: {
@@ -151,46 +149,6 @@ export default {
   min-height: 100vh;
 }
 
-/* Hero Section */
-.hero-section {
-  width: 100%;
-  height: 396px;
-  background: linear-gradient(rgba(77, 77, 77, 0.70), rgba(77, 77, 77, 0.70)), 
-              url('https://api.builder.io/api/v1/image/assets/TEMP/6ba0640caf634ea83255fc6ebd7dda9734c97932?width=2880') lightgray center/cover no-repeat;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: end;
-  padding: 50px 30px;
-}
-
-.hero-overlay {
-  width: 100%;
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.hero-subtitle {
-  color: #FFFFFF;
-  font-family: var(--font-family-inter);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 2.5;
-  letter-spacing: -0.48px;
-}
-
-.hero-title {
-  color: #FFFFFF;
-  font-family: var(--font-family-inter);
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: -0.8px;
-}
 
 /* Introduction Section */
 .introduction-section {
@@ -1006,10 +964,6 @@ export default {
     padding: 30px 20px !important;
   }
   
-  .hero-section {
-    height: 300px !important;
-    padding: 30px 20px !important;
-  }
   
   /* レイアウトの縦並び化 */
   .featured-content {
@@ -1097,10 +1051,6 @@ export default {
     padding: 20px 15px !important;
   }
   
-  .hero-section {
-    height: 250px !important;
-    padding: 25px 20px !important;
-  }
   
   /* レイアウトの縦並び化 */
   .featured-content {

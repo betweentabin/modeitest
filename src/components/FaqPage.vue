@@ -7,7 +7,7 @@
       :title="pageTitle || 'よくあるご質問'"
       :subtitle="pageSubtitle || 'FAQ'"
       cms-page-key="faq"
-      heroImage="/img/hero-image.png"
+      heroImage="/img/Image_fx4.jpg"
       mediaKey="hero_faq"
     />
     

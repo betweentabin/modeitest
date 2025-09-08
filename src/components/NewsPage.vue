@@ -6,7 +6,7 @@
     <HeroSection 
       :title="pageTitle || 'お知らせ'"
       :subtitle="pageSubtitle || 'information'"
-      heroImage="/img/hero-image.png"
+      heroImage="/img/Image_fx3.jpg"
       mediaKey="hero_news"
     />
     
