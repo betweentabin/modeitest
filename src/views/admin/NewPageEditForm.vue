@@ -387,20 +387,7 @@
                   <p class="form-help">推奨キー例: page_title, page_subtitle, lead, cta_primary, cta_secondary</p>
                 </div>
 
-                <!-- Live Preview (common placements) -->
-                <div class="fields-preview">
-                  <div class="preview-hero">
-                    <div class="preview-hero-inner">
-                      <h1 class="pv-title">{{ text('page_title') || 'ページタイトル' }}</h1>
-                      <div class="pv-subtitle">{{ text('page_subtitle') || 'sub title' }}</div>
-                      <p class="pv-lead">{{ text('lead') || '概要テキストのプレビュー（任意）' }}</p>
-                      <div class="pv-cta">
-                        <button class="btn btn-primary">{{ text('cta_primary') || 'お問い合わせはコチラ' }}</button>
-                        <button class="btn btn-secondary" style="margin-left:8px;">{{ text('cta_secondary') || '入会はコチラ' }}</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <!-- Live Preview (common placements) removed as requested -->
 
                 <!-- Links subsection -->
                 <label class="form-label" style="margin-top:20px;">
@@ -1379,6 +1366,10 @@ export default {
           // 更新後に最新データを再取得
           setTimeout(() => {
             this.fetchPageData()
+            // ライブプレビューの場合はiframeも更新
+            if (this.contentMode === 'live') {
+              this.refreshPreview()
+            }
           }, 1000)
         }
       } catch (err) {
