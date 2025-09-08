@@ -254,29 +254,43 @@ export default {
       this._pageText = usePageText('faq')
       this._pageText.load().then(() => {
         try {
-          // toRefsを使用しているため、.valueは不要
-          const page = this._pageText?.page
+          const page = this._pageText?.page?.value
           const list = page?.content?.faqs
           if (Array.isArray(list) && list.length) {
-            this.faqs = list
+            // CMSのfaqsをローカルのデフォルトとマージして不足項目を補完
+            const base = Array.isArray(this.faqs) ? this.faqs : []
+            const merged = list.map((it, idx) => {
+              const baseIt = (typeof base[idx] === 'object' && base[idx]) ? base[idx] : {}
+              const next = { ...baseIt, ...(typeof it === 'object' ? it : {}) }
+              // answerが欠落/空の場合はデフォルトのanswerで補完
+              if (!next.answer && baseIt.answer) next.answer = baseIt.answer
+              // tagsが欠落の場合は空配列に
+              if (!Array.isArray(next.tags)) next.tags = Array.isArray(baseIt.tags) ? baseIt.tags : []
+              // categoryが欠落の場合はデフォルトを採用
+              if (!next.category && baseIt.category) next.category = baseIt.category
+              return next
+            })
+            this.faqs = merged
           }
           this.ensureFaqIds()
-        } catch(e) { 
-          console.error('Error loading FAQ data:', e)
-        }
+        } catch(_) {}
       })
-    } catch(e) { 
-      console.error('Error initializing FAQ page:', e)
-    }
+    } catch(e) { /* noop */ }
   },
   methods: {
     _label(id, fallback) {
       try { return this._pageText?.getText(`cat_${id}`, fallback) || fallback } catch(_) { return fallback }
     },
     ensureFaqIds() {
-      // 安定したキーで保存できるよう、各FAQに連番の _id を付与
+      // 安定したキーで保存できるよう、各FAQに連番の _id を付与（既存のundefined/nullで上書きしない）
       const arr = Array.isArray(this.faqs) ? this.faqs : []
-      this.faqs = arr.map((it, idx) => (typeof it === 'object' ? { _id: (it._id ?? idx), ...it } : it))
+      this.faqs = arr.map((it, idx) => {
+        if (typeof it !== 'object' || it === null) return it
+        const out = { ...it }
+        const validId = (typeof out._id === 'number' || (typeof out._id === 'string' && out._id !== ''))
+        if (!validId) out._id = idx
+        return out
+      })
     },
     toggleAnswer(index) {
       const itemIndex = this.openItems.indexOf(index);
