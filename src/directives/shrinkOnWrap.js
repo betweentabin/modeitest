@@ -1,4 +1,4 @@
-// Vue 3 directive: shrink font size when text wraps to multiple lines
+// Vue 2 directive: shrink font size when text wraps to multiple lines
 // Usage: v-shrink-on-wrap or v-shrink-on-wrap="{ lines: 2, className: 'shrink-2lines' }"
 
 function getLineHeightPx(el) {
@@ -37,8 +37,16 @@ function setup(el, binding) {
   };
 
   // Observe size and content changes
-  const resizeObserver = new ResizeObserver(check);
-  resizeObserver.observe(el);
+  let resizeObserver = null;
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(check);
+    resizeObserver.observe(el);
+  } else {
+    // Fallback: window resize listener
+    const resizeHandler = () => check();
+    window.addEventListener('resize', resizeHandler);
+    el.__shrinkOnWrapResizeHandler__ = resizeHandler;
+  }
 
   const mutationObserver = new MutationObserver(check);
   mutationObserver.observe(el, { childList: true, characterData: true, subtree: true });
@@ -49,30 +57,31 @@ function setup(el, binding) {
 
   // Store cleanup on element
   el.__shrinkOnWrapCleanup__ = () => {
-    try { resizeObserver.disconnect(); } catch {}
+    try { resizeObserver && resizeObserver.disconnect(); } catch {}
+    try { window.removeEventListener('resize', el.__shrinkOnWrapResizeHandler__); } catch {}
     try { mutationObserver.disconnect(); } catch {}
     clearTimeout(fontLoadTimer);
   };
 }
 
 export default {
-  mounted(el, binding) {
+  // Called once the element is inserted into the DOM (Vue 2)
+  inserted(el, binding) {
     setup(el, binding);
   },
-  updated(el, binding) {
-    // Re-run check on updates
-    // setup again will rebind observers, so just run the class check
+  // Called after the containing component and its children have updated
+  componentUpdated(el, binding) {
     const opts = binding?.value || {};
     const threshold = Number(opts.lines) || 2;
     const className = opts.className || 'shrink-on-wrap';
     const lines = getLineCount(el);
     applyClass(el, lines >= threshold, className);
   },
-  unmounted(el) {
+  // Cleanup when directive is unbound from the element
+  unbind(el) {
     if (el.__shrinkOnWrapCleanup__) {
       el.__shrinkOnWrapCleanup__();
       delete el.__shrinkOnWrapCleanup__;
     }
   }
 };
-
