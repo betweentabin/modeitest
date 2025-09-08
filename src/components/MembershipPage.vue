@@ -51,13 +51,19 @@
         <div class="services-content">
           <!-- Premium Services -->
           <div class="service-category">
-            <h3 class="category-title">プレミアサービス</h3>
+            <h3 class="category-title">
+              <CmsText pageKey="membership" fieldKey="premium_category_title" tag="span" :fallback="'プレミアサービス'" />
+            </h3>
             <div class="service-grid">
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/ce302535d023990b1eca162e1afd7a0f8380e1dc?width=800" alt="日経トップリーダー" class="service-image" />
                 <div class="service-overlay">
-                  <span class="service-tag">consultation</span>
-                  <h4 class="service-name">日経トップリーダー</h4>
+                  <span class="service-tag">
+                    <CmsText pageKey="membership" fieldKey="premium_service1_tag" tag="span" :fallback="'consultation'" />
+                  </span>
+                  <h4 class="service-name">
+                    <CmsText pageKey="membership" fieldKey="premium_service1_name" tag="span" :fallback="'日経トップリーダー'" />
+                  </h4>
                 </div>
               </div>
             </div>
@@ -67,41 +73,63 @@
 
           <!-- Standard & Premium Services -->
           <div class="service-category">
-            <h3 class="category-title">スタンダード　&　プレミアサービス</h3>
+            <h3 class="category-title">
+              <CmsText pageKey="membership" fieldKey="standard_premium_category_title" tag="span" :fallback="'スタンダード　&　プレミアサービス'" />
+            </h3>
             <div class="service-grid">
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/bd8bbc9de4c9de4eb59eee7bc0cdac4b87af7876?width=800" alt="ビジネスセミナー" class="service-image" />
                 <div class="service-overlay">
-                  <span class="service-tag">consultation</span>
-                  <h4 class="service-name">ビジネスセミナー</h4>
+                  <span class="service-tag">
+                    <CmsText pageKey="membership" fieldKey="standard_service1_tag" tag="span" :fallback="'consultation'" />
+                  </span>
+                  <h4 class="service-name">
+                    <CmsText pageKey="membership" fieldKey="standard_service1_name" tag="span" :fallback="'ビジネスセミナー'" />
+                  </h4>
                 </div>
               </div>
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/960b36fb39767fc67e6b4a40be6051bee73138a8?width=800" alt="マッチング" class="service-image" />
                 <div class="service-overlay">
-                  <span class="service-tag">problem</span>
-                  <h4 class="service-name">マッチング</h4>
+                  <span class="service-tag">
+                    <CmsText pageKey="membership" fieldKey="standard_service2_tag" tag="span" :fallback="'problem'" />
+                  </span>
+                  <h4 class="service-name">
+                    <CmsText pageKey="membership" fieldKey="standard_service2_name" tag="span" :fallback="'マッチング'" />
+                  </h4>
                 </div>
               </div>
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/33c870bec0d0bf29bf0782915d3a6f8fe1f96623?width=800" alt="経済統計指標DL" class="service-image" />
                 <div class="service-overlay">
-                  <span class="service-tag">problem</span>
-                  <h4 class="service-name">経済統計指標DL</h4>
+                  <span class="service-tag">
+                    <CmsText pageKey="membership" fieldKey="standard_service3_tag" tag="span" :fallback="'problem'" />
+                  </span>
+                  <h4 class="service-name">
+                    <CmsText pageKey="membership" fieldKey="standard_service3_name" tag="span" :fallback="'経済統計指標DL'" />
+                  </h4>
                 </div>
               </div>
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/3a52b313c631d4d2f82f6039afa3a0b86b3c4f1e?width=800" alt="地域経済統計レポート閲覧" class="service-image" />
                 <div class="service-overlay">
-                  <span class="service-tag">consultation</span>
-                  <h4 class="service-name">地域経済統計レポート閲覧</h4>
+                  <span class="service-tag">
+                    <CmsText pageKey="membership" fieldKey="standard_service4_tag" tag="span" :fallback="'consultation'" />
+                  </span>
+                  <h4 class="service-name">
+                    <CmsText pageKey="membership" fieldKey="standard_service4_name" tag="span" :fallback="'地域経済統計レポート閲覧'" />
+                  </h4>
                 </div>
               </div>
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/4096c08b8615d6b9ef2adeb87f0b1f03ccb58429?width=800" alt="経営相談" class="service-image" />
                 <div class="service-overlay">
-                  <span class="service-tag">problem</span>
-                  <h4 class="service-name">経営相談</h4>
+                  <span class="service-tag">
+                    <CmsText pageKey="membership" fieldKey="standard_service5_tag" tag="span" :fallback="'problem'" />
+                  </span>
+                  <h4 class="service-name">
+                    <CmsText pageKey="membership" fieldKey="standard_service5_name" tag="span" :fallback="'経営相談'" />
+                  </h4>
                 </div>
               </div>
             </div>

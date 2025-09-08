@@ -32,7 +32,7 @@
       <!-- If HTML is provided in page JSON, render it and hide the static table -->
       <CmsBlock page-key="transaction-law" wrapper-class="cms-body" />
 
-      <div v-if="!hasHtml" class="transaction-law-table">
+      <div v-if="!hasHtml && !isEditPreview" class="transaction-law-table">
         <div class="table-row">
           <div class="table-label">販売業者</div>
           <div class="table-value">株式会社 ちくぎん地域経済研究所</div>
@@ -258,6 +258,14 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '特定商取引法に関する表記') || '特定商取引法に関する表記' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'transaction law') || 'transaction law' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') && (params.has('cmsEdit') || params.get('cmsPreview') === 'edit')
+      } catch (_) { return false }
+    },
     hasHtml() {
       try {
         const page = this._pageText?.page?.value

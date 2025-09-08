@@ -165,14 +165,12 @@ export default {
       if (!this.publication) return 'free'
       const lvlRaw = this.publication.membership_level || this.publication.membershipLevel
       const lvl = String(lvlRaw || '').toLowerCase()
-      const mo = this.publication.members_only
-      // 公開扱いの条件（EconomicStatisticsDetailと同じ思想）
-      // 1) membership_level が 'free'
-      // 2) members_only === false
-      // 3) membership_level 未設定（null/undefined/''）
-      if (!lvl || lvl === 'free' || mo === false) return 'free'
-      // それ以外は明示されたレベル、未設定なら standard
-      return lvl || 'standard'
+      const mo = (this.publication.members_only ?? this.publication.membersOnly)
+      // 未設定のときは members_only/membersOnly で補完
+      if (!lvl) return mo ? 'standard' : 'free'
+      // 明示 free または members_only=false は free 扱い
+      if (lvl === 'free' || mo === false) return 'free'
+      return lvl
     },
     // 会員レベルに基づくダウンロード可否
     // ・free: だれでも可

@@ -43,55 +43,79 @@
             <!-- Sitemap Links -->
             <div class="sitemap-links">
               <div class="sitemap-category">
-                <h4 class="category-title">メインページ</h4>
+                <h4 class="category-title">
+                  <CmsText pageKey="sitemap" fieldKey="cat_main" tag="span" :fallback="'メインページ'" />
+                </h4>
                 <ul class="link-list">
-                  <li><router-link to="/" class="sitemap-link">トップページ</router-link></li>
-                  <li><router-link to="/company" class="sitemap-link">会社概要</router-link></li>
-                  <li><router-link to="/aboutus" class="sitemap-link">研究所について</router-link></li>
+                  <li>
+                    <router-link to="/" class="sitemap-link">
+                      <CmsText pageKey="sitemap" fieldKey="link_home" tag="span" :fallback="'トップページ'" />
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link to="/company" class="sitemap-link">
+                      <CmsText pageKey="sitemap" fieldKey="link_company" tag="span" :fallback="'会社概要'" />
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link to="/aboutus" class="sitemap-link">
+                      <CmsText pageKey="sitemap" fieldKey="link_about" tag="span" :fallback="'研究所について'" />
+                    </router-link>
+                  </li>
                 </ul>
               </div>
               
               <div class="sitemap-category">
-                <h4 class="category-title">サービス</h4>
+                <h4 class="category-title">
+                  <CmsText pageKey="sitemap" fieldKey="cat_services" tag="span" :fallback="'サービス'" />
+                </h4>
                 <ul class="link-list">
-                  <li><router-link to="/seminar" class="sitemap-link">セミナー</router-link></li>
-                  <li><router-link to="/publication" class="sitemap-link">刊行物</router-link></li>
-                  <li><router-link to="/consulting" class="sitemap-link">経営コンサルティング</router-link></li>
-                  <li><router-link to="/research" class="sitemap-link">調査・研究</router-link></li>
-                  <li><router-link to="/training" class="sitemap-link">人材育成</router-link></li>
+                  <li><router-link to="/seminar" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_seminar" tag="span" :fallback="'セミナー'" /></router-link></li>
+                  <li><router-link to="/publication" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_publications" tag="span" :fallback="'刊行物'" /></router-link></li>
+                  <li><router-link to="/consulting" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_consulting" tag="span" :fallback="'経営コンサルティング'" /></router-link></li>
+                  <li><router-link to="/research" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_research" tag="span" :fallback="'調査・研究'" /></router-link></li>
+                  <li><router-link to="/training" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_training" tag="span" :fallback="'人材育成'" /></router-link></li>
                 </ul>
               </div>
               
               <div class="sitemap-category">
-                <h4 class="category-title">会員サービス</h4>
+                <h4 class="category-title">
+                  <CmsText pageKey="sitemap" fieldKey="cat_membership" tag="span" :fallback="'会員サービス'" />
+                </h4>
                 <ul class="link-list">
-                  <li><router-link to="/membership" class="sitemap-link">入会案内</router-link></li>
+                  <li><router-link to="/membership" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_membership" tag="span" :fallback="'入会案内'" /></router-link></li>
                 </ul>
               </div>
               
               <div class="sitemap-category">
-                <h4 class="category-title">各種情報</h4>
+                <h4 class="category-title">
+                  <CmsText pageKey="sitemap" fieldKey="cat_info" tag="span" :fallback="'各種情報'" />
+                </h4>
                 <ul class="link-list">
-                  <li><router-link to="/economic-indicators" class="sitemap-link">経済指標一覧</router-link></li>
-                  <li><router-link to="/economic-surveys" class="sitemap-link">経済調査統計一覧</router-link></li>
+                  <li><router-link to="/economic-indicators" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_indicators" tag="span" :fallback="'経済指標一覧'" /></router-link></li>
+                  <li><router-link to="/economic-surveys" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_surveys" tag="span" :fallback="'経済調査統計一覧'" /></router-link></li>
                 </ul>
               </div>
               
               <div class="sitemap-category">
-                <h4 class="category-title">お知らせ・サポート</h4>
+                <h4 class="category-title">
+                  <CmsText pageKey="sitemap" fieldKey="cat_support" tag="span" :fallback="'お知らせ・サポート'" />
+                </h4>
                 <ul class="link-list">
-                  <li><router-link to="/news" class="sitemap-link">お知らせ</router-link></li>
-                  <li><router-link to="/faq" class="sitemap-link">よくあるご質問</router-link></li>
-                  <li><router-link to="/contact" class="sitemap-link">お問い合わせ</router-link></li>
+                  <li><router-link to="/news" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_news" tag="span" :fallback="'お知らせ'" /></router-link></li>
+                  <li><router-link to="/faq" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_faq" tag="span" :fallback="'よくあるご質問'" /></router-link></li>
+                  <li><router-link to="/contact" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_contact" tag="span" :fallback="'お問い合わせ'" /></router-link></li>
                 </ul>
               </div>
               
               <div class="sitemap-category">
-                <h4 class="category-title">法的情報</h4>
+                <h4 class="category-title">
+                  <CmsText pageKey="sitemap" fieldKey="cat_legal" tag="span" :fallback="'法的情報'" />
+                </h4>
                 <ul class="link-list">
-                  <li><router-link to="/privacy" class="sitemap-link">プライバシーポリシー</router-link></li>
-                  <li><router-link to="/terms" class="sitemap-link">利用規約</router-link></li>
-                  <li><router-link to="/legal" class="sitemap-link">特定商取引法に関する表記</router-link></li>
+                  <li><router-link to="/privacy" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_privacy" tag="span" :fallback="'プライバシーポリシー'" /></router-link></li>
+                  <li><router-link to="/terms" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_terms" tag="span" :fallback="'利用規約'" /></router-link></li>
+                  <li><router-link to="/legal" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_legal" tag="span" :fallback="'特定商取引法に関する表記'" /></router-link></li>
                 </ul>
               </div>
             </div>
