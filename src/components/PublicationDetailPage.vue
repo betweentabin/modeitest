@@ -161,15 +161,15 @@ export default {
       if (lvl) return lvl
       return this.publication.membersOnly ? 'standard' : 'free'
     },
-    // freeは未ログインでもDL可。その他はログインかつ会員レベル満たす場合にDL可
+    // 経済調査統計の判定と合わせる: 公開かどうかだけでボタン表示を決める
+    // 実ダウンロード可否はAPI側に任せる
     canDownloadByAccess() {
       if (!this.publication) return false
-      const canDownload = !!this.publication.canDownload || !!this.publication.isDownloadable
-      if (!canDownload) return false
       const level = this.requiredLevel
-      if (level === 'free') return true
-      if (!this.isAuthenticated) return false
-      return typeof this.canAccess === 'function' ? this.canAccess(level) : false
+      // 一般公開（無料）は未ログインでもDLボタン表示
+      if (String(level).toLowerCase() === 'free') return true
+      // 有料（会員限定）はログインしていればDLボタン表示
+      return !!this.isAuthenticated
     },
     detailButtonText() {
       return this.canDownloadByAccess ? 'PDFダウンロード' : 'ログインする'
@@ -177,9 +177,10 @@ export default {
     shouldShowMembersNotice() {
       if (!this.publication) return false
       const level = this.requiredLevel
-      if (level === 'free') return false
-      if (!this.isAuthenticated) return true
-      return typeof this.canAccess === 'function' ? !this.canAccess(level) : true
+      // 無料公開は注意文を出さない
+      if (String(level).toLowerCase() === 'free') return false
+      // 有料公開で未ログインのとき注意文
+      return !this.isAuthenticated
     }
   },
   methods: {
