@@ -6,7 +6,7 @@
     <HeroSection 
       title="経済・調査統計"
       subtitle="economic statistics"
-      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/ab5db9916398054424d59236a434310786cb8146?width=2880"
+      heroImage="/img/Image_fx6.jpg"
     />
 
     <!-- Breadcrumbs -->

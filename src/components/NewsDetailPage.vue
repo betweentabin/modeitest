@@ -6,7 +6,7 @@
     <HeroSection 
       title="ニュース詳細"
       subtitle="news detail"
-      heroImage="/img/hero-image.png"
+      heroImage="/img/Image_fx3.jpg"
     />
     
     <!-- Breadcrumbs -->

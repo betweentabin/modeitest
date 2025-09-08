@@ -174,6 +174,68 @@
       </div>
     </section>
 
+    <!-- About Research Institute Section -->
+    <section class="about-institute-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <CmsText pageKey="company-profile" fieldKey="about_institute_title" tag="span" :fallback="'ちくぎん地域経済研究所について'" />
+        </h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">
+            <CmsText pageKey="company-profile" fieldKey="about_institute_subtitle" tag="span" :fallback="'about research institute'" />
+          </span>
+          <div class="divider-line"></div>
+        </div>
+      </div>
+      <div class="about-institute-content">
+        <div class="about-institute-text">
+          <CmsText pageKey="company-profile" fieldKey="about_institute_description" tag="div" type="html" :fallback="aboutInstituteDescription" />
+        </div>
+        <div class="about-institute-features">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="/img/vector-13.svg" alt="調査研究" />
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">
+                <CmsText pageKey="company-profile" fieldKey="feature_research_title" tag="span" :fallback="'地域経済の調査・研究'" />
+              </h3>
+              <p class="feature-description">
+                <CmsText pageKey="company-profile" fieldKey="feature_research_description" tag="span" :fallback="'地域に根差した経済・産業の調査・研究を通じて、地域の発展に貢献します。'" />
+              </p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="/img/vector-15-1.svg" alt="サポート" />
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">
+                <CmsText pageKey="company-profile" fieldKey="feature_support_title" tag="span" :fallback="'企業・機関のサポート'" />
+              </h3>
+              <p class="feature-description">
+                <CmsText pageKey="company-profile" fieldKey="feature_support_description" tag="span" :fallback="'地域経済を担う企業・医療・農業・学術研究活動のサポートを行います。'" />
+              </p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="/img/vector-11.svg" alt="人材育成" />
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">
+                <CmsText pageKey="company-profile" fieldKey="feature_human_title" tag="span" :fallback="'人材育成'" />
+              </h3>
+              <p class="feature-description">
+                <CmsText pageKey="company-profile" fieldKey="feature_human_description" tag="span" :fallback="'未来を支える「人」づくりに取り組み、地域の持続的発展を支援します。'" />
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- History Section -->
     <section class="history-section">
       <div class="section-header">
@@ -412,6 +474,12 @@ export default {
           <li>地域経済を担う企業・医療・農業・学術研究活動のサポート</li>
           <li>未来を支える「人」づくり</li>
         </ul>
+      `,
+      aboutInstituteDescription: `
+        <p>株式会社ちくぎん地域経済研究所は、筑邦銀行グループの一員として、地域社会の発展に貢献することを使命としています。</p>
+        <p>私たちは産・官・学・金（金融機関）のネットワークを構築し、バイオ・アグリ・医療・介護をはじめとする様々な分野の調査研究を専門的に行っています。</p>
+        <p>また、研究成果やネットワークを活用した経営コンサルティング機能により、多様な企業の生産・販売活動や医療・介護活動をサポートしています。</p>
+        <p>ヒト・モノ・カネ・情報を最大限に活かし、地域の振興・発展に寄与することを目指しています。</p>
       `,
     };
   },
@@ -1687,6 +1755,7 @@ section {
   .philosophy-section,
   .message-section,
   .company-profile-section,
+  .about-institute-section,
   .history-section,
   .staff-section,
   .financial-reports-section {
@@ -1768,6 +1837,7 @@ section {
   .philosophy-section,
   .message-section,
   .company-profile-section,
+  .about-institute-section,
   .history-section,
   .staff-section,
   .financial-reports-section {
@@ -2022,6 +2092,193 @@ section {
 @media (max-width: 400px) {
   .show-more-btn {
     width: 100% !important;
+  }
+}
+
+/* About Institute Section Styles */
+.about-institute-section {
+  padding: 80px 0;
+  background-color: #f8f9fa;
+}
+
+.about-institute-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.about-institute-text {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.about-institute-text p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-institute-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon img {
+  width: 30px;
+  height: 30px;
+  filter: brightness(0) invert(1);
+}
+
+.feature-content {
+  flex: 1;
+}
+
+.feature-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.feature-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+/* Responsive Design for About Institute Section */
+@media (max-width: 768px) {
+  .about-institute-section {
+    padding: 60px 0;
+  }
+  
+  .about-institute-content {
+    padding: 0 15px;
+  }
+  
+  .about-institute-text {
+    margin-bottom: 40px;
+  }
+  
+  .about-institute-text p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  
+  .about-institute-features {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 30px;
+  }
+  
+  .feature-item {
+    flex-direction: column;
+    text-align: center;
+    padding: 25px;
+    gap: 15px;
+  }
+  
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+  }
+  
+  .feature-icon img {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .feature-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .feature-description {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-institute-section {
+    padding: 40px 0;
+  }
+  
+  .about-institute-content {
+    padding: 0 10px;
+  }
+  
+  .about-institute-text {
+    margin-bottom: 30px;
+  }
+  
+  .about-institute-text p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .about-institute-features {
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .feature-item {
+    padding: 20px;
+    gap: 12px;
+  }
+  
+  .feature-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .feature-icon img {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .feature-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  .feature-description {
+    font-size: 13px;
   }
 }
 </style>

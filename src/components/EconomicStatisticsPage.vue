@@ -6,7 +6,7 @@
     <HeroSection 
       :title="pageTitle"
       :subtitle="pageSubtitle"
-      heroImage="/img/hero-image.png"
+      heroImage="/img/Image_fx6.jpg"
       mediaKey="hero_economic_statistics"
     />
     
