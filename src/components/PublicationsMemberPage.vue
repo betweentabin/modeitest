@@ -539,6 +539,8 @@ export default {
     },
     
     formatPublicationItem(item) {
+      const levelRaw = item.membership_level || item.membershipLevel
+      const level = (levelRaw && String(levelRaw).toLowerCase()) || (item.members_only ? 'standard' : 'free')
       return {
         id: item.id,
         title: item.title,
@@ -551,7 +553,7 @@ export default {
         pages: item.pages,
         is_downloadable: item.is_downloadable,
         members_only: item.members_only,
-        membershipLevel: item.members_only ? 'standard' : 'free'
+        membershipLevel: level
       };
     },
     

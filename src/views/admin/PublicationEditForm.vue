@@ -380,7 +380,7 @@ export default {
       this.error = ''
 
       try {
-        const res = await apiClient.get(`/api/admin/publications-v2/${this.publicationId}`)
+        const res = await apiClient.get(`/api/admin/publications/${this.publicationId}`)
         // 旧ルートは publication オブジェクトを直接返す（success ラッパーのみ）
         if (res && res.success && res.data) {
           const data = res.data.publication || res.data
@@ -411,14 +411,14 @@ export default {
           return
         }
         if (this.isNew) {
-          // v2エンドポイントを利用（任意のスラッグを許容）
-          const res = await apiClient.post('/api/admin/publications-v2', this.formData)
+          // 管理用の既存エンドポイントに合わせる
+          const res = await apiClient.post('/api/admin/publications', this.formData)
           if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
           this.successMessage = '刊行物を作成しました'
           setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
         } else {
-          // v2エンドポイントを利用（任意のスラッグを許容）
-          const res = await apiClient.put(`/api/admin/publications-v2/${this.publicationId}`, this.formData)
+          // 管理用の既存エンドポイントに合わせる
+          const res = await apiClient.put(`/api/admin/publications/${this.publicationId}`, this.formData)
           if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
           this.successMessage = '刊行物を更新しました'
         }
