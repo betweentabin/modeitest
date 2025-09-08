@@ -4,7 +4,12 @@
       <img class="x2-2-3" :src="x22" alt="2 2" />
       <div class="overlap-group-8">
         <div class="date-3 valign-text-middle inter-normal-ship-gray-10px">{{ date || '2025.04.28' }}</div>
-        <div class="x-vol valign-text-middle inter-semi-bold-ship-gray-11px">{{ hotInformationVol324 }}</div>
+        <div
+          class="x-vol valign-text-middle inter-semi-bold-ship-gray-11px"
+          v-shrink-on-wrap="{ lines: 2, className: 'shrink-2lines' }"
+        >
+          {{ hotInformationVol324 }}
+        </div>
         <div class="viwe-more-3 valign-text-middle inter-normal-ship-gray-8px">Viwe More .</div>
       </div>
     </div>
@@ -12,9 +17,11 @@
 </template>
 
 <script>
+import shrinkOnWrap from '@/directives/shrinkOnWrap'
 export default {
   name: "Frame1321317475",
   props: ["x22", "hotInformationVol324", "date"],
+  directives: { shrinkOnWrap },
 };
 </script>
 
@@ -67,6 +74,11 @@ export default {
   letter-spacing: 0;
   line-height: 16.5px;
   width: 150px;
+}
+
+.x-vol.shrink-2lines {
+  font-size: 0.92em;
+  line-height: 1.25em;
 }
 
 .viwe-more-3 {

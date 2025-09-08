@@ -5,7 +5,12 @@
         <img class="x2-2-2" :src="x22" alt="2 2" />
         <div class="overlap-group-6">
           <div class="date-2 valign-text-middle inter-normal-ship-gray-15px">{{ date || '2025.04.28' }}</div>
-          <div class="text-8 valign-text-middle inter-semi-bold-ship-gray-16px">{{ title || '事業継承から描く九州の未来' }}</div>
+          <div
+            class="text-8 valign-text-middle inter-semi-bold-ship-gray-16px"
+            v-shrink-on-wrap="{ lines: 2, className: 'shrink-2lines' }"
+          >
+            {{ title || '事業継承から描く九州の未来' }}
+          </div>
           <div class="viwe-more-2 valign-text-middle inter-normal-ship-gray-10px">Viwe More .</div>
         </div>
       </div>
@@ -14,9 +19,11 @@
 </template>
 
 <script>
+import shrinkOnWrap from '@/directives/shrinkOnWrap'
 export default {
   name: "Frame1321317474",
   props: ["x22", "className", "date", "title"],
+  directives: { shrinkOnWrap },
   methods: {
     goToPublication() {
       // 刊行物ページに遷移
@@ -88,6 +95,12 @@ export default {
   word-wrap: break-word;
   overflow-wrap: break-word;
   font-size: 16px;
+}
+
+/* When the title wraps to 2+ lines, gently shrink */
+.text-8.shrink-2lines {
+  font-size: 0.92em; /* ~8% smaller */
+  line-height: 1.25em;
 }
 
 .viwe-more-2 {
