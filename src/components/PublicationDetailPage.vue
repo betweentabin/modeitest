@@ -68,7 +68,7 @@
         <!-- Download/Login Button -->
         <div class="login-section">
           <!-- Show notice for members-only when not logged in -->
-          <p v-if="!isAuthenticated && publication?.membersOnly" class="members-only-notice">会員登録が必要です</p>
+          <p v-if="shouldShowMembersNotice" class="members-only-notice">会員登録が必要です</p>
           <button class="login-btn" @click="handlePrimaryAction">
             <div class="text-44 valign-text-middle inter-bold-white-15px">{{ detailButtonText }}</div>
             <frame13213176122 />
@@ -148,14 +148,46 @@ export default {
     } catch(e) { /* noop */ }
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'canAccess']),
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '刊行物') || '刊行物' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はコチラ') || 'メンバー登録はコチラ' },
+    // 必要会員レベル（members_only=true かつ level未指定はstandardとみなす）
+    requiredLevel() {
+      if (!this.publication) return 'free'
+      const lvlRaw = this.publication.membership_level || this.publication.membershipLevel
+      const lvl = String(lvlRaw || '').toLowerCase()
+      const mo = this.publication.members_only
+      // 公開扱いの条件（EconomicStatisticsDetailと同じ思想）
+      // 1) membership_level が 'free'
+      // 2) members_only === false
+      // 3) membership_level 未設定（null/undefined/''）
+      if (!lvl || lvl === 'free' || mo === false) return 'free'
+      // それ以外は明示されたレベル、未設定なら standard
+      return lvl || 'standard'
+    },
+    // 経済調査統計の判定と合わせる: 公開かどうかだけでボタン表示を決める
+    // 実ダウンロード可否はAPI側に任せる
+    canDownloadByAccess() {
+      if (!this.publication) return false
+      const level = this.requiredLevel
+      // 一般公開（無料）は未ログインでもDLボタン表示
+      if (String(level).toLowerCase() === 'free') return true
+      // 有料（会員限定）はログインしていればDLボタン表示
+      return !!this.isAuthenticated
+    },
     detailButtonText() {
-      return this.isAuthenticated ? 'PDFダウンロード' : 'ログインする'
+      return this.canDownloadByAccess ? 'PDFダウンロード' : 'ログインする'
+    },
+    shouldShowMembersNotice() {
+      if (!this.publication) return false
+      const level = this.requiredLevel
+      // 無料公開は注意文を出さない
+      if (String(level).toLowerCase() === 'free') return false
+      // 有料公開で未ログインのとき注意文
+      return !this.isAuthenticated
     }
   },
   methods: {
@@ -167,7 +199,7 @@ export default {
         const response = await apiClient.getPublication(publicationId);
         
         if (response.success && response.data && response.data.publication) {
-          this.publication = this.formatPublicationData(response.data.publication);
+          this.publication = this.formatPublicationData(response.data.publication, { can_download: response.data.can_download });
         } else {
           // Fallback to mock data
           this.loadFallbackData();
@@ -210,11 +242,15 @@ export default {
        };
     },
     
-    formatPublicationData(publicationData) {
+    formatPublicationData(publicationData, meta = {}) {
       return {
         ...publicationData,
         isDownloadable: publicationData.is_downloadable || false,
-        membersOnly: publicationData.members_only || false
+        membersOnly: publicationData.members_only || false,
+        membershipLevel: publicationData.membership_level || (publicationData.members_only ? 'standard' : 'free'),
+        canDownload: typeof meta.can_download !== 'undefined'
+          ? !!meta.can_download
+          : !!(publicationData.is_downloadable && publicationData.file_url)
       };
     },
     
@@ -234,9 +270,13 @@ export default {
     },
     
     handlePrimaryAction() {
-      if (!this.isAuthenticated) {
+      if (!this.canDownloadByAccess) {
         const redirect = encodeURIComponent(this.$route.fullPath)
-        this.$router.push(`/member-login?redirect=${redirect}`)
+        if (!this.isAuthenticated) {
+          this.$router.push(`/member-login?redirect=${redirect}`)
+        } else {
+          this.$router.push('/membership')
+        }
         return
       }
       if (this.publication?.id) {
