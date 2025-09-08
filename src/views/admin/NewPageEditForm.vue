@@ -1260,6 +1260,18 @@ export default {
       this.successMessage = ''
 
       try {
+        // In live-preview mode, ask iframe to save all inline edits first
+        if (this.contentMode === 'live') {
+          try {
+            const frame = this.$refs.liveFrame
+            if (frame && frame.contentWindow) {
+              frame.contentWindow.postMessage({ type: 'cms-save-all' }, '*')
+              // Give a moment for inline PUTs to complete before our own save
+              await new Promise(res => setTimeout(res, 500))
+            }
+          } catch (_) { /* noop */ }
+        }
+
         // Fieldsモードの長文ガード（ソフト）
         if (this.contentMode === 'fields') {
           const warns = this.collectTextWarnings()

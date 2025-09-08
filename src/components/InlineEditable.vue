@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useEditMode } from '@/composables/useEditMode'
 import { useAdminAuth } from '@/composables/useAdminAuth'
 import usePageText from '@/composables/usePageText'
@@ -81,9 +81,26 @@ export default {
       error.value = ''
     }
 
+    let msgHandler = null
     onMounted(async () => {
       try { await pageText.load() } catch (_) {}
       syncFromDisplay()
+
+      // Listen for parent admin request to save all dirty fields from live preview
+      msgHandler = (ev) => {
+        const data = ev?.data || {}
+        if (data && data.type === 'cms-save-all') {
+          if (isEditing.value && dirty.value && !saving.value) {
+            save()
+          }
+        }
+      }
+      try { window.addEventListener('message', msgHandler) } catch (_) {}
+    })
+
+    onBeforeUnmount(() => {
+      try { if (msgHandler) window.removeEventListener('message', msgHandler) } catch (_) {}
+      msgHandler = null
     })
 
     watch(() => cmsValue.value, () => {
