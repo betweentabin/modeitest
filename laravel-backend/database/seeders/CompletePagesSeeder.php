@@ -481,7 +481,12 @@ class CompletePagesSeeder extends Seeder
                         'hero_seminars_current' => '/img/hero-image.png',
                         'hero_financial_reports' => '/img/hero-image.png',
                         'hero_sitemap' => '/img/hero-image.png',
-                        'hero_consulting' => '/img/hero-image.png'
+                        'hero_consulting' => '/img/hero-image.png',
+                        // 追加: 実装で使用しているが登録が漏れていたキー
+                        'hero_news' => '/img/hero-image.png',
+                        'hero_faq' => '/img/hero-image.png',
+                        'hero_about_institute' => '/img/hero-image.png',
+                        'hero_seminar' => '/img/hero-image.png'
                         ,
                         // その他のセクション背景など
                         'contact_section_bg' => '/img/-----1-1.png'

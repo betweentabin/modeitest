@@ -85,10 +85,11 @@ export function usePageText(pageKey) {
       let res
       if (isPreview && adminToken) {
         // Use admin endpoint for preview to bypass is_published filter
-        res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true })
+        // Add cache-buster to avoid any intermediate caching returning stale data
+        res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
       } else {
         // Public endpoint for normal visitors
-        res = await apiClient.getPageContent(pageKey)
+        res = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
       }
 
       // Accept both wrapped and direct payload shapes

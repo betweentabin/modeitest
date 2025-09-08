@@ -59,7 +59,7 @@ export default {
       try {
         const token = localStorage.getItem('admin_token')
         if (token) {
-          const res = await apiClient.get(`/api/admin/pages/${this.pageKey}`, { silent: true })
+          const res = await apiClient.get(`/api/admin/pages/${this.pageKey}`, { silent: true, params: { _t: Date.now() } })
           const html = pickHtml(res)
           if (typeof html === 'string' && html.trim().length) this.html = html
         }

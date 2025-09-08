@@ -1,5 +1,6 @@
 import { reactive, toRefs } from 'vue'
 import apiClient from '@/services/apiClient'
+import { resolveMediaUrl } from '@/utils/url.js'
 
 const state = reactive({
   loaded: false,
@@ -12,45 +13,57 @@ async function loadMedia() {
   if (state.loaded || state.loading) return
   state.loading = true
   state.error = null
-  try {
-    // 1) Prefer admin endpoint if available (works for unpublished drafts too)
-    const adminRes = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
-    if (adminRes && (adminRes.data || adminRes.page)) {
-      const d = adminRes.data || adminRes
-      const page = d?.page || d
-      const images = page?.content?.images || {}
-      state.images = images || {}
-      state.loaded = true
-      return
+
+  // Helper: normalize/resolve URLs in the map
+  const normalize = (images) => {
+    const out = {}
+    if (images && typeof images === 'object') {
+      for (const [k, v] of Object.entries(images)) {
+        out[k] = resolveMediaUrl(typeof v === 'string' ? v : (v?.url || ''))
+      }
     }
-  } catch(e) {
-    // ignore, fallback to public/local
+    return out
   }
 
   try {
-    // 2) Public endpoint (requires published page)
+    // 1) If admin session exists, fetch the media page through admin API
+    // This returns the actual page object including unpublished changes
+    const adminPage = await apiClient.get('/api/admin/pages/media', { silent: true })
+    const page = adminPage?.data?.page || adminPage?.data?.data?.page || adminPage?.page
+    const images = page?.content?.images || null
+    if (images) {
+      state.images = normalize(images)
+      state.loaded = true
+      return
+    }
+  } catch (e) {
+    // ignore and try public endpoint
+  }
+
+  try {
+    // 2) Public endpoint (published media page)
     const res = await apiClient.get('/api/public/pages/media', { silent: true })
     const page = res?.data?.page || res?.data?.data?.page
     const images = page?.content?.images || null
     if (images) {
-      state.images = images
+      state.images = normalize(images)
       state.loaded = true
       return
     }
     throw new Error('media page not found')
   } catch (e) {
-    // 3) Fallback: try localStorage mock
+    // 3) Fallback: local mock or built-in defaults
     try {
       const str = localStorage.getItem('cms_mock_data')
       const json = str ? JSON.parse(str) : null
       const images = json?.media?.images || null
       if (images) {
-        state.images = images
+        state.images = normalize(images)
         state.loaded = true
         return
       }
       // Built-in defaults
-      state.images = {
+      state.images = normalize({
         hero_economic_indicators: '/img/hero-image.png',
         hero_economic_statistics: '/img/hero-image.png',
         hero_publications: '/img/hero-image.png',
@@ -67,7 +80,7 @@ async function loadMedia() {
         hero_consulting: '/img/hero-image.png',
         // Other common section backgrounds
         contact_section_bg: '/img/-----1-1.png',
-      }
+      })
       state.loaded = true
     } catch (err) {
       state.error = err?.message || 'Failed to load media registry'
@@ -81,7 +94,7 @@ export function useMedia() {
   const ensure = () => loadMedia()
   const getImage = (key, fallback = '') => {
     const v = state.images?.[key]
-    return typeof v === 'string' && v.length ? v : fallback
+    return typeof v === 'string' && v.length ? v : resolveMediaUrl(fallback)
   }
   return {
     ...toRefs(state),

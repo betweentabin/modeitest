@@ -358,6 +358,43 @@ class PageContentController extends Controller
         } catch (\Throwable $e) {}
 
         // URL正規化
+        // 追加: コード上で使用しているが media レジストリに未登録の Hero キーを補完
+        try {
+            $heroKeys = [
+                'hero_economic_indicators', 'hero_economic_statistics', 'hero_publications',
+                'hero_company_profile', 'hero_privacy', 'hero_terms', 'hero_transaction_law',
+                'hero_contact', 'hero_glossary', 'hero_membership', 'hero_seminars_current',
+                'hero_financial_reports', 'hero_sitemap', 'hero_consulting',
+                // 追加分（使用中だがSeederで漏れがち）
+                'hero_news', 'hero_faq', 'hero_about_institute', 'hero_seminar',
+            ];
+            $hasItem = function($k) use ($items) {
+                foreach ($items as $it) {
+                    if (($it['page_key'] ?? '') === 'media' && ($it['key'] ?? '') === $k) return true;
+                }
+                return false;
+            };
+            $mediaPage = null;
+            foreach ($pages as $p) { if ($p->page_key === 'media') { $mediaPage = $p; break; } }
+            foreach ($heroKeys as $k) {
+                if (!$hasItem($k)) {
+                    $items[] = [
+                        'page_key' => 'media',
+                        'model' => 'page_content',
+                        'id' => $mediaPage?->id,
+                        'key' => $k,
+                        'url' => '/img/hero-image.png',
+                        'path' => null,
+                        'filename' => null,
+                        // JSON レジストリとして扱い、置換時は replace-image を使う
+                        'source' => 'json',
+                        'updated_at' => $mediaPage?->updated_at,
+                    ];
+                }
+            }
+        } catch (\Throwable $e) { /* noop */ }
+
+        // URL正規化
         foreach ($items as &$it) {
             $u = (string)($it['url'] ?? '');
             if ($u === '') continue;
