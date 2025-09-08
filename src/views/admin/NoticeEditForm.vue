@@ -11,8 +11,37 @@
         </div>
         <div class="header-actions">
           <button @click="handleLogout" class="logout-btn">ログアウト</button>
-        </div>
-      </div>
+            </div>
+          </div>
+
+          <!-- 画像設定 -->
+          <div class="form-section">
+            <h3 class="section-title">画像設定</h3>
+
+            <div class="form-group">
+              <label for="featured_image" class="form-label">
+                お知らせ画像（サムネイル）
+              </label>
+              <div v-if="formData.featured_image" class="image-preview-container">
+                <img :src="formData.featured_image" alt="お知らせ画像" class="image-preview" />
+                <button type="button" @click="removeImage" class="remove-image-btn">画像を削除</button>
+              </div>
+              <div class="image-upload-container">
+                <input
+                  id="featured_image"
+                  type="file"
+                  @change="handleImageUpload"
+                  accept="image/*"
+                  class="file-input"
+                  ref="imageInput"
+                />
+                <label for="featured_image" class="file-input-label">
+                  画像を選択
+                </label>
+              </div>
+              <p class="form-help">推奨サイズ: 800×450px（16:9）、最大5MB</p>
+            </div>
+          </div>
 
       <!-- フォームコンテナ -->
       <div class="form-container">
@@ -258,7 +287,8 @@ export default {
         send_notification: false,
         is_published: false,
         link_url: '',
-        link_text: ''
+        link_text: '',
+        featured_image: ''
       },
       loading: false,
       submitLoading: false,
@@ -308,7 +338,8 @@ export default {
             category: data.category || 'notice',
             publish_date: (data.published_at || '').split('T')[0] || '',
             is_pinned: !!data.is_featured,
-            is_published: !!data.is_published
+            is_published: !!data.is_published,
+            featured_image: data.featured_image || ''
           }
         } else {
           throw new Error('Notice not found')
@@ -356,6 +387,40 @@ export default {
         console.error(err)
       } finally {
         this.submitLoading = false
+      }
+    },
+    async handleImageUpload(event) {
+      const file = event.target.files[0]
+      if (!file) return
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('画像ファイルは5MB以下にしてください')
+        return
+      }
+      if (!file.type.startsWith('image/')) {
+        alert('画像ファイルを選択してください')
+        return
+      }
+
+      try {
+        const form = new FormData()
+        form.append('file', file)
+        form.append('directory', 'public/media/notices')
+        const res = await apiClient.upload('/api/admin/media/upload', form)
+        if (!res || res.success === false || !res.file?.url) {
+          const msg = res?.error || res?.message || 'アップロードに失敗しました'
+          throw new Error(msg)
+        }
+        this.formData.featured_image = res.file.url
+      } catch (e) {
+        console.error('Image upload failed:', e)
+        alert('画像のアップロードに失敗しました')
+      }
+    },
+    removeImage() {
+      this.formData.featured_image = ''
+      if (this.$refs.imageInput) {
+        this.$refs.imageInput.value = ''
       }
     },
     goBack() {
@@ -630,6 +695,40 @@ export default {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* 画像アップロード UI */
+.image-preview-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.image-preview {
+  width: 200px;
+  height: auto;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+}
+.remove-image-btn {
+  background: #fff;
+  color: #da5761;
+  border: 1px solid #da5761;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.remove-image-btn:hover { background: #da5761; color: #fff; }
+.image-upload-container { display: flex; align-items: center; gap: 12px; }
+.file-input { display: none; }
+.file-input-label {
+  background-color: #1A1A1A;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+}
+.help-text { font-size: 12px; color: #666; margin-top: 8px; }
 
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
