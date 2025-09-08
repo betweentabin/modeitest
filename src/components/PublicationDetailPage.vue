@@ -168,26 +168,24 @@ export default {
       // それ以外は明示されたレベル、未設定なら standard
       return lvl || 'standard'
     },
-    // 経済調査統計の判定と合わせる: 公開かどうかだけでボタン表示を決める
-    // 実ダウンロード可否はAPI側に任せる
+    // 会員レベルに基づくダウンロード可否
+    // ・free: だれでも可
+    // ・standard/premium: 現在の会員レベルが必要レベル以上の場合のみ可
     canDownloadByAccess() {
       if (!this.publication) return false
-      const level = this.requiredLevel
-      // 一般公開（無料）は未ログインでもDLボタン表示
-      if (String(level).toLowerCase() === 'free') return true
-      // 有料（会員限定）はログインしていればDLボタン表示
-      return !!this.isAuthenticated
+      const level = String(this.requiredLevel).toLowerCase()
+      if (level === 'free') return true
+      return this.canAccess(level)
     },
     detailButtonText() {
       return this.canDownloadByAccess ? 'PDFダウンロード' : 'ログインする'
     },
     shouldShowMembersNotice() {
       if (!this.publication) return false
-      const level = this.requiredLevel
-      // 無料公開は注意文を出さない
-      if (String(level).toLowerCase() === 'free') return false
-      // 有料公開で未ログインのとき注意文
-      return !this.isAuthenticated
+      const level = String(this.requiredLevel).toLowerCase()
+      if (level === 'free') return false
+      // 必要レベルを満たしていない（未ログイン含む）場合に注意文
+      return !this.canAccess(level)
     }
   },
   methods: {
