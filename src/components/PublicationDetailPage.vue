@@ -157,9 +157,16 @@ export default {
     // 必要会員レベル（members_only=true かつ level未指定はstandardとみなす）
     requiredLevel() {
       if (!this.publication) return 'free'
-      const lvl = this.publication.membership_level || this.publication.membershipLevel
-      if (lvl) return lvl
-      return this.publication.membersOnly ? 'standard' : 'free'
+      const lvlRaw = this.publication.membership_level || this.publication.membershipLevel
+      const lvl = String(lvlRaw || '').toLowerCase()
+      const mo = this.publication.members_only
+      // 公開扱いの条件（EconomicStatisticsDetailと同じ思想）
+      // 1) membership_level が 'free'
+      // 2) members_only === false
+      // 3) membership_level 未設定（null/undefined/''）
+      if (!lvl || lvl === 'free' || mo === false) return 'free'
+      // それ以外は明示されたレベル、未設定なら standard
+      return lvl || 'standard'
     },
     // 経済調査統計の判定と合わせる: 公開かどうかだけでボタン表示を決める
     // 実ダウンロード可否はAPI側に任せる
