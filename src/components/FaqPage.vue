@@ -254,15 +254,20 @@ export default {
       this._pageText = usePageText('faq')
       this._pageText.load().then(() => {
         try {
-          const page = this._pageText?.page?.value
+          // toRefsを使用しているため、.valueは不要
+          const page = this._pageText?.page
           const list = page?.content?.faqs
           if (Array.isArray(list) && list.length) {
             this.faqs = list
           }
           this.ensureFaqIds()
-        } catch(_) {}
+        } catch(e) { 
+          console.error('Error loading FAQ data:', e)
+        }
       })
-    } catch(e) { /* noop */ }
+    } catch(e) { 
+      console.error('Error initializing FAQ page:', e)
+    }
   },
   methods: {
     _label(id, fallback) {
