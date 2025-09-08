@@ -81,7 +81,17 @@
                   <span v-for="tag in item.tags" :key="tag" class="tag">{{ tag }}</span>
                 </div>
                 <div class="answer-text">
-                  <CmsText pageKey="faq" :fieldKey="`faq_a_${item._id}`" tag="div" type="html" :fallback="item.answer" />
+                  <!-- CMSに有効な回答があればCmsTextを使い、なければローカル既定のHTMLを表示 -->
+                  <CmsText 
+                    v-if="hasCmsAnswer(item)"
+                    pageKey="faq" 
+                    :fieldKey="`faq_a_${item._id}`" 
+                    tag="div" 
+                    type="html" 
+                    :fallback="item.answer"
+                    :allowEmpty="false"
+                  />
+                  <div v-else v-html="item.answer"></div>
                 </div>
                 </div>
             </div>
@@ -279,6 +289,13 @@ export default {
   methods: {
     _label(id, fallback) {
       try { return this._pageText?.getText(`cat_${id}`, fallback) || fallback } catch(_) { return fallback }
+    },
+    hasCmsAnswer(item) {
+      try {
+        if (!this._pageText) return false
+        const html = this._pageText.getHtml(`faq_a_${item._id}`, '', { allowEmpty: true }) || ''
+        return String(html).replace(/[\s\u00A0]/g, '').length > 0
+      } catch(_) { return false }
     },
     applyCmsFaqs(list) {
       // CMSのfaqsをローカルのデフォルトとマージして不足項目を補完
