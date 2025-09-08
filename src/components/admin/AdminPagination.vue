@@ -11,14 +11,15 @@
       @click="goTo(page - 1)"
     >前へ</button>
 
-    <template v-for="item in items" :key="item.key">
+    <template v-for="item in items">
       <button
         v-if="item.type === 'page'"
+        :key="item.key"
         class="page-number"
         :class="{ active: item.value === page }"
         @click="goTo(item.value)"
       >{{ item.value }}</button>
-      <span v-else class="page-dots">…</span>
+      <span v-else :key="item.key" class="page-dots">…</span>
     </template>
 
     <button

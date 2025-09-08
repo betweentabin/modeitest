@@ -51,7 +51,7 @@ export default {
     // Fallback image path
     backgroundImage: {
       type: String,
-      default: '/img/-----1-1.png'
+      default: '/img/Image_fx1.jpg'
     },
     // Optional: page-specific override key. When omitted, falls back to 'site'
     cmsPageKey: {

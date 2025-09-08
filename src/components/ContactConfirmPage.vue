@@ -99,6 +99,13 @@
                      <!-- Action Buttons -->
            <div class="action-section">
              <div class="action-buttons">
+               <button type="button" class="back-btn" @click="goBack">
+                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
+                   <path d="M5.9698 12.4415L10.4419 17.0412C10.5351 17.1371 10.6616 17.191 10.7934 17.191C10.9253 17.191 11.0518 17.1371 11.145 17.0412C11.2382 16.9453 11.2906 16.8152 11.2906 16.6796C11.2906 16.544 11.2382 16.4139 11.145 16.318L7.5207 12.5909L17.2531 12.5909C17.3849 12.5909 17.5113 12.5371 17.6045 12.4413C17.6977 12.3454 17.75 12.2154 17.75 12.0799C17.75 11.9443 17.6977 11.8143 17.6045 11.7185C17.5113 11.6226 17.3849 11.5688 17.2531 11.5688L7.5207 11.5688L11.145 7.84171C11.2382 7.74581 11.2906 7.61574 11.2906 7.48012C11.2906 7.34449 11.2382 7.21443 11.145 7.11853C11.0518 7.02263 10.9253 6.96875 10.7934 6.96875C10.6616 6.96875 10.5351 7.02263 10.4419 7.11853L5.9698 11.7183C5.9236 11.7657 5.887 11.8221 5.862 11.8841C5.8369 11.9462 5.8241 12.0127 5.8241 12.0799C5.8241 12.147 5.8369 12.2135 5.862 12.2756C5.887 12.3376 5.9236 12.394 5.9698 12.4415Z" fill="#1A1A1A"/>
+                 </svg>
+                 戻る
+               </button>
                <button type="button" class="submit-btn" @click="submitForm">
                  送信する
                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -178,6 +185,11 @@ export default {
     }
   },
   methods: {
+    goBack() {
+      // フォームデータをURLパラメータで渡して入力ページに戻る
+      const formDataParam = encodeURIComponent(JSON.stringify(this.formData));
+      this.$router.push(`/contact?formData=${formDataParam}`);
+    },
     getSubjectText(value) {
       const subjects = {
         'inquiry': 'サービスに関するお問い合わせ',
@@ -442,6 +454,29 @@ export default {
 
 
 
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 200px;
+  padding: 20px 40px;
+  border-radius: 15px;
+  background: #F8F8F8;
+  color: #1A1A1A;
+  border: 2px solid #E0E0E0;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #E8E8E8;
+  border-color: #D0D0D0;
+}
+
  .submit-btn {
    display: flex;
    align-items: center;
@@ -559,6 +594,12 @@ export default {
     font-size: 18px !important;
   }
 
+  .back-btn {
+    font-size: 18px !important;
+    width: 180px !important;
+    padding: 18px 35px !important;
+  }
+
   .submit-btn {
     font-size: 20px !important;
     width: 450px !important;
@@ -610,6 +651,12 @@ export default {
 
   .confirm-value {
     font-size: 17px !important;
+  }
+
+  .back-btn {
+    font-size: 16px !important;
+    width: 160px !important;
+    padding: 16px 30px !important;
   }
 
   .submit-btn {
@@ -676,6 +723,12 @@ export default {
     gap: 20px !important;
   }
   
+  .back-btn {
+    width: 100% !important;
+    font-size: 16px !important;
+    padding: 15px 30px !important;
+  }
+
   .submit-btn {
     width: 100% !important;
     font-size: 17px !important;
@@ -727,6 +780,13 @@ export default {
   .confirm-value {
     font-size: 13px !important;
     padding: 12px !important;
+  }
+
+  .back-btn {
+    font-size: 14px !important;
+    width: 100% !important;
+    padding: 12px 20px !important;
+    border-radius: 12px !important;
   }
 
   .submit-btn {
