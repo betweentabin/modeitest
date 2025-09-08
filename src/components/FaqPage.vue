@@ -257,29 +257,41 @@ export default {
           const page = this._pageText?.page?.value
           const list = page?.content?.faqs
           if (Array.isArray(list) && list.length) {
-            // CMSのfaqsをローカルのデフォルトとマージして不足項目を補完
-            const base = Array.isArray(this.faqs) ? this.faqs : []
-            const merged = list.map((it, idx) => {
-              const baseIt = (typeof base[idx] === 'object' && base[idx]) ? base[idx] : {}
-              const next = { ...baseIt, ...(typeof it === 'object' ? it : {}) }
-              // answerが欠落/空の場合はデフォルトのanswerで補完
-              if (!next.answer && baseIt.answer) next.answer = baseIt.answer
-              // tagsが欠落の場合は空配列に
-              if (!Array.isArray(next.tags)) next.tags = Array.isArray(baseIt.tags) ? baseIt.tags : []
-              // categoryが欠落の場合はデフォルトを採用
-              if (!next.category && baseIt.category) next.category = baseIt.category
-              return next
-            })
-            this.faqs = merged
+            this.applyCmsFaqs(list)
           }
           this.ensureFaqIds()
         } catch(_) {}
       })
     } catch(e) { /* noop */ }
   },
+  watch: {
+    // CMSのページデータが再取得・更新されたら、faqsを同期して再描画
+    _pageRef(newPage) {
+      try {
+        const list = newPage?.content?.faqs
+        if (Array.isArray(list) && list.length) {
+          this.applyCmsFaqs(list)
+          this.ensureFaqIds()
+        }
+      } catch(_) {}
+    }
+  },
   methods: {
     _label(id, fallback) {
       try { return this._pageText?.getText(`cat_${id}`, fallback) || fallback } catch(_) { return fallback }
+    },
+    applyCmsFaqs(list) {
+      // CMSのfaqsをローカルのデフォルトとマージして不足項目を補完
+      const base = Array.isArray(this.faqs) ? this.faqs : []
+      const merged = list.map((it, idx) => {
+        const baseIt = (typeof base[idx] === 'object' && base[idx]) ? base[idx] : {}
+        const next = { ...baseIt, ...(typeof it === 'object' ? it : {}) }
+        if (!next.answer && baseIt.answer) next.answer = baseIt.answer
+        if (!Array.isArray(next.tags)) next.tags = Array.isArray(baseIt.tags) ? baseIt.tags : []
+        if (!next.category && baseIt.category) next.category = baseIt.category
+        return next
+      })
+      this.faqs = merged
     },
     ensureFaqIds() {
       // 安定したキーで保存できるよう、各FAQに連番の _id を付与（既存のundefined/nullで上書きしない）
