@@ -123,9 +123,19 @@ export function usePageText(pageKey) {
     if ((raw === undefined || raw === null || raw === '') && typeof page?.content?.html === 'string') {
       raw = page.content.html
     }
-    const chosen = allowEmpty ? (typeof raw === 'string' ? raw : fallback)
-                              : ((typeof raw === 'string' && raw.length > 0) ? raw : fallback)
-    return sanitizeHtml(chosen)
+
+    // 文字列でない場合は即フォールバック
+    const primary = (typeof raw === 'string' && raw.trim().length > 0) ? raw : fallback
+    let sanitized = sanitizeHtml(primary)
+
+    // 許容しない場合、サニタイズ後に実質空ならフォールバックを使用
+    if (!allowEmpty) {
+      const isEffectivelyEmpty = (typeof sanitized === 'string') && sanitized.replace(/[\s\u00A0]/g, '').length === 0
+      if (isEffectivelyEmpty) {
+        sanitized = sanitizeHtml(typeof fallback === 'string' ? fallback : '')
+      }
+    }
+    return sanitized
   }
 
   const getLink = (key, fallback = '', options = {}) => {
