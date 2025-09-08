@@ -176,9 +176,10 @@ export default {
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
   },
   mounted() {
+    // Load CMS page text once
     try { this._pageText = usePageText(this.pageKey); this._pageText.load() } catch (_) {}
-  },
-  mounted() {
+
+    // Layout adjustments
     this.adjustRectangleHeight();
     this.adjustAboutImageHeight();
     this.adjustServiceImageHeight();

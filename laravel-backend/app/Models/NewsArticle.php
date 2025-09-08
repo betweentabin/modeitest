@@ -17,6 +17,7 @@ class NewsArticle extends Model
         'content',
         'author',
         'category',
+        'type',
         'tags',
         'featured_image',
         'view_count',
@@ -59,6 +60,11 @@ class NewsArticle extends Model
     public function scopeByCategory($query, $category)
     {
         return $query->where('category', $category);
+    }
+
+    public function scopeByType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 
     public function scopeRecent($query, $limit = 10)

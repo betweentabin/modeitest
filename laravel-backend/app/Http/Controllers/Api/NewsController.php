@@ -11,7 +11,8 @@ class NewsController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = NewsArticle::published();
+        // 一般ニュースのみ抽出
+        $query = NewsArticle::published()->where('type', 'news');
 
         if ($request->has('category')) {
             $query->byCategory($request->category);
@@ -38,7 +39,7 @@ class NewsController extends Controller
 
     public function show($slug): JsonResponse
     {
-        $article = NewsArticle::published()
+        $article = NewsArticle::published()->where('type', 'news')
             ->where('slug', $slug)
             ->firstOrFail();
         
@@ -49,7 +50,7 @@ class NewsController extends Controller
 
     public function categories(): JsonResponse
     {
-        $categories = NewsArticle::published()
+        $categories = NewsArticle::published()->where('type', 'news')
             ->distinct()
             ->pluck('category')
             ->sort()
@@ -60,7 +61,7 @@ class NewsController extends Controller
 
     public function featured(): JsonResponse
     {
-        $articles = NewsArticle::published()
+        $articles = NewsArticle::published()->where('type', 'news')
             ->featured()
             ->recent(6)
             ->get();
@@ -70,11 +71,11 @@ class NewsController extends Controller
 
     public function related($slug): JsonResponse
     {
-        $article = NewsArticle::published()
+        $article = NewsArticle::published()->where('type', 'news')
             ->where('slug', $slug)
             ->firstOrFail();
         
-        $related = NewsArticle::published()
+        $related = NewsArticle::published()->where('type', 'news')
             ->where('id', '!=', $article->id)
             ->where('category', $article->category)
             ->recent(4)
@@ -85,7 +86,7 @@ class NewsController extends Controller
 
     public function popular(): JsonResponse
     {
-        $articles = NewsArticle::published()
+        $articles = NewsArticle::published()->where('type', 'news')
             ->orderBy('view_count', 'desc')
             ->limit(10)
             ->get();

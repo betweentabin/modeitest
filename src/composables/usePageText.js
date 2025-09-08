@@ -17,8 +17,12 @@ function sanitizeHtml(input = '') {
   html = html.replace(/\son[a-z]+\s*=\s*'[^']*'/gi, '')
   html = html.replace(/\son[a-z]+\s*=\s*[^\s>]+/gi, '')
 
-  // Allowlist tags and prune others by escaping angle brackets for non-allowed
-  const allowedTags = ['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'ul', 'ol', 'li', 'a']
+  // Allowlist tags and prune others
+  // Expanded to reflect common CMS content while staying safe
+  const allowedTags = [
+    'b','strong','i','em','u','br','p','ul','ol','li','a',
+    'h1','h2','h3','h4','h5','h6','div','span','blockquote','code','pre','hr','section','header','footer'
+  ]
 
   // Replace disallowed tags with their text content (strip tags)
   html = html.replace(/<\/?([a-z0-9-]+)([^>]*)>/gi, (match, tag, attrs) => {
