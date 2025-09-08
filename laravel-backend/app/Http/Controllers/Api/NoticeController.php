@@ -86,9 +86,10 @@ class NoticeController extends Controller
 
         $notice = NewsArticle::create([
             'title' => $request->title,
-            'slug' => Str::slug($request->title),
+            'slug' => $this->generateUniqueSlug($request->title),
             'content' => $request->content,
             'summary' => $request->summary,
+            // 強制的に notice カテゴリとして保存
             'category' => 'notice',
             'is_published' => $request->status === 'published',
             'published_at' => $request->published_at ?? ($request->status === 'published' ? now() : null),
@@ -100,6 +101,29 @@ class NoticeController extends Controller
             'message' => 'お知らせを作成しました',
             'notice' => $notice
         ], 201);
+    }
+
+    /**
+     * タイトルからユニークなスラッグを生成
+     */
+    private function generateUniqueSlug(string $title): string
+    {
+        $base = Str::slug($title);
+
+        // 日本語などで slug が空になる場合のフォールバック
+        if (empty($base)) {
+            $base = 'notice';
+        }
+
+        $slug = $base;
+        $suffix = 2;
+
+        while (\App\Models\NewsArticle::where('slug', $slug)->exists()) {
+            $slug = $base . '-' . $suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 
     /**

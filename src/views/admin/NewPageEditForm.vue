@@ -1054,7 +1054,8 @@ export default {
 
       try {
         // 管理APIから取得（未公開でも取得可能）
-        const res = await apiClient.request('GET', `/api/admin/pages/${this.pageKey}`, null, { silent: true })
+        // Add cache-buster to avoid stale admin GET after updates
+        const res = await apiClient.request('GET', `/api/admin/pages/${this.pageKey}`, null, { silent: true, params: { _t: Date.now() } })
         const body = res?.data || res
         const page = body?.page || body?.data?.page || body
         if (!page) throw new Error('no page data')
@@ -1271,9 +1272,21 @@ export default {
           }
         }
         // コンテンツのモードに応じて content を設定
-        if (this.contentMode === 'html' || this.contentMode === 'wysiwyg' || this.contentMode === 'inline') {
+        if (this.contentMode === 'html' || this.contentMode === 'wysiwyg' || this.contentMode === 'inline' || this.contentMode === 'live') {
           // フルHTML本文として保存。互換性のため単体 'html' と 'htmls.body' 両方に格納
-          const html = this.contentHtml || ''
+          // liveモードでは直近のプレビューHTMLを優先して保存
+          let html = this.contentHtml || ''
+          if (this.contentMode === 'live') {
+            try {
+              const previewKey = `cms_preview_${this.pageKey}`
+              const stored = localStorage.getItem(previewKey)
+              if (stored && typeof stored === 'string') html = stored
+              if (!html) {
+                // fallback: 推定可能なHTMLを抽出
+                html = this.extractHtmlFromContent()
+              }
+            } catch (_) { /* noop */ }
+          }
           let base = {}
           try { base = this.contentJson ? JSON.parse(this.contentJson) : {} } catch(e) { base = {} }
           const htmls = { ...(base.htmls || {}) }
