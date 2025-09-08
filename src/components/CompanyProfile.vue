@@ -172,69 +172,7 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- About Research Institute Section -->
-    <section class="about-institute-section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <CmsText pageKey="company-profile" fieldKey="about_institute_title" tag="span" :fallback="'ちくぎん地域経済研究所について'" />
-        </h2>
-        <div class="section-divider">
-          <div class="divider-line"></div>
-          <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="about_institute_subtitle" tag="span" :fallback="'about research institute'" />
-          </span>
-          <div class="divider-line"></div>
-        </div>
-      </div>
-      <div class="about-institute-content">
-        <div class="about-institute-text">
-          <CmsText pageKey="company-profile" fieldKey="about_institute_description" tag="div" type="html" :fallback="aboutInstituteDescription" />
-        </div>
-        <div class="about-institute-features">
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="/img/vector-13.svg" alt="調査研究" />
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">
-                <CmsText pageKey="company-profile" fieldKey="feature_research_title" tag="span" :fallback="'地域経済の調査・研究'" />
-              </h3>
-              <p class="feature-description">
-                <CmsText pageKey="company-profile" fieldKey="feature_research_description" tag="span" :fallback="'地域に根差した経済・産業の調査・研究を通じて、地域の発展に貢献します。'" />
-              </p>
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="/img/vector-15-1.svg" alt="サポート" />
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">
-                <CmsText pageKey="company-profile" fieldKey="feature_support_title" tag="span" :fallback="'企業・機関のサポート'" />
-              </h3>
-              <p class="feature-description">
-                <CmsText pageKey="company-profile" fieldKey="feature_support_description" tag="span" :fallback="'地域経済を担う企業・医療・農業・学術研究活動のサポートを行います。'" />
-              </p>
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="/img/vector-11.svg" alt="人材育成" />
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">
-                <CmsText pageKey="company-profile" fieldKey="feature_human_title" tag="span" :fallback="'人材育成'" />
-              </h3>
-              <p class="feature-description">
-                <CmsText pageKey="company-profile" fieldKey="feature_human_description" tag="span" :fallback="'未来を支える「人」づくりに取り組み、地域の持続的発展を支援します。'" />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </section>    
 
     <!-- History Section -->
     <section class="history-section">
