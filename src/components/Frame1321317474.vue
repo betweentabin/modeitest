@@ -99,8 +99,9 @@ export default {
 
 /* When the title wraps to 2+ lines, gently shrink */
 .text-8.shrink-2lines {
-  font-size: 0.92em; /* ~8% smaller */
-  line-height: 1.25em;
+  height: auto;            /* allow 2 lines without overlap */
+  line-height: 1.15em;     /* tighter line spacing on wrap */
+  font-size: 0.98em;       /* keep size nearly same */
 }
 
 .viwe-more-2 {
