@@ -72,14 +72,15 @@ export default {
 .x-vol {
   height: 17px;
   letter-spacing: 0;
-  line-height: 16.5px;
+  line-height: 12px;
   width: 150px;
+  font-size: 9px; /* override global 11px */
 }
 
 .x-vol.shrink-2lines {
   height: auto;
-  line-height: 1.15em;
-  font-size: 0.9em;  /* slightly smaller when wrapping */
+  line-height: 1.2em;
+  font-size: 9px;  /* keep at 9px when wrapping */
 }
 
 .viwe-more-3 {
