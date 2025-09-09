@@ -71,6 +71,9 @@
     
     <div class="frame-1321317524-1">
       <div class="frame-container-1">
+        <router-link to="/glossary" class="footer-link">
+          <frame13213175223 :text29="'用語集'" />
+        </router-link>
         <router-link to="/member-login" class="footer-link">
           <frame13213175223 :text29="frame132131752231Props.text29" />
         </router-link>
