@@ -49,16 +49,19 @@
                 <ul class="link-list">
                   <li>
                     <router-link to="/" class="sitemap-link">
+                      <Frame13213176122 class="arrow-red" />
                       <CmsText pageKey="sitemap" fieldKey="link_home" tag="span" :fallback="'トップページ'" />
                     </router-link>
                   </li>
                   <li>
                     <router-link to="/company" class="sitemap-link">
+                      <Frame13213176122 class="arrow-red" />
                       <CmsText pageKey="sitemap" fieldKey="link_company" tag="span" :fallback="'会社概要'" />
                     </router-link>
                   </li>
                   <li>
                     <router-link to="/aboutus" class="sitemap-link">
+                      <Frame13213176122 class="arrow-red" />
                       <CmsText pageKey="sitemap" fieldKey="link_about" tag="span" :fallback="'研究所について'" />
                     </router-link>
                   </li>
@@ -70,11 +73,11 @@
                   <CmsText pageKey="sitemap" fieldKey="cat_services" tag="span" :fallback="'サービス'" />
                 </h4>
                 <ul class="link-list">
-                  <li><router-link to="/seminar" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_seminar" tag="span" :fallback="'セミナー'" /></router-link></li>
-                  <li><router-link to="/publication" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_publications" tag="span" :fallback="'刊行物'" /></router-link></li>
-                  <li><router-link to="/consulting" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_consulting" tag="span" :fallback="'経営コンサルティング'" /></router-link></li>
-                  <li><router-link to="/research" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_research" tag="span" :fallback="'調査・研究'" /></router-link></li>
-                  <li><router-link to="/training" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_training" tag="span" :fallback="'人材育成'" /></router-link></li>
+                  <li><router-link to="/seminar" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_seminar" tag="span" :fallback="'セミナー'" /></router-link></li>
+                  <li><router-link to="/publication" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_publications" tag="span" :fallback="'刊行物'" /></router-link></li>
+                  <li><router-link to="/consulting" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_consulting" tag="span" :fallback="'経営コンサルティング'" /></router-link></li>
+                  <li><router-link to="/research" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_research" tag="span" :fallback="'調査・研究'" /></router-link></li>
+                  <li><router-link to="/training" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_training" tag="span" :fallback="'人材育成'" /></router-link></li>
                 </ul>
               </div>
               
@@ -83,7 +86,7 @@
                   <CmsText pageKey="sitemap" fieldKey="cat_membership" tag="span" :fallback="'会員サービス'" />
                 </h4>
                 <ul class="link-list">
-                  <li><router-link to="/membership" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_membership" tag="span" :fallback="'入会案内'" /></router-link></li>
+                  <li><router-link to="/membership" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_membership" tag="span" :fallback="'入会案内'" /></router-link></li>
                 </ul>
               </div>
               
@@ -92,8 +95,8 @@
                   <CmsText pageKey="sitemap" fieldKey="cat_info" tag="span" :fallback="'各種情報'" />
                 </h4>
                 <ul class="link-list">
-                  <li><router-link to="/economic-indicators" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_indicators" tag="span" :fallback="'経済指標一覧'" /></router-link></li>
-                  <li><router-link to="/economic-surveys" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_surveys" tag="span" :fallback="'経済調査統計一覧'" /></router-link></li>
+                  <li><router-link to="/economic-indicators" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_indicators" tag="span" :fallback="'経済指標一覧'" /></router-link></li>
+                  <li><router-link to="/economic-surveys" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_surveys" tag="span" :fallback="'経済調査統計一覧'" /></router-link></li>
                 </ul>
               </div>
               
@@ -102,9 +105,9 @@
                   <CmsText pageKey="sitemap" fieldKey="cat_support" tag="span" :fallback="'お知らせ・サポート'" />
                 </h4>
                 <ul class="link-list">
-                  <li><router-link to="/news" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_news" tag="span" :fallback="'お知らせ'" /></router-link></li>
-                  <li><router-link to="/faq" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_faq" tag="span" :fallback="'よくあるご質問'" /></router-link></li>
-                  <li><router-link to="/contact" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_contact" tag="span" :fallback="'お問い合わせ'" /></router-link></li>
+                  <li><router-link to="/news" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_news" tag="span" :fallback="'お知らせ'" /></router-link></li>
+                  <li><router-link to="/faq" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_faq" tag="span" :fallback="'よくあるご質問'" /></router-link></li>
+                  <li><router-link to="/contact" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_contact" tag="span" :fallback="'お問い合わせ'" /></router-link></li>
                 </ul>
               </div>
               
@@ -113,9 +116,9 @@
                   <CmsText pageKey="sitemap" fieldKey="cat_legal" tag="span" :fallback="'法的情報'" />
                 </h4>
                 <ul class="link-list">
-                  <li><router-link to="/privacy" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_privacy" tag="span" :fallback="'プライバシーポリシー'" /></router-link></li>
-                  <li><router-link to="/terms" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_terms" tag="span" :fallback="'利用規約'" /></router-link></li>
-                  <li><router-link to="/legal" class="sitemap-link"><CmsText pageKey="sitemap" fieldKey="link_legal" tag="span" :fallback="'特定商取引法に関する表記'" /></router-link></li>
+                  <li><router-link to="/privacy" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_privacy" tag="span" :fallback="'プライバシーポリシー'" /></router-link></li>
+                  <li><router-link to="/terms" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_terms" tag="span" :fallback="'利用規約'" /></router-link></li>
+                  <li><router-link to="/legal" class="sitemap-link"><Frame13213176122 class="arrow-red" /><CmsText pageKey="sitemap" fieldKey="link_legal" tag="span" :fallback="'特定商取引法に関する表記'" /></router-link></li>
                 </ul>
               </div>
             </div>
@@ -155,6 +158,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import CmsText from '@/components/CmsText.vue'
 import CmsBlock from '@/components/CmsBlock.vue'
+import Frame13213176122 from './Frame13213176122.vue'
 import { usePageText } from '@/composables/usePageText'
 
 import vector7 from "../../public/img/vector-7.svg";
@@ -172,7 +176,8 @@ export default {
     FixedSideButtons,
     ActionButton,
     CmsText,
-    CmsBlock
+    CmsBlock,
+    Frame13213176122
   },
   data() {
     return {
@@ -362,6 +367,9 @@ export default {
   text-decoration: none;
   transition: color 0.3s ease;
   padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .sitemap-link:hover {
