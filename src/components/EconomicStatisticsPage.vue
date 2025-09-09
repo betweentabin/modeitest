@@ -74,7 +74,10 @@
 
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
-        <div class="featured-content">
+        <div
+          class="featured-content"
+          @click="goToStatisticsDetail(featuredPublication.id)"
+        >
           <div class="featured-image" :class="{ blurred: isRestricted(featuredPublication) }">
             <img :src="featuredPublication.image || '/img/image-1.png'" :alt="featuredPublication.title" />
           </div>
@@ -88,7 +91,7 @@
                <div class="content-text">{{ featuredPublication.description }}</div>
              </div>
 
-            <button class="download-btn" @click="handleDownloadOrNavigate(featuredPublication)">{{ isRestricted(featuredPublication) ? '詳細を見る' : 'PDFダウンロード' }}
+            <button class="download-btn" @click.stop="handleDownloadOrNavigate(featuredPublication)">{{ isRestricted(featuredPublication) ? '詳細を見る' : 'PDFダウンロード' }}
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -675,6 +678,7 @@ export default {
   width: 100%;
   align-items: stretch;
   gap: 30px;
+  cursor: pointer;
 }
 
 .featured-image {
