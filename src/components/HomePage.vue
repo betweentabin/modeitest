@@ -1202,7 +1202,7 @@ export default {
 }
 
 .divider-text {
-  color: #1A1A1A;
+  color: #DA5761;
   font-size: 20px;
   font-weight: 700;
 }
