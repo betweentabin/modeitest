@@ -28,8 +28,7 @@
         </div>
       </div>
 
-      <!-- CMS Body (optional) -->
-      <CmsBlock page-key="financial-reports" wrapper-class="cms-body" />
+      <!-- CMS Body removed: keep spacing consistent without inline edit block -->
 
       <!-- Financial Reports -->
       <div class="reports-container" v-if="reportsList && reportsList.length">
@@ -227,6 +226,7 @@ export default {
   margin: 0 auto;
   padding: 50px;
   border-radius: 15px;
+  margin-top: 10px;
 }
 
 .report-section {
