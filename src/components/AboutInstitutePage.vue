@@ -237,10 +237,10 @@ export default {
       this.$nextTick(() => {
         if (window.innerWidth <= 1150) {
           // 1150px以下では改行を削除
-          this.mainHeadlineText = '産 官 学 金 を繋ぐ架け橋へ';
+          this.mainHeadlineText = '産・官・学・金(金融機関)をつなぐ架け橋へ';
         } else {
           // 1150px超では改行を追加
-          this.mainHeadlineText = '産 官 学 金 を<br>繋ぐ架け橋へ';
+          this.mainHeadlineText = '産・官・学・金(金融機関)<br>をつなぐ架け橋へ';
         }
       });
     },
