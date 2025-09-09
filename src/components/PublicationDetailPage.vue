@@ -120,7 +120,7 @@ import Frame13213176122 from "./Frame13213176122.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
-import { mapGetters } from 'vuex';
+import { useMemberAuth } from '@/composables/useMemberAuth'
 import { usePageText } from '@/composables/usePageText'
 
 export default {
@@ -154,7 +154,7 @@ export default {
     } catch(e) { /* noop */ }
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated', 'canAccess']),
+    // Auth/compliance computed based on member auth composable
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '刊行物') || '刊行物' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
@@ -176,20 +176,25 @@ export default {
     // ・free: だれでも可
     // ・standard/premium: 現在の会員レベルが必要レベル以上の場合のみ可
     canDownloadByAccess() {
-      if (!this.publication) return false
-      const level = String(this.requiredLevel).toLowerCase()
-      if (level === 'free') return true
-      return this.canAccess(level)
+      try {
+        if (!this.publication) return false
+        const level = String(this.requiredLevel || '').toLowerCase()
+        if (level === 'free') return true
+        const { isLoggedIn, canAccessContent } = useMemberAuth()
+        return isLoggedIn() && canAccessContent(level)
+      } catch (_) { return false }
     },
     detailButtonText() {
       return this.canDownloadByAccess ? 'PDFダウンロード' : 'ログインする'
     },
     shouldShowMembersNotice() {
-      if (!this.publication) return false
-      const level = String(this.requiredLevel).toLowerCase()
-      if (level === 'free') return false
-      // 必要レベルを満たしていない（未ログイン含む）場合に注意文
-      return !this.canAccess(level)
+      try {
+        if (!this.publication) return false
+        const level = String(this.requiredLevel || '').toLowerCase()
+        if (level === 'free') return false
+        const { isLoggedIn, canAccessContent } = useMemberAuth()
+        return !(isLoggedIn() && canAccessContent(level))
+      } catch (_) { return true }
     }
   },
   methods: {
@@ -274,11 +279,14 @@ export default {
     handlePrimaryAction() {
       if (!this.canDownloadByAccess) {
         const redirect = encodeURIComponent(this.$route.fullPath)
-        if (!this.isAuthenticated) {
-          this.$router.push(`/member-login?redirect=${redirect}`)
-        } else {
-          this.$router.push('/membership')
-        }
+        try {
+          const { isLoggedIn } = useMemberAuth()
+          if (!isLoggedIn()) {
+            this.$router.push(`/member-login?redirect=${redirect}`)
+          } else {
+            this.$router.push('/membership')
+          }
+        } catch(_) { this.$router.push(`/member-login?redirect=${redirect}`) }
         return
       }
       if (this.publication?.id) {

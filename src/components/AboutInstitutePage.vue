@@ -165,7 +165,7 @@ export default {
       pageKey: 'about-institute',
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      mainHeadlineText: '産・官・学・金(金融機関)<br>をつなぐ架け橋へ',
+      mainHeadlineText: '産・官・学・金<span class="small-text">(金融機関)</span><br>をつなぐ架け橋へ',
     };
   },
   computed: {
@@ -237,10 +237,10 @@ export default {
       this.$nextTick(() => {
         if (window.innerWidth <= 1150) {
           // 1150px以下では改行を削除
-          this.mainHeadlineText = '産・官・学・金(金融機関)をつなぐ架け橋へ';
+          this.mainHeadlineText = '産・官・学・金<span class="small-text">(金融機関)</span>をつなぐ架け橋へ';
         } else {
           // 1150px超では改行を追加
-          this.mainHeadlineText = '産・官・学・金(金融機関)<br>をつなぐ架け橋へ';
+          this.mainHeadlineText = '産・官・学・金<span class="small-text">(金融機関)</span><br>をつなぐ架け橋へ';
         }
       });
     },
@@ -714,5 +714,11 @@ export default {
   .divider-text {
     font-size: 13px !important;
   }
+}
+
+/* 小さなテキスト用のスタイル */
+.small-text {
+  font-size: 0.33em;
+  vertical-align: baseline;
 }
 </style>
