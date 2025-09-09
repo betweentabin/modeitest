@@ -33,8 +33,8 @@
               
               <div class="news-meta">
                <span class="news-date">{{ formatDate(newsItem.date) }}</span>
-               <span :class="getCategoryClass(newsItem.type)" class="category-badge">
-                 {{ getCategoryLabel(newsItem.type) }}
+               <span :class="getCategoryClass(newsItem.category)" class="category-badge">
+                 {{ getCategoryLabel(newsItem.category) }}
                </span>
              </div>
             
@@ -165,26 +165,26 @@ export default {
       const day = date.getDate();
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
-    getCategoryLabel(type) {
-      switch (type) {
-        case 'seminar':
-          return 'SEMINAR';
-        case 'publication':
-          return 'PUBLICATION';
-        case 'notice':
-          return 'NEWS';
-        default:
-          return 'NEWS';
+    getCategoryLabel(category) {
+      const map = {
+        // Notice サブタイプ
+        general: 'お知らせ',
+        system: 'システム',
+        event: 'イベント',
+        important: '重要',
+        notice: 'お知らせ',
+        // 互換: 旧タイプ表現
+        seminar: 'SEMINAR',
+        publication: 'PUBLICATION'
       }
+      return map[category] || 'お知らせ'
     },
-    getCategoryClass(type) {
-      switch (type) {
+    getCategoryClass(category) {
+      switch (category) {
         case 'seminar':
           return 'seminar-category';
         case 'publication':
           return 'publication-category';
-        case 'notice':
-          return 'news-category';
         default:
           return 'news-category';
       }

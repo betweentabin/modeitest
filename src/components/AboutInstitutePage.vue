@@ -184,6 +184,14 @@ export default {
     this.adjustAboutImageHeight();
     this.adjustServiceImageHeight();
     this.adjustMainHeadline();
+    // Ensure parentheses text like （金融機関） is reduced in size
+    this.applySmallTextToParentheses();
+    // Observe changes to the headline (CMS updates) and re-apply formatting
+    try {
+      this._headlineObserver = new MutationObserver(() => this.applySmallTextToParentheses());
+      const node = this.$el.querySelector('.main-headline');
+      if (node) this._headlineObserver.observe(node, { childList: true, subtree: true, characterData: true });
+    } catch(_) { /* noop */ }
     window.addEventListener('resize', this.adjustRectangleHeight);
     window.addEventListener('resize', this.adjustAboutImageHeight);
     window.addEventListener('resize', this.adjustServiceImageHeight);
@@ -194,6 +202,7 @@ export default {
     window.removeEventListener('resize', this.adjustAboutImageHeight);
     window.removeEventListener('resize', this.adjustServiceImageHeight);
     window.removeEventListener('resize', this.adjustMainHeadline);
+    try { if (this._headlineObserver) this._headlineObserver.disconnect() } catch(_) {}
   },
   methods: {
     adjustRectangleHeight() {
@@ -242,7 +251,26 @@ export default {
           // 1150px超では改行を追加
           this.mainHeadlineText = '産・官・学・金<span class="small-text">(金融機関)</span><br>をつなぐ架け橋へ';
         }
+        // After updating the headline (or CMS content), re-apply small text
+        this.$nextTick(() => this.applySmallTextToParentheses());
       });
+    },
+    // Wrap specific parentheses text with .small-text to force ~1/3 size
+    applySmallTextToParentheses() {
+      try {
+        const el = this.$el.querySelector('.main-headline');
+        if (!el) return;
+        let html = el.innerHTML || '';
+        // Remove existing wrappers to avoid duplicate nesting
+        html = html.replace(/<span class=\"small-text\">(.*?)<\/span>/g, '$1');
+        // Target common variants
+        html = html
+          .replace(/（金融機関）/g, '<span class="small-text">（金融機関）</span>')
+          .replace(/\(金融機関\)/g, '<span class="small-text">(金融機関)</span>')
+          .replace(/（金融）/g, '<span class="small-text">（金融）</span>')
+          .replace(/\(金融\)/g, '<span class="small-text">(金融)</span>');
+        el.innerHTML = html;
+      } catch(_) { /* noop */ }
     },
     handleContactClick() {
       this.$router.push('/contact');
