@@ -123,7 +123,7 @@ export default {
 
 .button-3 {
   align-items: center;
-  background-color: var(--mandy);
+  background-color: #9C3940;
   border-radius: 10px;
   box-shadow: 0px 1px 2px #0000000d;
   display: flex;
@@ -138,7 +138,7 @@ export default {
 }
 
 .button-3:hover {
-  background-color: #e67e7e;
+  background-color: #8a3238;
 }
 
 .text-44 {
