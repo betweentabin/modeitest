@@ -84,7 +84,7 @@
 
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
-        <div class="featured-content">
+        <div class="featured-content" @click="goToPublicationDetail(featuredPublication.id)">
           <div class="featured-image" :class="{ blurred: isRestricted(featuredPublication) }">
             <img src="/img/image-1.png" alt="一般向け刊行物" />
           </div>
@@ -94,7 +94,7 @@
               <span 
                 class="featured-category clickable"
                 role="button"
-                @click="selectCategory(featuredPublication.category)"
+                @click.stop="selectCategory(featuredPublication.category)"
                 :title="`カテゴリで絞り込み: ${getCategoryName(featuredPublication.category)}`"
               >
                 {{ getCategoryName(featuredPublication.category) }}
@@ -127,7 +127,7 @@
               </div>
             </div>
 
-            <button class="download-btn">入会してダウンロード
+            <button class="download-btn" @click.stop="goToRegister">入会してダウンロード
               <div class="icon-box">
                 <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="23" height="23" rx="5" fill="white"/>
@@ -866,6 +866,7 @@ export default {
   width: 100%;
   align-items: stretch;
   gap: 30px;
+  cursor: pointer;
 }
 
 .featured-image {

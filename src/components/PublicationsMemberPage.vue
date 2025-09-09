@@ -80,7 +80,7 @@
 
       <!-- Featured Publication -->
       <div class="featured-publication" v-if="featuredPublication">
-        <div class="featured-content">
+        <div class="featured-content" @click="goToPublicationDetail(featuredPublication.id)">
           <div class="featured-image" v-restricted="{ requiredLevel: featuredPublication.membershipLevel || 'free' }">
             <img src="/img/image-1.png" alt="経営戦略に関する書籍" />
           </div>
@@ -866,6 +866,7 @@ export default {
   width: 100%;
   align-items: stretch;
   gap: 30px;
+  cursor: pointer;
 }
 
 .featured-image {
