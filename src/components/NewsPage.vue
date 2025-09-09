@@ -492,6 +492,9 @@ export default {
   font-size: 0.8rem;
   font-weight: 500;
   color: white;
+  /* 背景色が消えてカテゴリが見えなくなっていたため、
+     デフォルトの背景色を付与（HomePage.vue と同等の見た目） */
+  background: #da5761;
 }
 
 .news-category.seminar {
@@ -501,6 +504,16 @@ export default {
   border-radius: 5px;
   font-size: 0.8rem;
   font-weight: 500;
+}
+
+/* 念のため、他カテゴリも同色で明示（API値に依存） */
+.news-category.publication,
+.news-category.notice,
+.news-category.research,
+.news-category.quarterly,
+.news-category.special,
+.news-category.free {
+  background: #da5761;
 }
 
 .news-title {
