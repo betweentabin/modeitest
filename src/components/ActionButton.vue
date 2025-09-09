@@ -72,7 +72,7 @@ export default {
 }
 
 .cta-button {
-  background: #DA5761;
+  background: #9C3940;
   border: none;
   border-radius: 15px;
   color: #FFFFFF;
@@ -92,7 +92,7 @@ export default {
 }
 
 .cta-button.secondary {
-  background: #9C3940;
+  background: #DA5761;
 }
 
 .cta-button:hover {
