@@ -4,8 +4,10 @@
     <header class="header">
       <div class="header-content">
         <div class="logo-section">
-          <img src="/img/ico-logo-1-1.svg" alt="ちくぎん地域経済研究所" class="logo">
-          <span class="company-name">株式会社ちくぎん地域経済研究所</span>
+          <router-link to="/" class="logo-link">
+            <img src="/img/ico-logo-1-1.svg" alt="ちくぎん地域経済研究所" class="logo">
+            <span class="company-name">株式会社ちくぎん地域経済研究所</span>
+          </router-link>
           <span class="company-url">https://www.chikugin-ri.co.jp/</span>
         </div>
         <button @click="handleLogout" class="logout-btn">ログアウト</button>
@@ -135,6 +137,18 @@ export default {
   gap: 12px;
 }
 
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.logo-link:hover {
+  opacity: 0.8;
+}
+
 .logo {
   height: 32px;
   width: auto;
@@ -143,7 +157,7 @@ export default {
 .company-name {
   font-size: 16px;
   font-weight: 600;
-  color: #1A1A1AA1A;
+  color: #1A1A1A;
 }
 
 .company-url {
