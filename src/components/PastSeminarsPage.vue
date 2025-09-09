@@ -65,7 +65,7 @@
     </div>
 
     <!-- Contact Section -->
-    <ContactSection />
+    <ContactSection cms-page-key="seminars" />
 
     <!-- Access Section -->
     <AccessSection />

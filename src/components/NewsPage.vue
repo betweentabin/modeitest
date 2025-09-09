@@ -123,7 +123,7 @@
      </div>
 
     <!-- Contact CTA Section -->
-    <ContactSection />
+    <ContactSection cms-page-key="news" />
 
     <!-- Access Section -->
     <AccessSection />

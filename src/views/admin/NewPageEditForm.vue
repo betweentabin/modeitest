@@ -782,7 +782,8 @@ export default {
       },
       editingImageIndex: -1,
       // ライブプレビューのデバイス幅切替
-      previewDevice: 'desktop'
+      previewDevice: 'desktop',
+      collectedTextKeys: []
     }
   },
   computed: {
@@ -881,10 +882,12 @@ export default {
         this.contentJson = JSON.stringify(this.formData.content || {}, null, 2)
       }
       if (newMode === 'fields') {
+        // Ask preview to list keys then preset
+        this.requestPreviewKeys()
         this.ensureFieldsPreset()
       }
       if (newMode === 'live') {
-        this.$nextTick(() => this.postToPreview())
+        this.$nextTick(() => { this.postToPreview(); this.requestPreviewKeysDeferred() })
       }
     }
   },
@@ -907,9 +910,27 @@ export default {
       this.contentJson = JSON.stringify(initial, null, 2)
       this.contentHtml = ''
     }
-    this.$nextTick(() => this.postToPreview())
+    // listen for keys reported from preview
+    try {
+      window.addEventListener('message', (ev) => {
+        const data = ev?.data || {}
+        if (data && data.type === 'cms-key' && data.pageKey === this.pageKey) {
+          const k = (data.fieldKey || '').trim()
+          if (k && !this.collectedTextKeys.includes(k)) {
+            this.collectedTextKeys.push(k)
+            if (this.contentMode === 'fields') this.ensureFieldsPreset()
+          }
+        }
+      })
+    } catch(_) {}
+
+    this.$nextTick(() => { this.postToPreview(); this.requestPreviewKeysDeferred() })
   },
   methods: {
+    requestPreviewKeys() {
+      try { const f = this.$refs.liveFrame; if (f && f.contentWindow) f.contentWindow.postMessage({ type: 'cms-list-keys', pageKey: this.pageKey }, '*') } catch(_) {}
+    },
+    requestPreviewKeysDeferred() { setTimeout(() => this.requestPreviewKeys(), 400) },
     text(k) {
       const key = (k || '').trim()
       const row = this.textsEditor.find(r => (r.key||'').trim() === key)
@@ -976,7 +997,8 @@ export default {
         }
       } catch (_) {}
 
-      const toAdd = (this.recommendedKeys || []).filter(k => !this.hasTextKey(k))
+      const keySet = new Set([...(this.recommendedKeys || []), ...(this.collectedTextKeys || [])])
+      const toAdd = Array.from(keySet).filter(k => !this.hasTextKey(k))
       for (const k of toAdd) {
         const v = existing[k] || ''
         this.textsEditor.push({ _id: `rk-${k}-${Date.now()}-${Math.random()}`, key: k, value: v })

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 import InlineEditable from '@/components/InlineEditable.vue'
 import { usePageText } from '@/composables/usePageText'
 
@@ -39,6 +39,30 @@ export default {
       if (props.type === 'link') return pageText.getLink(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
       return pageText.getText(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
     })
+    // Preview key broadcasting: helps admin editor collect keys used on page
+    const hasPreview = () => {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview')
+      } catch(_) { return false }
+    }
+    let handler = null
+    onMounted(() => {
+      if (!hasPreview()) return
+      try { window.parent && window.parent.postMessage({ type: 'cms-key', pageKey: props.pageKey, fieldKey: props.fieldKey }, '*') } catch(_) {}
+      handler = (ev) => {
+        const data = ev?.data || {}
+        if (data && data.type === 'cms-list-keys') {
+          if (!data.pageKey || data.pageKey === props.pageKey) {
+            try { window.parent && window.parent.postMessage({ type: 'cms-key', pageKey: props.pageKey, fieldKey: props.fieldKey }, '*') } catch(_) {}
+          }
+        }
+      }
+      try { window.addEventListener('message', handler) } catch(_) {}
+    })
+    onBeforeUnmount(() => { try { if (handler) window.removeEventListener('message', handler) } catch(_) {} handler = null })
     return { display }
   }
 }

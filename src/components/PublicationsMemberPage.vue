@@ -189,7 +189,7 @@
     />
 
     <!-- Contact CTA Section -->
-    <ContactSection />
+    <ContactSection cms-page-key="publications" />
 
     <!-- Access Section -->
     <AccessSection />

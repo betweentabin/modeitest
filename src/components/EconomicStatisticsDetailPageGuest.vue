@@ -85,7 +85,7 @@
 />
 
     <!-- Contact Section -->
-    <ContactSection />
+    <ContactSection cms-page-key="economic-statistics" />
 
     <!-- Access Section -->
     <AccessSection />

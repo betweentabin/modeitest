@@ -160,7 +160,7 @@
            </div>
         
         <!-- Contact CTA Section -->
-        <ContactSection />
+        <ContactSection cms-page-key="home" />
         
         <div class="frame-1321317484">
         <div class="content-view">
