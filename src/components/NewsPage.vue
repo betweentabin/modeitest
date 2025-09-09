@@ -285,6 +285,11 @@ export default {
         seminar: 'セミナー',
         publication: '刊行物',
         notice: 'お知らせ',
+        // お知らせ（notice）のサブタイプ
+        general: 'お知らせ',
+        system: 'システム',
+        event: 'イベント',
+        important: '重要',
         research: '研究',
         quarterly: '四半期経済レポート',
         special: '特集',

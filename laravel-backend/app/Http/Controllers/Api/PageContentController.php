@@ -566,10 +566,22 @@ class PageContentController extends Controller
         $page = PageContent::where('page_key', $pageKey)->first();
 
         if (!$page) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Page not found'
-            ], 404);
+            // Auto-create media registry if missing to avoid FE 404 loops
+            if ($pageKey === 'media') {
+                $page = PageContent::create([
+                    'page_key' => 'media',
+                    'title' => 'メディアレジストリ',
+                    'content' => [ 'images' => [] ],
+                    'is_published' => true,
+                    'published_at' => now(),
+                    'updated_by' => auth()->id(),
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Page not found'
+                ], 404);
+            }
         }
 
         return response()->json([
@@ -748,7 +760,19 @@ class PageContentController extends Controller
     {
         $page = PageContent::where('page_key', $pageKey)->first();
         if (!$page) {
-            return response()->json(['message' => 'Page not found'], 404);
+            // Safety: auto-create media registry if missing so FE can resolve useMedia()
+            if ($pageKey === 'media') {
+                $page = PageContent::create([
+                    'page_key' => 'media',
+                    'title' => 'メディアレジストリ',
+                    'content' => [ 'images' => [] ],
+                    'is_published' => true,
+                    'published_at' => now(),
+                    'updated_by' => auth()->id(),
+                ]);
+            } else {
+                return response()->json(['message' => 'Page not found'], 404);
+            }
         }
 
         $request->validate([
