@@ -115,6 +115,10 @@ export default {
     await this.load()
   },
   methods: {
+    isRegistryKey(key) {
+      if (!key || typeof key !== 'string') return false
+      return key.startsWith('hero_') || key.startsWith('company_profile_') || key === 'contact_section_bg'
+    },
     async load() {
       this.loading = true
       this.error = ''
@@ -174,7 +178,9 @@ export default {
           let endpoint = ''
           if (row.source === 'json') {
             fd.append('key', row.key)
-            endpoint = `/api/admin/pages/${row.pageKey}/replace-image`
+            // Redirect known registry keys to media page even if they were discovered under other pages
+            const pageKeyUsed = this.isRegistryKey(row.key) ? 'media' : row.pageKey
+            endpoint = `/api/admin/pages/${pageKeyUsed}/replace-image`
           } else {
             fd.append('old_url', row.url)
             endpoint = `/api/admin/pages/${row.pageKey}/replace-html-image`

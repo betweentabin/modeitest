@@ -10,12 +10,19 @@ const state = reactive({
 })
 
 // Temporary default: force local media without hitting API.
-// Toggle via VITE_MEDIA_FORCE_LOCAL env ("1" to enable, "0" to disable),
-// or override at runtime by localStorage/query/global as implemented below.
+// Configure with env vars (set one of these to "1" or "true"):
+// - VITE_MEDIA_FORCE_LOCAL (Vite)
+// - VUE_APP_MEDIA_FORCE_LOCAL (Vue CLI)
+// You can also override at runtime via localStorage/query/global as below.
 const FORCE_LOCAL_DEFAULT = (() => {
   try {
-    // Vite-style env variable (string)
-    const v = (import.meta && import.meta.env && import.meta.env.VITE_MEDIA_FORCE_LOCAL) || undefined
+    // Read build-time envs via bundler replacement (no import.meta usage for Vue CLI compatibility)
+    const v =
+      // Vite-style env var if present (replaced at build time where supported)
+      (typeof process !== 'undefined' && process && process.env && process.env.VITE_MEDIA_FORCE_LOCAL) ||
+      // Vue CLI-style env var
+      (typeof process !== 'undefined' && process && process.env && process.env.VUE_APP_MEDIA_FORCE_LOCAL) ||
+      undefined
     if (typeof v !== 'undefined') return String(v) === '1' || String(v).toLowerCase() === 'true'
   } catch (_) {}
   // Default ON for now; set to false when backend media registry is ready.
