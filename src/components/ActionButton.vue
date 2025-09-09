@@ -72,7 +72,7 @@ export default {
 }
 
 .cta-button {
-  background: #9C3940;
+  background: #DA5761;
   border: none;
   border-radius: 15px;
   color: #FFFFFF;
@@ -115,6 +115,19 @@ export default {
   /* ボタン間のgap調整 */
   .cta-buttons {
     gap: 25px !important;
+  }
+}
+
+/* Desktop: arrange buttons in two columns */
+@media (min-width: 900px) {
+  .cta-buttons {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .cta-button {
+    flex: 1 1 0;
+    width: auto;
+    max-width: none;
   }
 }
 
