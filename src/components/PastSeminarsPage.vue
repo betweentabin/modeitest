@@ -60,6 +60,11 @@
             <button class="pagination-btn" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">›</button>
             <button class="pagination-btn next-btn" @click="goToPage(totalPages)" :disabled="currentPage === totalPages">最後</button>
           </div>
+
+          <!-- Back Button -->
+          <div class="back-container">
+            <button class="back-btn" @click="goBack">前に戻る</button>
+          </div>
         </div>
       </div>
     </div>
@@ -166,6 +171,10 @@ export default {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
       }
+    },
+    goBack() {
+      if (window.history.length > 1) this.$router.go(-1)
+      else this.$router.push('/')
     }
   }
 };
@@ -602,6 +611,33 @@ export default {
   .section-header {
     gap: 20px !important;
   }
+}
+
+/* Back Button */
+.back-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  min-width: 180px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-accent-dark, #9C3940);
+  color: var(--color-accent-dark, #9C3940);
+  background: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.back-btn:hover {
+  background: var(--color-accent-dark, #9C3940);
+  color: #fff;
 }
 
 @media (max-width: 480px) {

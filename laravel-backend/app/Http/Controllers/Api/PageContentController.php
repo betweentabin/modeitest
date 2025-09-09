@@ -11,6 +11,88 @@ use Illuminate\Support\Str;
 
 class PageContentController extends Controller
 {
+    // --- Image utilities (GD-based, no external deps) ---
+    private function gdCanProcess(): bool
+    {
+        return function_exists('imagecreatetruecolor') && function_exists('imagecopyresampled');
+    }
+
+    private function gdCreateFromPath(string $path)
+    {
+        $info = @getimagesize($path);
+        if (!$info || !isset($info[2])) return [null, null, null];
+        $mime = $info['mime'] ?? '';
+        $type = $info[2]; // IMAGETYPE_*
+        try {
+            switch ($type) {
+                case IMAGETYPE_JPEG: return [imagecreatefromjpeg($path), $mime, 'jpg'];
+                case IMAGETYPE_PNG: return [imagecreatefrompng($path), $mime, 'png'];
+                case IMAGETYPE_WEBP: if (function_exists('imagecreatefromwebp')) return [imagecreatefromwebp($path), $mime, 'webp']; else return [null, null, null];
+                case IMAGETYPE_GIF: return [imagecreatefromgif($path), $mime, 'gif'];
+                default: return [null, null, null]; // svg, bmp 等は非対応
+            }
+        } catch (\Throwable $e) {
+            return [null, null, null];
+        }
+    }
+
+    private function gdSaveToPath($image, string $path, string $ext): bool
+    {
+        try {
+            switch (strtolower($ext)) {
+                case 'jpg':
+                case 'jpeg':
+                    return imagejpeg($image, $path, 85);
+                case 'png':
+                    // 0 (no compression) to 9
+                    return imagepng($image, $path, 6);
+                case 'webp':
+                    if (function_exists('imagewebp')) return imagewebp($image, $path, 85);
+                    return false;
+                case 'gif':
+                    return imagegif($image, $path);
+                default:
+                    return false;
+            }
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    // Resize and center-crop to target size (cover behavior)
+    private function gdResizeCoverTo(string $srcPath, string $dstPath, int $tw, int $th): bool
+    {
+        if ($tw <= 0 || $th <= 0) return false;
+        if (!$this->gdCanProcess()) return false;
+        [$src, $mime, $ext] = $this->gdCreateFromPath($srcPath);
+        if (!$src) return false;
+        $srcInfo = @getimagesize($srcPath);
+        $sw = (int)($srcInfo[0] ?? 0); $sh = (int)($srcInfo[1] ?? 0);
+        if ($sw <= 0 || $sh <= 0) { imagedestroy($src); return false; }
+
+        $scale = max($tw / $sw, $th / $sh);
+        $nw = (int)ceil($sw * $scale);
+        $nh = (int)ceil($sh * $scale);
+
+        $tmp = imagecreatetruecolor($nw, $nh);
+        // preserve transparency for PNG/GIF
+        imagealphablending($tmp, false);
+        imagesavealpha($tmp, true);
+        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $nw, $nh, $sw, $sh);
+
+        // crop center to target
+        $dx = (int)max(0, ($nw - $tw) / 2);
+        $dy = (int)max(0, ($nh - $th) / 2);
+        $dst = imagecreatetruecolor($tw, $th);
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+        imagecopy($dst, $tmp, 0, 0, $dx, $dy, min($tw, $nw), min($th, $nh));
+
+        // Save
+        $ok = $this->gdSaveToPath($dst, $dstPath, $ext ?: pathinfo($dstPath, PATHINFO_EXTENSION));
+        imagedestroy($src); imagedestroy($tmp); imagedestroy($dst);
+        return $ok;
+    }
     /**
      * Recursively collect image references from nested JSON content.
      * Supports structures like nested 'images' maps and common single image fields.
@@ -703,6 +785,53 @@ class PageContentController extends Controller
         } else {
             $content['images'] = $content['images'] ?? [];
             $content['images'][$key] = $newValue;
+        }
+
+        // If replacing an entry on the media registry, attempt to keep the same pixel size
+        // by resizing the newly uploaded image to the previous image's dimensions (cover behavior).
+        // This helps ensure the display size doesn't change on existing pages that rely on natural image ratio.
+        try {
+            if ($pageKey === 'media') {
+                // find previous entry to extract target dimensions
+                $prev = null;
+                if (strpos($key, '.') !== false) {
+                    [$prevExists, $prevVal] = $this->getByPath($page->content ?? [], $key);
+                    $prev = $prevExists ? $prevVal : null;
+                } else {
+                    $prev = $page->content['images'][$key] ?? null;
+                }
+
+                // Resolve previous image file path (public disk)
+                $prevUrl = null; $prevPath = null;
+                if (is_array($prev)) {
+                    $prevUrl = $prev['url'] ?? null;
+                    $prevPath = $prev['path'] ?? null;
+                } elseif (is_string($prev)) {
+                    $prevUrl = $prev;
+                }
+
+                $prevDiskPath = null;
+                if ($prevPath) {
+                    $prevDiskPath = Storage::disk('public')->path($prevPath);
+                } elseif ($prevUrl && is_string($prevUrl) && str_starts_with($prevUrl, '/storage/')) {
+                    $rel = ltrim(substr($prevUrl, strlen('/storage/')), '/');
+                    $prevDiskPath = Storage::disk('public')->path($rel);
+                }
+
+                if ($prevDiskPath && @is_file($prevDiskPath)) {
+                    $dim = @getimagesize($prevDiskPath);
+                    $tw = (int)($dim[0] ?? 0); $th = (int)($dim[1] ?? 0);
+                    if ($tw > 0 && $th > 0) {
+                        $dstPath = Storage::disk('public')->path($path);
+                        // Try resizing only for raster images (skip svg etc.)
+                        if ($this->gdCanProcess()) {
+                            $this->gdResizeCoverTo($dstPath, $dstPath, $tw, $th);
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // best-effort; ignore failures
         }
 
         $page->update([

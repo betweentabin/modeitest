@@ -132,6 +132,11 @@
               最後
             </button>
           </div>
+
+          <!-- Back Button -->
+          <div class="back-container">
+            <button class="back-btn" @click="goBack">前に戻る</button>
+          </div>
         </div>
       </div>
     </div>
@@ -261,6 +266,10 @@ export default {
       // 実際のIDを使用（APIからのデータに含まれている）
       const seminarId = seminar.id || this.generateSeminarId(seminar);
       this.$router.push(`/seminar/${seminarId}`);
+    },
+    goBack() {
+      if (window.history.length > 1) this.$router.go(-1)
+      else this.$router.push('/')
     },
     generateSeminarId(seminar) {
       // セミナーのタイトルと日付からIDを生成（フォールバック用）
@@ -629,6 +638,33 @@ export default {
 
 .show-more-btn:hover {
   background: var(--color-secondary);
+}
+
+/* Back Button */
+.back-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  min-width: 180px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-accent-dark, #9C3940);
+  color: var(--color-accent-dark, #9C3940);
+  background: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.back-btn:hover {
+  background: var(--color-accent-dark, #9C3940);
+  color: #fff;
 }
 
 /* Membership Badge Styles */
