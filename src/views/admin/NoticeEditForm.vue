@@ -14,35 +14,6 @@
             </div>
           </div>
 
-          <!-- 画像設定 -->
-          <div class="form-section">
-            <h3 class="section-title">画像設定</h3>
-
-            <div class="form-group">
-              <label for="featured_image" class="form-label">
-                お知らせ画像（サムネイル）
-              </label>
-              <div v-if="formData.featured_image" class="image-preview-container">
-                <img :src="formData.featured_image" alt="お知らせ画像" class="image-preview" />
-                <button type="button" @click="removeImage" class="remove-image-btn">画像を削除</button>
-              </div>
-              <div class="image-upload-container">
-                <input
-                  id="featured_image"
-                  type="file"
-                  @change="handleImageUpload"
-                  accept="image/*"
-                  class="file-input"
-                  ref="imageInput"
-                />
-                <label for="featured_image" class="file-input-label">
-                  画像を選択
-                </label>
-              </div>
-              <p class="form-help">推奨サイズ: 800×450px（16:9）、最大5MB</p>
-            </div>
-          </div>
-
       <!-- フォームコンテナ -->
       <div class="form-container">
         <div v-if="loading" class="loading">読み込み中...</div>
@@ -51,6 +22,35 @@
         </div>
         <div v-else class="form-content">
           <form @submit.prevent="handleSubmit" class="edit-form">
+            <!-- 画像設定 -->
+            <div class="form-section">
+              <h3 class="section-title">画像設定</h3>
+
+              <div class="form-group">
+                <label for="featured_image" class="form-label">
+                  お知らせ画像（サムネイル）
+                </label>
+                <div v-if="formData.featured_image" class="image-preview-container">
+                  <img :src="formData.featured_image" alt="お知らせ画像" class="image-preview" />
+                  <button type="button" @click="removeImage" class="remove-image-btn">画像を削除</button>
+                </div>
+                <div class="image-upload-container">
+                  <input
+                    id="featured_image"
+                    type="file"
+                    @change="handleImageUpload"
+                    accept="image/*"
+                    class="file-input"
+                    ref="imageInput"
+                  />
+                  <label for="featured_image" class="file-input-label">
+                    画像を選択
+                  </label>
+                </div>
+                <p class="form-help">推奨サイズ: 800×450px（16:9）、最大5MB</p>
+              </div>
+            </div>
+
             <!-- お知らせ基本情報 -->
             <div class="form-section">
               <h3 class="section-title">基本情報</h3>
