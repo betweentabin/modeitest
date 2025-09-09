@@ -85,9 +85,15 @@
     <section class="cta-section">
       <div class="container">
         <div class="cta-content">
-          <h2>株式会社ちくぎん地域経済研究所</h2>
-          <p>地域の未来を共に考え、企業の成長をサポートします。</p>
-          <button class="cta-button" @click="scrollToContact">お問い合わせはこちら</button>
+          <h2>
+            <CmsText pageKey="about" fieldKey="cta_block_title" tag="span" :fallback="'株式会社ちくぎん地域経済研究所'" />
+          </h2>
+          <p>
+            <CmsText pageKey="about" fieldKey="cta_block_body" tag="span" :fallback="'地域の未来を共に考え、企業の成長をサポートします。'" />
+          </p>
+          <button class="cta-button" @click="scrollToContact">
+            <CmsText pageKey="about" fieldKey="cta_block_button" tag="span" :fallback="'お問い合わせはこちら'" />
+          </button>
         </div>
       </div>
     </section>
@@ -107,28 +113,28 @@
         <div class="company-table">
           <table>
             <tr>
-              <th>会社名</th>
-              <td>株式会社ちくぎん地域経済研究所</td>
+              <th><CmsText pageKey="about" fieldKey="company_label_name" tag="span" :fallback="'会社名'" /></th>
+              <td><CmsText pageKey="about" fieldKey="company_value_name" tag="span" :fallback="'株式会社ちくぎん地域経済研究所'" /></td>
             </tr>
             <tr>
-              <th>設立</th>
-              <td>平成3年4月1日（1991年）</td>
+              <th><CmsText pageKey="about" fieldKey="company_label_established" tag="span" :fallback="'設立'" /></th>
+              <td><CmsText pageKey="about" fieldKey="company_value_established" tag="span" :fallback="'平成3年4月1日（1991年）'" /></td>
             </tr>
             <tr>
-              <th>資本金</th>
-              <td>30,000千円</td>
+              <th><CmsText pageKey="about" fieldKey="company_label_capital" tag="span" :fallback="'資本金'" /></th>
+              <td><CmsText pageKey="about" fieldKey="company_value_capital" tag="span" :fallback="'30,000千円'" /></td>
             </tr>
             <tr>
-              <th>所在地</th>
-              <td>〒839-0864 福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階</td>
+              <th><CmsText pageKey="about" fieldKey="company_label_address" tag="span" :fallback="'所在地'" /></th>
+              <td><CmsText pageKey="about" fieldKey="company_value_address" tag="div" type="html" :fallback="'〒839-0864 福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階'" /></td>
             </tr>
             <tr>
-              <th>電話番号</th>
-              <td>TEL：0942-46-5081</td>
+              <th><CmsText pageKey="about" fieldKey="company_label_tel" tag="span" :fallback="'電話番号'" /></th>
+              <td><CmsText pageKey="about" fieldKey="company_value_tel" tag="span" :fallback="'TEL：0942-46-5081'" /></td>
             </tr>
             <tr>
-              <th>営業時間</th>
-              <td>平日 9:00～17:00</td>
+              <th><CmsText pageKey="about" fieldKey="company_label_business_hours" tag="span" :fallback="'営業時間'" /></th>
+              <td><CmsText pageKey="about" fieldKey="company_value_business_hours" tag="span" :fallback="'平日 9:00～17:00'" /></td>
             </tr>
           </table>
         </div>
@@ -148,32 +154,19 @@
         </div>
         
         <div class="history-timeline">
-          <div class="timeline-item">
-            <div class="timeline-year">1988</div>
+          <div class="timeline-item" v-for="(item, idx) in visibleHistory" :key="idx">
+            <div class="timeline-year">{{ item.year }}</div>
             <div class="timeline-content">
-              <h4>調査研究開始</h4>
-              <p>筑邦銀行にて地域経済に関する調査研究を開始</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-year">2010</div>
-            <div class="timeline-content">
-              <h4>経営戦略支援</h4>
-              <p>企業への経営戦略支援、事業承継サポート、M&Aアドバイザリーを本格化</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-year">2011</div>
-            <div class="timeline-content">
-              <h4>コンサルティング事業拡大</h4>
-              <p>福岡県、佐賀県、長崎県、大分県、熊本県、宮崎県、鹿児島県での調査・研究、コンサルティング事業を展開。</p>
-              <p>地域密着型の総合的なサービス提供を開始。</p>
+              <h4>{{ item.title }}</h4>
+              <p v-for="(t, i) in item.texts" :key="i">{{ t }}</p>
             </div>
           </div>
         </div>
-        
-        <div class="history-more">
-          <button class="more-button">続きを見る</button>
+
+        <div class="history-more" v-if="historyItems.length > visibleHistoryCount">
+          <button class="more-button" @click="showMoreHistory">
+            <CmsText pageKey="about" fieldKey="history_more" tag="span" :fallback="'さらに表示'" />
+          </button>
         </div>
       </div>
     </section>
@@ -196,8 +189,8 @@
               <img src="/img/image.png" alt="スタッフ1" />
             </div>
             <div class="staff-info">
-              <h4>代表取締役社長</h4>
-              <p>田中 太郎</p>
+              <h4><CmsText pageKey="about" fieldKey="staff1_title" tag="span" :fallback="'代表取締役社長'" /></h4>
+              <p><CmsText pageKey="about" fieldKey="staff1_name" tag="span" :fallback="'田中 太郎'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -205,8 +198,8 @@
               <img src="/img/image-1.png" alt="スタッフ2" />
             </div>
             <div class="staff-info">
-              <h4>常務取締役</h4>
-              <p>佐藤 花子</p>
+              <h4><CmsText pageKey="about" fieldKey="staff2_title" tag="span" :fallback="'常務取締役'" /></h4>
+              <p><CmsText pageKey="about" fieldKey="staff2_name" tag="span" :fallback="'佐藤 花子'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -214,8 +207,8 @@
               <img src="/img/image-2.png" alt="スタッフ3" />
             </div>
             <div class="staff-info">
-              <h4>研究部長</h4>
-              <p>山田 次郎</p>
+              <h4><CmsText pageKey="about" fieldKey="staff3_title" tag="span" :fallback="'研究部長'" /></h4>
+              <p><CmsText pageKey="about" fieldKey="staff3_name" tag="span" :fallback="'山田 次郎'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -237,7 +230,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="staff-more">
           <button class="more-button">続きを見る</button>
         </div>
@@ -280,6 +273,8 @@ export default {
       pageData: null,
       loading: true,
       error: null,
+      // 沿革の「さらに表示」用: 初期は5件表示
+      visibleHistoryCount: 5,
       frame132131753022Props: frame132131753022Data,
       defaultAboutMessage: `
         <p>変化の激しい経済環境の中で、企業が持続的な成長を遂げるためには、正確な情報と深い洞察に基づく戦略的な意思決定が不可欠です。</p>
@@ -318,6 +313,33 @@ export default {
       return {
         background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/hero-image.png') center/cover`
       };
+    },
+    // 沿革データ（CMSにあれば優先）
+    historyItems() {
+      const fromCms = this.pageData?.content?.history
+      if (Array.isArray(fromCms) && fromCms.length) {
+        return fromCms.map((it, idx) => ({
+          id: it.id || idx,
+          year: String(it.year || it.date || ''),
+          title: it.title || it.heading || '',
+          texts: Array.isArray(it.texts)
+            ? it.texts
+            : (it.description ? [it.description] : [])
+        }))
+      }
+      // 既存ダミー + 追加で動作確認
+      return [
+        { year: '1988', title: '調査研究開始', texts: ['筑邦銀行にて地域経済に関する調査研究を開始'] },
+        { year: '2010', title: '経営戦略支援', texts: ['企業への経営戦略支援、事業承継サポート、M&Aアドバイザリーを本格化'] },
+        { year: '2011', title: 'コンサルティング事業拡大', texts: ['福岡県、佐賀県、長崎県、大分県、熊本県、宮崎県、鹿児島県での調査・研究、コンサルティング事業を展開。', '地域密着型の総合的なサービス提供を開始。'] },
+        { year: '2014', title: '新サービス開始', texts: ['データ分析支援サービスの提供を開始'] },
+        { year: '2017', title: '地域連携強化', texts: ['地方自治体との共同研究プロジェクトを開始'] },
+        { year: '2019', title: 'DX推進', texts: ['リサーチ業務のデジタル化を推進'] },
+        { year: '2022', title: '拠点拡充', texts: ['九州内での連携拠点を拡充'] },
+      ]
+    },
+    visibleHistory() {
+      return this.historyItems.slice(0, this.visibleHistoryCount)
     }
   },
   async mounted() {
@@ -339,6 +361,10 @@ export default {
     scrollToContact() {
       // お問い合わせページに遷移
       this.$router.push('/contact');
+    },
+    showMoreHistory() {
+      const next = this.visibleHistoryCount + 5
+      this.visibleHistoryCount = Math.min(next, this.historyItems.length)
     },
     getImageUrl(type) {
       if (this.pageData?.content?.images?.[type]?.url) {

@@ -15,13 +15,27 @@
 
     <!-- In-page Navigation -->
     <nav class="inpage-nav" aria-label="セクション内リンク">
-      <a href="#philosophy" @click.prevent="scrollTo('philosophy')">経営理念</a>
-      <a href="#message" @click.prevent="scrollTo('message')">ご挨拶</a>
-      <a href="#profile" @click.prevent="scrollTo('profile')">企業概要</a>
-      <a href="#history" @click.prevent="scrollTo('history')">沿革</a>
-      <a href="#staff" @click.prevent="scrollTo('staff')">所員紹介</a>
-      <a href="#financial-reports" @click.prevent="scrollTo('financial-reports')">決算報告</a>
-      <a href="#access" @click.prevent="scrollTo('access')">アクセス</a>
+      <a href="#philosophy" @click.prevent="scrollTo('philosophy')">
+        <CmsText pageKey="company-profile" fieldKey="nav_philosophy" tag="span" :fallback="'経営理念'" />
+      </a>
+      <a href="#message" @click.prevent="scrollTo('message')">
+        <CmsText pageKey="company-profile" fieldKey="nav_message" tag="span" :fallback="'ご挨拶'" />
+      </a>
+      <a href="#profile" @click.prevent="scrollTo('profile')">
+        <CmsText pageKey="company-profile" fieldKey="nav_profile" tag="span" :fallback="'企業概要'" />
+      </a>
+      <a href="#history" @click.prevent="scrollTo('history')">
+        <CmsText pageKey="company-profile" fieldKey="nav_history" tag="span" :fallback="'沿革'" />
+      </a>
+      <a href="#staff" @click.prevent="scrollTo('staff')">
+        <CmsText pageKey="company-profile" fieldKey="nav_staff" tag="span" :fallback="'所員紹介'" />
+      </a>
+      <a href="#financial-reports" @click.prevent="scrollTo('financial-reports')">
+        <CmsText pageKey="company-profile" fieldKey="nav_financial" tag="span" :fallback="'決算報告'" />
+      </a>
+      <a href="#access" @click.prevent="scrollTo('access')">
+        <CmsText pageKey="company-profile" fieldKey="nav_access" tag="span" :fallback="'アクセス'" />
+      </a>
     </nav>
 
     <!-- CMS Body (optional full HTML override) -->

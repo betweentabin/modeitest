@@ -79,12 +79,13 @@
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service2_title" tag="span" :fallback="'人材開発、セミナー'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service2_desc" tag="span" :fallback="'企業幹部、従業員または後継者(次世代育成)にマッチする効果的な研修を行います。ご要望に合わせて各種講演会、セミナー等の企画・運営を行うほか、様々なニーズに合わせて、外部専門家等の紹介・斡旋をいたします。'" /></p>
             <div class="service-details">
-              人材紹介、斡旋<br>
-              外部専門家の紹介、斡旋<br>
-              教育・研修<br>
-              社員研修<br>
-              講演会<br>
-              セミナー
+              <CmsText 
+                pageKey="about-institute" 
+                fieldKey="service2_list" 
+                tag="div" 
+                type="html"
+                :fallback="'人材紹介、斡旋<br>外部専門家の紹介、斡旋<br>教育・研修<br>社員研修<br>講演会<br>セミナー'" 
+              />
             </div>
           </div>
         </div>
@@ -95,12 +96,13 @@
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service3_title" tag="span" :fallback="'経営支援(経営サポート)'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service3_desc" tag="span" :fallback="'企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。'" /></p>
             <div class="service-details">
-              コンサルティング<br>
-              経営課題解決サポート<br>
-              ビジネスマッチング<br>
-              国内外企業の紹介<br>
-              新ビジネスモデルの発展<br>
-              業務提携等の支援
+              <CmsText 
+                pageKey="about-institute" 
+                fieldKey="service3_list" 
+                tag="div" 
+                type="html"
+                :fallback="'コンサルティング<br>経営課題解決サポート<br>ビジネスマッチング<br>国内外企業の紹介<br>新ビジネスモデルの発展<br>業務提携等の支援'" 
+              />
             </div>
           </div>
         </div>

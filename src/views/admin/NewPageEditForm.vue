@@ -587,13 +587,29 @@ const RECOMMENDED_KEYS = {
   'economic-indicators': ['page_title', 'page_subtitle'],
   news: ['page_title', 'page_subtitle'],
   // Aboutページ：ご挨拶の本文/署名までCMS化
-  about: ['page_title', 'mission_title', 'mission_body', 'message_title', 'message_subtitle', 'message_body', 'message_signature', 'cta_primary'],
+  about: [
+    'page_title','page_subtitle',
+    'mission_title','mission_body',
+    'message_title','message_subtitle','message_body','message_signature',
+    'cta_primary',
+    // CTA block
+    'cta_block_title','cta_block_body','cta_block_button',
+    // Company table
+    'company_label_name','company_value_name',
+    'company_label_established','company_value_established',
+    'company_label_capital','company_value_capital',
+    'company_label_address','company_value_address',
+    'company_label_tel','company_value_tel',
+    'company_label_business_hours','company_value_business_hours',
+    // History controls
+    'history_more'
+  ],
   // CompanyProfile：ご挨拶、ミッション、会社概要見出しまで
   'company-profile': ['page_title', 'page_subtitle', 'philosophy_title', 'philosophy_subtitle', 'message_title', 'message_subtitle', 'message_label', 'message_signature', 'mission_title', 'mission_body', 'profile_title', 'profile_subtitle'],
   // Consulting：主要セクションをCMS化
   consulting: ['page_title', 'page_subtitle', 'what_title', 'what_subtitle', 'what_content_subtitle', 'what_content_heading', 'what_content_body', 'duties_title', 'duties_subtitle', 'duties_intro', 'duties_label', 'duties_heading', 'duties_list', 'support_title', 'support_subtitle_en', 'support_intro', 'support_free_title', 'support_paid_title', 'achievements_title', 'achievements_subtitle', 'cta_primary', 'cta_secondary'],
   // About Institute：導入とサービス概要
-  'about-institute': ['page_title', 'page_subtitle', 'about_title', 'about_subtitle', 'about_body', 'service_title', 'service_subtitle', 'service1_title', 'service1_desc', 'service1_list', 'service2_title', 'service2_desc', 'service3_title', 'service3_desc', 'cta_primary', 'cta_secondary'],
+  'about-institute': ['page_title', 'page_subtitle', 'about_title', 'about_subtitle', 'about_body', 'service_title', 'service_subtitle', 'service1_title', 'service1_desc', 'service1_list', 'service2_title', 'service2_desc', 'service2_list', 'service3_title', 'service3_desc', 'service3_list', 'cta_primary', 'cta_secondary'],
   terms: [
     'page_title', 'page_subtitle', 'intro',
     'copyright_title', 'copyright_body',
@@ -696,6 +712,13 @@ const KEY_LOCATIONS = {
     mission_body: 'ミッションの本文（HTML可）',
     history_title: '沿革セクション見出し',
     history_subtitle: '沿革セクション英字',
+    nav_philosophy: 'ページ内ナビ：経営理念',
+    nav_message: 'ページ内ナビ：ご挨拶',
+    nav_profile: 'ページ内ナビ：企業概要',
+    nav_history: 'ページ内ナビ：沿革',
+    nav_staff: 'ページ内ナビ：所員紹介',
+    nav_financial: 'ページ内ナビ：決算報告',
+    nav_access: 'ページ内ナビ：アクセス',
   },
   'privacy': {
     page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',
@@ -786,6 +809,22 @@ const KEY_LOCATIONS = {
     message_title: 'ご挨拶セクション見出し',
     message_subtitle: 'ご挨拶セクション英字',
     message_signature: 'ご挨拶の署名',
+    cta_block_title: 'CTAブロック見出し',
+    cta_block_body: 'CTAブロック本文',
+    cta_block_button: 'CTAボタン文言',
+    company_label_name: '会社概要テーブル：項目名（会社名）',
+    company_value_name: '会社概要テーブル：値（会社名）',
+    company_label_established: '会社概要テーブル：項目名（設立）',
+    company_value_established: '会社概要テーブル：値（設立）',
+    company_label_capital: '会社概要テーブル：項目名（資本金）',
+    company_value_capital: '会社概要テーブル：値（資本金）',
+    company_label_address: '会社概要テーブル：項目名（所在地）',
+    company_value_address: '会社概要テーブル：値（所在地・HTML可）',
+    company_label_tel: '会社概要テーブル：項目名（電話番号）',
+    company_value_tel: '会社概要テーブル：値（電話番号）',
+    company_label_business_hours: '会社概要テーブル：項目名（営業時間）',
+    company_value_business_hours: '会社概要テーブル：値（営業時間）',
+    history_more: '沿革：さらに表示ボタン',
   },
   'membership': {
     page_title: 'ヒーロー・パンくず（MembershipPage）',

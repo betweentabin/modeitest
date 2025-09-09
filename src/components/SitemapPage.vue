@@ -310,8 +310,8 @@ export default {
 
 .sitemap-links {
   display: grid;
-  /* Desktop: 4 equal columns to keep widths uniform */
-  grid-template-columns: repeat(4, 1fr);
+  /* Desktop: 3 equal columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
 }
 
@@ -323,11 +323,10 @@ export default {
   padding-right: 20px;
 }
 
-/* 4列の時: 1〜3列目に縦線を表示して区切りを一定にする */
-@media (min-width: 1151px) {
-  .sitemap-category:nth-child(4n+1):not(:last-child)::after,
-  .sitemap-category:nth-child(4n+2)::after,
-  .sitemap-category:nth-child(4n+3)::after {
+/* 3列の時: 1列目と2列目に縦線 */
+@media (min-width: 500px) {
+  .sitemap-category:nth-child(3n+1):not(:last-child)::after,
+  .sitemap-category:nth-child(3n+2)::after {
     content: '';
     position: absolute;
     top: 0;
@@ -335,10 +334,6 @@ export default {
     width: 1px;
     height: 100%;
     background-color: #E0E0E0;
-  }
-  /* 各行の4列目（最後の列）は縦線を非表示 */
-  .sitemap-category:nth-child(4n)::after {
-    display: none;
   }
 }
 
