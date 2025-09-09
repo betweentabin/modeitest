@@ -830,7 +830,8 @@ export default {
       editingImageIndex: -1,
       // ライブプレビューのデバイス幅切替
       previewDevice: 'desktop',
-      collectedTextKeys: []
+      collectedTextKeys: [],
+      collectedTextDefaults: {}
     }
   },
   computed: {
@@ -969,6 +970,9 @@ export default {
             this.collectedTextKeys.push(k)
             if (this.contentMode === 'fields') this.ensureFieldsPreset()
           }
+          if (k && typeof data.value === 'string' && data.value.length >= 0) {
+            this.collectedTextDefaults[k] = data.value
+          }
         }
       })
     } catch(_) {}
@@ -1071,6 +1075,8 @@ export default {
           if (p) return p.replace(/<[^>]+>/g, '').trim()
         }
       } catch(_) {}
+      // Fallback to collected display text from preview
+      if (this.collectedTextDefaults[key]) return this.collectedTextDefaults[key]
       return ''
     },
     focusOrAddKey(k) {
@@ -1114,7 +1120,7 @@ export default {
       const keySet = new Set([...(this.recommendedKeys || []), ...(this.collectedTextKeys || [])])
       const toAdd = Array.from(keySet).filter(k => !this.hasTextKey(k))
       for (const k of toAdd) {
-        const v = existing[k] || ''
+        const v = existing[k] || this.collectedTextDefaults[k] || ''
         this.textsEditor.push({ _id: `rk-${k}-${Date.now()}-${Math.random()}`, key: k, value: v })
       }
     },

@@ -51,12 +51,16 @@ export default {
     let handler = null
     onMounted(() => {
       if (!hasPreview()) return
-      try { window.parent && window.parent.postMessage({ type: 'cms-key', pageKey: props.pageKey, fieldKey: props.fieldKey }, '*') } catch(_) {}
+      try {
+        window.parent && window.parent.postMessage({ type: 'cms-key', pageKey: props.pageKey, fieldKey: props.fieldKey, value: (typeof display.value === 'string' ? display.value : '') }, '*')
+      } catch(_) {}
       handler = (ev) => {
         const data = ev?.data || {}
         if (data && data.type === 'cms-list-keys') {
           if (!data.pageKey || data.pageKey === props.pageKey) {
-            try { window.parent && window.parent.postMessage({ type: 'cms-key', pageKey: props.pageKey, fieldKey: props.fieldKey }, '*') } catch(_) {}
+            try {
+              window.parent && window.parent.postMessage({ type: 'cms-key', pageKey: props.pageKey, fieldKey: props.fieldKey, value: (typeof display.value === 'string' ? display.value : '') }, '*')
+            } catch(_) {}
           }
         }
       }
