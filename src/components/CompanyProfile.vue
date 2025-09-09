@@ -188,7 +188,20 @@
           <div class="divider-line"></div>
         </div>
       </div>
-      <div class="history-content">
+      <div v-if="historyList && historyList.length" class="history-content">
+        <div 
+          v-for="(h, idx) in historyList" 
+          :key="idx" 
+          class="history-item"
+        >
+          <div class="history-year">{{ h.year || '' }}</div>
+          <div class="history-details">
+            <div class="history-date">{{ h.date || '' }}</div>
+            <div class="history-description" v-html="h.body || h.title || ''"></div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="history-content">
         <div class="history-item">
           <div class="history-year">1988</div>
           <div class="history-details">
@@ -425,6 +438,12 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
+    historyList() {
+      try {
+        const c = this._pageText?.page?.value?.content
+        return Array.isArray(c?.history) ? c.history : []
+      } catch(_) { return [] }
+    }
   },
   mounted() {
     this.adjustImageHeight();

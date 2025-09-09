@@ -177,6 +177,53 @@
               </div>
             </div>
 
+            <!-- Company Profile: History repeater -->
+            <div v-if="isCompanyProfile" class="form-group">
+              <h3 class="section-title">沿革（history 配列）</h3>
+              <div class="guide-actions">
+                <button type="button" class="btn btn-primary" @click="addHistoryEntry">+ 年表を追加</button>
+              </div>
+              <div class="fields-editor">
+                <div class="field-head">
+                  <div>年</div><div>日付</div><div>本文（HTML可）</div><div>操作</div>
+                </div>
+                <div class="field-row" v-for="(h, hi) in (formData.content.history || [])" :key="`h-${hi}`">
+                  <input v-model="h.year" type="text" class="form-input field-key" placeholder="例）2011" />
+                  <input v-model="h.date" type="text" class="form-input field-key" placeholder="例）平成23年7月1日" />
+                  <input v-model="h.body" type="text" class="form-input field-value" placeholder="本文（HTML可）" />
+                  <div class="field-hint"><span class="counter">{{ (h.body||'').length }}</span></div>
+                  <button type="button" class="btn btn-secondary small" @click="removeHistoryEntry(hi)">削除</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Financial Reports: Reports repeater with PDF upload -->
+            <div v-if="isFinancialReports" class="form-group">
+              <h3 class="section-title">決算報告（financial_reports 配列）</h3>
+              <div class="guide-actions">
+                <button type="button" class="btn btn-primary" @click="addReport">+ 年度を追加</button>
+              </div>
+              <div class="fields-editor" v-for="(r, ri) in (formData.content.financial_reports || [])" :key="`r-${ri}`" style="margin-bottom:16px;">
+                <div class="field-row">
+                  <input v-model="r.fiscal_year" type="text" class="form-input field-key" placeholder="例）2025年3月期" />
+                  <input v-model="r.date_label" type="text" class="form-input field-value" placeholder="例）決算短信（2025年5月12日）" />
+                  <button type="button" class="btn btn-secondary small" @click="removeReport(ri)">削除</button>
+                </div>
+                <div class="field-head" style="margin-top:8px"><div>項目ラベル</div><div>URL</div><div>操作</div></div>
+                <div class="field-row" v-for="(it, ii) in (r.items || (r.items = []))" :key="`ri-${ri}-ii-${ii}`">
+                  <input v-model="it.label" type="text" class="form-input field-key" placeholder="例）決算要旨（PDF：...）" />
+                  <input v-model="it.url" type="text" class="form-input field-value" placeholder="/storage/media/xxx.pdf または https://..." />
+                  <div class="field-hint">
+                    <button type="button" class="btn btn-secondary small" @click="uploadReportItemPdf(ri, ii)">PDFアップ</button>
+                  </div>
+                  <button type="button" class="btn btn-secondary small" @click="removeReportItem(ri, ii)">削除</button>
+                </div>
+                <div class="guide-actions">
+                  <button type="button" class="btn btn-primary" @click="addReportItem(ri)">+ 項目を追加</button>
+                </div>
+              </div>
+            </div>
+
             <!-- コンテンツ -->
             <div class="form-section">
               <h3 class="section-title">コンテンツ</h3>
@@ -862,7 +909,9 @@ export default {
         case 'desktop':
         default: return 1200
       }
-    }
+    },
+    isCompanyProfile() { const k = (this.formData.page_key || this.pageKey || '').trim(); return k === 'company-profile' },
+    isFinancialReports() { const k = (this.formData.page_key || this.pageKey || '').trim(); return k === 'financial-reports' }
   },
   watch: {
     contentJson(newValue) {
@@ -927,6 +976,71 @@ export default {
     this.$nextTick(() => { this.postToPreview(); this.requestPreviewKeysDeferred() })
   },
   methods: {
+    syncContentJson() { try { this.contentJson = JSON.stringify(this.formData.content || {}, null, 2) } catch(_) {} },
+    // History editor
+    addHistoryEntry() {
+      if (!this.formData.content) this.formData.content = {}
+      if (!Array.isArray(this.formData.content.history)) this.formData.content.history = []
+      this.formData.content.history.push({ year: '', date: '', body: '' })
+      this.syncContentJson()
+    },
+    removeHistoryEntry(index) {
+      try { this.formData.content.history.splice(index, 1) } catch(_) {}
+      this.syncContentJson()
+    },
+    // Reports editor
+    addReport() {
+      if (!this.formData.content) this.formData.content = {}
+      if (!Array.isArray(this.formData.content.financial_reports)) this.formData.content.financial_reports = []
+      this.formData.content.financial_reports.push({ fiscal_year: '', date_label: '', items: [] })
+      this.syncContentJson()
+    },
+    removeReport(ri) {
+      try { this.formData.content.financial_reports.splice(ri, 1) } catch(_) {}
+      this.syncContentJson()
+    },
+    addReportItem(ri) {
+      const r = (this.formData.content.financial_reports || [])[ri]
+      if (!r) return
+      if (!Array.isArray(r.items)) r.items = []
+      r.items.push({ label: '', url: '' })
+      this.syncContentJson()
+    },
+    removeReportItem(ri, ii) {
+      const r = (this.formData.content.financial_reports || [])[ri]
+      if (!r || !Array.isArray(r.items)) return
+      r.items.splice(ii, 1)
+      this.syncContentJson()
+    },
+    async uploadReportItemPdf(ri, ii) {
+      try {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'application/pdf'
+        input.onchange = async (e) => {
+          const file = e.target.files[0]
+          if (!file) return
+          const fd = new FormData()
+          fd.append('file', file)
+          fd.append('directory', 'public/media/financial-reports')
+          const api = (await import('@/services/apiClient.js')).default
+          const res = await api.upload('/api/admin/media/upload', fd)
+          const url = res?.file?.url || res?.data?.file?.url || res?.data?.url || ''
+          if (url) {
+            const r = (this.formData.content.financial_reports || [])[ri]
+            if (r && Array.isArray(r.items) && r.items[ii]) { r.items[ii].url = url }
+            this.syncContentJson()
+            alert('PDFをアップロードしました')
+          } else {
+            alert(res?.message || 'アップロードに失敗しました')
+          }
+        }
+        input.click()
+      } catch (e) {
+        console.error(e)
+        alert('アップロードに失敗しました')
+      }
+    },
     requestPreviewKeys() {
       try { const f = this.$refs.liveFrame; if (f && f.contentWindow) f.contentWindow.postMessage({ type: 'cms-list-keys', pageKey: this.pageKey }, '*') } catch(_) {}
     },

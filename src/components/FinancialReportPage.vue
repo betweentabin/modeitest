@@ -32,73 +32,46 @@
       <CmsBlock page-key="financial-reports" wrapper-class="cms-body" />
 
       <!-- Financial Reports -->
-      <div class="reports-container">
+      <div class="reports-container" v-if="reportsList && reportsList.length">
+        <div class="report-section" v-for="(r, i) in reportsList" :key="i">
+          <h3 class="report-year">{{ r.fiscal_year }}</h3>
+          <div class="report-date">{{ r.date_label }}</div>
+          <ul class="report-list">
+            <li class="report-item" v-for="(it, j) in (r.items || [])" :key="j">
+              <template v-if="it && it.url">
+                <a class="report-title" :href="it.url" target="_blank" rel="noopener">{{ it.label || it.url }}</a>
+              </template>
+              <template v-else>
+                <span class="report-title">{{ it && (it.label || '') }}</span>
+              </template>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="reports-container" v-else>
+        <!-- fallback to current static placeholders when no CMS data -->
         <!-- 2025年3月期 -->
         <div class="report-section">
           <h3 class="report-year">2025年3月期</h3>
           <div class="report-date">決算短信（2020年5月12日）</div>
           <ul class="report-list">
-            <li class="report-item">
-              <span class="report-title">決算短信（2020年5月12日）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算説明資料（PDF・1,285KB・全3ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算説明資料【第2期（決算説明）資料】（PDF・334KB・全2ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算報告書【第1期（決算メンバー）】スピーチ（PDF・626KB・全1ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">メディアの売上実績配信の利益を見いただいたより上げす</span>
-            </li>
+            <li class="report-item"><span class="report-title">決算短信（2020年5月12日）</span></li>
+            <li class="report-item"><span class="report-title">決算説明資料（PDF・1,285KB・全3ページ）</span></li>
+            <li class="report-item"><span class="report-title">決算説明資料【第2期（決算説明）資料】（PDF・334KB・全2ページ）</span></li>
+            <li class="report-item"><span class="report-title">決算報告書【第1期（決算メンバー）】スピーチ（PDF・626KB・全1ページ）</span></li>
+            <li class="report-item"><span class="report-title">メディアの売上実績配信の利益を見いただいたより上げす</span></li>
           </ul>
         </div>
-
         <!-- 2024年3月期 -->
         <div class="report-section">
           <h3 class="report-year">2024年3月期</h3>
           <div class="report-date">決算短信（2020年5月12日）</div>
           <ul class="report-list">
-            <li class="report-item">
-              <span class="report-title">決算短信（2020年5月12日）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算説明（PDF・1,285KB・全3ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算説明資料【第2期（決算説明）資料】（PDF・334KB・全2ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算報告書【第1期（決算メンバー）】スピーチ（PDF・626KB・全1ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">メディアの売上実績配信の利益を見いただいたより上げす</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- 2023年3月期 -->
-        <div class="report-section">
-          <h3 class="report-year">2023年3月期</h3>
-          <div class="report-date">決算短信（2020年5月12日）</div>
-          <ul class="report-list">
-            <li class="report-item">
-              <span class="report-title">決算短信（2020年5月12日）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算説明（PDF・1,285KB・全3ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算説明資料【第2期（決算説明）資料】（PDF・334KB・全2ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">決算報告書【第1期（決算メンバー）】スピーチ（PDF・626KB・全1ページ）</span>
-            </li>
-            <li class="report-item">
-              <span class="report-title">メディアの売上実績配信の利益を見いただいたより上げす</span>
-            </li>
+            <li class="report-item"><span class="report-title">決算短信（2020年5月12日）</span></li>
+            <li class="report-item"><span class="report-title">決算説明（PDF・1,285KB・全3ページ）</span></li>
+            <li class="report-item"><span class="report-title">決算説明資料【第2期（決算説明）資料】（PDF・334KB・全2ページ）</span></li>
+            <li class="report-item"><span class="report-title">決算報告書【第1期（決算メンバー）】スピーチ（PDF・626KB・全1ページ）</span></li>
+            <li class="report-item"><span class="report-title">メディアの売上実績配信の利益を見いただいたより上げす</span></li>
           </ul>
         </div>
       </div>
@@ -114,7 +87,7 @@
     />
 
     <!-- Contact CTA Section -->
-    <ContactSection />
+    <ContactSection cms-page-key="financial-reports" />
 
     <!-- Access Section -->
     <AccessSection />
@@ -173,6 +146,12 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Financial Report') || 'Financial Report' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+    reportsList() {
+      try {
+        const c = this._pageText?.page?.value?.content
+        return Array.isArray(c?.financial_reports) ? c.financial_reports : []
+      } catch(_) { return [] }
+    },
   },
   methods: {
     goToContact() {
