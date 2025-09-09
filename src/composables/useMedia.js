@@ -9,6 +9,51 @@ const state = reactive({
   images: {}, // key -> url
 })
 
+// Temporary default: force local media without hitting API.
+// Toggle via VITE_MEDIA_FORCE_LOCAL env ("1" to enable, "0" to disable),
+// or override at runtime by localStorage/query/global as implemented below.
+const FORCE_LOCAL_DEFAULT = (() => {
+  try {
+    // Vite-style env variable (string)
+    const v = (import.meta && import.meta.env && import.meta.env.VITE_MEDIA_FORCE_LOCAL) || undefined
+    if (typeof v !== 'undefined') return String(v) === '1' || String(v).toLowerCase() === 'true'
+  } catch (_) {}
+  // Default ON for now; set to false when backend media registry is ready.
+  return true
+})()
+
+function isForceLocal() {
+  try {
+    if (typeof window !== 'undefined') {
+      if (FORCE_LOCAL_DEFAULT) return true
+      const ls = localStorage.getItem('cms_media_force_local')
+      if (ls && ls.toString() === '1') return true
+      const qp = new URLSearchParams(window.location.search)
+      if (qp.get('mediaLocal') === '1') return true
+      // Allow a runtime global flag for debugging
+      if (window.__CMS_MEDIA_FORCE_LOCAL__ === true) return true
+    }
+  } catch (_) {}
+  return false
+}
+
+function readLocalMock() {
+  try {
+    // Highest priority: explicit images object for media registry
+    const imgStr = localStorage.getItem('cms_mock_media_images')
+    if (imgStr) {
+      const imgs = JSON.parse(imgStr)
+      if (imgs && typeof imgs === 'object') return imgs
+    }
+    // Backward compat: full mock payload with media.images
+    const str = localStorage.getItem('cms_mock_data')
+    const json = str ? JSON.parse(str) : null
+    const images = json?.media?.images || null
+    if (images) return images
+  } catch (_) {}
+  return null
+}
+
 async function loadMedia() {
   if (state.loaded || state.loading) return
   state.loading = true
@@ -23,6 +68,41 @@ async function loadMedia() {
       }
     }
     return out
+  }
+
+  // Force-local mode: never hit API, use local mock or built-ins
+  if (isForceLocal()) {
+    try {
+      const images = readLocalMock()
+      if (images) {
+        state.images = normalize(images)
+        state.loaded = true
+        return
+      }
+      // Built-in defaults
+      state.images = normalize({
+        hero_economic_indicators: '/img/hero-image.png',
+        hero_economic_statistics: '/img/hero-image.png',
+        hero_publications: '/img/hero-image.png',
+        hero_company_profile: '/img/hero-image.png',
+        hero_privacy: '/img/hero-image.png',
+        hero_terms: '/img/hero-image.png',
+        hero_transaction_law: '/img/hero-image.png',
+        hero_contact: '/img/hero-image.png',
+        hero_glossary: '/img/hero-image.png',
+        hero_membership: '/img/hero-image.png',
+        hero_seminars_current: '/img/hero-image.png',
+        hero_financial_reports: '/img/hero-image.png',
+        hero_sitemap: '/img/hero-image.png',
+        hero_consulting: '/img/hero-image.png',
+        // Other common section backgrounds
+        contact_section_bg: '/img/-----1-1.png',
+      })
+      state.loaded = true
+      return
+    } catch (e) {
+      // fall through to normal flow if something odd happens
+    }
   }
 
   try {
@@ -56,9 +136,7 @@ async function loadMedia() {
   } catch (e) {
     // 3) Fallback: local mock or built-in defaults
     try {
-      const str = localStorage.getItem('cms_mock_data')
-      const json = str ? JSON.parse(str) : null
-      const images = json?.media?.images || null
+      const images = readLocalMock()
       if (images) {
         state.images = normalize(images)
         state.loaded = true

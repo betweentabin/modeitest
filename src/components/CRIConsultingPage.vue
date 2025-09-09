@@ -303,9 +303,7 @@ export default {
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
   },
   mounted() {
-    this.adjustImageHeight();
     this.adjustRectangleHeight();
-    window.addEventListener('resize', this.adjustImageHeight);
     window.addEventListener('resize', this.adjustRectangleHeight);
     try {
       this._pageText = usePageText(this.pageKey)
@@ -313,29 +311,10 @@ export default {
     } catch(e) { /* noop */ }
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.adjustImageHeight);
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
-    adjustImageHeight() {
-      this.$nextTick(() => {
-        const contentText = this.$el.querySelector('.content-text');
-        const contentImage = this.$el.querySelector('.content-image');
-        
-        if (contentText && contentImage) {
-          const textHeight = contentText.offsetHeight;
-          contentImage.style.height = textHeight + 'px';
-        }
-        
-        const dutiesContent = this.$el.querySelector('.duties-content');
-        const dutiesImage = this.$el.querySelector('.duties-image');
-        
-        if (dutiesContent && dutiesImage) {
-          const dutiesHeight = dutiesContent.offsetHeight;
-          dutiesImage.style.height = dutiesHeight + 'px';
-        }
-      });
-    },
+    // Equal-height for paired images/text is handled with CSS Grid
     adjustRectangleHeight() {
       this.$nextTick(() => {
         const frame1321317466 = this.$el.querySelector('.frame-1321317466');
@@ -429,18 +408,21 @@ export default {
 .content-container {
   background-color: #FFF;
   border-radius: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  /* Grid gives equal height columns */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   max-width: 2000px;
   margin: 0 auto;
 }
 
 .content-image {
-  width: 50%;
+  width: 100%;
+  height: 100%;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 .content-text {
@@ -489,8 +471,10 @@ export default {
 .duties-container {
   background: #FFF;
   border-radius: 20px;
-  display: flex;
-  align-items: flex-start;
+  /* Grid gives equal height columns */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   max-width: 2000px;
   margin: 0 auto;
 }
@@ -539,10 +523,12 @@ export default {
 }
 
 .duties-image {
-  width: 50%;
+  width: 100%;
+  height: 100%;
   border-radius: 0 20px 20px 0;
   object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 .duties-description {
@@ -1121,6 +1107,7 @@ export default {
   
   .content-container,
   .duties-container {
+    display: flex !important;
     flex-direction: column;
   }
   
@@ -1131,6 +1118,7 @@ export default {
   }
   
   .duties-container {
+    display: flex !important;
     flex-direction: column-reverse;
   }
   

@@ -157,7 +157,10 @@ export default {
       }
     },
     pickReplace(idx) {
-      this.filePickIndex = idx
+      // 表示中の行（フィルタ/ページング適用後）の行を正しく取得
+      const start = (this.currentPage - 1) * this.pageSize
+      const row = this.filteredRows[start + idx]
+      if (!row) return
       // 動的にfile要素を起こす（1行1入力を避ける）
       const input = document.createElement('input')
       input.type = 'file'
@@ -165,7 +168,6 @@ export default {
       input.onchange = async (e) => {
         const file = e.target.files[0]
         if (!file) return
-        const row = this.allRows[this.filePickIndex]
         try {
           const fd = new FormData()
           fd.append('image', file)
@@ -188,8 +190,6 @@ export default {
         } catch (err) {
           console.error('replace image failed', err)
           alert('置換に失敗しました')
-        } finally {
-          this.filePickIndex = -1
         }
       }
       input.click()

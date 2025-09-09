@@ -183,20 +183,14 @@ export default {
 
     // Layout adjustments
     this.adjustRectangleHeight();
-    this.adjustAboutImageHeight();
-    this.adjustServiceImageHeight();
     this.adjustMainHeadline();
     // Ensure parentheses text like （金融機関） is reduced in size
     // note: small text is handled via inline span in mainHeadlineText
     window.addEventListener('resize', this.adjustRectangleHeight);
-    window.addEventListener('resize', this.adjustAboutImageHeight);
-    window.addEventListener('resize', this.adjustServiceImageHeight);
     window.addEventListener('resize', this.adjustMainHeadline);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
-    window.removeEventListener('resize', this.adjustAboutImageHeight);
-    window.removeEventListener('resize', this.adjustServiceImageHeight);
     window.removeEventListener('resize', this.adjustMainHeadline);
     // no observer to clean up
   },
@@ -212,32 +206,7 @@ export default {
         }
       });
     },
-    adjustAboutImageHeight() {
-      this.$nextTick(() => {
-        const aboutText = this.$el.querySelector('.about-text');
-        const aboutImage = this.$el.querySelector('.about-image');
-        
-        if (aboutText && aboutImage) {
-          const textHeight = aboutText.offsetHeight;
-          aboutImage.style.height = textHeight + 'px';
-        }
-      });
-    },
-    adjustServiceImageHeight() {
-      this.$nextTick(() => {
-        const serviceCards = this.$el.querySelectorAll('.service-card');
-        
-        serviceCards.forEach(card => {
-          const serviceContent = card.querySelector('.service-content');
-          const serviceImage = card.querySelector('.service-image');
-          
-          if (serviceContent && serviceImage) {
-            const contentHeight = serviceContent.offsetHeight;
-            serviceImage.style.height = contentHeight + 'px';
-          }
-        });
-      });
-    },
+    // Equal-height is achieved via CSS Grid; no JS height sync needed
     adjustMainHeadline() {
       this.$nextTick(() => {
         if (window.innerWidth <= 1150) {
@@ -324,23 +293,26 @@ export default {
 }
 
 .about-content {
-  display: flex;
-  align-items: flex-start;
+  /* Use grid so both columns share the same row height */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   width: 100%;
   max-width: 2000px;
   height: auto;
 }
 
 .about-image {
-  width: 50%;
-  height: auto;
+  width: 100%;
+  height: 100%;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 .about-text {
-  width: 50%;
+  width: 100%;
   height: auto;
   padding: 50px;
   background: white;
@@ -387,8 +359,10 @@ export default {
 }
 
 .service-card {
-  display: flex;
-  align-items: flex-start;
+  /* Grid ensures the image column matches the text column height */
+  display: grid;
+  grid-template-columns: 40% 60%;
+  align-items: stretch;
   width: 100%;
   background: white;
   border-radius: 20px;
@@ -397,14 +371,15 @@ export default {
 }
 
 .service-image {
-  width: 40%;
-  height: auto;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 .service-content {
-  width: 60%;
+  width: 100%;
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -453,6 +428,7 @@ export default {
 
   /* レイアウトの縦並び化 */
   .about-content {
+    display: flex !important;
     flex-direction: column !important;
     gap: 0 !important;
   }
@@ -477,6 +453,7 @@ export default {
 
   /* サービスカードの縦並び化 */
   .service-card {
+    display: flex !important;
     flex-direction: column !important;
   }
   
