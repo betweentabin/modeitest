@@ -25,7 +25,7 @@
       </div>
       <div class="button-3" @click="goToContact">
         <div class="text-44 valign-text-middle inter-bold-white-15px">
-          <CmsText :pageKey="cmsKey" fieldKey="contact_cta" tag="span" :fallback="'お問い合わせはコチラ'" />
+          <CmsText :pageKey="cmsKey" fieldKey="contact_cta" tag="span" :fallback="'お問い合わせはこちら'" />
         </div>
         <frame13213176122 />
       </div>

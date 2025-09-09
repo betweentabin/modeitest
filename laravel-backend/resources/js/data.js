@@ -161,7 +161,7 @@ export const screen2Data = {
     heroImage: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/hero-image.png",
     text66: "産・官・学・金（金融機関）の力で",
     text67: "企業活動を支援",
-    text68: "お問い合わせはコチラ",
+    text68: "お問い合わせはこちら",
     frame13213174901: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---2@2x.png",
     text72: "セミナー",
     seminar: "SEMINAR",

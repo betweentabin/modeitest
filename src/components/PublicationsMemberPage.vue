@@ -182,8 +182,8 @@
 
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはコチラ"
-      secondary-text="入会はコチラ"
+      primary-text="お問い合わせはこちら"
+      secondary-text="入会はこちら"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
     />

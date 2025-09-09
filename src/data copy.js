@@ -161,7 +161,7 @@ export const homePageData = {
     heroImage: "/img/hero-image.png",
     text66: "産・官・学・金（金融機関）の力で",
     text67: "企業活動を支援",
-    text68: "お問い合わせはコチラ",
+    text68: "お問い合わせはこちら",
     frame13213174901: "/img/---2.png",
     text72: "セミナー",
     seminar: "SEMINAR",

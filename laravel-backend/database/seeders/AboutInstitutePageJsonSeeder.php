@@ -28,8 +28,8 @@ class AboutInstitutePageJsonSeeder extends Seeder
             'service3_title' => '経営支援(経営サポート)',
             'service3_desc' => '企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。',
 
-            'cta_primary' => 'お問い合わせはコチラ',
-            'cta_secondary' => '入会はコチラ',
+            'cta_primary' => 'お問い合わせはこちら',
+            'cta_secondary' => '入会はこちら',
         ];
 
         $htmls = [

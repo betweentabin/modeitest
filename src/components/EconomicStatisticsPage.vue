@@ -239,10 +239,10 @@ export default {
       return this._pageText?.getText('page_subtitle', 'economic statistics') || 'economic statistics'
     },
     ctaPrimaryText() {
-      return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ'
+      return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら'
     },
     ctaSecondaryText() {
-      return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ'
+      return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら'
     },
     filteredPublications() {
       const filtered = this.publications.filter(pub => {

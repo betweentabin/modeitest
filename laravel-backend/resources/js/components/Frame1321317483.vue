@@ -3,7 +3,7 @@
     <div class="overlap-group6">
       <div class="rectangle-9"></div>
       <div class="button-3">
-        <div class="text-44 valign-text-middle inter-bold-white-15px">お問い合わせはコチラ</div>
+        <div class="text-44 valign-text-middle inter-bold-white-15px">お問い合わせはこちら</div>
         <frame13213176122 />
       </div>
       <div class="text-45 valign-text-middle">株式会社ちくぎん地域経済研究所</div>

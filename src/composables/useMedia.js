@@ -27,14 +27,16 @@ async function loadMedia() {
 
   try {
     // 1) If admin session exists, fetch the media page through admin API
-    // This returns the actual page object including unpublished changes
-    const adminPage = await apiClient.get('/api/admin/pages/media', { silent: true })
-    const page = adminPage?.data?.page || adminPage?.data?.data?.page || adminPage?.page
-    const images = page?.content?.images || null
-    if (images) {
-      state.images = normalize(images)
-      state.loaded = true
-      return
+    // Avoid hitting admin endpoint when not authenticated to prevent spurious 404 logs
+    if (apiClient.isAdminAuthenticated()) {
+      const adminPage = await apiClient.get('/api/admin/pages/media', { silent: true })
+      const page = adminPage?.data?.page || adminPage?.data?.data?.page || adminPage?.page
+      const images = page?.content?.images || null
+      if (images) {
+        state.images = normalize(images)
+        state.loaded = true
+        return
+      }
     }
   } catch (e) {
     // ignore and try public endpoint

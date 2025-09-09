@@ -54,30 +54,9 @@ export default {
     }
 
     const hasPreview = this._hasCmsPreviewFlag()
-    if (hasPreview) {
-      this._loadPreviewFromStorage()
-      this._previewHandler = (ev) => {
-        const data = ev?.data || {}
-        if (data && data.type === 'cms-preview' && data.pageKey === this.pageKey) {
-          if (typeof data.html === 'string') {
-            this.html = data.html
-            try { localStorage.setItem(this._lsKey(), data.html) } catch (_) {}
-            this.dirty = true
-          }
-        }
-      }
-      window.addEventListener('message', this._previewHandler)
-      // Also try to fetch latest from admin endpoint when admin token exists
-      try {
-        const token = localStorage.getItem('admin_token')
-        if (token) {
-          const res = await apiClient.get(`/api/admin/pages/${this.pageKey}`, { silent: true, params: { _t: Date.now() } })
-          const html = pickHtml(res)
-          if (typeof html === 'string' && html.trim().length) this.html = html
-        }
-      } catch (_) { /* ignore */ }
-      return
-    }
+    // インライン編集廃止に伴い、プレビュー経由の上書きや管理APIの強制取得は無効化
+    // 常に公開APIからの読み取りのみを行う
+    if (false && hasPreview) { /* disabled preview/edit path */ }
     try {
       const res = await apiClient.getPageContent(this.pageKey)
       const html = pickHtml(res)
@@ -93,12 +72,8 @@ export default {
   methods: {
     _lsKey() { return `cms_preview_${this.pageKey}` },
     _hasCmsPreviewFlag() {
-      try {
-        const hash = window.location.hash || ''
-        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
-        const params = new URLSearchParams(qs)
-        return params.has('cmsPreview')
-      } catch (_) { return false }
+      // インライン編集・プレビュー連携は停止
+      return false
     },
     _hasCmsEditFlag() {
       try {
@@ -166,7 +141,8 @@ export default {
   },
   computed: {
     isEditMode() {
-      return this._hasCmsPreviewFlag() && this._hasCmsEditFlag()
+      // 編集UIは常に無効化
+      return false
     }
   }
 }

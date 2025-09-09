@@ -172,8 +172,8 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'ちくぎん地域経済研究所について') || 'ちくぎん地域経済研究所について' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'for you') || 'for you' },
-    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
-    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
   },
   mounted() {
     // Load CMS page text once

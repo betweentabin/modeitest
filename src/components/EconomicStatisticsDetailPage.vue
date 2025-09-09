@@ -90,7 +90,7 @@
 
 <!-- Action Button Section -->
 <ActionButton 
-  primary-text="お問い合わせはコチラ"
+  primary-text="お問い合わせはこちら"
   secondary-text="メンバー登録はコチラ"
   max-width="1500px"
   @primary-click="handleContactClick"

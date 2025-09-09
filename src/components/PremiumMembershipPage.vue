@@ -76,7 +76,7 @@
          <!-- CTA Section -->
      <ActionButton 
        primary-text="会員についてお問い合わせ"
-       secondary-text="入会はコチラ"
+       secondary-text="入会はこちら"
        @primary-click="handleContactClick"
        @secondary-click="handleJoinClick"
      />

@@ -32,8 +32,8 @@ class ConsultingPageJsonSeeder extends Seeder
             'achievements_title' => 'CRI経営コンサルティングの実績紹介',
             'achievements_subtitle' => 'achievements',
             // CTA
-            'cta_primary' => 'お問い合わせはコチラ',
-            'cta_secondary' => '入会はコチラ',
+            'cta_primary' => 'お問い合わせはこちら',
+            'cta_secondary' => '入会はこちら',
         ];
 
         $htmls = [

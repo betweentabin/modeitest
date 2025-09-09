@@ -147,7 +147,7 @@
         <div class="support-description">
           <p>「経営改善」とは、会社（ハード）が変わるのではなく、会社の中にいる「人」（ソフト）が変わることです。 ちくぎん地域経済研究所は、事業のお悩み解決のために、あなたにぴったりの解決策をご提案いたします。<br>どうぞお気軽にご相談ください。</p>
           <button class="contact-btn" @click="goToContact">
-            <span>お問い合わせはコチラ</span>
+            <span>お問い合わせはこちら</span>
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none">
               <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
               <path d="M13.2193 10.2752L9.7194 13.875C9.64643 13.95 9.54746 13.9922 9.44427 13.9922C9.34107 13.9922 9.24211 13.95 9.16914 13.875C9.09617 13.7999 9.05517 13.6981 9.05517 13.592C9.05517 13.4858 9.09617 13.3841 9.16914 13.309L12.0055 10.3922L4.38888 10.3922C4.28574 10.3922 4.18683 10.35 4.1139 10.275C4.04097 10.2 4 10.0983 4 9.99219C4 9.88611 4.04097 9.78437 4.1139 9.70936C4.18683 9.63435 4.28574 9.59221 4.38888 9.59221L12.0055 9.59221L9.16914 6.67537C9.09617 6.60032 9.05517 6.49853 9.05517 6.39239C9.05517 6.28625 9.09617 6.18446 9.16914 6.1094C9.24211 6.03435 9.34107 5.99219 9.44427 5.99219C9.54746 5.99219 9.64643 6.03435 9.7194 6.1094L13.2193 9.7092C13.2554 9.74635 13.2841 9.79046 13.3037 9.83902C13.3233 9.88758 13.3333 9.93962 13.3333 9.99219C13.3333 10.0448 13.3233 10.0968 13.3037 10.1454C13.2841 10.1939 13.2554 10.238 13.2193 10.2752Z" fill="#1A1A1A"/>
@@ -241,8 +241,8 @@
     
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはコチラ"
-      secondary-text="入会はコチラ"
+      primary-text="お問い合わせはこちら"
+      secondary-text="入会はこちら"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
     />
@@ -299,8 +299,8 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'consulting') || 'consulting' },
-    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ' },
-    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
   },
   mounted() {
     this.adjustImageHeight();

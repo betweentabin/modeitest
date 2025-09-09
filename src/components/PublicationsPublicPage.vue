@@ -477,10 +477,10 @@ export default {
       return this._pageText?.getText('page_subtitle', 'publications') || 'publications'
     },
     ctaPrimaryText() {
-      return this._pageText?.getText('cta_primary', 'お問い合わせはコチラ') || 'お問い合わせはコチラ'
+      return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら'
     },
     ctaSecondaryText() {
-      return this._pageText?.getText('cta_secondary', '入会はコチラ') || '入会はコチラ'
+      return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら'
     }
   },
   methods: {

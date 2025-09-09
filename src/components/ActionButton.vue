@@ -27,11 +27,11 @@ export default {
   props: {
     primaryText: {
       type: String,
-      default: "お問い合わせはコチラ"
+      default: "お問い合わせはこちら"
     },
     secondaryText: {
       type: String,
-      default: "入会はコチラ"
+      default: "入会はこちら"
     },
     showSecondary: {
       type: Boolean,

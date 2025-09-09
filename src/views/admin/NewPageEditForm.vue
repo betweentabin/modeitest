@@ -233,7 +233,7 @@
                 <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
                 <!-- <label><input type="radio" value="inline" v-model="contentMode" /> ページ風プレビュー（直編集）</label> -->
-                <label><input type="radio" value="live" v-model="contentMode" /> 現在のページそのままプレビュー</label>
+                <label><input type="radio" value="live" v-model="contentMode" /> プレビュー（表示のみ）</label>
               </div>
 
               <!-- WYSIWYG editor -->
@@ -365,7 +365,7 @@
                   <iframe ref="liveFrame" class="live-preview" :src="previewUrl"></iframe>
                 </div>
               </div>
-                <p class="form-help">このプレビューは実際のページをそのまま表示します。入力内容は即座に反映されます（保存前は閲覧者には見えません）。</p>
+                <p class="form-help">このプレビューは実際のページを表示します（表示のみ）。</p>
               </div>
 
               <!-- Fields mode: key-value editor for content.texts -->
@@ -618,8 +618,8 @@ const KEY_HELP = {
   page_title: { label: 'ページタイトル', desc: 'ページの大見出しに表示されます', placeholder: '例）経済・調査統計' },
   page_subtitle: { label: 'サブタイトル（英字など）', desc: 'タイトル下に小さく英字等で表示', placeholder: '例）economic statistics' },
   lead: { label: 'リード文', desc: 'ページ冒頭の説明文（任意）', placeholder: 'ページの概要を1〜2文で書きます' },
-  cta_primary: { label: 'メインボタン文言', desc: '主ボタンのテキスト', placeholder: '例）お問い合わせはコチラ' },
-  cta_secondary: { label: 'サブボタン文言', desc: '副ボタンのテキスト', placeholder: '例）入会はコチラ' },
+  cta_primary: { label: 'メインボタン文言', desc: '主ボタンのテキスト', placeholder: '例）お問い合わせはこちら' },
+  cta_secondary: { label: 'サブボタン文言', desc: '副ボタンのテキスト', placeholder: '例）入会はこちら' },
   form_title: { label: 'フォーム見出し', desc: 'お問い合わせフォーム上部の見出し', placeholder: 'お問い合わせ' },
   mission_title: { label: 'ミッション見出し', desc: '会社/団体紹介の小見出し', placeholder: '産学官金のネットワークを活かした地域創生' },
   mission_body: { label: 'ミッション本文', desc: '紹介の本文', placeholder: '私たちは、〜〜〜' },
@@ -896,8 +896,8 @@ export default {
     previewUrl() {
       const base = this.previewPath
       const sep = base.includes('?') ? '&' : '?'
-      // cmsEdit=1 を付けるとプレビュー側が contenteditable になり、逆方向に編集が反映されます
-      return `${base}${sep}cmsPreview=1&cmsEdit=1`
+      // cmsEdit を付けずにプレビュー（閲覧のみ）
+      return `${base}${sep}cmsPreview=1`
     },
     recommendedKeys() {
       const key = this.formData.page_key || this.pageKey || ''
