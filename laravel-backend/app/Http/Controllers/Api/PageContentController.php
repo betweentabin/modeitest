@@ -448,7 +448,7 @@ class PageContentController extends Controller
                 'hero_contact', 'hero_glossary', 'hero_membership', 'hero_seminars_current',
                 'hero_financial_reports', 'hero_sitemap', 'hero_consulting',
                 // 追加分（使用中だがSeederで漏れがち）
-                'hero_news', 'hero_faq', 'hero_about_institute', 'hero_seminar',
+                'hero_news', 'hero_faq', 'hero_about_institute', 'hero_seminar', 'hero_premium_membership',
                 // 子コンポーネント（CompanyProfile など）で参照されるメディアキー
                 'company_profile_philosophy', 'company_profile_message',
                 'company_profile_staff_morita', 'company_profile_staff_mizokami',

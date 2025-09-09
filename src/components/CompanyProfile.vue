@@ -15,27 +15,43 @@
 
     <!-- In-page Navigation -->
     <nav class="inpage-nav" aria-label="セクション内リンク">
-      <a href="#philosophy" @click.prevent="scrollTo('philosophy')">
-        <CmsText pageKey="company-profile" fieldKey="nav_philosophy" tag="span" :fallback="'経営理念'" />
-      </a>
-      <a href="#message" @click.prevent="scrollTo('message')">
-        <CmsText pageKey="company-profile" fieldKey="nav_message" tag="span" :fallback="'ご挨拶'" />
-      </a>
-      <a href="#profile" @click.prevent="scrollTo('profile')">
-        <CmsText pageKey="company-profile" fieldKey="nav_profile" tag="span" :fallback="'企業概要'" />
-      </a>
-      <a href="#history" @click.prevent="scrollTo('history')">
-        <CmsText pageKey="company-profile" fieldKey="nav_history" tag="span" :fallback="'沿革'" />
-      </a>
-      <a href="#staff" @click.prevent="scrollTo('staff')">
-        <CmsText pageKey="company-profile" fieldKey="nav_staff" tag="span" :fallback="'所員紹介'" />
-      </a>
-      <a href="#financial-reports" @click.prevent="scrollTo('financial-reports')">
-        <CmsText pageKey="company-profile" fieldKey="nav_financial" tag="span" :fallback="'決算報告'" />
-      </a>
-      <a href="#access" @click.prevent="scrollTo('access')">
-        <CmsText pageKey="company-profile" fieldKey="nav_access" tag="span" :fallback="'アクセス'" />
-      </a>
+      <ul class="inpage-list">
+        <li class="inpage-item">
+          <a href="#philosophy" @click.prevent="scrollTo('philosophy')">
+            <CmsText pageKey="company-profile" fieldKey="nav_philosophy" tag="span" :fallback="'経営理念'" />
+          </a>
+        </li>
+        <li class="inpage-item">
+          <a href="#message" @click.prevent="scrollTo('message')">
+            <CmsText pageKey="company-profile" fieldKey="nav_message" tag="span" :fallback="'ご挨拶'" />
+          </a>
+        </li>
+        <li class="inpage-item">
+          <a href="#profile" @click.prevent="scrollTo('profile')">
+            <CmsText pageKey="company-profile" fieldKey="nav_profile" tag="span" :fallback="'企業概要'" />
+          </a>
+        </li>
+        <li class="inpage-item">
+          <a href="#history" @click.prevent="scrollTo('history')">
+            <CmsText pageKey="company-profile" fieldKey="nav_history" tag="span" :fallback="'沿革'" />
+          </a>
+        </li>
+        <li class="inpage-item">
+          <a href="#staff" @click.prevent="scrollTo('staff')">
+            <CmsText pageKey="company-profile" fieldKey="nav_staff" tag="span" :fallback="'所員紹介'" />
+          </a>
+        </li>
+        <li class="inpage-item">
+          <a href="#financial-reports" @click.prevent="scrollTo('financial-reports')">
+            <CmsText pageKey="company-profile" fieldKey="nav_financial" tag="span" :fallback="'決算報告'" />
+          </a>
+        </li>
+        <li class="inpage-item">
+          <a href="#access" @click.prevent="scrollTo('access')">
+            <CmsText pageKey="company-profile" fieldKey="nav_access" tag="span" :fallback="'アクセス'" />
+          </a>
+        </li>
+      </ul>
     </nav>
 
     <!-- CMS Body (optional full HTML override) -->
@@ -746,24 +762,67 @@ export default {
 
 /* In-page nav */
 .inpage-nav {
+  padding: 16px 20px 0;
+}
+
+.inpage-list {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  padding: 16px 20px 0;
-  color: #6B7280; /* gray-500 */
-  font-weight: 700;
+  align-items: center;
+  gap: 0; /* gaps come from separators */
   flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1200px;
 }
-.inpage-nav a {
-  color: #6B7280;
+
+.inpage-item {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  color: #6B7280; /* gray-500 */
+}
+
+.inpage-item a {
+  color: inherit;
   text-decoration: none;
   font-size: 16px;
+  padding: 6px 8px;
+  line-height: 1.6;
 }
-.inpage-nav a:hover { color: #DA5761; }
-.inpage-nav a:not(:first-child)::before {
+
+.inpage-item a:hover { color: #DA5761; }
+
+/* angled slash separator (after each item except last) */
+.inpage-item:not(:last-child)::after {
   content: '/';
-  margin: 0 10px;
   color: #B0B0B0;
+  display: inline-block;
+  margin: 0 14px;
+  transform: skewX(-10deg);
+}
+
+/* Responsive behavior: turn into horizontal scroll with snap on small screens */
+@media (max-width: 900px) {
+  .inpage-list {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding-bottom: 8px;
+    gap: 0;
+  }
+  .inpage-item {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+  /* keep separators smaller on mobile */
+  .inpage-item:not(:last-child)::after {
+    margin: 0 10px;
+    opacity: 0.7;
+  }
 }
 
 

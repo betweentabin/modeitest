@@ -478,6 +478,7 @@ class CompletePagesSeeder extends Seeder
                         'hero_contact' => '/img/hero-image.png',
                         'hero_glossary' => '/img/hero-image.png',
                         'hero_membership' => '/img/hero-image.png',
+                        'hero_premium_membership' => '/img/hero-image.png',
                         'hero_seminars_current' => '/img/hero-image.png',
                         'hero_financial_reports' => '/img/hero-image.png',
                         'hero_sitemap' => '/img/hero-image.png',
