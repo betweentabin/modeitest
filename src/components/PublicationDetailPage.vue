@@ -164,13 +164,12 @@ export default {
     requiredLevel() {
       if (!this.publication) return 'free'
       const lvlRaw = this.publication.membership_level || this.publication.membershipLevel
-      const lvl = String(lvlRaw || '').toLowerCase()
+      const lvl = String(lvlRaw || '').trim().toLowerCase()
+      // DBに membership_level が入っている場合はそれを優先（source of truth）
+      if (lvl) return lvl
+      // 旧データ互換: members_only=true の場合は標準会員以上とみなす
       const mo = (this.publication.members_only ?? this.publication.membersOnly)
-      // 未設定のときは members_only/membersOnly で補完
-      if (!lvl) return mo ? 'standard' : 'free'
-      // 明示 free または members_only=false は free 扱い
-      if (lvl === 'free' || mo === false) return 'free'
-      return lvl
+      return mo ? 'standard' : 'free'
     },
     // 会員レベルに基づくダウンロード可否
     // ・free: だれでも可
