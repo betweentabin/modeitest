@@ -398,15 +398,22 @@
                     </button>
                   </div>
                 </div>
+                <!-- Device filter to clarify which device the text appears on -->
+                <div class="device-filter">
+                  <span class="df-label">表示対象</span>
+                  <label class="df-item"><input type="radio" value="all" v-model="fieldDeviceFilter" /> 全て</label>
+                  <label class="df-item"><input type="radio" value="desktop" v-model="fieldDeviceFilter" /> デスクトップ</label>
+                  <label class="df-item"><input type="radio" value="mobile" v-model="fieldDeviceFilter" /> モバイル</label>
+                </div>
                 <div class="fields-editor">
                   <div class="field-head">
                     <div>キー</div>
                     <div>値</div>
-                    <div>文字数</div>
+                    <div>情報</div>
                     <div>操作</div>
                   </div>
                   <div 
-                    v-for="(row, idx) in textsEditor" 
+                    v-for="(row, idx) in filteredTextRows" 
                     :key="row._id"
                     :class="['field-row', getKeyLimit(row.key) && (row.value || '').length > getKeyLimit(row.key) ? 'field-row-warning' : '']"
                   >
@@ -423,8 +430,9 @@
                       :placeholder="getKeyPlaceholder(row.key) ? getKeyPlaceholder(row.key) : '値（表示テキスト）'"
                     />
                     <div class="field-hint">
-                      <span v-if="getKeyLimit(row.key)" class="counter">{{ (row.value || '').length }}/{{ getKeyLimit(row.key) }}</span>
-                      <span v-else class="counter">{{ (row.value || '').length }}</span>
+                      <span class="device-badge" :class="'dev-' + getKeyDevice(row.key)">{{ getKeyDeviceLabel(row.key) }}</span>
+                      <span v-if="getKeyLimit(row.key)" class="counter" style="margin-left:6px;">{{ (row.value || '').length }}/{{ getKeyLimit(row.key) }}</span>
+                      <span v-else class="counter" style="margin-left:6px;">{{ (row.value || '').length }}</span>
                       <div v-if="getKeyLabel(row.key)" class="key-help">{{ getKeyLabel(row.key) }}：{{ getKeyDesc(row.key) }}</div>
                       <div v-if="getKeyLocation(row.key)" class="key-help">表示箇所：{{ getKeyLocation(row.key) }}</div>
                     </div>
@@ -791,6 +799,15 @@ const KEY_LOCATIONS = {
   }
 }
 
+// Optional device mapping per page/key to clarify where text is used.
+// Values: 'desktop' | 'mobile' | 'both' (default when unspecified)
+// Keep this sparse; unspecified keys are treated as 'both'.
+const KEY_DEVICES = {
+  // Example structure (uncomment and adjust as needed):
+  // 'aboutus': { page_title: 'both', page_subtitle: 'both' },
+  // 'membership': { page_title: 'both' },
+}
+
 export default {
   name: 'NewPageEditForm',
   components: {
@@ -831,7 +848,9 @@ export default {
       // ライブプレビューのデバイス幅切替
       previewDevice: 'desktop',
       collectedTextKeys: [],
-      collectedTextDefaults: {}
+      collectedTextDefaults: {},
+      // Fields view: filter rows by device for clarity
+      fieldDeviceFilter: 'all' // 'all' | 'desktop' | 'mobile'
     }
   },
   computed: {
@@ -902,6 +921,15 @@ export default {
     recommendedKeys() {
       const key = this.formData.page_key || this.pageKey || ''
       return RECOMMENDED_KEYS[key] || []
+    },
+    // Filter text rows by device selection (default: all)
+    filteredTextRows() {
+      const f = this.fieldDeviceFilter
+      if (f === 'all') return this.textsEditor
+      return this.textsEditor.filter(r => {
+        const d = this.getKeyDevice(r.key)
+        return d === f || d === 'both'
+      })
     },
     previewWidthPx() {
       switch (this.previewDevice) {
@@ -1374,6 +1402,17 @@ export default {
       const page = (this.formData.page_key || this.pageKey || '').trim()
       const key = (k || '').trim()
       return (KEY_LOCATIONS[page] && KEY_LOCATIONS[page][key]) ? KEY_LOCATIONS[page][key] : ''
+    },
+    getKeyDevice(k) {
+      const page = (this.formData.page_key || this.pageKey || '').trim()
+      const key = (k || '').trim()
+      const map = KEY_DEVICES[page] || {}
+      const v = map[key]
+      return v === 'desktop' || v === 'mobile' ? v : 'both'
+    },
+    getKeyDeviceLabel(k) {
+      const d = this.getKeyDevice(k)
+      return d === 'desktop' ? 'デスクトップ' : d === 'mobile' ? 'モバイル' : '両方'
     },
     reloadFieldsFromJson() {
       try {
@@ -1903,6 +1942,30 @@ export default {
   font-size: 12px;
   color: #666;
 }
+
+/* Device indicator and filter */
+.device-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 6px 0;
+  font-size: 13px;
+  color: #555;
+}
+.df-label { font-weight: 600; color: #374151; }
+.df-item { display: inline-flex; align-items: center; gap: 6px; }
+
+.device-badge {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+.dev-both { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+.dev-desktop { background: #ecfeff; border-color: #a5f3fc; color: #155e75; }
+.dev-mobile { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
 
 .counter {
   background: #f3f4f6;

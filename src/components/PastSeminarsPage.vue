@@ -627,17 +627,16 @@ export default {
   padding: 10px 24px;
   min-width: 180px;
   border-radius: 10px;
-  border: 1.5px solid var(--color-accent-dark, #9C3940);
-  color: var(--color-accent-dark, #9C3940);
-  background: #fff;
+  border: none;
+  color: #fff;
+  background: #1A1A1A;
   font-weight: 700;
   cursor: pointer;
-  transition: all .2s ease;
+  transition: background-color .2s ease, opacity .2s ease;
 }
 
 .back-btn:hover {
-  background: var(--color-accent-dark, #9C3940);
-  color: #fff;
+  background: #333333;
 }
 
 @media (max-width: 480px) {
