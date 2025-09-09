@@ -15,7 +15,7 @@
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
     
     <!-- CMS Body (optional) -->
-    <CmsBlock page-key="cri-consulting" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
     
     <!-- What is CRI Consulting Section -->
     <div class="what-is-section">

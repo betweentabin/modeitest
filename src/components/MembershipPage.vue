@@ -16,7 +16,7 @@
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- CMS Body (optional) -->
-    <CmsBlock page-key="membership" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
 
     <!-- Introduction Section -->
     <section class="introduction-section">

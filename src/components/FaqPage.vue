@@ -29,7 +29,7 @@
       </div>
       
       <!-- CMS Body (optional) -->
-      <CmsBlock page-key="faq" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
       
       <div class="faq-categories">
         <button 

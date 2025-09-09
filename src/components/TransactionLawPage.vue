@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- If HTML is provided in page JSON, render it and hide the static table -->
-      <CmsBlock page-key="transaction-law" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
 
       <div v-if="!hasHtml && !isEditPreview" class="transaction-law-table">
         <div class="table-row">

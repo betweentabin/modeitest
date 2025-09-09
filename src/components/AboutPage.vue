@@ -17,7 +17,7 @@
     </div>
 
     <!-- Our Mission Section -->
-    <CmsBlock page-key="about" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
     <section class="section mission-section">
       <div class="container">
         <div class="section-header">

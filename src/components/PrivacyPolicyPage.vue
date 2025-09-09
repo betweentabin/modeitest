@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <CmsBlock page-key="privacy" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
       <div class="content-container" v-if="!hasHtml && !isEditPreview">
         <!-- Introduction -->
         <div class="intro-section">

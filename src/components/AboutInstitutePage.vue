@@ -15,7 +15,7 @@
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- CMS Body (optional) -->
-    <CmsBlock page-key="about-institute" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
 
     <!-- About Section -->
     <div class="about-section">

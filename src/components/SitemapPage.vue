@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- CMS Body (optional) -->
-      <CmsBlock page-key="sitemap" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
 
       <div class="content-container">
                  <!-- Sitemap Content -->

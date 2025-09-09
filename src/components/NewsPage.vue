@@ -28,7 +28,7 @@
       </div>
 
       <!-- CMS Body (optional) -->
-      <CmsBlock page-key="news" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
 
       <div class="news-container">
         <div class="news-categories">

@@ -25,7 +25,7 @@
       </div>
 
       <!-- CMS Body (optional) -->
-      <CmsBlock page-key="economic-statistics" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
 
       <!-- Filter Container -->
       <div class="filter-container">

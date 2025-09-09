@@ -14,7 +14,7 @@
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- CMS Body (optional full HTML override) -->
-    <CmsBlock page-key="company-profile" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
 
     <!-- Philosophy Section -->
     <section class="philosophy-section">

@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <CmsBlock page-key="terms" wrapper-class="cms-body" />
+      <!-- CMS Body removed -->
       <div class="content-container" v-if="!hasHtml">
         <!-- Introduction -->
         <div class="intro-section">

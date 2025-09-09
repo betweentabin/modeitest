@@ -15,7 +15,7 @@
     <Breadcrumbs :breadcrumbs="['セミナー', pageTitle]" />
 
     <!-- CMS Body (optional) -->
-    <CmsBlock page-key="seminars-current" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
 
     <!-- Current Seminars Section -->
     <div class="current-seminars-section">

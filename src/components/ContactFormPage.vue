@@ -15,7 +15,7 @@
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- CMS Body (optional) -->
-    <CmsBlock page-key="contact" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
 
     <!-- Form Section -->
     <section class="form-section">

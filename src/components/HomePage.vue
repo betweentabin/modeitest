@@ -35,8 +35,7 @@
       </div>
     </div>
 
-    <!-- CMS Body (optional) -->
-    <CmsBlock page-key="home" wrapper-class="cms-body" />
+    <!-- CMS Body removed -->
 
       <div class="frame-1321317457">
           <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }" @click="goToSeminar" style="cursor: pointer;">
@@ -1182,7 +1181,7 @@ export default {
 }
 
 .section-title {
-  color: #DA5761;
+  color: #1A1A1A;
   font-size: 36px;
   font-weight: 700;
   text-align: center;
@@ -1199,11 +1198,11 @@ export default {
 .divider-line {
   width: 69px;
   height: 2px;
-  background: #DA5761;
+  background: #1A1A1A;
 }
 
 .divider-text {
-  color: #DA5761;
+  color: #1A1A1A;
   font-size: 20px;
   font-weight: 700;
 }
