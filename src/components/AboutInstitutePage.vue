@@ -165,7 +165,7 @@ export default {
       pageKey: 'about-institute',
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      mainHeadlineText: '産 官 学 金 を<br>繋ぐ架け橋へ',
+      mainHeadlineText: '産・官・学・金(金融機関)<br>をつなぐ架け橋へ',
     };
   },
   computed: {

@@ -13,11 +13,22 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- In-page Navigation -->
+    <nav class="inpage-nav" aria-label="セクション内リンク">
+      <a href="#philosophy" @click.prevent="scrollTo('philosophy')">経営理念</a>
+      <a href="#message" @click.prevent="scrollTo('message')">ご挨拶</a>
+      <a href="#profile" @click.prevent="scrollTo('profile')">企業概要</a>
+      <a href="#history" @click.prevent="scrollTo('history')">沿革</a>
+      <a href="#staff" @click.prevent="scrollTo('staff')">所員紹介</a>
+      <a href="#financial-reports" @click.prevent="scrollTo('financial-reports')">決算報告</a>
+      <a href="#access" @click.prevent="scrollTo('access')">アクセス</a>
+    </nav>
+
     <!-- CMS Body (optional full HTML override) -->
     <!-- CMS Body removed -->
 
     <!-- Philosophy Section -->
-    <section class="philosophy-section">
+    <section id="philosophy" class="philosophy-section">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="philosophy_title" tag="span" :fallback="'経営理念'" />
@@ -62,7 +73,7 @@
     </section>
 
     <!-- Message Section -->
-    <section class="message-section">
+    <section id="message" class="message-section">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="message_title" tag="span" :fallback="'ご挨拶'" />
@@ -101,7 +112,7 @@
     <ContactSection cms-page-key="company-profile" />
 
     <!-- Company Profile Section -->
-    <section class="company-profile-section">
+    <section id="profile" class="company-profile-section">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="profile_title" tag="span" :fallback="'会社概要'" />
@@ -175,7 +186,7 @@
     </section>    
 
     <!-- History Section -->
-    <section class="history-section">
+    <section id="history" class="history-section">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="history_title" tag="span" :fallback="'沿革'" />
@@ -227,7 +238,7 @@
     </section>
 
     <!-- Staff Section -->
-    <section class="staff-section">
+    <section id="staff" class="staff-section">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="staff_title" tag="span" :fallback="'所員紹介'" />
@@ -306,7 +317,7 @@
     </section>
 
     <!-- Financial Reports Section -->
-    <section class="financial-reports-section">
+    <section id="financial-reports" class="financial-reports-section">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="financial_reports_title" tag="span" :fallback="'決算報告'" />
@@ -362,6 +373,7 @@
     </section>
 
         <!-- Access Section -->
+    <div id="access"></div>
     <AccessSection />
 
     <!-- Footer Navigation -->
@@ -470,6 +482,16 @@ export default {
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
+    scrollTo(id) {
+      try {
+        const el = this.$el.querySelector(`#${id}`)
+        if (el && typeof el.scrollIntoView === 'function') {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        } else if (el) {
+          window.location.hash = id
+        }
+      } catch (_) {}
+    },
     media(key, fallback = '') {
       try {
         if (this._media && this._media.getImage) {
@@ -706,6 +728,28 @@ export default {
   position: relative;
   width: 100%;
   overflow-x: auto;
+}
+
+/* In-page nav */
+.inpage-nav {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 20px 0;
+  color: #6B7280; /* gray-500 */
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+.inpage-nav a {
+  color: #6B7280;
+  text-decoration: none;
+  font-size: 16px;
+}
+.inpage-nav a:hover { color: #DA5761; }
+.inpage-nav a:not(:first-child)::before {
+  content: '/';
+  margin: 0 10px;
+  color: #B0B0B0;
 }
 
 
