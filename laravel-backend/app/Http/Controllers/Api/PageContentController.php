@@ -442,21 +442,31 @@ class PageContentController extends Controller
         // URL正規化
         // 追加: コード上で使用しているが media レジストリに未登録の Hero キーを補完
         try {
-            $heroKeys = [
+            $baseHero = [
                 'hero_economic_indicators', 'hero_economic_statistics', 'hero_publications',
                 'hero_company_profile', 'hero_privacy', 'hero_terms', 'hero_transaction_law',
                 'hero_contact', 'hero_glossary', 'hero_membership', 'hero_seminars_current',
                 'hero_financial_reports', 'hero_sitemap', 'hero_consulting',
-                // 追加分（使用中だがSeederで漏れがち）
                 'hero_news', 'hero_faq', 'hero_about_institute', 'hero_seminar', 'hero_premium_membership',
-                // 子コンポーネント（CompanyProfile など）で参照されるメディアキー
+            ];
+            $companyKeys = [
                 'company_profile_philosophy', 'company_profile_message',
                 'company_profile_staff_morita', 'company_profile_staff_mizokami',
                 'company_profile_staff_kuga', 'company_profile_staff_takada',
                 'company_profile_staff_nakamura',
-                // セクション背景
-                'contact_section_bg',
             ];
+            $sectionKeys = [ 'contact_section_bg' ];
+
+            $variants = function(array $keys) {
+                $out = [];
+                foreach ($keys as $k) {
+                    $out[] = $k;
+                    $out[] = $k . '_mobile';
+                    $out[] = $k . '_tablet';
+                }
+                return $out;
+            };
+            $heroKeys = array_merge($variants($baseHero), $variants($companyKeys), $variants($sectionKeys));
             $hasItem = function($k) use ($items) {
                 foreach ($items as $it) {
                     if (($it['page_key'] ?? '') === 'media' && ($it['key'] ?? '') === $k) return true;

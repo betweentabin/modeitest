@@ -183,10 +183,32 @@ export function useMedia() {
     const v = state.images?.[key]
     return typeof v === 'string' && v.length ? v : resolveMediaUrl(fallback)
   }
+  const viewport = () => {
+    try {
+      const w = typeof window !== 'undefined' ? window.innerWidth : 1200
+      if (w <= 600) return 'mobile'
+      if (w <= 1024) return 'tablet'
+      return 'desktop'
+    } catch (_) { return 'desktop' }
+  }
+  const getResponsiveImage = (key, fallback = '') => {
+    const vp = viewport()
+    const tryKeys = vp === 'mobile'
+      ? [ `${key}_mobile`, `${key}_sm`, `${key}@mobile`, key ]
+      : vp === 'tablet'
+      ? [ `${key}_tablet`, `${key}_md`, key ]
+      : [ key ]
+    for (const k of tryKeys) {
+      const v = state.images?.[k]
+      if (typeof v === 'string' && v.length) return v
+    }
+    return resolveMediaUrl(fallback)
+  }
   return {
     ...toRefs(state),
     ensure,
     getImage,
+    getResponsiveImage,
   }
 }
 

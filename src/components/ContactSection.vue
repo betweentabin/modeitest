@@ -76,9 +76,15 @@ export default {
     },
     resolvedBg() {
       const key = this.mediaKey
-      if (key && this._media && this._media.getImage) {
-        const v = this._media.getImage(key, this.backgroundImage)
-        return v || this.backgroundImage
+      if (key && this._media) {
+        if (this._media.getResponsiveImage) {
+          const v = this._media.getResponsiveImage(key, this.backgroundImage)
+          return v || this.backgroundImage
+        }
+        if (this._media.getImage) {
+          const v = this._media.getImage(key, this.backgroundImage)
+          return v || this.backgroundImage
+        }
       }
       return this.backgroundImage
     },

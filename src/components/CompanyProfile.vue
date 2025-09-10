@@ -524,8 +524,13 @@ export default {
     },
     media(key, fallback = '') {
       try {
-        if (this._media && this._media.getImage) {
-          return this._media.getImage(key, fallback) || fallback
+        if (this._media) {
+          if (this._media.getResponsiveImage) {
+            return this._media.getResponsiveImage(key, fallback) || fallback
+          }
+          if (this._media.getImage) {
+            return this._media.getImage(key, fallback) || fallback
+          }
         }
       } catch(e) {}
       return fallback

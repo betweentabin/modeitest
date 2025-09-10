@@ -78,9 +78,15 @@ export default {
   computed: {
     resolvedImage() {
       const key = this.mediaKey
-      if (key && this._media && this._media.getImage) {
-        const v = this._media.getImage(key, this.heroImage)
-        return v || this.heroImage
+      if (key && this._media) {
+        if (this._media.getResponsiveImage) {
+          const v = this._media.getResponsiveImage(key, this.heroImage)
+          return v || this.heroImage
+        }
+        if (this._media.getImage) {
+          const v = this._media.getImage(key, this.heroImage)
+          return v || this.heroImage
+        }
       }
       return this.heroImage
     },
