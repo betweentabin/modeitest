@@ -340,9 +340,13 @@ export default {
     canAccess(item) {
       return !this.isRestricted(item)
     },
-    // ボタン文言
+    // ボタン文言（アクセス不可時は会員種別を表示）
     getButtonLabel(item) {
-      return this.canAccess(item) ? 'PDFダウンロード' : '詳細を見る'
+      if (this.canAccess(item)) return 'PDFダウンロード'
+      const level = this.getItemLevel(item)
+      if (level === 'premium') return 'プレミアム会員限定'
+      if (level === 'standard') return 'スタンダード会員限定'
+      return '会員限定'
     },
     // 表示用の会員レベル（standard|premium|free|null）
     getItemLevel(item) {
