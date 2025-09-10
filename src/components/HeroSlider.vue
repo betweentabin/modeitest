@@ -248,7 +248,34 @@ export default {
 
 
 /* レスポンシブ対応 */
-@media (max-width: 1150px) {
+@media (max-width: 1400px) {
+  .hero-slider {
+    height: 850px;
+    padding: 45px 40px;
+  }
+  
+  .slide-overlay {
+    padding: 180px 60px;
+  }
+  
+  .slide-content {
+    max-width: 900px;
+    gap: 18px;
+  }
+  
+  .slide-title,
+  .slide-subtitle {
+    font-size: 44px;
+    padding: 12px 22px;
+  }
+  
+  .slide-button {
+    font-size: 18px;
+    padding: 12px 22px;
+  }
+}
+
+@media (max-width: 1200px) {
   .hero-slider {
     height: 800px;
     padding: 40px 30px;
@@ -260,27 +287,72 @@ export default {
   
   .slide-content {
     max-width: 800px;
+    gap: 16px;
   }
   
   .slide-title,
   .slide-subtitle {
-    font-size: 42px;
+    font-size: 40px;
+    padding: 12px 20px;
+  }
+  
+  .slide-button {
+    font-size: 16px;
+    padding: 12px 20px;
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .hero-slider {
-    height: 800px;
-    padding: 30px 20px;
+    height: 750px;
+    padding: 35px 25px;
   }
   
   .slide-overlay {
-    padding: 250px 40px;
+    padding: 220px 45px;
+  }
+  
+  .slide-content {
+    max-width: 700px;
+    gap: 15px;
   }
   
   .slide-title,
   .slide-subtitle {
     font-size: 36px;
+    padding: 10px 18px;
+  }
+  
+  .slide-button {
+    font-size: 15px;
+    padding: 10px 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-slider {
+    height: 700px;
+    padding: 30px 20px;
+  }
+  
+  .slide-overlay {
+    padding: 200px 40px;
+  }
+  
+  .slide-content {
+    max-width: 600px;
+    gap: 14px;
+  }
+  
+  .slide-title,
+  .slide-subtitle {
+    font-size: 32px;
+    padding: 10px 16px;
+  }
+  
+  .slide-button {
+    font-size: 14px;
+    padding: 10px 16px;
   }
 }
 
@@ -294,41 +366,98 @@ export default {
     padding: 130px 30px;
   }
   
+  .slide-content {
+    max-width: 100%;
+    gap: 12px;
+  }
+  
   .slide-title,
   .slide-subtitle {
     font-size: 28px;
+    padding: 8px 14px;
+  }
+  
+  .slide-button {
+    font-size: 13px;
+    padding: 8px 14px;
   }
 }
 
 @media (max-width: 600px) {
   .hero-slider {
-    height: 400px;
+    height: 350px;
     padding: 15px 10px;
   }
   
   .slide-overlay {
-    padding: 90px 10px;
+    padding: 70px 20px;
+  }
+  
+  .slide-content {
+    gap: 10px;
   }
   
   .slide-title,
   .slide-subtitle {
-    font-size: 22px;
+    font-size: 24px;
+    padding: 6px 12px;
+  }
+  
+  .slide-button {
+    font-size: 12px;
+    padding: 6px 12px;
   }
 }
 
 @media (max-width: 480px) {
   .hero-slider {
-    height: auto;
-    min-height: auto;
+    height: 250px;
+    padding: 8px 5px;
   }
   
   .slide-overlay {
-    background-color: transparent;
+    padding: 40px 12px;
+  }
+  
+  .slide-content {
+    gap: 6px;
   }
   
   .slide-title,
   .slide-subtitle {
     font-size: 18px;
+    padding: 4px 8px;
+  }
+  
+  .slide-button {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-slider {
+    height: 220px;
+    padding: 5px 3px;
+  }
+  
+  .slide-overlay {
+    padding: 30px 8px;
+  }
+  
+  .slide-content {
+    gap: 4px;
+  }
+  
+  .slide-title,
+  .slide-subtitle {
+    font-size: 16px;
+    padding: 3px 6px;
+  }
+  
+  .slide-button {
+    font-size: 9px;
+    padding: 3px 6px;
   }
 }
 </style>

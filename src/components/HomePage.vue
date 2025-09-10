@@ -407,7 +407,7 @@ export default {
           onClick: () => this.goToContact()
         },
         {
-          image: '/img/Image_fx2.jpg',
+          image: '/img/Image_fx6.jpg',
           title: '経営改善に役立つ',
           subtitle: '中小企業セミナー開催',
           buttonText: 'セミナー一覧を見る',
@@ -3126,6 +3126,16 @@ export default {
   }
 }
 
+@media (max-width: 600px) {
+  /* 600px以下でframe-1321317457の位置調整 */
+  .frame-1321317457 {
+    padding: 10px;
+    margin-top: -60px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
 @media (max-width: 480px) {
   .hero-content {
     gap: 10px;
@@ -3202,10 +3212,10 @@ export default {
   }
   
   .frame-1321317457 {
-    padding: 10px;
-    margin-top: -80px;
+    padding: 8px;
+    margin-top: -30px;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
   
   /* 480px以下でoverlap-group-1の縦横比を維持 */
