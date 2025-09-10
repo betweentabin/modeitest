@@ -61,121 +61,7 @@
               </div>
             </div>
 
-            <!-- 画像管理 -->
-            <div class="form-section">
-              <h3 class="section-title">画像管理</h3>
-              <div class="image-management">
-                <div v-if="!isNew && formData.images && formData.images.length > 0" class="image-list">
-                  <div v-for="(image, index) in formData.images" :key="index" class="image-item">
-                    <div class="image-preview">
-                      <img :src="image.url" :alt="image.alt || '画像'" class="preview-img" />
-                    </div>
-                    <div class="image-details">
-                      <div class="image-info">
-                        <div class="image-name">{{ image.alt || `画像 ${index + 1}` }}</div>
-                        <div class="image-path">{{ image.url }}</div>
-                      </div>
-                      <div class="image-actions">
-                        <button 
-                          type="button" 
-                          @click="editImage(index)" 
-                          class="image-btn edit-image-btn"
-                        >
-                          編集
-                        </button>
-                        <button 
-                          type="button" 
-                          @click="deleteImage(index)" 
-                          class="image-btn delete-image-btn"
-                        >
-                          削除
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div v-else class="no-images">
-                  <p>画像がまだ追加されていません</p>
-                </div>
-                
-                <div class="add-image-section">
-                  <button 
-                    type="button" 
-                    @click="showImageUploadModal = true" 
-                    class="add-image-btn"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-                    </svg>
-                    画像を追加
-                  </button>
-                </div>
-                
-                <!-- 画像アップロードモーダル -->
-                <div v-if="showImageUploadModal" class="modal-overlay">
-                  <div class="modal-container">
-                    <div class="modal-header">
-                      <h3>画像を追加</h3>
-                      <button @click="showImageUploadModal = false" class="close-modal">×</button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group">
-                        <label class="form-label">画像を選択</label>
-                        <input 
-                          type="file" 
-                          @change="handleImageSelect" 
-                          accept="image/*" 
-                          class="file-input"
-                          ref="fileInput"
-                        />
-                      </div>
-                      
-                      <div v-if="selectedImage" class="image-preview-container">
-                        <img :src="selectedImagePreview" alt="プレビュー" class="image-preview-large" />
-                      </div>
-                      
-                      <div class="form-group">
-                        <label for="image-alt" class="form-label">代替テキスト</label>
-                        <input 
-                          id="image-alt" 
-                          v-model="newImage.alt" 
-                          type="text" 
-                          class="form-input" 
-                          placeholder="画像の説明"
-                        />
-                      </div>
-                      
-                      <div class="form-group">
-                        <label for="image-description" class="form-label">説明</label>
-                        <textarea 
-                          id="image-description" 
-                          v-model="newImage.description" 
-                          class="form-input" 
-                          rows="3" 
-                          placeholder="画像の詳細な説明"
-                        ></textarea>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button 
-                        @click="showImageUploadModal = false" 
-                        class="btn btn-secondary"
-                      >
-                        キャンセル
-                      </button>
-                      <button 
-                        @click="addImage" 
-                        class="btn btn-primary"
-                        :disabled="!selectedImage"
-                      >
-                        追加
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- 画像管理セクションは削除（無効化） -->
 
             <!-- Company Profile: History repeater -->
             <div v-if="isCompanyProfile" class="form-group">
@@ -923,8 +809,7 @@ export default {
         content: {},
         meta_description: '',
         meta_keywords: '',
-        is_published: false,
-        images: []
+        is_published: false
       },
       contentMode: 'wysiwyg',
       contentJson: '',
@@ -938,15 +823,6 @@ export default {
       error: '',
       submitError: '',
       successMessage: '',
-      showImageUploadModal: false,
-      selectedImage: null,
-      selectedImagePreview: '',
-      newImage: {
-        alt: '',
-        description: '',
-        url: ''
-      },
-      editingImageIndex: -1,
       // ライブプレビューのデバイス幅切替
       previewDevice: 'desktop',
       collectedTextKeys: [],
@@ -1349,8 +1225,7 @@ export default {
           content: page.content || {},
           meta_description: page.meta_description || '',
           meta_keywords: page.meta_keywords || '',
-          is_published: !!page.is_published,
-          images: Array.isArray(page.images) ? page.images : (page.content?.images || [])
+          is_published: !!page.is_published
         }
         this.contentJson = JSON.stringify(this.formData.content || {}, null, 2)
         // HTML/WYSIWYG 初期値
@@ -1369,99 +1244,7 @@ export default {
       }
     },
     
-    handleImageSelect(event) {
-      const file = event.target.files[0]
-      if (!file) return
-      
-      if (file.size > 5 * 1024 * 1024) {
-        this.submitError = '画像サイズは5MB以下にしてください'
-        return
-      }
-      
-      this.selectedImage = file
-      
-      // プレビュー用のURLを作成
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        this.selectedImagePreview = e.target.result
-      }
-      reader.readAsDataURL(file)
-    },
-    
-    addImage() {
-      if (!this.selectedImage) return
-      
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const newImageData = {
-          id: Date.now(),
-          url: e.target.result,
-          alt: this.newImage.alt || this.selectedImage.name,
-          description: this.newImage.description || ''
-        }
-        
-        if (this.editingImageIndex >= 0) {
-          // 既存の画像を更新
-          this.formData.images.splice(this.editingImageIndex, 1, newImageData)
-          this.editingImageIndex = -1
-        } else {
-          // 新しい画像を追加
-          if (!this.formData.images) {
-            this.formData.images = []
-          }
-          this.formData.images.push(newImageData)
-        }
-        
-        // モーダルをリセット
-        this.resetImageModal()
-        
-        // 成功メッセージ
-        this.successMessage = '画像が追加されました'
-        setTimeout(() => {
-          this.successMessage = ''
-        }, 3000)
-      }
-      reader.readAsDataURL(this.selectedImage)
-    },
-    
-    editImage(index) {
-      const image = this.formData.images[index]
-      this.editingImageIndex = index
-      this.newImage = {
-        alt: image.alt,
-        description: image.description
-      }
-      this.selectedImagePreview = image.url
-      this.selectedImage = true // 画像が既に選択されている状態
-      this.showImageUploadModal = true
-    },
-    
-    deleteImage(index) {
-      if (!confirm('この画像を削除してもよろしいですか？')) {
-        return
-      }
-      
-      this.formData.images.splice(index, 1)
-      this.successMessage = '画像が削除されました'
-      setTimeout(() => {
-        this.successMessage = ''
-      }, 3000)
-    },
-    
-    resetImageModal() {
-      this.showImageUploadModal = false
-      this.selectedImage = null
-      this.selectedImagePreview = ''
-      this.newImage = {
-        alt: '',
-        description: '',
-        url: ''
-      }
-      this.editingImageIndex = -1
-      if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
-      }
-    },
+    // 画像編集機能は無効化しました
     addTextField() {
       this.textsEditor.push({ _id: `new-${Date.now()}-${Math.random()}`, key: '', value: '' })
     },
@@ -1636,11 +1419,7 @@ export default {
         }
         
         // 送信データの準備
-        const submitData = {
-          ...this.formData,
-          // 画像データも含める
-          images: this.formData.images || []
-        }
+        const submitData = { ...this.formData }
         
         if (this.isNew) {
           // 新規作成機能
@@ -1671,10 +1450,7 @@ export default {
           }
           this.successMessage = 'ページを更新しました'
           
-          // 画像が含まれる場合、成功メッセージを拡張
-          if (submitData.images && submitData.images.length > 0) {
-            this.successMessage += `（${submitData.images.length}枚の画像を含む）`
-          }
+          // 画像に関する付加メッセージは不要
           
           // 更新後に最新データを再取得
           setTimeout(() => {
