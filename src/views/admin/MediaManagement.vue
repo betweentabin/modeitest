@@ -24,6 +24,16 @@
             </svg>
           </button>
         </div>
+        <div class="search-container" style="margin-top:8px; justify-content:flex-end;">
+          <label style="display:flex; gap:8px; align-items:center; cursor:pointer;">
+            <input type="checkbox" v-model="groupResponsiveDuplicates" />
+            <span>バリアントがベースと同一なら隠す</span>
+          </label>
+          <label style="display:flex; gap:8px; align-items:center; cursor:pointer;">
+            <input type="checkbox" v-model="hidePlaceholders" />
+            <span>プレースホルダ行を隠す</span>
+          </label>
+        </div>
       </div>
 
       <!-- データテーブル -->
@@ -108,6 +118,9 @@ export default {
       filePickIndex: -1,
       currentPage: 1,
       pageSize: 20,
+      // 表示整理オプション
+      groupResponsiveDuplicates: true, // ベースと同じURLのバリアントは隠す
+      hidePlaceholders: false, // プレースホルダ（/img/hero-image.png 等）を隠す
     }
   },
   async mounted() {
@@ -160,12 +173,28 @@ export default {
           // レスポンシブ・バリアントが未設定の場合はベースキーのプレビューを見せる
           if ((it.page_key || '') === 'media' && typeof it.key === 'string') {
             const m = it.key.match(/^(.*)_(mobile|tablet)$/)
-            if (m && isPlaceholder(rawUrl)) {
+            if (m) {
               const baseKey = m[1]
               const base = mediaIndex[baseKey]
-              if (base && base.url && !isPlaceholder(base.url)) {
-                url = resolveUrl(base.url)
+              const baseResolved = base && base.url ? resolveUrl(base.url) : ''
+              if (isPlaceholder(rawUrl) && baseResolved && !isPlaceholder(baseResolved)) {
+                url = baseResolved
               }
+              return ({
+                _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
+                id: it.id || null,
+                pageKey: it.page_key,
+                model: it.model || 'page_content',
+                key: it.key,
+                url,
+                source: it.source || 'json',
+                updated_at: it.updated_at,
+                // メタ
+                isVariant: true,
+                baseKey,
+                baseUrl: baseResolved || '',
+                isPlaceholder: isPlaceholder(rawUrl),
+              })
             }
           }
 
@@ -178,6 +207,11 @@ export default {
             url,
             source: it.source || 'json',
             updated_at: it.updated_at,
+            // メタ
+            isVariant: false,
+            baseKey: null,
+            baseUrl: '',
+            isPlaceholder: isPlaceholder(rawUrl),
           })
         })
         this.allRows = mapped
@@ -266,12 +300,21 @@ export default {
   computed: {
     filteredRows() {
       const kw = (this.searchKeyword || '').toLowerCase().trim()
-      if (!kw) return this.allRows
-      return this.allRows.filter(r =>
-        (r.pageKey||'').toLowerCase().includes(kw) ||
-        (r.key||'').toLowerCase().includes(kw) ||
-        (r.url||'').toLowerCase().includes(kw)
-      )
+      let list = this.allRows
+      if (kw) {
+        list = list.filter(r =>
+          (r.pageKey||'').toLowerCase().includes(kw) ||
+          (r.key||'').toLowerCase().includes(kw) ||
+          (r.url||'').toLowerCase().includes(kw)
+        )
+      }
+      if (this.hidePlaceholders) {
+        list = list.filter(r => !r.isPlaceholder)
+      }
+      if (this.groupResponsiveDuplicates) {
+        list = list.filter(r => !(r.isVariant && r.url && r.baseUrl && r.url === r.baseUrl))
+      }
+      return list
     },
     totalPages() {
       return Math.max(1, Math.ceil(this.filteredRows.length / this.pageSize))
