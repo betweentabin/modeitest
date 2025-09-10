@@ -107,7 +107,7 @@ export function usePageText(pageKey) {
         // Add cache-buster to avoid any intermediate caching returning stale data
         res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
       } else {
-        // Public endpoint for normal visitors
+        // Public endpoint for normal visitors (with cache-buster to avoid stale)
         res = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
       }
 

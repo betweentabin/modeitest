@@ -119,7 +119,7 @@
                 <label><input type="radio" value="json" v-model="contentMode" /> JSON</label>
                 <label><input type="radio" value="fields" v-model="contentMode" /> Fields（安全なテキスト上書き）</label>
                 <!-- <label><input type="radio" value="inline" v-model="contentMode" /> ページ風プレビュー（直編集）</label> -->
-                <label><input type="radio" value="live" v-model="contentMode" /> プレビュー（表示のみ）</label>
+                <!-- プレビュー（表示のみ）機能は無効化 -->
               </div>
 
               <!-- WYSIWYG editor -->
@@ -232,27 +232,7 @@
                 </div>
                 <p class="form-help">実際のサイト風にレイアウトして、本文をその場で編集できます。保存でこの内容が反映されます。</p>
               </div>
-              <!-- Live page preview (actual page in iframe) -->
-              <div v-else-if="contentMode==='live'" class="form-group">
-              <div class="preview-toolbar">
-                <span>プレビューURL: {{ previewUrl }}</span>
-                <div class="device-toggle">
-                  <label>デバイス:</label>
-                  <select v-model="previewDevice" class="device-select" @change="$nextTick(() => refreshPreview())">
-                    <option value="desktop">Desktop (1200px)</option>
-                    <option value="tablet">Tablet (900px)</option>
-                    <option value="mobile">Mobile (375px)</option>
-                  </select>
-                </div>
-                <button type="button" class="btn btn-secondary small" @click="refreshPreview">リロード</button>
-              </div>
-              <div class="live-preview-wrap">
-                <div class="live-preview-frame" :style="{ width: previewWidthPx + 'px' }">
-                  <iframe ref="liveFrame" class="live-preview" :src="previewUrl"></iframe>
-                </div>
-              </div>
-                <p class="form-help">このプレビューは実際のページを表示します（表示のみ）。</p>
-              </div>
+              <!-- Live page preview (iframe) は無効化 -->
 
               <!-- Fields mode: key-value editor for content.texts -->
               <div v-else class="form-group">

@@ -168,6 +168,12 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Economic Indicators') || 'Economic Indicators' },
   },
   async mounted() {
+    // ページ文言（タイトル等）をCMSから読込
+    try {
+      this._pageText = usePageText(this.pageKey)
+      await this._pageText.load()
+    } catch (e) { /* noop */ }
+
     // CMSからHTMLが設定されていれば優先表示 + カテゴリ/指標の読込
     try {
       const [pageRes, catRes, indRes] = await Promise.all([

@@ -38,6 +38,13 @@
               ご不明な点がございましたら、お気軽にお問い合わせください。
             </p>
           </div>
+          <!-- Back to top (home) button -->
+          <ActionButton
+            :primaryText="'トップに戻る'"
+            :showSecondary="false"
+            :maxWidth="'1014px'"
+            @primary-click="$router.push('/')"
+          />
         </div>
       </div>
     </section>
@@ -58,6 +65,7 @@ import AccessSection from './AccessSection.vue';
 import HeroSection from './HeroSection.vue';
 import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
+import ActionButton from './ActionButton.vue'
 
 export default {
   name: 'SeminarApplicationCompletePage',
@@ -67,7 +75,8 @@ export default {
     Group27,
     AccessSection,
     HeroSection,
-    Breadcrumbs
+    Breadcrumbs,
+    ActionButton
   },
   data() {
     return {
