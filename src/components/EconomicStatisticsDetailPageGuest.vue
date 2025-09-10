@@ -68,7 +68,9 @@
         <div class="login-section">
           <div class="login-btn" @click="goToLogin">
             <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
-            <frame13213176122 />
+            <div class="pdf-icon-wrapper">
+              <img class="pdf-icon" src="/img/login-arrow-icon.svg" alt="ログイン" width="24" height="24" />
+            </div>
           </div>
         </div>
 
@@ -356,7 +358,7 @@ export default {
 
 .login-btn {
   align-items: center;
-  background-color: var(--mandy);
+  background-color: #DA5761;
   border-radius: 10px;
   box-shadow: 0px 1px 2px #0000000d;
   display: flex;
@@ -376,6 +378,10 @@ export default {
 
 .login-btn:hover {
   opacity: 0.8;
+}
+
+.login-btn .pdf-icon {
+  color: #DA5761;
 }
 
 .text-44 {

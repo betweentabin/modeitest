@@ -283,6 +283,15 @@ export default {
   margin: 0;
 }
 
+/* Inline-editable elements should match description font size */
+.inline-editable {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #3F3F3F;
+  line-height: normal;
+}
+
 /* CMS body safe defaults (prevent layout break) */
 .cms-body {
   width: 100%;
@@ -344,6 +353,10 @@ export default {
     font-size: 18px !important;
   }
   
+  .inline-editable {
+    font-size: 18px !important;
+  }
+  
   .hero-overlay {
     padding: 50px 30px !important;
   }
@@ -383,6 +396,10 @@ export default {
   }
   
   .list-content {
+    font-size: 17px !important;
+  }
+  
+  .inline-editable {
     font-size: 17px !important;
   }
   
@@ -428,6 +445,10 @@ export default {
     font-size: 16px !important;
   }
   
+  .inline-editable {
+    font-size: 16px !important;
+  }
+  
   .hero-overlay {
     padding: 30px 20px !important;
   }
@@ -467,6 +488,10 @@ export default {
   }
   
   .list-content {
+    font-size: 13px !important;
+  }
+  
+  .inline-editable {
     font-size: 13px !important;
   }
   

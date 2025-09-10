@@ -94,7 +94,7 @@
             <button class="download-btn" @click.stop="handleDownloadOrNavigate(featuredPublication)">{{ isRestricted(featuredPublication) ? '詳細を見る' : 'PDFダウンロード' }}
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
+                  <img class="pdf-icon" :src="isRestricted(featuredPublication) ? '/img/arrow-icon.svg' : '/img/pdfaicon.png'" :alt="isRestricted(featuredPublication) ? '詳細' : 'PDF'" width="24" height="24" />
                 </div>
               </div>
             </button>
@@ -123,7 +123,7 @@
               <button class="publication-download" @click.stop="handleDownloadOrNavigate(publication)">{{ isRestricted(publication) ? '詳細を見る' : 'PDFダウンロード' }}
                 <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
+                  <img class="pdf-icon" :src="isRestricted(publication) ? '/img/arrow-icon.svg' : '/img/pdfaicon.png'" :alt="isRestricted(publication) ? '詳細' : 'PDF'" width="24" height="24" />
                 </div>
               </div>
             </button>
@@ -1255,13 +1255,20 @@ export default {
 
 /* PDF Icon Wrapper */
 .pdf-icon-wrapper {
-  width: 23px;
-  height: 23px;
-  background: white;
+  width: 24px;
+  height: 24px;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.download-btn .pdf-icon {
+  color: #1A1A1A;
+}
+
+.publication-download .pdf-icon {
+  color: #1A1A1A;
 }
 
 .pdf-icon {

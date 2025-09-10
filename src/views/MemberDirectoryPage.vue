@@ -24,6 +24,9 @@
             <div class="actions">
               <button v-if="!memberInfo" @click="$router.push('/login?redirect=/member-directory')" class="login-btn">
                 ログインする
+                <div class="pdf-icon-wrapper">
+                  <img class="pdf-icon" src="/img/login-arrow-icon.svg" alt="ログイン" width="24" height="24" />
+                </div>
               </button>
               <button @click="$router.push('/upgrade')" class="upgrade-btn">
                 アップグレードする

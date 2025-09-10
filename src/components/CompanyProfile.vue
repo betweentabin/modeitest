@@ -2360,4 +2360,38 @@ section {
     font-size: 13px;
   }
 }
+
+/* Inline-editable elements should match description font size */
+.inline-editable {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #3F3F3F;
+  line-height: normal;
+}
+
+/* Responsive font sizes for inline-editable */
+@media (max-width: 1150px) {
+  .inline-editable {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .inline-editable {
+    font-size: 17px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .inline-editable {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .inline-editable {
+    font-size: 13px !important;
+  }
+}
 </style>
