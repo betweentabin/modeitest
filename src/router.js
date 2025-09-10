@@ -195,7 +195,7 @@ const router = new Router({
     {
       path: "/membership/apply/confirm",
       name: "membershipApplyConfirm",
-      component: SeminarApplicationConfirmPage,
+      component: MembershipApplicationConfirmPage,
       meta: { title: "入会申し込み - 確認" }
     },
     {

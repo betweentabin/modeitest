@@ -80,6 +80,11 @@
         >
           <div class="featured-image" :class="{ blurred: isRestricted(featuredPublication) }">
             <img :src="featuredPublication.image || '/img/image-1.png'" :alt="featuredPublication.title" />
+            <MembershipBadge
+              v-if="isRestricted(featuredPublication) && getItemLevel(featuredPublication) && getItemLevel(featuredPublication) !== 'free'"
+              :level="getItemLevel(featuredPublication)"
+              class="publication-badge"
+            />
           </div>
           <div class="featured-info">
             <div class="featured-meta">
@@ -91,10 +96,10 @@
                <div class="content-text">{{ featuredPublication.description }}</div>
              </div>
 
-            <button class="download-btn" @click.stop="handleDownloadOrNavigate(featuredPublication)">{{ isRestricted(featuredPublication) ? '詳細を見る' : 'PDFダウンロード' }}
+            <button class="download-btn" @click.stop="handleDownloadOrNavigate(featuredPublication)">{{ getButtonLabel(featuredPublication) }}
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" :src="isRestricted(featuredPublication) ? '/img/arrow-icon.svg' : '/img/pdfaicon.png'" :alt="isRestricted(featuredPublication) ? '詳細' : 'PDF'" width="24" height="24" />
+                  <img class="pdf-icon" :src="getButtonLabel(featuredPublication) === 'PDFダウンロード' ? '/img/pdfaicon.png' : '/img/arrow-icon.svg'" :alt="getButtonLabel(featuredPublication) === 'PDFダウンロード' ? 'PDF' : '詳細'" width="24" height="24" />
                 </div>
               </div>
             </button>
@@ -113,6 +118,11 @@
           >
             <div class="publication-image" :class="{ blurred: isRestricted(publication) }">
               <img :src="publication.image || '/img/image-1.png'" :alt="publication.title" />
+              <MembershipBadge
+                v-if="isRestricted(publication) && getItemLevel(publication) && getItemLevel(publication) !== 'free'"
+                :level="getItemLevel(publication)"
+                class="publication-badge"
+              />
             </div>
             <div class="publication-info">
               <div class="publication-meta">
@@ -120,10 +130,10 @@
                 <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
-              <button class="publication-download" @click.stop="handleDownloadOrNavigate(publication)">{{ isRestricted(publication) ? '詳細を見る' : 'PDFダウンロード' }}
+              <button class="publication-download" @click.stop="handleDownloadOrNavigate(publication)">{{ getButtonLabel(publication) }}
                 <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" :src="isRestricted(publication) ? '/img/arrow-icon.svg' : '/img/pdfaicon.png'" :alt="isRestricted(publication) ? '詳細' : 'PDF'" width="24" height="24" />
+                  <img class="pdf-icon" :src="getButtonLabel(publication) === 'PDFダウンロード' ? '/img/pdfaicon.png' : '/img/arrow-icon.svg'" :alt="getButtonLabel(publication) === 'PDFダウンロード' ? 'PDF' : '詳細'" width="24" height="24" />
                 </div>
               </div>
             </button>
@@ -169,6 +179,7 @@ import ContactSection from "./ContactSection.vue";
 import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
+import MembershipBadge from './MembershipBadge.vue'
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
 import { usePageText } from '@/composables/usePageText'
@@ -187,6 +198,7 @@ export default {
     AccessSection,
     FixedSideButtons,
     ActionButton,
+    MembershipBadge,
     CmsBlock
   },
   data() {
@@ -291,27 +303,53 @@ export default {
         this.shouldBlur = true
       }
     },
-    // 現在の閲覧者が有料会員か判定
-    viewerHasPaidMembership() {
+    // 現在の閲覧者の会員レベル取得（'premium' | 'standard' | null）
+    viewerMembershipLevel() {
       try {
         const raw = localStorage.getItem('memberUser')
-        if (!raw) return false
+        if (!raw) return null
         const u = JSON.parse(raw)
-        const t = u?.membership_type
-        return t === 'standard' || t === 'premium'
-      } catch(e) { return false }
+        const t = (u?.membership_type || '').toLowerCase()
+        if (t === 'premium' || t === 'standard') return t
+        return null
+      } catch (e) { return null }
+    },
+    // 現在の閲覧者が有料会員か判定
+    viewerHasPaidMembership() {
+      const lvl = this.viewerMembershipLevel()
+      return lvl === 'standard' || lvl === 'premium'
     },
 
-    // 個別アイテムの制限判定：members_only かつ 閲覧者が有料会員でない
+    // 個別アイテムの制限判定：会員種別まで考慮
     isRestricted(item) {
       if (!item) return false
-      // 会員レベルが free なら常に非制限
-      const level = (item.membership_level || item.membershipLevel || '').toLowerCase()
-      if (level === 'free') return false
-      // 明示的に members_only=false なら非制限
-      if (item.members_only === false) return false
-      // それ以外は members_only を優先
+      const required = (item.membership_level || item.membershipLevel || '').toLowerCase()
+      // 明示的に無料 or 非会員公開
+      if (required === 'free' || item.members_only === false) return false
+      // 必要レベルが未指定で members_only の場合 → 有料会員なら可
+      if (!!item.members_only && !required) return !this.viewerHasPaidMembership()
+      // 標準限定 → 標準/プレミアムは閲覧可
+      const viewer = this.viewerMembershipLevel()
+      if (required === 'standard') return !(viewer === 'standard' || viewer === 'premium')
+      // プレミアム限定 → プレミアムのみ可
+      if (required === 'premium') return viewer !== 'premium'
+      // その他は保守的に制限とみなす
       return !!item.members_only && !this.viewerHasPaidMembership()
+    },
+    // ダウンロード可否
+    canAccess(item) {
+      return !this.isRestricted(item)
+    },
+    // ボタン文言
+    getButtonLabel(item) {
+      return this.canAccess(item) ? 'PDFダウンロード' : '詳細を見る'
+    },
+    // 表示用の会員レベル（standard|premium|free|null）
+    getItemLevel(item) {
+      if (!item) return null
+      const level = (item.membership_level || item.membershipLevel || '').toLowerCase()
+      if (level === 'standard' || level === 'premium' || level === 'free') return level
+      return null
     },
 
     async loadPublications() {
@@ -906,6 +944,7 @@ export default {
 .publication-image {
   height: 180px;
   overflow: hidden;
+  position: relative;
 }
 
 .publication-image img {
@@ -914,6 +953,14 @@ export default {
   object-fit: cover;
 }
 .publication-image.blurred img, .featured-image.blurred img { filter: blur(6px); }
+
+/* Membership badge positioning */
+.publication-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
 
 .publication-info {
   padding: 20px 0 0 0;

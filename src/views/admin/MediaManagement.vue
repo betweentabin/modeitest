@@ -56,8 +56,7 @@
                   <button 
                     class="edit-btn" 
                     @click="pickReplace((currentPage - 1) * pageSize + idx)"
-                    :disabled="row.model !== 'page_content'"
-                    :title="row.model !== 'page_content' ? 'ページ管理以外は置換未対応' : '画像で置換'"
+                    :title="actionTitle(row)"
                   >画像で置換</button>
                 </td>
               </tr>
@@ -119,6 +118,13 @@ export default {
       if (!key || typeof key !== 'string') return false
       return key.startsWith('hero_') || key.startsWith('company_profile_') || key === 'contact_section_bg'
     },
+    isModelRow(row) {
+      return ['news','news_article','publication','economic_report','seminar'].includes(row.model)
+    },
+    actionTitle(row) {
+      if (this.isModelRow(row)) return 'モデル画像/HTMLを置換'
+      return '画像で置換'
+    },
     async load() {
       this.loading = true
       this.error = ''
@@ -143,6 +149,7 @@ export default {
 
           return ({
           _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
+          id: it.id || null,
           pageKey: it.page_key,
           model: it.model || 'page_content',
           key: it.key,
@@ -181,9 +188,20 @@ export default {
             // Redirect known registry keys to media page even if they were discovered under other pages
             const pageKeyUsed = this.isRegistryKey(row.key) ? 'media' : row.pageKey
             endpoint = `/api/admin/pages/${pageKeyUsed}/replace-image`
-          } else {
+          } else if (row.source === 'html' && row.model === 'page_content') {
             fd.append('old_url', row.url)
             endpoint = `/api/admin/pages/${row.pageKey}/replace-html-image`
+          } else if (this.isModelRow(row) && row.key && (row.key === 'featured_image' || row.key === 'cover_image')) {
+            fd.append('model', row.model)
+            fd.append('id', row.id)
+            fd.append('field', row.key)
+            endpoint = `/api/admin/media/replace-model-image`
+          } else if (this.isModelRow(row) && row.source === 'html') {
+            fd.append('model', row.model)
+            fd.append('id', row.id)
+            fd.append('field', 'content')
+            fd.append('old_url', row.url)
+            endpoint = `/api/admin/media/replace-model-html-image`
           }
           const url = endpoint
           const res = await apiClient.upload(url, fd)

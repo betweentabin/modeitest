@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\MediaReplaceController;
 use App\Http\Controllers\Api\MemberAccessController;
 
 /*
@@ -197,6 +198,12 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
             Route::post('/{pageKey}/replace-image', [PageContentController::class, 'replaceImage']);
             Route::post('/{pageKey}/replace-html-image', [PageContentController::class, 'replaceHtmlImage']);
+        });
+
+        // モデル画像置換（ニュース・刊行物・レポート・セミナーなど）
+        Route::prefix('media')->middleware('can:manage-content')->group(function () {
+            Route::post('/replace-model-image', [MediaReplaceController::class, 'replaceModelImage']);
+            Route::post('/replace-model-html-image', [MediaReplaceController::class, 'replaceModelHtmlImage']);
         });
         
         Route::prefix('publications')->middleware('can:manage-content')->group(function () {
