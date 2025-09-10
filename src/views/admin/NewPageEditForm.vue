@@ -433,6 +433,16 @@
             </div>
           </form>
         </div>
+        
+        <!-- Hidden iframe to auto-collect CMS keys (no UI) -->
+        <div class="sr-only-hidden" aria-hidden="true">
+          <iframe
+            ref="hiddenFrame"
+            :src="previewUrl"
+            title="hidden-cms-preview"
+            tabindex="-1"
+          ></iframe>
+        </div>
       </div>
     </div>
   </AdminLayout>
@@ -1032,7 +1042,10 @@ export default {
       }
     },
     requestPreviewKeys() {
-      try { const f = this.$refs.liveFrame; if (f && f.contentWindow) f.contentWindow.postMessage({ type: 'cms-list-keys', pageKey: this.pageKey }, '*') } catch(_) {}
+      try {
+        const f = this.$refs.hiddenFrame || this.$refs.liveFrame
+        if (f && f.contentWindow) f.contentWindow.postMessage({ type: 'cms-list-keys', pageKey: this.pageKey }, '*')
+      } catch(_) {}
     },
     requestPreviewKeysDeferred() { setTimeout(() => this.requestPreviewKeys(), 400) },
     text(k) {
@@ -1142,13 +1155,11 @@ export default {
         } catch(_) {}
       }
       try { localStorage.setItem(`cms_preview_${this.pageKey}`, html || '') } catch(_) {}
-      const frame = this.$refs.liveFrame
-      if (frame && frame.contentWindow) {
-        frame.contentWindow.postMessage({ type: 'cms-preview', pageKey: this.pageKey, html }, '*')
-      }
+      const frame = this.$refs.hiddenFrame || this.$refs.liveFrame
+      if (frame && frame.contentWindow) { frame.contentWindow.postMessage({ type: 'cms-preview', pageKey: this.pageKey, html }, '*') }
     },
     refreshPreview() {
-      const frame = this.$refs.liveFrame
+      const frame = this.$refs.hiddenFrame || this.$refs.liveFrame
       if (frame) frame.src = this.previewUrl
       setTimeout(() => this.postToPreview(), 300)
     },
@@ -1466,6 +1477,8 @@ export default {
 </script>
 
 <style scoped>
+.sr-only-hidden { position: absolute; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none; }
+.sr-only-hidden iframe { width: 0; height: 0; border: 0; }
 .dashboard {
   background-color: white;
   border-radius: 8px;
