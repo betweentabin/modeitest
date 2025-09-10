@@ -85,9 +85,11 @@
           <!-- 非会員の場合 -->
           <div v-if="authState.type === 'non_member'" class="members-only-section">
             <p class="members-only-notice">{{ authState.message }}</p>
-            <div class="login-btn arrow-dark" @click="goToLogin">
+            <div class="login-btn" @click="goToLogin">
               <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
-              <frame13213176122 />
+              <div class="pdf-icon-wrapper">
+                <img class="pdf-icon" src="/img/login-arrow-icon.svg" alt="ログイン" width="24" height="24" />
+              </div>
             </div>
           </div>
           
@@ -109,7 +111,9 @@
             <p class="members-only-notice">{{ authState.message }}</p>
             <div class="upgrade-btn arrow-dark" @click="goToMembership">
               <div class="text-44 valign-text-middle inter-bold-white-15px">会員アップグレード</div>
-              <frame13213176122 />
+              <div class="pdf-icon-wrapper">
+                <img class="pdf-icon" src="/img/arrow-icon.svg" alt="アップグレード" width="24" height="24" />
+              </div>
             </div>
           </div>
         </div>
@@ -812,7 +816,27 @@ export default {
 }
 
 /* Button styles - EconomicStatisticsDetailPageと同じスタイル */
-.login-btn, .upgrade-btn {
+.login-btn {
+  align-items: center;
+  background-color: #DA5761;
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px #0000000d;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px 0px;
+  width: 380px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-family: var(--font-family-inter);
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s;
+  margin: 0 auto;
+}
+
+.upgrade-btn {
   align-items: center;
   background-color: #1A1A1A;
   border-radius: 10px;
@@ -834,6 +858,14 @@ export default {
 
 .login-btn:hover, .upgrade-btn:hover {
   opacity: 0.8;
+}
+
+.login-btn .pdf-icon {
+  color: #DA5761;
+}
+
+.upgrade-btn .pdf-icon {
+  color: #1A1A1A;
 }
 
 .registration-btn {

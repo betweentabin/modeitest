@@ -73,14 +73,14 @@
           <button v-if="canDownloadByAccess" class="login-btn" @click="publication?.id && downloadPublication(publication.id)">
             <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
             <div class="pdf-icon-wrapper">
-              <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
+              <img class="pdf-icon" src="/img/pdfaicon.png" alt="PDF" width="24" height="24" />
             </div>
           </button>
           <!-- Login button when not permitted -->
           <button v-else class="login-btn" @click="handlePrimaryAction">
             <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
             <div class="pdf-icon-wrapper">
-              <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
+              <img class="pdf-icon" src="/img/login-arrow-icon.svg" alt="ログイン" width="24" height="24" />
             </div>
           </button>
         </div>
@@ -464,7 +464,7 @@ export default {
 
 .login-btn {
   align-items: center;
-  background-color: var(--mandy);
+  background-color: #DA5761;
   border-radius: 10px;
   box-shadow: 0px 1px 2px #0000000d;
   display: flex;
@@ -562,13 +562,16 @@ export default {
 
 /* PDF Icon Wrapper */
 .pdf-icon-wrapper {
-  width: 23px;
-  height: 23px;
-  background: white;
+  width: 24px;
+  height: 24px;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.login-btn .pdf-icon {
+  color: #DA5761;
 }
 
 .pdf-icon {

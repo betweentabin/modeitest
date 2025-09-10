@@ -1198,7 +1198,7 @@ export default {
 .divider-line {
   width: 69px;
   height: 2px;
-  background: #1A1A1A;
+  background: #DA5761;
 }
 
 .divider-text {
