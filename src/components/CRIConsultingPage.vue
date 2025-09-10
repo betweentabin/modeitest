@@ -304,7 +304,9 @@ export default {
   },
   mounted() {
     this.adjustRectangleHeight();
+    this.adjustContentHeights();
     window.addEventListener('resize', this.adjustRectangleHeight);
+    window.addEventListener('resize', this.adjustContentHeights);
     try {
       this._pageText = usePageText(this.pageKey)
       this._pageText.load()
@@ -312,6 +314,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
+    window.removeEventListener('resize', this.adjustContentHeights);
   },
   methods: {
     // Equal-height for paired images/text is handled with CSS Grid
@@ -324,6 +327,40 @@ export default {
           const frameHeight = frame1321317466.offsetHeight;
           rectangle3.style.height = frameHeight + 'px';
         }
+      });
+    },
+    adjustContentHeights() {
+      this.$nextTick(() => {
+        // Content container height adjustment
+        const contentText = this.$el.querySelector('.content-text');
+        const contentImage = this.$el.querySelector('.content-image');
+        
+        if (contentText && contentImage) {
+          const contentTextHeight = contentText.offsetHeight;
+          contentImage.style.height = contentTextHeight + 'px';
+        }
+        
+        // Duties container height adjustment
+        const dutiesText = this.$el.querySelector('.duties-content');
+        const dutiesImage = this.$el.querySelector('.duties-image');
+        
+        if (dutiesText && dutiesImage) {
+          const dutiesTextHeight = dutiesText.offsetHeight;
+          dutiesImage.style.height = dutiesTextHeight + 'px';
+        }
+        
+        // Service cards height adjustment
+        const serviceCards = this.$el.querySelectorAll('.service-card');
+        
+        serviceCards.forEach(card => {
+          const serviceText = card.querySelector('.service-content');
+          const serviceImage = card.querySelector('.service-image');
+          
+          if (serviceText && serviceImage) {
+            const textHeight = serviceText.offsetHeight;
+            serviceImage.style.height = textHeight + 'px';
+          }
+        });
       });
     },
     handleContactClick() {
@@ -408,17 +445,14 @@ export default {
 .content-container {
   background-color: #FFF;
   border-radius: 20px;
-  /* Grid gives equal height columns */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch;
+  display: flex;
+  align-items: flex-start;
   max-width: 2000px;
   margin: 0 auto;
 }
 
 .content-image {
-  width: 100%;
-  height: 100%;
+  width: 50%;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
@@ -426,7 +460,7 @@ export default {
 }
 
 .content-text {
-  flex: 1;
+  width: 50%;
   padding: 50px;
   background: #FFF;
   border-radius: 0 20px 20px 0;
@@ -471,16 +505,14 @@ export default {
 .duties-container {
   background: #FFF;
   border-radius: 20px;
-  /* Grid gives equal height columns */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch;
+  display: flex;
+  align-items: flex-start;
   max-width: 2000px;
   margin: 0 auto;
 }
 
 .duties-content {
-  flex: 1;
+  width: 50%;
   padding: 50px;
   background: #FFF;
   border-radius: 20px 0 0 20px;
@@ -523,8 +555,7 @@ export default {
 }
 
 .duties-image {
-  width: 100%;
-  height: 100%;
+  width: 50%;
   border-radius: 0 20px 20px 0;
   object-fit: cover;
   object-position: center;

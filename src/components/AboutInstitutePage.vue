@@ -184,14 +184,17 @@ export default {
     // Layout adjustments
     this.adjustRectangleHeight();
     this.adjustMainHeadline();
+    this.adjustServiceCardHeights();
     // Ensure parentheses text like （金融機関） is reduced in size
     // note: small text is handled via inline span in mainHeadlineText
     window.addEventListener('resize', this.adjustRectangleHeight);
     window.addEventListener('resize', this.adjustMainHeadline);
+    window.addEventListener('resize', this.adjustServiceCardHeights);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
     window.removeEventListener('resize', this.adjustMainHeadline);
+    window.removeEventListener('resize', this.adjustServiceCardHeights);
     // no observer to clean up
   },
   methods: {
@@ -204,6 +207,21 @@ export default {
           const frameHeight = frame1321317466.offsetHeight;
           rectangle3.style.height = frameHeight + 'px';
         }
+      });
+    },
+    adjustServiceCardHeights() {
+      this.$nextTick(() => {
+        const serviceCards = this.$el.querySelectorAll('.service-card');
+        
+        serviceCards.forEach(card => {
+          const serviceText = card.querySelector('.service-content');
+          const serviceImage = card.querySelector('.service-image');
+          
+          if (serviceText && serviceImage) {
+            const textHeight = serviceText.offsetHeight;
+            serviceImage.style.height = textHeight + 'px';
+          }
+        });
       });
     },
     // Equal-height is achieved via CSS Grid; no JS height sync needed
@@ -372,7 +390,6 @@ export default {
 
 .service-image {
   width: 100%;
-  height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;

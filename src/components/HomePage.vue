@@ -4,36 +4,14 @@
     <navigation />
     
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-image" :style="{ 'background-image': 'url(' + heroImage + ')' }">
-        <div class="hero-overlay">
-          <div class="hero-content">
-            <div class="hero-title-wrapper">
-              <h1 class="hero-title">
-                <CmsText pageKey="home" fieldKey="page_title" tag="span" :fallback="text66" />
-              </h1>
-            </div>
-            <div class="hero-subtitle-wrapper">
-              <div class="hero-subtitle">
-                <CmsText pageKey="home" fieldKey="page_subtitle" tag="span" :fallback="text67" />
-              </div>
-            </div>
-            <div class="hero-button-wrapper" @click="goToContact">
-              <div class="hero-button-text">
-                <CmsText pageKey="home" fieldKey="cta_primary" tag="span" :fallback="text68" />
-              </div>
-              <div class="hero-button-icon">
-                <img
-                  class="vector-2"
-                  :src="vector35"
-                  alt="Vector"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      :slides="heroSlides"
+      :autoPlay="true"
+      :autoPlayInterval="6000"
+      cmsPageKey="home"
+      titleFieldKey="page_title"
+      subtitleFieldKey="page_subtitle"
+    />
 
     <!-- CMS Body removed -->
 
@@ -395,11 +373,14 @@ import vector5 from "../../public/img/vector-5.svg";
 import vector7 from "../../public/img/vector-7.svg";
 import CmsBlock from './CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
+import HeroSection from '@/components/HeroSection.vue'
 export default {
   name: "HomePage",
   components: {
     Navigation,
     CmsBlock,
+    CmsText,
+    HeroSection,
     ContactSection,
     Card,
     Frame1321317481,
@@ -413,10 +394,33 @@ export default {
     Group27,
     AccessSection,
     FixedSideButtons,
-    CmsText,
   },
   data() {
     return {
+      // Hero slides data
+      heroSlides: [
+        {
+          image: '/img/Image_fx1.jpg',
+          title: '産・官・学・金（金融機関）の力で',
+          subtitle: '企業活動を支援',
+          buttonText: 'お問い合わせはこちら',
+          onClick: () => this.goToContact()
+        },
+        {
+          image: '/img/Image_fx2.jpg',
+          title: '経営改善に役立つ',
+          subtitle: '中小企業セミナー開催',
+          buttonText: 'セミナー一覧を見る',
+          onClick: () => this.goToSeminar()
+        },
+        {
+          image: '/img/Image_fx3.jpg',
+          title: 'ビジネスに役立つ',
+          subtitle: '会員サービス',
+          buttonText: '入会案内はこちら',
+          onClick: () => this.goToMembership()
+        }
+      ],
       // Import data from homePageData
       heroImage: homePageData.heroImage,
       text66: homePageData.text66,
