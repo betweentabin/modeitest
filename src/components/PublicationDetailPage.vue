@@ -72,12 +72,16 @@
           <!-- Download button when allowed -->
           <button v-if="canDownloadByAccess" class="login-btn" @click="publication?.id && downloadPublication(publication.id)">
             <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
-            <frame13213176122 />
+            <div class="pdf-icon-wrapper">
+              <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+            </div>
           </button>
           <!-- Login button when not permitted -->
           <button v-else class="login-btn" @click="handlePrimaryAction">
             <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
-            <frame13213176122 />
+            <div class="pdf-icon-wrapper">
+              <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+            </div>
           </button>
         </div>
 
@@ -116,7 +120,6 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import ContactSection from "./ContactSection.vue";
-import Frame13213176122 from "./Frame13213176122.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import apiClient from '../services/apiClient.js';
@@ -134,7 +137,6 @@ export default {
     Breadcrumbs,
     FixedSideButtons,
     ContactSection,
-    Frame13213176122,
     ActionButton
   },
   data() {
@@ -556,5 +558,21 @@ export default {
   .cta-button {
     width: 100%;
   }
+}
+
+/* PDF Icon Wrapper */
+.pdf-icon-wrapper {
+  width: 23px;
+  height: 23px;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-icon {
+  width: 23px;
+  height: 23px;
 }
 </style>

@@ -621,9 +621,37 @@ const RECOMMENDED_KEYS = {
     'prohibited_title', 'prohibited_body',
     'article8_title', 'article8_body'
   ],
-  privacy: ['page_title', 'page_subtitle'],
+  privacy: [
+    'page_title','page_subtitle',
+    'intro',
+    'collection_title','collection_body',
+    'purpose_title','purpose_intro','purpose_list',
+    'disclosure_title','disclosure_list',
+    'correction_title','correction_body',
+    'disclaimer_title','disclaimer_body1','disclaimer_body2','disclaimer_body3',
+    'changes_title','changes_body'
+  ],
   faq: ['page_title', 'page_subtitle'],
-  'transaction-law': ['page_title', 'page_subtitle']
+  'transaction-law': [
+    'page_title','page_subtitle',
+    'seller_label','seller_value',
+    'rep_label','rep_value',
+    'addr_label','addr_value',
+    'tel_label','tel_value',
+    'fax_label','fax_value',
+    'mail_label','mail_value','contact_cta',
+    'fee_label','fee_desc','fee_section_title','fee_standard_label','fee_standard_amount','fee_premium_label','fee_premium_amount',
+    'payment_label','payment_body',
+    'otherfees_label','otherfees_value',
+    'service_time_label','service_time_value',
+    'cancel_label','cancel_value',
+    'refund_label','refund_body',
+    'terms_note',
+    'article1_title','article1_body',
+    'article2_title','article2_body',
+    'article3_title','article3_body',
+    'download_terms'
+  ]
 }
 
 // ソフト上限（超過時に警告）
@@ -723,6 +751,22 @@ const KEY_LOCATIONS = {
   'privacy': {
     page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',
     page_subtitle: '英字のサブ見出し（PrivacyPolicyPage）',
+    intro: '導入文',
+    collection_title: '見出し：適切な取得',
+    collection_body: '本文：適切な取得',
+    purpose_title: '見出し：収集・利用目的',
+    purpose_intro: '本文：目的の導入',
+    purpose_list: '本文：目的リスト（HTML可）',
+    disclosure_title: '見出し：第三者開示',
+    disclosure_list: '本文：第三者開示リスト（HTML可）',
+    correction_title: '見出し：訂正・削除',
+    correction_body: '本文：訂正・削除（HTML可）',
+    disclaimer_title: '見出し：免責事項',
+    disclaimer_body1: '本文：免責事項（1）',
+    disclaimer_body2: '本文：免責事項（2）',
+    disclaimer_body3: '本文：免責事項（3）',
+    changes_title: '見出し：方針の変更',
+    changes_body: '本文：方針の変更',
   },
   'faq': {
     page_title: 'ヒーロー・パンくず・見出し（FaqPage）',
@@ -752,6 +796,25 @@ const KEY_LOCATIONS = {
   'transaction-law': {
     page_title: 'ヒーロー・パンくず・見出し（TransactionLawPage）',
     page_subtitle: '英字のサブ見出し（TransactionLawPage）',
+    seller_label: 'ラベル：販売業者', seller_value: '値：販売業者',
+    rep_label: 'ラベル：代表者名', rep_value: '値：代表者名',
+    addr_label: 'ラベル：住所', addr_value: '値：住所（HTML可）',
+    tel_label: 'ラベル：電話番号', tel_value: '値：電話番号',
+    fax_label: 'ラベル：FAX番号', fax_value: '値：FAX番号',
+    mail_label: 'ラベル：メール', mail_value: '値：メール', contact_cta: 'ボタン：お問い合わせへ',
+    fee_label: 'ラベル：料金', fee_desc: '本文：料金の説明（HTML可）', fee_section_title: '見出し：料金セクション',
+    fee_standard_label: '料金：スタンダード見出し', fee_standard_amount: '料金：スタンダード金額',
+    fee_premium_label: '料金：プレミアム見出し', fee_premium_amount: '料金：プレミアム金額',
+    payment_label: 'ラベル：支払い時期および方法', payment_body: '本文：支払い時期および方法（HTML可）',
+    otherfees_label: 'ラベル：その他料金', otherfees_value: '値：その他料金',
+    service_time_label: 'ラベル：提供時間', service_time_value: '値：提供時間',
+    cancel_label: 'ラベル：退会について', cancel_value: '値：退会について',
+    refund_label: 'ラベル：返金について', refund_body: '本文：返金について（HTML可）',
+    terms_note: '注記：会員規約の確認',
+    article1_title: '規約：第1条 見出し', article1_body: '規約：第1条 本文（HTML可）',
+    article2_title: '規約：第2条 見出し', article2_body: '規約：第2条 本文（HTML可）',
+    article3_title: '規約：第3条 見出し', article3_body: '規約：第3条 本文（HTML可）',
+    download_terms: 'リンク文言：会員規約PDFダウンロード',
   },
   'sitemap': {
     page_title: 'ヒーロー・パンくず・見出し（SitemapPage）',

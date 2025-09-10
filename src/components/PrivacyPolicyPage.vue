@@ -35,68 +35,57 @@
         <!-- Introduction -->
         <div class="intro-section">
           <p class="intro-text">
-            当研究所では以下のプライバシーポリシーに基づき、お客様より提供を受けた個人情報を厳正な管理の元に保管し、
-            当研究所の管理行においてのみ利用します。当研究所のサービスを利用した場合、当研究所のキャンペーンやアンケート等に応募した場合には、プライバシーポリシーに同意したものとみなされますので、本プライバシーポリシーの内容をご理解いただくようお願いいたします。
+            <CmsText pageKey="privacy" fieldKey="intro" tag="span" :fallback="'当研究所では以下のプライバシーポリシーに基づき、お客様より提供を受けた個人情報を厳正な管理の元に保管し、当研究所の管理行においてのみ利用します。当研究所のサービスを利用した場合、当研究所のキャンペーンやアンケート等に応募した場合には、プライバシーポリシーに同意したものとみなされますので、本プライバシーポリシーの内容をご理解いただくようお願いいたします。'" />
           </p>
         </div>
 
         <!-- Privacy Policy Sections -->
         <div class="policy-section">
-          <h3 class="section-title">適切な取得</h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="collection_title" tag="span" :fallback="'適切な取得'" /></h3>
           <p class="section-content">
-            当研究所では、当研究所の各種サービスをご利用いただくにあたって、個人の情報をお伺いする場合があります。お伺いする情報としては、会社名、役職、氏名、Ｅメールアドレス、電話番号などの個人情報が主なものとなります。また、それ以外にもアンケート調査のため、質問させていただくこともございます。これらの情報は、すべて下記の収集目的に従って、適法かつ公正な手段により収集されます。
+            <CmsText pageKey="privacy" fieldKey="collection_body" tag="span" :fallback="'当研究所では、当研究所の各種サービスをご利用いただくにあたって、個人の情報をお伺いする場合があります。お伺いする情報としては、会社名、役職、氏名、Ｅメールアドレス、電話番号などの個人情報が主なものとなります。また、それ以外にもアンケート調査のため、質問させていただくこともございます。これらの情報は、すべて下記の収集目的に従って、適法かつ公正な手段により収集されます。'" />
           </p>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">個人情報を収集・利用する目的</h3>
-          <p class="section-content">当研究所が個人情報を収集または利用する目的は以下のとおりです。</p>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="purpose_title" tag="span" :fallback="'個人情報を収集・利用する目的'" /></h3>
+          <p class="section-content"><CmsText pageKey="privacy" fieldKey="purpose_intro" tag="span" :fallback="'当研究所が個人情報を収集または利用する目的は以下のとおりです。'" /></p>
           <div class="list-content">
-            サービスの提供、キャンペーンなどを行うため<br>
-            サービスに関する情報またはキャンペーン情報を提供するため<br>
-            お客様から寄せられたご意見、ご要望にお答えするため<br>
-            サービスの開発・改善を目的とした調査・検討を行うため<br>
-            サービスに関する統計的資料を作成するため
+            <CmsText pageKey="privacy" fieldKey="purpose_list" tag="div" type="html" :fallback="'サービスの提供、キャンペーンなどを行うため<br>サービスに関する情報またはキャンペーン情報を提供するため<br>お客様から寄せられたご意見、ご要望にお答えするため<br>サービスの開発・改善を目的とした調査・検討を行うため<br>サービスに関する統計的資料を作成するため'" />
           </div>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">情報の第三者への開示について</h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="disclosure_title" tag="span" :fallback="'情報の第三者への開示について'" /></h3>
           <div class="list-content">
-            法令により情報の開示が求められる場合<br>
-            人の生命、身体または財産の保護のために必要があると当研究所が判断した場合<br>
-            国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力することその他公共の利益のために特に必要があると当研究所が判断した場合<br>
-            お客様または当研究所の権利の確保のために必要であると当研究所が判断した場合<br>
-            業務遂行に必要な限度で個人情報の取扱いを委託する場合
+            <CmsText pageKey="privacy" fieldKey="disclosure_list" tag="div" type="html" :fallback="'法令により情報の開示が求められる場合<br>人の生命、身体または財産の保護のために必要があると当研究所が判断した場合<br>国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力することその他公共の利益のために特に必要があると当研究所が判断した場合<br>お客様または当研究所の権利の確保のために必要であると当研究所が判断した場合<br>業務遂行に必要な限度で個人情報の取扱いを委託する場合'" />
           </div>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">個人情報の訂正および削除</h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="correction_title" tag="span" :fallback="'個人情報の訂正および削除'" /></h3>
           <p class="section-content">
-            お客様は、当研究所所定の手続きにより、以下の請求を行うことができます。                                                                          (1) 当研究所の保有する自己の個人情報が誤った情報でないことを確認すること                                                                             (2) 当研究所の保有する自己の個人情報が誤った情報である場合に、それを訂正または削除すること<br>
-            当研究所は、前項(２)の個人情報の訂正または削除の可否を決定した場合には、遅滞なく、当該お客様に通知します。<br>
-            これらの請求を希望される場合には、お問い合わせフォームよりご連絡ください。
+            <CmsText pageKey="privacy" fieldKey="correction_body" tag="div" type="html" :fallback="'お客様は、当研究所所定の手続きにより、以下の請求を行うことができます。(1) 当研究所の保有する自己の個人情報が誤った情報でないことを確認すること (2) 当研究所の保有する自己の個人情報が誤った情報である場合に、それを訂正または削除すること<br>当研究所は、前項(２)の個人情報の訂正または削除の可否を決定した場合には、遅滞なく、当該お客様に通知します。<br>これらの請求を希望される場合には、お問い合わせフォームよりご連絡ください。'" />
           </p>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">免責事項</h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="disclaimer_title" tag="span" :fallback="'免責事項'" /></h3>
           <p class="section-content">
-            当研究所では、お客様の個人情報を厳格に管理し、改ざん、漏えいや不正アクセス等の危険性に対して予防策を実施します。 個人情報の登録が発生するWebページではデータ送信の際にSSL(Secure Socket Layer)暗号化技術を使用しております。
+            <CmsText pageKey="privacy" fieldKey="disclaimer_body1" tag="span" :fallback="'当研究所では、お客様の個人情報を厳格に管理し、改ざん、漏えいや不正アクセス等の危険性に対して予防策を実施します。 個人情報の登録が発生するWebページではデータ送信の際にSSL(Secure Socket Layer)暗号化技術を使用しております。'" />
           </p>
           <p class="section-content">
-            ただし、各種申込フォームにお客様が入力されたメールアドレスが間違っている場合は責任を負いかねますのでご理解下さい。
+            <CmsText pageKey="privacy" fieldKey="disclaimer_body2" tag="span" :fallback="'ただし、各種申込フォームにお客様が入力されたメールアドレスが間違っている場合は責任を負いかねますのでご理解下さい。'" />
           </p>
           <p class="section-content">
-            ※各種申込フォームでは内容をお客様に確認していただくために、登録されたメールアドレスに申込情報を自動的に配信する仕組みになっています。そのため間違ったメールアドレスであっても、そのメールアドレスに申込情報が自動的に配信されます。
+            <CmsText pageKey="privacy" fieldKey="disclaimer_body3" tag="span" :fallback="'※各種申込フォームでは内容をお客様に確認していただくために、登録されたメールアドレスに申込情報を自動的に配信する仕組みになっています。そのため間違ったメールアドレスであっても、そのメールアドレスに申込情報が自動的に配信されます。'" />
           </p>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title">適切な取得</h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="changes_title" tag="span" :fallback="'適切な取得'" /></h3>
           <p class="section-content">
-            当研究所サイトを利用された場合、お客様はプライバシーポリシーに同意して頂いたものと判断いたします。諸事情により、上記のプライバシーポリシーを部分的に変更、修正、 追加、削除させて頂くことがございます。加えて、プライバシーポリシーについては、変更等のご連絡をお客様にご連絡することはありません。随時、このページにてご確認ください。
+            <CmsText pageKey="privacy" fieldKey="changes_body" tag="span" :fallback="'当研究所サイトを利用された場合、お客様はプライバシーポリシーに同意して頂いたものと判断いたします。諸事情により、上記のプライバシーポリシーを部分的に変更、修正、 追加、削除させて頂くことがございます。加えて、プライバシーポリシーについては、変更等のご連絡をお客様にご連絡することはありません。随時、このページにてご確認ください。'" />
           </p>
         </div>
       </div>

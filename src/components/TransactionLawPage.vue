@@ -34,40 +34,38 @@
 
       <div v-if="!hasHtml && !isEditPreview" class="transaction-law-table">
         <div class="table-row">
-          <div class="table-label">販売業者</div>
-          <div class="table-value">株式会社 ちくぎん地域経済研究所</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="seller_label" tag="span" :fallback="'販売業者'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="seller_value" tag="span" :fallback="'株式会社 ちくぎん地域経済研究所'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">代表者名</div>
-          <div class="table-value">代表取締役社長　空閑 重信</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="rep_label" tag="span" :fallback="'代表者名'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="rep_value" tag="span" :fallback="'代表取締役社長　空閑 重信'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">住所</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="addr_label" tag="span" :fallback="'住所'" /></div>
           <div class="table-value">
-            〒839-0864<br>
-            福岡県久留米市百年公園1番1号<br>
-            久留米リサーチセンタービル6階
+            <CmsText pageKey="transaction-law" fieldKey="addr_value" tag="div" type="html" :fallback="'〒839-0864<br>福岡県久留米市百年公園1番1号<br>久留米リサーチセンタービル6階'" />
           </div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">電話番号</div>
-          <div class="table-value">0942-46-5081 (平日9:00～17:00)</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="tel_label" tag="span" :fallback="'電話番号'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="tel_value" tag="span" :fallback="'0942-46-5081 (平日9:00～17:00)'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">FAX番号</div>
-          <div class="table-value">0942-38-7631</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="fax_label" tag="span" :fallback="'FAX番号'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="fax_value" tag="span" :fallback="'0942-38-7631'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">メール</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="mail_label" tag="span" :fallback="'メール'" /></div>
           <div class="table-value-with-button">
-            <span>info@chikugin-ri.co.jp</span>
+            <span><CmsText pageKey="transaction-law" fieldKey="mail_value" tag="span" :fallback="'info@chikugin-ri.co.jp'" /></span>
             <button class="contact-button" @click="goToContact">
-              お問い合わせはこちら
+              <CmsText pageKey="transaction-law" fieldKey="contact_cta" tag="span" :fallback="'お問い合わせはこちら'" />
               <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect y="0.5" width="18" height="18" rx="5" fill="white"/>
                 <path d="M13.7193 9.84548L10.2194 13.4453C10.1464 13.5203 10.0475 13.5625 9.94427 13.5625C9.84107 13.5625 9.74211 13.5203 9.66914 13.4453C9.59617 13.3702 9.55517 13.2684 9.55517 13.1623C9.55517 13.0562 9.59617 12.9544 9.66914 12.8793L12.5055 9.96248L4.88888 9.96248C4.78574 9.96248 4.68683 9.92034 4.6139 9.84533C4.54097 9.77032 4.5 9.66858 4.5 9.5625C4.5 9.45642 4.54097 9.35468 4.6139 9.27967C4.68683 9.20466 4.78574 9.16252 4.88888 9.16252L12.5055 9.16252L9.66914 6.24568C9.59617 6.17063 9.55517 6.06884 9.55517 5.9627C9.55517 5.85656 9.59617 5.75477 9.66914 5.67972C9.74211 5.60466 9.84107 5.5625 9.94427 5.5625C10.0475 5.5625 10.1464 5.60466 10.2194 5.67972L13.7193 9.27952C13.7554 9.31666 13.7841 9.36078 13.8037 9.40933C13.8233 9.45789 13.8333 9.50994 13.8333 9.5625C13.8333 9.61506 13.8233 9.66711 13.8037 9.71567C13.7841 9.76422 13.7554 9.80834 13.7193 9.84548Z" fill="#DA5761"/>
@@ -77,83 +75,79 @@
         </div>
         
         <div class="table-row">
-          <div class="table-label">料金</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="fee_label" tag="span" :fallback="'料金'" /></div>
           <div class="table-value">
             <div class="fee-description">
-              会費は下記に定める金額とします。<br>
-              （法人会員については個人の登録１名あたりの金額）
+              <CmsText pageKey="transaction-law" fieldKey="fee_desc" tag="div" type="html" :fallback="'会費は下記に定める金額とします。<br>（法人会員については個人の登録１名あたりの金額）'" />
             </div>
-            <div class="fee-section-title">■ ちくぎん地域経済クラブ</div>
+            <div class="fee-section-title"><CmsText pageKey="transaction-law" fieldKey="fee_section_title" tag="span" :fallback="'■ ちくぎん地域経済クラブ'" /></div>
             <div class="fee-table">
               <div class="fee-row">
-                <div class="fee-type">スタンダード会員</div>
-                <div class="fee-amount">月額　1,000円（消費税別）</div>
+                <div class="fee-type"><CmsText pageKey="transaction-law" fieldKey="fee_standard_label" tag="span" :fallback="'スタンダード会員'" /></div>
+                <div class="fee-amount"><CmsText pageKey="transaction-law" fieldKey="fee_standard_amount" tag="span" :fallback="'月額 1,000円（消費税別）'" /></div>
               </div>
               <div class="fee-row">
-                <div class="fee-type">プレミアムネット会員</div>
-                <div class="fee-amount">月額　3,000円（消費税別）</div>
+                <div class="fee-type"><CmsText pageKey="transaction-law" fieldKey="fee_premium_label" tag="span" :fallback="'プレミアムネット会員'" /></div>
+                <div class="fee-amount"><CmsText pageKey="transaction-law" fieldKey="fee_premium_amount" tag="span" :fallback="'月額 3,000円（消費税別）'" /></div>
               </div>
             </div>
           </div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">支払い時期および方法</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="payment_label" tag="span" :fallback="'支払い時期および方法'" /></div>
           <div class="table-value">
-            会費の納入は入会月の翌月から口座振替によって、毎月20日（休日の場合は翌営業日）に会員種別ごとの月額会費を納入することとします。<br>
-            口座振替を利用しない場合は、毎年4月20日（休日の場合は翌営業日）までに年会費（毎年4月1日～翌年3月31日分）を一括納入することとします。
+            <CmsText pageKey="transaction-law" fieldKey="payment_body" tag="div" type="html" :fallback="'会費の納入は入会月の翌月から口座振替によって、毎月20日（休日の場合は翌営業日）に会員種別ごとの月額会費を納入することとします。<br>口座振替を利用しない場合は、毎年4月20日（休日の場合は翌営業日）までに年会費（毎年4月1日～翌年3月31日分）を一括納入することとします。'" />
           </div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">その他料金</div>
-          <div class="table-value">口座振込：振込手数料</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="otherfees_label" tag="span" :fallback="'その他料金'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="otherfees_value" tag="span" :fallback="'口座振込：振込手数料'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">提供時間</div>
-          <div class="table-value">所定の手続きの終了後、直ちにご利用いただけます。</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="service_time_label" tag="span" :fallback="'提供時間'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="service_time_value" tag="span" :fallback="'所定の手続きの終了後、直ちにご利用いただけます。'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">退会について</div>
-          <div class="table-value">ご利用の停止、退会については、退会希望月の前月末までに、お電話または筑邦銀行窓口に直接お申し出ください。</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="cancel_label" tag="span" :fallback="'退会について'" /></div>
+          <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="cancel_value" tag="span" :fallback="'ご利用の停止、退会については、退会希望月の前月末までに、お電話または筑邦銀行窓口に直接お申し出ください。'" /></div>
         </div>
         
         <div class="table-row">
-          <div class="table-label">返金について</div>
+          <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="refund_label" tag="span" :fallback="'返金について'" /></div>
           <div class="table-value">
-            退会または除名された会員がすでに納入した会費は返還しないものとします。<br>
-            ただし、会員規約の変更に伴い退会する会員で、退会月の翌月以降の先払分会費がある場合は、当該会費を返還することとします。
+            <CmsText pageKey="transaction-law" fieldKey="refund_body" tag="div" type="html" :fallback="'退会または除名された会員がすでに納入した会費は返還しないものとします。<br>ただし、会員規約の変更に伴い退会する会員で、退会月の翌月以降の先払分会費がある場合は、当該会費を返還することとします。'" />
+          </div>
         </div>
-      </div>
 
       <!-- Member Terms Section -->
-      <div class="member-terms-section">
-        <div class="terms-notice">
-          会員サービスについては、会員規約も合わせてご確認ください。
-        </div>
+        <div class="member-terms-section">
+          <div class="terms-notice">
+            <CmsText pageKey="transaction-law" fieldKey="terms_note" tag="span" :fallback="'会員サービスについては、会員規約も合わせてご確認ください。'" />
+          </div>
         
         <div class="terms-content">
           <div class="terms-article">
-            <h3 class="terms-title">第1条(目的）</h3>
+            <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article1_title" tag="span" :fallback="'第1条(目的）'" /></h3>
             <p class="terms-text">
-              「ちくぎん地域経済クラブ」（以下、「本会」という）は、株式会社ちくぎん地域経済研究所（以下、「当社」という）が運営するサービスであり、産・官・学・金（金融機関）のネットワーク構築や会員相互の交流等を通じて、企業経営等に役立つ様々な情報や機会提供により、会員企業等がともに発展し、ひいては地域の振興・発展に寄与することを目的とします。
+              <CmsText pageKey="transaction-law" fieldKey="article1_body" tag="span" :fallback="'「ちくぎん地域経済クラブ」（以下、「本会」という）は、株式会社ちくぎん地域経済研究所（以下、「当社」という）が運営するサービスであり、産・官・学・金（金融機関）のネットワーク構築や会員相互の交流等を通じて、企業経営等に役立つ様々な情報や機会提供により、会員企業等がともに発展し、ひいては地域の振興・発展に寄与することを目的とします。'" />
             </p>
           </div>
           
           <div class="terms-article">
-            <h3 class="terms-title">第2条(会員）</h3>
+            <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article2_title" tag="span" :fallback="'第2条(会員）'" /></h3>
             <p class="terms-text">
-              本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人の方を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。<br>
-              会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。
+              <CmsText pageKey="transaction-law" fieldKey="article2_body" tag="div" type="html" :fallback="'本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人の方を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。<br>会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。'" />
             </p>
           </div>
           
           <div class="terms-article">
-            <h3 class="terms-title">第3条(会員種別および会員サービス）</h3>
+            <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article3_title" tag="span" :fallback="'第3条(会員種別および会員サービス）'" /></h3>
             <p class="terms-text">
-              本会の会員は、スタンダード会員とプレミアムネット会員の2種類とし、その会員種別に応じた次のサービス（以下、「会員サービス」という）を利用できるものとします。
+              <CmsText pageKey="transaction-law" fieldKey="article3_body" tag="span" :fallback="'本会の会員は、スタンダード会員とプレミアムネット会員の2種類とし、その会員種別に応じた次のサービス（以下、「会員サービス」という）を利用できるものとします。'" />
             </p>
             
             <div class="service-section">
