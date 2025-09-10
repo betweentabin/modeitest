@@ -125,7 +125,7 @@
               {{ getDownloadButtonText(featuredPublication) }}
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+                  <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
                 </div>
               </div>
             </button>
@@ -164,7 +164,7 @@
                 {{ getDownloadButtonText(publication) }}
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+                  <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
                 </div>
               </div>
             </button>

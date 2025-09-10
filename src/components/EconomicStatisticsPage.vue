@@ -94,7 +94,7 @@
             <button class="download-btn" @click.stop="handleDownloadOrNavigate(featuredPublication)">{{ isRestricted(featuredPublication) ? '詳細を見る' : 'PDFダウンロード' }}
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+                  <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
                 </div>
               </div>
             </button>
@@ -123,7 +123,7 @@
               <button class="publication-download" @click.stop="handleDownloadOrNavigate(publication)">{{ isRestricted(publication) ? '詳細を見る' : 'PDFダウンロード' }}
                 <div class="icon-box">
                 <div class="pdf-icon-wrapper">
-                  <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+                  <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
                 </div>
               </div>
             </button>

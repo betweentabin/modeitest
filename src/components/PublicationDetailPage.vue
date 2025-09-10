@@ -73,14 +73,14 @@
           <button v-if="canDownloadByAccess" class="login-btn" @click="publication?.id && downloadPublication(publication.id)">
             <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
             <div class="pdf-icon-wrapper">
-              <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+              <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
             </div>
           </button>
           <!-- Login button when not permitted -->
           <button v-else class="login-btn" @click="handlePrimaryAction">
             <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
             <div class="pdf-icon-wrapper">
-              <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+              <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
             </div>
           </button>
         </div>

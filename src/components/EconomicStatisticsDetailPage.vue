@@ -72,7 +72,7 @@
             <div class="download-btn arrow-dark" @click="downloadStatistics">
               <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
               <div class="pdf-icon-wrapper">
-                <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+                <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@
             <div class="login-btn arrow-dark" @click="goToLogin">
               <div class="text-44 valign-text-middle inter-bold-white-15px">ログインする</div>
               <div class="pdf-icon-wrapper">
-                <img class="pdf-icon" src="/img/PDFicon.png" alt="PDF" width="23" height="23" />
+                <img class="pdf-icon" src="/img/PDFicon.svg" alt="PDF" width="23" height="23" />
               </div>
             </div>
           </div>
