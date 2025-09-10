@@ -291,7 +291,7 @@ export default {
   },
   data() {
     return {
-      pageKey: 'consulting',
+      pageKey: 'cri-consulting',
       frame132131753022Props: homePageData.frame132131753022Props,
     };
   },

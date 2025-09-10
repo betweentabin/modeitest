@@ -132,30 +132,52 @@ export default {
         const res = await apiClient.get('/api/admin/pages/media-usage', { silent: true })
         const items = res?.data?.data?.items || res?.data?.items || []
         const apiBase = getApiBaseUrl()
+        const isPlaceholder = (u) => {
+          if (!u) return true
+          return u === '/img/hero-image.png' || u === 'img/hero-image.png' ||
+                 u === '/img/-----1-1.png' || u === 'img/-----1-1.png'
+        }
+        const resolveUrl = (rawUrl) => {
+          let url = rawUrl || ''
+          if (!url) return ''
+          if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url
+          if (url.startsWith('/storage/') || url.startsWith('storage/')) {
+            const path = url.startsWith('/storage/') ? url : `/${url}`
+            return `${apiBase}${path}`
+          }
+          return url // '/img' 等はそのまま
+        }
+        // インデックス（media のキー別に参照できるように）
+        const mediaIndex = {}
+        for (const it of items) {
+          if ((it.page_key || '') === 'media' && it.key) {
+            mediaIndex[it.key] = it
+          }
+        }
         const mapped = items.map(it => {
           const rawUrl = it.url || ''
-          let url = rawUrl
-          // 絶対URLはそのまま
-          if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') || rawUrl.startsWith('//')) {
-            url = rawUrl
-          } else if (rawUrl.startsWith('/storage/') || rawUrl.startsWith('storage/')) {
-            // ストレージはバックエンドに向ける（先頭に/を統一）
-            const path = rawUrl.startsWith('/storage/') ? rawUrl : `/${rawUrl}`
-            url = `${apiBase}${path}`
-          } else {
-            // それ以外（/img 等）は現在オリジンで解決させるため、そのまま
-            url = rawUrl
+          let url = resolveUrl(rawUrl)
+          // レスポンシブ・バリアントが未設定の場合はベースキーのプレビューを見せる
+          if ((it.page_key || '') === 'media' && typeof it.key === 'string') {
+            const m = it.key.match(/^(.*)_(mobile|tablet)$/)
+            if (m && isPlaceholder(rawUrl)) {
+              const baseKey = m[1]
+              const base = mediaIndex[baseKey]
+              if (base && base.url && !isPlaceholder(base.url)) {
+                url = resolveUrl(base.url)
+              }
+            }
           }
 
           return ({
-          _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
-          id: it.id || null,
-          pageKey: it.page_key,
-          model: it.model || 'page_content',
-          key: it.key,
-          url,
-          source: it.source || 'json',
-          updated_at: it.updated_at,
+            _id: `mu-${it.page_key}-${it.key}-${Math.random()}`,
+            id: it.id || null,
+            pageKey: it.page_key,
+            model: it.model || 'page_content',
+            key: it.key,
+            url,
+            source: it.source || 'json',
+            updated_at: it.updated_at,
           })
         })
         this.allRows = mapped
