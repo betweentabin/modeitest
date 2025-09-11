@@ -16,8 +16,10 @@
       <div class="pane center">
         <div class="preview-header">
           <div class="info">プレビュー: {{ currentPage ? currentPage.title : '-' }}</div>
-          <div class="actions">
+          <div class="actions" style="display:flex; gap:8px; align-items:center;">
             <button class="btn" :disabled="!currentPage" @click="publish">公開</button>
+            <button class="btn" :disabled="!currentPage" @click="issuePreview">プレビューリンク</button>
+            <a v-if="previewUrl" :href="previewUrl" target="_blank" rel="noopener" class="btn">開く</a>
           </div>
         </div>
         <div class="preview">
@@ -66,6 +68,7 @@
 <script>
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '@/services/apiClient'
+import { getApiUrl } from '@/config/api.js'
 
 export default {
   name: 'BlockCmsEditor',
@@ -81,6 +84,7 @@ export default {
       warnings: [],
       showCreate: false,
       createForm: { slug: '', title: '' },
+      previewUrl: '',
     }
   },
   mounted(){ this.loadPages() },
@@ -88,6 +92,18 @@ export default {
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
       if (res.success) this.pages = res.data.data || []
+      // auto-select by route param or query
+      const slug = this.$route.params.slug || this.$route.query.slug
+      if (slug) {
+        const match = (this.pages || []).find(p => p.slug === slug)
+        if (match) { await this.selectPage(match) }
+        else {
+          // If not exists, prefill create modal with slug
+          this.createForm.slug = slug
+          this.createForm.title = slug
+          this.showCreate = true
+        }
+      }
     },
     async selectPage(p){
       const res = await apiClient.getCmsPage(p.id)
@@ -130,6 +146,18 @@ export default {
     async saveHero(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'hero', { sort:10, component_type:'Hero', props_json:{ title: this.hero.title }, status:'draft' }) },
     async saveRich(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'rich', { sort:20, component_type:'RichText', props_json:{ html: this.richText.html }, status:'draft' }) },
     async publish(){ if (!this.currentPage) return; const res = await apiClient.publishCmsPage(this.currentPage.id); if (res.success) alert('公開しました') },
+    async issuePreview(){
+      if (!this.currentPage) return
+      try{
+        const tok = await apiClient.issueCmsPreviewToken(this.currentPage.id)
+        if (tok.success) {
+          const t = tok.data.token
+          const slug = tok.data.slug
+          this.previewUrl = getApiUrl(`/api/public/pages-v2/${encodeURIComponent(slug)}/preview?token=${encodeURIComponent(t)}`)
+          alert('プレビューリンクを作成しました。開くボタンで確認できます。')
+        }
+      }catch(_){ alert('プレビューリンクの作成に失敗しました') }
+    },
     openCreate(){ this.showCreate = true },
     async create(){
       if (!this.createForm.slug || !this.createForm.title) return

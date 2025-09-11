@@ -432,7 +432,7 @@ const router = new Router({
       meta: { title: "メール配信 - ちくぎん地域経済研究所" }
     },
     {
-      path: "/admin/cms-v2",
+      path: "/admin/cms-v2/:slug?",
       name: "blockCmsEditor",
       component: BlockCmsEditor,
       meta: { title: "ブロック型CMS - ちくぎん地域経済研究所" }

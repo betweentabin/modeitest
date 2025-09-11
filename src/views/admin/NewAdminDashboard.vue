@@ -92,6 +92,7 @@
                 </td>
                 <td>
                   <button @click="editPage(page)" class="edit-btn">編集</button>
+                  <button @click="editInCms(page)" class="edit-btn" style="margin-left:8px;">CMS編集</button>
                 </td>
                 <td>
                   <input 
@@ -283,6 +284,11 @@ export default {
     },
     editPage(page) {
       this.$router.push(`/admin/pages/${page.pageKey}/edit`)
+    },
+    editInCms(page) {
+      const slug = page.pageKey || page.slug || ''
+      if (!slug) return
+      this.$router.push(`/admin/cms-v2/${slug}`)
     },
     createNewPage() {
       this.$router.push('/admin/pages/new')

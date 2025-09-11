@@ -472,6 +472,7 @@ class ApiClient {
   }
   async listCmsOverrides() { return this.get('/api/admin/cms-v2/overrides') }
   async setCmsOverride(payload) { return this.post('/api/admin/cms-v2/overrides', payload) }
+  async issueCmsPreviewToken(pageId) { return this.post(`/api/admin/cms-v2/pages/${pageId}/preview-token`) }
 
   // News API methods
   async getNews(params = {}) {
