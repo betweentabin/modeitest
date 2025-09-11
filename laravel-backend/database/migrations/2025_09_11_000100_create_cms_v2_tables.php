@@ -39,17 +39,41 @@ return new class extends Migration
                 $table->string('filename');
                 $table->string('mime', 191)->nullable();
                 $table->unsignedBigInteger('size')->default(0);
+                $table->string('checksum', 64)->nullable();
                 $table->binary('data');
                 $table->timestampsTz();
+            });
+        }
+
+        if (!Schema::hasTable('cms_v2_overrides')) {
+            Schema::create('cms_v2_overrides', function (Blueprint $table) {
+                $table->id();
+                $table->string('slug')->unique();
+                if (method_exists($table, 'ulid')) { $table->ulid('page_id'); } else { $table->uuid('page_id'); }
+                $table->boolean('enabled')->default(false);
+                $table->unsignedBigInteger('updated_by')->nullable();
+                $table->timestampsTz();
+            });
+        }
+
+        if (!Schema::hasTable('cms_v2_page_versions')) {
+            Schema::create('cms_v2_page_versions', function (Blueprint $table) {
+                if (method_exists($table, 'ulid')) { $table->ulid('id')->primary(); } else { $table->uuid('id')->primary(); }
+                if (method_exists($table, 'ulid')) { $table->ulid('page_id'); } else { $table->uuid('page_id'); }
+                $table->json('snapshot_json');
+                $table->unsignedBigInteger('created_by')->nullable();
+                $table->timestampsTz();
+                $table->index(['page_id', 'created_at']);
             });
         }
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('cms_v2_page_versions');
+        Schema::dropIfExists('cms_v2_overrides');
         Schema::dropIfExists('cms_v2_media');
         Schema::dropIfExists('cms_v2_sections');
         Schema::dropIfExists('cms_v2_pages');
     }
 };
-

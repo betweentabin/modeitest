@@ -464,6 +464,14 @@ class ApiClient {
     fd.append('file', file)
     return this.upload('/api/admin/cms-v2/media', fd)
   }
+  async listCmsPageVersions(id) {
+    return this.get(`/api/admin/cms-v2/pages/${id}/versions`)
+  }
+  async rollbackCmsPageVersion(id, versionId) {
+    return this.post(`/api/admin/cms-v2/pages/${id}/versions/${versionId}/rollback`)
+  }
+  async listCmsOverrides() { return this.get('/api/admin/cms-v2/overrides') }
+  async setCmsOverride(payload) { return this.post('/api/admin/cms-v2/overrides', payload) }
 
   // News API methods
   async getNews(params = {}) {

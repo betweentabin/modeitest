@@ -281,14 +281,21 @@ Route::prefix('admin')->group(function () {
         });
 
         // CMS v2（ブロック型CMS）管理
-        Route::prefix('cms-v2')->middleware('can:manage-content')->group(function () {
+        Route::prefix('cms-v2')->middleware(['auth:sanctum','can:manage-content','throttle:60,1'])->group(function () {
             Route::get('/pages', [App\Http\Controllers\Admin\CmsV2Controller::class, 'index']);
             Route::post('/pages', [App\Http\Controllers\Admin\CmsV2Controller::class, 'store']);
             Route::get('/pages/{id}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'show']);
             Route::put('/pages/{id}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'update']);
             Route::put('/pages/{id}/sections/{sid}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'upsertSection']);
-            Route::post('/pages/{id}/publish', [App\Http\Controllers\Admin\CmsV2Controller::class, 'publish']);
-            Route::post('/media', [App\Http\Controllers\Admin\CmsV2Controller::class, 'uploadMedia']);
+            Route::post('/pages/{id}/publish', [App\Http\Controllers\Admin\CmsV2Controller::class, 'publish'])->middleware('throttle:10,1');
+            Route::get('/pages/{id}/versions', [App\Http\Controllers\Admin\CmsV2Controller::class, 'versions']);
+            Route::post('/pages/{id}/versions/{vid}/rollback', [App\Http\Controllers\Admin\CmsV2Controller::class, 'rollback']);
+            Route::post('/media', [App\Http\Controllers\Admin\CmsV2Controller::class, 'uploadMedia'])->middleware('throttle:30,1');
+            // overrides
+            Route::get('/overrides', [App\Http\Controllers\Admin\CmsV2Controller::class, 'listOverrides']);
+            Route::post('/overrides', [App\Http\Controllers\Admin\CmsV2Controller::class, 'setOverride'])->middleware('throttle:20,1');
+            // preview token
+            Route::post('/pages/{id}/preview-token', [App\Http\Controllers\Admin\CmsV2Controller::class, 'issuePreviewToken'])->middleware('throttle:30,1');
         });
 
         // メールグループ管理
@@ -417,6 +424,14 @@ Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
 Route::prefix('public')->group(function () {
     Route::get('/pages', [PageContentController::class, 'index']);
     Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
+    // CMS v2 public page snapshot
+    Route::get('/pages-v2/{slug}', [App\Http\Controllers\Api\CmsV2PublicController::class, 'showBySlug']);
+    Route::get('/pages-v2/{slug}/preview', [App\Http\Controllers\Api\CmsV2PublicController::class, 'preview']);
+    // media delivery (immutable + ETag)
+    Route::get('/m/{id}/{preset}.{ext}', [App\Http\Controllers\Api\MediaV2Controller::class, 'show'])
+        ->where('id', '[A-Za-z0-9\-]+')
+        ->where('preset', '[A-Za-z0-9_\-]+')
+        ->where('ext', '[A-Za-z0-9]+');
 });
 
 // 新しいニュースAPI（v2）

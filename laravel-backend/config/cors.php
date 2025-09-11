@@ -19,26 +19,17 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:3000', 
-        'http://localhost:8080', 
-        'http://localhost:5173',
-        'https://heroic-celebration-production.up.railway.app',
-        'https://modeitest.vercel.app'
-    ],
+    'allowed_origins' => array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:8080,http://localhost:5173')))),
 
-    'allowed_origins_patterns' => [
-        '/^https:\/\/.*\.vercel\.app$/',
-        '/^https:\/\/.*\.railway\.app$/'
-    ],
+    'allowed_origins_patterns' => array_filter(array_map(function ($p) { return trim($p); }, explode(',', (string) env('CORS_ALLOWED_ORIGIN_PATTERNS', '/^https:\/\/.*\.vercel\.app$/,/^https:\/\/.*\.railway\.app$/')))),
 
     'allowed_headers' => ['*'],
 
     'exposed_headers' => [],
 
     // ブラウザにプリフライト結果をキャッシュさせ、不要なOPTIONSを減らす
-    'max_age' => 600,
+    'max_age' => (int) env('CORS_MAX_AGE', 600),
 
-    'supports_credentials' => true,
+    'supports_credentials' => (bool) env('CORS_SUPPORTS_CREDENTIALS', true),
 
 ];

@@ -725,6 +725,13 @@ router.beforeEach((to, from, next) => {
   // ルートのメタ情報からタイトルを取得
   const title = to.meta?.title || 'ちくぎん地域経済研究所 - CMS管理システム';
   document.title = title;
+  // Admin guard for Block CMS
+  if (to.path.startsWith('/admin/cms-v2')) {
+    const hasAdmin = !!localStorage.getItem('admin_token')
+    if (!hasAdmin) {
+      return next('/admin')
+    }
+  }
   next();
 });
 

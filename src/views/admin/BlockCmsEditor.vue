@@ -39,6 +39,12 @@
             <label>本文（HTML）</label>
             <textarea v-model="richText.html" class="textarea" rows="6" @change="saveRich"></textarea>
           </div>
+          <div class="field" v-if="warnings && warnings.length">
+            <label>警告</label>
+            <ul style="margin:0; padding-left:18px; color:#b45309;">
+              <li v-for="w in warnings" :key="w">{{ w }}</li>
+            </ul>
+          </div>
         </div>
         <div v-else class="empty">右側で編集ができます</div>
       </div>
@@ -72,6 +78,7 @@ export default {
       sections: [],
       hero: { title: '' },
       richText: { html: '' },
+      warnings: [],
       showCreate: false,
       createForm: { slug: '', title: '' },
     }
@@ -92,7 +99,26 @@ export default {
         const rich = secs.find(s=>s.sort===20) || { id: 'rich', sort: 20, component_type:'RichText', props_json:{ html: '' } }
         this.hero = { title: (hero.props_json&&hero.props_json.title)||'' }
         this.richText = { html: (rich.props_json&&rich.props_json.html)||'' }
+        this.collectWarnings([hero, rich])
       }
+    },
+    collectWarnings(sections){
+      const warn = []
+      const expected = {
+        'Hero': new Set(['title']),
+        'RichText': new Set(['html'])
+      }
+      for (const s of sections){
+        if (!s || !s.component_type) continue
+        const props = (s.props_json && typeof s.props_json === 'object') ? Object.keys(s.props_json) : []
+        const ex = expected[s.component_type]
+        if (ex){
+          for (const k of props){ if (!ex.has(k)) warn.push(`${s.component_type}: 未対応キー「${k}」`) }
+        } else {
+          warn.push(`未対応ブロック: ${s.component_type}`)
+        }
+      }
+      this.warnings = warn
     },
     renderPreviewHtml(){
       const h = this.hero.title ? `<section><h1>${this.escape(this.hero.title)}</h1></section>` : ''
@@ -138,4 +164,3 @@ export default {
 .modal-inner{ background:#fff; border-radius:8px; padding:16px; width:360px; display:flex; flex-direction:column; gap:10px; }
 .actions{ display:flex; justify-content:flex-end; }
 </style>
-
