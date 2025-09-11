@@ -14,42 +14,59 @@
         </div>
       </div>
       <div class="pane center">
-        <div class="preview-header">
-          <div class="info">プレビュー: {{ currentPage ? currentPage.title : '-' }}</div>
-          <div class="actions" style="display:flex; gap:8px; align-items:center;">
-            <button class="btn" :disabled="!currentPage" @click="publish">公開</button>
+        <div v-if="currentPage" class="editor-form">
+          <div class="field">
+            <label>KV画像</label>
+            <div class="kv-uploader" @click="selectKvFile">
+              <input ref="kvInput" type="file" accept="image/*" style="display:none" @change="onKvSelected" />
+              <div v-if="kv.previewUrl" class="kv-preview" :style="{backgroundImage: `url(${kv.previewUrl})`}"></div>
+              <div v-else class="kv-placeholder">
+                <span class="kv-icon">🖼</span>
+                <span>アップロードファイル</span>
+              </div>
+            </div>
+            <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）</div>
+          </div>
+
+          <div class="field">
+            <label>ページタイトル</label>
+            <input v-model="currentPage.title" class="input" @change="savePageMeta" />
+          </div>
+
+          <div class="section-title">コンテンツ</div>
+          <div class="field">
+            <label>エディター</label>
+            <textarea v-model="richText.html" class="textarea" rows="18" @change="saveRich"></textarea>
+          </div>
+
+          <div v-if="currentPage.slug==='privacy-policy'" class="section-title">子コンポーネント文言（デザインは不変）</div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>ページタイトル（見出し）</label>
+            <input v-model="privacyTexts.page_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>サブタイトル</label>
+            <input v-model="privacyTexts.page_subtitle" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>導入文</label>
+            <textarea v-model="privacyTexts.intro" class="textarea" rows="4"></textarea>
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="actions" style="justify-content:flex-start; gap:8px;">
+            <button class="btn" @click="savePrivacyTexts">文言を保存</button>
+            <span class="help">ページ内のCmsTextに反映（公開デザインはそのまま）</span>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn primary" :disabled="!currentPage" @click="publish">公開する</button>
+            <button class="btn" :disabled="!currentPage" @click="unpublish">公開を停止する</button>
             <button class="btn" :disabled="!currentPage" @click="issuePreview">プレビューリンク</button>
             <a v-if="previewUrl" :href="previewUrl" target="_blank" rel="noopener" class="btn">開く</a>
           </div>
         </div>
-        <div class="preview">
-          <iframe v-if="currentPage" :srcdoc="renderPreviewHtml()" class="frame"></iframe>
-          <div v-else class="empty">ページを選択してください</div>
-        </div>
+        <div v-else class="empty">ページを選択してください</div>
       </div>
-      <div class="pane right">
-        <div v-if="currentPage" class="editor">
-          <div class="field">
-            <label>タイトル</label>
-            <input v-model="currentPage.title" class="input" @change="savePageMeta" />
-          </div>
-          <div class="field">
-            <label>Hero見出し</label>
-            <input v-model="hero.title" class="input" @change="saveHero" />
-          </div>
-          <div class="field">
-            <label>本文（HTML）</label>
-            <textarea v-model="richText.html" class="textarea" rows="6" @change="saveRich"></textarea>
-          </div>
-          <div class="field" v-if="warnings && warnings.length">
-            <label>警告</label>
-            <ul style="margin:0; padding-left:18px; color:#b45309;">
-              <li v-for="w in warnings" :key="w">{{ w }}</li>
-            </ul>
-          </div>
-        </div>
-        <div v-else class="empty">右側で編集ができます</div>
-      </div>
+      <div class="pane right" style="display:none"></div>
     </div>
 
     <!-- Create modal -->
@@ -85,6 +102,8 @@ export default {
       showCreate: false,
       createForm: { slug: '', title: '' },
       previewUrl: '',
+      kv: { id:'', ext:'', previewUrl:'' },
+      privacyTexts: { page_title: '', page_subtitle: '', intro: '' },
     }
   },
   mounted(){ this.loadPages() },
@@ -112,11 +131,27 @@ export default {
         // very small mapping to two demo sections: hero (sort 10) and rich (sort 20)
         const secs = (res.data.sections||[])
         const hero = secs.find(s=>s.sort===10) || { id: 'hero', sort: 10, component_type:'Hero', props_json:{ title: '' } }
+        const kv = secs.find(s=>s.sort===15) || { id: 'kv', sort: 15, component_type:'KV', props_json:{ image_id:'', ext:'' } }
         const rich = secs.find(s=>s.sort===20) || { id: 'rich', sort: 20, component_type:'RichText', props_json:{ html: '' } }
         this.hero = { title: (hero.props_json&&hero.props_json.title)||'' }
+        this.kv = { id: (kv.props_json&&kv.props_json.image_id)||'', ext:(kv.props_json&&kv.props_json.ext)||'', previewUrl: this.kvPreviewFromProps((kv.props_json||{})) }
         this.richText = { html: (rich.props_json&&rich.props_json.html)||'' }
         this.collectWarnings([hero, rich])
+        if (this.currentPage.slug === 'privacy-policy') {
+          try {
+            const page = await apiClient.adminGetPageContent('privacy')
+            const content = page?.data?.page?.content || {}
+            const texts = content.texts || {}
+            this.privacyTexts.page_title = texts.page_title || this.currentPage.title || ''
+            this.privacyTexts.page_subtitle = texts.page_subtitle || ''
+            this.privacyTexts.intro = texts.intro || ''
+          } catch(_) { /* noop */ }
+        }
       }
+    },
+    kvPreviewFromProps(props){
+      if (!props || !props.image_id || !props.ext) return ''
+      return getApiUrl(`/api/public/m/${encodeURIComponent(props.image_id)}/md.${encodeURIComponent(props.ext)}`)
     },
     collectWarnings(sections){
       const warn = []
@@ -145,7 +180,21 @@ export default {
     async savePageMeta(){ if (!this.currentPage) return; await apiClient.updateCmsPage(this.currentPage.id, { title: this.currentPage.title }) },
     async saveHero(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'hero', { sort:10, component_type:'Hero', props_json:{ title: this.hero.title }, status:'draft' }) },
     async saveRich(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'rich', { sort:20, component_type:'RichText', props_json:{ html: this.richText.html }, status:'draft' }) },
-    async publish(){ if (!this.currentPage) return; const res = await apiClient.publishCmsPage(this.currentPage.id); if (res.success) alert('公開しました') },
+    async publish(){
+      if (!this.currentPage) return
+      const res = await apiClient.publishCmsPage(this.currentPage.id)
+      if (res.success) {
+        try { await apiClient.setCmsOverride({ slug: this.currentPage.slug, page_id: this.currentPage.id, enabled: true }) } catch(_){ /* ignore */ }
+        alert('公開しました（オーバーライドON）')
+      }
+    },
+    async unpublish(){
+      if (!this.currentPage) return
+      try {
+        const res = await apiClient.setCmsOverride({ slug: this.currentPage.slug, page_id: this.currentPage.id, enabled: false })
+        if (res.success) alert('公開を停止しました（オーバーライドOFF）')
+      } catch(_){ alert('公開停止に失敗しました') }
+    },
     async issuePreview(){
       if (!this.currentPage) return
       try{
@@ -158,6 +207,30 @@ export default {
         }
       }catch(_){ alert('プレビューリンクの作成に失敗しました') }
     },
+    selectKvFile(){ this.$refs.kvInput && this.$refs.kvInput.click() },
+    async onKvSelected(e){
+      const f = (e.target.files && e.target.files[0]) || null
+      if (!f || !this.currentPage) return
+      try{
+        const up = await apiClient.uploadCmsMedia(f)
+        if (up && up.success){
+          const id = up.data.id
+          const mime = (up.data.mime||'').toLowerCase()
+          const ext = mime.includes('png')? 'png' : mime.includes('webp')? 'webp' : mime.includes('gif')? 'gif' : 'jpg'
+          await apiClient.upsertCmsSection(this.currentPage.id, 'kv', { sort:15, component_type:'KV', props_json:{ image_id:id, ext }, status:'draft' })
+          this.kv = { id, ext, previewUrl: getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`) }
+        } else {
+          alert('画像アップロードに失敗しました')
+        }
+      } catch(_){ alert('画像アップロードに失敗しました') }
+    },
+    async savePrivacyTexts(){
+      try {
+        const patch = { content: { texts: { ...this.privacyTexts } } }
+        const res = await apiClient.adminUpdatePageContent('privacy', patch)
+        if (res) alert('保存しました')
+      } catch(_) { alert('保存に失敗しました') }
+    },
     openCreate(){ this.showCreate = true },
     async create(){
       if (!this.createForm.slug || !this.createForm.title) return
@@ -169,10 +242,10 @@ export default {
 </script>
 
 <style scoped>
-.cms{ display:flex; gap:0; height: calc(100vh - 140px); background:#fff; border-radius:8px; overflow:hidden; }
+.cms{ display:flex; gap:0; min-height: calc(100vh - 140px); background:#fff; border-radius:8px; overflow:hidden; }
 .pane{ border-right:1px solid #eee; }
 .left{ width:280px; }
-.center{ flex:1; }
+.center{ flex:1; padding:16px; }
 .right{ width:360px; }
 .toolbar{ display:flex; gap:8px; padding:10px; border-bottom:1px solid #eee; }
 .list{ overflow:auto; height: calc(100% - 50px); }
@@ -180,15 +253,20 @@ export default {
 .item.active{ background:#fff2f4; }
 .title{ font-weight:600; }
 .slug{ color:#777; font-size:12px; }
-.preview-header{ display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-bottom:1px solid #eee; }
-.preview{ height: calc(100% - 45px); }
-.frame{ width:100%; height:100%; border:0; background:#fff; }
-.editor{ padding:12px; }
+.editor-form{ max-width: 860px; margin: 0 auto; }
 .field{ margin-bottom:12px; display:flex; flex-direction:column; gap:6px; }
 .input, .textarea{ border:1px solid #ddd; border-radius:6px; padding:8px 10px; }
 .btn{ background:#1A1A1A; color:#fff; border:none; border-radius:6px; padding:8px 12px; cursor:pointer; }
+.btn.primary{ background:#DA5761; }
 .empty{ padding:16px; color:#777; }
 .modal{ position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
 .modal-inner{ background:#fff; border-radius:8px; padding:16px; width:360px; display:flex; flex-direction:column; gap:10px; }
 .actions{ display:flex; justify-content:flex-end; }
+.actions-row{ display:flex; gap:8px; justify-content:center; padding-top:8px; }
+.section-title{ background:#e6f0ff; color:#1a3a7c; padding:6px 10px; border-left:4px solid #2d5bd1; margin:10px 0; font-weight:600; }
+.kv-uploader{ border:1px dashed #bbb; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; background:#fafafa; cursor:pointer; }
+.kv-placeholder{ display:flex; flex-direction:column; align-items:center; color:#666; gap:6px; }
+.kv-icon{ font-size:22px; }
+.kv-preview{ width:100%; height:100%; background-size:cover; background-position:center; border-radius:8px; }
+.help{ color:#777; font-size:12px; }
 </style>

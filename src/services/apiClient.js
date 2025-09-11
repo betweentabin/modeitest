@@ -472,6 +472,13 @@ class ApiClient {
   }
   async listCmsOverrides() { return this.get('/api/admin/cms-v2/overrides') }
   async setCmsOverride(payload) { return this.post('/api/admin/cms-v2/overrides', payload) }
+  // Legacy PageContent (CmsText) admin APIs
+  async adminGetPageContent(pageKey) {
+    return this.get(`/api/admin/pages/${encodeURIComponent(pageKey)}`)
+  }
+  async adminUpdatePageContent(pageKey, data) {
+    return this.put(`/api/admin/pages/${encodeURIComponent(pageKey)}`, data)
+  }
   async issueCmsPreviewToken(pageId) { return this.post(`/api/admin/cms-v2/pages/${pageId}/preview-token`) }
 
   // News API methods
