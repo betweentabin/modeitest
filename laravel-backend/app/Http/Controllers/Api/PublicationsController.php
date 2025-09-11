@@ -55,22 +55,30 @@ class PublicationsController extends Controller
                 $request->merge($raw);
             }
         }
+        // Normalize optional numeric fields
+        if ($request->has('pages') && $request->input('pages') === '') {
+            $request->merge(['pages' => null]);
+        }
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|in:research,quarterly,special,survey',
+            // 管理画面のカテゴリーマスタに合わせてスラッグを許容（固定のinから撤廃）
+            'category' => 'required|string|max:255',
             'type' => 'required|in:pdf,book,digital',
             'publication_date' => 'required|date',
             'issue_number' => 'nullable|string|max:50',
             'author' => 'nullable|string|max:255',
             'pages' => 'nullable|integer|min:1',
-            'file_url' => 'nullable|url',
-            'cover_image' => 'nullable|url',
+            // 管理側のアップロードは /storage/... を返すため URL 制約を撤廃
+            'file_url' => 'nullable|string',
+            'cover_image' => 'nullable|string',
             'price' => 'nullable|numeric|min:0',
             'tags' => 'nullable|string',
             'is_published' => 'boolean',
             'is_downloadable' => 'boolean',
             'members_only' => 'boolean',
+            // オプション: 会員レベルも許容
+            'membership_level' => 'nullable|in:free,standard,premium',
         ]);
 
         if ($validator->fails()) {
@@ -107,24 +115,31 @@ class PublicationsController extends Controller
                 $request->merge($raw);
             }
         }
+        // Normalize optional numeric fields
+        if ($request->has('pages') && $request->input('pages') === '') {
+            $request->merge(['pages' => null]);
+        }
         $publication = Publication::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
-            'category' => 'sometimes|required|in:research,quarterly,special,survey',
+            // 固定一覧から撤廃し、マスタのスラッグを許容
+            'category' => 'sometimes|required|string|max:255',
             'type' => 'sometimes|required|in:pdf,book,digital',
             'publication_date' => 'sometimes|required|date',
             'issue_number' => 'nullable|string|max:50',
             'author' => 'nullable|string|max:255',
             'pages' => 'nullable|integer|min:1',
-            'file_url' => 'nullable|url',
-            'cover_image' => 'nullable|url',
+            // /storage/... 形式も通す
+            'file_url' => 'nullable|string',
+            'cover_image' => 'nullable|string',
             'price' => 'nullable|numeric|min:0',
             'tags' => 'nullable|string',
             'is_published' => 'boolean',
             'is_downloadable' => 'boolean',
             'members_only' => 'boolean',
+            'membership_level' => 'nullable|in:free,standard,premium',
         ]);
 
         if ($validator->fails()) {
