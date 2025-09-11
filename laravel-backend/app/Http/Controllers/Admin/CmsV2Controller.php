@@ -46,7 +46,8 @@ class CmsV2Controller extends Controller
             'title' => 'required|string|max:255',
             'meta_json' => 'array',
         ]);
-        $id = method_exists(new CmsV2Page, 'getKeyType') && method_exists(\Schema::class, 'hasTable') ? (string) Str::ulid() : (string) Str::uuid();
+        // Always use ULID (26-char, no dashes) to match migration column type
+        $id = (string) Str::ulid();
         $page = CmsV2Page::create([
             'id' => $id,
             'slug' => $data['slug'],
