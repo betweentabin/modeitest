@@ -7,7 +7,7 @@
       :title="pageTitle"
       :subtitle="pageSubtitle"
       cms-page-key="contact"
-      heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
+      heroImage="/img/Image_fx2.jpg"
       mediaKey="hero_contact"
     />
 

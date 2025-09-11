@@ -486,8 +486,14 @@ export default {
     gap: 10px;
   }
 
+  .navigation-section {
+    margin-top: 10px;
+  }
+
   .nav-item {
     width: 100%;
+    padding: 20px 0;
+    min-height: 0px;
   }
 
   .action-buttons {
