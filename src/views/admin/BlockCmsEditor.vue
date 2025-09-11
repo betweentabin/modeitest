@@ -264,7 +264,17 @@ export default {
     },
     async importExistingPrivacy(){
       try {
-        const res = await apiClient.adminGetPageContent('privacy')
+        let res = await apiClient.adminGetPageContent('privacy')
+        // 404などで存在しない場合は初期化して再取得
+        if (!res || res.success === false || !res.data || !res.data.page) {
+          await apiClient.post('/api/admin/pages', {
+            page_key: 'privacy',
+            title: 'プライバシーポリシー',
+            content: { html: '', texts: { page_title: 'プライバシーポリシー', page_subtitle: 'privacy policy', intro: '' } },
+            is_published: true
+          })
+          res = await apiClient.adminGetPageContent('privacy')
+        }
         const content = res?.data?.page?.content || {}
         const texts = content.texts || {}
         const html = content.html || ''
@@ -277,6 +287,7 @@ export default {
         this.privacyTexts.intro = texts.intro || this.privacyTexts.intro
         alert('既存の文言を取り込みました')
       } catch (e) {
+        console.warn('importExistingPrivacy failed', e)
         alert('取り込みに失敗しました')
       }
     },
