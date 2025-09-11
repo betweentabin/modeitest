@@ -49,6 +49,14 @@ class Member extends Authenticatable
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
         'is_active' => 'boolean',
+        // 機微情報はアプリキーで暗号化（検索に使わない項目のみ）
+        'phone' => 'encrypted',
+        'postal_code' => 'encrypted',
+        'address' => 'encrypted',
+        'position' => 'encrypted',
+        'department' => 'encrypted',
+        'concerns' => 'encrypted',
+        'notes' => 'encrypted',
     ];
 
     // リレーションシップ
