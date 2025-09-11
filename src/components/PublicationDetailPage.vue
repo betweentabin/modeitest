@@ -325,7 +325,7 @@ export default {
 
 /* Publication Detail Section */
 .publication-detail-section {
-  padding: 70px 50px 50px 50px;
+  padding: 70px 50px 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -525,13 +525,107 @@ export default {
 /* Footer Navigation */
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
   .publication-detail-section {
-    padding: 30px 20px 0 20px;
+    padding: 50px 30px !important;
   }
   
   .publication-detail-card {
-    padding: 30px 20px;
+    padding: 40px !important;
+  }
+  
+  .section-title {
+    font-size: 32px !important;
+  }
+  
+  .divider-text {
+    font-size: 18px !important;
+  }
+  
+  .detail-label {
+    font-size: 18px !important;
+  }
+  
+  .detail-value {
+    font-size: 18px !important;
+  }
+  
+  .publication-content {
+    flex-direction: column !important;
+    gap: 30px !important;
+  }
+  
+  .publication-image {
+    width: 100% !important;
+    height: 300px !important;
+    border-radius: 20px 20px 0 0 !important;
+    order: -1 !important;
+  }
+  
+  .publication-info {
+    width: 100% !important;
+    order: 2 !important;
+  }
+}
+
+/* 900px以下（タブレット） */
+@media (max-width: 900px) {
+  .publication-image {
+    height: 280px !important;
+    order: -1 !important;
+  }
+}
+
+
+@media (max-width: 900px) {
+  .publication-detail-section {
+    padding: 30px 20px !important;
+  }
+  
+  .publication-detail-card {
+    padding: 35px !important;
+  }
+  
+  .section-title {
+    font-size: 29px !important;
+  }
+  
+  .divider-text {
+    font-size: 17px !important;
+  }
+  
+  .detail-label {
+    font-size: 17px !important;
+  }
+  
+  .detail-value {
+    font-size: 17px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .publication-detail-section {
+    padding: 30px 20px !important;
+  }
+  
+  .publication-detail-card {
+    padding: 30px !important;
+  }
+  
+  .section-title {
+    font-size: 27px !important;
+  }
+  
+  .divider-text {
+    font-size: 16px !important;
+  }
+  
+  .detail-label {
+    font-size: 16px !important;
+  }
+  
+  .detail-value {
+    font-size: 16px !important;
   }
   
   .publication-content {
@@ -541,6 +635,11 @@ export default {
   .publication-image {
     width: 100%;
     height: 300px;
+  }
+  
+  .publication-image img {
+    height: 250px !important;
+    order: -1 !important;
   }
   
   .publication-info {
@@ -557,6 +656,38 @@ export default {
   
   .cta-button {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .publication-detail-section {
+    padding: 20px 15px !important;
+  }
+  
+  .publication-detail-card {
+    padding: 20px !important;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
+  .divider-text {
+    font-size: 13px !important;
+  }
+  
+  .detail-label {
+    font-size: 13px !important;
+  }
+  
+  .detail-value {
+    font-size: 13px !important;
+  }
+  
+  .publication-image {
+    height: 200px !important;
+    border-radius: 15px 15px 0 0 !important;
+    order: -1 !important;
   }
 }
 

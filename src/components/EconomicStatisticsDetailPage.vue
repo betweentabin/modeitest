@@ -566,11 +566,14 @@ export default {
   }
   
   .statistics-detail-card {
-    padding: 30px 20px !important;
+    padding: 40px !important;
   }
   
   .statistics-image {
-    height: 350px !important;
+    height: 300px !important;
+    width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    order: -1 !important;
   }
   
   .section-title {
@@ -615,11 +618,12 @@ export default {
   }
   
   .statistics-detail-card {
-    padding: 30px 20px !important;
+    padding: 35px !important;
   }
   
   .statistics-image {
     height: 280px !important;
+    order: -1 !important;
   }
   
   .section-title {
@@ -664,11 +668,12 @@ export default {
   }
   
   .statistics-detail-card {
-    padding: 30px 20px !important;
+    padding: 30px !important;
   }
   
   .statistics-image {
     height: 250px !important;
+    order: -1 !important;
   }
   
   .section-title {
@@ -715,11 +720,13 @@ export default {
   }
   
   .statistics-detail-card {
-    padding: 20px 15px !important;
+    padding: 20px !important;
   }
   
   .statistics-image {
     height: 200px !important;
+    border-radius: 15px 15px 0 0 !important;
+    order: -1 !important;
   }
   
   .section-title {
