@@ -17,16 +17,16 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="content-header">
-        <h2 class="page-title">
+      <div class="section-header">
+        <h2 class="main-title">
           <CmsText pageKey="terms" fieldKey="page_title" tag="span" :fallback="pageTitle" />
         </h2>
-        <div class="title-decoration">
-          <div class="line-left"></div>
-          <span class="title-english">
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">
             <CmsText pageKey="terms" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
           </span>
-          <div class="line-right"></div>
+          <div class="divider-line"></div>
         </div>
       </div>
 
@@ -260,7 +260,7 @@ export default {
   background: #ECECEC;
 }
 
-.content-header {
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -268,17 +268,17 @@ export default {
   margin-bottom: 40px;
 }
 
-.page-title {
+.section-title {
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 36px;
   font-weight: 700;
   color: #1A1A1A;
   letter-spacing: -0.72px;
-  text-align: center;
+  text-align: left;
   margin: 0;
 }
 
-.title-decoration {
+.section-divider {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -286,14 +286,14 @@ export default {
   min-width: 306px;
 }
 
-.line-left, .line-right {
+.divider-line {
   width: 80px;
   height: 2px;
   background: #DA5761;
   flex-shrink: 0;
 }
 
-.title-english {
+.divider-text {
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 20px;
   font-weight: 700;
@@ -334,9 +334,19 @@ export default {
   gap: 15px;
 }
 
+.main-title {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: -0.72px;
+  text-align: center;
+  margin: 0;
+}
+
 .section-title {
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   color: #1A1A1A;
   margin: 0;
@@ -402,13 +412,6 @@ export default {
     order: 1 !important;
   }
   
-  .hero-title {
-    font-size: 32px !important;
-  }
-  
-  .hero-subtitle {
-    font-size: 18px !important;
-  }
   
   .main-content {
     padding: 50px 30px !important;
@@ -418,15 +421,15 @@ export default {
     padding: 30px 20px !important;
   }
   
-  .content-header {
+  .section-header {
     gap: 25px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 32px !important;
   }
   
-  .decoration-text {
+  .divider-text {
     font-size: 18px !important;
   }
   
@@ -468,13 +471,7 @@ export default {
 }
 
 @media (max-width: 900px) {
-  .hero-title {
-    font-size: 29px !important;
-  }
   
-  .hero-subtitle {
-    font-size: 17px !important;
-  }
   
   .main-content {
     padding: 30px 20px !important;
@@ -484,15 +481,19 @@ export default {
     padding: 30px 20px !important;
   }
   
-  .content-header {
+  .section-header {
     gap: 22px !important;
   }
   
-  .page-title {
+  .main-title {
     font-size: 29px !important;
   }
   
-  .decoration-text {
+  .section-title {
+    font-size: 20px !important;
+  }
+  
+  .divider-text {
     font-size: 17px !important;
   }
   
@@ -512,11 +513,23 @@ export default {
     font-size: 17px !important;
   }
   
+  .intro-text .inline-editable {
+    font-size: 17px !important;
+  }
+  
   .section-content {
     font-size: 17px !important;
   }
   
+  .section-content .inline-editable {
+    font-size: 17px !important;
+  }
+  
   .list-content {
+    font-size: 17px !important;
+  }
+  
+  .list-content .inline-editable {
     font-size: 17px !important;
   }
   
@@ -542,15 +555,19 @@ export default {
     padding: 30px 20px !important;
   }
   
-  .content-header {
+  .section-header {
     gap: 20px !important;
   }
   
-  .page-title {
+  .main-title {
     font-size: 27px !important;
   }
   
-  .decoration-text {
+  .section-title {
+    font-size: 19px !important;
+  }
+  
+  .divider-text {
     font-size: 16px !important;
   }
   
@@ -583,21 +600,27 @@ export default {
     font-size: 16px !important;
   }
   
+  .intro-text .inline-editable {
+    font-size: 16px !important;
+  }
+  
   .section-content {
+    font-size: 16px !important;
+  }
+  
+  .section-content .inline-editable {
     font-size: 16px !important;
   }
   
   .list-content {
     font-size: 16px !important;
   }
-
-  .hero-title {
-    font-size: 27px !important;
-  }
   
-  .hero-subtitle {
+  .list-content .inline-editable {
     font-size: 16px !important;
   }
+
+  
   
   .company-address {
     font-size: 16px !important;
@@ -627,13 +650,7 @@ export default {
 }
 
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 22px !important;
-  }
   
-  .hero-subtitle {
-    font-size: 13px !important;
-  }
   
   .main-content {
     padding: 20px 15px !important;
@@ -643,15 +660,19 @@ export default {
     padding: 20px 15px !important;
   }
   
-  .content-header {
+  .section-header {
     gap: 18px !important;
   }
   
-  .page-title {
+  .main-title {
     font-size: 22px !important;
   }
   
-  .decoration-text {
+  .section-title {
+    font-size: 18px !important;
+  }
+  
+  .divider-text {
     font-size: 13px !important;
   }
   
@@ -671,11 +692,23 @@ export default {
     font-size: 13px !important;
   }
   
+  .intro-text .inline-editable {
+    font-size: 13px !important;
+  }
+  
   .section-content {
     font-size: 13px !important;
   }
   
+  .section-content .inline-editable {
+    font-size: 13px !important;
+  }
+  
   .list-content {
+    font-size: 13px !important;
+  }
+  
+  .list-content .inline-editable {
     font-size: 13px !important;
   }
   
@@ -695,7 +728,7 @@ export default {
 /* Inline-editable elements should match description font size */
 .inline-editable {
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   color: #3F3F3F;
   line-height: normal;
@@ -703,14 +736,22 @@ export default {
 
 /* Responsive font sizes for inline-editable */
 @media (max-width: 1150px) {
+  .main-title {
+    font-size: 32px !important;
+  }
+  
+  .section-title {
+    font-size: 22px !important;
+  }
+  
   .inline-editable {
-    font-size: 18px !important;
+    font-size: 20px !important;
   }
 }
 
 @media (max-width: 900px) {
   .inline-editable {
-    font-size: 17px !important;
+    font-size: 18px !important;
   }
 }
 
@@ -722,7 +763,7 @@ export default {
 
 @media (max-width: 480px) {
   .inline-editable {
-    font-size: 13px !important;
+    font-size: 14px !important;
   }
 }
 </style>

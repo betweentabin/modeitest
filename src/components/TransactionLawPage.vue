@@ -534,7 +534,7 @@ export default {
 .service-subtitle {
   color: #1A1A1A;
   font-family: var(--font-family-inter);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   line-height: normal;
   margin: 10px 0;
@@ -780,6 +780,10 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 1150px) {
+  .service-subtitle {
+    font-size: 18px !important;
+  }
+  
   .frame-1321317467-1 {
     flex-direction: column !important;
     gap: 20px !important;
@@ -894,6 +898,10 @@ export default {
 }
 
 @media (max-width: 900px) {
+  .service-subtitle {
+    font-size: 17px !important;
+  }
+  
   .hero-title {
     font-size: 29px !important;
   }
@@ -999,6 +1007,10 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .service-subtitle {
+    font-size: 16px !important;
+  }
+  
   .main-content {
     padding: 40px 20px !important;
   }
@@ -1125,6 +1137,10 @@ export default {
 }
 
 @media (max-width: 480px) {
+  .service-subtitle {
+    font-size: 13px !important;
+  }
+  
   .hero-title {
     font-size: 22px !important;
   }

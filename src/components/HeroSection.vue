@@ -1,5 +1,13 @@
 <template>
-  <div class="hero-section" :style="heroStyle">
+  <!-- Use HeroSlider if slides are provided -->
+  <HeroSlider 
+    v-if="slides && slides.length > 0"
+    :slides="slides"
+    :autoPlay="autoPlay"
+    :autoPlayInterval="autoPlayInterval"
+  />
+  <!-- Fallback to single hero image -->
+  <div v-else class="hero-section" :style="heroStyle">
     <div class="hero-overlay">
       <div class="hero-content">
         <!-- When cmsPageKey provided, render inline-editable texts -->
@@ -18,11 +26,11 @@
       </div>
     </div>
   </div>
-  
 </template>
 
 <script>
 import CmsText from '@/components/CmsText.vue'
+import HeroSlider from '@/components/HeroSlider.vue'
 
 export default {
   name: "HeroSection",
@@ -61,9 +69,23 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    // Slider functionality
+    slides: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    autoPlay: {
+      type: Boolean,
+      default: true
+    },
+    autoPlayInterval: {
+      type: Number,
+      default: 5000
     }
   },
-  components: { CmsText },
+  components: { CmsText, HeroSlider },
   async mounted() {
     // lazy load media registry if mediaKey is provided
     if (this.mediaKey) {

@@ -67,7 +67,7 @@ export default {
 .overlap-group-6 {
   align-items: flex-start;
   background-color: var(--white);
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 15px 0px 0px 0px;
   display: flex;
   flex-direction: column;
   left: 76px;
@@ -171,6 +171,7 @@ export default {
     right: 0px;
     left: auto;
     padding: 15px 20px;
+    border-radius: 15px 0px 0px 0px;
   }
   
   .text-8 {
@@ -210,6 +211,7 @@ export default {
     min-height: 0px !important;
     width: 100% !important;
     max-width: 100% !important;
+    border-radius: 15px 15px 0px 0px !important;
   }
   
   .text-8 {
