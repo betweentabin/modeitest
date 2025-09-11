@@ -13,13 +13,24 @@
             <input v-model="form.subject" class="form-input" placeholder="件名" />
           </div>
           <div class="form-group">
-            <label>グループ</label>
+            <label>送信先グループ</label>
             <select v-model="form.groups" class="form-select" multiple>
               <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }} ({{ g.members_count || 0 }})</option>
             </select>
           </div>
           <div class="form-group" style="align-self:flex-end;">
             <button class="small-btn" @click="openTemplates">テンプレートから作成</button>
+            <button class="small-btn" style="margin-left:8px" @click="$router.push('/admin/mailmagazine/group')">グループを管理</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>受信者の目安</label>
+            <div class="hint">概算: グループ合計 {{ estimatedGroupCount }} 件 + 追加メール {{ extraEmailCount }} 件（重複は含む可能性あり）</div>
+          </div>
+          <div class="form-group" style="display:flex; align-items:center; gap:8px;">
+            <input id="saveAsTemplate" type="checkbox" v-model="saveAsTemplate" />
+            <label for="saveAsTemplate" style="margin:0;">テンプレートとして保存</label>
           </div>
         </div>
         <div class="form-row">
@@ -79,6 +90,7 @@
                 <td>{{ formatDateTime(c.created_at) }}</td>
                 <td>
                   <button class="small-btn" @click="preview(c)">プレビュー</button>
+                  <button class="small-btn" @click="openRecipients(c)">受信者</button>
                   <button class="small-btn" @click="openAttachments(c)">添付</button>
                   <button class="small-btn" @click="duplicate(c)">複製</button>
                   <button class="small-btn" @click="toggleTemplate(c)">{{ c.is_template ? 'テンプレ解除' : 'テンプレ化' }}</button>
@@ -124,9 +136,10 @@
               <option value="sent">sent</option>
               <option value="failed">failed</option>
             </select>
-            <button class="save-btn" @click="resendFailed">失敗を再送待ちに戻す</button>
+            <button class="save-btn" @click="resendFailed" :disabled="recipientsLoading">失敗を再送待ちに戻す</button>
           </div>
-          <table class="data-table">
+          <div v-if="recipientsLoading" class="loading">読み込み中...</div>
+          <table class="data-table" v-else>
             <thead>
               <tr>
                 <th>ID</th>
@@ -238,6 +251,7 @@ export default {
       statusFilter: '',
       form: { subject: '', body_html: '', groups: [] },
       extraEmailsText: '',
+      saveAsTemplate: false,
       showPreview: false,
       previewHtml: '',
       previewSubject: '',
@@ -249,6 +263,11 @@ export default {
       showTemplates: false,
       templatesLoading: false,
       templates: [],
+      // recipients modal state
+      showRecipients: false,
+      recipientsLoading: false,
+      recipientStatusFilter: '',
+      recipients: [],
     }
   },
   computed: {
@@ -259,6 +278,16 @@ export default {
       const end = Math.min(this.pagination.last_page, start + maxShow - 1)
       for (let i = start; i <= end; i++) pages.push(i)
       return pages
+    },
+    estimatedGroupCount() {
+      if (!Array.isArray(this.form.groups) || this.form.groups.length === 0) return 0
+      const selected = new Set(this.form.groups.map(x => Number(x)))
+      return (this.groups || [])
+        .filter(g => selected.has(Number(g.id)))
+        .reduce((sum, g) => sum + (Number(g.members_count) || 0), 0)
+    },
+    extraEmailCount() {
+      return this.emailsFromText().length
     }
   },
   mounted() { this.loadData() },
@@ -291,9 +320,14 @@ export default {
         const payload = { ...this.form, extra_emails: this.emailsFromText() }
         const res = await apiClient.createEmailCampaign(payload)
         if (res.success) {
+          // Mark as template if user requested
+          if (this.saveAsTemplate && res.data && res.data.id) {
+            try { await apiClient.markEmailTemplate(res.data.id) } catch(e) { console.warn('Failed to mark template', e) }
+          }
           alert('作成しました')
           this.form = { subject: '', body_html: '', groups: [] }
           this.extraEmailsText = ''
+          this.saveAsTemplate = false
           await this.loadCampaigns(this.pagination.current_page)
         } else { alert(res.error || '作成に失敗しました') }
       } catch (e) { alert('作成に失敗しました') } finally { this.saving = false }
@@ -369,6 +403,39 @@ export default {
         const res = await apiClient.deleteEmailAttachment(this.currentCampaign.id, a.id)
         if (res.success) this.attachments = this.attachments.filter(x => x.id !== a.id)
       } catch(e) { alert('削除に失敗しました') }
+    },
+    // Recipients modal
+    async openRecipients(c) {
+      this.currentCampaign = c
+      this.showRecipients = true
+      this.recipientStatusFilter = ''
+      await this.loadRecipients()
+    },
+    async loadRecipients() {
+      if (!this.currentCampaign) return
+      this.recipientsLoading = true
+      try {
+        const params = {}
+        if (this.recipientStatusFilter) params.status = this.recipientStatusFilter
+        const res = await apiClient.getEmailCampaign(this.currentCampaign.id, params)
+        if (res.success) {
+          this.recipients = (res.data && res.data.recipients && res.data.recipients.data) || []
+        }
+      } catch(e) { console.warn('Failed to load recipients', e) } finally { this.recipientsLoading = false }
+    },
+    async resendFailed() {
+      if (!this.currentCampaign) return
+      try {
+        const res = await apiClient.resendFailedRecipients(this.currentCampaign.id)
+        if (res.success) { await this.loadRecipients() }
+      } catch(e) { alert('再送待ちへの変更に失敗しました') }
+    },
+    async resendRecipient(r) {
+      if (!this.currentCampaign || !r) return
+      try {
+        const res = await apiClient.resendRecipient(this.currentCampaign.id, r.id)
+        if (res.success) { await this.loadRecipients() }
+      } catch(e) { alert('再送待ちへの変更に失敗しました') }
     },
     async toggleTemplate(c) {
       try {

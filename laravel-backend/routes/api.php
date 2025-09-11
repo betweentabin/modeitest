@@ -280,6 +280,17 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [NewsV2Controller::class, 'destroy']);
         });
 
+        // CMS v2（ブロック型CMS）管理
+        Route::prefix('cms-v2')->middleware('can:manage-content')->group(function () {
+            Route::get('/pages', [App\Http\Controllers\Admin\CmsV2Controller::class, 'index']);
+            Route::post('/pages', [App\Http\Controllers\Admin\CmsV2Controller::class, 'store']);
+            Route::get('/pages/{id}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'show']);
+            Route::put('/pages/{id}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'update']);
+            Route::put('/pages/{id}/sections/{sid}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'upsertSection']);
+            Route::post('/pages/{id}/publish', [App\Http\Controllers\Admin\CmsV2Controller::class, 'publish']);
+            Route::post('/media', [App\Http\Controllers\Admin\CmsV2Controller::class, 'uploadMedia']);
+        });
+
         // メールグループ管理
         Route::prefix('mail-groups')->middleware('can:manage-mails')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\MailGroupController::class, 'index']);

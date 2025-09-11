@@ -69,6 +69,11 @@
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/cms-v2" class="nav-item" :class="{ active: isActive('/admin/cms-v2') }">
+              ブロック型CMS
+            </router-link>
+          </li>
+          <li>
             <router-link to="/admin/mailmagazine" class="nav-item" :class="{ active: isActive('/admin/mailmagazine') }">
               一括メール管理
             </router-link>

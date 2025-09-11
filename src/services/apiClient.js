@@ -382,8 +382,8 @@ class ApiClient {
     return this.post('/api/admin/emails', data)
   }
 
-  async getEmailCampaign(id) {
-    return this.get(`/api/admin/emails/${id}`)
+  async getEmailCampaign(id, params = {}) {
+    return this.get(`/api/admin/emails/${id}`, { params })
   }
 
   async previewEmailCampaign(id) {
@@ -438,6 +438,31 @@ class ApiClient {
 
   async deleteEmailAttachment(id, attachmentId) {
     return this.delete(`/api/admin/emails/${id}/attachments/${attachmentId}`)
+  }
+
+  // CMS v2 (block CMS)
+  async listCmsPages(params = {}) {
+    return this.get('/api/admin/cms-v2/pages', { params })
+  }
+  async createCmsPage(data) {
+    return this.post('/api/admin/cms-v2/pages', data)
+  }
+  async getCmsPage(id) {
+    return this.get(`/api/admin/cms-v2/pages/${id}`)
+  }
+  async updateCmsPage(id, data) {
+    return this.put(`/api/admin/cms-v2/pages/${id}`, data)
+  }
+  async upsertCmsSection(pageId, sectionId, data) {
+    return this.put(`/api/admin/cms-v2/pages/${pageId}/sections/${sectionId}`, data)
+  }
+  async publishCmsPage(id) {
+    return this.post(`/api/admin/cms-v2/pages/${id}/publish`)
+  }
+  async uploadCmsMedia(file) {
+    const fd = new FormData()
+    fd.append('file', file)
+    return this.upload('/api/admin/cms-v2/media', fd)
   }
 
   // News API methods
