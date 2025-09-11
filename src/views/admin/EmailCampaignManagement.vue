@@ -5,46 +5,61 @@
         <h1 class="page-title">メール配信</h1>
       </div>
 
-      <!-- 作成フォーム（簡易版） -->
+      <!-- 作成フォーム（改善版） -->
       <div class="composer">
         <div class="form-row">
           <div class="form-group">
-            <label>件名</label>
-            <input v-model="form.subject" class="form-input" placeholder="件名" />
-          </div>
-          <div class="form-group">
-            <label>送信先グループ</label>
-            <select v-model="form.groups" class="form-select" multiple>
-              <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }} ({{ g.members_count || 0 }})</option>
-            </select>
+            <label>メールタイトル（件名）</label>
+            <input v-model="form.subject" class="form-input" placeholder="例）Hot Information Vol.XXX掲載しました！" />
           </div>
           <div class="form-group" style="align-self:flex-end;">
             <button class="small-btn" @click="openTemplates">テンプレートから作成</button>
             <button class="small-btn" style="margin-left:8px" @click="$router.push('/admin/mailmagazine/group')">グループを管理</button>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>受信者の目安</label>
-            <div class="hint">概算: グループ合計 {{ estimatedGroupCount }} 件 + 追加メール {{ extraEmailCount }} 件（重複は含む可能性あり）</div>
-          </div>
-          <div class="form-group" style="display:flex; align-items:center; gap:8px;">
-            <input id="saveAsTemplate" type="checkbox" v-model="saveAsTemplate" />
-            <label for="saveAsTemplate" style="margin:0;">テンプレートとして保存</label>
-          </div>
-        </div>
+
+        <!-- 宛先（直打ち） -->
         <div class="form-row">
           <div class="form-group full">
-            <label>本文（HTML）</label>
+            <label>送信先メールアドレス（直打ち）</label>
+            <div class="inline-add">
+              <input v-model="extraEmailInput" class="form-input" placeholder="example@example.com" @keyup.enter="addExtraEmail" />
+              <button class="small-btn" @click="addExtraEmail">追加する</button>
+            </div>
+            <div class="chips" v-if="extraEmailList.length">
+              <span v-for="(e,i) in extraEmailList" :key="e+i" class="chip">{{ e }} <button class="chip-x" @click="removeExtraEmail(i)">×</button></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 宛先（グループ） -->
+        <div class="form-row">
+          <div class="form-group full">
+            <label>メールグループ</label>
+            <select v-model="form.groups" class="form-select" multiple>
+              <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }} ({{ g.members_count || 0 }})</option>
+            </select>
+            <div class="hint">複数選択可。概算: グループ合計 {{ estimatedGroupCount }} 件 + 直打ち {{ extraEmailCount }} 件（重複は除外前の数）</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <label>メール内容（本文HTML）</label>
             <MinimalEditor v-model="form.body_html" placeholder="本文を入力..." />
           </div>
         </div>
+
         <div class="form-row">
-          <div class="form-group full">
-            <label>追加メール（改行区切り）</label>
-            <textarea v-model="extraEmailsText" class="form-textarea" rows="4" placeholder="example@example.com"></textarea>
+          <div class="form-group" style="display:flex; align-items:center; gap:8px;">
+            <input id="saveAsTemplate" type="checkbox" v-model="saveAsTemplate" />
+            <label for="saveAsTemplate" style="margin:0;">この内容をテンプレートとして保存</label>
+          </div>
+          <div class="form-group">
+            <div class="hint">テンプレートは「件名・本文・添付」を保存します。宛先（直打ち/グループ）は保存されません。</div>
           </div>
         </div>
+
         <div class="form-actions">
           <button class="save-btn" :disabled="saving" @click="createCampaign">{{ saving ? '作成中...' : 'キャンペーン作成' }}</button>
           <button class="refresh-btn" @click="loadData">再読込</button>
@@ -250,7 +265,9 @@ export default {
       pagination: { current_page: 1, last_page: 1, per_page: 20, total: 0 },
       statusFilter: '',
       form: { subject: '', body_html: '', groups: [] },
-      extraEmailsText: '',
+      // direct input addresses (chip style)
+      extraEmailInput: '',
+      extraEmailList: [],
       saveAsTemplate: false,
       showPreview: false,
       previewHtml: '',
@@ -286,9 +303,7 @@ export default {
         .filter(g => selected.has(Number(g.id)))
         .reduce((sum, g) => sum + (Number(g.members_count) || 0), 0)
     },
-    extraEmailCount() {
-      return this.emailsFromText().length
-    }
+    extraEmailCount() { return this.extraEmailList.length }
   },
   mounted() { this.loadData() },
   methods: {
@@ -311,13 +326,32 @@ export default {
         } else { throw new Error(res.error || res.message) }
       } catch (e) { this.error = '読み込みに失敗しました' } finally { this.loading = false }
     },
-    emailsFromText() {
-      return this.extraEmailsText.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+    validEmail(s) {
+      // simple RFC-like check
+      return /^(?!.{255,})([A-Za-z0-9._%+-]+)@([A-Za-z0-9.-]+)\.[A-Za-z]{2,}$/.test(s)
     },
+    addExtraEmail() {
+      const v = (this.extraEmailInput || '').trim()
+      if (!v) return
+      // allow comma-separated quick add
+      const parts = v.split(',').map(s=>s.trim()).filter(Boolean)
+      let added = 0
+      for (const p of parts) {
+        if (this.validEmail(p) && !this.extraEmailList.includes(p)) { this.extraEmailList.push(p); added++ }
+      }
+      if (added===0 && parts.length===1) alert('メールアドレスの形式を確認してください')
+      this.extraEmailInput = ''
+    },
+    removeExtraEmail(i) { this.extraEmailList.splice(i,1) },
     async createCampaign() {
       this.saving = true
       try {
-        const payload = { ...this.form, extra_emails: this.emailsFromText() }
+        const payload = { ...this.form, extra_emails: this.extraEmailList }
+        if ((!payload.groups || payload.groups.length===0) && (!payload.extra_emails || payload.extra_emails.length===0)) {
+          alert('宛先が未指定です。直打ちかグループを設定してください。')
+          this.saving = false
+          return
+        }
         const res = await apiClient.createEmailCampaign(payload)
         if (res.success) {
           // Mark as template if user requested
@@ -326,7 +360,7 @@ export default {
           }
           alert('作成しました')
           this.form = { subject: '', body_html: '', groups: [] }
-          this.extraEmailsText = ''
+          this.extraEmailList = []
           this.saveAsTemplate = false
           await this.loadCampaigns(this.pagination.current_page)
         } else { alert(res.error || '作成に失敗しました') }
@@ -476,6 +510,10 @@ export default {
 .form-group { flex: 1; }
 .form-group.full { flex: 1 1 100%; }
 .form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
+.inline-add { display:flex; gap:8px; }
+.chips { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+.chip { background:#f1f1f1; border:1px solid #ddd; border-radius:16px; padding:4px 8px; font-size:12px; }
+.chip-x { border:none; background:transparent; margin-left:6px; cursor:pointer; }
 .form-actions { display: flex; gap: 12px; }
 .save-btn { padding: 8px 16px; border: 1px solid #DA5761; background: #DA5761; color: white; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
 .save-btn:hover { background: #9C3940; border-color: #9C3940; }

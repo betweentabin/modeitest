@@ -35,7 +35,9 @@ class EmailImmediateController extends Controller
         // Decide mailer (fallback to log if SMTP is not configured)
         $mailer = config('mail.default', 'smtp');
         $smtpHost = config('mail.mailers.smtp.host');
-        if ($mailer === 'smtp' && (empty($smtpHost) || $smtpHost === 'smtp.mailgun.org')) {
+        $dryRun = filter_var(env('MAIL_DRY_RUN', false), FILTER_VALIDATE_BOOLEAN);
+        if ($dryRun || ($mailer === 'smtp' && (empty($smtpHost) || $smtpHost === 'smtp.mailgun.org'))) {
+            // In dry-run or when SMTP looks unconfigured, use log mailer to avoid hanging
             $mailer = 'log';
         }
 
@@ -54,6 +56,7 @@ class EmailImmediateController extends Controller
         if (!empty($data['cc'])) $message->cc($data['cc']);
         if (!empty($data['bcc'])) $message->bcc($data['bcc']);
 
+        // Send (synchronously). In environments where SMTP is unreachable, above fallback prevents timeouts
         $message->send($mailable);
 
         return response()->json([
@@ -63,4 +66,3 @@ class EmailImmediateController extends Controller
         ]);
     }
 }
-

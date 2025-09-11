@@ -255,9 +255,11 @@ export default {
         const params = { page, per_page: 20 }
         if (this.memberSearch) params.search = this.memberSearch
         if (this.memberTypeFilter) params.membership_type = this.memberTypeFilter
-        const res = await apiClient.get('/api/admin/member-list', { params })
+        // NOTE: endpoint fix - use official admin members list API
+        const res = await apiClient.getAdminMembers(params)
         if (res.success) {
-          this.candidates = res.data.data || []
+          const p = res.data || {}
+          this.candidates = p.data || []
         }
       } catch(e) { console.warn('Failed to load candidates', e) }
     },
