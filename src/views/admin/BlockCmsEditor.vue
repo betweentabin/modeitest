@@ -77,6 +77,11 @@
             <button class="btn" @click="importExistingPrivacy">既存文言を取り込む</button>
             <button class="btn" @click="syncRichToPageContentHtml">本文をPageContentに同期</button>
           </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field" style="margin-top:8px;">
+            <label>PageContentのページキー（必要に応じて変更）</label>
+            <input v-model="pageContentKey" class="input" placeholder="privacy / privacy-poricy など" />
+            <div class="help">取り込み/保存はこのキーで行います</div>
+          </div>
         </div>
         <div v-else class="empty">ページを選択してください</div>
       </div>
@@ -119,8 +124,8 @@ export default {
       kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
       privacyTexts: { page_title: '', page_subtitle: '', intro: '' },
-      // PageContent (CmsText) 側のキー。要件により 'privacy-poricy' を既定にする
-      pageContentKey: 'privacy-poricy',
+      // PageContent(CmsText) 側のキー。既定は 'privacy'（必要に応じてUIで変更可）
+      pageContentKey: 'privacy',
     }
   },
   mounted(){ this.loadPages() },
@@ -266,8 +271,8 @@ export default {
     },
     async importExistingPrivacy(){
       try {
-        // 候補キーを順に探索（要件: privacy-poricy を優先）
-        const candidates = [this.pageContentKey, 'privacy-poricy', 'privacy-policy', 'privacy', 'privacy poricy']
+        // 候補キーを順に探索（UIで指定→ privacy → privacy-poricy → privacy-policy → privacy poricy）
+        const candidates = [this.pageContentKey, 'privacy', 'privacy-poricy', 'privacy-policy', 'privacy poricy']
         let foundKey = null
         let res = null
         for (const k of candidates) {
