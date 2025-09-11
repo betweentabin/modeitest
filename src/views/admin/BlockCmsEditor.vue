@@ -63,6 +63,11 @@
             <button class="btn" :disabled="!currentPage" @click="issuePreview">プレビューリンク</button>
             <a v-if="previewUrl" :href="previewUrl" target="_blank" rel="noopener" class="btn">開く</a>
           </div>
+
+          <div v-if="currentPage.slug==='privacy-policy'" class="actions-row" style="margin-top:8px;">
+            <button class="btn" @click="importExistingPrivacy">既存文言を取り込む</button>
+            <button class="btn" @click="syncRichToPageContentHtml">本文をPageContentに同期</button>
+          </div>
         </div>
         <div v-else class="empty">ページを選択してください</div>
       </div>
@@ -223,6 +228,33 @@ export default {
           alert('画像アップロードに失敗しました')
         }
       } catch(_){ alert('画像アップロードに失敗しました') }
+    },
+    async importExistingPrivacy(){
+      try {
+        const res = await apiClient.adminGetPageContent('privacy')
+        const content = res?.data?.page?.content || {}
+        const texts = content.texts || {}
+        const html = content.html || ''
+        if (typeof html === 'string' && html.trim()) {
+          this.richText.html = html
+        }
+        // set known basic fields
+        this.privacyTexts.page_title = texts.page_title || this.privacyTexts.page_title
+        this.privacyTexts.page_subtitle = texts.page_subtitle || this.privacyTexts.page_subtitle
+        this.privacyTexts.intro = texts.intro || this.privacyTexts.intro
+        alert('既存の文言を取り込みました')
+      } catch (e) {
+        alert('取り込みに失敗しました')
+      }
+    },
+    async syncRichToPageContentHtml(){
+      try {
+        const patch = { content: { html: this.richText.html || '' } }
+        const res = await apiClient.adminUpdatePageContent('privacy', patch)
+        if (res) alert('PageContentに本文を同期しました')
+      } catch (e) {
+        alert('同期に失敗しました')
+      }
     },
     async savePrivacyTexts(){
       try {
