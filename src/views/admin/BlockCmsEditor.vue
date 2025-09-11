@@ -48,21 +48,21 @@
             </div>
           </div>
 
-          <div v-if="currentPage.slug==='privacy-policy'" class="section-title">子コンポーネント文言（デザインは不変）</div>
-          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+          <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
+          <div v-if="currentPage" class="field">
             <label>ページタイトル（見出し）</label>
             <input v-model="privacyTexts.page_title" class="input" />
           </div>
-          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+          <div v-if="currentPage" class="field">
             <label>サブタイトル</label>
             <input v-model="privacyTexts.page_subtitle" class="input" />
           </div>
-          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+          <div v-if="currentPage" class="field">
             <label>導入文</label>
             <textarea v-model="privacyTexts.intro" class="textarea" rows="4"></textarea>
           </div>
-          <div v-if="currentPage.slug==='privacy-policy'" class="actions" style="justify-content:flex-start; gap:8px;">
-            <button class="btn" @click="savePrivacyTexts">文言を保存</button>
+          <div v-if="currentPage" class="actions" style="justify-content:flex-start; gap:8px;">
+            <button class="btn" @click="savePrivacyTexts">文言を保存（PageContent）</button>
             <span class="help">ページ内のCmsTextに反映（公開デザインはそのまま）</span>
           </div>
 
@@ -142,11 +142,11 @@
             <a v-if="previewUrl" :href="previewUrl" target="_blank" rel="noopener" class="btn">開く</a>
           </div>
 
-          <div v-if="currentPage.slug==='privacy-policy'" class="actions-row" style="margin-top:8px;">
+          <div v-if="currentPage" class="actions-row" style="margin-top:8px;">
             <button class="btn" @click="importExistingPrivacy">既存文言を取り込む</button>
             <button class="btn" @click="syncRichToPageContentHtml">本文をPageContentに同期</button>
           </div>
-          <div v-if="currentPage.slug==='privacy-policy'" class="field" style="margin-top:8px;">
+          <div v-if="currentPage" class="field" style="margin-top:8px;">
             <label>PageContentのページキー（必要に応じて変更）</label>
             <input v-model="pageContentKey" class="input" placeholder="privacy / privacy-poricy など" />
             <div class="help">取り込み/保存はこのキーで行います</div>
@@ -201,7 +201,7 @@ export default {
         disclaimer_title: '', disclaimer_body1: '', disclaimer_body2: '', disclaimer_body3: '',
         changes_title: '', changes_body: '',
       },
-      // PageContent(CmsText) 側のキー。既定は 'privacy'（必要に応じてUIで変更可）
+      // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
   },
@@ -236,21 +236,25 @@ export default {
         this.kv = { id: (kv.props_json&&kv.props_json.image_id)||'', ext:(kv.props_json&&kv.props_json.ext)||'', previewUrl: this.kvPreviewFromProps((kv.props_json||{})) }
         this.richText = { html: (rich.props_json&&rich.props_json.html)||'' }
         this.collectWarnings([hero, rich])
-        if (this.currentPage.slug === 'privacy-policy') {
-          try {
-            const page = await apiClient.adminGetPageContent('privacy')
-            const content = page?.data?.page?.content || {}
-            const texts = content.texts || {}
-            // copy known fields if present
-            const keys = Object.keys(this.privacyTexts)
-            for (const k of keys) {
-              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') {
-                this.privacyTexts[k] = texts[k]
-              }
+        // 推奨のPageContentキーを推定
+        const slug = (this.currentPage.slug || '').toLowerCase()
+        if (slug.includes('privacy')) this.pageContentKey = 'privacy'
+        else if (slug.includes('legal') || slug.includes('transaction')) this.pageContentKey = 'transaction-law'
+        else if (slug.includes('terms')) this.pageContentKey = 'terms'
+
+        // 既存テキストの読み込み
+        try {
+          const page = await apiClient.adminGetPageContent(this.pageContentKey)
+          const content = page?.data?.page?.content || {}
+          const texts = content.texts || {}
+          const keys = Object.keys(this.privacyTexts)
+          for (const k of keys) {
+            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') {
+              this.privacyTexts[k] = texts[k]
             }
-            if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
-          } catch(_) { /* noop */ }
-        }
+          }
+          if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
+        } catch(_) { /* noop */ }
       }
     },
     kvPreviewFromProps(props){

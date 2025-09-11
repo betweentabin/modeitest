@@ -39,7 +39,6 @@ class TermsPageJsonSeeder extends Seeder
         $page = PageContent::where('page_key', $key)->first();
 
         if (!$page) {
-            // 作成
             PageContent::create([
                 'page_key' => $key,
                 'title' => '利用規約',
@@ -55,17 +54,15 @@ class TermsPageJsonSeeder extends Seeder
             return;
         }
 
-        // 既存レコードをマージ更新
+        // 非破壊マージ（既存優先、不足のみ補完）
         $content = $page->content ?? [];
-        if (!is_array($content)) {
-            $content = ['html' => (string)$content];
-        }
+        if (!is_array($content)) { $content = ['html' => (string)$content]; }
 
         $texts = isset($content['texts']) && is_array($content['texts']) ? $content['texts'] : [];
         $htmls = isset($content['htmls']) && is_array($content['htmls']) ? $content['htmls'] : [];
 
-        $content['texts'] = array_merge($defaultsTexts, $texts);
-        $content['htmls'] = array_merge($defaultsHtmls, $htmls);
+        $content['texts'] = array_replace($defaultsTexts, $texts);
+        $content['htmls'] = array_replace($defaultsHtmls, $htmls);
 
         $page->update([
             'title' => $page->title ?: '利用規約',
@@ -75,4 +72,3 @@ class TermsPageJsonSeeder extends Seeder
         ]);
     }
 }
-

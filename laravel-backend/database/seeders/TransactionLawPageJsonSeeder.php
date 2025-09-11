@@ -40,17 +40,21 @@ HTML;
             PageContent::create([
                 'page_key' => $key,
                 'title' => '特定商取引法に関する表記',
-                'content' => [ 'texts' => $texts, 'html' => $html ],
+                'content' => [ 'texts' => $texts, 'html' => $html, 'htmls' => ['body' => $html] ],
                 'is_published' => true,
                 'published_at' => now(),
             ]);
             return;
         }
 
+        // 非破壊マージ（既存優先、不足のみ補完）
         $content = $page->content ?? [];
         if (!is_array($content)) $content = ['html' => (string)$content];
-        $content['texts'] = array_merge($texts, $content['texts'] ?? []);
-        $content['html'] = $content['html'] ?? $html;
+        $existingHtml  = (isset($content['html']) && is_string($content['html']) && trim($content['html']) !== '') ? $content['html'] : '';
+        $existingBody  = (isset($content['htmls']['body']) && is_string($content['htmls']['body']) && trim($content['htmls']['body']) !== '') ? $content['htmls']['body'] : '';
+        $content['texts'] = array_replace($texts, $content['texts'] ?? []);
+        $content['html'] = $existingHtml !== '' ? $existingHtml : $html;
+        $content['htmls'] = array_replace($content['htmls'] ?? [], ['body' => ($existingBody !== '' ? $existingBody : ($existingHtml !== '' ? $existingHtml : $html))]);
 
         $page->update([
             'title' => $page->title ?: '特定商取引法に関する表記',
@@ -60,4 +64,3 @@ HTML;
         ]);
     }
 }
-

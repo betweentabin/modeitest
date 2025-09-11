@@ -30,7 +30,10 @@
         </div>
       </div>
 
-      <!-- CMS Body removed -->
+      <div class="content-container" v-if="hasHtml">
+        <div class="cms-body" v-html="_pageText?.getHtml('body', '')"></div>
+      </div>
+
       <div class="content-container" v-if="!hasHtml">
         <!-- Introduction -->
         <div class="intro-section">
@@ -222,7 +225,10 @@ export default {
       try {
         const page = this._pageText?.page?.value
         const html = page?.content?.html
-        return typeof html === 'string' && html.trim().length > 0
+        const htmlsBody = page?.content?.htmls?.body
+        const hasMain = typeof html === 'string' && html.trim().length > 0
+        const hasBody = typeof htmlsBody === 'string' && htmlsBody.trim().length > 0
+        return hasMain || hasBody
       } catch(_) { return false }
     }
   },
@@ -243,6 +249,23 @@ export default {
 </script>
 
 <style scoped>
+.cms-body {
+  width: 100%;
+  max-width: 2000px;
+  background: #FFF;
+  border-radius: 20px;
+  padding: 30px;
+  overflow-wrap: anywhere;
+}
+.cms-body /deep/ h1, .cms-body /deep/ h2, .cms-body /deep/ h3, .cms-body /deep/ h4, .cms-body /deep/ h5, .cms-body /deep/ h6 {
+  margin: 0.6em 0 0.4em;
+  line-height: 1.3;
+}
+.cms-body /deep/ p { margin: 0.6em 0; line-height: 1.6; }
+.cms-body /deep/ ul, .cms-body /deep/ ol { padding-left: 1.4em; margin: 0.6em 0; }
+.cms-body /deep/ img { max-width: 100%; height: auto; }
+.cms-body /deep/ table { width: 100%; border-collapse: collapse; margin: 0.8em 0; }
+.cms-body /deep/ th, .cms-body /deep/ td { border: 1px solid #E5E5E5; padding: 8px 10px; text-align: left; vertical-align: top; }
 .terms-of-service-page {
   background: #ECECEC;
   min-height: 100vh;
