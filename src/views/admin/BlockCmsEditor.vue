@@ -291,8 +291,11 @@ export default {
         this.pageContentKey = foundKey
         const content = res?.data?.page?.content || {}
         const texts = content.texts || {}
-        const html = content.html || ''
-        if (typeof html === 'string' && html.trim()) {
+        // Prefer content.html; fallback to content.htmls.body if html is empty
+        const htmls = (content && content.htmls) || {}
+        const bodyHtml = (typeof htmls?.body === 'string') ? htmls.body : ''
+        const html = (typeof content?.html === 'string' && content.html.trim()) ? content.html : bodyHtml
+        if (typeof html === 'string') {
           this.richText.html = html
         }
         // set known basic fields
@@ -307,7 +310,9 @@ export default {
     },
     async syncRichToPageContentHtml(){
       try {
-        const patch = { content: { html: this.richText.html || '' } }
+        const html = this.richText.html || ''
+        // Sync to both html and htmls.body for backward compatibility
+        const patch = { content: { html, htmls: { body: html } } }
         const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('PageContentに本文を同期しました')
       } catch (e) {

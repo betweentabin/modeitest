@@ -175,18 +175,6 @@
                   class="form-input"
                 >
               </div>
-              <div class="form-group">
-                <label>会社所在地（県名）</label>
-                <template v-if="regionOptions.length">
-                  <select v-model="editForm.region" class="form-select">
-                    <option value="">未選択</option>
-                    <option v-for="r in regionOptions" :key="r" :value="r">{{ r }}</option>
-                  </select>
-                </template>
-                <template v-else>
-                  <input v-model="editForm.region" type="text" class="form-input" />
-                </template>
-              </div>
             </div>
 
             <div class="form-row">
@@ -229,24 +217,14 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label>住所</label>
-              <textarea 
-                v-model="editForm.address" 
-                class="form-textarea"
-                rows="3"
-              ></textarea>
-            </div>
+            <!-- 住所は編集対象外 -->
 
             <div class="form-row">
               <div class="form-group">
                 <label>役職</label>
                 <input v-model="editForm.position" type="text" class="form-input" />
               </div>
-              <div class="form-group">
-                <label>部署</label>
-                <input v-model="editForm.department" type="text" class="form-input" />
-              </div>
+              <!-- 部署は編集対象外 -->
             </div>
 
             <div class="form-row">
@@ -382,18 +360,6 @@
                   class="form-input"
                 >
               </div>
-              <div class="form-group">
-                <label>会社所在地（県名）</label>
-                <template v-if="regionOptions.length">
-                  <select v-model="addForm.region" class="form-select">
-                    <option value="">未選択</option>
-                    <option v-for="r in regionOptions" :key="r" :value="r">{{ r }}</option>
-                  </select>
-                </template>
-                <template v-else>
-                  <input v-model="addForm.region" type="text" class="form-input" />
-                </template>
-              </div>
             </div>
 
             <div class="form-row">
@@ -458,24 +424,14 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label>住所</label>
-              <textarea 
-                v-model="addForm.address" 
-                class="form-textarea"
-                rows="3"
-              ></textarea>
-            </div>
+            <!-- 住所は編集対象外 -->
 
             <div class="form-row">
               <div class="form-group">
                 <label>役職</label>
                 <input v-model="addForm.position" type="text" class="form-input" />
               </div>
-              <div class="form-group">
-                <label>部署</label>
-                <input v-model="addForm.department" type="text" class="form-input" />
-              </div>
+              <!-- 部署は編集対象外 -->
             </div>
 
             <div class="form-row">
@@ -569,9 +525,8 @@ export default {
         email: '',
         phone: '',
         postal_code: '',
-        region: '',
         position: '',
-        department: '',
+        // department: '', // 編集不可
         capital: null,
         industry: '',
         password: '',
@@ -580,13 +535,12 @@ export default {
         status: 'active',
         membership_expires_at: '',
         is_active: true,
-        address: '',
+        // address: '', // 編集不可
         concerns: '',
         notes: ''
       },
       adding: false,
       // masters
-      regionOptions: [],
       industryOptions: []
     }
   },
@@ -610,13 +564,7 @@ export default {
   methods: {
     async loadMasters() {
       try {
-        const [regionsRes, industriesRes] = await Promise.all([
-          apiClient.getRegions(),
-          apiClient.getIndustries()
-        ])
-        if (regionsRes && regionsRes.success) {
-          this.regionOptions = (regionsRes.data?.regions || regionsRes.data || []).map(r => r.name || r).filter(Boolean)
-        }
+        const industriesRes = await apiClient.getIndustries()
         if (industriesRes && industriesRes.success) {
           this.industryOptions = (industriesRes.data?.industries || industriesRes.data || []).map(i => i.name || i).filter(Boolean)
         }
@@ -727,10 +675,8 @@ export default {
         email: member.email,
         phone: member.phone,
         postal_code: member.postal_code,
-        region: member.region,
-        address: member.address,
         position: member.position,
-        department: member.department,
+        // department: member.department, // 編集不可
         capital: member.capital,
         industry: member.industry,
         concerns: member.concerns,
@@ -864,13 +810,18 @@ export default {
         representative_name: '',
         email: '',
         phone: '',
+        postal_code: '',
+        position: '',
+        capital: null,
+        industry: '',
         password: '',
         password_confirmation: '',
         membership_type: 'free',
         status: 'active',
         membership_expires_at: '',
         is_active: true,
-        address: ''
+        concerns: '',
+        notes: ''
       }
     },
     
