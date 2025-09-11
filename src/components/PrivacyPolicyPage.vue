@@ -30,7 +30,14 @@
         </div>
       </div>
 
-      <!-- CMS Body removed -->
+      <!-- Render sanitized full HTML when content.html or htmls.body exists -->
+      <div
+        class="content-container"
+        v-if="hasHtml && !isEditPreview"
+        v-html="_pageText?.getHtml('body', '')"
+      />
+
+      <!-- Structured fallback (texts) when no full HTML provided -->
       <div class="content-container" v-if="!hasHtml && !isEditPreview">
         <!-- Introduction -->
         <div class="intro-section">
@@ -41,14 +48,14 @@
 
         <!-- Privacy Policy Sections -->
         <div class="policy-section">
-          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="collection_title" tag="span" :fallback="'適切な取得'" /></h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="collection_title" tag="span" :fallback="'個人情報の収集'" /></h3>
           <p class="section-content">
             <CmsText pageKey="privacy" fieldKey="collection_body" tag="span" :fallback="'当研究所では、当研究所の各種サービスをご利用いただくにあたって、個人の情報をお伺いする場合があります。お伺いする情報としては、会社名、役職、氏名、Ｅメールアドレス、電話番号などの個人情報が主なものとなります。また、それ以外にもアンケート調査のため、質問させていただくこともございます。これらの情報は、すべて下記の収集目的に従って、適法かつ公正な手段により収集されます。'" />
           </p>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="purpose_title" tag="span" :fallback="'個人情報を収集・利用する目的'" /></h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="purpose_title" tag="span" :fallback="'個人情報の利用目的'" /></h3>
           <p class="section-content"><CmsText pageKey="privacy" fieldKey="purpose_intro" tag="span" :fallback="'当研究所が個人情報を収集または利用する目的は以下のとおりです。'" /></p>
           <div class="list-content">
             <CmsText pageKey="privacy" fieldKey="purpose_list" tag="div" type="html" :fallback="'サービスの提供、キャンペーンなどを行うため<br>サービスに関する情報またはキャンペーン情報を提供するため<br>お客様から寄せられたご意見、ご要望にお答えするため<br>サービスの開発・改善を目的とした調査・検討を行うため<br>サービスに関する統計的資料を作成するため'" />
@@ -56,14 +63,14 @@
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="disclosure_title" tag="span" :fallback="'情報の第三者への開示について'" /></h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="disclosure_title" tag="span" :fallback="'個人情報の第三者提供'" /></h3>
           <div class="list-content">
             <CmsText pageKey="privacy" fieldKey="disclosure_list" tag="div" type="html" :fallback="'法令により情報の開示が求められる場合<br>人の生命、身体または財産の保護のために必要があると当研究所が判断した場合<br>国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力することその他公共の利益のために特に必要があると当研究所が判断した場合<br>お客様または当研究所の権利の確保のために必要であると当研究所が判断した場合<br>業務遂行に必要な限度で個人情報の取扱いを委託する場合'" />
           </div>
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="correction_title" tag="span" :fallback="'個人情報の訂正および削除'" /></h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="correction_title" tag="span" :fallback="'個人情報の開示・訂正・削除'" /></h3>
           <p class="section-content">
             <CmsText pageKey="privacy" fieldKey="correction_body" tag="div" type="html" :fallback="'お客様は、当研究所所定の手続きにより、以下の請求を行うことができます。(1) 当研究所の保有する自己の個人情報が誤った情報でないことを確認すること (2) 当研究所の保有する自己の個人情報が誤った情報である場合に、それを訂正または削除すること<br>当研究所は、前項(２)の個人情報の訂正または削除の可否を決定した場合には、遅滞なく、当該お客様に通知します。<br>これらの請求を希望される場合には、お問い合わせフォームよりご連絡ください。'" />
           </p>
@@ -83,7 +90,7 @@
         </div>
 
         <div class="policy-section">
-          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="changes_title" tag="span" :fallback="'適切な取得'" /></h3>
+          <h3 class="section-title"><CmsText pageKey="privacy" fieldKey="changes_title" tag="span" :fallback="'プライバシーポリシーの変更'" /></h3>
           <p class="section-content">
             <CmsText pageKey="privacy" fieldKey="changes_body" tag="span" :fallback="'当研究所サイトを利用された場合、お客様はプライバシーポリシーに同意して頂いたものと判断いたします。諸事情により、上記のプライバシーポリシーを部分的に変更、修正、 追加、削除させて頂くことがございます。加えて、プライバシーポリシーについては、変更等のご連絡をお客様にご連絡することはありません。随時、このページにてご確認ください。'" />
           </p>
