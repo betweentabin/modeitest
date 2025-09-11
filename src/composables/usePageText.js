@@ -20,7 +20,7 @@ function sanitizeHtml(input = '') {
   // Allowlist tags and prune others
   // Expanded to reflect common CMS content while staying safe
   const allowedTags = [
-    'b','strong','i','em','u','br','p','ul','ol','li','a',
+    'b','strong','i','em','u','br','p','ul','ol','li','a','img',
     'h1','h2','h3','h4','h5','h6','div','span','blockquote','code','pre','hr','section','header','footer'
   ]
 
@@ -43,6 +43,25 @@ function sanitizeHtml(input = '') {
       const safe = href.startsWith('http://') || href.startsWith('https://') || href.startsWith('/')
       const safeHref = safe ? ` href="${href.replace(/"/g, '&quot;')}"` : ''
       return `<a${safeHref} target="_blank" rel="noopener noreferrer">`
+    }
+
+    if (t === 'img') {
+      // allow only safe src and optional alt; drop others
+      let src = ''
+      let alt = ''
+      const srcMatch = attrs.match(/src\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i)
+      if (srcMatch) {
+        src = srcMatch[2] || srcMatch[3] || srcMatch[4] || ''
+      }
+      const altMatch = attrs.match(/alt\s*=\s*("([^"]*)"|'([^']*)')/i)
+      if (altMatch) {
+        alt = altMatch[2] || altMatch[3] || ''
+      }
+      const isSafeSrc = src.startsWith('https://') || src.startsWith('http://') || src.startsWith('/api/public/m/') || src.startsWith('/')
+      if (!isSafeSrc) return ''
+      const safeSrc = src.replace(/"/g, '&quot;')
+      const safeAlt = (alt || '').replace(/</g,'').replace(/>/g,'')
+      return `<img src="${safeSrc}" alt="${safeAlt}">`
     }
 
     // for others, drop attributes

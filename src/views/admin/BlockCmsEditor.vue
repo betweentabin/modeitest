@@ -38,6 +38,15 @@
             <label>エディター</label>
             <textarea v-model="richText.html" class="textarea" rows="18" @change="saveRich"></textarea>
           </div>
+          <div class="field">
+            <label>本文用画像</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input ref="contentImgInput" type="file" accept="image/*" style="display:none" @change="onContentImageSelected" />
+              <button class="btn" @click="selectContentImage">画像を選択</button>
+              <button class="btn" @click="insertLastContentImage" :disabled="!lastContentImgUrl">本文に画像を追加</button>
+              <span class="help" v-if="lastContentImgUrl">準備済み: {{ lastContentImgUrl }}</span>
+            </div>
+          </div>
 
           <div v-if="currentPage.slug==='privacy-policy'" class="section-title">子コンポーネント文言（デザインは不変）</div>
           <div v-if="currentPage.slug==='privacy-policy'" class="field">
@@ -108,6 +117,7 @@ export default {
       createForm: { slug: '', title: '' },
       previewUrl: '',
       kv: { id:'', ext:'', previewUrl:'' },
+      lastContentImgUrl: '',
       privacyTexts: { page_title: '', page_subtitle: '', intro: '' },
     }
   },
@@ -228,6 +238,29 @@ export default {
           alert('画像アップロードに失敗しました')
         }
       } catch(_){ alert('画像アップロードに失敗しました') }
+    },
+    selectContentImage(){ this.$refs.contentImgInput && this.$refs.contentImgInput.click() },
+    async onContentImageSelected(e){
+      const f = (e.target.files && e.target.files[0]) || null
+      if (!f || !this.currentPage) return
+      try{
+        const up = await apiClient.uploadCmsMedia(f)
+        if (up && up.success){
+          const id = up.data.id
+          const mime = (up.data.mime||'').toLowerCase()
+          const ext = mime.includes('png')? 'png' : mime.includes('webp')? 'webp' : mime.includes('gif')? 'gif' : 'jpg'
+          const url = getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`)
+          this.lastContentImgUrl = url
+        } else {
+          alert('画像アップロードに失敗しました')
+        }
+      } catch(_){ alert('画像アップロードに失敗しました') }
+    },
+    insertLastContentImage(){
+      if (!this.lastContentImgUrl) return
+      const html = this.richText.html || ''
+      this.richText.html = `${html}\n<p><img src="${this.lastContentImgUrl}" alt=""></p>`
+      this.lastContentImgUrl = ''
     },
     async importExistingPrivacy(){
       try {
