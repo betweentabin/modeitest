@@ -111,6 +111,34 @@
               <div class="info-value">{{ memberInfo?.address || '未登録' }}</div>
             </div>
             <div class="info-row">
+              <label>役職</label>
+              <div class="info-value">{{ memberInfo?.position || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>部署</label>
+              <div class="info-value">{{ memberInfo?.department || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>資本金</label>
+              <div class="info-value">{{ formatCapital(memberInfo?.capital) }}</div>
+            </div>
+            <div class="info-row">
+              <label>業種</label>
+              <div class="info-value">{{ memberInfo?.industry || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>会社所在地（県名）</label>
+              <div class="info-value">{{ memberInfo?.region || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>お困りごと</label>
+              <div class="info-value">{{ memberInfo?.concerns || '未登録' }}</div>
+            </div>
+            <div class="info-row">
+              <label>備考</label>
+              <div class="info-value">{{ memberInfo?.notes || '未登録' }}</div>
+            </div>
+            <div class="info-row">
               <label>会員種別</label>
               <div class="info-value">
                 <span :class="['membership-badge', `membership-${memberInfo?.membership_type}`]">
@@ -178,6 +206,18 @@
                     placeholder="例: 123-4567"
                   >
                 </div>
+                <div class="form-group">
+                  <label>会社所在地（県名）</label>
+                  <template v-if="regionOptions.length">
+                    <select v-model="editForm.region" class="form-input">
+                      <option value="">未選択</option>
+                      <option v-for="r in regionOptions" :key="r" :value="r">{{ r }}</option>
+                    </select>
+                  </template>
+                  <template v-else>
+                    <input v-model="editForm.region" type="text" class="form-input" placeholder="例: 福岡" />
+                  </template>
+                </div>
               </div>
 
               <div class="form-group">
@@ -187,6 +227,46 @@
                   class="form-textarea"
                   rows="3"
                 ></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>役職</label>
+                  <input v-model="editForm.position" type="text" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>部署</label>
+                  <input v-model="editForm.department" type="text" class="form-input" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>資本金（円）</label>
+                  <input v-model.number="editForm.capital" type="number" min="0" step="1" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>業種</label>
+                  <template v-if="industryOptions.length">
+                    <select v-model="editForm.industry" class="form-input">
+                      <option value="">未選択</option>
+                      <option v-for="i in industryOptions" :key="i" :value="i">{{ i }}</option>
+                    </select>
+                  </template>
+                  <template v-else>
+                    <input v-model="editForm.industry" type="text" class="form-input" placeholder="例: 金融業" />
+                  </template>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>お困りごと</label>
+                <textarea v-model="editForm.concerns" class="form-textarea" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>備考</label>
+                <textarea v-model="editForm.notes" class="form-textarea" rows="3"></textarea>
               </div>
 
               <div class="form-actions">
@@ -455,7 +535,10 @@ export default {
         company: '',
         phone: '',
         special_requests: ''
-      }
+      },
+      // マスタ
+      regionOptions: [],
+      industryOptions: []
     }
   },
   computed: {
@@ -497,11 +580,13 @@ export default {
     },
     async fetchInitialData() {
       try {
-        const [profileRes, dashboardRes, favoritesRes, cmsRes] = await Promise.all([
+        const [profileRes, dashboardRes, favoritesRes, cmsRes, regionsRes, industriesRes] = await Promise.all([
           apiClient.get('/api/member/my-profile'),
           apiClient.get('/api/member/dashboard'),
           apiClient.get('/api/member/favorites'),
-          apiClient.getPageContent('my-account')
+          apiClient.getPageContent('my-account'),
+          apiClient.getRegions(),
+          apiClient.getIndustries()
         ])
 
         // プロフィール
@@ -529,6 +614,14 @@ export default {
           const page = cmsRes.data?.page || cmsRes.data?.data?.page || null
           const content = page?.content || null
           this.cms = (content && content.labels) ? content : { labels: content?.labels || {} }
+        }
+
+        // マスタ
+        if (regionsRes && regionsRes.success) {
+          this.regionOptions = (regionsRes.data?.regions || regionsRes.data || []).map(r => r.name || r).filter(Boolean)
+        }
+        if (industriesRes && industriesRes.success) {
+          this.industryOptions = (industriesRes.data?.industries || industriesRes.data || []).map(i => i.name || i).filter(Boolean)
         }
 
         // ダウンロード履歴（API未提供のためダミー）
@@ -569,7 +662,14 @@ export default {
         email: this.memberInfo.email || '',
         phone: this.memberInfo.phone || '',
         postal_code: this.memberInfo.postal_code || '',
-        address: this.memberInfo.address || ''
+        address: this.memberInfo.address || '',
+        position: this.memberInfo.position || '',
+        department: this.memberInfo.department || '',
+        capital: this.memberInfo.capital ?? null,
+        industry: this.memberInfo.industry || '',
+        region: this.memberInfo.region || '',
+        concerns: this.memberInfo.concerns || '',
+        notes: this.memberInfo.notes || ''
       }
       this.editMode = true
     },
@@ -727,6 +827,12 @@ export default {
     formatDate(dateString) {
       const date = new Date(dateString)
       return date.toLocaleDateString('ja-JP')
+    },
+    formatCapital(val) {
+      if (val === null || val === undefined || val === '') return '未登録'
+      const n = Number(val)
+      if (isNaN(n)) return String(val)
+      return n.toLocaleString('ja-JP') + '円'
     },
     
     saveSettings() {

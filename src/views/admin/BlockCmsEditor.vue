@@ -119,6 +119,8 @@ export default {
       kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
       privacyTexts: { page_title: '', page_subtitle: '', intro: '' },
+      // PageContent (CmsText) 側のキー。要件により 'privacy-poricy' を既定にする
+      pageContentKey: 'privacy-poricy',
     }
   },
   mounted(){ this.loadPages() },
@@ -264,17 +266,29 @@ export default {
     },
     async importExistingPrivacy(){
       try {
-        let res = await apiClient.adminGetPageContent('privacy')
-        // 404などで存在しない場合は初期化して再取得
-        if (!res || res.success === false || !res.data || !res.data.page) {
+        // 候補キーを順に探索（要件: privacy-poricy を優先）
+        const candidates = [this.pageContentKey, 'privacy-poricy', 'privacy-policy', 'privacy', 'privacy poricy']
+        let foundKey = null
+        let res = null
+        for (const k of candidates) {
+          try {
+            const r = await apiClient.adminGetPageContent(k)
+            if (r && r.success && r.data && r.data.page) { res = r; foundKey = k; break }
+          } catch(_) { /* try next */ }
+        }
+        // 無ければ既定キーで初期作成
+        if (!res || !foundKey) {
+          foundKey = this.pageContentKey
           await apiClient.post('/api/admin/pages', {
-            page_key: 'privacy',
+            page_key: foundKey,
             title: 'プライバシーポリシー',
             content: { html: '', texts: { page_title: 'プライバシーポリシー', page_subtitle: 'privacy policy', intro: '' } },
             is_published: true
           })
-          res = await apiClient.adminGetPageContent('privacy')
+          res = await apiClient.adminGetPageContent(foundKey)
         }
+        // 採用キーを記録
+        this.pageContentKey = foundKey
         const content = res?.data?.page?.content || {}
         const texts = content.texts || {}
         const html = content.html || ''
@@ -294,7 +308,7 @@ export default {
     async syncRichToPageContentHtml(){
       try {
         const patch = { content: { html: this.richText.html || '' } }
-        const res = await apiClient.adminUpdatePageContent('privacy', patch)
+        const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('PageContentに本文を同期しました')
       } catch (e) {
         alert('同期に失敗しました')
@@ -303,7 +317,7 @@ export default {
     async savePrivacyTexts(){
       try {
         const patch = { content: { texts: { ...this.privacyTexts } } }
-        const res = await apiClient.adminUpdatePageContent('privacy', patch)
+        const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('保存しました')
       } catch(_) { alert('保存に失敗しました') }
     },
