@@ -59,7 +59,7 @@
           <h3 class="duties-title"><CmsText pageKey="cri-consulting" fieldKey="duties_label" tag="span" :fallback="'MAIN DUTIES'" /></h3>
           <h4 class="duties-heading"><CmsText pageKey="cri-consulting" fieldKey="duties_heading" tag="span" :fallback="'事業にまつわる様々な悩みを一緒に解決します'" /></h4>
           <div class="duties-list">
-            <CmsText pageKey="cri-consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<p>経営戦略策定のサポート</p><p>ビジネスマッチィングの支援</p><p>事業継承の支援（後継者育成支援）</p><p>社員研修、経営計画策定のための人材育成</p><p>税務、財務、事務など各業務の課題解決力の育成</p><p>事務省力化のサポート</p><p>人事制度の策定</p><p>ワンストップのよろず差相談</p>`" />
+            <CmsText pageKey="cri-consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<div>・経営戦略策定のサポート</div><div>・ビジネスマッチィングの支援</div><div>・事業継承の支援（後継者育成支援）</div><div>・社員研修、経営計画策定のための人材育成</div><div>・税務、財務、事務など各業務の課題解決力の育成</div><div>・事務省力化のサポート</div><div>・人事制度の策定</div><div>・ワンストップのよろず差相談</div>`" />
           </div>
         </div>
         <img src="https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304" alt="Main Duties Image" class="duties-image" />
@@ -545,13 +545,28 @@ export default {
   gap: 5px;
 }
 
-.duties-list p {
+.duties-list div {
   color: #3F3F3F;
   font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 18px;
   font-weight: 400;
   line-height: normal;
   margin: 0;
+}
+
+/* Inline-editable elements should match description font size */
+.inline-editable {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #3F3F3F;
+  line-height: normal;
+}
+
+/* Override inline-editable font size for duties-list to match other content */
+.duties-list .inline-editable {
+  font-size: 18px;
+  color: #3F3F3F;
 }
 
 .duties-image {
@@ -932,7 +947,7 @@ export default {
   .duties-description,
   .support-description p,
   .achievements-note,
-  .duties-list p {
+  .duties-list div {
     font-size: 17px !important;
   }
   
@@ -973,6 +988,17 @@ export default {
   
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive font sizes for inline-editable */
+@media (max-width: 1150px) {
+  .inline-editable {
+    font-size: 20px !important;
+  }
+  
+  .duties-list .inline-editable {
+    font-size: 18px !important;
   }
 }
 
@@ -1020,12 +1046,16 @@ export default {
   .duties-description,
   .support-description p,
   .achievements-note,
-  .duties-list p {
+  .duties-list div {
     font-size: 17px !important;
   }
   
   .duties-description {
     margin-top: 40px !important;
+  }
+  
+  .duties-list .inline-editable {
+    font-size: 17px !important;
   }
   
   .service-title {
@@ -1112,12 +1142,16 @@ export default {
   .duties-description,
   .support-description p,
   .achievements-note,
-  .duties-list p {
+  .duties-list div {
     font-size: 16px !important;
   }
   
   .duties-description {
     margin-top: 30px !important;
+  }
+  
+  .duties-list .inline-editable {
+    font-size: 16px !important;
   }
   
   .service-title {
@@ -1229,12 +1263,16 @@ export default {
   .duties-description,
   .support-description p,
   .achievements-note,
-  .duties-list p {
+  .duties-list div {
     font-size: 15px !important;
   }
   
   .duties-description {
     margin-top: 25px !important;
+  }
+  
+  .duties-list .inline-editable {
+    font-size: 15px !important;
   }
   
   .service-title {
@@ -1336,12 +1374,16 @@ export default {
   .duties-description,
   .support-description p,
   .achievements-note,
-  .duties-list p {
+  .duties-list div {
     font-size: 13px !important;
   }
   
   .duties-description {
     margin-top: 20px !important;
+  }
+  
+  .duties-list .inline-editable {
+    font-size: 13px !important;
   }
   
   .service-title {
