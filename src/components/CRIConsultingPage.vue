@@ -1154,6 +1154,7 @@ export default {
   }
   
   .duties-content {
+    width: 100% !important;
     border-radius: 0 0 20px 20px;
   }
   
@@ -1163,6 +1164,11 @@ export default {
   
   .content-image {
     height: 300px !important;
+  }
+  
+  .content-text {
+    width: 100% !important;
+    border-radius: 0 0 20px 20px !important;
   }
   
   .service-grid,
