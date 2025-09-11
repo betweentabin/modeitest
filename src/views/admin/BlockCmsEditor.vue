@@ -66,6 +66,75 @@
             <span class="help">ページ内のCmsTextに反映（公開デザインはそのまま）</span>
           </div>
 
+          <!-- privacy-policy: section-wise fields -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="section-title">セクション別文言</div>
+          <!-- 1. 収集 -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>1. 個人情報の収集（見出し）</label>
+            <input v-model="privacyTexts.collection_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>1. 個人情報の収集（本文）</label>
+            <textarea v-model="privacyTexts.collection_body" class="textarea" rows="4"></textarea>
+          </div>
+          <!-- 2. 利用目的 -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>2. 個人情報の利用目的（見出し）</label>
+            <input v-model="privacyTexts.purpose_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>2. 個人情報の利用目的（導入文）</label>
+            <textarea v-model="privacyTexts.purpose_intro" class="textarea" rows="3"></textarea>
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>2. 個人情報の利用目的（リストHTML）</label>
+            <textarea v-model="privacyTexts.purpose_list" class="textarea" rows="5" placeholder="<ul>は不要。<br>区切りで入力"></textarea>
+          </div>
+          <!-- 3. 第三者提供 -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>3. 個人情報の第三者提供（見出し）</label>
+            <input v-model="privacyTexts.disclosure_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>3. 個人情報の第三者提供（リストHTML）</label>
+            <textarea v-model="privacyTexts.disclosure_list" class="textarea" rows="5"></textarea>
+          </div>
+          <!-- 4. 開示・訂正・削除 -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>4. 個人情報の開示・訂正・削除（見出し）</label>
+            <input v-model="privacyTexts.correction_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>4. 個人情報の開示・訂正・削除（本文HTML）</label>
+            <textarea v-model="privacyTexts.correction_body" class="textarea" rows="5"></textarea>
+          </div>
+          <!-- 免責 -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>免責事項（見出し）</label>
+            <input v-model="privacyTexts.disclaimer_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>免責事項（本文1）</label>
+            <textarea v-model="privacyTexts.disclaimer_body1" class="textarea" rows="3"></textarea>
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>免責事項（本文2）</label>
+            <textarea v-model="privacyTexts.disclaimer_body2" class="textarea" rows="3"></textarea>
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>免責事項（本文3）</label>
+            <textarea v-model="privacyTexts.disclaimer_body3" class="textarea" rows="3"></textarea>
+          </div>
+          <!-- 変更告知 -->
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>プライバシーポリシーの変更（見出し）</label>
+            <input v-model="privacyTexts.changes_title" class="input" />
+          </div>
+          <div v-if="currentPage.slug==='privacy-policy'" class="field">
+            <label>プライバシーポリシーの変更（本文）</label>
+            <textarea v-model="privacyTexts.changes_body" class="textarea" rows="3"></textarea>
+          </div>
+
           <div class="actions-row">
             <button class="btn primary" :disabled="!currentPage" @click="publish">公開する</button>
             <button class="btn" :disabled="!currentPage" @click="unpublish">公開を停止する</button>
@@ -123,7 +192,15 @@ export default {
       previewUrl: '',
       kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
-      privacyTexts: { page_title: '', page_subtitle: '', intro: '' },
+      privacyTexts: {
+        page_title: '', page_subtitle: '', intro: '',
+        collection_title: '', collection_body: '',
+        purpose_title: '', purpose_intro: '', purpose_list: '',
+        disclosure_title: '', disclosure_list: '',
+        correction_title: '', correction_body: '',
+        disclaimer_title: '', disclaimer_body1: '', disclaimer_body2: '', disclaimer_body3: '',
+        changes_title: '', changes_body: '',
+      },
       // PageContent(CmsText) 側のキー。既定は 'privacy'（必要に応じてUIで変更可）
       pageContentKey: 'privacy',
     }
@@ -164,9 +241,14 @@ export default {
             const page = await apiClient.adminGetPageContent('privacy')
             const content = page?.data?.page?.content || {}
             const texts = content.texts || {}
-            this.privacyTexts.page_title = texts.page_title || this.currentPage.title || ''
-            this.privacyTexts.page_subtitle = texts.page_subtitle || ''
-            this.privacyTexts.intro = texts.intro || ''
+            // copy known fields if present
+            const keys = Object.keys(this.privacyTexts)
+            for (const k of keys) {
+              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') {
+                this.privacyTexts[k] = texts[k]
+              }
+            }
+            if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
           } catch(_) { /* noop */ }
         }
       }
@@ -303,10 +385,13 @@ export default {
         if (typeof html === 'string') {
           this.richText.html = html
         }
-        // set known basic fields
-        this.privacyTexts.page_title = texts.page_title || this.privacyTexts.page_title
-        this.privacyTexts.page_subtitle = texts.page_subtitle || this.privacyTexts.page_subtitle
-        this.privacyTexts.intro = texts.intro || this.privacyTexts.intro
+        // set known fields if present
+        const keys = Object.keys(this.privacyTexts)
+        for (const k of keys) {
+          if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') {
+            this.privacyTexts[k] = texts[k]
+          }
+        }
         alert('既存の文言を取り込みました')
       } catch (e) {
         console.warn('importExistingPrivacy failed', e)

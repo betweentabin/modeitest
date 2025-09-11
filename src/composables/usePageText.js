@@ -157,11 +157,12 @@ export function usePageText(pageKey) {
 
   const getHtml = (key, fallback = '', options = {}) => {
     const allowEmpty = !!options.allowEmpty
+    const allowBodyFallback = options.allowBodyFallback !== false // only allow content.html fallback for 'body' key by default
     const page = state.pages[pageKey]?.page
     const htmls = page?.content?.htmls || page?.content?.rich || null
     let raw = htmls && Object.prototype.hasOwnProperty.call(htmls, key) ? htmls[key] : undefined
-    // フォールバック: 単体の content.html を本文として扱う
-    if ((raw === undefined || raw === null || raw === '') && typeof page?.content?.html === 'string') {
+    // フォールバック: 'body' キーのみ単体の content.html を本文として扱う
+    if ((raw === undefined || raw === null || raw === '') && key === 'body' && allowBodyFallback && typeof page?.content?.html === 'string') {
       raw = page.content.html
     }
 
