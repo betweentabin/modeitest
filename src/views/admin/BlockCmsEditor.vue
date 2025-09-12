@@ -55,14 +55,14 @@
             <label>ページタイトル（見出し）</label>
             <input v-if="currentPage.slug==='privacy-policy'" v-model="privacyTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='terms'" v-model="termsTexts.page_title" class="input" />
-            <input v-else-if="currentPage.slug==='legal'" v-model="tlTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='transaction-law'" v-model="tlTexts.page_title" class="input" />
             <input v-else v-model="privacyTexts.page_title" class="input" />
           </div>
           <div v-if="currentPage" class="field">
             <label>サブタイトル</label>
             <input v-if="currentPage.slug==='privacy-policy'" v-model="privacyTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='terms'" v-model="termsTexts.page_subtitle" class="input" />
-            <input v-else-if="currentPage.slug==='legal'" v-model="tlTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='transaction-law'" v-model="tlTexts.page_subtitle" class="input" />
             <input v-else v-model="privacyTexts.page_subtitle" class="input" />
           </div>
           <div v-if="currentPage && currentPage.slug==='privacy-policy'" class="field">
