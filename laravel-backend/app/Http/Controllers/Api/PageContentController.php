@@ -686,6 +686,8 @@ class PageContentController extends Controller
         return response()->json(['message' => 'Page deleted successfully']);
     }
 
+    
+
     public function uploadImage(Request $request, string $pageKey): JsonResponse
     {
         $page = PageContent::where('page_key', $pageKey)->first();
@@ -790,6 +792,15 @@ class PageContentController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
         ]);
 
+        // メディアレジストリ内のKV(= hero_*)はMedia管理からの編集を禁止（各ページのKV専用UIを使用）
+        $reqKey = (string)$request->key;
+        if ($pageKey === 'media' && str_starts_with($reqKey, 'hero_')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'KV画像はメディア管理から変更できません。各ページのKVアップローダーをご利用ください。'
+            ], 403);
+        }
+
         $file = $request->file('image');
         $fileName = Str::slug($pageKey) . '-' . Str::slug($request->key) . '-' . time() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('pages/' . $pageKey, $fileName, 'public');
@@ -821,46 +832,43 @@ class PageContentController extends Controller
             $content['images'][$key] = $newValue;
         }
 
-        // If replacing an entry on the media registry, attempt to keep the same pixel size
-        // by resizing the newly uploaded image to the previous image's dimensions (cover behavior).
-        // This helps ensure the display size doesn't change on existing pages that rely on natural image ratio.
+        // 既存の画像寸法を維持するため、差し替え先の従前画像サイズに合わせて新画像をリサイズ（cover）
+        // hero_*（KV）はここには来ない（上で403）
         try {
-            if ($pageKey === 'media') {
-                // find previous entry to extract target dimensions
-                $prev = null;
-                if (strpos($key, '.') !== false) {
-                    [$prevExists, $prevVal] = $this->getByPath($page->content ?? [], $key);
-                    $prev = $prevExists ? $prevVal : null;
-                } else {
-                    $prev = $page->content['images'][$key] ?? null;
-                }
+            // find previous entry to extract target dimensions
+            $prev = null;
+            if (strpos($key, '.') !== false) {
+                [$prevExists, $prevVal] = $this->getByPath($page->content ?? [], $key);
+                $prev = $prevExists ? $prevVal : null;
+            } else {
+                $prev = $page->content['images'][$key] ?? null;
+            }
 
-                // Resolve previous image file path (public disk)
-                $prevUrl = null; $prevPath = null;
-                if (is_array($prev)) {
-                    $prevUrl = $prev['url'] ?? null;
-                    $prevPath = $prev['path'] ?? null;
-                } elseif (is_string($prev)) {
-                    $prevUrl = $prev;
-                }
+            // Resolve previous image file path (public disk)
+            $prevUrl = null; $prevPath = null;
+            if (is_array($prev)) {
+                $prevUrl = $prev['url'] ?? null;
+                $prevPath = $prev['path'] ?? null;
+            } elseif (is_string($prev)) {
+                $prevUrl = $prev;
+            }
 
-                $prevDiskPath = null;
-                if ($prevPath) {
-                    $prevDiskPath = Storage::disk('public')->path($prevPath);
-                } elseif ($prevUrl && is_string($prevUrl) && str_starts_with($prevUrl, '/storage/')) {
-                    $rel = ltrim(substr($prevUrl, strlen('/storage/')), '/');
-                    $prevDiskPath = Storage::disk('public')->path($rel);
-                }
+            $prevDiskPath = null;
+            if ($prevPath) {
+                $prevDiskPath = Storage::disk('public')->path($prevPath);
+            } elseif ($prevUrl && is_string($prevUrl) && str_starts_with($prevUrl, '/storage/')) {
+                $rel = ltrim(substr($prevUrl, strlen('/storage/')), '/');
+                $prevDiskPath = Storage::disk('public')->path($rel);
+            }
 
-                if ($prevDiskPath && @is_file($prevDiskPath)) {
-                    $dim = @getimagesize($prevDiskPath);
-                    $tw = (int)($dim[0] ?? 0); $th = (int)($dim[1] ?? 0);
-                    if ($tw > 0 && $th > 0) {
-                        $dstPath = Storage::disk('public')->path($path);
-                        // Try resizing only for raster images (skip svg etc.)
-                        if ($this->gdCanProcess()) {
-                            $this->gdResizeCoverTo($dstPath, $dstPath, $tw, $th);
-                        }
+            if ($prevDiskPath && @is_file($prevDiskPath)) {
+                $dim = @getimagesize($prevDiskPath);
+                $tw = (int)($dim[0] ?? 0); $th = (int)($dim[1] ?? 0);
+                if ($tw > 0 && $th > 0) {
+                    $dstPath = Storage::disk('public')->path($path);
+                    // Try resizing only for raster images (skip svg etc.)
+                    if ($this->gdCanProcess()) {
+                        $this->gdResizeCoverTo($dstPath, $dstPath, $tw, $th);
                     }
                 }
             }
@@ -906,6 +914,30 @@ class PageContentController extends Controller
         $fileName = Str::slug($pageKey) . '-htmlimg-' . time() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('pages/' . $pageKey, $fileName, 'public');
         $newUrl = Storage::url($path);
+
+        // 既存のHTML内画像(old_url)の寸法を可能であれば取得し、新しい画像を同寸法にリサイズ
+        try {
+            $oldUrl = (string)$request->old_url;
+            $prevDiskPath = null;
+            if ($oldUrl && str_starts_with($oldUrl, '/storage/')) {
+                $rel = ltrim(substr($oldUrl, strlen('/storage/')), '/');
+                $prevDiskPath = Storage::disk('public')->path($rel);
+            } elseif ($oldUrl && (str_starts_with($oldUrl, '/img/') || str_starts_with($oldUrl, 'img/'))) {
+                $rel = $oldUrl[0] === '/' ? substr($oldUrl, 1) : $oldUrl;
+                $candidate = public_path($rel);
+                if (@is_file($candidate)) $prevDiskPath = $candidate;
+            }
+            if ($prevDiskPath && @is_file($prevDiskPath)) {
+                $dim = @getimagesize($prevDiskPath);
+                $tw = (int)($dim[0] ?? 0); $th = (int)($dim[1] ?? 0);
+                if ($tw > 0 && $th > 0) {
+                    $dstPath = Storage::disk('public')->path($path);
+                    if ($this->gdCanProcess()) {
+                        $this->gdResizeCoverTo($dstPath, $dstPath, $tw, $th);
+                    }
+                }
+            }
+        } catch (\Throwable $e) { /* ignore */ }
 
         $replaced = str_replace($request->old_url, $newUrl, $html);
         if ($replaced === $html) {

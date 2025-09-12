@@ -347,8 +347,10 @@ export default {
     // 除外ページ: 刊行物/お知らせ/セミナー/経済統計・指標/会員ログイン/マイページ/お問い合わせ
     excludeKeys(){
       return new Set([
-        'publications','publications-public','news','notices','seminars','seminars-current','seminars-past',
-        'economic-reports','statistics','economic-indicators','login','my-account','contact'
+        'publications','publications-public','news','notice','notices',
+        'seminars','seminars-current','seminars-past',
+        'economic-reports','statistics','economic-indicators',
+        'login','my-account'
       ])
     },
     showGenericEditor(){

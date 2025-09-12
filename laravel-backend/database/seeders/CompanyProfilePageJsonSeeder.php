@@ -13,6 +13,14 @@ class CompanyProfilePageJsonSeeder extends Seeder
         $texts = [
             'page_title' => '会社概要',
             'page_subtitle' => 'About Us',
+            // In-page navigation labels
+            'nav_philosophy' => '経営理念',
+            'nav_message' => 'ご挨拶',
+            'nav_profile' => '企業概要',
+            'nav_history' => '沿革',
+            'nav_staff' => '所員紹介',
+            'nav_financial' => '決算報告',
+            'nav_access' => 'アクセス',
             'philosophy_title' => '経営理念',
             'philosophy_subtitle' => 'philosophy',
             'message_title' => 'ご挨拶',

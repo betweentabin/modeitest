@@ -13,6 +13,11 @@ class GlossaryPageJsonSeeder extends Seeder
         $texts = [
             'page_title' => '用語集',
             'page_subtitle' => 'glossary',
+            // ContactSection (used with cms-page-key="glossary")
+            'contact_title' => '株式会社ちくぎん地域経済研究所',
+            'contact_label' => 'About us',
+            'contact_subtitle' => '様々な分野の調査研究を通じ、企業活動などをサポートします。',
+            'contact_cta' => 'お問い合わせはこちら',
         ];
 
         $htmls = [

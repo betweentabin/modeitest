@@ -67,6 +67,7 @@
                     class="edit-btn" 
                     @click="pickReplace((currentPage - 1) * pageSize + idx)"
                     :title="actionTitle(row)"
+                    :disabled="isKvRow(row)"
                   >画像で置換</button>
                 </td>
               </tr>
@@ -131,10 +132,17 @@ export default {
       if (!key || typeof key !== 'string') return false
       return key.startsWith('hero_') || key.startsWith('company_profile_') || key === 'contact_section_bg'
     },
+    // KV(キービジュアル)かどうか
+    isKvRow(row) {
+      const k = (row && row.key) ? String(row.key) : ''
+      // mediaレジストリ内の hero_ 系はKVとして扱う
+      return (row && row.pageKey === 'media' && k.startsWith('hero_'))
+    },
     isModelRow(row) {
       return ['news','news_article','publication','economic_report','seminar'].includes(row.model)
     },
     actionTitle(row) {
+      if (this.isKvRow(row)) return 'KV画像は各ページ編集で変更してください'
       if (this.isModelRow(row)) return 'モデル画像/HTMLを置換'
       return '画像で置換'
     },
@@ -228,6 +236,11 @@ export default {
       const start = (this.currentPage - 1) * this.pageSize
       const row = this.filteredRows[start + idx]
       if (!row) return
+      // KVはここでは編集不可（BlockCMS/ページ毎のKVアップロードで対応）
+      if (this.isKvRow(row)) {
+        alert('KV画像はメディア管理では変更できません。各ページのKVアップローダーから変更してください。')
+        return
+      }
       // 動的にfile要素を起こす（1行1入力を避ける）
       const input = document.createElement('input')
       input.type = 'file'

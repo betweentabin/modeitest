@@ -14,6 +14,11 @@ class ContactPageJsonSeeder extends Seeder
             'page_title' => 'お問い合わせ',
             'page_subtitle' => 'contact',
             'form_title' => 'お問い合わせ',
+            // ContactSection (default cmsPageKey fallback is 'contact')
+            'contact_title' => '株式会社ちくぎん地域経済研究所',
+            'contact_label' => 'About us',
+            'contact_subtitle' => '様々な分野の調査研究を通じ、企業活動などをサポートします。',
+            'contact_cta' => 'お問い合わせはこちら',
         ];
 
         $page = PageContent::where('page_key', $key)->first();
@@ -34,4 +39,3 @@ class ContactPageJsonSeeder extends Seeder
         $page->update(['title' => $page->title ?: 'お問い合わせ', 'content' => $content]);
     }
 }
-

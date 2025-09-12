@@ -174,6 +174,30 @@ class MediaReplaceController extends Controller
         $html = (string)($record->{$validated['field']} ?? '');
         if ($html === '') return response()->json(['success' => false, 'message' => 'HTML content not found'], 400);
 
+        // 旧画像の寸法に合わせて新画像をリサイズ（可能な場合）
+        try {
+            $oldUrl = (string)$validated['old_url'];
+            $prevDiskPath = null;
+            if ($oldUrl && str_starts_with($oldUrl, '/storage/')) {
+                $rel = ltrim(substr($oldUrl, strlen('/storage/')), '/');
+                $prevDiskPath = Storage::disk('public')->path($rel);
+            } elseif ($oldUrl && (str_starts_with($oldUrl, '/img/') || str_starts_with($oldUrl, 'img/'))) {
+                $rel = $oldUrl[0] === '/' ? substr($oldUrl, 1) : $oldUrl;
+                $candidate = public_path($rel);
+                if (@is_file($candidate)) $prevDiskPath = $candidate;
+            }
+            if ($prevDiskPath && @is_file($prevDiskPath)) {
+                $dim = @getimagesize($prevDiskPath);
+                $tw = (int)($dim[0] ?? 0); $th = (int)($dim[1] ?? 0);
+                if ($tw > 0 && $th > 0) {
+                    $dstPath = Storage::disk('public')->path($path);
+                    if ($this->gdCanProcess()) {
+                        $this->gdResizeCoverTo($dstPath, $dstPath, $tw, $th);
+                    }
+                }
+            }
+        } catch (\Throwable $e) { /* ignore */ }
+
         $replaced = str_replace($validated['old_url'], $newUrl, $html);
         if ($replaced === $html) {
             return response()->json(['success' => false, 'message' => 'Old URL not found in HTML'], 400);
@@ -188,4 +212,3 @@ class MediaReplaceController extends Controller
         return response()->json(['success' => true, 'data' => ['new_url' => $newUrl]]);
     }
 }
-

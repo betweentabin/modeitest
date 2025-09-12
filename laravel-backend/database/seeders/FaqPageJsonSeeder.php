@@ -14,6 +14,11 @@ class FaqPageJsonSeeder extends Seeder
         $texts = [
             'page_title' => 'よくあるご質問',
             'page_subtitle' => 'FAQ',
+            // Category labels
+            'cat_all' => '全て',
+            'cat_service' => '各種サービスについて',
+            'cat_membership' => '会員について',
+            'cat_research' => '調査研究について',
         ];
 
         // デフォルトFAQ（フロントの静的デフォルトと整合）

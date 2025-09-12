@@ -15,7 +15,8 @@ class AboutPageJsonSeeder extends Seeder
             'page_title' => 'ちくぎん地域経済研究所について',
             'page_subtitle' => 'ABOUT US',
             'mission_title' => '産学官金のネットワークを活かした地域創生',
-            'mission_body' => '私たちは、産・官・学・金（金融機関）のネットワークを活用し、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。',
+            // component expects mission_text (not mission_body)
+            'mission_text' => '私たちは、産・官・学・金（金融機関）のネットワークを活用し、地域経済の持続的な発展と地域企業の成長を支援することを使命としています。',
             'philosophy_title' => '経営理念',
             'philosophy_subtitle' => 'OUR MISSION',
             'message_title' => 'ご挨拶',
@@ -29,6 +30,25 @@ class AboutPageJsonSeeder extends Seeder
             'history_subtitle' => 'HISTORY',
             'staff_title' => '所属紹介',
             'staff_subtitle' => 'OUR TEAM',
+            // CTA block
+            'cta_block_title' => '株式会社ちくぎん地域経済研究所',
+            'cta_block_body' => '地域の未来を共に考え、企業の成長をサポートします。',
+            'cta_block_button' => 'お問い合わせはこちら',
+            // Company table labels/values
+            'company_label_name' => '会社名',
+            'company_value_name' => '株式会社 ちくぎん地域経済研究所',
+            'company_label_established' => '設立',
+            'company_value_established' => '平成3年4月1日（1991年）',
+            'company_label_capital' => '資本金',
+            'company_value_capital' => '30,000千円',
+            'company_label_address' => '所在地',
+            'company_value_address' => '〒839-0864 福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階',
+            'company_label_tel' => '電話番号',
+            'company_value_tel' => 'TEL：0942-46-5081',
+            'company_label_business_hours' => '営業時間',
+            'company_value_business_hours' => '平日 9:00～17:00',
+            // History
+            'history_more' => 'さらに表示',
         ];
         
         $defaultHtmls = [
