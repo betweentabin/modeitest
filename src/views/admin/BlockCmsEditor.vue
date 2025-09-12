@@ -91,6 +91,25 @@
               <label>{{ key }}（HTML）</label>
               <textarea v-model="companyHtmls[key]" class="textarea" rows="3"></textarea>
             </div>
+            <!-- Company history (沿革) -->
+            <div class="section-title">沿革（history）</div>
+            <div class="help">年/日付/本文(HTML) を編集できます</div>
+            <div v-for="(h, idx) in companyHistory" :key="`hist-${idx}`" class="field" style="border:1px solid #eee; padding:10px; border-radius:8px;">
+              <label>年（year）</label>
+              <input v-model="h.year" class="input" placeholder="例: 2011" />
+              <label>日付（date）</label>
+              <input v-model="h.date" class="input" placeholder="例: 平成23年7月1日" />
+              <label>本文（HTML）</label>
+              <textarea v-model="h.body" class="textarea" rows="3" placeholder="本文（HTML）"></textarea>
+              <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+                <button class="btn" @click="companyHistory.splice(idx,1)">削除</button>
+                <button class="btn" @click="companyHistory.splice(Math.max(0, idx-1), 0, companyHistory.splice(idx,1)[0])" :disabled="idx===0">上へ</button>
+                <button class="btn" @click="companyHistory.splice(Math.min(companyHistory.length, idx+2), 0, companyHistory.splice(idx,1)[0])" :disabled="idx===companyHistory.length-1">下へ</button>
+              </div>
+            </div>
+            <div class="actions" style="justify-content:flex-start;">
+              <button class="btn" @click="companyHistory.push({ year:'', date:'', body:'' })">+ 沿革を追加</button>
+            </div>
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
@@ -320,7 +339,7 @@ export default {
   name: 'BlockCmsEditor',
   components: { AdminLayout },
   data(){
-    return {
+      return {
       pages: [],
       search: '',
       currentPage: null,
@@ -361,7 +380,8 @@ export default {
       genericTexts: {},
       genericHtmls: {},
       // glossary: 用語リスト（items）の編集
-      glossaryItems: [],
+        glossaryItems: [],
+        companyHistory: [],
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
@@ -469,6 +489,12 @@ export default {
           } else if (this.pageContentKey === 'company-profile') {
             this.companyTexts = { ...(this.companyTexts || {}), ...(texts || {}) }
             this.companyHtmls = { ...(this.companyHtmls || {}), ...(htmls || {}) }
+            // history
+            this.companyHistory = Array.isArray(content?.history) ? content.history.map(h => ({
+              year: typeof h?.year === 'string' ? h.year : '',
+              date: typeof h?.date === 'string' ? h.date : '',
+              body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : '')
+            })) : []
             if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'consulting') {
             this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
@@ -647,6 +673,11 @@ export default {
         } else if (foundKey === 'company-profile') {
           this.companyTexts = { ...(this.companyTexts || {}), ...(texts || {}) }
           this.companyHtmls = { ...(this.companyHtmls || {}), ...(htmls || {}) }
+          this.companyHistory = Array.isArray(content?.history) ? content.history.map(h => ({
+            year: typeof h?.year === 'string' ? h.year : '',
+            date: typeof h?.date === 'string' ? h.date : '',
+            body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : '')
+          })) : []
         } else if (foundKey === 'consulting') {
           this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
           this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
@@ -695,6 +726,10 @@ export default {
         } else if (this.pageContentKey === 'company-profile') {
           patch.content.texts = { ...this.companyTexts }
           patch.content.htmls = { ...this.companyHtmls }
+          const hist = Array.isArray(this.companyHistory) ? this.companyHistory
+            .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
+            .filter(h => h.year || h.date || h.body) : []
+          patch.content.history = hist
         } else if (this.pageContentKey === 'consulting') {
           patch.content.texts = { ...this.consultingTexts }
           patch.content.htmls = { ...this.consultingHtmls }

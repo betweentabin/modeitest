@@ -10,6 +10,7 @@ class PremiumMembershipPageJsonSeeder extends Seeder
     public function run(): void
     {
         $key = 'premium-membership';
+        $alias = 'membership-premium'; // legacy alias key to keep in sync
 
         $texts = [
             'page_title' => 'プレミアム会員',
@@ -29,6 +30,7 @@ class PremiumMembershipPageJsonSeeder extends Seeder
             'cta_secondary' => '入会はこちら',
         ];
 
+        // Upsert for primary key
         $page = PageContent::where('page_key', $key)->first();
         if (!$page) {
             PageContent::create([
@@ -38,19 +40,41 @@ class PremiumMembershipPageJsonSeeder extends Seeder
                 'is_published' => true,
                 'published_at' => now(),
             ]);
-            return;
+        } else {
+            $content = $page->content ?? [];
+            if (!is_array($content)) $content = ['html' => (string)$content];
+            // Prefer seeder values for premium fields
+            $existing = $content['texts'] ?? [];
+            $content['texts'] = array_replace((array)$existing, $texts);
+            $page->update([
+                'title' => $page->title ?: 'プレミアム会員',
+                'content' => $content,
+                'is_published' => true,
+                'published_at' => $page->published_at ?: now(),
+            ]);
         }
 
-        $content = $page->content ?? [];
-        if (!is_array($content)) $content = ['html' => (string)$content];
-        $content['texts'] = array_merge($texts, $content['texts'] ?? []);
-
-        $page->update([
-            'title' => $page->title ?: 'プレミアム会員',
-            'content' => $content,
-            'is_published' => true,
-            'published_at' => $page->published_at ?: now(),
-        ]);
+        // Keep legacy alias in sync to avoid admin/editor confusion
+        $aliasPage = PageContent::where('page_key', $alias)->first();
+        if (!$aliasPage) {
+            PageContent::create([
+                'page_key' => $alias,
+                'title' => 'プレミアム会員',
+                'content' => [ 'texts' => $texts ],
+                'is_published' => true,
+                'published_at' => now(),
+            ]);
+        } else {
+            $ac = $aliasPage->content ?? [];
+            if (!is_array($ac)) $ac = ['html' => (string)$ac];
+            $existingAlias = $ac['texts'] ?? [];
+            $ac['texts'] = array_replace((array)$existingAlias, $texts);
+            $aliasPage->update([
+                'title' => $aliasPage->title ?: 'プレミアム会員',
+                'content' => $ac,
+                'is_published' => true,
+                'published_at' => $aliasPage->published_at ?: now(),
+            ]);
+        }
     }
 }
-

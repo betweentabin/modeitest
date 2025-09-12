@@ -76,12 +76,19 @@ class CompanyProfilePageJsonSeeder extends Seeder
             'company_profile_staff_nakamura' => 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451',
         ];
 
+        // デフォルトの沿革（history）
+        $defaultHistory = [
+            [ 'year' => '1988', 'date' => '昭和63年1月30日', 'body' => 'ちくぎんコンピュータサービス（株）設立' ],
+            [ 'year' => '2010', 'date' => '平成22年6月29日', 'body' => 'ちくぎんコンピュータサービス（株）の定款変更により、経営コンサルティング業務・経済調査等業務を追加。' ],
+            [ 'year' => '2011', 'date' => '平成23年7月1日', 'body' => '社名変更　（株）ちくぎん地域経済研究所として新たにスタート。<br>主たる業務は調査・研究、人材開発、IT関連サービス、経営支援（経営サポート）、コンシェルジュサービス。' ],
+        ];
+
         $page = PageContent::where('page_key', $key)->first();
         if (!$page) {
             PageContent::create([
                 'page_key' => $key,
                 'title' => '会社概要',
-                'content' => ['texts' => $texts, 'htmls' => $defaultHtmls, 'images' => $images],
+                'content' => ['texts' => $texts, 'htmls' => $defaultHtmls, 'images' => $images, 'history' => $defaultHistory],
                 'is_published' => true,
                 'published_at' => now(),
             ]);
@@ -95,6 +102,10 @@ class CompanyProfilePageJsonSeeder extends Seeder
         $content['htmls'] = array_merge($defaultHtmls, $htmls);
         $imgs = isset($content['images']) && is_array($content['images']) ? $content['images'] : [];
         $content['images'] = array_merge($images, $imgs);
+        // history は未設定または空のときだけ初期値を設定（既存優先）
+        if (empty($content['history']) || !is_array($content['history'])) {
+            $content['history'] = $defaultHistory;
+        }
 
         // プライバシー方式との整合: content.html が未設定なら既存セクションから全文HTMLを合成
         $existingHtml = isset($content['html']) && is_string($content['html']) ? trim($content['html']) : '';

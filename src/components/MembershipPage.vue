@@ -49,8 +49,8 @@
         </div>
 
         <div class="services-content">
-          <!-- Premium Services -->
-          <div class="service-category">
+          <!-- Premium Services (hidden on standard-only view) -->
+          <div class="service-category" v-if="!isStandardView">
             <h3 class="category-title">
               <CmsText :pageKey="cmsKey" fieldKey="premium_category_title" tag="span" :fallback="'プレミアサービス'" />
             </h3>
@@ -71,10 +71,10 @@
 
           <div class="section-divider"></div>
 
-          <!-- Standard & Premium Services -->
+          <!-- Standard & Premium Services (or Standard only on standard view) -->
           <div class="service-category">
             <h3 class="category-title">
-              <CmsText :pageKey="cmsKey" fieldKey="standard_premium_category_title" tag="span" :fallback="'スタンダード　&　プレミアサービス'" />
+              <CmsText :pageKey="cmsKey" :fieldKey="isStandardView ? 'standard_category_title' : 'standard_premium_category_title'" tag="span" :fallback="isStandardView ? 'スタンダードサービス' : 'スタンダード　&　プレミアサービス'" />
             </h3>
             <div class="service-grid">
               <div class="service-card">
@@ -299,6 +299,9 @@ export default {
     };
   },
   computed: {
+    isStandardView() {
+      return this.cmsKey === 'standard-membership'
+    },
     cmsKey() {
       const name = this.$route && this.$route.name
       const path = (this.$route && this.$route.path || '').toLowerCase()
