@@ -97,7 +97,9 @@ class CompanyProfilePageJsonSeeder extends Seeder
 
         $content = $page->content ?? [];
         if (!is_array($content)) $content = ['html' => (string)$content];
-        $content['texts'] = array_merge($texts, $content['texts'] ?? []);
+        // Prefer seeder defaults for baseline整合（既存の誤った初期値を修正）
+        $existingTexts = isset($content['texts']) && is_array($content['texts']) ? $content['texts'] : [];
+        $content['texts'] = array_replace($existingTexts, $texts);
         $htmls = isset($content['htmls']) && is_array($content['htmls']) ? $content['htmls'] : [];
         $content['htmls'] = array_merge($defaultHtmls, $htmls);
         $imgs = isset($content['images']) && is_array($content['images']) ? $content['images'] : [];
@@ -149,6 +151,11 @@ class CompanyProfilePageJsonSeeder extends Seeder
             $content['htmls'] = array_merge($content['htmls'] ?? [], ['body' => $compiled]);
         }
 
-        $page->update(['title' => $page->title ?: '会社概要', 'content' => $content]);
+        $page->update([
+            'title' => $page->title ?: '会社概要',
+            'content' => $content,
+            'is_published' => true,
+            'published_at' => $page->published_at ?: now(),
+        ]);
     }
 }

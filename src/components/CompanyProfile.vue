@@ -494,7 +494,8 @@ export default {
     this.setupCarouselScroll();
     try {
       this._pageText = usePageText(this.pageKey)
-      this._pageText.load()
+      // force: true でキャッシュを無視して常に最新を取得
+      this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
     this.loadFinancialReports();
     // lazy media registry (for staff/philosophy/message images)
