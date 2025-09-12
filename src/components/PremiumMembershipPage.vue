@@ -75,8 +75,8 @@
 
          <!-- CTA Section -->
      <ActionButton 
-       primary-text="会員についてお問い合わせ"
-       secondary-text="入会はこちら"
+       :primary-text="ctaPrimaryText"
+       :secondary-text="ctaSecondaryText"
        @primary-click="handleContactClick"
        @secondary-click="handleJoinClick"
      />
@@ -108,6 +108,8 @@ import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data";
 import CmsText from '@/components/CmsText.vue'
 
+import { usePageText } from '@/composables/usePageText'
+
 export default {
   name: "PremiumMembershipPage",
   components: {
@@ -125,9 +127,20 @@ export default {
   data() {
     return {
       frame132131753022Props: frame132131753022Data,
-      pageTitle: 'プレミアム会員',
-      pageSubtitle: 'premium membership',
     };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { try { return this._pageText?.getText('page_title', 'プレミアム会員') || 'プレミアム会員' } catch(e){ return 'プレミアム会員' } },
+    pageSubtitle() { try { return this._pageText?.getText('page_subtitle', 'premium membership') || 'premium membership' } catch(e){ return 'premium membership' } },
+    ctaPrimaryText() { try { return this._pageText?.getText('cta_primary', '会員についてお問い合わせ') || '会員についてお問い合わせ' } catch(e){ return '会員についてお問い合わせ' } },
+    ctaSecondaryText() { try { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' } catch(e){ return '入会はこちら' } },
+  },
+  mounted() {
+    try {
+      this._pageText = usePageText('premium-membership')
+      this._pageText.load()
+    } catch(e) { /* noop */ }
   },
   methods: {
     handleContactClick() {

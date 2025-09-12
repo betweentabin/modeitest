@@ -432,6 +432,7 @@ export default {
         else if (slug.includes('sitemap')) this.pageContentKey = 'sitemap'
         else if (slug.includes('faq')) this.pageContentKey = 'faq'
         else if (slug.includes('glossary')) this.pageContentKey = 'glossary'
+        else if (slug.includes('premium')) this.pageContentKey = 'premium-membership'
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
         else if (slug.includes('financial')) this.pageContentKey = 'financial-reports'
         else if (slug === 'home') this.pageContentKey = 'home'
