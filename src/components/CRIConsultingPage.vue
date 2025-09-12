@@ -307,7 +307,7 @@ export default {
     window.addEventListener('resize', this.adjustRectangleHeight);
     try {
       this._pageText = usePageText(this.pageKey)
-      this._pageText.load()
+      this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
   },
   beforeDestroy() {

@@ -262,7 +262,7 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('faq')
-      this._pageText.load().then(() => {
+      this._pageText.load({ force: true }).then(() => {
         try {
           const page = this._pageText?.page?.value
           const list = page?.content?.faqs

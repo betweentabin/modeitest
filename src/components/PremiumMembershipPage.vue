@@ -139,7 +139,7 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('premium-membership')
-      this._pageText.load()
+      this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
   },
   methods: {

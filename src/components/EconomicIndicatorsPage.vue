@@ -171,7 +171,7 @@ export default {
     // ページ文言（タイトル等）をCMSから読込
     try {
       this._pageText = usePageText(this.pageKey)
-      await this._pageText.load()
+      await this._pageText.load({ force: true })
     } catch (e) { /* noop */ }
 
     // CMSからHTMLが設定されていれば優先表示 + カテゴリ/指標の読込

@@ -223,7 +223,7 @@ export default {
     // Load structured texts for this page (title, lead, CTA etc.)
     try {
       this._pageText = usePageText(this.pageKey)
-      await this._pageText.load()
+      await this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
     // 認証状態からブラー制御を再判定
     await this.updateBlurFromAuth()

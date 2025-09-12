@@ -222,7 +222,7 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('glossary')
-      this._pageText.load().then(() => {
+      this._pageText.load({ force: true }).then(() => {
         try {
           const items = this._pageText?.page?.value?.content?.items
           if (Array.isArray(items) && items.length) {

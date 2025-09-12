@@ -178,7 +178,7 @@ export default {
   },
   mounted() {
     // Load CMS page text once
-    try { this._pageText = usePageText(this.pageKey); this._pageText.load() } catch (_) {}
+    try { this._pageText = usePageText(this.pageKey); this._pageText.load({ force: true }) } catch (_) {}
 
     // Layout adjustments
     this.adjustRectangleHeight();

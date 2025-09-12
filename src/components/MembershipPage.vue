@@ -317,7 +317,7 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText(this.cmsKey)
-      this._pageText.load()
+      this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
   },
   watch: {
@@ -325,7 +325,7 @@ export default {
       if (newKey && newKey !== oldKey) {
         try {
           this._pageText = usePageText(newKey)
-          this._pageText.load()
+          this._pageText.load({ force: true })
         } catch(e) { /* noop */ }
       }
     }

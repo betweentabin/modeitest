@@ -273,7 +273,7 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('transaction-law')
-      this._pageText.load()
+      this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
   },
 };
