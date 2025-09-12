@@ -64,6 +64,40 @@ class TermsPageJsonSeeder extends Seeder
         $content['texts'] = array_replace($defaultsTexts, $texts);
         $content['htmls'] = array_replace($defaultsHtmls, $htmls);
 
+        // プライバシーポリシー型（全文HTML）への整合: content.html が空なら、セクションから本文を合成
+        $existingHtml = isset($content['html']) && is_string($content['html']) ? trim($content['html']) : '';
+        if ($existingHtml === '') {
+            $t = $content['texts'];
+            $h = $content['htmls'];
+            // 合成の順序: intro -> 各セクション（h3 + 本文）
+            $parts = [];
+            if (!empty($h['intro'])) { $parts[] = '<p>' . $h['intro'] . '</p>'; }
+            $sections = [
+                ['copyright', '著作権等について'],
+                ['link', 'リンクについて'],
+                ['disclaimer', '免責事項'],
+                ['security', 'セキュリティについて'],
+                ['cookie', 'クッキー(Cookie)について'],
+                ['environment', 'ご利用環境について'],
+                ['prohibited', '禁止される行為'],
+                ['article8', '第8条（利用規約の変更）'],
+            ];
+            foreach ($sections as [$key, $fallbackTitle]) {
+                $titleKey = $key . '_title';
+                $bodyKey  = $key . '_body';
+                $title = isset($t[$titleKey]) && is_string($t[$titleKey]) && trim($t[$titleKey]) !== '' ? $t[$titleKey] : $fallbackTitle;
+                $body  = isset($h[$bodyKey]) && is_string($h[$bodyKey]) ? $h[$bodyKey] : '';
+                if ($title || $body) {
+                    $parts[] = '<h3>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</h3>';
+                    if ($body !== '') { $parts[] = '<div>' . $body . '</div>'; }
+                }
+            }
+            $compiled = implode("\n\n", $parts);
+            $content['html'] = $compiled;
+            // 互換: body キーでも参照できるように
+            $content['htmls'] = array_replace($content['htmls'] ?? [], ['body' => $compiled]);
+        }
+
         $page->update([
             'title' => $page->title ?: '利用規約',
             'content' => $content,

@@ -30,7 +30,8 @@
         </div>
       </div>
 
-      <div class="content-container" v-if="hasHtml">
+      <!-- Full HTML render is only for CMS preview; otherwise keep section layout -->
+      <div class="content-container" v-if="hasHtml && isEditPreview">
         <div class="cms-body" v-html="_pageText?.getHtml('body', '')"></div>
       </div>
 
@@ -221,6 +222,14 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '利用規約') || '利用規約' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'terms of service') || 'terms of service' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') && (params.has('cmsEdit') || params.get('cmsPreview') === 'edit')
+      } catch (_) { return false }
+    },
     hasHtml() {
       try {
         const page = this._pageText?.page?.value

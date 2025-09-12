@@ -60,6 +60,43 @@ class ConsultingPageJsonSeeder extends Seeder
         $content['texts'] = array_merge($texts, $content['texts'] ?? []);
         $existingHtmls = isset($content['htmls']) && is_array($content['htmls']) ? $content['htmls'] : [];
         $content['htmls'] = array_merge($htmls, $existingHtmls);
+
+        // content.html が空なら、セクションから合成
+        $existingHtml = isset($content['html']) && is_string($content['html']) ? trim($content['html']) : '';
+        if ($existingHtml === '') {
+            $t = $content['texts'];
+            $h = $content['htmls'];
+            $parts = [];
+
+            // What is
+            $whatTitle = $t['what_title'] ?? 'CRI 経営コンサルティングとは？';
+            $parts[] = '<h2>' . htmlspecialchars($whatTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($t['what_content_heading'])) {
+                $parts[] = '<h3>' . htmlspecialchars($t['what_content_heading'], ENT_QUOTES, 'UTF-8') . '</h3>';
+            }
+            if (!empty($h['what_content_body'])) { $parts[] = '<div>' . $h['what_content_body'] . '</div>'; }
+
+            // Duties
+            $dutiesTitle = $t['duties_title'] ?? '主な業務';
+            $parts[] = '<h2>' . htmlspecialchars($dutiesTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($t['duties_heading'])) {
+                $parts[] = '<p>' . htmlspecialchars($t['duties_heading'], ENT_QUOTES, 'UTF-8') . '</p>';
+            }
+            if (!empty($h['duties_intro'])) { $parts[] = '<p>' . $h['duties_intro'] . '</p>'; }
+            if (!empty($h['duties_list'])) { $parts[] = '<div>' . $h['duties_list'] . '</div>'; }
+
+            // Support
+            $supportTitle = $t['support_title'] ?? 'サポート内容と費用に関して';
+            $parts[] = '<h2>' . htmlspecialchars($supportTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($h['support_intro'])) { $parts[] = '<p>' . $h['support_intro'] . '</p>'; }
+            if (!empty($t['support_free_title'])) { $parts[] = '<h3>' . htmlspecialchars($t['support_free_title'], ENT_QUOTES, 'UTF-8') . '</h3>'; }
+            if (!empty($t['support_paid_title'])) { $parts[] = '<h3>' . htmlspecialchars($t['support_paid_title'], ENT_QUOTES, 'UTF-8') . '</h3>'; }
+
+            $compiled = implode("\n\n", $parts);
+            $content['html'] = $compiled;
+            $content['htmls'] = array_merge($content['htmls'] ?? [], ['body' => $compiled]);
+        }
+
         $page->update(['title' => $page->title ?: 'CRI経営コンサルティング', 'content' => $content]);
     }
 }

@@ -29,12 +29,12 @@
           <div class="decoration-line"></div>
         </div>
       </div>
-      <!-- If HTML is provided in page JSON, render it and hide the static table -->
-      <div class="content-container" v-if="hasHtml && !isEditPreview">
+      <!-- Full HTML render only in CMS preview; keep static table otherwise -->
+      <div class="content-container" v-if="hasHtml && isEditPreview">
         <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
       </div>
 
-      <div v-if="!hasHtml && !isEditPreview" class="transaction-law-table">
+      <div v-if="!isEditPreview" class="transaction-law-table">
         <div class="table-row">
           <div class="table-label"><CmsText pageKey="transaction-law" fieldKey="seller_label" tag="span" :fallback="'販売業者'" /></div>
           <div class="table-value"><CmsText pageKey="transaction-law" fieldKey="seller_value" tag="span" :fallback="'株式会社 ちくぎん地域経済研究所'" /></div>

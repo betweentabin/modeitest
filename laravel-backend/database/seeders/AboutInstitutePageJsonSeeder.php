@@ -54,7 +54,38 @@ class AboutInstitutePageJsonSeeder extends Seeder
         $content['texts'] = array_merge($texts, $content['texts'] ?? []);
         $existingHtmls = isset($content['htmls']) && is_array($content['htmls']) ? $content['htmls'] : [];
         $content['htmls'] = array_merge($htmls, $existingHtmls);
+
+        // content.html が空なら、セクションから合成
+        $existingHtml = isset($content['html']) && is_string($content['html']) ? trim($content['html']) : '';
+        if ($existingHtml === '') {
+            $t = $content['texts'];
+            $h = $content['htmls'];
+            $parts = [];
+
+            $aboutTitle = isset($t['about_title']) && $t['about_title'] !== '' ? $t['about_title'] : 'ちくぎん地域経済研究所について';
+            $parts[] = '<h2>' . htmlspecialchars($aboutTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($h['about_body'])) { $parts[] = '<div>' . $h['about_body'] . '</div>'; }
+
+            $svcTitle = isset($t['service_title']) && $t['service_title'] !== '' ? $t['service_title'] : 'サービス概要';
+            $parts[] = '<h2>' . htmlspecialchars($svcTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+
+            // 3つのサービスを簡単に合成
+            for ($i = 1; $i <= 3; $i++) {
+                $tt = $t["service{$i}_title"] ?? '';
+                $td = $t["service{$i}_desc"] ?? '';
+                $list = $h["service{$i}_list"] ?? '';
+                if ($tt || $td || $list) {
+                    if ($tt) $parts[] = '<h3>' . htmlspecialchars($tt, ENT_QUOTES, 'UTF-8') . '</h3>';
+                    if ($td) $parts[] = '<p>' . htmlspecialchars($td, ENT_QUOTES, 'UTF-8') . '</p>';
+                    if ($list) $parts[] = '<div>' . $list . '</div>';
+                }
+            }
+
+            $compiled = implode("\n\n", $parts);
+            $content['html'] = $compiled;
+            $content['htmls'] = array_merge($content['htmls'] ?? [], ['body' => $compiled]);
+        }
+
         $page->update(['title' => $page->title ?: 'ちくぎん地域経済研究所について', 'content' => $content]);
     }
 }
-

@@ -87,6 +87,49 @@ class CompanyProfilePageJsonSeeder extends Seeder
         $content['htmls'] = array_merge($defaultHtmls, $htmls);
         $imgs = isset($content['images']) && is_array($content['images']) ? $content['images'] : [];
         $content['images'] = array_merge($images, $imgs);
+
+        // プライバシー方式との整合: content.html が未設定なら既存セクションから全文HTMLを合成
+        $existingHtml = isset($content['html']) && is_string($content['html']) ? trim($content['html']) : '';
+        if ($existingHtml === '') {
+            $t = $content['texts'];
+            $h = $content['htmls'];
+            $parts = [];
+
+            $phTitle = isset($t['philosophy_title']) && $t['philosophy_title'] !== '' ? $t['philosophy_title'] : '経営理念';
+            $parts[] = '<h2>' . htmlspecialchars($phTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($h['mission_body'])) { $parts[] = '<div>' . $h['mission_body'] . '</div>'; }
+
+            $msgTitle = isset($t['message_title']) && $t['message_title'] !== '' ? $t['message_title'] : 'ご挨拶';
+            $parts[] = '<h2>' . htmlspecialchars($msgTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($h['message_body'])) { $parts[] = '<div>' . $h['message_body'] . '</div>'; }
+
+            // 会社概要テーブルを合成（ラベルはサニタイズ、値はHTML許容）
+            $profilePairs = [
+                ['profile_company_name_label','profile_company_name_value','会社名'],
+                ['profile_established_label','profile_established_value','設立'],
+                ['profile_address_label','profile_address_value','住所'],
+                ['profile_representative_label','profile_representative_value','代表者'],
+                ['profile_capital_label','profile_capital_value','資本金'],
+                ['profile_shareholders_label','profile_shareholders_value','株主'],
+                ['profile_organization_label','profile_organization_value','組織体制'],
+            ];
+            $rows = '';
+            foreach ($profilePairs as [$lk, $vk, $fallbackLabel]) {
+                $label = isset($t[$lk]) && is_string($t[$lk]) && trim($t[$lk]) !== '' ? $t[$lk] : $fallbackLabel;
+                $val = isset($t[$vk]) && is_string($t[$vk]) ? $t[$vk] : '';
+                $rows .= '<tr><th>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</th><td>' . $val . '</td></tr>';
+            }
+            if ($rows !== '') {
+                $profTitle = isset($t['profile_title']) && $t['profile_title'] !== '' ? $t['profile_title'] : '会社概要';
+                $parts[] = '<h2>' . htmlspecialchars($profTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+                $parts[] = '<table>' . $rows . '</table>';
+            }
+
+            $compiled = implode("\n\n", $parts);
+            $content['html'] = $compiled;
+            $content['htmls'] = array_merge($content['htmls'] ?? [], ['body' => $compiled]);
+        }
+
         $page->update(['title' => $page->title ?: '会社概要', 'content' => $content]);
     }
 }
