@@ -7,7 +7,7 @@
     <HeroSection 
       :title="pageTitle"
       :subtitle="pageSubtitle"
-      cms-page-key="membership"
+      :cms-page-key="cmsKey"
       heroImage="/img/Image_fx7.jpg"
       mediaKey="hero_membership"
     />
@@ -23,10 +23,10 @@
       <div class="container">
         <div class="intro-content">
           <h2 class="intro-title">
-            <CmsText pageKey="membership" fieldKey="intro_title" tag="span" :fallback="'ご入会に際しまして'" />
+            <CmsText :pageKey="cmsKey" fieldKey="intro_title" tag="span" :fallback="'ご入会に際しまして'" />
           </h2>
           <p class="intro-text">
-            <CmsText pageKey="membership" fieldKey="intro_text" tag="span" :fallback="'ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報誌「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。'" />
+            <CmsText :pageKey="cmsKey" fieldKey="intro_text" tag="span" :fallback="'ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報誌「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。'" />
           </p>
         </div>
       </div>
@@ -37,12 +37,12 @@
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
-            <CmsText pageKey="membership" fieldKey="services_title" tag="span" :fallback="'主な会員が受けられるサービス内容'" />
+            <CmsText :pageKey="cmsKey" fieldKey="services_title" tag="span" :fallback="'主な会員が受けられるサービス内容'" />
           </h2>
           <div class="section-decoration">
             <div class="decoration-line"></div>
             <span class="decoration-text">
-              <CmsText pageKey="membership" fieldKey="services_label" tag="span" :fallback="'service'" />
+              <CmsText :pageKey="cmsKey" fieldKey="services_label" tag="span" :fallback="'service'" />
             </span>
             <div class="decoration-line"></div>
           </div>
@@ -52,17 +52,17 @@
           <!-- Premium Services -->
           <div class="service-category">
             <h3 class="category-title">
-              <CmsText pageKey="membership" fieldKey="premium_category_title" tag="span" :fallback="'プレミアサービス'" />
+              <CmsText :pageKey="cmsKey" fieldKey="premium_category_title" tag="span" :fallback="'プレミアサービス'" />
             </h3>
             <div class="service-grid">
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/ce302535d023990b1eca162e1afd7a0f8380e1dc?width=800" alt="日経トップリーダー" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText pageKey="membership" fieldKey="premium_service1_tag" tag="span" :fallback="'consultation'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="premium_service1_tag" tag="span" :fallback="'consultation'" />
                   </span>
                   <h4 class="service-name">
-                    <CmsText pageKey="membership" fieldKey="premium_service1_name" tag="span" :fallback="'日経トップリーダー'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="premium_service1_name" tag="span" :fallback="'日経トップリーダー'" />
                   </h4>
                 </div>
               </div>
@@ -74,17 +74,17 @@
           <!-- Standard & Premium Services -->
           <div class="service-category">
             <h3 class="category-title">
-              <CmsText pageKey="membership" fieldKey="standard_premium_category_title" tag="span" :fallback="'スタンダード　&　プレミアサービス'" />
+              <CmsText :pageKey="cmsKey" fieldKey="standard_premium_category_title" tag="span" :fallback="'スタンダード　&　プレミアサービス'" />
             </h3>
             <div class="service-grid">
               <div class="service-card">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/bd8bbc9de4c9de4eb59eee7bc0cdac4b87af7876?width=800" alt="ビジネスセミナー" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText pageKey="membership" fieldKey="standard_service1_tag" tag="span" :fallback="'consultation'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service1_tag" tag="span" :fallback="'consultation'" />
                   </span>
                   <h4 class="service-name">
-                    <CmsText pageKey="membership" fieldKey="standard_service1_name" tag="span" :fallback="'ビジネスセミナー'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service1_name" tag="span" :fallback="'ビジネスセミナー'" />
                   </h4>
                 </div>
               </div>
@@ -92,10 +92,10 @@
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/960b36fb39767fc67e6b4a40be6051bee73138a8?width=800" alt="マッチング" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText pageKey="membership" fieldKey="standard_service2_tag" tag="span" :fallback="'problem'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service2_tag" tag="span" :fallback="'problem'" />
                   </span>
                   <h4 class="service-name">
-                    <CmsText pageKey="membership" fieldKey="standard_service2_name" tag="span" :fallback="'マッチング'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service2_name" tag="span" :fallback="'マッチング'" />
                   </h4>
                 </div>
               </div>
@@ -103,10 +103,10 @@
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/33c870bec0d0bf29bf0782915d3a6f8fe1f96623?width=800" alt="経済統計指標DL" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText pageKey="membership" fieldKey="standard_service3_tag" tag="span" :fallback="'problem'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service3_tag" tag="span" :fallback="'problem'" />
                   </span>
                   <h4 class="service-name">
-                    <CmsText pageKey="membership" fieldKey="standard_service3_name" tag="span" :fallback="'経済統計指標DL'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service3_name" tag="span" :fallback="'経済統計指標DL'" />
                   </h4>
                 </div>
               </div>
@@ -114,10 +114,10 @@
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/3a52b313c631d4d2f82f6039afa3a0b86b3c4f1e?width=800" alt="地域経済統計レポート閲覧" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText pageKey="membership" fieldKey="standard_service4_tag" tag="span" :fallback="'consultation'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service4_tag" tag="span" :fallback="'consultation'" />
                   </span>
                   <h4 class="service-name">
-                    <CmsText pageKey="membership" fieldKey="standard_service4_name" tag="span" :fallback="'地域経済統計レポート閲覧'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service4_name" tag="span" :fallback="'地域経済統計レポート閲覧'" />
                   </h4>
                 </div>
               </div>
@@ -125,10 +125,10 @@
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/4096c08b8615d6b9ef2adeb87f0b1f03ccb58429?width=800" alt="経営相談" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText pageKey="membership" fieldKey="standard_service5_tag" tag="span" :fallback="'problem'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service5_tag" tag="span" :fallback="'problem'" />
                   </span>
                   <h4 class="service-name">
-                    <CmsText pageKey="membership" fieldKey="standard_service5_name" tag="span" :fallback="'経営相談'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service5_name" tag="span" :fallback="'経営相談'" />
                   </h4>
                 </div>
               </div>
@@ -140,23 +140,23 @@
           <!-- Membership Information -->
           <div class="membership-info">
           <h3 class="membership-info-title">
-            <CmsText pageKey="membership" fieldKey="membership_info_title" tag="span" :fallback="'会員サービスについて'" />
+            <CmsText :pageKey="cmsKey" fieldKey="membership_info_title" tag="span" :fallback="'会員サービスについて'" />
           </h3>
             <div class="membership-table">
               <div class="table-row table-row-top">
                 <div class="table-label">
-                  <CmsText pageKey="membership" fieldKey="membership_benefits_label" tag="span" :fallback="'会員のメリット'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="membership_benefits_label" tag="span" :fallback="'会員のメリット'" />
                 </div>
                 <div class="table-content">
-                  <CmsText pageKey="membership" fieldKey="membership_benefits_text" tag="div" :fallback="'浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="membership_benefits_text" tag="div" :fallback="'浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。'" />
                 </div>
               </div>
               <div class="table-row">
                 <div class="table-label">
-                  <CmsText pageKey="membership" fieldKey="membership_fee_label" tag="span" :fallback="'月会費'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="membership_fee_label" tag="span" :fallback="'月会費'" />
                 </div>
                 <div class="table-content">
-                  <CmsText pageKey="membership" fieldKey="membership_fee_text" tag="div" :fallback="'・スタンダード1,000 円（税別）・プレミアム3,000円（税別）'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="membership_fee_text" tag="div" :fallback="'・スタンダード1,000 円（税別）・プレミアム3,000円（税別）'" />
                 </div>
               </div>
             </div>
@@ -184,12 +184,12 @@
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
-            <CmsText pageKey="membership" fieldKey="flow_title" tag="span" :fallback="'入会までの流れ'" />
+            <CmsText :pageKey="cmsKey" fieldKey="flow_title" tag="span" :fallback="'入会までの流れ'" />
           </h2>
           <div class="section-decoration">
             <div class="decoration-line"></div>
             <span class="decoration-text">
-              <CmsText pageKey="membership" fieldKey="flow_label" tag="span" :fallback="'flow of joining'" />
+              <CmsText :pageKey="cmsKey" fieldKey="flow_label" tag="span" :fallback="'flow of joining'" />
             </span>
             <div class="decoration-line"></div>
           </div>
@@ -201,10 +201,10 @@
               <div class="step-number">STEP1</div>
               <div class="step-content">
                 <h4 class="step-title">
-                  <CmsText pageKey="membership" fieldKey="step1_title" tag="span" :fallback="'当事務所、もしくは最寄りの筑邦銀行の窓口でお申し込み'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="step1_title" tag="span" :fallback="'当事務所、もしくは最寄りの筑邦銀行の窓口でお申し込み'" />
                 </h4>
                 <p class="step-description">
-                  <CmsText pageKey="membership" fieldKey="step1_desc" tag="span" :fallback="'入会申込書に必要事項をご記入いただきましたら、当研究所・筑邦銀行の窓口にて直接ご提出ください。<br>・筑邦銀行とのお取引がない方もお申し込みいただけます。'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="step1_desc" tag="span" :fallback="'入会申込書に必要事項をご記入いただきましたら、当研究所・筑邦銀行の窓口にて直接ご提出ください。<br>・筑邦銀行とのお取引がない方もお申し込みいただけます。'" />
                 </p>
               </div>
             </div>
@@ -212,10 +212,10 @@
               <div class="step-number">STEP2</div>
               <div class="step-content">
                 <h4 class="step-title">
-                  <CmsText pageKey="membership" fieldKey="step2_title" tag="span" :fallback="'入会に際しての簡単な審査'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="step2_title" tag="span" :fallback="'入会に際しての簡単な審査'" />
                 </h4>
                 <p class="step-description">
-                  <CmsText pageKey="membership" fieldKey="step2_desc" tag="span" :fallback="'※審査完了後、当事務所よりメールで審査結果が届きます。'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="step2_desc" tag="span" :fallback="'※審査完了後、当事務所よりメールで審査結果が届きます。'" />
                 </p>
               </div>
             </div>
@@ -223,7 +223,7 @@
               <div class="step-number">STEP3</div>
               <div class="step-content">
                 <h4 class="step-title">
-                  <CmsText pageKey="membership" fieldKey="step3_title" tag="span" :fallback="'審査完了後、当事務所指定の銀行口座へ月会費のお支払い'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="step3_title" tag="span" :fallback="'審査完了後、当事務所指定の銀行口座へ月会費のお支払い'" />
                 </h4>
               </div>
             </div>
@@ -231,7 +231,7 @@
               <div class="step-number">STEP4</div>
               <div class="step-content">
                 <h4 class="step-title">
-                  <CmsText pageKey="membership" fieldKey="step4_title" tag="span" :fallback="'支払い完了後、当事務所での確認作業が完了し次第、当事務所より、お客様の会員IDとパスワードを発行し、メールにてご連絡させていただきます。'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="step4_title" tag="span" :fallback="'支払い完了後、当事務所での確認作業が完了し次第、当事務所より、お客様の会員IDとパスワードを発行し、メールにてご連絡させていただきます。'" />
                 </h4>
               </div>
             </div>
@@ -242,8 +242,8 @@
 
     <!-- CTA Section -->
     <ActionButton 
-      primary-text="お問い合わせはこちら"
-      secondary-text="入会はこちら"
+      :primary-text="ctaPrimaryText"
+      :secondary-text="ctaSecondaryText"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
     />
@@ -299,17 +299,33 @@ export default {
     };
   },
   computed: {
+    cmsKey() {
+      const name = this.$route && this.$route.name
+      const path = (this.$route && this.$route.path || '').toLowerCase()
+      if (name === 'standardMembership' || path.includes('/membership/standard')) return 'standard-membership'
+      return 'membership'
+    },
     _pageRef() { return this._pageText?.page?.value },
-    pageTitle() { return this._pageText?.getText('page_title', '入会案内') || '入会案内' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
+    pageTitle() { return this._pageText?.getText('page_title', this.cmsKey === 'standard-membership' ? 'スタンダード会員' : '入会案内') || (this.cmsKey === 'standard-membership' ? 'スタンダード会員' : '入会案内') },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', this.cmsKey === 'standard-membership' ? 'standard membership' : 'membership') || (this.cmsKey === 'standard-membership' ? 'standard membership' : 'membership') },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
   },
   mounted() {
     try {
-      this._pageText = usePageText('membership')
+      this._pageText = usePageText(this.cmsKey)
       this._pageText.load()
     } catch(e) { /* noop */ }
+  },
+  watch: {
+    cmsKey(newKey, oldKey) {
+      if (newKey && newKey !== oldKey) {
+        try {
+          this._pageText = usePageText(newKey)
+          this._pageText.load()
+        } catch(e) { /* noop */ }
+      }
+    }
   },
   methods: {
     handleContactClick() {
