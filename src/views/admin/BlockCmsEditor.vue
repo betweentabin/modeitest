@@ -166,8 +166,8 @@
           </template>
 
           <!-- 特定商取引法 セクション別文言 -->
-          <div v-if="currentPage.slug==='legal'" class="section-title">セクション別文言（特定商取引法）</div>
-          <template v-if="currentPage.slug==='legal'">
+          <div v-if="currentPage.slug==='transaction-law'" class="section-title">セクション別文言（特定商取引法）</div>
+          <template v-if="currentPage.slug==='transaction-law'">
             <div class="field"><label>販売業者（ラベル）</label><input v-model="tlTexts.seller_label" class="input" /></div>
             <div class="field"><label>販売業者（値）</label><input v-model="tlTexts.seller_value" class="input" /></div>
             <div class="field"><label>代表者名（ラベル）</label><input v-model="tlTexts.rep_label" class="input" /></div>
@@ -448,7 +448,12 @@ export default {
     async importExistingPrivacy(){
       try {
         // 候補キーを順に探索（UIで指定→ privacy → privacy-poricy → privacy-policy → privacy poricy）
-        const candidates = [this.pageContentKey, 'privacy', 'privacy-poricy', 'privacy-policy', 'privacy poricy']
+        const candidates = [
+          this.pageContentKey,
+          // common fallbacks
+          'terms', 'transaction-law',
+          'privacy', 'privacy-poricy', 'privacy-policy', 'privacy poricy'
+        ]
         let foundKey = null
         let res = null
         for (const k of candidates) {
