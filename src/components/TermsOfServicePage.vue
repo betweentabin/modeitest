@@ -225,10 +225,7 @@ export default {
       try {
         const page = this._pageText?.page?.value
         const html = page?.content?.html
-        const htmlsBody = page?.content?.htmls?.body
-        const hasMain = typeof html === 'string' && html.trim().length > 0
-        const hasBody = typeof htmlsBody === 'string' && htmlsBody.trim().length > 0
-        return hasMain || hasBody
+        return typeof html === 'string' && html.trim().length > 0
       } catch(_) { return false }
     }
   },

@@ -33,20 +33,22 @@
             <input v-model="currentPage.title" class="input" @change="savePageMeta" />
           </div>
 
-          <div class="section-title">コンテンツ</div>
-          <div class="field">
-            <label>エディター</label>
-            <textarea v-model="richText.html" class="textarea" rows="18" @change="saveRich"></textarea>
-          </div>
-          <div class="field">
-            <label>本文用画像</label>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <input ref="contentImgInput" type="file" accept="image/*" style="display:none" @change="onContentImageSelected" />
-              <button class="btn" @click="selectContentImage">画像を選択</button>
-              <button class="btn" @click="insertLastContentImage" :disabled="!lastContentImgUrl">本文に画像を追加</button>
-              <span class="help" v-if="lastContentImgUrl">準備済み: {{ lastContentImgUrl }}</span>
+          <template v-if="showContentEditor">
+            <div class="section-title">コンテンツ</div>
+            <div class="field">
+              <label>エディター</label>
+              <textarea v-model="richText.html" class="textarea" rows="18" @change="saveRich"></textarea>
             </div>
-          </div>
+            <div class="field">
+              <label>本文用画像</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input ref="contentImgInput" type="file" accept="image/*" style="display:none" @change="onContentImageSelected" />
+                <button class="btn" @click="selectContentImage">画像を選択</button>
+                <button class="btn" @click="insertLastContentImage" :disabled="!lastContentImgUrl">本文に画像を追加</button>
+                <span class="help" v-if="lastContentImgUrl">準備済み: {{ lastContentImgUrl }}</span>
+              </div>
+            </div>
+          </template>
 
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
           <div v-if="currentPage" class="field">
@@ -256,6 +258,8 @@ export default {
       previewUrl: '',
       kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
+      // エディタ（本文）の表示切替。既定は非表示
+      showContentEditor: false,
       privacyTexts: {
         page_title: '', page_subtitle: '', intro: '',
         collection_title: '', collection_body: '',
