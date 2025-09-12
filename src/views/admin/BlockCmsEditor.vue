@@ -113,6 +113,28 @@
             </div>
           </template>
 
+          <!-- glossary: 用語リスト編集 -->
+          <div v-if="currentPage && currentPage.slug==='glossary'" class="section-title">用語リスト（items）</div>
+          <template v-if="currentPage && currentPage.slug==='glossary'">
+            <div class="help">用語（term / category / definition(HTML)）を編集・追加できます</div>
+            <div v-for="(it, idx) in glossaryItems" :key="`gls-${idx}`" class="field" style="border:1px solid #eee; padding:10px; border-radius:8px;">
+              <label>用語（term）</label>
+              <input v-model="it.term" class="input" placeholder="例: CPI" />
+              <label>カテゴリ（category）</label>
+              <input v-model="it.category" class="input" placeholder="例: economic" />
+              <label>定義（HTML）</label>
+              <textarea v-model="it.definition" class="textarea" rows="4" placeholder="定義をHTMLで入力"></textarea>
+              <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+                <button class="btn" @click="glossaryItems.splice(idx,1)">削除</button>
+                <button class="btn" @click="glossaryItems.splice(Math.max(0, idx-1), 0, glossaryItems.splice(idx,1)[0])" :disabled="idx===0">上へ</button>
+                <button class="btn" @click="glossaryItems.splice(Math.min(glossaryItems.length, idx+2), 0, glossaryItems.splice(idx,1)[0])" :disabled="idx===glossaryItems.length-1">下へ</button>
+              </div>
+            </div>
+            <div class="actions" style="justify-content:flex-start;">
+              <button class="btn" @click="glossaryItems.push({ term:'', category:'', definition:'' })">+ 用語を追加</button>
+            </div>
+          </template>
+
           <!-- フォールバック: 汎用のtexts/htmlsエディタ（除外ページ以外） -->
           <template v-if="currentPage && showGenericEditor">
             <div class="section-title">子コンポーネント文言（基本）</div>
@@ -338,6 +360,8 @@ export default {
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
       genericHtmls: {},
+      // glossary: 用語リスト（items）の編集
+      glossaryItems: [],
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
@@ -452,6 +476,15 @@ export default {
             this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
             this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
             if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'glossary') {
+            // Glossary: texts/htmls はそのまま、items をロード
+            this.genericTexts = {}
+            this.genericHtmls = {}
+            this.glossaryItems = Array.isArray(content?.items) ? content.items.map(it => ({
+              term: typeof it?.term === 'string' ? it.term : (typeof it?.title === 'string' ? it.title : ''),
+              category: typeof it?.category === 'string' ? it.category : '',
+              definition: typeof it?.definition === 'string' ? it.definition : (typeof it?.content === 'string' ? it.content : '')
+            })) : []
           } else {
             // フォールバック: 任意ページの全texts/htmlsを編集（置き換え）
             this.genericTexts = { ...(texts || {}) }
@@ -618,6 +651,12 @@ export default {
         } else if (foundKey === 'about-institute') {
           this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
           this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
+        } else if (foundKey === 'glossary') {
+          this.glossaryItems = Array.isArray(content?.items) ? content.items.map(it => ({
+            term: typeof it?.term === 'string' ? it.term : (typeof it?.title === 'string' ? it.title : ''),
+            category: typeof it?.category === 'string' ? it.category : '',
+            definition: typeof it?.definition === 'string' ? it.definition : (typeof it?.content === 'string' ? it.content : '')
+          })) : []
         } else {
           // generic: 置き換え
           this.genericTexts = { ...(texts || {}) }
@@ -660,6 +699,15 @@ export default {
         } else if (this.pageContentKey === 'about-institute') {
           patch.content.texts = { ...this.aboutTexts }
           patch.content.htmls = { ...this.aboutHtmls }
+        } else if (this.pageContentKey === 'glossary') {
+          // texts/htmls は既存どおり（intro等）。items も保存
+          if (Object.keys(this.genericTexts||{}).length) patch.content.texts = { ...this.genericTexts }
+          if (Object.keys(this.genericHtmls||{}).length) patch.content.htmls = { ...this.genericHtmls }
+          // normalize items
+          const items = Array.isArray(this.glossaryItems) ? this.glossaryItems
+            .map(it => ({ term: String(it.term||'').trim(), category: String(it.category||'').trim(), definition: String(it.definition||'').trim() }))
+            .filter(it => it.term && it.definition) : []
+          patch.content.items = items
         } else {
           // generic fallback: 動的に集めたtexts/htmlsを保存
           const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)
