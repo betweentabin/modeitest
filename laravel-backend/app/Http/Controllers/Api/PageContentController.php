@@ -663,8 +663,23 @@ class PageContentController extends Controller
 
             // Only merge when incoming is array; otherwise leave as-is
             if (is_array($validated['content'])) {
-                // array_replace_recursive keeps existing keys and replaces only provided ones
-                $validated['content'] = array_replace_recursive($existing, $validated['content']);
+                // For list-type fields (numeric arrays), we want full replacement rather than index-wise merge.
+                // Prepare incoming copy and merged base.
+                $incoming = $validated['content'];
+                $merged = $existing;
+
+                // Keys that must be replaced entirely when provided
+                $replaceListKeys = ['history', 'items'];
+                foreach ($replaceListKeys as $rk) {
+                    if (array_key_exists($rk, $incoming) && is_array($incoming[$rk])) {
+                        $merged[$rk] = $incoming[$rk];
+                        unset($incoming[$rk]);
+                    }
+                }
+
+                // Deep-merge the rest (associative maps like texts/htmls/images)
+                $merged = array_replace_recursive($merged, $incoming);
+                $validated['content'] = $merged;
             }
         }
 

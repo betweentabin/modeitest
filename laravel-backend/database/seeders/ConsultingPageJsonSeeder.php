@@ -9,7 +9,8 @@ class ConsultingPageJsonSeeder extends Seeder
 {
     public function run(): void
     {
-        $key = 'consulting';
+        $key = 'cri-consulting';
+        $alias = 'consulting'; // legacy key to migrate/sync from
         $texts = [
             'page_title' => 'CRI経営コンサルティング',
             'page_subtitle' => 'consulting',
@@ -43,23 +44,25 @@ class ConsultingPageJsonSeeder extends Seeder
             'support_intro' => '経営改善とは会社の中の「人」が変わることです。<br>ご相談と問題点・課題の整理は無料です。まずは、お気軽にご相談ください。'
         ];
 
+        // Load primary and alias pages
         $page = PageContent::where('page_key', $key)->first();
-        if (!$page) {
-            PageContent::create([
-                'page_key' => $key,
-                'title' => 'CRI経営コンサルティング',
-                'content' => ['texts' => $texts, 'htmls' => $htmls],
-                'is_published' => true,
-                'published_at' => now(),
-            ]);
-            return;
-        }
+        $aliasPage = PageContent::where('page_key', $alias)->first();
 
-        $content = $page->content ?? [];
+        $content = $page ? ($page->content ?? []) : [];
         if (!is_array($content)) $content = ['html' => (string)$content];
-        $content['texts'] = array_merge($texts, $content['texts'] ?? []);
+        $existingTexts = isset($content['texts']) && is_array($content['texts']) ? $content['texts'] : [];
         $existingHtmls = isset($content['htmls']) && is_array($content['htmls']) ? $content['htmls'] : [];
-        $content['htmls'] = array_merge($htmls, $existingHtmls);
+
+        $aliasContent = $aliasPage ? ($aliasPage->content ?? []) : [];
+        if (!is_array($aliasContent)) $aliasContent = ['html' => (string)$aliasContent];
+        $aliasTexts = isset($aliasContent['texts']) && is_array($aliasContent['texts']) ? $aliasContent['texts'] : [];
+        $aliasHtmls = isset($aliasContent['htmls']) && is_array($aliasContent['htmls']) ? $aliasContent['htmls'] : [];
+
+        // Merge order: defaults -> existing main -> alias (prefer alias since recent edits likely saved there)
+        $finalTexts = array_replace($texts, $existingTexts, $aliasTexts);
+        $finalHtmls = array_replace($htmls, $existingHtmls, $aliasHtmls);
+        $content['texts'] = $finalTexts;
+        $content['htmls'] = $finalHtmls;
 
         // content.html が空なら、セクションから合成
         $existingHtml = isset($content['html']) && is_string($content['html']) ? trim($content['html']) : '';
@@ -97,6 +100,39 @@ class ConsultingPageJsonSeeder extends Seeder
             $content['htmls'] = array_merge($content['htmls'] ?? [], ['body' => $compiled]);
         }
 
-        $page->update(['title' => $page->title ?: 'CRI経営コンサルティング', 'content' => $content]);
+        if (!$page) {
+            $page = PageContent::create([
+                'page_key' => $key,
+                'title' => 'CRI経営コンサルティング',
+                'content' => $content,
+                'is_published' => true,
+                'published_at' => now(),
+            ]);
+        } else {
+            $page->update([
+                'title' => $page->title ?: 'CRI経営コンサルティング',
+                'content' => $content,
+                'is_published' => true,
+                'published_at' => $page->published_at ?: now(),
+            ]);
+        }
+
+        // Keep legacy alias in sync to avoid admin/editor confusion
+        if ($aliasPage) {
+            $aliasPage->update([
+                'title' => $aliasPage->title ?: 'CRI経営コンサルティング',
+                'content' => $content,
+                'is_published' => true,
+                'published_at' => $aliasPage->published_at ?: now(),
+            ]);
+        } else {
+            PageContent::create([
+                'page_key' => $alias,
+                'title' => 'CRI経営コンサルティング',
+                'content' => $content,
+                'is_published' => true,
+                'published_at' => now(),
+            ]);
+        }
     }
 }

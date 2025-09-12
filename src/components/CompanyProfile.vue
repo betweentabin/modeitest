@@ -242,7 +242,8 @@
           </div>
         </div>
       </div>
-      <div v-else class="history-content">
+      <!-- 明示的に history が空配列（= 全件削除）ならフォールバックを出さない -->
+      <div v-else-if="historyAbsent" class="history-content">
         <div class="history-item">
           <div class="history-year">1988</div>
           <div class="history-details">
@@ -485,6 +486,12 @@ export default {
         const c = this._pageText?.page?.value?.content
         return Array.isArray(c?.history) ? c.history : []
       } catch(_) { return [] }
+    },
+    historyAbsent() {
+      try {
+        const c = this._pageText?.page?.value?.content
+        return !(c && Object.prototype.hasOwnProperty.call(c, 'history'))
+      } catch (_) { return true }
     }
   },
   mounted() {

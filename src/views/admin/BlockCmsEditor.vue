@@ -446,7 +446,7 @@ export default {
         else if (slug.includes('legal') || slug.includes('transaction')) this.pageContentKey = 'transaction-law'
         else if (slug.includes('terms')) this.pageContentKey = 'terms'
         else if (slug.includes('company')) this.pageContentKey = 'company-profile'
-        else if (slug.includes('consult')) this.pageContentKey = 'consulting'
+        else if (slug.includes('consult')) this.pageContentKey = 'cri-consulting'
         else if (slug.includes('aboutus')) this.pageContentKey = 'about-institute'
         else if (slug.includes('about')) this.pageContentKey = 'about'
         else if (slug.includes('sitemap')) this.pageContentKey = 'sitemap'
@@ -459,7 +459,7 @@ export default {
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'services'
         else if (slug.includes('company')) this.pageContentKey = 'company-profile'
-        else if (slug.includes('consult')) this.pageContentKey = 'consulting'
+        else if (slug.includes('consult')) this.pageContentKey = 'cri-consulting'
         else if (slug.includes('about')) this.pageContentKey = 'about-institute'
 
         // 既存テキストの読み込み
@@ -496,7 +496,7 @@ export default {
               body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : '')
             })) : []
             if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
-          } else if (this.pageContentKey === 'consulting') {
+          } else if (this.pageContentKey === 'cri-consulting') {
             this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
             this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
             if (!this.consultingTexts.page_title) this.consultingTexts.page_title = this.currentPage.title || ''
@@ -678,7 +678,7 @@ export default {
             date: typeof h?.date === 'string' ? h.date : '',
             body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : '')
           })) : []
-        } else if (foundKey === 'consulting') {
+        } else if (foundKey === 'cri-consulting') {
           this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
           this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
         } else if (foundKey === 'about-institute') {
@@ -730,7 +730,7 @@ export default {
             .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
             .filter(h => h.year || h.date || h.body) : []
           patch.content.history = hist
-        } else if (this.pageContentKey === 'consulting') {
+        } else if (this.pageContentKey === 'cri-consulting') {
           patch.content.texts = { ...this.consultingTexts }
           patch.content.htmls = { ...this.consultingHtmls }
         } else if (this.pageContentKey === 'about-institute') {
