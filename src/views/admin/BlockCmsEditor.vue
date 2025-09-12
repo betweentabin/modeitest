@@ -87,17 +87,29 @@
               <label>{{ key }}</label>
               <input v-model="companyTexts[key]" class="input" />
             </div>
+            <div class="field" v-for="(val, key) in companyHtmls" :key="`company-html-${key}`">
+              <label>{{ key }}（HTML）</label>
+              <textarea v-model="companyHtmls[key]" class="textarea" rows="3"></textarea>
+            </div>
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
               <label>{{ key }}</label>
               <input v-model="consultingTexts[key]" class="input" />
             </div>
+            <div class="field" v-for="(val, key) in consultingHtmls" :key="`consult-html-${key}`">
+              <label>{{ key }}（HTML）</label>
+              <textarea v-model="consultingHtmls[key]" class="textarea" rows="3"></textarea>
+            </div>
           </template>
           <template v-if="currentPage && currentPage.slug==='aboutus'">
             <div class="field" v-for="(val, key) in aboutTexts" :key="`about-${key}`">
               <label>{{ key }}</label>
               <input v-model="aboutTexts[key]" class="input" />
+            </div>
+            <div class="field" v-for="(val, key) in aboutHtmls" :key="`about-html-${key}`">
+              <label>{{ key }}（HTML）</label>
+              <textarea v-model="aboutHtmls[key]" class="textarea" rows="3"></textarea>
             </div>
           </template>
 
@@ -304,8 +316,11 @@ export default {
       tlHtmls: {},
       // 会社概要 / コンサル / 研究所について（小コンポーネント文言）
       companyTexts: {},
+      companyHtmls: {},
       consultingTexts: {},
+      consultingHtmls: {},
       aboutTexts: {},
+      aboutHtmls: {},
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
@@ -373,12 +388,15 @@ export default {
             if (!this.tlTexts.page_title) this.tlTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'company-profile') {
             this.companyTexts = { ...(this.companyTexts || {}), ...(texts || {}) }
+            this.companyHtmls = { ...(this.companyHtmls || {}), ...(htmls || {}) }
             if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'consulting') {
             this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
+            this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
             if (!this.consultingTexts.page_title) this.consultingTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'about-institute') {
             this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
+            this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
             if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
           }
         } catch(_) { /* noop */ }
@@ -534,10 +552,13 @@ export default {
           this.tlHtmls = { ...(this.tlHtmls || {}), ...(htmls || {}) }
         } else if (foundKey === 'company-profile') {
           this.companyTexts = { ...(this.companyTexts || {}), ...(texts || {}) }
+          this.companyHtmls = { ...(this.companyHtmls || {}), ...(htmls || {}) }
         } else if (foundKey === 'consulting') {
           this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
+          this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
         } else if (foundKey === 'about-institute') {
           this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
+          this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
         }
         alert('既存の文言を取り込みました')
       } catch (e) {
@@ -569,10 +590,13 @@ export default {
           patch.content.htmls = { ...this.tlHtmls }
         } else if (this.pageContentKey === 'company-profile') {
           patch.content.texts = { ...this.companyTexts }
+          patch.content.htmls = { ...this.companyHtmls }
         } else if (this.pageContentKey === 'consulting') {
           patch.content.texts = { ...this.consultingTexts }
+          patch.content.htmls = { ...this.consultingHtmls }
         } else if (this.pageContentKey === 'about-institute') {
           patch.content.texts = { ...this.aboutTexts }
+          patch.content.htmls = { ...this.aboutHtmls }
         } else {
           // fallback: save as texts only
           patch.content.texts = { ...this.privacyTexts }

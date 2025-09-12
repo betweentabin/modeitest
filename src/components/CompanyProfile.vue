@@ -507,7 +507,6 @@ export default {
     })
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.adjustImageHeight);
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {

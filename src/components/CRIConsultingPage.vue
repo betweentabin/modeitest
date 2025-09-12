@@ -408,14 +408,16 @@ export default {
 .content-container {
   background-color: #FFF;
   border-radius: 20px;
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   max-width: 2000px;
   margin: 0 auto;
 }
 
 .content-image {
-  width: 50%;
+  width: 100%;
+  height: 100%;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
@@ -423,7 +425,7 @@ export default {
 }
 
 .content-text {
-  width: 50%;
+  width: 100%;
   padding: 50px;
   background: #FFF;
   border-radius: 0 20px 20px 0;
@@ -468,14 +470,15 @@ export default {
 .duties-container {
   background: #FFF;
   border-radius: 20px;
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   max-width: 2000px;
   margin: 0 auto;
 }
 
 .duties-content {
-  width: 50%;
+  width: 100%;
   padding: 50px;
   background: #FFF;
   border-radius: 20px 0 0 20px;
@@ -533,7 +536,8 @@ export default {
 }
 
 .duties-image {
-  width: 50%;
+  width: 100%;
+  height: 100%;
   border-radius: 0 20px 20px 0;
   object-fit: cover;
   object-position: center;
