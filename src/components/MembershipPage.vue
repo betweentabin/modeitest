@@ -139,18 +139,24 @@
 
           <!-- Membership Information -->
           <div class="membership-info">
-            <h3 class="membership-info-title">会員サービスについて</h3>
+          <h3 class="membership-info-title">
+            <CmsText pageKey="membership" fieldKey="membership_info_title" tag="span" :fallback="'会員サービスについて'" />
+          </h3>
             <div class="membership-table">
               <div class="table-row table-row-top">
-                <div class="table-label">会員のメリット</div>
+                <div class="table-label">
+                  <CmsText pageKey="membership" fieldKey="membership_benefits_label" tag="span" :fallback="'会員のメリット'" />
+                </div>
                 <div class="table-content">
-                  浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。
+                  <CmsText pageKey="membership" fieldKey="membership_benefits_text" tag="div" :fallback="'浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。'" />
                 </div>
               </div>
               <div class="table-row">
-                <div class="table-label">月会費</div>
+                <div class="table-label">
+                  <CmsText pageKey="membership" fieldKey="membership_fee_label" tag="span" :fallback="'月会費'" />
+                </div>
                 <div class="table-content">
-                  ・スタンダード1,000 円（税別）・プレミアム3,000円（税別）
+                  <CmsText pageKey="membership" fieldKey="membership_fee_text" tag="div" :fallback="'・スタンダード1,000 円（税別）・プレミアム3,000円（税別）'" />
                 </div>
               </div>
             </div>
@@ -177,10 +183,14 @@
     <section class="flow-section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">入会までの流れ</h2>
+          <h2 class="section-title">
+            <CmsText pageKey="membership" fieldKey="flow_title" tag="span" :fallback="'入会までの流れ'" />
+          </h2>
           <div class="section-decoration">
             <div class="decoration-line"></div>
-            <span class="decoration-text">flow of joining</span>
+            <span class="decoration-text">
+              <CmsText pageKey="membership" fieldKey="flow_label" tag="span" :fallback="'flow of joining'" />
+            </span>
             <div class="decoration-line"></div>
           </div>
         </div>
@@ -190,32 +200,39 @@
             <div class="flow-step">
               <div class="step-number">STEP1</div>
               <div class="step-content">
-                <h4 class="step-title">当事務所、もしくは最寄りの筑邦銀行の窓口でお申し込み</h4>
+                <h4 class="step-title">
+                  <CmsText pageKey="membership" fieldKey="step1_title" tag="span" :fallback="'当事務所、もしくは最寄りの筑邦銀行の窓口でお申し込み'" />
+                </h4>
                 <p class="step-description">
-                  入会申込書に必要事項をご記入いただきましたら、当研究所・筑邦銀行の窓口にて直接ご提出ください。<br>
-                  ・筑邦銀行とのお取引がない方もお申し込みいただけます。
+                  <CmsText pageKey="membership" fieldKey="step1_desc" tag="span" :fallback="'入会申込書に必要事項をご記入いただきましたら、当研究所・筑邦銀行の窓口にて直接ご提出ください。<br>・筑邦銀行とのお取引がない方もお申し込みいただけます。'" />
                 </p>
               </div>
             </div>
             <div class="flow-step">
               <div class="step-number">STEP2</div>
               <div class="step-content">
-                <h4 class="step-title">入会に際しての簡単な審査</h4>
+                <h4 class="step-title">
+                  <CmsText pageKey="membership" fieldKey="step2_title" tag="span" :fallback="'入会に際しての簡単な審査'" />
+                </h4>
                 <p class="step-description">
-                  ※審査完了後、当事務所よりメールで審査結果が届きます。
+                  <CmsText pageKey="membership" fieldKey="step2_desc" tag="span" :fallback="'※審査完了後、当事務所よりメールで審査結果が届きます。'" />
                 </p>
               </div>
             </div>
             <div class="flow-step">
               <div class="step-number">STEP3</div>
               <div class="step-content">
-                <h4 class="step-title">審査完了後、当事務所指定の銀行口座へ月会費のお支払い</h4>
+                <h4 class="step-title">
+                  <CmsText pageKey="membership" fieldKey="step3_title" tag="span" :fallback="'審査完了後、当事務所指定の銀行口座へ月会費のお支払い'" />
+                </h4>
               </div>
             </div>
             <div class="flow-step">
               <div class="step-number">STEP4</div>
               <div class="step-content">
-                <h4 class="step-title">支払い完了後、当事務所での確認作業が完了し次第、当事務所より、お客様の会員IDとパスワードを発行し、メールにてご連絡させていただきます。</h4>
+                <h4 class="step-title">
+                  <CmsText pageKey="membership" fieldKey="step4_title" tag="span" :fallback="'支払い完了後、当事務所での確認作業が完了し次第、当事務所より、お客様の会員IDとパスワードを発行し、メールにてご連絡させていただきます。'" />
+                </h4>
               </div>
             </div>
           </div>
@@ -285,6 +302,8 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '入会案内') || '入会案内' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
+    ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
   },
   mounted() {
     try {
