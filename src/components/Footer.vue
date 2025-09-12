@@ -8,7 +8,7 @@
       <router-link to="/company" class="footer-link">
         <frame13213175225 :text14="frame132131752252Props.text14" />
       </router-link>
-      <router-link to="/about-institute" class="footer-link">
+      <router-link to="/aboutus" class="footer-link">
         <frame13213175225 :text14="'私たちについて'" />
       </router-link>
       <router-link to="/news" class="footer-link">
@@ -36,11 +36,9 @@
         :frame13213175251Props="frame132131752731Props.frame13213175251Props"
         :frame13213175252Props="frame132131752731Props.frame13213175252Props"
       />
-      <frame13213175273
-        :frame13213175222Props="frame132131752732Props.frame13213175222Props"
-        :frame13213175251Props="frame132131752732Props.frame13213175251Props"
-        :frame13213175252Props="frame132131752732Props.frame13213175252Props"
-      />
+      <router-link to="/glossary" class="footer-link">
+        <frame13213175222 :text19="'用語集'" />
+      </router-link>
     </div>
 
 
@@ -49,7 +47,7 @@
       <div class="frame-container">
         <div class="frame-132131752-2">
           <router-link to="/services" class="footer-link">
-            <frame13213175222 :text19="'会員サービスのご案内'" />
+            <frame13213175222 :text19="'入会案内'" />
           </router-link>
           <router-link to="/membership/standard" class="footer-link">
             <frame13213175255 :text22="frame1321317525221Props.text26" />
@@ -61,9 +59,6 @@
         <router-link to="/cri-consulting" class="footer-link">
           <frame13213175222 :text19="'CRI 経営コンサルティング'" />
         </router-link>
-        <router-link to="/financial-report" class="footer-link">
-          <frame13213175222 :text19="'決算報告'" />
-        </router-link>
       </div>
     </div>
 
@@ -71,9 +66,6 @@
     
     <div class="frame-1321317524-1">
       <div class="frame-container-1">
-        <router-link to="/glossary" class="footer-link">
-          <frame13213175223 :text29="'用語集'" />
-        </router-link>
         <router-link to="/member-login" class="footer-link">
           <frame13213175223 :text29="frame132131752231Props.text29" />
         </router-link>

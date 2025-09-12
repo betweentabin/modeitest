@@ -7,6 +7,9 @@
       <router-link to="/company" class="footer-link">
         <frame13213175225 :text14="frame132131752252Props.text14" />
       </router-link>
+      <router-link to="/aboutus" class="footer-link">
+        <frame13213175225 :text14="'私たちについて'" />
+      </router-link>
       <router-link to="/news" class="footer-link">
         <frame13213175225 :text14="frame132131752253Props.text14" />
       </router-link>
@@ -41,7 +44,7 @@
         <div class="footer-item">
           <span class="footer-text">会員PR</span>
         </div>
-        <router-link to="/application-form" class="footer-item footer-link">
+        <router-link to="/services" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">会員PRどっとコム</span>
         </router-link>
@@ -70,7 +73,7 @@
             <img class="vector-27" src="/img/vector.svg" alt="Vector" />
             <div class="text-25 valign-text-middle inter-normal-black-16px">経済指標一覧</div>
           </router-link>
-          <router-link to="/statistics" class="frame-1321317524 footer-link">
+          <router-link to="/economic-research" class="frame-1321317524 footer-link">
             <img class="vector-27" src="/img/vector.svg" alt="Vector" />
             <div class="text-25 valign-text-middle inter-normal-black-16px">経済・調査統計</div>
           </router-link>
@@ -83,21 +86,14 @@
           />
           <div class="cri valign-text-middle inter-normal-black-16px">CRI 経営コンサルティング</div>
         </router-link>
-        <router-link to="/financial-report" class="frame-1321317523-1 footer-link">
-          <img
-            class="vector-27"
-            src="/img/vector.svg"
-            alt="Vector"
-          />
-          <div class="text-28 valign-text-middle inter-normal-black-16px">決算報告</div>
-        </router-link>
       </div>
     </div>
     <div class="frame-1321317524-1">
       <div class="frame-container-1">
-        <div class="footer-item">
+        <router-link to="/member-login" class="footer-item footer-link">
+          <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">会員ログイン</span>
-        </div>
+        </router-link>
         <router-link to="/legal" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">特定商取引法に関する表記</span>
