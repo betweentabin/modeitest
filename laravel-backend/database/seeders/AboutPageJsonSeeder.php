@@ -54,6 +54,21 @@ class AboutPageJsonSeeder extends Seeder
         $existing['texts'] = array_merge($texts, $existing['texts'] ?? []);
         $htmls = isset($existing['htmls']) && is_array($existing['htmls']) ? $existing['htmls'] : [];
         $existing['htmls'] = array_merge($defaultHtmls, $htmls);
+
+        // privacy型との整合: content.html が空なら簡易本文を合成
+        $existingHtml = isset($existing['html']) && is_string($existing['html']) ? trim($existing['html']) : '';
+        if ($existingHtml === '') {
+            $t = $existing['texts'];
+            $h = $existing['htmls'];
+            $parts = [];
+            $msgTitle = isset($t['message_title']) && $t['message_title'] !== '' ? $t['message_title'] : 'ご挨拶';
+            $parts[] = '<h2>' . htmlspecialchars($msgTitle, ENT_QUOTES, 'UTF-8') . '</h2>';
+            if (!empty($h['message_body'])) { $parts[] = '<div>' . $h['message_body'] . '</div>'; }
+            $compiled = implode("\n\n", $parts);
+            $existing['html'] = $compiled;
+            $existing['htmls'] = array_merge($existing['htmls'] ?? [], ['body' => $compiled]);
+        }
+
         $page->update(['title' => $page->title ?: '会社概要', 'content' => $existing]);
     }
 }

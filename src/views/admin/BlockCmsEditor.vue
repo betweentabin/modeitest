@@ -113,6 +113,20 @@
             </div>
           </template>
 
+          <!-- フォールバック: 汎用のtexts/htmlsエディタ（除外ページ以外） -->
+          <template v-if="currentPage && showGenericEditor">
+            <div class="section-title">子コンポーネント文言（基本）</div>
+            <div class="field" v-for="(val, key) in genericTexts" :key="`gtext-${key}`">
+              <label>{{ key }}</label>
+              <input v-model="genericTexts[key]" class="input" />
+            </div>
+            <div class="section-title">セクション別文言（HTML）</div>
+            <div class="field" v-for="(val, key) in genericHtmls" :key="`ghtml-${key}`">
+              <label>{{ key }}（HTML）</label>
+              <textarea v-model="genericHtmls[key]" class="textarea" rows="3"></textarea>
+            </div>
+          </template>
+
           <!-- privacy-policy: section-wise fields -->
           <div v-if="currentPage.slug==='privacy-policy'" class="section-title">セクション別文言</div>
           <!-- 1. 収集 -->
@@ -321,11 +335,35 @@ export default {
       consultingHtmls: {},
       aboutTexts: {},
       aboutHtmls: {},
+      // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
+      genericTexts: {},
+      genericHtmls: {},
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
   },
   mounted(){ this.loadPages() },
+  computed: {
+    // 除外ページ: 刊行物/お知らせ/セミナー/経済統計・指標/会員ログイン/マイページ/お問い合わせ
+    excludeKeys(){
+      return new Set([
+        'publications','publications-public','news','notices','seminars','seminars-current','seminars-past',
+        'economic-reports','statistics','economic-indicators','login','my-account','contact'
+      ])
+    },
+    showGenericEditor(){
+      const key = (this.pageContentKey || '').trim()
+      if (!key) return false
+      if (this.excludeKeys.has(key)) return false
+      // 既に専用UIがあるものは除外
+      const specialized = new Set(['privacy','terms','transaction-law','company-profile','consulting','about-institute'])
+      if (specialized.has(key)) return false
+      // texts/htmls のどちらかがあるときに表示
+      const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
+      const hasHtmls = this.genericHtmls && Object.keys(this.genericHtmls).length > 0
+      return hasTexts || hasHtmls
+    }
+  },
   methods: {
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
@@ -363,6 +401,17 @@ export default {
         else if (slug.includes('terms')) this.pageContentKey = 'terms'
         else if (slug.includes('company')) this.pageContentKey = 'company-profile'
         else if (slug.includes('consult')) this.pageContentKey = 'consulting'
+        else if (slug.includes('aboutus')) this.pageContentKey = 'about-institute'
+        else if (slug.includes('about')) this.pageContentKey = 'about'
+        else if (slug.includes('sitemap')) this.pageContentKey = 'sitemap'
+        else if (slug.includes('faq')) this.pageContentKey = 'faq'
+        else if (slug.includes('glossary')) this.pageContentKey = 'glossary'
+        else if (slug.includes('membership')) this.pageContentKey = 'membership'
+        else if (slug.includes('financial')) this.pageContentKey = 'financial-reports'
+        else if (slug === 'home') this.pageContentKey = 'home'
+        else if (slug.includes('services')) this.pageContentKey = 'services'
+        else if (slug.includes('company')) this.pageContentKey = 'company-profile'
+        else if (slug.includes('consult')) this.pageContentKey = 'consulting'
         else if (slug.includes('about')) this.pageContentKey = 'about-institute'
 
         // 既存テキストの読み込み
@@ -398,6 +447,10 @@ export default {
             this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
             this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
             if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
+          } else {
+            // フォールバック: 任意ページの全texts/htmlsを編集
+            this.genericTexts = { ...(this.genericTexts || {}), ...(texts || {}) }
+            this.genericHtmls = { ...(this.genericHtmls || {}), ...(htmls || {}) }
           }
         } catch(_) { /* noop */ }
       }
@@ -507,6 +560,7 @@ export default {
           this.pageContentKey,
           // common fallbacks
           'terms', 'transaction-law', 'company-profile', 'consulting', 'about-institute',
+          'about', 'sitemap', 'faq', 'glossary', 'membership', 'financial-reports', 'home', 'services',
           'privacy', 'privacy-poricy', 'privacy-policy', 'privacy poricy'
         ]
         let foundKey = null
@@ -559,6 +613,9 @@ export default {
         } else if (foundKey === 'about-institute') {
           this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
           this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
+        } else {
+          this.genericTexts = { ...(this.genericTexts || {}), ...(texts || {}) }
+          this.genericHtmls = { ...(this.genericHtmls || {}), ...(htmls || {}) }
         }
         alert('既存の文言を取り込みました')
       } catch (e) {
@@ -598,8 +655,15 @@ export default {
           patch.content.texts = { ...this.aboutTexts }
           patch.content.htmls = { ...this.aboutHtmls }
         } else {
-          // fallback: save as texts only
-          patch.content.texts = { ...this.privacyTexts }
+          // generic fallback: 動的に集めたtexts/htmlsを保存
+          const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)
+          if (hasGeneric) {
+            if (this.genericTexts && Object.keys(this.genericTexts).length) patch.content.texts = { ...this.genericTexts }
+            if (this.genericHtmls && Object.keys(this.genericHtmls).length) patch.content.htmls = { ...this.genericHtmls }
+          } else {
+            // last resort
+            patch.content.texts = { ...this.privacyTexts }
+          }
         }
         const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('保存しました')
