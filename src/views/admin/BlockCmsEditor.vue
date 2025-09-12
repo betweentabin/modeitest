@@ -414,6 +414,8 @@ export default {
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
       if (res.success) this.pages = res.data.data || []
+      // Enhance titles with current PageContent page_title where available
+      try { await this.applyPrettyTitles() } catch(_) {}
       // auto-select by route param or query
       const slug = this.$route.params.slug || this.$route.query.slug
       if (slug) {
@@ -426,6 +428,42 @@ export default {
           this.showCreate = true
         }
       }
+    },
+    pageContentKeyFromSlug(slug){
+      const s = (slug||'').toLowerCase()
+      if (s.includes('privacy')) return 'privacy'
+      if (s.includes('legal') || s.includes('transaction')) return 'transaction-law'
+      if (s.includes('terms')) return 'terms'
+      if (s.includes('company')) return 'company-profile'
+      if (s.includes('consult')) return 'cri-consulting'
+      if (s.includes('aboutus')) return 'about-institute'
+      if (s.includes('about')) return 'about'
+      if (s.includes('sitemap')) return 'sitemap'
+      if (s.includes('faq')) return 'faq'
+      if (s.includes('glossary')) return 'glossary'
+      if (s.includes('premium')) return 'premium-membership'
+      if (s.includes('standard') && s.includes('membership')) return 'standard-membership'
+      if (s.includes('membership')) return 'membership'
+      if (s.includes('financial')) return 'financial-reports'
+      if (s === 'home') return 'home'
+      if (s.includes('services')) return 'services'
+      return null
+    },
+    async applyPrettyTitles(){
+      const list = Array.isArray(this.pages)? this.pages : []
+      const jobs = list.map(async (p)=>{
+        const key = this.pageContentKeyFromSlug(p.slug)
+        if (!key) return
+        try{
+          const r = await apiClient.adminGetPageContent(key)
+          const page = r?.data?.page
+          if (!page) return
+          const texts = page?.content?.texts || {}
+          const title = (typeof texts.page_title === 'string' && texts.page_title.trim()) ? texts.page_title.trim() : (page.title || '')
+          if (title) p.title = title
+        }catch(_){ /* ignore */ }
+      })
+      await Promise.all(jobs)
     },
     async selectPage(p){
       const res = await apiClient.getCmsPage(p.id)
