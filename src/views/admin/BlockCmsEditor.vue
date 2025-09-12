@@ -310,27 +310,32 @@ export default {
         try {
           const page = await apiClient.adminGetPageContent(this.pageContentKey)
           const content = page?.data?.page?.content || {}
-          const texts = content.texts || {}
-          const htmls = content.htmls || {}
+          const texts = (content && typeof content === 'object' && content.texts && typeof content.texts === 'object') ? content.texts : {}
+          const htmls = (content && typeof content === 'object' && content.htmls && typeof content.htmls === 'object') ? content.htmls : {}
           // Reset minimal headings
           if (this.pageContentKey === 'privacy') {
-            for (const k of Object.keys(this.privacyTexts)) {
+            const pTexts = this.privacyTexts || (this.privacyTexts = {})
+            for (const k of Object.keys(pTexts)) {
               if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.privacyTexts[k] = texts[k]
             }
             if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'terms') {
-            for (const k of Object.keys(this.termsTexts)) {
+            const tTexts = this.termsTexts || (this.termsTexts = {})
+            const tHtmls = this.termsHtmls || (this.termsHtmls = {})
+            for (const k of Object.keys(tTexts)) {
               if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.termsTexts[k] = texts[k]
             }
-            for (const k of Object.keys(this.termsHtmls)) {
+            for (const k of Object.keys(tHtmls)) {
               if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.termsHtmls[k] = htmls[k]
             }
             if (!this.termsTexts.page_title) this.termsTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'transaction-law') {
-            for (const k of Object.keys(this.tlTexts)) {
+            const tlTexts = this.tlTexts || (this.tlTexts = {})
+            const tlHtmls = this.tlHtmls || (this.tlHtmls = {})
+            for (const k of Object.keys(tlTexts)) {
               if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.tlTexts[k] = texts[k]
             }
-            for (const k of Object.keys(this.tlHtmls)) {
+            for (const k of Object.keys(tlHtmls)) {
               if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.tlHtmls[k] = htmls[k]
             }
             if (!this.tlTexts.page_title) this.tlTexts.page_title = this.currentPage.title || ''
@@ -474,21 +479,26 @@ export default {
         }
         // set known fields if present (per page)
         if (foundKey === 'privacy') {
-          for (const k of Object.keys(this.privacyTexts)) {
+          const target = this.privacyTexts || (this.privacyTexts = {})
+          for (const k of Object.keys(target)) {
             if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.privacyTexts[k] = texts[k]
           }
         } else if (foundKey === 'terms') {
-          for (const k of Object.keys(this.termsTexts)) {
+          const tTexts = this.termsTexts || (this.termsTexts = {})
+          const tHtmls = this.termsHtmls || (this.termsHtmls = {})
+          for (const k of Object.keys(tTexts)) {
             if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.termsTexts[k] = texts[k]
           }
-          for (const k of Object.keys(this.termsHtmls)) {
+          for (const k of Object.keys(tHtmls)) {
             if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.termsHtmls[k] = htmls[k]
           }
         } else if (foundKey === 'transaction-law') {
-          for (const k of Object.keys(this.tlTexts)) {
+          const tlTexts = this.tlTexts || (this.tlTexts = {})
+          const tlHtmls = this.tlHtmls || (this.tlHtmls = {})
+          for (const k of Object.keys(tlTexts)) {
             if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.tlTexts[k] = texts[k]
           }
-          for (const k of Object.keys(this.tlHtmls)) {
+          for (const k of Object.keys(tlHtmls)) {
             if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.tlHtmls[k] = htmls[k]
           }
         }
