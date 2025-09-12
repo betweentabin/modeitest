@@ -275,6 +275,12 @@ export default {
         disclaimer_title: '', disclaimer_body1: '', disclaimer_body2: '', disclaimer_body3: '',
         changes_title: '', changes_body: '',
       },
+      // 利用規約（セクション別）: APIから動的にマージするため空で初期化
+      termsTexts: {},
+      termsHtmls: {},
+      // 特定商取引法（セクション別）: APIから動的にマージするため空で初期化
+      tlTexts: {},
+      tlHtmls: {},
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
@@ -324,30 +330,18 @@ export default {
           const htmls = (content && typeof content === 'object' && content.htmls && typeof content.htmls === 'object') ? content.htmls : {}
           // Reset minimal headings
           if (this.pageContentKey === 'privacy') {
-            const pTexts = this.privacyTexts || (this.privacyTexts = {})
-            for (const k of Object.keys(pTexts)) {
-              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.privacyTexts[k] = texts[k]
-            }
+            // 既存のprivacyTextsにAPIの全キーをマージ
+            this.privacyTexts = { ...(this.privacyTexts || {}), ...(texts || {}) }
             if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'terms') {
-            const tTexts = this.termsTexts || (this.termsTexts = {})
-            const tHtmls = this.termsHtmls || (this.termsHtmls = {})
-            for (const k of Object.keys(tTexts)) {
-              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.termsTexts[k] = texts[k]
-            }
-            for (const k of Object.keys(tHtmls)) {
-              if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.termsHtmls[k] = htmls[k]
-            }
+            // terms: texts/htmls ともに全キーをそのままマージ
+            this.termsTexts = { ...(this.termsTexts || {}), ...(texts || {}) }
+            this.termsHtmls = { ...(this.termsHtmls || {}), ...(htmls || {}) }
             if (!this.termsTexts.page_title) this.termsTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'transaction-law') {
-            const tlTexts = this.tlTexts || (this.tlTexts = {})
-            const tlHtmls = this.tlHtmls || (this.tlHtmls = {})
-            for (const k of Object.keys(tlTexts)) {
-              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.tlTexts[k] = texts[k]
-            }
-            for (const k of Object.keys(tlHtmls)) {
-              if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.tlHtmls[k] = htmls[k]
-            }
+            // 特商法: texts/htmls ともに全キーをそのままマージ
+            this.tlTexts = { ...(this.tlTexts || {}), ...(texts || {}) }
+            this.tlHtmls = { ...(this.tlHtmls || {}), ...(htmls || {}) }
             if (!this.tlTexts.page_title) this.tlTexts.page_title = this.currentPage.title || ''
           }
         } catch(_) { /* noop */ }
@@ -494,28 +488,13 @@ export default {
         }
         // set known fields if present (per page)
         if (foundKey === 'privacy') {
-          const target = this.privacyTexts || (this.privacyTexts = {})
-          for (const k of Object.keys(target)) {
-            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.privacyTexts[k] = texts[k]
-          }
+          this.privacyTexts = { ...(this.privacyTexts || {}), ...(texts || {}) }
         } else if (foundKey === 'terms') {
-          const tTexts = this.termsTexts || (this.termsTexts = {})
-          const tHtmls = this.termsHtmls || (this.termsHtmls = {})
-          for (const k of Object.keys(tTexts)) {
-            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.termsTexts[k] = texts[k]
-          }
-          for (const k of Object.keys(tHtmls)) {
-            if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.termsHtmls[k] = htmls[k]
-          }
+          this.termsTexts = { ...(this.termsTexts || {}), ...(texts || {}) }
+          this.termsHtmls = { ...(this.termsHtmls || {}), ...(htmls || {}) }
         } else if (foundKey === 'transaction-law') {
-          const tlTexts = this.tlTexts || (this.tlTexts = {})
-          const tlHtmls = this.tlHtmls || (this.tlHtmls = {})
-          for (const k of Object.keys(tlTexts)) {
-            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.tlTexts[k] = texts[k]
-          }
-          for (const k of Object.keys(tlHtmls)) {
-            if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.tlHtmls[k] = htmls[k]
-          }
+          this.tlTexts = { ...(this.tlTexts || {}), ...(texts || {}) }
+          this.tlHtmls = { ...(this.tlHtmls || {}), ...(htmls || {}) }
         }
         alert('既存の文言を取り込みました')
       } catch (e) {
