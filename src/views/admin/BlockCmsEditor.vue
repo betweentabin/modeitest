@@ -418,6 +418,9 @@ export default {
 
         // 既存テキストの読み込み
         try {
+          // 切替時に汎用フィールドを初期化（前ページのキーが残らないように）
+          this.genericTexts = {}
+          this.genericHtmls = {}
           const page = await apiClient.adminGetPageContent(this.pageContentKey)
           const content = page?.data?.page?.content || {}
           const texts = (content && typeof content === 'object' && content.texts && typeof content.texts === 'object') ? content.texts : {}
@@ -450,9 +453,9 @@ export default {
             this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
             if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
           } else {
-            // フォールバック: 任意ページの全texts/htmlsを編集
-            this.genericTexts = { ...(this.genericTexts || {}), ...(texts || {}) }
-            this.genericHtmls = { ...(this.genericHtmls || {}), ...(htmls || {}) }
+            // フォールバック: 任意ページの全texts/htmlsを編集（置き換え）
+            this.genericTexts = { ...(texts || {}) }
+            this.genericHtmls = { ...(htmls || {}) }
           }
         } catch(_) { /* noop */ }
       }
@@ -616,8 +619,9 @@ export default {
           this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
           this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
         } else {
-          this.genericTexts = { ...(this.genericTexts || {}), ...(texts || {}) }
-          this.genericHtmls = { ...(this.genericHtmls || {}), ...(htmls || {}) }
+          // generic: 置き換え
+          this.genericTexts = { ...(texts || {}) }
+          this.genericHtmls = { ...(htmls || {}) }
         }
         alert('既存の文言を取り込みました')
       } catch (e) {
