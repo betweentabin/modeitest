@@ -51,13 +51,19 @@
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
           <div v-if="currentPage" class="field">
             <label>ページタイトル（見出し）</label>
-            <input v-model="privacyTexts.page_title" class="input" />
+            <input v-if="currentPage.slug==='privacy-policy'" v-model="privacyTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='terms'" v-model="termsTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='legal'" v-model="tlTexts.page_title" class="input" />
+            <input v-else v-model="privacyTexts.page_title" class="input" />
           </div>
           <div v-if="currentPage" class="field">
             <label>サブタイトル</label>
-            <input v-model="privacyTexts.page_subtitle" class="input" />
+            <input v-if="currentPage.slug==='privacy-policy'" v-model="privacyTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='terms'" v-model="termsTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='legal'" v-model="tlTexts.page_subtitle" class="input" />
+            <input v-else v-model="privacyTexts.page_subtitle" class="input" />
           </div>
-          <div v-if="currentPage" class="field">
+          <div v-if="currentPage && currentPage.slug==='privacy-policy'" class="field">
             <label>導入文</label>
             <textarea v-model="privacyTexts.intro" class="textarea" rows="4"></textarea>
           </div>
@@ -134,6 +140,64 @@
             <label>プライバシーポリシーの変更（本文）</label>
             <textarea v-model="privacyTexts.changes_body" class="textarea" rows="3"></textarea>
           </div>
+
+          <!-- 利用規約 セクション別文言 -->
+          <div v-if="currentPage.slug==='terms'" class="section-title">セクション別文言（利用規約）</div>
+          <template v-if="currentPage.slug==='terms'">
+            <div class="field"><label>導入文（HTML）</label><textarea v-model="termsHtmls.intro" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>著作権（見出し）</label><input v-model="termsTexts.copyright_title" class="input" /></div>
+            <div class="field"><label>著作権（本文HTML）</label><textarea v-model="termsHtmls.copyright_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>リンク（見出し）</label><input v-model="termsTexts.link_title" class="input" /></div>
+            <div class="field"><label>リンク（本文HTML）</label><textarea v-model="termsHtmls.link_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>免責事項（見出し）</label><input v-model="termsTexts.disclaimer_title" class="input" /></div>
+            <div class="field"><label>免責事項（本文HTML）</label><textarea v-model="termsHtmls.disclaimer_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>セキュリティ（見出し）</label><input v-model="termsTexts.security_title" class="input" /></div>
+            <div class="field"><label>セキュリティ（本文HTML）</label><textarea v-model="termsHtmls.security_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>クッキー（見出し）</label><input v-model="termsTexts.cookie_title" class="input" /></div>
+            <div class="field"><label>クッキー（本文HTML）</label><textarea v-model="termsHtmls.cookie_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>ご利用環境（見出し）</label><input v-model="termsTexts.environment_title" class="input" /></div>
+            <div class="field"><label>ご利用環境（本文HTML）</label><textarea v-model="termsHtmls.environment_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>禁止される行為（見出し）</label><input v-model="termsTexts.prohibited_title" class="input" /></div>
+            <div class="field"><label>禁止される行為（本文HTML）</label><textarea v-model="termsHtmls.prohibited_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>第8条（見出し）</label><input v-model="termsTexts.article8_title" class="input" /></div>
+            <div class="field"><label>第8条（本文HTML）</label><textarea v-model="termsHtmls.article8_body" class="textarea" rows="4"></textarea></div>
+          </template>
+
+          <!-- 特定商取引法 セクション別文言 -->
+          <div v-if="currentPage.slug==='legal'" class="section-title">セクション別文言（特定商取引法）</div>
+          <template v-if="currentPage.slug==='legal'">
+            <div class="field"><label>販売業者（ラベル）</label><input v-model="tlTexts.seller_label" class="input" /></div>
+            <div class="field"><label>販売業者（値）</label><input v-model="tlTexts.seller_value" class="input" /></div>
+            <div class="field"><label>代表者名（ラベル）</label><input v-model="tlTexts.rep_label" class="input" /></div>
+            <div class="field"><label>代表者名（値）</label><input v-model="tlTexts.rep_value" class="input" /></div>
+            <div class="field"><label>住所（ラベル）</label><input v-model="tlTexts.addr_label" class="input" /></div>
+            <div class="field"><label>住所（HTML）</label><textarea v-model="tlHtmls.addr_value" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>電話番号（ラベル）</label><input v-model="tlTexts.tel_label" class="input" /></div>
+            <div class="field"><label>電話番号（値）</label><input v-model="tlTexts.tel_value" class="input" /></div>
+            <div class="field"><label>FAX番号（ラベル）</label><input v-model="tlTexts.fax_label" class="input" /></div>
+            <div class="field"><label>FAX番号（値）</label><input v-model="tlTexts.fax_value" class="input" /></div>
+            <div class="field"><label>メール（ラベル）</label><input v-model="tlTexts.mail_label" class="input" /></div>
+            <div class="field"><label>メール（値）</label><input v-model="tlTexts.mail_value" class="input" /></div>
+            <div class="field"><label>お問い合わせCTA</label><input v-model="tlTexts.contact_cta" class="input" /></div>
+            <div class="field"><label>料金（ラベル）</label><input v-model="tlTexts.fee_label" class="input" /></div>
+            <div class="field"><label>料金（説明HTML）</label><textarea v-model="tlHtmls.fee_desc" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>料金セクション見出し</label><input v-model="tlTexts.fee_section_title" class="input" /></div>
+            <div class="field"><label>スタンダード会員（見出し）</label><input v-model="tlTexts.fee_standard_label" class="input" /></div>
+            <div class="field"><label>スタンダード会員（金額）</label><input v-model="tlTexts.fee_standard_amount" class="input" /></div>
+            <div class="field"><label>プレミアムネット会員（見出し）</label><input v-model="tlTexts.fee_premium_label" class="input" /></div>
+            <div class="field"><label>プレミアムネット会員（金額）</label><input v-model="tlTexts.fee_premium_amount" class="input" /></div>
+            <div class="field"><label>支払い時期および方法（ラベル）</label><input v-model="tlTexts.payment_label" class="input" /></div>
+            <div class="field"><label>支払い時期および方法（本文HTML）</label><textarea v-model="tlHtmls.payment_body" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>その他料金（ラベル）</label><input v-model="tlTexts.otherfees_label" class="input" /></div>
+            <div class="field"><label>その他料金（値）</label><input v-model="tlTexts.otherfees_value" class="input" /></div>
+            <div class="field"><label>提供時間（ラベル）</label><input v-model="tlTexts.service_time_label" class="input" /></div>
+            <div class="field"><label>提供時間（値）</label><input v-model="tlTexts.service_time_value" class="input" /></div>
+            <div class="field"><label>退会（ラベル）</label><input v-model="tlTexts.cancel_label" class="input" /></div>
+            <div class="field"><label>退会（値）</label><input v-model="tlTexts.cancel_value" class="input" /></div>
+            <div class="field"><label>返金（ラベル）</label><input v-model="tlTexts.refund_label" class="input" /></div>
+            <div class="field"><label>返金（本文HTML）</label><textarea v-model="tlHtmls.refund_body" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>会員規約注記</label><input v-model="tlTexts.terms_note" class="input" /></div>
+          </template>
 
           <div class="actions-row">
             <button class="btn primary" :disabled="!currentPage" @click="publish">公開する</button>
@@ -247,13 +311,30 @@ export default {
           const page = await apiClient.adminGetPageContent(this.pageContentKey)
           const content = page?.data?.page?.content || {}
           const texts = content.texts || {}
-          const keys = Object.keys(this.privacyTexts)
-          for (const k of keys) {
-            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') {
-              this.privacyTexts[k] = texts[k]
+          const htmls = content.htmls || {}
+          // Reset minimal headings
+          if (this.pageContentKey === 'privacy') {
+            for (const k of Object.keys(this.privacyTexts)) {
+              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.privacyTexts[k] = texts[k]
             }
+            if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'terms') {
+            for (const k of Object.keys(this.termsTexts)) {
+              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.termsTexts[k] = texts[k]
+            }
+            for (const k of Object.keys(this.termsHtmls)) {
+              if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.termsHtmls[k] = htmls[k]
+            }
+            if (!this.termsTexts.page_title) this.termsTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'transaction-law') {
+            for (const k of Object.keys(this.tlTexts)) {
+              if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.tlTexts[k] = texts[k]
+            }
+            for (const k of Object.keys(this.tlHtmls)) {
+              if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.tlHtmls[k] = htmls[k]
+            }
+            if (!this.tlTexts.page_title) this.tlTexts.page_title = this.currentPage.title || ''
           }
-          if (!this.privacyTexts.page_title) this.privacyTexts.page_title = this.currentPage.title || ''
         } catch(_) { /* noop */ }
       }
     },
@@ -370,10 +451,12 @@ export default {
         // 無ければ既定キーで初期作成
         if (!res || !foundKey) {
           foundKey = this.pageContentKey
+          const defaultTitle = foundKey === 'terms' ? '利用規約' : (foundKey === 'transaction-law' ? '特定商取引法に関する表記' : 'プライバシーポリシー')
+          const defaultTexts = foundKey === 'terms' ? { page_title: '利用規約', page_subtitle: 'terms of service' } : (foundKey === 'transaction-law' ? { page_title: '特定商取引法に関する表記', page_subtitle: 'transaction law' } : { page_title: 'プライバシーポリシー', page_subtitle: 'privacy policy', intro: '' })
           await apiClient.post('/api/admin/pages', {
             page_key: foundKey,
-            title: 'プライバシーポリシー',
-            content: { html: '', texts: { page_title: 'プライバシーポリシー', page_subtitle: 'privacy policy', intro: '' } },
+            title: defaultTitle,
+            content: { html: '', texts: defaultTexts },
             is_published: true
           })
           res = await apiClient.adminGetPageContent(foundKey)
@@ -389,11 +472,24 @@ export default {
         if (typeof html === 'string') {
           this.richText.html = html
         }
-        // set known fields if present
-        const keys = Object.keys(this.privacyTexts)
-        for (const k of keys) {
-          if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') {
-            this.privacyTexts[k] = texts[k]
+        // set known fields if present (per page)
+        if (foundKey === 'privacy') {
+          for (const k of Object.keys(this.privacyTexts)) {
+            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.privacyTexts[k] = texts[k]
+          }
+        } else if (foundKey === 'terms') {
+          for (const k of Object.keys(this.termsTexts)) {
+            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.termsTexts[k] = texts[k]
+          }
+          for (const k of Object.keys(this.termsHtmls)) {
+            if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.termsHtmls[k] = htmls[k]
+          }
+        } else if (foundKey === 'transaction-law') {
+          for (const k of Object.keys(this.tlTexts)) {
+            if (Object.prototype.hasOwnProperty.call(texts, k) && typeof texts[k] === 'string') this.tlTexts[k] = texts[k]
+          }
+          for (const k of Object.keys(this.tlHtmls)) {
+            if (Object.prototype.hasOwnProperty.call(htmls, k) && typeof htmls[k] === 'string') this.tlHtmls[k] = htmls[k]
           }
         }
         alert('既存の文言を取り込みました')
@@ -415,7 +511,19 @@ export default {
     },
     async savePrivacyTexts(){
       try {
-        const patch = { content: { texts: { ...this.privacyTexts } } }
+        let patch = { content: {} }
+        if (this.pageContentKey === 'privacy') {
+          patch.content.texts = { ...this.privacyTexts }
+        } else if (this.pageContentKey === 'terms') {
+          patch.content.texts = { ...this.termsTexts }
+          patch.content.htmls = { ...this.termsHtmls }
+        } else if (this.pageContentKey === 'transaction-law') {
+          patch.content.texts = { ...this.tlTexts }
+          patch.content.htmls = { ...this.tlHtmls }
+        } else {
+          // fallback: save as texts only
+          patch.content.texts = { ...this.privacyTexts }
+        }
         const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('保存しました')
       } catch(_) { alert('保存に失敗しました') }
