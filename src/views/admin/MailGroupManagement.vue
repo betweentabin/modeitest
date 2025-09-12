@@ -173,7 +173,22 @@ export default {
       const end = Math.min(this.pagination.last_page, start + maxShow - 1)
       for (let i = start; i <= end; i++) pages.push(i)
       return pages
-    }
+    },
+    allChecked() {
+      const candidates = this.candidates || []
+      const selected = this.selectedCandidateIds || []
+      return candidates.length > 0 && selected.length === candidates.length
+    },
+    addIds() {
+      const selected = this.selectedCandidateIds || []
+      const memberSet = this.groupMemberIds || new Set()
+      return selected.filter(id => !memberSet.has(id))
+    },
+    removeIds() {
+      const selected = this.selectedCandidateIds || []
+      const memberSet = this.groupMemberIds || new Set()
+      return selected.filter(id => memberSet.has(id))
+    },
   },
   mounted() {
     this.loadGroups()
@@ -263,18 +278,9 @@ export default {
         }
       } catch(e) { console.warn('Failed to load candidates', e) }
     },
-    get allChecked() {
-      return this.candidates.length>0 && this.selectedCandidateIds.length===this.candidates.length
-    },
     toggleAllCandidates(ev) {
       if (ev.target.checked) this.selectedCandidateIds = this.candidates.map(c=>c.id)
       else this.selectedCandidateIds = []
-    },
-    get addIds() {
-      return this.selectedCandidateIds.filter(id => !this.groupMemberIds.has(id))
-    },
-    get removeIds() {
-      return this.selectedCandidateIds.filter(id => this.groupMemberIds.has(id))
     },
     async addSelectedToGroup() {
       if (!this.currentGroup) return

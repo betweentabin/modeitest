@@ -311,6 +311,9 @@ Route::prefix('admin')->group(function () {
 
         // メールキャンペーン管理
         Route::prefix('emails')->middleware('can:manage-mails')->group(function () {
+            // static endpoints must be defined before "/{id}" to avoid conflicts
+            Route::get('/templates', [App\Http\Controllers\Admin\EmailCampaignController::class, 'templates']);
+
             Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'show']);
@@ -320,8 +323,6 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/resend-failed', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendFailed']);
             Route::post('/{id}/recipients/{recipientId}/resend', [App\Http\Controllers\Admin\EmailCampaignController::class, 'resendRecipient']);
             Route::post('/{id}/duplicate', [App\Http\Controllers\Admin\EmailCampaignController::class, 'duplicate']);
-            // templates
-            Route::get('/templates', [App\Http\Controllers\Admin\EmailCampaignController::class, 'templates']);
             Route::post('/{id}/mark-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'markTemplate']);
             Route::post('/{id}/unmark-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'unmarkTemplate']);
             Route::post('/{id}/create-from-template', [App\Http\Controllers\Admin\EmailCampaignController::class, 'createFromTemplate']);
