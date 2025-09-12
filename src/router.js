@@ -237,7 +237,7 @@ const router = new Router({
     },
     {
       path: "/seminars/:id",
-      name: "seminarDetail",
+      name: "seminarDetailCurrent",
       component: SeminarDetailPage,
       meta: { title: "セミナー詳細（予約受付中） - ちくぎん地域経済研究所" }
     },
@@ -623,12 +623,6 @@ const router = new Router({
     {
       path: "/seminars",
       redirect: "/seminar"
-    },
-    {
-      path: "/seminars/current",
-      name: "currentSeminars",
-      component: CurrentSeminarsPage,
-      meta: { title: "受付中のセミナー - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminars/past",
