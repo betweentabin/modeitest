@@ -1,6 +1,6 @@
 <template>
   <div class="items-1 inter-bold-black-15px">
-    <div class="text-6 valign-text-middle" @click="navigateTo('about')" style="cursor: pointer;">私たちについて</div>
+    <div class="text-6 valign-text-middle" @click="navigateTo('aboutus')" style="cursor: pointer;">私たちについて</div>
     <img
       class="vector-22"
       src="/img/vector-1.svg"
@@ -48,7 +48,7 @@
       src="/img/vector-1.svg"
       alt="Vector 6"
     />
-    <div class="text-6 valign-text-middle" @click="navigateTo('company-profile')" style="cursor: pointer;">会社概要</div>
+    <div class="text-6 valign-text-middle" @click="navigateTo('company')" style="cursor: pointer;">会社概要</div>
     <img
       class="vector-22"
       src="/img/vector-1.svg"

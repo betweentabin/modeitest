@@ -756,8 +756,8 @@ export default {
       this.$router.push('/publication');
     },
     goToNews() {
-      // ニュースページに遷移
-      this.$router.push('/news');
+      // 経済指標ページに遷移
+      this.$router.push('/economic-indicators');
     },
     goToMembership() {
       // 会員ページに遷移
