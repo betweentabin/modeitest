@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             ServicesSeeder::class,
             PageContentsSeeder::class,
             CompletePagesSeeder::class,
+            // Populate non-KV media registry images after base pages are created
+            MediaImagesSeeder::class,
             TermsPageJsonSeeder::class,
             PrivacyPageJsonSeeder::class,
             FaqPageJsonSeeder::class,
