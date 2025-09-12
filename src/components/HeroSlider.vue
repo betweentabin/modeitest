@@ -17,7 +17,7 @@
               <div class="slide-subtitle" v-if="slide.subtitle">{{ slide.subtitle }}</div>
               <div class="slide-button" v-if="slide.buttonText" @click="handleSlideClick(slide)">
                 {{ slide.buttonText }}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <svg class="button-icon" viewBox="0 0 24 24" fill="none">
                   <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
                   <path d="M18.0302 12.4415L13.5581 17.0412C13.4649 17.1371 13.3384 17.191 13.2066 17.191C13.0747 17.191 12.9482 17.1371 12.855 17.0412C12.7618 16.9453 12.7094 16.8152 12.7094 16.6796C12.7094 16.544 12.7618 16.4139 12.855 16.318L16.4793 12.5909L6.7469 12.5909C6.61511 12.5909 6.48872 12.5371 6.39554 12.4413C6.30235 12.3454 6.25 12.2154 6.25 12.0799C6.25 11.9443 6.30235 11.8143 6.39554 11.7185C6.48872 11.6226 6.61511 11.5688 6.7469 11.5688L16.4793 11.5688L12.855 7.84171C12.7618 7.74581 12.7094 7.61574 12.7094 7.48012C12.7094 7.34449 12.7618 7.21443 12.855 7.11853C12.9482 7.02263 13.0747 6.96875 13.2066 6.96875C13.3384 6.96875 13.4649 7.02263 13.5581 7.11853L18.0302 11.7183C18.0764 11.7657 18.113 11.8221 18.138 11.8841C18.1631 11.9462 18.1759 12.0127 18.1759 12.0799C18.1759 12.147 18.1631 12.2135 18.138 12.2756C18.113 12.3376 18.0764 12.394 18.0302 12.4415Z" fill="#DA5761"/>
                 </svg>
@@ -203,7 +203,7 @@ export default {
 .slide-button {
   align-items: center;
   background-color: var(--mandy);
-  border-radius: 10px;
+  border-radius: 8px;
   display: inline-flex;
   gap: 20px;
   justify-content: flex-start;
@@ -220,6 +220,12 @@ export default {
 
 .slide-button:hover {
   opacity: 0.8;
+}
+
+.button-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
 .slider-dots {
@@ -271,7 +277,13 @@ export default {
   
   .slide-button {
     font-size: 18px;
-    padding: 12px 22px;
+    padding: 15px 28px;
+    gap: 18px;
+  }
+  
+  .button-icon {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -298,7 +310,13 @@ export default {
   
   .slide-button {
     font-size: 16px;
-    padding: 12px 20px;
+    padding: 14px 25px;
+    gap: 16px;
+  }
+  
+  .button-icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -325,7 +343,13 @@ export default {
   
   .slide-button {
     font-size: 15px;
-    padding: 10px 18px;
+    padding: 12px 22px;
+    gap: 15px;
+  }
+  
+  .button-icon {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -352,7 +376,13 @@ export default {
   
   .slide-button {
     font-size: 14px;
-    padding: 10px 16px;
+    padding: 12px 20px;
+    gap: 14px;
+  }
+  
+  .button-icon {
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -379,7 +409,17 @@ export default {
   
   .slide-button {
     font-size: 13px;
-    padding: 8px 14px;
+    padding: 10px 18px;
+    gap: 12px;
+  }
+  
+  .button-icon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .slider-dots {
+    display: none;
   }
 }
 
@@ -405,18 +445,19 @@ export default {
   
   .slide-button {
     font-size: 12px;
-    padding: 6px 12px;
+    padding: 8px 16px;
+    gap: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .hero-slider {
-    height: 250px;
+    height: 280px;
     padding: 8px 5px;
   }
   
   .slide-overlay {
-    padding: 40px 12px;
+    padding: 75px 12px;
   }
   
   .slide-content {
@@ -425,13 +466,14 @@ export default {
   
   .slide-title,
   .slide-subtitle {
-    font-size: 18px;
-    padding: 4px 8px;
+    font-size: 15px;
+    padding: 5px 10px;
   }
   
   .slide-button {
     font-size: 10px;
-    padding: 4px 8px;
+    padding: 6px 12px;
+    gap: 8px;
   }
 }
 
@@ -457,7 +499,13 @@ export default {
   
   .slide-button {
     font-size: 9px;
-    padding: 3px 6px;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+  
+  .button-icon {
+    width: 8px;
+    height: 8px;
   }
 }
 </style>

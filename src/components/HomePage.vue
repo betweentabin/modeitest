@@ -3213,7 +3213,7 @@ export default {
   
   .frame-1321317457 {
     padding: 8px;
-    margin-top: -30px;
+    margin-top: -60px;
     flex-wrap: wrap;
     gap: 6px;
   }
