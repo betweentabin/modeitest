@@ -4,13 +4,45 @@
       <div class="page-header">
         <h1 class="page-title">メールグループ管理</h1>
         <div class="header-actions">
-          <button class="add-btn" @click="openCreateModal">新規グループ</button>
+          <button class="add-btn" @click="toggleInlineCreate">グループ追加</button>
+        </div>
+      </div>
+
+      <!-- Inline create panel (wireframe style) -->
+      <div v-if="showInlineCreate" class="inline-create">
+        <div class="group-name">
+          <div class="label">グループ名</div>
+          <input v-model="inlineForm.name" class="form-input" placeholder="例）スタンダード会員" />
+        </div>
+        <div class="emails">
+          <div class="label">メールアドレス</div>
+          <!-- chips -->
+          <div class="chips">
+            <span v-for="(m,i) in inlineForm.selectedMembers" :key="m.id" class="chip">{{ m.company_name || m.email || ('ID:' + m.id) }}
+              <button class="chip-x" @click="removeSelectedMember(i)">×</button>
+            </span>
+            <input v-model="memberSuggestQuery" class="chip-input" placeholder="会社名/メールで検索して追加" @keyup.enter="searchMembers" />
+            <button class="small-btn" @click="searchMembers" :disabled="suggestLoading">{{ suggestLoading ? '検索中...' : '検索' }}</button>
+          </div>
+          <!-- suggestions -->
+          <div v-if="memberSuggestions.length" class="suggest-box">
+            <div v-for="s in memberSuggestions" :key="s.id" class="suggest-item" @click="addMemberSuggestion(s)">
+              <div class="suggest-title">{{ s.company_name || s.email }}</div>
+              <div class="suggest-sub">{{ s.representative_name }} / {{ s.email }}</div>
+            </div>
+          </div>
+          <div class="hint">検索して候補をクリックすると宛先に追加されます。</div>
+        </div>
+        <div class="inline-actions">
+          <button class="primary" :disabled="inlineSaving" @click="createGroupInline">{{ inlineSaving ? '作成中...' : 'グループ作成' }}</button>
+          <button class="ghost" @click="toggleInlineCreate">キャンセル</button>
         </div>
       </div>
 
       <div class="filters-section">
         <div class="search-filter">
-          <input v-model="search" class="search-input" placeholder="グループ名で検索..." @keyup.enter="loadGroups" />
+          <label class="search-label">検索する</label>
+          <input v-model="search" class="search-input" placeholder="グループ名で検索" @keyup.enter="loadGroups" />
         </div>
         <button class="refresh-btn" @click="loadGroups" :disabled="loading">{{ loading ? '更新中...' : '更新' }}</button>
       </div>
@@ -22,25 +54,23 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th class="narrow"></th>
                 <th>グループ名</th>
-                <th>説明</th>
-                <th>メンバー数</th>
-                <th>作成日</th>
-                <th>操作</th>
+                <th>送信先メールアドレス</th>
+                <th>編集する</th>
+                <th>削除</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="g in groups" :key="g.id">
-                <td>{{ g.id }}</td>
+                <td class="narrow"><input type="checkbox" :value="g.id" v-model="selectedGroupIds" :disabled="isVirtual(g)" /></td>
                 <td>{{ g.name }}</td>
-                <td class="desc">{{ g.description }}</td>
-                <td>{{ g.members_count || 0 }}</td>
-                <td>{{ formatDate(g.created_at) }}</td>
-                <td>
-                  <button class="small-btn" @click="openMembersModal(g)">メンバー</button>
-                  <button class="small-btn danger" @click="deleteGroup(g)">削除</button>
+                <td class="desc">
+                  <template v-if="g.id < 0">{{ g.description }}（{{ g.members_count || 0 }}件）</template>
+                  <template v-else>メンバー数: {{ g.members_count || 0 }}</template>
                 </td>
+                <td><button class="link-btn" @click="openMembersModal(g)">編集する</button></td>
+                <td><button class="small-btn danger" @click="deleteGroup(g)" :disabled="isVirtual(g)">削除</button></td>
               </tr>
             </tbody>
           </table>
@@ -49,6 +79,10 @@
 
       <div class="pagination" v-if="pagination.total > pagination.per_page">
         <button v-for="p in paginationPages" :key="p" @click="loadGroups(p)" :class="['page-btn', { active: p === pagination.current_page }]">{{ p }}</button>
+      </div>
+
+      <div class="bulk-actions">
+        <button class="danger" :disabled="selectedGroupIds.length===0" @click="bulkDelete">削除する</button>
       </div>
     </div>
 
@@ -151,6 +185,14 @@ export default {
       search: '',
       groups: [],
       pagination: { current_page: 1, last_page: 1, per_page: 20, total: 0 },
+      // inline create panel
+      showInlineCreate: false,
+      inlineForm: { name: '', selectedMembers: [] },
+      memberSuggestQuery: '',
+      memberSuggestions: [],
+      suggestLoading: false,
+      inlineSaving: false,
+      // legacy modal (kept)
       showCreate: false,
       createForm: { name: '', description: '' },
       showMembers: false,
@@ -163,6 +205,8 @@ export default {
       groupMemberIds: new Set(),
       csvFile: null,
       uploadingCsv: false,
+      // bulk select
+      selectedGroupIds: [],
     }
   },
   computed: {
@@ -194,6 +238,42 @@ export default {
     this.loadGroups()
   },
   methods: {
+    isVirtual(g){ return (g && g.id && Number(g.id) < 0) },
+    toggleInlineCreate(){ this.showInlineCreate = !this.showInlineCreate },
+    async searchMembers(){
+      const q = (this.memberSuggestQuery || '').trim()
+      if (!q) { this.memberSuggestions = []; return }
+      this.suggestLoading = true
+      try {
+        const res = await apiClient.getAdminMembers({ search: q, per_page: 10 })
+        if (res.success) this.memberSuggestions = (res.data && res.data.data) || []
+      } catch(e){ console.warn(e) } finally { this.suggestLoading = false }
+    },
+    addMemberSuggestion(m){
+      if (!this.inlineForm.selectedMembers.find(x=>x.id===m.id)) this.inlineForm.selectedMembers.push(m)
+      this.memberSuggestions = []
+      this.memberSuggestQuery = ''
+    },
+    removeSelectedMember(i){ this.inlineForm.selectedMembers.splice(i,1) },
+    async createGroupInline(){
+      if (!this.inlineForm.name.trim()) { alert('グループ名を入力してください'); return }
+      this.inlineSaving = true
+      try {
+        const res = await apiClient.createMailGroup({ name: this.inlineForm.name })
+        if (res.success) {
+          const group = res.data
+          const memberIds = this.inlineForm.selectedMembers.map(m=>m.id)
+          if (memberIds.length>0) {
+            try { await apiClient.bulkEditMailGroupMembers(group.id, 'add', memberIds) } catch(e){ console.warn('failed to add members', e) }
+          }
+          this.inlineForm = { name: '', selectedMembers: [] }
+          this.showInlineCreate = false
+          await this.loadGroups(this.pagination.current_page)
+        } else {
+          alert(res.error || '作成に失敗しました')
+        }
+      } catch(e){ alert('作成に失敗しました') } finally { this.inlineSaving = false }
+    },
     formatDate(s) { return s ? new Date(s).toLocaleDateString('ja-JP') : '-' },
     async loadGroups(page = 1) {
       this.loading = true
@@ -253,6 +333,16 @@ export default {
         else alert(res.error || '削除に失敗しました')
       } catch (e) { alert('削除に失敗しました') }
     },
+    async bulkDelete(){
+      const ids = (this.selectedGroupIds || []).filter(id => Number(id) > 0)
+      if (ids.length===0) { alert('削除対象がありません'); return }
+      if (!confirm(`${ids.length}件のグループを削除しますか？`)) return
+      for (const id of ids) {
+        try { await apiClient.deleteMailGroup(id) } catch(e) { console.warn('failed delete', id, e) }
+      }
+      this.selectedGroupIds = []
+      this.loadGroups(this.pagination.current_page)
+    },
     openMembersModal(group) { this.currentGroup = group; this.memberIdsText = ''; this.showMembers = true; this.selectedCandidateIds=[]; this.loadGroupMembers(); this.loadMemberCandidates(); },
     closeMembersModal() { this.showMembers = false; this.currentGroup = null },
     async loadGroupMembers() {
@@ -311,17 +401,35 @@ export default {
 .page-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e5e5e5; }
 .page-title { font-size: 24px; font-weight: 600; }
 .header-actions { display: flex; gap: 12px; }
-.add-btn, .refresh-btn { padding: 8px 16px; border: none; border-radius: 4px; background: #007bff; color: white; cursor: pointer; }
+.add-btn, .refresh-btn { padding: 8px 16px; border: none; border-radius: 4px; background: #f1f1f1; color: #1a1a1a; cursor: pointer; }
 .filters-section { padding: 16px 24px; border-bottom: 1px solid #e5e5e5; display: flex; gap: 12px; align-items: center; }
+.search-label { margin-right: 8px; color: #555; }
 .search-input { padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
+.inline-create { padding: 16px 24px; border-bottom: 1px solid #eee; display: grid; gap: 12px; }
+.inline-create .label { background: #f3f3f3; border: 1px solid #ddd; padding: 8px 12px; color: #333; width: fit-content; margin-bottom: 8px; }
+.inline-create .group-name, .inline-create .emails { display: block; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; padding: 8px; border:1px solid #e0e0e0; border-radius:6px; }
+.chip { background:#fff; border:1px solid #ddd; border-radius:16px; padding:4px 10px; font-size:12px; }
+.chip-x { border:none; background:transparent; margin-left:6px; cursor:pointer; }
+.chip-input { border:none; outline:none; padding:4px 8px; min-width:180px; }
+.suggest-box { border:1px solid #eee; border-radius:6px; margin-top:8px; max-height:200px; overflow:auto; }
+.suggest-item { padding:8px 10px; cursor:pointer; }
+.suggest-item:hover { background:#fafafa; }
+.suggest-title { font-weight:600; }
+.suggest-sub { font-size:12px; color:#666; }
+.inline-actions { display:flex; gap:8px; justify-content:flex-end; }
+.inline-actions .primary { padding: 8px 16px; border: 1px solid #1a1a1a; border-radius: 4px; background: #1a1a1a; color: white; }
+.inline-actions .ghost { padding: 8px 16px; border: 1px solid #d0d0d0; border-radius: 4px; background: white; color: #333; }
 .table-container { overflow-x: auto; }
 .loading, .error { padding: 40px; text-align: center; }
 .error { color: #da5761; }
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table th, .data-table td { border-bottom: 1px solid #e5e5e5; padding: 12px 16px; text-align: left; }
-.desc { max-width: 420px; color: #555; }
+.data-table th.narrow, .data-table td.narrow { width: 32px; }
+.desc { max-width: 540px; color: #555; }
 .small-btn { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer; margin-right: 6px; }
 .small-btn.danger { border-color: #dc3545; color: #dc3545; }
+.link-btn { background:none; border:none; color:#007bff; cursor:pointer; text-decoration:underline; }
 .pagination { padding: 16px 24px; }
 .page-btn { margin-right: 6px; padding: 6px 10px; }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; }
@@ -336,4 +444,6 @@ export default {
 .form-input, .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d0d0d0; border-radius: 4px; }
 .cancel-btn { padding: 8px 16px; border: 1px solid #6c757d; border-radius: 4px; background: white; color: #6c757d; }
 .save-btn { padding: 8px 16px; border: 1px solid #28a745; border-radius: 4px; background: #28a745; color: white; }
+.bulk-actions { display:flex; justify-content:flex-end; padding: 16px 24px; }
+.bulk-actions .danger { padding: 8px 16px; border: 1px solid #dc3545; border-radius: 4px; background: white; color: #dc3545; }
 </style>
