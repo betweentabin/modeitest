@@ -80,6 +80,27 @@
             <span class="help">ページ内のCmsTextに反映（公開デザインはそのまま）</span>
           </div>
 
+          <!-- company / consulting / about: 動的テキスト一覧（小コンポーネント） -->
+          <div v-if="currentPage && (currentPage.slug==='company' || currentPage.slug==='cri-consulting' || currentPage.slug==='aboutus')" class="section-title">小コンポーネントの文言一覧（texts）</div>
+          <template v-if="currentPage && currentPage.slug==='company'">
+            <div class="field" v-for="(val, key) in companyTexts" :key="`company-${key}`">
+              <label>{{ key }}</label>
+              <input v-model="companyTexts[key]" class="input" />
+            </div>
+          </template>
+          <template v-if="currentPage && currentPage.slug==='cri-consulting'">
+            <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
+              <label>{{ key }}</label>
+              <input v-model="consultingTexts[key]" class="input" />
+            </div>
+          </template>
+          <template v-if="currentPage && currentPage.slug==='aboutus'">
+            <div class="field" v-for="(val, key) in aboutTexts" :key="`about-${key}`">
+              <label>{{ key }}</label>
+              <input v-model="aboutTexts[key]" class="input" />
+            </div>
+          </template>
+
           <!-- privacy-policy: section-wise fields -->
           <div v-if="currentPage.slug==='privacy-policy'" class="section-title">セクション別文言</div>
           <!-- 1. 収集 -->
@@ -281,6 +302,10 @@ export default {
       // 特定商取引法（セクション別）: APIから動的にマージするため空で初期化
       tlTexts: {},
       tlHtmls: {},
+      // 会社概要 / コンサル / 研究所について（小コンポーネント文言）
+      companyTexts: {},
+      consultingTexts: {},
+      aboutTexts: {},
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
@@ -321,6 +346,9 @@ export default {
         if (slug.includes('privacy')) this.pageContentKey = 'privacy'
         else if (slug.includes('legal') || slug.includes('transaction')) this.pageContentKey = 'transaction-law'
         else if (slug.includes('terms')) this.pageContentKey = 'terms'
+        else if (slug.includes('company')) this.pageContentKey = 'company-profile'
+        else if (slug.includes('consult')) this.pageContentKey = 'consulting'
+        else if (slug.includes('about')) this.pageContentKey = 'about-institute'
 
         // 既存テキストの読み込み
         try {
@@ -343,6 +371,15 @@ export default {
             this.tlTexts = { ...(this.tlTexts || {}), ...(texts || {}) }
             this.tlHtmls = { ...(this.tlHtmls || {}), ...(htmls || {}) }
             if (!this.tlTexts.page_title) this.tlTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'company-profile') {
+            this.companyTexts = { ...(this.companyTexts || {}), ...(texts || {}) }
+            if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'consulting') {
+            this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
+            if (!this.consultingTexts.page_title) this.consultingTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'about-institute') {
+            this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
+            if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
           }
         } catch(_) { /* noop */ }
       }
@@ -451,7 +488,7 @@ export default {
         const candidates = [
           this.pageContentKey,
           // common fallbacks
-          'terms', 'transaction-law',
+          'terms', 'transaction-law', 'company-profile', 'consulting', 'about-institute',
           'privacy', 'privacy-poricy', 'privacy-policy', 'privacy poricy'
         ]
         let foundKey = null
@@ -495,6 +532,12 @@ export default {
         } else if (foundKey === 'transaction-law') {
           this.tlTexts = { ...(this.tlTexts || {}), ...(texts || {}) }
           this.tlHtmls = { ...(this.tlHtmls || {}), ...(htmls || {}) }
+        } else if (foundKey === 'company-profile') {
+          this.companyTexts = { ...(this.companyTexts || {}), ...(texts || {}) }
+        } else if (foundKey === 'consulting') {
+          this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
+        } else if (foundKey === 'about-institute') {
+          this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
         }
         alert('既存の文言を取り込みました')
       } catch (e) {
@@ -524,6 +567,12 @@ export default {
         } else if (this.pageContentKey === 'transaction-law') {
           patch.content.texts = { ...this.tlTexts }
           patch.content.htmls = { ...this.tlHtmls }
+        } else if (this.pageContentKey === 'company-profile') {
+          patch.content.texts = { ...this.companyTexts }
+        } else if (this.pageContentKey === 'consulting') {
+          patch.content.texts = { ...this.consultingTexts }
+        } else if (this.pageContentKey === 'about-institute') {
+          patch.content.texts = { ...this.aboutTexts }
         } else {
           // fallback: save as texts only
           patch.content.texts = { ...this.privacyTexts }

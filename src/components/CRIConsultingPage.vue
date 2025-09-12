@@ -304,9 +304,7 @@ export default {
   },
   mounted() {
     this.adjustRectangleHeight();
-    this.adjustContentHeights();
     window.addEventListener('resize', this.adjustRectangleHeight);
-    window.addEventListener('resize', this.adjustContentHeights);
     try {
       this._pageText = usePageText(this.pageKey)
       this._pageText.load()
@@ -314,7 +312,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
-    window.removeEventListener('resize', this.adjustContentHeights);
   },
   methods: {
     // Equal-height for paired images/text is handled with CSS Grid
@@ -327,40 +324,6 @@ export default {
           const frameHeight = frame1321317466.offsetHeight;
           rectangle3.style.height = frameHeight + 'px';
         }
-      });
-    },
-    adjustContentHeights() {
-      this.$nextTick(() => {
-        // Content container height adjustment
-        const contentText = this.$el.querySelector('.content-text');
-        const contentImage = this.$el.querySelector('.content-image');
-        
-        if (contentText && contentImage) {
-          const contentTextHeight = contentText.offsetHeight;
-          contentImage.style.height = contentTextHeight + 'px';
-        }
-        
-        // Duties container height adjustment
-        const dutiesText = this.$el.querySelector('.duties-content');
-        const dutiesImage = this.$el.querySelector('.duties-image');
-        
-        if (dutiesText && dutiesImage) {
-          const dutiesTextHeight = dutiesText.offsetHeight;
-          dutiesImage.style.height = dutiesTextHeight + 'px';
-        }
-        
-        // Service cards height adjustment
-        const serviceCards = this.$el.querySelectorAll('.service-card');
-        
-        serviceCards.forEach(card => {
-          const serviceText = card.querySelector('.service-content');
-          const serviceImage = card.querySelector('.service-image');
-          
-          if (serviceText && serviceImage) {
-            const textHeight = serviceText.offsetHeight;
-            serviceImage.style.height = textHeight + 'px';
-          }
-        });
       });
     },
     handleContactClick() {

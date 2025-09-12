@@ -471,19 +471,22 @@ export default {
 }
 
 .mission-content {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 45% 1fr;
+  align-items: stretch;
   gap: 60px;
 }
 
 .mission-image {
-  flex: 0 0 45%;
+  height: 100%;
 }
 
 .mission-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   border-radius: 10px;
+  display: block;
 }
 
 .mission-text {
@@ -509,8 +512,9 @@ export default {
 }
 
 .message-content {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 45%;
+  align-items: stretch;
   gap: 60px;
 }
 
@@ -537,13 +541,15 @@ export default {
 }
 
 .message-image {
-  flex: 0 0 45%;
+  height: 100%;
 }
 
 .message-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   border-radius: 10px;
+  display: block;
 }
 
 /* CTA Section */
@@ -812,8 +818,9 @@ export default {
   }
   
   .mission-content,
-  .message-content,
-
+  .message-content {
+    display: block;
+  }
   .mission-image,
   .message-image,
   .access-map {

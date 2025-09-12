@@ -488,9 +488,8 @@ export default {
     }
   },
   mounted() {
-    this.adjustImageHeight();
+    // CSS Grid handles equal heights; keep rectangle sync only
     this.adjustRectangleHeight();
-    window.addEventListener('resize', this.adjustImageHeight);
     window.addEventListener('resize', this.adjustRectangleHeight);
     this.setupCarouselScroll();
     try {
@@ -719,25 +718,6 @@ export default {
         maximumFractionDigits: 0
       }).format(amount);
     },
-    adjustImageHeight() {
-      this.$nextTick(() => {
-        const messageText = this.$el.querySelector('.message-text');
-        const messageImage = this.$el.querySelector('.message-image');
-        
-        if (messageText && messageImage) {
-          const textHeight = messageText.offsetHeight;
-          messageImage.style.height = textHeight + 'px';
-        }
-        
-        const philosophyText = this.$el.querySelector('.philosophy-text');
-        const philosophyImage = this.$el.querySelector('.philosophy-image');
-        
-        if (philosophyText && philosophyImage) {
-          const philosophyHeight = philosophyText.offsetHeight;
-          philosophyImage.style.height = philosophyHeight + 'px';
-        }
-      });
-    },
     adjustRectangleHeight() {
       this.$nextTick(() => {
         const frame1321317466 = this.$el.querySelector('.frame-1321317466');
@@ -886,21 +866,24 @@ section {
 }
 
 .philosophy-content {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   width: 100%;
   max-width: 2000px;
 }
 
 .philosophy-image {
-  width: 50%;
+  width: 100%;
+  height: 100%;
+  display: block;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
 }
 
 .philosophy-text {
-  width: 50%;
+  width: 100%;
   height: auto;
   padding: 50px;
   background: white;
@@ -956,14 +939,15 @@ section {
 }
 
 .message-content {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   width: 100%;
   max-width: 2000px;
 }
 
 .message-text {
-  width: 50%;
+  width: 100%;
   padding: 50px;
   background: white;
   border-radius: 20px 0 0 20px;
@@ -1003,7 +987,9 @@ section {
 }
 
 .message-image {
-  width: 50%;
+  width: 100%;
+  height: 100%;
+  display: block;
   border-radius: 0 20px 20px 0;
   object-fit: cover;
   object-position: center;
@@ -1632,6 +1618,7 @@ section {
   
   .philosophy-content,
   .message-content {
+    display: flex;
     flex-direction: column;
     gap: 0;
   }
