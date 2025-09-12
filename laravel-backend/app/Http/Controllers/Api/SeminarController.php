@@ -27,6 +27,29 @@ class SeminarController extends Controller
             $query->where('membership_requirement', $request->membership_requirement);
         }
 
+        // 年・月フィルタ（管理画面のUIに合わせて対応）
+        if ($request->filled('year')) {
+            $year = (int) $request->year;
+            if ($year > 0) {
+                $query->whereYear('date', $year);
+            }
+        }
+
+        if ($request->filled('month')) {
+            $month = (int) $request->month;
+            if ($month >= 1 && $month <= 12) {
+                $query->whereMonth('date', $month);
+            }
+        }
+
+        // カテゴリフィルタ（存在すれば適用）
+        if ($request->filled('category')) {
+            $cat = (int) $request->category;
+            if ($cat > 0) {
+                $query->where('category_id', $cat);
+            }
+        }
+
         // 日付範囲フィルタ
         if ($request->filled('date_from')) {
             $query->where('date', '>=', $request->date_from);
@@ -49,11 +72,28 @@ class SeminarController extends Controller
         // 管理者の場合は全てのステータスのセミナーを表示
 
         // ソート
-        // 過去セミナーは新しい順、それ以外は従来通り昇順
-        if ($requestedStatus === 'completed') {
-            $query->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+        // 管理画面では「新規作成がすぐ見える」ことを優先し、既定で作成順降順
+        $user = $request->user();
+        $isAdmin = $user && method_exists($user, 'isAdmin') && $user->isAdmin();
+        $sort = $request->input('sort'); // 'date_asc' | 'date_desc' | 'created_desc'
+
+        if ($isAdmin) {
+            if ($sort === 'date_asc') {
+                $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+            } elseif ($sort === 'date_desc') {
+                $query->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+            } else {
+                // 既定（管理画面）：新しい作成順
+                $query->orderBy('id', 'desc');
+            }
         } else {
-            $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+            // 公開側の既定：
+            // 過去セミナーは新しい順、それ以外は従来通り昇順
+            if ($requestedStatus === 'completed') {
+                $query->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+            } else {
+                $query->orderBy('date', 'asc')->orderBy('start_time', 'asc');
+            }
         }
 
         // ページネーション

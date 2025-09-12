@@ -21,6 +21,7 @@ class Seminar extends Model
         'current_participants',
         'fee',
         'status',
+        'category_id',
         'membership_requirement',
         'premium_open_at',
         'standard_open_at',

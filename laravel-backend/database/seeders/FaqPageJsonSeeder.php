@@ -21,18 +21,38 @@ class FaqPageJsonSeeder extends Seeder
             'cat_research' => '調査研究について',
         ];
 
-        // デフォルトFAQ（フロントの静的デフォルトと整合）
+        // デフォルトFAQ（フロントの静的デフォルトと完全一致）
         $faqs = [
             [
                 'category' => 'service',
                 'question' => '貴社にとってどんなサービスが提供されますか？',
-                'answer' => '私たちは地域経済に関するリサーチ・分析とレポート作成、経営戦略立案支援・事業計画策定・プロジェクト管理・経営指導等を実施しています。',
+                'answer' => '私たちは以下のようなサービスを提供しています：
+            <ul>
+              <li>地域経済に関するリサーチ・分析とレポートの作成をします</li>
+              <li>経営戦略立案支援・事業計画策定・プロジェクト管理・経営指導等を実施しています</li>
+            </ul>',
                 'tags' => []
             ],
             [
                 'category' => 'membership',
                 'question' => '資料費どのくらいの会費を支払っているのですか？',
-                'answer' => 'スタンダード会員：年会費12,000円（税別）。プレミアム会員：ビジネスマッチング・事業承継等の支援を含む特典をご提供します。',
+                'answer' => '<div class="answer-section">
+              <div class="price-info">
+                <strong>スタンダード会員</strong><br>
+                年会費：12,000円（税別）月額1,000円程度
+              </div>
+              <div class="benefits">
+                <strong>サービス内容：</strong>
+                <ul>
+                  <li>経済指標・市場分析・企業分析・業界動向・資産・投資・金融等専門経営指導プログラム（入会金別途要）</li>
+                </ul>
+              </div>
+              <div class="price-info premium">
+                <strong>プレミアム会員（推奨会員）</strong><br>
+                ・ビジネスマッチング：最新の市場分析、事業承継等の支援<br>
+                ・M&A（事業承継関連）
+              </div>
+            </div>',
                 'tags' => ['スタンダード会員','プレミアム会員']
             ],
             [
@@ -101,7 +121,7 @@ class FaqPageJsonSeeder extends Seeder
         if (!is_array($content)) $content = ['html' => (string)$content];
         $content['texts'] = array_merge($texts, $content['texts'] ?? []);
 
-        // 既存のfaqsにデフォルトをマージ（questionで重複判定）
+        // 既存のfaqsに対して「質問一致」で上書きマージ（不足は追加）
         $existing = $content['faqs'] ?? [];
         $byQuestion = [];
         foreach ($existing as $item) {
@@ -110,11 +130,10 @@ class FaqPageJsonSeeder extends Seeder
             }
         }
         foreach ($faqs as $item) {
-            if (!isset($byQuestion[$item['question']])) {
-                $existing[] = $item;
-            }
+            $q = $item['question'];
+            $byQuestion[$q] = $item; // 上書き（回答の詳細差分を反映）
         }
-        $content['faqs'] = $existing;
+        $content['faqs'] = array_values($byQuestion);
 
         $page->update([
             'title' => $page->title ?: 'よくあるご質問',

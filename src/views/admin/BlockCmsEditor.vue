@@ -154,6 +154,30 @@
             </div>
           </template>
 
+          <!-- FAQ: Q/A リスト編集 -->
+          <div v-if="currentPage && currentPage.slug==='faq'" class="section-title">FAQ 項目（faqs）</div>
+          <template v-if="currentPage && currentPage.slug==='faq'">
+            <div class="help">カテゴリ/質問/回答(HTML)/タグ（カンマ区切り）を編集・追加できます</div>
+            <div v-for="(fq, idx) in faqItems" :key="`faq-${idx}`" class="field" style="border:1px solid #eee; padding:10px; border-radius:8px;">
+              <label>カテゴリ</label>
+              <input v-model="fq.category" class="input" placeholder="all | service | membership | research" />
+              <label>質問</label>
+              <input v-model="fq.question" class="input" placeholder="質問文" />
+              <label>回答（HTML）</label>
+              <textarea v-model="fq.answer" class="textarea" rows="4" placeholder="回答HTML"></textarea>
+              <label>タグ（カンマ区切り）</label>
+              <input :value="(Array.isArray(fq.tags)? fq.tags.join(', ') : '')" @input="(e)=>{ const v=e.target.value||''; fq.tags = v.split(',').map(s=>s.trim()).filter(Boolean) }" class="input" placeholder="例: 会費,手続き" />
+              <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+                <button class="btn" @click="faqItems.splice(idx,1)">削除</button>
+                <button class="btn" @click="faqItems.splice(Math.max(0, idx-1), 0, faqItems.splice(idx,1)[0])" :disabled="idx===0">上へ</button>
+                <button class="btn" @click="faqItems.splice(Math.min(faqItems.length, idx+2), 0, faqItems.splice(idx,1)[0])" :disabled="idx===faqItems.length-1">下へ</button>
+              </div>
+            </div>
+            <div class="actions" style="justify-content:flex-start;">
+              <button class="btn" @click="faqItems.push({ category:'all', question:'', answer:'', tags:[], _id: faqItems.length })">+ FAQを追加</button>
+            </div>
+          </template>
+
           <!-- フォールバック: 汎用のtexts/htmlsエディタ（除外ページ以外） -->
           <template v-if="currentPage && showGenericEditor">
             <div class="section-title">子コンポーネント文言（基本）</div>
@@ -381,6 +405,8 @@ export default {
       genericHtmls: {},
       // glossary: 用語リスト（items）の編集
         glossaryItems: [],
+        // faq: Q/A リストの編集
+        faqItems: [],
         companyHistory: [],
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
@@ -551,6 +577,18 @@ export default {
               category: typeof it?.category === 'string' ? it.category : '',
               definition: typeof it?.definition === 'string' ? it.definition : (typeof it?.content === 'string' ? it.content : '')
             })) : []
+          } else if (this.pageContentKey === 'faq') {
+            // FAQ: textsはカテゴリ名など。faqs 配列をロード
+            this.genericTexts = { ...(texts || {}) }
+            this.genericHtmls = { ...(htmls || {}) }
+            const list = Array.isArray(content?.faqs) ? content.faqs : []
+            this.faqItems = list.map((it, idx) => ({
+              category: typeof it?.category === 'string' ? it.category : 'all',
+              question: typeof it?.question === 'string' ? it.question : '',
+              answer: typeof it?.answer === 'string' ? it.answer : '',
+              tags: Array.isArray(it?.tags) ? it.tags : [],
+              _id: (typeof it?._id === 'number' || typeof it?._id === 'string') ? it._id : idx
+            }))
           } else {
             // フォールバック: 任意ページの全texts/htmlsを編集（置き換え）
             this.genericTexts = { ...(texts || {}) }
@@ -728,6 +766,17 @@ export default {
             category: typeof it?.category === 'string' ? it.category : '',
             definition: typeof it?.definition === 'string' ? it.definition : (typeof it?.content === 'string' ? it.content : '')
           })) : []
+        } else if (foundKey === 'faq') {
+          this.genericTexts = { ...(texts || {}) }
+          this.genericHtmls = { ...(htmls || {}) }
+          const list = Array.isArray(content?.faqs) ? content.faqs : []
+          this.faqItems = list.map((it, idx) => ({
+            category: typeof it?.category === 'string' ? it.category : 'all',
+            question: typeof it?.question === 'string' ? it.question : '',
+            answer: typeof it?.answer === 'string' ? it.answer : '',
+            tags: Array.isArray(it?.tags) ? it.tags : [],
+            _id: (typeof it?._id === 'number' || typeof it?._id === 'string') ? it._id : idx
+          }))
         } else {
           // generic: 置き換え
           this.genericTexts = { ...(texts || {}) }
@@ -783,6 +832,18 @@ export default {
             .map(it => ({ term: String(it.term||'').trim(), category: String(it.category||'').trim(), definition: String(it.definition||'').trim() }))
             .filter(it => it.term && it.definition) : []
           patch.content.items = items
+        } else if (this.pageContentKey === 'faq') {
+          // FAQ: texts（カテゴリ名など）と faqs 配列を保存
+          if (Object.keys(this.genericTexts||{}).length) patch.content.texts = { ...this.genericTexts }
+          if (Object.keys(this.genericHtmls||{}).length) patch.content.htmls = { ...this.genericHtmls }
+          const faqs = Array.isArray(this.faqItems) ? this.faqItems.map((it, idx) => ({
+            category: String((it.category||'all')).trim() || 'all',
+            question: String(it.question||'').trim(),
+            answer: String(it.answer||'').trim(),
+            tags: Array.isArray(it.tags) ? it.tags.map(t=>String(t).trim()).filter(Boolean) : [],
+            _id: (typeof it._id === 'number' || typeof it._id === 'string') ? it._id : idx
+          })).filter(it => it.question || it.answer) : []
+          patch.content.faqs = faqs
         } else {
           // generic fallback: 動的に集めたtexts/htmlsを保存
           const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)
