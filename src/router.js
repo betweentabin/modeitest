@@ -61,7 +61,6 @@ import PrivacyPolicyPage from "./components/PrivacyPolicyPage";
 import TermsOfServicePage from "./components/TermsOfServicePage";
 import CriConsultingPage from "./components/CRIConsultingPage";
 import SitemapPage from "./components/SitemapPage";
-import FinancialReportPage from "./components/FinancialReportPage";
 import TestPage from "./components/TestPage";
 import ContactFormPage from "./components/ContactFormPage";
 import ContactConfirmPage from "./components/ContactConfirmPage";
@@ -336,12 +335,6 @@ const router = new Router({
       name: "sitemap",
       component: SitemapPage,
       meta: { title: "サイトマップ - ちくぎん地域経済研究所" }
-    },
-    {
-      path: "/financial-report",
-      name: "financialReport",
-      component: FinancialReportPage,
-      meta: { title: "決算報告 - ちくぎん地域経済研究所" }
     },
     {
       path: "/seminar-registration",
@@ -674,10 +667,6 @@ const router = new Router({
     {
       path: "/terms-of-service",
       redirect: "/terms"
-    },
-    {
-      path: "/financial-reports",
-      redirect: "/financial-report"
     },
     {
       path: "/my-account",

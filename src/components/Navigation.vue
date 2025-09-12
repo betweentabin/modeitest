@@ -1,10 +1,10 @@
 <template>
   <div class="navigation" :class="{ 'menu-open': isMenuOpen }">
-    <div class="logo-section">
+    <div class="logo-section" :style="{ height: logoSectionHeight }">
       <view-component />
       <group1 />
     </div>
-    <div class="nav-controls">
+    <div class="nav-controls" ref="navControls">
       <div class="main-nav">
         <x-button v-if="!isMobile" />
         <x-button2 v-if="!isMobile" />
@@ -45,12 +45,15 @@ export default {
   data() {
     return {
       isMenuOpen: false,
-      isMobile: false
+      isMobile: false,
+      logoSectionHeight: 'auto'
     };
   },
   mounted() {
     this.checkScreenSize();
+    this.updateLogoSectionHeight();
     window.addEventListener('resize', this.checkScreenSize);
+    window.addEventListener('resize', this.updateLogoSectionHeight);
   },
   methods: {
     toggleMenu() {
@@ -71,10 +74,19 @@ export default {
       } else {
         document.body.style.overflow = '';
       }
+    },
+    updateLogoSectionHeight() {
+      this.$nextTick(() => {
+        if (this.$refs.navControls) {
+          const navControlsHeight = this.$refs.navControls.offsetHeight;
+          this.logoSectionHeight = `${navControlsHeight}px`;
+        }
+      });
     }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.checkScreenSize);
+    window.removeEventListener('resize', this.updateLogoSectionHeight);
     // メニューが開いている状態でコンポーネントが破棄される場合の処理
     if (this.isMenuOpen) {
       document.body.style.overflow = '';
@@ -90,10 +102,12 @@ export default {
   box-shadow: 0px 3px 20px #00000026;
   display: flex;
   justify-content: space-between;
-  padding: 10px 20px;
-  position: relative;
+  padding: 15px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  z-index: 9;
+  z-index: 1000;
 }
 
 .logo-section {
@@ -171,9 +185,19 @@ export default {
 }
 
 /* サブナビのレスポンシブ対応 */
-@media (max-width: 1150px) {
+@media (max-width: 1350px) {
   .sub-nav {
     display: none;
+  }
+
+  .navigation {
+    padding: 20px 15px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .navigation {
+    padding: 18px 15px;
   }
 }
 
@@ -183,12 +207,9 @@ export default {
   .x-button2 {
     display: none;
   }
-}
 
-/* 小さい画面でのレイアウト調整 */
-@media (max-width: 800px) {
   .navigation {
-    padding: 12px 15px;
+    padding: 18px 15px;
   }
   
   .logo-section {
@@ -204,7 +225,7 @@ export default {
 
 @media (max-width: 600px) {
   .navigation {
-    padding: 10px 10px;
+    padding: 16px 10px;
   }
   
   .logo-section {
@@ -221,7 +242,7 @@ export default {
 
 @media (max-width: 480px) {
   .navigation {
-    padding: 8px 8px;
+    padding: 14px 8px;
   }
   
   .logo-section {

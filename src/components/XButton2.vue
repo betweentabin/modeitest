@@ -43,7 +43,7 @@ export default {
   box-shadow: 0px 1px 2px #0000000d;
   display: inline-flex;
   flex: 0 0 auto;
-  flex-direction: column;
+  flex-direction: row;
   height: 40px;
   justify-content: center;
   padding: 0px 24px 0px 20px;
@@ -61,9 +61,13 @@ export default {
 
 .text-62 {
   letter-spacing: 0;
-  line-height: 19.5px;
+  line-height: 40px;
   position: relative;
   white-space: nowrap;
   width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 </style>

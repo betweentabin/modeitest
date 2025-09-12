@@ -242,8 +242,8 @@
           </div>
         </div>
       </div>
-      <!-- 明示的に history が空配列（= 全件削除）ならフォールバックを出さない -->
-      <div v-else-if="historyAbsent" class="history-content">
+      <!-- CMSデータがない場合はフォールバックを表示 -->
+      <div v-else class="history-content">
         <div class="history-item">
           <div class="history-year">1988</div>
           <div class="history-details">
@@ -371,7 +371,7 @@
         <div v-else class="report-content">
           <div class="report-card">
             <div 
-              v-for="report in financialReports" 
+              v-for="report in displayedReports" 
               :key="report.id" 
               class="report-year-section"
             >
@@ -392,8 +392,8 @@
           </div>
           
           <!-- Show More Button -->
-          <button class="show-more-btn" @click="goToFinancialReports">
-            <span>さらに表示</span>
+          <button v-if="financialReports.length > 2" class="show-more-btn" @click="toggleShowAll">
+            <span>{{ showAllReports ? '表示を減らす' : 'さらに表示' }}</span>
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
               <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
               <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
@@ -452,6 +452,7 @@ export default {
       frame132131753022Props: frame132131753022Data,
       financialReports: [],
       loadingReports: false,
+      showAllReports: false,
       carouselIndicators: [],
       currentCarouselIndex: 0,
       defaultMessageBody: `
@@ -516,6 +517,14 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
+  },
+  computed: {
+    displayedReports() {
+      if (this.showAllReports) {
+        return this.financialReports;
+      }
+      return this.financialReports.slice(0, 2);
+    }
   },
   methods: {
     scrollTo(id) {
@@ -663,19 +672,19 @@ export default {
     async loadFinancialReports() {
       this.loadingReports = true;
       try {
-        // 既存の決算報告ページと同じデータを表示
+        // 決算報告データを表示
         this.financialReports = [
           {
             id: 1,
             fiscal_year: '2025年3月期',
             report_type: '年次決算',
-            report_date: '2020-05-12',
+            report_date: '2025-05-12',
             revenue: null,
             net_income: null,
             file_path: null,
-            report_info: '決算情報（2020年5月12日）',
+            report_info: '決算情報（2025年5月12日）',
             report_links: [
-              '決算情報（2020年5月12日）',
+              '決算情報（2025年5月12日）',
               '決算要旨（PDF ： 1.28MB／全31ページ）',
               '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 384KB／全22ページ）',
               '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 620KB／全11ページ）',
@@ -686,16 +695,50 @@ export default {
             id: 2,
             fiscal_year: '2024年3月期',
             report_type: '年次決算',
-            report_date: '2020-05-12',
+            report_date: '2024-05-12',
             revenue: null,
             net_income: null,
             file_path: null,
-            report_info: '決算情報（2020年5月12日）',
+            report_info: '決算情報（2024年5月12日）',
             report_links: [
-              '決算情報（2020年5月12日）',
-              '決算要旨（PDF ： 1.28MB／全31ページ）',
-              '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 384KB／全22ページ）',
-              '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 620KB／全11ページ）',
+              '決算情報（2024年5月12日）',
+              '決算要旨（PDF ： 1.25MB／全30ページ）',
+              '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 380KB／全21ページ）',
+              '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 615KB／全10ページ）',
+              'メディア向け決算説明会の模様をご覧いただけます'
+            ]
+          },
+          {
+            id: 3,
+            fiscal_year: '2023年3月期',
+            report_type: '年次決算',
+            report_date: '2023-05-12',
+            revenue: null,
+            net_income: null,
+            file_path: null,
+            report_info: '決算情報（2023年5月12日）',
+            report_links: [
+              '決算情報（2023年5月12日）',
+              '決算要旨（PDF ： 1.22MB／全29ページ）',
+              '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 375KB／全20ページ）',
+              '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 610KB／全9ページ）',
+              'メディア向け決算説明会の模様をご覧いただけます'
+            ]
+          },
+          {
+            id: 4,
+            fiscal_year: '2022年3月期',
+            report_type: '年次決算',
+            report_date: '2022-05-12',
+            revenue: null,
+            net_income: null,
+            file_path: null,
+            report_info: '決算情報（2022年5月12日）',
+            report_links: [
+              '決算情報（2022年5月12日）',
+              '決算要旨（PDF ： 1.20MB／全28ページ）',
+              '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 370KB／全19ページ）',
+              '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 605KB／全8ページ）',
               'メディア向け決算説明会の模様をご覧いただけます'
             ]
           }
@@ -736,8 +779,8 @@ export default {
         }
       });
     },
-    goToFinancialReports() {
-      this.$router.push('/financial-report');
+    toggleShowAll() {
+      this.showAllReports = !this.showAllReports;
     }
   }
 };

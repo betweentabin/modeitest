@@ -110,7 +110,8 @@ export default {
 .hero-slider {
   width: 100%;
   height: 900px;
-  padding: 50px;
+  padding: 50px 50px 50px 50px;
+  padding-top: 130px;
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
@@ -254,10 +255,12 @@ export default {
 
 
 /* レスポンシブ対応 */
+
 @media (max-width: 1400px) {
   .hero-slider {
     height: 850px;
     padding: 45px 40px;
+    padding-top: 125px;
   }
   
   .slide-overlay {
@@ -287,10 +290,17 @@ export default {
   }
 }
 
+@media (max-width: 1350px) {
+  .hero-slider {
+    padding-top: 100px;
+  }
+}
+
 @media (max-width: 1200px) {
   .hero-slider {
     height: 800px;
     padding: 40px 30px;
+    padding-top: 90px;
   }
   
   .slide-overlay {
@@ -324,6 +334,7 @@ export default {
   .hero-slider {
     height: 750px;
     padding: 35px 25px;
+    padding-top: 95px;
   }
   
   .slide-overlay {
@@ -357,6 +368,7 @@ export default {
   .hero-slider {
     height: 700px;
     padding: 30px 20px;
+    padding-top: 90px;
   }
   
   .slide-overlay {
@@ -390,6 +402,7 @@ export default {
   .hero-slider {
     height: 500px;
     padding: 20px 15px;
+    padding-top: 75px;
   }
   
   .slide-overlay {
@@ -427,6 +440,7 @@ export default {
   .hero-slider {
     height: 350px;
     padding: 15px 10px;
+    padding-top: 60px;
   }
   
   .slide-overlay {
@@ -454,6 +468,7 @@ export default {
   .hero-slider {
     height: 280px;
     padding: 8px 5px;
+    padding-top: 50px;
   }
   
   .slide-overlay {
@@ -481,6 +496,7 @@ export default {
   .hero-slider {
     height: 220px;
     padding: 5px 3px;
+    padding-top: 45px;
   }
   
   .slide-overlay {

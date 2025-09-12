@@ -753,10 +753,6 @@ export default {
       // 経済指標ページに遷移
       this.$router.push('/economic-indicators');
     },
-    goToFinancialReport() {
-      // 決算報告ページに遷移
-      this.$router.push('/financial-report');
-    },
     goToContact() {
       // お問い合わせページに遷移
       this.$router.push('/contact');

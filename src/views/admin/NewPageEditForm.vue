@@ -459,7 +459,6 @@ const RECOMMENDED_KEYS = {
   home: ['page_title', 'lead', 'cta_primary', 'cta_secondary'],
   'economic-statistics': ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
   publications: ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
-  'financial-reports': ['page_title', 'page_subtitle', 'cta_primary', 'cta_secondary'],
   'economic-indicators': ['page_title', 'page_subtitle'],
   news: ['page_title', 'page_subtitle'],
   // Aboutページ：ご挨拶の本文/署名までCMS化
@@ -580,12 +579,6 @@ const KEY_LOCATIONS = {
     page_subtitle: '英字のサブ見出し（PublicationsPublic/Detail）',
     cta_primary: '下部の主ボタン文言（Detail等）',
     cta_secondary: '下部の副ボタン文言（Detail等）',
-  },
-  'financial-reports': {
-    page_title: 'ヒーロー・パンくず・見出し（FinancialReportPage）',
-    page_subtitle: '英字のサブ見出し（FinancialReportPage）',
-    cta_primary: '最下部の主ボタン文言',
-    cta_secondary: '最下部の副ボタン文言',
   },
   'economic-indicators': {
     page_title: 'ヒーロー・パンくず・見出し（EconomicIndicatorsPage）',
@@ -875,8 +868,6 @@ export default {
         // FAQ
         'faq': '/#/faq',
         // Financial reports
-        'financial-report': '/#/financial-report',
-        'financial-reports': '/#/financial-report'
       }
       return map[key] || '/#/'
     },
@@ -908,7 +899,6 @@ export default {
       }
     },
     isCompanyProfile() { const k = (this.formData.page_key || this.pageKey || '').trim(); return k === 'company-profile' },
-    isFinancialReports() { const k = (this.formData.page_key || this.pageKey || '').trim(); return k === 'financial-reports' }
   },
   watch: {
     contentJson(newValue) {
@@ -1022,7 +1012,7 @@ export default {
           if (!file) return
           const fd = new FormData()
           fd.append('file', file)
-          fd.append('directory', 'public/media/financial-reports')
+          fd.append('directory', 'public/media/uploads')
           const api = (await import('@/services/apiClient.js')).default
           const res = await api.upload('/api/admin/media/upload', fd)
           const url = res?.file?.url || res?.data?.file?.url || res?.data?.url || ''

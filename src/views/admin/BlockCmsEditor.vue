@@ -603,7 +603,6 @@ export default {
       if (s.includes('premium')) return 'premium-membership'
       if (s.includes('standard') && s.includes('membership')) return 'standard-membership'
       if (s.includes('membership')) return 'membership'
-      if (s.includes('financial')) return 'financial-reports'
       if (s === 'home') return 'home'
       if (s.includes('services')) return 'services'
       return null
@@ -652,7 +651,6 @@ export default {
         else if (slug.includes('premium')) this.pageContentKey = 'premium-membership'
         else if (slug.includes('standard') && slug.includes('membership')) this.pageContentKey = 'standard-membership'
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
-        else if (slug.includes('financial')) this.pageContentKey = 'financial-reports'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'services'
         else if (slug.includes('company')) this.pageContentKey = 'company-profile'
@@ -835,7 +833,7 @@ export default {
           this.pageContentKey,
           // common fallbacks
           'terms', 'transaction-law', 'company-profile', 'consulting', 'about-institute',
-          'about', 'sitemap', 'faq', 'glossary', 'membership', 'financial-reports', 'home', 'services',
+          'about', 'sitemap', 'faq', 'glossary', 'membership', 'home', 'services',
           'privacy', 'privacy-poricy', 'privacy-policy', 'privacy poricy'
         ]
         let foundKey = null

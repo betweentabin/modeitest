@@ -44,7 +44,7 @@
         <div class="footer-item">
           <span class="footer-text">会員PR</span>
         </div>
-        <router-link to="/services" class="footer-item footer-link">
+        <router-link to="/application-form" class="footer-item footer-link">
           <img class="vector-27" src="/img/vector.svg" alt="Vector" />
           <span class="footer-text">会員PRどっとコム</span>
         </router-link>
