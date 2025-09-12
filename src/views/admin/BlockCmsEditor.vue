@@ -84,11 +84,11 @@
           <div v-if="currentPage && (currentPage.slug==='company' || currentPage.slug==='cri-consulting' || currentPage.slug==='aboutus')" class="section-title">小コンポーネントの文言一覧（texts）</div>
           <template v-if="currentPage && currentPage.slug==='company'">
             <div class="field" v-for="(val, key) in companyTexts" :key="`company-${key}`">
-              <label>{{ key }}</label>
+              <label>{{ displayLabel(key) }}</label>
               <input v-model="companyTexts[key]" class="input" />
             </div>
             <div class="field" v-for="(val, key) in companyHtmls" :key="`company-html-${key}`">
-              <label>{{ key }}（HTML）</label>
+              <label>{{ displayLabel(key, true) }}</label>
               <textarea v-model="companyHtmls[key]" class="textarea" rows="3"></textarea>
             </div>
             <!-- Company history (沿革) -->
@@ -113,21 +113,21 @@
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
-              <label>{{ key }}</label>
+              <label>{{ displayLabel(key) }}</label>
               <input v-model="consultingTexts[key]" class="input" />
             </div>
             <div class="field" v-for="(val, key) in consultingHtmls" :key="`consult-html-${key}`">
-              <label>{{ key }}（HTML）</label>
+              <label>{{ displayLabel(key, true) }}</label>
               <textarea v-model="consultingHtmls[key]" class="textarea" rows="3"></textarea>
             </div>
           </template>
           <template v-if="currentPage && currentPage.slug==='aboutus'">
             <div class="field" v-for="(val, key) in aboutTexts" :key="`about-${key}`">
-              <label>{{ key }}</label>
+              <label>{{ displayLabel(key) }}</label>
               <input v-model="aboutTexts[key]" class="input" />
             </div>
             <div class="field" v-for="(val, key) in aboutHtmls" :key="`about-html-${key}`">
-              <label>{{ key }}（HTML）</label>
+              <label>{{ displayLabel(key, true) }}</label>
               <textarea v-model="aboutHtmls[key]" class="textarea" rows="3"></textarea>
             </div>
           </template>
@@ -182,12 +182,12 @@
           <template v-if="currentPage && showGenericEditor">
             <div class="section-title">子コンポーネント文言（基本）</div>
             <div class="field" v-for="(val, key) in genericTexts" :key="`gtext-${key}`">
-              <label>{{ key }}</label>
+              <label>{{ displayLabel(key) }}</label>
               <input v-model="genericTexts[key]" class="input" />
             </div>
             <div class="section-title">セクション別文言（HTML）</div>
             <div class="field" v-for="(val, key) in genericHtmls" :key="`ghtml-${key}`">
-              <label>{{ key }}（HTML）</label>
+              <label>{{ displayLabel(key, true) }}</label>
               <textarea v-model="genericHtmls[key]" class="textarea" rows="3"></textarea>
             </div>
           </template>
@@ -408,6 +408,132 @@ export default {
         // faq: Q/A リストの編集
         faqItems: [],
         companyHistory: [],
+      // 日本語表示用のラベルマップ（スラッグ別）
+      labelMaps: {
+        // トップ
+        home: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          about_title: '研究所について（見出し）', about_subtitle: '研究所について（英字）',
+          about_body: '研究所について（本文）',
+          cta_secondary: 'ボタン（研究所について詳しく）'
+        },
+        company: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          nav_philosophy: 'ナビ: 経営理念', nav_message: 'ナビ: ご挨拶', nav_profile: 'ナビ: 企業概要', nav_history: 'ナビ: 沿革', nav_staff: 'ナビ: 所員紹介', nav_financial: 'ナビ: 決算報告', nav_access: 'ナビ: アクセス',
+          philosophy_title: '経営理念（見出し）', philosophy_subtitle: '経営理念（英字）',
+          mission_label: 'OUR MISSION（ラベル）', mission_title: 'ミッション（見出し）',
+          message_title: 'ご挨拶（見出し）', message_subtitle: 'ご挨拶（英字）', message_label: 'ご挨拶（ラベル）', message_signature: 'ご挨拶（署名）',
+          profile_title: '会社概要（見出し）', profile_subtitle: '会社概要（英字）',
+          profile_company_name_label: '会社名（ラベル）', profile_company_name_value: '会社名（値）',
+          profile_established_label: '設立（ラベル）', profile_established_value: '設立（値）',
+          profile_address_label: '住所（ラベル）', profile_address_value: '住所（値・HTML可）',
+          profile_representative_label: '代表者（ラベル）', profile_representative_value: '代表者（値）',
+          profile_capital_label: '資本金（ラベル）', profile_capital_value: '資本金（値）',
+          profile_shareholders_label: '株主（ラベル）', profile_shareholders_value: '株主（値）',
+          profile_organization_label: '組織体制（ラベル）', profile_organization_value: '組織体制（値）',
+          history_title: '沿革（見出し）', history_subtitle: '沿革（英字）',
+          staff_title: '所員紹介（見出し）', staff_subtitle: '所員紹介（英字）',
+          // HTMLs
+          message_body: 'ご挨拶（本文）', mission_body: 'ミッション（本文）'
+        },
+        'cri-consulting': {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          what_title: '「CRI経営コンサルティングとは？」（見出し）', what_subtitle: '（英字）',
+          what_content_subtitle: '説明サブ見出し', what_content_heading: '説明見出し',
+          duties_title: '主な業務（見出し）', duties_subtitle: '主な業務（英字）', duties_label: '主な業務（ラベル）', duties_heading: '主な業務（説明見出し）',
+          support_title: 'サポート内容と費用（見出し）', support_subtitle_en: 'サポート（英字）',
+          achievements_title: '実績紹介（見出し）', achievements_subtitle: '実績紹介（英字）',
+          cta_primary: 'お問い合わせボタン文言', cta_secondary: '入会ボタン文言',
+          // HTMLs
+          what_content_body: '説明（本文）', duties_intro: '主な業務（導入文）', duties_list: '主な業務（リストHTML）', support_intro: 'サポート（導入文）',
+          // 実績（任意）
+          achievements_item1_date: '実績1 日付', achievements_item1_category: '実績1 カテゴリ', achievements_item1_title: '実績1 タイトル', achievements_item1_desc: '実績1 説明（HTML）',
+          achievements_item2_date: '実績2 日付', achievements_item2_category: '実績2 カテゴリ', achievements_item2_title: '実績2 タイトル', achievements_item2_desc: '実績2 説明（HTML）',
+          achievements_item3_date: '実績3 日付', achievements_item3_category: '実績3 カテゴリ', achievements_item3_title: '実績3 タイトル', achievements_item3_desc: '実績3 説明（HTML）',
+          achievements_item4_date: '実績4 日付', achievements_item4_category: '実績4 カテゴリ', achievements_item4_title: '実績4 タイトル', achievements_item4_desc: '実績4 説明（HTML）'
+        },
+        aboutus: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          about_title: '研究所について（見出し）', about_subtitle: '研究所について（英字）',
+          service_title: 'サービス概要（見出し）', service_subtitle: 'サービス概要（英字）',
+          service1_title: 'サービス1（見出し）', service1_desc: 'サービス1（説明）', service1_list: 'サービス1（リストHTML）',
+          service2_title: 'サービス2（見出し）', service2_desc: 'サービス2（説明）', service2_list: 'サービス2（リストHTML）',
+          service3_title: 'サービス3（見出し）', service3_desc: 'サービス3（説明）', service3_list: 'サービス3（リストHTML）',
+          main_headline: 'ヒーロー見出し（HTML）',
+          cta_primary: 'お問い合わせボタン文言', cta_secondary: '入会ボタン文言',
+          // HTMLs
+          about_body: '研究所について（本文）'
+        }
+        ,
+        // 利用規約
+        terms: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          copyright_title: '著作権等について（見出し）', link_title: 'リンクについて（見出し）', disclaimer_title: '免責事項（見出し）',
+          security_title: 'セキュリティについて（見出し）', cookie_title: 'クッキーについて（見出し）', environment_title: 'ご利用環境について（見出し）',
+          prohibited_title: '禁止される行為（見出し）', article8_title: '第8条（見出し）',
+          // HTMLs
+          intro: '導入（本文）', copyright_body: '著作権等について（本文）', link_body: 'リンクについて（本文）', disclaimer_body: '免責事項（本文）',
+          security_body: 'セキュリティについて（本文）', cookie_body: 'クッキーについて（本文）', environment_body: 'ご利用環境について（本文）',
+          prohibited_body: '禁止される行為（本文）', article8_body: '第8条（本文）'
+        },
+        // 会員（入会案内）
+        membership: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          intro_title: '導入（見出し）', intro_text: '導入（本文）',
+          services_title: 'サービス（見出し）', services_label: 'サービス（英字）',
+          premium_category_title: 'プレミアサービス（見出し）',
+          premium_service1_tag: 'プレミア項目1（タグ）', premium_service1_name: 'プレミア項目1（名称）',
+          standard_premium_category_title: 'スタンダード＆プレミア（見出し）',
+          standard_service1_tag: '項目1（タグ）', standard_service1_name: '項目1（名称）',
+          standard_service2_tag: '項目2（タグ）', standard_service2_name: '項目2（名称）',
+          standard_service3_tag: '項目3（タグ）', standard_service3_name: '項目3（名称）',
+          standard_service4_tag: '項目4（タグ）', standard_service4_name: '項目4（名称）',
+          standard_service5_tag: '項目5（タグ）', standard_service5_name: '項目5（名称）',
+          membership_info_title: '会員サービスについて（見出し）',
+          membership_benefits_label: '会員のメリット（ラベル）', membership_benefits_text: '会員のメリット（本文）',
+          membership_fee_label: '月会費（ラベル）', membership_fee_text: '月会費（本文）',
+          flow_title: '入会までの流れ（見出し）', flow_label: '入会までの流れ（英字）',
+          step1_title: 'STEP1（見出し）', step1_desc: 'STEP1（説明）',
+          step2_title: 'STEP2（見出し）', step2_desc: 'STEP2（説明）',
+          step3_title: 'STEP3（見出し）', step4_title: 'STEP4（見出し）',
+          cta_primary: 'お問い合わせボタン文言', cta_secondary: '入会ボタン文言'
+        },
+        'standard-membership': {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          intro_title: '導入（見出し）', intro_text: '導入（本文）',
+          services_title: '主なサービス（見出し）', services_label: 'サービス（英字）',
+          standard_category_title: 'スタンダードサービス（見出し）',
+          standard_service1_tag: '項目1（タグ）', standard_service1_name: '項目1（名称）',
+          standard_service2_tag: '項目2（タグ）', standard_service2_name: '項目2（名称）',
+          standard_service3_tag: '項目3（タグ）', standard_service3_name: '項目3（名称）',
+          standard_service4_tag: '項目4（タグ）', standard_service4_name: '項目4（名称）',
+          standard_service5_tag: '項目5（タグ）', standard_service5_name: '項目5（名称）',
+          membership_info_title: '会員サービスについて（見出し）',
+          membership_benefits_label: '会員のメリット（ラベル）', membership_benefits_text: '会員のメリット（本文）',
+          membership_fee_label: '月会費（ラベル）', membership_fee_text: '月会費（本文）',
+          flow_title: '入会までの流れ（見出し）', flow_label: '入会までの流れ（英字）',
+          step1_title: 'STEP1（見出し）', step1_desc: 'STEP1（説明）',
+          step2_title: 'STEP2（見出し）', step2_desc: 'STEP2（説明）',
+          step3_title: 'STEP3（見出し）', step4_title: 'STEP4（見出し）',
+          cta_primary: 'お問い合わせボタン文言', cta_secondary: '入会ボタン文言'
+        },
+        'premium-membership': {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          benefits_title: '話題の特典（見出し）', benefits_label: '話題の特典（英字）',
+          featured_title: '特集（見出し）', featured_body: '特集（本文）', featured_cta: '特集CTA',
+          cta_primary: 'お問い合わせボタン文言', cta_secondary: '入会ボタン文言'
+        },
+        sitemap: {
+          intro: '導入文',
+          cat_main: 'カテゴリ: メイン', cat_services: 'カテゴリ: サービス', cat_membership: 'カテゴリ: 会員', cat_support: 'カテゴリ: サポート', cat_legal: 'カテゴリ: 法務',
+          link_home: 'リンク: ホーム', link_company: 'リンク: 会社概要', link_about: 'リンク: 研究所について', link_seminar: 'リンク: セミナー', link_publications: 'リンク: 刊行物', link_consulting: 'リンク: コンサルティング', link_research: 'リンク: 調査研究', link_training: 'リンク: 研修', link_membership: 'リンク: 入会案内', link_news: 'リンク: お知らせ', link_faq: 'リンク: FAQ', link_contact: 'リンク: お問い合わせ', link_privacy: 'リンク: プライバシー', link_terms: 'リンク: 利用規約', link_legal: 'リンク: 特商法'
+        },
+        glossary: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          intro: '導入（本文）',
+          contact_title: '問合せ（見出し）', contact_subtitle: '問合せ（説明）', contact_label: '問合せ（英字）', contact_cta: '問合せボタン'
+        }
+      },
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
     }
@@ -454,6 +580,13 @@ export default {
           this.showCreate = true
         }
       }
+    },
+    displayLabel(key, isHtml=false){
+      const slug = (this.currentPage && this.currentPage.slug) || ''
+      const map = this.labelMaps[slug] || {}
+      const base = map[key] || key
+      if (isHtml && !/（HTML）$/.test(base)) return `${base}（HTML）`
+      return base
     },
     pageContentKeyFromSlug(slug){
       const s = (slug||'').toLowerCase()

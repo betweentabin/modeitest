@@ -14,7 +14,7 @@
           </div>
           <div class="form-group" style="align-self:flex-end;">
             <button class="small-btn" @click="openTemplates">テンプレートから作成</button>
-            <button class="small-btn" style="margin-left:8px" @click="$router.push('/admin/mailmagazine/group')">グループを管理</button>
+            <button class="small-btn" style="margin-left:8px" @click="goManageGroups">グループを管理</button>
           </div>
         </div>
 
@@ -307,6 +307,10 @@ export default {
   },
   mounted() { this.loadData() },
   methods: {
+    goManageGroups() {
+      if (this.$route && this.$route.path === '/admin/mailmagazine/group') return
+      this.$router.push('/admin/mailmagazine/group')
+    },
     async loadData() { await Promise.all([this.loadGroups(), this.loadCampaigns()]) },
     async loadGroups() {
       try {

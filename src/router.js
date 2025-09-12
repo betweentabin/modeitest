@@ -74,6 +74,25 @@ import MembershipPage from "./components/MembershipPage";
 
 Vue.use(Router);
 
+// Avoid NavigationDuplicated errors on redundant navigations in Vue Router v3
+const originalPush = Router.prototype.push;
+Router.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => {
+    if (err && (err.name === 'NavigationDuplicated' || (typeof err.message === 'string' && err.message.includes('redundant navigation')))) return;
+    throw err;
+  });
+};
+
+const originalReplace = Router.prototype.replace;
+Router.prototype.replace = function replace(location, onResolve, onReject) {
+  if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject);
+  return originalReplace.call(this, location).catch(err => {
+    if (err && (err.name === 'NavigationDuplicated' || (typeof err.message === 'string' && err.message.includes('redundant navigation')))) return;
+    throw err;
+  });
+};
+
 const router = new Router({
   mode: "hash",
   scrollBehavior(to, from, savedPosition) {

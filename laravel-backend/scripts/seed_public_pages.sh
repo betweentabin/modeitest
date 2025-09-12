@@ -36,6 +36,7 @@ run_seed ContactPageJsonSeeder
 run_seed SitemapPageJsonSeeder
 run_seed GlossaryPageJsonSeeder
 run_seed FaqPageJsonSeeder
+run_seed HomePageJsonSeeder
 
 # Pre-create Block CMS (CMS v2) page entries so the list is populated
 run_seed CmsV2DefaultPagesSeeder
