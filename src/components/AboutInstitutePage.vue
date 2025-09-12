@@ -16,7 +16,6 @@
 
     <!-- CMS Body (optional) -->
     <!-- CMS Body removed -->
-sss
     <!-- About Section -->
     <div class="about-section">
       <div class="section-header">

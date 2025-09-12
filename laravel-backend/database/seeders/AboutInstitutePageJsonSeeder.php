@@ -18,6 +18,9 @@ class AboutInstitutePageJsonSeeder extends Seeder
             'about_title' => 'ちくぎん地域経済研究所について',
             'about_subtitle' => 'FOR YOU',
 
+            // ヒーロー見出し（HTMLを含むテキストとして扱う）
+            'main_headline' => '産・官・学・金<span class="small-text">(金融機関)</span><br>をつなぐ架け橋へ',
+
             'service_title' => 'サービス概要',
             'service_subtitle' => 'service',
 
@@ -35,6 +38,8 @@ class AboutInstitutePageJsonSeeder extends Seeder
         $htmls = [
             'about_body' => '当研究所は、産・官・学・金(金融)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。<br>今後とも地元企業や地域の皆様をはじめ行政等との連携を緊密にし、様々な事業展開を図り地域の発展に寄与してまいりたいと考えております。',
             'service1_list' => '主な定期刊行物<br>ちくぎん地域経済レポート（四半期毎）<br>Hot Information（1ヶ月に2回）<br>メールマガジン（毎週2回）',
+            'service2_list' => '人材紹介、斡旋<br>外部専門家の紹介、斡旋<br>教育・研修<br>社員研修<br>講演会<br>セミナー',
+            'service3_list' => 'コンサルティング<br>経営課題解決サポート<br>ビジネスマッチング<br>国内外企業の紹介<br>新ビジネスモデルの発展<br>業務提携等の支援',
         ];
 
         $page = PageContent::where('page_key', $key)->first();
