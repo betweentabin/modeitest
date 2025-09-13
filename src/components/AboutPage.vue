@@ -75,7 +75,7 @@
             />
           </div>
           <div class="message-image">
-            <img src="/img/image-2.png" alt="代表挨拶" />
+            <img :src="getImageUrl('message') || '/img/image-2.png'" alt="代表挨拶" />
           </div>
         </div>
       </div>

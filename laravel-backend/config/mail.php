@@ -46,6 +46,18 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        // SendGrid via Symfony Mailer (HTTP API)
+        // Requires: composer require symfony/sendgrid-mailer
+        // Usage: set MAIL_MAILER=sendgrid and SENDGRID_API_KEY in env.
+        // Optionally, set MAIL_URL=sendgrid+api://<API_KEY>@default to override.
+        'sendgrid' => [
+            'transport' => 'sendgrid',
+            'url' => env('MAIL_URL'),
+            // Some environments rely on DSN only; still expose key for factories that support it
+            'key' => env('SENDGRID_API_KEY'),
+            'timeout' => env('MAIL_TIMEOUT', 5),
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
