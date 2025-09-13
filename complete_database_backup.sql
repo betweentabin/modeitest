@@ -325,7 +325,7 @@ CREATE INDEX IF NOT EXISTS page_contents_page_key_index ON page_contents (page_k
 CREATE INDEX IF NOT EXISTS page_contents_is_published_index ON page_contents (is_published);
 
 -- =====================================
--- ニュースカテゴリテーブル (news_categories)
+-- お知らせカテゴリテーブル (news_categories)
 -- =====================================
 CREATE TABLE IF NOT EXISTS news_categories (
     id BIGSERIAL PRIMARY KEY,
@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS news_categories (
 );
 
 -- =====================================
--- ニューステーブル (news)
+-- お知らせテーブル (news)
 -- =====================================
 CREATE TABLE IF NOT EXISTS news (
     id BIGSERIAL PRIMARY KEY,
@@ -499,7 +499,7 @@ INSERT INTO industries (name, code, created_at, updated_at) VALUES
 ('農林水産業', 'agriculture', NOW(), NOW())
 ON CONFLICT (code) DO NOTHING;
 
--- ニュースカテゴリ
+-- お知らせカテゴリ
 INSERT INTO news_categories (name, slug, description, sort_order, created_at, updated_at) VALUES
 ('お知らせ', 'notice', '一般的なお知らせ', 1, NOW(), NOW()),
 ('重要', 'important', '重要なお知らせ', 2, NOW(), NOW()),
@@ -534,7 +534,7 @@ WHERE status = 'active'
   AND is_active = TRUE 
   AND (membership_expires_at IS NULL OR membership_expires_at > NOW());
 
--- 公開されたニュースビュー
+-- 公開されたお知らせビュー
 CREATE OR REPLACE VIEW published_news AS
 SELECT n.*, nc.name as category_name
 FROM news n

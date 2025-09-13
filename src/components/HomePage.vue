@@ -204,6 +204,55 @@
                     :date="dynamicPublications[2] ? dynamicPublications[2].date : undefined"
                   />
                 </div>
+                <div class="publication-item-wrapper" @click="goToPublication(3)">
+                  <frame1321317475
+                    :x22="dynamicPublications[3] ? dynamicPublications[3].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[3] ? dynamicPublications[3].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[3] ? dynamicPublications[3].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(4)">
+                  <frame1321317475
+                    :x22="dynamicPublications[4] ? dynamicPublications[4].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[4] ? dynamicPublications[4].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[4] ? dynamicPublications[4].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(5)">
+                  <frame1321317475
+                    :x22="dynamicPublications[5] ? dynamicPublications[5].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[5] ? dynamicPublications[5].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[5] ? dynamicPublications[5].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(6)">
+                  <frame1321317475
+                    :x22="dynamicPublications[6] ? dynamicPublications[6].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[6] ? dynamicPublications[6].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[6] ? dynamicPublications[6].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(7)">
+                  <frame1321317475
+                    :x22="dynamicPublications[7] ? dynamicPublications[7].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[7] ? dynamicPublications[7].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[7] ? dynamicPublications[7].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(8)">
+                  <frame1321317475
+                    :x22="dynamicPublications[8] ? dynamicPublications[8].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[8] ? dynamicPublications[8].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[8] ? dynamicPublications[8].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(9)">
+                  <frame1321317475
+                    :x22="dynamicPublications[9] ? dynamicPublications[9].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[9] ? dynamicPublications[9].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[9] ? dynamicPublications[9].date : undefined"
+                  />
+                </div>
               </div>
               <!-- モバイル用のボタン（768px以下で表示） -->
               <div class="mobile-publication-button-wrapper">
@@ -509,7 +558,7 @@ export default {
       allPublications: [], // 全ての刊行物データ（ID参照用）
       currentIndex: 0, // 右側リストの先頭オフセット（メインは常に最新=0）
       // Dynamic news data
-      dynamicNewsItems: [], // CMSから取得したニュースデータ（カテゴリー情報含む）
+      dynamicNewsItems: [], // CMSから取得したお知らせデータ（カテゴリー情報含む）
       // Vector images for UI elements
       vector35,
       vector152,
@@ -532,7 +581,7 @@ export default {
     };
   },
   mounted() {
-    // トップのニュース/お知らせ・セミナー・刊行物などを読み込む
+    // トップのお知らせ/お知らせ・セミナー・刊行物などを読み込む
     // モック有効時はモックから、無効時はAPIから取得（内部でエラーハンドリング済み）
     this.loadLatestData().catch(error => {
       console.error('データの読み込みに失敗しました:', error);
@@ -565,7 +614,7 @@ export default {
         const publications = publicationsResponse?.data?.publications || publicationsResponse?.data || [];
         const notices = (noticesResponse?.data?.data) || (noticesResponse?.data?.notices) || (noticesResponse?.data) || [];
 
-        // ニュース枠は「お知らせ管理」の内容を表示する
+        // お知らせ枠は「お知らせ管理」の内容を表示する
         this.updatePageData(/*allNews not used*/[], seminars, publications, notices);
 
       } catch (error) {
@@ -578,7 +627,7 @@ export default {
       let latestNews = [];
       
       try {
-        // ニュース枠はお知らせを使用
+        // お知らせ枠はお知らせを使用
         const rawNotices = Array.isArray(notices) ? notices.slice(0, 5) : [];
         latestNews = rawNotices.map(n => ({
           id: n.id,
@@ -717,7 +766,7 @@ export default {
       this.dynamicPublications = list
     },
     getCategoryLabel(newsItem) {
-      // ニュースの種類に応じてカテゴリーラベルを返す
+      // お知らせの種類に応じてカテゴリーラベルを返す
       if (!newsItem) return 'NEWS';
       
       switch (newsItem.type) {
@@ -732,7 +781,7 @@ export default {
       }
     },
     getCategoryClass(newsItem) {
-      // ニュースの種類に応じてCSSクラスを返す
+      // お知らせの種類に応じてCSSクラスを返す
       if (!newsItem) return 'news-category';
       
       switch (newsItem.type) {
@@ -747,14 +796,14 @@ export default {
       }
     },
     goToNewsDetail(index) {
-      // 指定されたインデックスのニュース詳細ページに遷移
+      // 指定されたインデックスのお知らせ詳細ページに遷移
       if (this.dynamicNewsItems.length > index && this.dynamicNewsItems[index]) {
         const newsItem = this.dynamicNewsItems[index];
         this.$router.push(`/news/${newsItem.id}`);
       }
     },
     goToNewsList() {
-      // ニュース一覧ページに遷移
+      // お知らせ一覧ページに遷移
       this.$router.push('/news');
     },
     goToPublicationList() {

@@ -264,7 +264,7 @@ const mockData = {
       lastUpdated: '2025-03-25',
       images: []
     },
-    // ニュース・お知らせ関連
+    // お知らせ・お知らせ関連
     news: {
       title: 'お知らせ',
       content: 'お知らせ一覧ページ',

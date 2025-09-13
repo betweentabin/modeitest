@@ -180,7 +180,7 @@ export const screen2Data = {
     image1: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/image-2@2x.png",
     text120: "詳細はこちら",
     Information2: "Information",
-    text121: "ニュース",
+    text121: "お知らせ",
     date1: "2025.05.12",
     hotInformationVol319: "HOT Information Vol.319掲載しました！",
     vector3: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",

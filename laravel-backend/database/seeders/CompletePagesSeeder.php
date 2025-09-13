@@ -84,16 +84,16 @@ class CompletePagesSeeder extends Seeder
                 'published_at' => now(),
             ],
 
-            // 5. ニュース
+            // 5. お知らせ
             [
                 'page_key' => 'news',
-                'title' => 'ニュース',
+                'title' => 'お知らせ',
                 'content' => [
                     'description' => '研究所からのお知らせや最新情報をお届けします',
                     'categories' => ['お知らせ', '重要', 'イベント', 'メディア']
                 ],
                 'meta_description' => 'ちくぎん地域経済研究所からのお知らせや最新情報をご覧いただけます。',
-                'meta_keywords' => 'お知らせ,ニュース,イベント,最新情報',
+                'meta_keywords' => 'お知らせ,お知らせ,イベント,最新情報',
                 'is_published' => true,
                 'published_at' => now(),
             ],

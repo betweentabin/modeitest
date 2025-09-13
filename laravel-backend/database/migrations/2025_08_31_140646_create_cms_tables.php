@@ -71,7 +71,7 @@ return new class extends Migration
         });
         }
 
-        // ニュースカテゴリテーブル
+        // お知らせカテゴリテーブル
         if (!Schema::hasTable('news_categories')) {
         Schema::create('news_categories', function (Blueprint $table) {
             $table->id();
@@ -85,7 +85,7 @@ return new class extends Migration
         });
         }
 
-        // ニューステーブル
+        // お知らせテーブル
         if (!Schema::hasTable('news')) {
         Schema::create('news', function (Blueprint $table) {
             $table->id();

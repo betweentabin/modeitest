@@ -140,7 +140,7 @@ const router = new Router({
       path: "/news",
       name: "news",
       component: NewsPage,
-      meta: { title: "ニュース - ちくぎん地域経済研究所" }
+      meta: { title: "お知らせ - ちくぎん地域経済研究所" }
     },
     {
       path: "/news/:id",

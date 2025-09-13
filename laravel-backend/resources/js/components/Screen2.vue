@@ -253,6 +253,34 @@
                   :x22="frame13213174752Props.x22"
                   :hotInformationVol324="frame13213174752Props.hotInformationVol324"
                 />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
+                <frame1321317475
+                  :x22="frame13213174752Props.x22"
+                  :hotInformationVol324="frame13213174752Props.hotInformationVol324"
+                />
                 <div class="frame-1321317475">
                   <div class="overlap-group3">
                     <img class="x2-2" :src="x221" alt="2 2" />

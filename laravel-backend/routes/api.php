@@ -200,7 +200,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/{pageKey}/replace-html-image', [PageContentController::class, 'replaceHtmlImage']);
         });
 
-        // モデル画像置換（ニュース・刊行物・レポート・セミナーなど）
+        // モデル画像置換（お知らせ・刊行物・レポート・セミナーなど）
         Route::prefix('media')->middleware('can:manage-content')->group(function () {
             Route::post('/replace-model-image', [MediaReplaceController::class, 'replaceModelImage']);
             Route::post('/replace-model-html-image', [MediaReplaceController::class, 'replaceModelHtmlImage']);
@@ -271,7 +271,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [App\Http\Controllers\Admin\SeminarCategoryController::class, 'destroy']);
         });
         
-        // 管理者用ニュースAPI
+        // 管理者用お知らせAPI
         Route::prefix('news-v2')->group(function () {
             Route::get('/', [NewsV2Controller::class, 'index']);
             Route::post('/', [NewsV2Controller::class, 'store']);
@@ -435,7 +435,7 @@ Route::prefix('public')->group(function () {
         ->where('ext', '[A-Za-z0-9]+');
 });
 
-// 新しいニュースAPI（v2）
+// 新しいお知らせAPI（v2）
 Route::prefix('news-v2')->group(function () {
     Route::get('/', [NewsV2Controller::class, 'index']);
     Route::get('/{id}', [NewsV2Controller::class, 'show']);

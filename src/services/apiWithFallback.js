@@ -74,7 +74,7 @@ class ApiWithFallback {
     }
   }
 
-  // ニュース関連
+  // お知らせ関連
   async getNews(params = {}) {
     if (this.useFallback) {
       return mockServer.getNews(params)

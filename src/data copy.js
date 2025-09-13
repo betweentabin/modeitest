@@ -180,7 +180,7 @@ export const homePageData = {
     image1: "/img/image-2.png",
     text120: "詳細はこちら",
     Information2: "Information",
-    text121: "ニュース",
+    text121: "お知らせ",
     date1: "2025.05.12",
     hotInformationVol319: "HOT Information Vol.319掲載しました！",
     vector3: "/img/rectangle-6-7.png",

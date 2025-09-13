@@ -11,7 +11,7 @@ class NewsController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        // 一般ニュースのみ抽出
+        // 一般お知らせのみ抽出
         $query = NewsArticle::published()->where('type', 'news');
 
         if ($request->has('category')) {

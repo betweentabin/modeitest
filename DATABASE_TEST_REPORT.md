@@ -107,7 +107,7 @@ DB_CONNECTION=sqlite
 
 #### 2. /api/news (公開API)
 - **結果**: ✅ 正常動作
-- **データ**: 5件のニュース記事を正常に返却
+- **データ**: 5件のお知らせ記事を正常に返却
 
 #### 3. /api/economic-statistics (認証必須API)
 - **結果**: ❌ エラー

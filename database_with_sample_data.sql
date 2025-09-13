@@ -285,7 +285,7 @@ ON CONFLICT (page_key) DO UPDATE SET
     updated_at = EXCLUDED.updated_at;
 
 -- =====================================
--- ニュースサンプルデータ
+-- お知らせサンプルデータ
 -- =====================================
 
 INSERT INTO news (

@@ -28,8 +28,8 @@ INSERT INTO page_contents (page_key, title, content, meta_description, meta_keyw
 -- 6. セミナー情報
 ('seminars', 'セミナー情報 - 一般社団法人○○研究機構', '{"content": "定期開催セミナーのご案内と申込み受付。", "images": []}', 'セミナー情報と申込み案内', 'セミナー,講演,申込み', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
--- 7. ニュース・お知らせ
-('news', 'ニュース・お知らせ - 一般社団法人○○研究機構', '{"content": "最新のニュースとお知らせをお伝えします。", "images": []}', '最新ニュースとお知らせ', 'ニュース,お知らせ,最新', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+-- 7. お知らせ・お知らせ
+('news', 'お知らせ・お知らせ - 一般社団法人○○研究機構', '{"content": "最新のお知らせとお知らせをお伝えします。", "images": []}', '最新お知らせとお知らせ', 'お知らせ,お知らせ,最新', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- 8. FAQ
 ('faq', 'よくあるご質問 - 一般社団法人○○研究機構', '{"content": "よくお寄せいただくご質問にお答えします。", "images": []}', 'よくあるご質問とその回答', 'FAQ,質問,回答', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -115,7 +115,7 @@ BEGIN
     RAISE NOTICE '   4. CRIコンサルティング (cri-consulting)';
     RAISE NOTICE '   5. 経済統計 (economic-statistics)';
     RAISE NOTICE '   6. セミナー情報 (seminars)';
-    RAISE NOTICE '   7. ニュース・お知らせ (news)';
+    RAISE NOTICE '   7. お知らせ・お知らせ (news)';
     RAISE NOTICE '   8. FAQ (faq)';
     RAISE NOTICE '   9. お問い合わせ (contact)';
     RAISE NOTICE '   10. 会員申込み (membership-application)';
