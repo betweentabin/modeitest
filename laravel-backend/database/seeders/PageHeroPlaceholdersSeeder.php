@@ -34,11 +34,9 @@ class PageHeroPlaceholdersSeeder extends Seeder
 
             // Only set if missing to avoid overriding any existing hero
             $changed = false;
-            foreach (['hero', 'hero_mobile', 'hero_tablet'] as $k) {
-                if (!array_key_exists($k, $imgs)) {
-                    $imgs[$k] = $defaults;
-                    $changed = true;
-                }
+            if (!array_key_exists('hero', $imgs)) {
+                $imgs['hero'] = $defaults;
+                $changed = true;
             }
             if ($changed) {
                 $content['images'] = $imgs;
@@ -47,4 +45,3 @@ class PageHeroPlaceholdersSeeder extends Seeder
         }
     }
 }
-

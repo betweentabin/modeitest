@@ -150,10 +150,8 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
-import ApiClient from '@/services/apiClient'
+import api from '@/services/apiClient'
 import AdminPagination from '@/components/admin/AdminPagination.vue'
-
-const api = new ApiClient()
 
 export default {
   name: 'AdminUserManagement',

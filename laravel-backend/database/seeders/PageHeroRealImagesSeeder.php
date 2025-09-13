@@ -41,14 +41,11 @@ class PageHeroRealImagesSeeder extends Seeder
             if (!is_array($content)) { $content = ['html' => (string)$content]; }
             $imgs = isset($content['images']) && is_array($content['images']) ? $content['images'] : [];
 
-            // overwrite placeholders or set when missing
-            $imgs['hero'] = $imgs['hero'] ?? $url; $imgs['hero'] = $url;
-            $imgs['hero_mobile'] = $imgs['hero_mobile'] ?? $url;
-            $imgs['hero_tablet'] = $imgs['hero_tablet'] ?? $url;
+            // overwrite placeholders or set when missing (single hero only)
+            $imgs['hero'] = $url;
 
             $content['images'] = $imgs;
             $page->update(['content' => $content]);
         }
     }
 }
-
