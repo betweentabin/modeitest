@@ -38,7 +38,7 @@
           <div class="filter-group">
             <select v-model="filters.category" class="filter-select">
               <option value="">カテゴリー</option>
-              <option value="news">ニュース</option>
+              <option value="news">お知らせ</option>
               <option value="research">研究レポート</option>
               <option value="seminar">セミナー</option>
             </select>

@@ -55,7 +55,7 @@ class NewsV2Controller extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'ニュースの取得に失敗しました。',
+                'message' => 'お知らせの取得に失敗しました。',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -80,7 +80,7 @@ class NewsV2Controller extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'ニュースが見つかりません。',
+                'message' => 'お知らせが見つかりません。',
                 'error' => $e->getMessage()
             ], 404);
         }
@@ -109,13 +109,13 @@ class NewsV2Controller extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'ニュースが作成されました。',
+                'message' => 'お知らせが作成されました。',
                 'data' => ['news' => $news]
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'ニュースの作成に失敗しました。',
+                'message' => 'お知らせの作成に失敗しました。',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -146,13 +146,13 @@ class NewsV2Controller extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'ニュースが更新されました。',
+                'message' => 'お知らせが更新されました。',
                 'data' => ['news' => $news]
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'ニュースの更新に失敗しました。',
+                'message' => 'お知らせの更新に失敗しました。',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -166,12 +166,12 @@ class NewsV2Controller extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'ニュースが削除されました。'
+                'message' => 'お知らせが削除されました。'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'ニュースの削除に失敗しました。',
+                'message' => 'お知らせの削除に失敗しました。',
                 'error' => $e->getMessage()
             ], 500);
         }

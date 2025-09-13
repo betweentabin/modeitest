@@ -121,7 +121,7 @@
                 <p class="plan-price inter-bold-mandy-20px">無料</p>
                 <ul class="plan-features inter-normal-ship-gray-10px">
                   <li>基本統計の閲覧</li>
-                  <li>ニュース記事（一部）</li>
+                  <li>お知らせ記事（一部）</li>
                 </ul>
               </div>
 

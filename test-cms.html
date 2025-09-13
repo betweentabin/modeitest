@@ -117,7 +117,7 @@
             <p>1. <a href="http://localhost:8081/admin/notices" target="_blank">お知らせ管理画面</a>を開く</p>
             <p>2. 新規お知らせを作成</p>
             <p>3. 既存のお知らせを編集</p>
-            <p>4. <a href="http://localhost:8081/news" target="_blank">ニュースページ</a>で反映を確認</p>
+            <p>4. <a href="http://localhost:8081/news" target="_blank">お知らせページ</a>で反映を確認</p>
             <div class="button-group">
                 <button onclick="testNoticeCRUD()">お知らせCRUDテスト実行</button>
                 <button onclick="checkNoticeData()">保存データ確認</button>
@@ -141,7 +141,7 @@
             <h3>ステップ 5: HomePage.vueでの表示確認</h3>
             <p>1. CMS管理画面で新しいデータを追加</p>
             <p>2. <a href="http://localhost:8081" target="_blank">ホームページ</a>を開く（またはリロード）</p>
-            <p>3. 最新のニュース、セミナー数、刊行物数が自動的に表示されることを確認</p>
+            <p>3. 最新のお知らせ、セミナー数、刊行物数が自動的に表示されることを確認</p>
             <div class="button-group">
                 <button onclick="testHomePageIntegration()">ホームページ連携テスト</button>
             </div>
@@ -248,7 +248,7 @@
                 resultDiv.innerHTML = `
                     <span class="success">✅ お知らせ作成成功！</span><br>
                     タイトル: ${newNotice.title}<br>
-                    <small>ニュースページで確認してください。</small>
+                    <small>お知らせページで確認してください。</small>
                 `;
             } catch (error) {
                 resultDiv.className = 'result error';
@@ -281,7 +281,7 @@
                 resultDiv.innerHTML = `
                     <span class="success">✅ 刊行物作成成功！</span><br>
                     タイトル: ${newPublication.title}<br>
-                    <small>ニュースページで確認してください。</small>
+                    <small>お知らせページで確認してください。</small>
                 `;
             } catch (error) {
                 resultDiv.className = 'result error';
@@ -433,7 +433,7 @@
                     <strong>次の手順：</strong><br>
                     1. ホームページを開く/リロードする<br>
                     2. 以下が更新されているか確認：<br>
-                    　・最新のニュース欄に「${testItems[2].data.title}」<br>
+                    　・最新のお知らせ欄に「${testItems[2].data.title}」<br>
                     　・セミナー数の更新<br>
                     　・刊行物数の更新<br>
                     <br>

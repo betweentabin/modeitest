@@ -21,7 +21,7 @@
   - テスト用会員データ
   - セミナーサンプル
   - 経済レポートサンプル
-  - ニュースサンプル
+  - お知らせサンプル
   - ページコンテンツ
 
 ## 移行手順
@@ -82,7 +82,7 @@ DATABASE_URL=postgresql://username:password@host:port/database
 - `seminar_registrations` - セミナー申込
 - `economic_reports` - 経済レポート
 - `page_contents` - CMSページ
-- `news` - ニュース
+- `news` - お知らせ
 
 ### メール機能
 - `mail_groups` - メールグループ
@@ -98,7 +98,7 @@ DATABASE_URL=postgresql://username:password@host:port/database
 ### マスターデータ
 - `regions` - 地域マスター
 - `industries` - 業界マスター
-- `news_categories` - ニュースカテゴリ
+- `news_categories` - お知らせカテゴリ
 - `publication_categories` - 刊行物カテゴリ
 
 ## 検証方法

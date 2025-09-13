@@ -247,8 +247,8 @@ export default {
           this.totalItems = 0
         }
       } catch (err) {
-        console.error('ニュースの読み込みに失敗しました:', err)
-        this.error = 'ニュースの読み込みに失敗しました。'
+        console.error('お知らせの読み込みに失敗しました:', err)
+        this.error = 'お知らせの読み込みに失敗しました。'
         // フォールバックは行わない
         this.newsItems = []
         this.totalPages = 1
@@ -280,7 +280,7 @@ export default {
       return `${year}.${month}.${day}`;
     },
     getCategoryLabel(category) {
-      // ニュース種別・カテゴリに応じて日本語ラベルを表示
+      // お知らせ種別・カテゴリに応じて日本語ラベルを表示
       const labels = {
         seminar: 'セミナー',
         publication: '刊行物',

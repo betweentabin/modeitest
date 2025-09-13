@@ -84,7 +84,7 @@
                     <option value="">カテゴリーを選択</option>
                     <option value="seminar">セミナー関連</option>
                     <option value="publication">刊行物関連</option>
-                    <option value="news">ニュース関連</option>
+                    <option value="news">お知らせ関連</option>
                     <option value="general">一般</option>
                   </select>
                 </div>

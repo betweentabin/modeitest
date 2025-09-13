@@ -63,7 +63,7 @@ class News extends Model
     public function scopeForMembership($query, $membershipLevel = 'none')
     {
         // CMS版newsテーブルにはmembership_requirementフィールドがないので
-        // 全てのニュースを返す（会員制限なし）
+        // 全てのお知らせを返す（会員制限なし）
         return $query;
     }
 

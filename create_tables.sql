@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS publications (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ニュースカテゴリテーブル
+-- お知らせカテゴリテーブル
 CREATE TABLE IF NOT EXISTS news_categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS news_categories (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ニューステーブル
+-- お知らせテーブル
 CREATE TABLE IF NOT EXISTS news (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,

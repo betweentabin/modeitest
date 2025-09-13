@@ -4,13 +4,13 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="ニュース詳細"
+      title="お知らせ詳細"
       subtitle="news detail"
       heroImage="/img/Image_fx3.jpg"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['ニュース', newsItem ? newsItem.title : '詳細']" />
+    <Breadcrumbs :breadcrumbs="['お知らせ', newsItem ? newsItem.title : '詳細']" />
 
     <div class="page-content">
       <div v-if="loading" class="loading-container">
@@ -19,14 +19,14 @@
       
       <div v-else-if="error" class="error-container">
         <div class="error-message">{{ error }}</div>
-        <button @click="$router.push('/news')" class="back-btn">ニュース一覧に戻る</button>
+        <button @click="$router.push('/news')" class="back-btn">お知らせ一覧に戻る</button>
       </div>
       
              <div v-else-if="newsItem" class="detail-container">
          <!-- メインコンテンツ -->
         <div class="detail-content">
           <div class="detail-header">
-              <!-- ニュース画像 -->
+              <!-- お知らせ画像 -->
               <div v-if="newsItem.image" class="news-image">
                 <img :src="newsItem.image" :alt="newsItem.title" />
               </div>
@@ -134,7 +134,7 @@ export default {
         const res = await apiClient.getNotice(newsId)
         const n = res?.data || res
         if (!n || (!n.id && !n.notice)) {
-          this.error = 'ニュースが見つかりませんでした'
+          this.error = 'お知らせが見つかりませんでした'
           return
         }
         const notice = n.notice || n
@@ -151,7 +151,7 @@ export default {
         this.relatedNews = []
         
       } catch (err) {
-        this.error = 'ニュースの詳細情報を取得できませんでした';
+        this.error = 'お知らせの詳細情報を取得できませんでした';
         console.error('News detail loading error:', err);
       } finally {
         this.loading = false;
