@@ -603,7 +603,7 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/membership');
+      this.$router.push('/membership/apply');
     },
     canAccessPublication(publication) {
       const requiredLevel = publication.membershipLevel || 'free';

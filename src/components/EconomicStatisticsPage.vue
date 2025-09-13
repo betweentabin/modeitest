@@ -273,7 +273,7 @@ export default {
       this.$router.push(link)
     },
     handleJoinClick() {
-      const link = this._pageText?.getLink('cta_secondary', '/register') || '/register'
+      const link = this._pageText?.getLink('cta_secondary', '/membership/apply') || '/membership/apply'
       this.$router.push(link)
     },
     async updateBlurFromAuth() {
@@ -519,7 +519,7 @@ export default {
       this.$router.push('/contact');
     },
     handleJoinClick() {
-      this.$router.push('/membership');
+      this.$router.push('/membership/apply');
     }
   }
 };

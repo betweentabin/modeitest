@@ -262,6 +262,10 @@ const router = new Router({
       component: ApplicationFormPage,
     },
     {
+      path: "/application-form",
+      redirect: "/membership/apply"
+    },
+    {
       path: "/glossary",
       name: "glossary",
       component: GlossaryPage,
@@ -563,9 +567,7 @@ const router = new Router({
     },
     {
       path: "/register",
-      name: "memberRegister",
-      component: MembershipPage,
-      meta: { title: "入会案内 - ちくぎん地域経済研究所" }
+      redirect: "/membership/apply"
     },
     {
       path: "/membership",

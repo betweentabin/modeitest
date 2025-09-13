@@ -426,7 +426,7 @@ export default {
 
 .content-image {
   width: 100%;
-  height: 100%;
+  max-height: 550px;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
@@ -435,6 +435,7 @@ export default {
 
 .content-text {
   width: 100%;
+  max-height: 550px;
   padding: 50px;
   background: #FFF;
   border-radius: 0 20px 20px 0;
@@ -488,6 +489,7 @@ export default {
 
 .duties-content {
   width: 100%;
+  max-height: 550px;
   padding: 50px;
   background: #FFF;
   border-radius: 20px 0 0 20px;
@@ -546,7 +548,7 @@ export default {
 
 .duties-image {
   width: 100%;
-  height: 100%;
+  max-height: 550px;
   border-radius: 0 20px 20px 0;
   object-fit: cover;
   object-position: center;
@@ -872,6 +874,31 @@ export default {
 
 
 
+@media (max-width: 1850px) {
+  .content-image {
+    max-height: 650px;
+  }
+
+  .content-text {
+    max-height: 650px;
+  }
+}
+
+@media (max-width: 1600px) {
+  .content-image {
+    max-height: 700px;
+  }
+
+  .content-text {
+    max-height: 700px;
+  }
+}
+
+@media (max-width: 1480px) {
+    .duties-image {
+    max-height: 580px;
+  }
+}
 
 
 /* Responsive Design */
@@ -1063,6 +1090,10 @@ export default {
   
   .frame-1321317466 {
     order: 1;
+  }
+
+  .duties-content {
+    gap: 25px !important;
   }
 }
 
