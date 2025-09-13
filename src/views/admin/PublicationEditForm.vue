@@ -449,11 +449,18 @@ export default {
         // Build multipart form
         const fd = new FormData()
         const payload = { ...this.formData }
-        // Normalize booleans to 1/0
+        // Do NOT send existing cover_image URL as a string when uploading.
+        // The admin backend expects cover_image to be a file if present.
+        delete payload.cover_image
+        // Normalize booleans and skip empty strings (e.g., pages: '')
         Object.entries(payload).forEach(([k, v]) => {
           if (v === null || v === undefined) return
-          if (typeof v === 'boolean') fd.append(k, v ? '1' : '0')
-          else fd.append(k, v)
+          if (typeof v === 'boolean') {
+            fd.append(k, v ? '1' : '0')
+            return
+          }
+          if (typeof v === 'string' && v.trim() === '') return
+          fd.append(k, v)
         })
         if (this.coverImageFile) fd.append('cover_image', this.coverImageFile)
         if (this.pdfFile) fd.append('pdf_file', this.pdfFile)

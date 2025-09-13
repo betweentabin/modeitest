@@ -463,23 +463,7 @@
       </div>
       <div v-else class="empty">ページを選択してください</div>
     </div>
-      <div class="pane right">
-        <div class="preview-panel" v-if="currentPage && showPreview">
-          <div class="preview-toolbar">
-            <div class="label">プレビュー</div>
-            <div class="spacer"></div>
-            <button class="btn" :class="{active: previewDevice==='desktop'}" @click="setPreviewDevice('desktop')">PC</button>
-            <button class="btn" :class="{active: previewDevice==='tablet'}" @click="setPreviewDevice('tablet')">Tablet</button>
-            <button class="btn" :class="{active: previewDevice==='mobile'}" @click="setPreviewDevice('mobile')">SP</button>
-            <button class="btn" @click="reloadPreview">再読込</button>
-            <a class="btn" :href="rawPreviewUrl" target="_blank" rel="noopener">別タブ</a>
-          </div>
-          <div class="preview-viewport" :style="previewViewportStyle">
-            <iframe v-if="previewUrl" :key="previewUrl" class="preview-frame" :src="previewUrl"></iframe>
-            <div v-else class="help">プレビューURLが未設定です</div>
-          </div>
-        </div>
-      </div>
+      <div class="pane right" style="display:none"></div>
     </div>
 
     <!-- Create modal -->
@@ -515,16 +499,12 @@ export default {
       showCreate: false,
       createForm: { slug: '', title: '' },
       previewUrl: '',
-      rawPreviewUrl: '',
       kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
       // エディタ（本文）の表示切替。既定は非表示
       showContentEditor: false,
       // ページ構成ビュー（実ページに近い配置で編集）
       layoutMode: false,
-      // 右ペイン: ライブプレビュー
-      showPreview: true,
-      previewDevice: 'desktop', // 'desktop' | 'tablet' | 'mobile'
       privacyTexts: {
         page_title: '', page_subtitle: '', intro: '',
         collection_title: '', collection_body: '',
@@ -711,46 +691,10 @@ export default {
       const hasHtmls = this.genericHtmls && Object.keys(this.genericHtmls).length > 0
       return hasTexts || hasHtmls
     },
-    previewViewportStyle(){
-      const map = {
-        desktop: 1200,
-        tablet: 768,
-        mobile: 375,
-      }
-      const w = map[this.previewDevice] || 1200
-      return { width: w + 'px', height: 'calc(100% - 46px)' }
     }
   },
   methods: {
-    setPreviewDevice(d){ this.previewDevice = d },
-    getRoutePathFromSlug(slug){
-      const s = (slug||'').toLowerCase()
-      if (s === 'home') return ''
-      if (s.includes('company')) return 'company'
-      if (s.includes('aboutus')) return 'aboutus'
-      if (s.includes('about')) return 'aboutus'
-      if (s.includes('legal') || s.includes('transaction')) return 'legal'
-      if (s.includes('privacy')) return 'privacy'
-      if (s.includes('terms')) return 'terms'
-      if (s.includes('faq')) return 'faq'
-      if (s.includes('glossary')) return 'glossary'
-      if (s.includes('sitemap')) return 'sitemap'
-      if (s.includes('publication')) return 'publications-public'
-      return s.replace(/^\/+/, '')
-    },
-    buildPreviewUrl(){
-      try {
-        const slug = (this.currentPage && this.currentPage.slug) || ''
-        const route = this.getRoutePathFromSlug(slug)
-        const base = window.location.origin
-        const path = route ? `/#/${route}` : '/#/'
-        const t = Date.now()
-        const qs = `cmsPreview=1&_t=${t}`
-        this.rawPreviewUrl = `${base}${path}?${qs}`
-        this.previewUrl = this.rawPreviewUrl
-      } catch(_) { this.previewUrl=''; this.rawPreviewUrl='' }
-    },
-    reloadPreview(){ this.buildPreviewUrl() },
+    // preview helpers removed
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
       if (res.success) this.pages = res.data.data || []
@@ -841,8 +785,7 @@ export default {
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'services'
-        // プレビューURL構築
-        this.buildPreviewUrl()
+        // プレビュー機能は撤去
 
         // 既存テキストの読み込み
         try {
@@ -1308,7 +1251,7 @@ export default {
   .pane{ border-right:1px solid #eee; }
   .left{ width:280px; }
   .center{ flex:1; padding:16px; }
-  .right{ width:420px; }
+  .right{ width:360px; }
 .toolbar{ display:flex; gap:8px; padding:10px; border-bottom:1px solid #eee; }
 .list{ overflow:auto; height: calc(100% - 50px); }
 .item{ padding:10px 12px; border-bottom:1px solid #f4f4f4; cursor:pointer; }
@@ -1331,16 +1274,7 @@ export default {
   .kv-icon{ font-size:22px; }
   .kv-preview{ width:100%; height:100%; background-size:cover; background-position:center; border-radius:8px; }
   .help{ color:#777; font-size:12px; }
-  /* Preview panel */
-  .preview-panel{ display:flex; flex-direction:column; height:100%; }
-  .preview-toolbar{ display:flex; gap:8px; padding:8px; border-bottom:1px solid #eee; align-items:center; }
-  .preview-toolbar .label{ font-weight:600; color:#333; }
-  .preview-toolbar .spacer{ flex:1; }
-  .preview-viewport{ flex:1; overflow:auto; display:flex; align-items:flex-start; justify-content:center; padding:10px; background:#f9f9f9; }
-  .preview-frame{ width:100%; height:100%; border:1px solid #ddd; background:#fff; }
-  .btn.active{ background:#2d5bd1; }
-  
-  /* Device widths: container width is set inline via :style */
+  /* Preview panel removed */
   .page-image-row{ display:flex; gap:12px; align-items:center; border:1px solid #eee; border-radius:8px; padding:10px; margin-bottom:8px; background:#fafafa; }
   .img-preview{ width:120px; height:80px; background:#fff; border:1px solid #eee; display:flex; align-items:center; justify-content:center; }
   .img-preview img{ max-width:100%; max-height:100%; object-fit:contain; }
