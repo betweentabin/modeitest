@@ -31,6 +31,7 @@
 <script>
 import CmsText from '@/components/CmsText.vue'
 import HeroSlider from '@/components/HeroSlider.vue'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "HeroSection",
@@ -96,9 +97,22 @@ export default {
         this._media.ensure()
       } catch (e) { /* noop */ }
     }
+    // load page content for per-page KV hero (managed on each page)
+    if (this.cmsPageKey) {
+      try {
+        this._pageText = usePageText(this.cmsPageKey)
+        // Prefer admin when editing; otherwise public is fine. Force load to get fresh hero.
+        await this._pageText.load({ force: true })
+      } catch (e) { /* noop */ }
+    }
   },
   computed: {
     resolvedImage() {
+      // 1) per-page KV: prefer page content images (hero[_mobile|_tablet])
+      const fromPage = this.pageHero()
+      if (fromPage) return fromPage
+
+      // 2) legacy media registry fallback
       const key = this.mediaKey
       if (key && this._media) {
         if (this._media.getResponsiveImage) {
@@ -110,12 +124,48 @@ export default {
           return v || this.heroImage
         }
       }
+      // 3) static fallback
       return this.heroImage
     },
     heroStyle() {
       return {
         backgroundImage: `url('${this.resolvedImage || ''}')`
       };
+    }
+  }
+  ,
+  methods: {
+    viewport() {
+      try {
+        const w = typeof window !== 'undefined' ? window.innerWidth : 1200
+        if (w <= 600) return 'mobile'
+        if (w <= 1024) return 'tablet'
+        return 'desktop'
+      } catch (_) { return 'desktop' }
+    },
+    getFromImagesMap(images, key) {
+      const val = images?.[key]
+      if (!val) return ''
+      if (typeof val === 'string') return val
+      if (typeof val === 'object' && val.url) return val.url
+      return ''
+    },
+    pageHero() {
+      try {
+        const page = this._pageText?.page?.value
+        const images = page?.content?.images || {}
+        const vp = this.viewport()
+        const candidates = vp === 'mobile'
+          ? ['hero_mobile', 'hero_sm', 'hero']
+          : vp === 'tablet'
+          ? ['hero_tablet', 'hero_md', 'hero']
+          : ['hero']
+        for (const k of candidates) {
+          const v = this.getFromImagesMap(images, k)
+          if (typeof v === 'string' && v.length) return v
+        }
+        return ''
+      } catch (_) { return '' }
     }
   }
 };

@@ -64,13 +64,13 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/pages" class="nav-item" :class="{ active: isActive('/admin/pages') }">
+            <router-link v-if="false" to="/admin/pages" class="nav-item" :class="{ active: isActive('/admin/pages') }">
               各ページ管理
             </router-link>
           </li>
           <li>
             <router-link to="/admin/cms-v2" class="nav-item" :class="{ active: isActive('/admin/cms-v2') }">
-              ブロック型CMS
+              各ページ管理
             </router-link>
           </li>
           <li>

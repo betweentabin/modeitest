@@ -439,16 +439,10 @@ class PageContentController extends Controller
             }
         } catch (\Throwable $e) {}
 
-        // URL正規化
-        // 追加: コード上で使用しているが media レジストリに未登録の Hero キーを補完
+        // 追加: コード上で使用しているが media レジストリに未登録の共有画像キーを補完
         try {
-            $baseHero = [
-                'hero_economic_indicators', 'hero_economic_statistics', 'hero_publications',
-                'hero_company_profile', 'hero_privacy', 'hero_terms', 'hero_transaction_law',
-                'hero_contact', 'hero_glossary', 'hero_membership', 'hero_seminars_current',
-                'hero_financial_reports', 'hero_sitemap', 'hero_consulting',
-                'hero_news', 'hero_faq', 'hero_about_institute', 'hero_seminar', 'hero_premium_membership',
-            ];
+            // Policy: hero_* images are now managed per page, not globally.
+            // Do NOT include any hero_* keys here.
             $companyKeys = [
                 'company_profile_philosophy', 'company_profile_message',
                 'company_profile_staff_morita', 'company_profile_staff_mizokami',
@@ -466,7 +460,7 @@ class PageContentController extends Controller
                 }
                 return $out;
             };
-            $heroKeys = array_merge($variants($baseHero), $variants($companyKeys), $variants($sectionKeys));
+            $heroKeys = array_merge($variants($companyKeys), $variants($sectionKeys));
             $hasItem = function($k) use ($items) {
                 foreach ($items as $it) {
                     if (($it['page_key'] ?? '') === 'media' && ($it['key'] ?? '') === $k) return true;
