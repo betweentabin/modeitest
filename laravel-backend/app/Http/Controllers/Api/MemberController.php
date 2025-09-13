@@ -405,6 +405,24 @@ class MemberController extends Controller
         $csv = "会社名,代表者名,メールアドレス,電話番号,郵便番号,住所,会員種別,状態,入会日,会員期限,登録日\n";
 
         foreach ($rows as $r) {
+            $formatDate = function ($value, $format = 'Y-m-d H:i:s') {
+                try {
+                    if ($value instanceof \Carbon\CarbonInterface) {
+                        return $value->timezone('Asia/Tokyo')->format($format);
+                    }
+                    if ($value instanceof \DateTimeInterface) {
+                        return \Carbon\Carbon::instance($value)->timezone('Asia/Tokyo')->format($format);
+                    }
+                    if (is_string($value) && $value !== '') {
+                        return \Carbon\Carbon::parse($value)->timezone('Asia/Tokyo')->format($format);
+                    }
+                } catch (\Throwable $e) {
+                    // フォーマットに失敗した場合は元の値（文字列）を返す
+                    return is_scalar($value) ? (string)$value : '';
+                }
+                return '';
+            };
+
             $line = [
                 $r->company_name,
                 $r->representative_name,
@@ -414,9 +432,9 @@ class MemberController extends Controller
                 $r->address,
                 $r->membership_type,
                 $r->status,
-                optional($r->joined_date)->format('Y-m-d'),
-                optional($r->membership_expires_at)->timezone('Asia/Tokyo')->format('Y-m-d H:i:s'),
-                optional($r->created_at)->timezone('Asia/Tokyo')->format('Y-m-d H:i:s'),
+                $formatDate($r->joined_date, 'Y-m-d'),
+                $formatDate($r->membership_expires_at, 'Y-m-d H:i:s'),
+                $formatDate($r->created_at, 'Y-m-d H:i:s'),
             ];
             $csv .= implode(',', array_map(function($v){
                 $v = (string)($v ?? '');
