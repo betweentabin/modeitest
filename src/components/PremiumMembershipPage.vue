@@ -58,7 +58,7 @@
                  </div>
                </div>
 
-              <button class="download-btn">
+              <button class="download-btn" @click="downloadDemo4Image">
                 <CmsText pageKey="premium-membership" fieldKey="featured_cta" tag="span" :fallback="'日経トップリーダーを確認する'" />
                 <div class="icon-box">
                   <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,6 +150,17 @@ export default {
     handleJoinClick() {
       // Navigate to membership application form
       this.$router.push('/membership/apply');
+    },
+    
+    downloadDemo4Image() {
+      // demo4の画像（demo4.jpg）をPDFのように表示
+      const imageUrl = '/img/demo4.jpg';
+      
+      // 新しいタブで画像を表示（PDFのように）
+      window.open(imageUrl, '_blank');
+      
+      // ユーザーが手動でダウンロードできるように、右クリックメニューで保存可能
+      console.log('demo4.jpg を表示しました。右クリックで「名前を付けて画像を保存」を選択してダウンロードしてください。');
     }
   }
 };
