@@ -292,7 +292,7 @@ export default {
 
 @media (max-width: 1350px) {
   .hero-slider {
-    padding-top: 100px;
+    padding-top: 120px;
   }
 }
 
@@ -300,7 +300,7 @@ export default {
   .hero-slider {
     height: 800px;
     padding: 40px 30px;
-    padding-top: 90px;
+    padding-top: 110px;
   }
   
   .slide-overlay {
@@ -334,7 +334,7 @@ export default {
   .hero-slider {
     height: 750px;
     padding: 35px 25px;
-    padding-top: 95px;
+    padding-top: 100px;
   }
   
   .slide-overlay {
@@ -440,7 +440,7 @@ export default {
   .hero-slider {
     height: 350px;
     padding: 15px 10px;
-    padding-top: 60px;
+    padding-top: 70px;
   }
   
   .slide-overlay {
@@ -468,7 +468,7 @@ export default {
   .hero-slider {
     height: 280px;
     padding: 8px 5px;
-    padding-top: 50px;
+    padding-top: 58px;
   }
   
   .slide-overlay {
@@ -496,7 +496,7 @@ export default {
   .hero-slider {
     height: 220px;
     padding: 5px 3px;
-    padding-top: 45px;
+    padding-top: 55px;
   }
   
   .slide-overlay {
