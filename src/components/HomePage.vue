@@ -518,11 +518,11 @@ export default {
     };
   },
   mounted() {
-    // 一時的にデータロードを無効化してエラーを回避
-    console.log('HomePage mounted - データロードをスキップ');
-    // this.loadLatestData().catch(error => {
-    //   console.error('データの読み込みに失敗しました:', error);
-    // });
+    // トップのニュース/お知らせ・セミナー・刊行物などを読み込む
+    // モック有効時はモックから、無効時はAPIから取得（内部でエラーハンドリング済み）
+    this.loadLatestData().catch(error => {
+      console.error('データの読み込みに失敗しました:', error);
+    });
   },
   methods: {
     async loadLatestData() {
