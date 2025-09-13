@@ -34,7 +34,7 @@
           </div>
 
           <!-- Layout view toggle (for key pages like company) -->
-          <div class="field" v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('company'))">
+          <div class="field" v-if="currentPage && (['company','aboutus','consult'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -361,6 +361,119 @@
             </div>
             <div class="help">決算データは別管理（自動表示）です。タイトルのみ編集できます。</div>
 
+          </template>
+
+          <!-- AboutUs: layout oriented editor -->
+          <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('aboutus')) && layoutMode">
+            <!-- 研究所について（About） -->
+            <div class="section-title">研究所について（About）</div>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field">
+                  <label>見出し</label>
+                  <input v-model="aboutTexts.about_title" class="input" placeholder="研究所について" />
+                </div>
+                <div class="field">
+                  <label>英字</label>
+                  <input v-model="aboutTexts.about_subtitle" class="input" placeholder="About us" />
+                </div>
+                <div class="field">
+                  <label>本文（HTML）</label>
+                  <textarea v-model="aboutHtmls.about_body" class="textarea" rows="6"></textarea>
+                </div>
+              </div>
+              <div class="image-col">
+                <div class="field">
+                  <label>セクション画像（images.content）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('content') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.content</div>
+                      <div class="img-actions">
+                        <input ref="img_about_content" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('content', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('content')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- サービス（Services） -->
+            <div class="section-title">サービス（Services）</div>
+            <div class="field">
+              <label>見出し</label>
+              <input v-model="aboutTexts.service_title" class="input" placeholder="サービス概要" />
+            </div>
+            <div class="field">
+              <label>英字</label>
+              <input v-model="aboutTexts.service_subtitle" class="input" placeholder="services" />
+            </div>
+
+            <div class="field">
+              <label>サービス1（見出し）</label>
+              <input v-model="aboutTexts.service1_title" class="input" />
+              <label>サービス1（説明）</label>
+              <input v-model="aboutTexts.service1_desc" class="input" />
+              <label>サービス1（リストHTML）</label>
+              <textarea v-model="aboutHtmls.service1_list" class="textarea" rows="4"></textarea>
+            </div>
+            <div class="field">
+              <label>サービス2（見出し）</label>
+              <input v-model="aboutTexts.service2_title" class="input" />
+              <label>サービス2（説明）</label>
+              <input v-model="aboutTexts.service2_desc" class="input" />
+              <label>サービス2（リストHTML）</label>
+              <textarea v-model="aboutHtmls.service2_list" class="textarea" rows="4"></textarea>
+            </div>
+            <div class="field">
+              <label>サービス3（見出し）</label>
+              <input v-model="aboutTexts.service3_title" class="input" />
+              <label>サービス3（説明）</label>
+              <input v-model="aboutTexts.service3_desc" class="input" />
+              <label>サービス3（リストHTML）</label>
+              <textarea v-model="aboutHtmls.service3_list" class="textarea" rows="4"></textarea>
+            </div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
+          </template>
+
+          <!-- CRI Consulting: layout oriented editor -->
+          <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('consult')) && layoutMode">
+            <!-- クリとは？ -->
+            <div class="section-title">CRIとは？（What is CRI Consulting）</div>
+            <div class="field"><label>見出し</label><input v-model="consultingTexts.what_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="consultingTexts.what_subtitle" class="input" /></div>
+            <div class="field"><label>説明サブ見出し</label><input v-model="consultingTexts.what_content_subtitle" class="input" /></div>
+            <div class="field"><label>説明見出し</label><input v-model="consultingTexts.what_content_heading" class="input" /></div>
+            <div class="field"><label>説明（本文HTML）</label><textarea v-model="consultingHtmls.what_content_body" class="textarea" rows="5"></textarea></div>
+
+            <!-- 主な業務 -->
+            <div class="section-title">主な業務（Main Duties）</div>
+            <div class="field"><label>見出し</label><input v-model="consultingTexts.duties_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="consultingTexts.duties_subtitle" class="input" /></div>
+            <div class="field"><label>導入（HTML）</label><textarea v-model="consultingHtmls.duties_intro" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>ラベル</label><input v-model="consultingTexts.duties_label" class="input" /></div>
+            <div class="field"><label>説明見出し</label><input v-model="consultingTexts.duties_heading" class="input" /></div>
+            <div class="field"><label>リスト（HTML）</label><textarea v-model="consultingHtmls.duties_list" class="textarea" rows="5"></textarea></div>
+
+            <!-- サポート内容と費用 -->
+            <div class="section-title">サポート内容と費用（Support & Costs）</div>
+            <div class="field"><label>英字</label><input v-model="consultingTexts.support_subtitle_en" class="input" /></div>
+            <div class="field"><label>導入（HTML）</label><textarea v-model="consultingHtmls.support_intro" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>無料（見出し）</label><input v-model="consultingTexts.support_free_title" class="input" /></div>
+            <div class="field"><label>有料（見出し）</label><input v-model="consultingTexts.support_paid_title" class="input" /></div>
+
+            <!-- 実績（任意） -->
+            <div class="section-title">実績紹介（Achievements）</div>
+            <div class="field"><label>見出し</label><input v-model="consultingTexts.achievements_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="consultingTexts.achievements_subtitle" class="input" /></div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
