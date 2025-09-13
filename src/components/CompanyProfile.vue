@@ -495,8 +495,13 @@ export default {
     this.setupCarouselScroll();
     try {
       this._pageText = usePageText(this.pageKey)
-      // force: true でキャッシュを無視して常に最新を取得
-      this._pageText.load({ force: true })
+      const opts = { force: true }
+      // 管理者ログイン時は管理APIを優先（未公開の最新も即時反映）
+      try {
+        const token = localStorage.getItem('admin_token')
+        if (token && token.length > 0) opts.preferAdmin = true
+      } catch (_) {}
+      this._pageText.load(opts)
     } catch(e) { /* noop */ }
     this.loadFinancialReports();
     // lazy media registry (for staff/philosophy/message images)

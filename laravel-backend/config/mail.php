@@ -82,6 +82,21 @@ return [
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
+        // Gmail API (OAuth2) via symfony/google-mailer
+        // Use DSN in MAIL_URL, e.g.:
+        // MAIL_MAILER=gmail
+        // MAIL_URL=gmail+api://USER@gmail.com@default?client_id=XXX&client_secret=YYY&refresh_token=ZZZ
+        'gmail' => [
+            'transport' => 'gmail',
+            'url' => env('MAIL_URL'),
+            // Optional explicit params (when not using DSN)
+            'user' => env('GOOGLE_GMAIL_USER'),
+            'client_id' => env('GOOGLE_CLIENT_ID'),
+            'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+            'refresh_token' => env('GOOGLE_REFRESH_TOKEN'),
+            'access_token' => env('GOOGLE_ACCESS_TOKEN'), // optional pre-fetched token
+        ],
+
         'log' => [
             'transport' => 'log',
             'channel' => env('MAIL_LOG_CHANNEL'),
