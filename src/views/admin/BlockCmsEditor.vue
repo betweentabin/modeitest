@@ -833,7 +833,6 @@ export default {
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
       const hasHtmls = this.genericHtmls && Object.keys(this.genericHtmls).length > 0
       return hasTexts || hasHtmls
-    },
     }
   },
   methods: {
