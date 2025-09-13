@@ -480,8 +480,8 @@ class ApiClient {
     return this.put('/api/admin/media/rename', { old_path: oldPath, new_name: newName })
   }
   async deleteMedia(path) {
-    // Laravel expects JSON body with { path } on DELETE
-    return this.delete('/api/admin/media/delete', { body: { path } })
+    // Use 3-arg signature to avoid options.body overriding stringified body
+    return this.request('DELETE', '/api/admin/media/delete', { path })
   }
   async listMediaDirectories() {
     return this.get('/api/admin/media/directories')
@@ -497,6 +497,20 @@ class ApiClient {
   }
   async listCmsOverrides() { return this.get('/api/admin/cms-v2/overrides') }
   async setCmsOverride(payload) { return this.post('/api/admin/cms-v2/overrides', payload) }
+
+  // Admin Users (system administrators)
+  async listAdminUsers(params = {}) {
+    return this.get('/api/admin/admin-users', { params })
+  }
+  async createAdminUser(data) {
+    return this.post('/api/admin/admin-users', data)
+  }
+  async updateAdminUser(id, data) {
+    return this.put(`/api/admin/admin-users/${id}`, data)
+  }
+  async deleteAdminUser(id) {
+    return this.delete(`/api/admin/admin-users/${id}`)
+  }
   // Legacy PageContent (CmsText) admin APIs
   async adminGetPageContent(pageKey) {
     return this.get(`/api/admin/pages/${encodeURIComponent(pageKey)}`)

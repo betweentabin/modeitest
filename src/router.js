@@ -38,6 +38,7 @@ import MailGroupManagement from "./views/admin/MailGroupManagement";
 import EmailCampaignManagement from "./views/admin/EmailCampaignManagement";
 import BlockCmsEditor from "./views/admin/BlockCmsEditor.vue";
 import EmailSendNow from "./views/admin/EmailSendNow.vue";
+import AdminUserManagement from "./views/admin/AdminUserManagement.vue";
 import PublicationDetailPage from "./components/PublicationDetailPage";
 import NewsDetailPage from "./components/NewsDetailPage";
 import SeminarPage from "./components/SeminarPage";
@@ -432,6 +433,12 @@ const router = new Router({
       name: "noticeManagement",
       component: NoticeManagement,
       meta: { title: "お知らせ管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/admin-users",
+      name: "adminUserManagement",
+      component: AdminUserManagement,
+      meta: { title: "管理者管理 - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/mail-groups",

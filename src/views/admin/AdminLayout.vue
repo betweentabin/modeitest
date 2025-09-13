@@ -68,6 +68,11 @@
               メディアライブラリ
             </router-link>
           </li>
+          <li v-if="isSuperAdmin">
+            <router-link to="/admin/admin-users" class="nav-item" :class="{ active: isActive('/admin/admin-users') }">
+              管理者管理
+            </router-link>
+          </li>
           <li>
             <router-link v-if="false" to="/admin/pages" class="nav-item" :class="{ active: isActive('/admin/pages') }">
               各ページ管理
@@ -99,6 +104,14 @@ import axios from 'axios'
 
 export default {
   name: 'AdminLayout',
+  data() {
+    return {
+      adminUser: null,
+    }
+  },
+  created() {
+    try { this.adminUser = JSON.parse(localStorage.getItem('adminUser') || 'null') } catch { this.adminUser = null }
+  },
   methods: {
     isActive(path) {
       return this.$route.path === path || this.$route.path.startsWith(path + '/')
@@ -108,6 +121,12 @@ export default {
       localStorage.removeItem('adminUser')
       delete axios.defaults.headers.common['Authorization']
       this.$router.push('/admin')
+    }
+  },
+  computed: {
+    isSuperAdmin() {
+      const role = this.adminUser?.role || null
+      return role === 'super_admin'
     }
   }
 }

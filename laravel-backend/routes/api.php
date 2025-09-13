@@ -214,12 +214,13 @@ Route::prefix('admin')->group(function () {
             Route::post('/replace-model-html-image', [MediaReplaceController::class, 'replaceModelHtmlImage']);
         });
         
+        // 刊行物（管理）: ファイルアップロード対応の管理用コントローラに切替
         Route::prefix('publications')->middleware('can:manage-content')->group(function () {
-            Route::get('/', [PublicationsController::class, 'index']);
-            Route::post('/', [PublicationsController::class, 'store']);
-            Route::get('/{id}', [PublicationsController::class, 'show']);
-            Route::put('/{id}', [PublicationsController::class, 'update']);
-            Route::delete('/{id}', [PublicationsController::class, 'destroy']);
+            Route::get('/', [\App\Http\Controllers\Admin\PublicationManagementController::class, 'index']);
+            Route::post('/', [\App\Http\Controllers\Admin\PublicationManagementController::class, 'store']);
+            Route::get('/{id}', [\App\Http\Controllers\Admin\PublicationManagementController::class, 'show']);
+            Route::put('/{id}', [\App\Http\Controllers\Admin\PublicationManagementController::class, 'update']);
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\PublicationManagementController::class, 'destroy']);
         });
 
         // 経済統計レポート管理関連のルート

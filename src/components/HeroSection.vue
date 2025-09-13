@@ -108,7 +108,7 @@ export default {
   },
   computed: {
     resolvedImage() {
-      // 1) per-page KV: prefer page content images (hero[_mobile|_tablet])
+      // 1) per-page KV: use a single 'hero' image for all devices
       const fromPage = this.pageHero()
       if (fromPage) return fromPage
 
@@ -154,17 +154,8 @@ export default {
       try {
         const page = this._pageText?.page?.value
         const images = page?.content?.images || {}
-        const vp = this.viewport()
-        const candidates = vp === 'mobile'
-          ? ['hero_mobile', 'hero_sm', 'hero']
-          : vp === 'tablet'
-          ? ['hero_tablet', 'hero_md', 'hero']
-          : ['hero']
-        for (const k of candidates) {
-          const v = this.getFromImagesMap(images, k)
-          if (typeof v === 'string' && v.length) return v
-        }
-        return ''
+        const v = this.getFromImagesMap(images, 'hero')
+        return (typeof v === 'string' && v.length) ? v : ''
       } catch (_) { return '' }
     }
   }
