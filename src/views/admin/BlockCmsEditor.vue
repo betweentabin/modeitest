@@ -739,9 +739,6 @@ export default {
         else if (slug.includes('services')) this.pageContentKey = 'services'
         // プレビューURL構築
         this.buildPreviewUrl()
-        else if (slug.includes('company')) this.pageContentKey = 'company-profile'
-        else if (slug.includes('consult')) this.pageContentKey = 'cri-consulting'
-        else if (slug.includes('about')) this.pageContentKey = 'about-institute'
 
         // 既存テキストの読み込み
         try {
