@@ -909,7 +909,7 @@ section {
 
 .philosophy-image {
   width: 100%;
-  height: 100%;
+  max-height: 400px;
   display: block;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
@@ -918,7 +918,7 @@ section {
 
 .philosophy-text {
   width: 100%;
-  height: auto;
+  max-height: 400px;
   padding: 50px;
   background: white;
   border-radius: 0 20px 20px 0;
@@ -982,6 +982,7 @@ section {
 
 .message-text {
   width: 100%;
+  max-height: 700px;
   padding: 50px;
   background: white;
   border-radius: 20px 0 0 20px;
@@ -1022,7 +1023,7 @@ section {
 
 .message-image {
   width: 100%;
-  height: 100%;
+  max-height: 700px;
   display: block;
   border-radius: 0 20px 20px 0;
   object-fit: cover;
@@ -1593,6 +1594,14 @@ section {
   .staff-member {
     width: calc((100% - 30px) / 4);
     min-width: calc((100% - 30px) / 4);
+  }
+
+  .message-text {
+    max-height: 900px;
+  }
+
+  .message-image {
+    max-height: 900px;
   }
 }
 

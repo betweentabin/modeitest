@@ -204,6 +204,55 @@
                     :date="dynamicPublications[2] ? dynamicPublications[2].date : undefined"
                   />
                 </div>
+                <div class="publication-item-wrapper" @click="goToPublication(3)">
+                  <frame1321317475
+                    :x22="dynamicPublications[3] ? dynamicPublications[3].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[3] ? dynamicPublications[3].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[3] ? dynamicPublications[3].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(4)">
+                  <frame1321317475
+                    :x22="dynamicPublications[4] ? dynamicPublications[4].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[4] ? dynamicPublications[4].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[4] ? dynamicPublications[4].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(5)">
+                  <frame1321317475
+                    :x22="dynamicPublications[5] ? dynamicPublications[5].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[5] ? dynamicPublications[5].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[5] ? dynamicPublications[5].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(6)">
+                  <frame1321317475
+                    :x22="dynamicPublications[6] ? dynamicPublications[6].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[6] ? dynamicPublications[6].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[6] ? dynamicPublications[6].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(7)">
+                  <frame1321317475
+                    :x22="dynamicPublications[7] ? dynamicPublications[7].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[7] ? dynamicPublications[7].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[7] ? dynamicPublications[7].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(8)">
+                  <frame1321317475
+                    :x22="dynamicPublications[8] ? dynamicPublications[8].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[8] ? dynamicPublications[8].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[8] ? dynamicPublications[8].date : undefined"
+                  />
+                </div>
+                <div class="publication-item-wrapper" @click="goToPublication(9)">
+                  <frame1321317475
+                    :x22="dynamicPublications[9] ? dynamicPublications[9].x22 : frame13213174752Props.x22"
+                    :hotInformationVol324="dynamicPublications[9] ? dynamicPublications[9].hotInformationVol324 : frame13213174752Props.hotInformationVol324"
+                    :date="dynamicPublications[9] ? dynamicPublications[9].date : undefined"
+                  />
+                </div>
               </div>
               <!-- モバイル用のボタン（768px以下で表示） -->
               <div class="mobile-publication-button-wrapper">
