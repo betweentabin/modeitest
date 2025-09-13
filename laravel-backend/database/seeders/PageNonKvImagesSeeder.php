@@ -15,8 +15,11 @@ class PageNonKvImagesSeeder extends Seeder
 {
     public function run(): void
     {
-        // ABOUT: mission section image (component reads content.images['content'])
+        // ABOUT: hero + mission section image (component reads content.images['hero'|'content'])
         $this->mergeImages('about', [
+            'hero' => '/img/hero-image.png',
+            'hero_mobile' => '/img/hero-image.png',
+            'hero_tablet' => '/img/hero-image.png',
             // Used in AboutPage.vue: getImageUrl('content')
             'content' => '/img/image-1.png',
             // Optionally keep a message image slot for future wiring
@@ -61,4 +64,3 @@ class PageNonKvImagesSeeder extends Seeder
         $page->update(['content' => $content]);
     }
 }
-

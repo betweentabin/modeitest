@@ -30,6 +30,10 @@ class DatabaseSeeder extends Seeder
             MediaImagesSeeder::class,
             // Put per-page non-KV images into their own pages
             PageNonKvImagesSeeder::class,
+            // Remove hero_* entries from media registry (managed per page)
+            RemoveHeroImagesFromMediaSeeder::class,
+            // Ensure each page has a hero placeholder field to manage from the page editor
+            PageHeroPlaceholdersSeeder::class,
             TermsPageJsonSeeder::class,
             PrivacyPageJsonSeeder::class,
             FaqPageJsonSeeder::class,
