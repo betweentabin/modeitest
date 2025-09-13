@@ -66,9 +66,9 @@
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service1_title" tag="span" :fallback="'開発・研究'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service1_desc" tag="span" :fallback="'ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。'" /></p>
-            <div class="service-details">
-              <CmsText pageKey="about-institute" fieldKey="service1_list" tag="div" type="html" :fallback="'主な定期刊行物<br>ちくぎん地域経済レポート（四半期毎）<br>Hot Information（1ヶ月に2回）<br>メールマガジン（毎週2回）'" />
-            </div>
+              <div class="service-details">
+                <CmsText pageKey="about-institute" fieldKey="service1_list" tag="div" type="html" :fallback="'・主な定期刊行物<br>・ちくぎん地域経済レポート（四半期毎）<br>・Hot Information（1ヶ月に2回）<br>・メールマガジン（毎週2回）'" />
+              </div>
           </div>
         </div>
         
@@ -83,7 +83,7 @@
                 fieldKey="service2_list" 
                 tag="div" 
                 type="html"
-                :fallback="'人材紹介、斡旋<br>外部専門家の紹介、斡旋<br>教育・研修<br>社員研修<br>講演会<br>セミナー'" 
+                :fallback="'・人材紹介、斡旋<br>・外部専門家の紹介、斡旋<br>・教育・研修<br>・社員研修<br>・講演会<br>・セミナー'" 
               />
             </div>
           </div>
@@ -100,7 +100,7 @@
                 fieldKey="service3_list" 
                 tag="div" 
                 type="html"
-                :fallback="'コンサルティング<br>経営課題解決サポート<br>ビジネスマッチング<br>国内外企業の紹介<br>新ビジネスモデルの発展<br>業務提携等の支援'" 
+                :fallback="'・コンサルティング<br>・経営課題解決サポート<br>・ビジネスマッチング<br>・国内外企業の紹介<br>・新ビジネスモデルの発展<br>・業務提携等の支援'" 
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ export default {
 
 .about-image {
   width: 100%;
-  height: 100%;
+  max-height: 600px;
   border-radius: 20px 0 0 20px;
   object-fit: cover;
   object-position: center;
@@ -312,7 +312,7 @@ export default {
 
 .about-text {
   width: 100%;
-  height: auto;
+  max-height: 600px;
   padding: 50px;
   background: white;
   border-radius: 0 20px 20px 0;
@@ -333,6 +333,103 @@ export default {
   font-size: 55px;
   font-weight: 700;
   line-height: 1.5;
+}
+
+/* より細かいレスポンシブ対応 */
+@media (max-width: 1600px) {
+  .main-headline {
+    font-size: 52px !important;
+  }
+}
+
+@media (max-width: 1500px) {
+  .main-headline {
+    font-size: 51px !important;
+  }
+}
+
+@media (max-width: 1400px) {
+  .main-headline {
+    font-size: 48px !important;
+  }
+}
+
+@media (max-width: 1300px) {
+  .main-headline {
+    font-size: 42px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .main-headline {
+    font-size: 40px !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .main-headline {
+    font-size: 40px !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .main-headline {
+    font-size: 40px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-headline {
+    font-size: 38px !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .main-headline {
+    font-size: 35px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-headline {
+    font-size: 32px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .main-headline {
+    font-size: 30px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-headline {
+    font-size: 28px !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .main-headline {
+    font-size: 26px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-headline {
+    font-size: 24px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .main-headline {
+    font-size: 22px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .main-headline {
+    font-size: 20px !important;
+  }
 }
 
 .about-description {
@@ -372,7 +469,7 @@ export default {
 
 .service-image {
   width: 100%;
-  height: 100%;
+  max-height: 400px;
   object-fit: cover;
   object-position: center;
   display: block;
@@ -380,6 +477,7 @@ export default {
 
 .service-content {
   width: 100%;
+  max-height: 400px;
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -405,16 +503,7 @@ export default {
   font-size: 14px;
   font-weight: 400;
   line-height: 1.8;
-  background: #F5F5F5;
-  padding: 20px;
-  border-radius: 10px;
 }
-
-
-
-
-
-/* Footer Navigation */
 
 
 
@@ -481,7 +570,6 @@ export default {
   }
 
   .main-headline {
-    font-size: 48px !important;
     white-space: normal !important;
     word-break: break-word !important;
     overflow-wrap: break-word !important;
@@ -552,10 +640,6 @@ export default {
     font-size: 17px !important;
   }
 
-  .main-headline {
-    font-size: 42px !important;
-  }
-  
   .about-description {
     font-size: 17px !important;
   }
@@ -602,10 +686,6 @@ export default {
     font-size: 16px !important;
   }
 
-  .main-headline {
-    font-size: 38px !important;
-  }
-  
   .about-description {
     font-size: 16px !important;
   }
@@ -620,6 +700,12 @@ export default {
 
   .service-details {
     font-size: 16px !important;
+  }
+}
+
+@media (max-width: 1050px) {
+.service-content {
+    max-height: 450px !important;
   }
 }
 
@@ -654,9 +740,6 @@ export default {
   }
 
   /* フォントサイズ調整 */
-  .main-headline {
-    font-size: 25px !important;
-  }
   
   .about-description {
     font-size: 13px !important;
@@ -672,7 +755,6 @@ export default {
   
   .service-details {
     font-size: 13px !important;
-    padding: 15px;
   }
 
   /* 画像の調整 */
