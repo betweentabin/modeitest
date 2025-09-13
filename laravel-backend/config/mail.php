@@ -34,6 +34,11 @@ return [
     */
 
     'mailers' => [
+        // Resend Mailer (custom switch handled in code path)
+        'resend' => [
+            'transport' => 'resend',
+            'key' => env('RESEND_API_KEY'),
+        ],
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),

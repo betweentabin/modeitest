@@ -33,8 +33,8 @@
             <input v-model="currentPage.title" class="input" @change="savePageMeta" />
           </div>
 
-          <!-- Layout view toggle (for key pages like company) -->
-          <div class="field" v-if="currentPage && (['company','aboutus','consult'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
+          <!-- Layout view toggle (for key pages like company/aboutus/consult/membership) -->
+          <div class="field" v-if="currentPage && (['company','aboutus','consult','membership'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -59,6 +59,66 @@
               </div>
             </div>
           </template>
+          
+          <!-- membership: 構成ビュー（layoutMode） -->
+          <template v-if="currentPage && currentPage.slug==='membership' && layoutMode">
+            <div class="section-title">導入（Introduction）</div>
+            <div class="field"><label>見出し</label><input v-model="membershipTexts.intro_title" class="input" placeholder="ご入会に際しまして" /></div>
+            <div class="field"><label>本文</label><textarea v-model="membershipTexts.intro_text" class="textarea" rows="4"></textarea></div>
+
+            <div class="section-title">サービス（Services）</div>
+            <div class="field"><label>見出し</label><input v-model="membershipTexts.services_title" class="input" placeholder="主な会員が受けられるサービス内容" /></div>
+            <div class="field"><label>英字</label><input v-model="membershipTexts.services_label" class="input" placeholder="service" /></div>
+
+            <div class="field"><label>プレミアサービス（見出し）</label><input v-model="membershipTexts.premium_category_title" class="input" /></div>
+            <div class="field"><label>プレミア項目1（タグ）</label><input v-model="membershipTexts.premium_service1_tag" class="input" /></div>
+            <div class="field"><label>プレミア項目1（名称）</label><input v-model="membershipTexts.premium_service1_name" class="input" /></div>
+
+            <div class="field"><label>スタンダード＆プレミア（見出し）</label><input v-model="membershipTexts.standard_premium_category_title" class="input" /></div>
+            <div class="field"><label>項目1（タグ）</label><input v-model="membershipTexts.standard_service1_tag" class="input" /></div>
+            <div class="field"><label>項目1（名称）</label><input v-model="membershipTexts.standard_service1_name" class="input" /></div>
+            <div class="field"><label>項目2（タグ）</label><input v-model="membershipTexts.standard_service2_tag" class="input" /></div>
+            <div class="field"><label>項目2（名称）</label><input v-model="membershipTexts.standard_service2_name" class="input" /></div>
+            <div class="field"><label>項目3（タグ）</label><input v-model="membershipTexts.standard_service3_tag" class="input" /></div>
+            <div class="field"><label>項目3（名称）</label><input v-model="membershipTexts.standard_service3_name" class="input" /></div>
+            <div class="field"><label>項目4（タグ）</label><input v-model="membershipTexts.standard_service4_tag" class="input" /></div>
+            <div class="field"><label>項目4（名称）</label><input v-model="membershipTexts.standard_service4_name" class="input" /></div>
+            <div class="field"><label>項目5（タグ）</label><input v-model="membershipTexts.standard_service5_tag" class="input" /></div>
+            <div class="field"><label>項目5（名称）</label><input v-model="membershipTexts.standard_service5_name" class="input" /></div>
+
+            <div class="section-title">会員サービスについて</div>
+            <div class="field"><label>見出し</label><input v-model="membershipTexts.membership_info_title" class="input" /></div>
+            <div class="field"><label>会員のメリット（ラベル）</label><input v-model="membershipTexts.membership_benefits_label" class="input" /></div>
+            <div class="field"><label>会員のメリット（本文）</label><textarea v-model="membershipTexts.membership_benefits_text" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>月会費（ラベル）</label><input v-model="membershipTexts.membership_fee_label" class="input" /></div>
+            <div class="field"><label>月会費（本文）</label><textarea v-model="membershipTexts.membership_fee_text" class="textarea" rows="3"></textarea></div>
+
+            <div class="section-title">入会までの流れ（Flow）</div>
+            <div class="field"><label>見出し</label><input v-model="membershipTexts.flow_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="membershipTexts.flow_label" class="input" /></div>
+            <div class="field"><label>STEP1（見出し）</label><input v-model="membershipTexts.step1_title" class="input" /></div>
+            <div class="field"><label>STEP1（説明）</label><textarea v-model="membershipTexts.step1_desc" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>STEP2（見出し）</label><input v-model="membershipTexts.step2_title" class="input" /></div>
+            <div class="field"><label>STEP2（説明）</label><textarea v-model="membershipTexts.step2_desc" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>STEP3（見出し）</label><input v-model="membershipTexts.step3_title" class="input" /></div>
+            <div class="field"><label>STEP4（見出し）</label><input v-model="membershipTexts.step4_title" class="input" /></div>
+
+            <div class="section-title">CTA ボタン</div>
+            <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="membershipTexts.cta_primary" class="input" /></div>
+            <div class="field"><label>入会（ボタン文言）</label><input v-model="membershipTexts.cta_secondary" class="input" /></div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
+          </template>
+
+          <!-- membership: 非レイアウト（一覧） -->
+          <template v-if="currentPage && currentPage.slug==='membership' && !layoutMode">
+            <div class="field" v-for="(val, key) in membershipTexts" :key="`membership-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="membershipTexts[key]" class="input" />
+            </div>
+          </template>
 
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
           <div v-if="currentPage" class="field">
@@ -69,6 +129,7 @@
             <input v-else-if="currentPage.slug==='cri-consulting'" v-model="consultingTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='company'" v-model="companyTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='aboutus'" v-model="aboutTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_title" class="input" />
             <input v-else v-model="privacyTexts.page_title" class="input" />
           </div>
           <div v-if="currentPage" class="field">
@@ -79,6 +140,7 @@
             <input v-else-if="currentPage.slug==='cri-consulting'" v-model="consultingTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='company'" v-model="companyTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='aboutus'" v-model="aboutTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_subtitle" class="input" />
             <input v-else v-model="privacyTexts.page_subtitle" class="input" />
           </div>
           <div v-if="currentPage && currentPage.slug==='privacy-policy'" class="field">
@@ -361,6 +423,35 @@
             </div>
             <div class="help">決算データは別管理（自動表示）です。タイトルのみ編集できます。</div>
 
+          </template>
+
+          <!-- Company: Access (アクセス) editable fields -->
+          <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('company')) && layoutMode">
+            <div class="section-title">アクセス（Access）</div>
+            <!-- ブロック1 -->
+            <div class="field"><label>見出し1</label><input v-model="companyTexts.access_title_1" class="input" placeholder="所在地" /></div>
+            <div class="field"><label>英字/サブ1</label><input v-model="companyTexts.access_subtitle_1" class="input" placeholder="address" /></div>
+            <div class="field"><label>本文1（HTML）</label><textarea v-model="companyHtmls.access_body_1" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>電話番号</label><input v-model="companyTexts.access_phone" class="input" placeholder="TEL: 000-000-0000" /></div>
+            <div class="field"><label>営業時間</label><input v-model="companyTexts.access_hours" class="input" placeholder="9:00-17:00（平日）" /></div>
+
+            <!-- ブロック2（最寄り） -->
+            <div class="section-title">最寄り（Nearest）</div>
+            <div class="field"><label>見出し2</label><input v-model="companyTexts.access_title_2" class="input" placeholder="最寄駅・バス" /></div>
+            <div class="field"><label>駅1</label><input v-model="companyTexts.access_station_1" class="input" /></div>
+            <div class="field"><label>駅2</label><input v-model="companyTexts.access_station_2" class="input" /></div>
+            <div class="field"><label>バス</label><input v-model="companyTexts.access_bus_1" class="input" /></div>
+
+            <!-- ブロック3（車でのアクセス） -->
+            <div class="section-title">ルート（By Car）</div>
+            <div class="field"><label>見出し3</label><input v-model="companyTexts.access_title_3" class="input" placeholder="お車でお越しの方" /></div>
+            <div class="field"><label>ルート1</label><input v-model="companyTexts.access_route_1" class="input" /></div>
+            <div class="field"><label>ルート2</label><input v-model="companyTexts.access_route_2" class="input" /></div>
+            <div class="field"><label>ルート3</label><input v-model="companyTexts.access_route_3" class="input" /></div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
           </template>
 
           <!-- AboutUs: layout oriented editor -->
@@ -794,6 +885,7 @@ export default {
       consultingHtmls: {},
       aboutTexts: {},
       aboutHtmls: {},
+      membershipTexts: {},
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
       genericHtmls: {},
@@ -832,7 +924,13 @@ export default {
           history_title: '沿革（見出し）', history_subtitle: '沿革（英字）',
           staff_title: '所員紹介（見出し）', staff_subtitle: '所員紹介（英字）',
           // HTMLs
-          message_body: 'ご挨拶（本文）', mission_body: 'ミッション（本文）'
+          message_body: 'ご挨拶（本文）', mission_body: 'ミッション（本文）',
+          // Access
+          access_title_1: 'アクセス 見出し1', access_subtitle_1: 'アクセス 英字1',
+          access_phone: 'アクセス 電話', access_hours: 'アクセス 営業時間',
+          access_title_2: 'アクセス 見出し2', access_station_1: 'アクセス 駅1', access_station_2: 'アクセス 駅2', access_bus_1: 'アクセス バス',
+          access_title_3: 'アクセス 見出し3', access_route_1: 'アクセス ルート1', access_route_2: 'アクセス ルート2', access_route_3: 'アクセス ルート3',
+          access_body_1: 'アクセス 本文1（HTML）'
         },
         'cri-consulting': {
           page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
@@ -952,7 +1050,7 @@ export default {
       if (!key) return false
       if (this.excludeKeys.has(key)) return false
       // 既に専用UIがあるものは除外
-      const specialized = new Set(['privacy','terms','transaction-law','company-profile','consulting','about-institute'])
+      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','membership'])
       if (specialized.has(key)) return false
       // texts/htmls のどちらかがあるときに表示
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
@@ -999,7 +1097,7 @@ export default {
       if (s.includes('sitemap')) return 'sitemap'
       if (s.includes('faq')) return 'faq'
       if (s.includes('glossary')) return 'glossary'
-      if (s.includes('premium')) return 'premium-membership'
+      if (s.includes('premium') && s.includes('membership')) return 'premium-membership'
       if (s.includes('standard') && s.includes('membership')) return 'standard-membership'
       if (s.includes('membership')) return 'membership'
       if (s === 'home') return 'home'
@@ -1102,6 +1200,8 @@ export default {
             this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
             this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
             if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'membership') {
+            this.membershipTexts = { ...(this.membershipTexts || {}), ...(texts || {}) }
           } else if (this.pageContentKey === 'glossary') {
             // Glossary: texts/htmls はそのまま、items をロード
             this.genericTexts = {}
@@ -1488,6 +1588,8 @@ export default {
             _id: (typeof it._id === 'number' || typeof it._id === 'string') ? it._id : idx
           })).filter(it => it.question || it.answer) : []
           patch.content.faqs = faqs
+        } else if (this.pageContentKey === 'membership') {
+          patch.content.texts = { ...this.membershipTexts }
         } else {
           // generic fallback: 動的に集めたtexts/htmlsを保存
           const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)

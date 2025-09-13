@@ -53,14 +53,28 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                     ->get(['disk','path','filename'])
                     ->map(fn($a) => ['disk' => $a->disk, 'path' => $a->path, 'filename' => $a->filename])
                     ->toArray();
-                $mailable = new CampaignMail(
-                    subjectLine: $campaign->subject,
-                    bodyHtml: $campaign->body_html,
-                    bodyText: $campaign->body_text,
-                    attachmentsMeta: $attachments,
-                );
 
-                Mail::to($recipient->email)->send($mailable);
+                if (config('mail.default') === 'resend') {
+                    // Send via Resend API
+                    $mapped = array_map(function ($a) {
+                        return ['path' => 'storage://' . ($a['disk'] ?? 'public') . '/' . ($a['path'] ?? ''), 'as' => $a['filename'] ?? null];
+                    }, $attachments);
+                    (new \App\Services\Mailer\ResendMailer())->send([
+                        'to' => $recipient->email,
+                        'subject' => $campaign->subject,
+                        'body_html' => $campaign->body_html,
+                        'body_text' => $campaign->body_text,
+                        'attachments' => $mapped,
+                    ]);
+                } else {
+                    $mailable = new CampaignMail(
+                        subjectLine: $campaign->subject,
+                        bodyHtml: $campaign->body_html,
+                        bodyText: $campaign->body_text,
+                        attachmentsMeta: $attachments,
+                    );
+                    Mail::to($recipient->email)->send($mailable);
+                }
             } else {
                 Log::info('[MAIL_DRY_RUN] Skipping send', [
                     'recipient_id' => $recipient->id,

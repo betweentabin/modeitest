@@ -36,6 +36,25 @@ class EmailImmediateController extends Controller
         $mailer = config('mail.default', 'smtp');
         $smtpHost = config('mail.mailers.smtp.host');
         $dryRun = filter_var(env('MAIL_DRY_RUN', false), FILTER_VALIDATE_BOOLEAN);
+        if ($mailer === 'resend') {
+            // Use Resend API path
+            if ($dryRun) {
+                return response()->json(['success' => true, 'message' => '[MAIL_DRY_RUN] Resend skipped', 'mailer' => 'resend']);
+            }
+            $payload = $data;
+            // Normalize attachments: support storage disk references
+            $attachments = [];
+            foreach (($data['attachments'] ?? []) as $att) {
+                if (!empty($att['path'])) {
+                    $attachments[] = ['path' => $att['path'], 'as' => $att['as'] ?? null];
+                } elseif (!empty($att['data']) && !empty($att['as'])) {
+                    $attachments[] = ['data' => $att['data'], 'as' => $att['as']];
+                }
+            }
+            $payload['attachments'] = $attachments;
+            (new \App\Services\Mailer\ResendMailer())->send($payload);
+            return response()->json(['success' => true, 'message' => 'Email sent via Resend', 'mailer' => 'resend']);
+        }
         if ($dryRun || ($mailer === 'smtp' && (empty($smtpHost) || $smtpHost === 'smtp.mailgun.org'))) {
             // In dry-run or when SMTP looks unconfigured, use log mailer to avoid hanging
             $mailer = 'log';

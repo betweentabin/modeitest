@@ -115,9 +115,9 @@ export default {
   },
   computed: {
     // Use explicit page key if provided; otherwise fall back to an existing page
-    // to avoid 404 (no 'site' page exists in backend). 'contact' exists and is safe.
+    // to avoid 404. Access content is now managed under 'company-profile'.
     cmsKey() {
-      return this.cmsPageKey || 'contact'
+      return this.cmsPageKey || 'company-profile'
     }
   },
   methods: {
