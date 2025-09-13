@@ -33,8 +33,8 @@
             <input v-model="currentPage.title" class="input" @change="savePageMeta" />
           </div>
 
-          <!-- Layout view toggle (for key pages like company/aboutus/consult/membership) -->
-          <div class="field" v-if="currentPage && (['company','aboutus','consult','membership'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
+          <!-- Layout view toggle (for key pages like company/aboutus/about/consult/membership) -->
+          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -120,6 +120,73 @@
             </div>
           </template>
 
+          <!-- standard-membership: 構成ビュー（layoutMode） -->
+          <template v-if="currentPage && currentPage.slug==='standard-membership' && layoutMode">
+            <div class="section-title">導入（Introduction）</div>
+            <div class="field"><label>見出し</label><input v-model="standardTexts.intro_title" class="input" /></div>
+            <div class="field"><label>本文</label><textarea v-model="standardTexts.intro_text" class="textarea" rows="4"></textarea></div>
+
+            <div class="section-title">サービス（Services）</div>
+            <div class="field"><label>見出し</label><input v-model="standardTexts.services_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="standardTexts.services_label" class="input" /></div>
+            <div class="field"><label>スタンダードサービス（見出し）</label><input v-model="standardTexts.standard_category_title" class="input" /></div>
+            <div class="field"><label>項目1（タグ）</label><input v-model="standardTexts.standard_service1_tag" class="input" /></div>
+            <div class="field"><label>項目1（名称）</label><input v-model="standardTexts.standard_service1_name" class="input" /></div>
+            <div class="field"><label>項目2（タグ）</label><input v-model="standardTexts.standard_service2_tag" class="input" /></div>
+            <div class="field"><label>項目2（名称）</label><input v-model="standardTexts.standard_service2_name" class="input" /></div>
+            <div class="field"><label>項目3（タグ）</label><input v-model="standardTexts.standard_service3_tag" class="input" /></div>
+            <div class="field"><label>項目3（名称）</label><input v-model="standardTexts.standard_service3_name" class="input" /></div>
+            <div class="field"><label>項目4（タグ）</label><input v-model="standardTexts.standard_service4_tag" class="input" /></div>
+            <div class="field"><label>項目4（名称）</label><input v-model="standardTexts.standard_service4_name" class="input" /></div>
+            <div class="field"><label>項目5（タグ）</label><input v-model="standardTexts.standard_service5_tag" class="input" /></div>
+            <div class="field"><label>項目5（名称）</label><input v-model="standardTexts.standard_service5_name" class="input" /></div>
+
+            <div class="section-title">会員サービスについて</div>
+            <div class="field"><label>見出し</label><input v-model="standardTexts.membership_info_title" class="input" /></div>
+            <div class="field"><label>会員のメリット（ラベル）</label><input v-model="standardTexts.membership_benefits_label" class="input" /></div>
+            <div class="field"><label>会員のメリット（本文）</label><textarea v-model="standardTexts.membership_benefits_text" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>月会費（ラベル）</label><input v-model="standardTexts.membership_fee_label" class="input" /></div>
+            <div class="field"><label>月会費（本文）</label><textarea v-model="standardTexts.membership_fee_text" class="textarea" rows="3"></textarea></div>
+
+            <div class="section-title">入会までの流れ（Flow）</div>
+            <div class="field"><label>見出し</label><input v-model="standardTexts.flow_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="standardTexts.flow_label" class="input" /></div>
+            <div class="field"><label>STEP1（見出し）</label><input v-model="standardTexts.step1_title" class="input" /></div>
+            <div class="field"><label>STEP1（説明）</label><textarea v-model="standardTexts.step1_desc" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>STEP2（見出し）</label><input v-model="standardTexts.step2_title" class="input" /></div>
+            <div class="field"><label>STEP2（説明）</label><textarea v-model="standardTexts.step2_desc" class="textarea" rows="3"></textarea></div>
+            <div class="field"><label>STEP3（見出し）</label><input v-model="standardTexts.step3_title" class="input" /></div>
+            <div class="field"><label>STEP4（見出し）</label><input v-model="standardTexts.step4_title" class="input" /></div>
+
+            <div class="section-title">CTA ボタン</div>
+            <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="standardTexts.cta_primary" class="input" /></div>
+            <div class="field"><label>入会（ボタン文言）</label><input v-model="standardTexts.cta_secondary" class="input" /></div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
+          </template>
+
+          <!-- premium-membership: 構成ビュー（layoutMode） -->
+          <template v-if="currentPage && currentPage.slug==='premium-membership' && layoutMode">
+            <div class="section-title">話題の特典（Benefits）</div>
+            <div class="field"><label>見出し</label><input v-model="premiumTexts.benefits_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="premiumTexts.benefits_label" class="input" /></div>
+
+            <div class="section-title">特集（Featured）</div>
+            <div class="field"><label>見出し</label><input v-model="premiumTexts.featured_title" class="input" /></div>
+            <div class="field"><label>本文</label><textarea v-model="premiumTexts.featured_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>ボタン文言</label><input v-model="premiumTexts.featured_cta" class="input" /></div>
+
+            <div class="section-title">CTA ボタン</div>
+            <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="premiumTexts.cta_primary" class="input" /></div>
+            <div class="field"><label>入会（ボタン文言）</label><input v-model="premiumTexts.cta_secondary" class="input" /></div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
+          </template>
+
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
           <div v-if="currentPage" class="field">
             <label>ページタイトル（見出し）</label>
@@ -129,7 +196,10 @@
             <input v-else-if="currentPage.slug==='cri-consulting'" v-model="consultingTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='company'" v-model="companyTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='aboutus'" v-model="aboutTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='about'" v-model="aboutTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_title" class="input" />
             <input v-else v-model="privacyTexts.page_title" class="input" />
           </div>
           <div v-if="currentPage" class="field">
@@ -140,7 +210,10 @@
             <input v-else-if="currentPage.slug==='cri-consulting'" v-model="consultingTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='company'" v-model="companyTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='aboutus'" v-model="aboutTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='about'" v-model="aboutTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_subtitle" class="input" />
             <input v-else v-model="privacyTexts.page_subtitle" class="input" />
           </div>
           <div v-if="currentPage && currentPage.slug==='privacy-policy'" class="field">
@@ -531,6 +604,115 @@
             </div>
           </template>
 
+          <!-- About (旧 about): layout oriented editor -->
+          <template v-if="currentPage && currentPage.slug==='about' && layoutMode">
+            <!-- 経営理念（Philosophy） / ミッション -->
+            <div class="section-title">経営理念（Philosophy）</div>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field">
+                  <label>見出し</label>
+                  <input v-model="aboutTexts.philosophy_title" class="input" placeholder="経営理念" />
+                </div>
+                <div class="field">
+                  <label>英字</label>
+                  <input v-model="aboutTexts.philosophy_subtitle" class="input" placeholder="OUR MISSION" />
+                </div>
+                <div class="field">
+                  <label>ミッション見出し</label>
+                  <input v-model="aboutTexts.mission_title" class="input" placeholder="産学官金のネットワークを活かした地域創生" />
+                </div>
+                <div class="field">
+                  <label>ミッション本文</label>
+                  <textarea v-model="aboutTexts.mission_text" class="textarea" rows="5"></textarea>
+                </div>
+              </div>
+              <div class="image-col">
+                <div class="field">
+                  <label>セクション画像（images.content）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('content') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.content</div>
+                      <div class="img-actions">
+                        <input ref="img_about_content_old" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('content', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('content')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ご挨拶（Message） -->
+            <div class="section-title">ご挨拶（Message）</div>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field"><label>見出し</label><input v-model="aboutTexts.message_title" class="input" /></div>
+                <div class="field"><label>英字</label><input v-model="aboutTexts.message_subtitle" class="input" /></div>
+                <div class="field"><label>本文（HTML）</label><textarea v-model="aboutHtmls.message_body" class="textarea" rows="6"></textarea></div>
+                <div class="field"><label>署名</label><input v-model="aboutTexts.message_signature" class="input" /></div>
+              </div>
+              <div class="image-col">
+                <div class="field">
+                  <label>セクション画像（images.message）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('message') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.message</div>
+                      <div class="img-actions">
+                        <input ref="img_about_message_old" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('message', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('message')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 会社概要（Company） -->
+            <div class="section-title">会社概要（Company）</div>
+            <div class="field"><label>見出し</label><input v-model="aboutTexts.company_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="aboutTexts.company_subtitle" class="input" /></div>
+            <div class="field">
+              <label>会社名（ラベル/値）</label>
+              <input v-model="aboutTexts.company_label_name" class="input" />
+              <input v-model="aboutTexts.company_value_name" class="input" />
+            </div>
+            <div class="field">
+              <label>設立（ラベル/値）</label>
+              <input v-model="aboutTexts.company_label_established" class="input" />
+              <input v-model="aboutTexts.company_value_established" class="input" />
+            </div>
+            <div class="field">
+              <label>所在地（ラベル/値HTML）</label>
+              <input v-model="aboutTexts.company_label_address" class="input" />
+              <textarea v-model="aboutHtmls.company_value_address" class="textarea" rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>電話（ラベル/値）</label>
+              <input v-model="aboutTexts.company_label_tel" class="input" />
+              <input v-model="aboutTexts.company_value_tel" class="input" />
+            </div>
+            <div class="field">
+              <label>営業時間（ラベル/値）</label>
+              <input v-model="aboutTexts.company_label_business_hours" class="input" />
+              <input v-model="aboutTexts.company_value_business_hours" class="input" />
+            </div>
+
+            <!-- 所員紹介（Staff） -->
+            <div class="section-title">所属紹介（Staff）</div>
+            <div class="field"><label>見出し</label><input v-model="aboutTexts.staff_title" class="input" /></div>
+            <div class="field"><label>英字</label><input v-model="aboutTexts.staff_subtitle" class="input" /></div>
+            <div class="field"><label>スタッフ1（役職/氏名）</label><input v-model="aboutTexts.staff1_title" class="input" /><input v-model="aboutTexts.staff1_name" class="input" /></div>
+            <div class="field"><label>スタッフ2（役職/氏名）</label><input v-model="aboutTexts.staff2_title" class="input" /><input v-model="aboutTexts.staff2_name" class="input" /></div>
+            <div class="field"><label>スタッフ3（役職/氏名）</label><input v-model="aboutTexts.staff3_title" class="input" /><input v-model="aboutTexts.staff3_name" class="input" /></div>
+
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
+          </template>
+
           <!-- CRI Consulting: layout oriented editor -->
           <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('consult')) && layoutMode">
             <!-- クリとは？ -->
@@ -886,6 +1068,8 @@ export default {
       aboutTexts: {},
       aboutHtmls: {},
       membershipTexts: {},
+      standardTexts: {},
+      premiumTexts: {},
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
       genericHtmls: {},
@@ -959,6 +1143,24 @@ export default {
           cta_primary: 'お問い合わせボタン文言', cta_secondary: '入会ボタン文言',
           // HTMLs
           about_body: '研究所について（本文）'
+        },
+        about: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          philosophy_title: '経営理念（見出し）', philosophy_subtitle: '経営理念（英字）',
+          mission_title: 'ミッション（見出し）', mission_text: 'ミッション（本文）',
+          message_title: 'ご挨拶（見出し）', message_subtitle: 'ご挨拶（英字）', message_signature: 'ご挨拶（署名）',
+          company_title: '会社概要（見出し）', company_subtitle: '会社概要（英字）',
+          company_label_name: '会社名（ラベル）', company_value_name: '会社名（値）',
+          company_label_established: '設立（ラベル）', company_value_established: '設立（値）',
+          company_label_address: '所在地（ラベル）', company_value_address: '所在地（値）',
+          company_label_tel: '電話番号（ラベル）', company_value_tel: '電話番号（値）',
+          company_label_business_hours: '営業時間（ラベル）', company_value_business_hours: '営業時間（値）',
+          staff_title: '所属紹介（見出し）', staff_subtitle: '所属紹介（英字）',
+          staff1_title: 'スタッフ1（役職）', staff1_name: 'スタッフ1（氏名）',
+          staff2_title: 'スタッフ2（役職）', staff2_name: 'スタッフ2（氏名）',
+          staff3_title: 'スタッフ3（役職）', staff3_name: 'スタッフ3（氏名）',
+          // HTMLs
+          message_body: 'ご挨拶（本文）', company_value_address_html: '所在地（値HTML）'
         }
         ,
         // 利用規約
@@ -1050,7 +1252,7 @@ export default {
       if (!key) return false
       if (this.excludeKeys.has(key)) return false
       // 既に専用UIがあるものは除外
-      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','membership'])
+      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','about','membership','standard-membership','premium-membership'])
       if (specialized.has(key)) return false
       // texts/htmls のどちらかがあるときに表示
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
@@ -1200,8 +1402,16 @@ export default {
             this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
             this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
             if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'about') {
+            this.aboutTexts = { ...(this.aboutTexts || {}), ...(texts || {}) }
+            this.aboutHtmls = { ...(this.aboutHtmls || {}), ...(htmls || {}) }
+            if (!this.aboutTexts.page_title) this.aboutTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'membership') {
             this.membershipTexts = { ...(this.membershipTexts || {}), ...(texts || {}) }
+          } else if (this.pageContentKey === 'standard-membership') {
+            this.standardTexts = { ...(this.standardTexts || {}), ...(texts || {}) }
+          } else if (this.pageContentKey === 'premium-membership') {
+            this.premiumTexts = { ...(this.premiumTexts || {}), ...(texts || {}) }
           } else if (this.pageContentKey === 'glossary') {
             // Glossary: texts/htmls はそのまま、items をロード
             this.genericTexts = {}
@@ -1567,6 +1777,9 @@ export default {
         } else if (this.pageContentKey === 'about-institute') {
           patch.content.texts = { ...this.aboutTexts }
           patch.content.htmls = { ...this.aboutHtmls }
+        } else if (this.pageContentKey === 'about') {
+          patch.content.texts = { ...this.aboutTexts }
+          patch.content.htmls = { ...this.aboutHtmls }
         } else if (this.pageContentKey === 'glossary') {
           // texts/htmls は既存どおり（intro等）。items も保存
           if (Object.keys(this.genericTexts||{}).length) patch.content.texts = { ...this.genericTexts }
@@ -1590,6 +1803,10 @@ export default {
           patch.content.faqs = faqs
         } else if (this.pageContentKey === 'membership') {
           patch.content.texts = { ...this.membershipTexts }
+        } else if (this.pageContentKey === 'standard-membership') {
+          patch.content.texts = { ...this.standardTexts }
+        } else if (this.pageContentKey === 'premium-membership') {
+          patch.content.texts = { ...this.premiumTexts }
         } else {
           // generic fallback: 動的に集めたtexts/htmlsを保存
           const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)
