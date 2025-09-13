@@ -180,6 +180,35 @@ export default {
   }
 }
 
+/* 1550px以上で横幅を900pxに変更 */
+@media (min-width: 1550px) {
+  .frame-1321317474 {
+    width: 900px !important;
+    height: 500px !important;
+  }
+  
+  .frame-1321317473-2 {
+    width: 900px !important;
+    height: 500px !important;
+  }
+  
+  .overlap-group1 {
+    width: 900px !important;
+    height: 499px !important;
+  }
+  
+  .x2-2-2 {
+    width: 900px !important;
+    height: 450px !important;
+  }
+  
+  .overlap-group-6 {
+    width: 724px !important;
+    left: 76px !important;
+    top: 384px !important;
+  }
+}
+
 @media (max-width: 480px) {
   .frame-1321317474 {
     height: auto !important;

@@ -260,25 +260,6 @@
               </div>
             </div>
           </div>
-          <div class="frame-21">
-            <div class="vector-container">
-              <img
-                class="vector-11"
-                :src="vector111"
-                alt="Vector 11"
-              />
-              <img
-                class="vector-13-1"
-                :src="vector132"
-                alt="Vector 13"
-              />
-              <img
-                class="vector-12"
-                :src="vector121"
-                alt="Vector 12"
-              />
-            </div>
-          </div>
         </div>
 
 
@@ -1892,13 +1873,6 @@ export default {
   width: 150px;
 }
 
-.frame-21 {
-  height: 1px;
-  margin-bottom: -1px;
-  position: relative;
-  width: 100%;
-  max-width: 1239px;
-}
 
 .vector-container {
   align-items: flex-start;
@@ -1953,6 +1927,15 @@ export default {
   position: absolute;
   top: 0;
   width: calc(100% - 609px);
+}
+
+/* 1550px以上でframe-1321317473の位置を調整 */
+@media (min-width: 1550px) {
+  .frame-1321317473 {
+    left: 920px !important;
+    width: calc(100% - 920px) !important;
+    height: 500px !important;
+  }
 }
 
 .frame-1321317473-1 {
@@ -2273,6 +2256,7 @@ export default {
   }
 }
 
+
 @media (max-width: 1200px) {
   .hero-section {
     height: 800px;
@@ -2431,22 +2415,8 @@ export default {
     min-height: 398px !important;
   }
   
-  .frame-1321317474 {
-    width: 100%;
-    max-width: 100%;
-    flex-shrink: 0;
-    margin-bottom: 20px;
-  }
   
-  .frame-1321317474 .frame-1321317474 {
-    width: 100%;
-    max-width: 100%;
-  }
   
-  .frame-1321317474 .frame-1321317473-2 {
-    width: 100%;
-    max-width: 100%;
-  }
   
   .frame-1321317473 * {
     position: relative !important;
@@ -3719,6 +3689,92 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* 基本スタイル */
+.frame-1321317474 {
+  width: auto;
+  max-width: none;
+}
+
+.frame-1321317473-2 {
+  width: auto;
+  max-width: none;
+}
+
+.x2-2-2 {
+  width: auto;
+  max-width: none;
+}
+
+/* 1550px以上でmain-publication-wrapperの横幅を900pxに固定 */
+@media (min-width: 1550px) {
+  .content-view-1 {
+    height: 500px !important;
+    min-height: 500px !important;
+  }
+  
+  .frame-1321317473-1 {
+    height: 500px !important;
+  }
+  
+  .overlap-group-container {
+    height: 500px !important;
+    min-height: 500px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+  
+  .overlap-group-container .overlap-group3-1,
+  .overlap-group-container .overlap-group-1 {
+    height: calc((500px - 30px) / 3) !important;
+    flex: 1 !important;
+  }
+  
+  .overlap-group-container .x2-2-1,
+  .overlap-group-container .x2-3,
+  .overlap-group-container .x2-4 {
+    height: calc((500px - 30px) / 3) !important;
+  }
+  
+  .overlap-group-container .overlap-group2,
+  .overlap-group-container .overlap-group-2 {
+    width: 350px !important;
+    height: 70px !important;
+    min-width: 350px !important;
+    justify-content: space-between !important;
+  }
+  
+  .overlap-group-container .flex-col-2,
+  .overlap-group-container .flex-col {
+    align-items: flex-start !important;
+    text-align: left !important;
+    flex: 1 !important;
+  }
+  
+  .main-publication-wrapper {
+    width: 900px !important;
+    max-width: 900px !important;
+  }
+  
+  .frame-1321317474 {
+    width: 900px !important;
+    max-width: 900px !important;
+    min-width: 900px !important;
+  }
+  
+  .frame-1321317473-2 {
+    width: 900px !important;
+    max-width: 900px !important;
+    min-width: 900px !important;
+  }
+  
+  .x2-2-2 {
+    width: 900px !important;
+    max-width: 900px !important;
+    min-width: 900px !important;
+  }
 }
 
 .main-publication-wrapper:hover {
