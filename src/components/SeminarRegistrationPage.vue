@@ -1,65 +1,14 @@
 <template>
   <div class="seminar-registration-page">
-    <!-- Navigation -->
-    <nav class="navigation">
-      <div class="nav-logo">
-        <svg width="434" height="44" viewBox="0 0 434 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_486_50)">
-            <path d="M53.9591 5.82657C53.9301 5.09363 53.7483 4.37502 53.4254 3.71742C53.1026 3.05981 52.6459 2.47791 52.0851 2.00951C51.304 1.38305 50.3428 1.02733 49.3446 0.995335C49.3384 0.995335 44.5656 0.995335 44.5386 0.995335C44.9522 1.00769 43.8022 1.39433 44.2232 1.38939C47.2079 1.35975 48.2302 2.03916 49.0807 2.69757C50.0332 3.39335 50.7057 4.41041 50.9756 5.56345C51.6641 8.86416 49.4059 14.8813 45.9327 20.2882H48.8303C52.2458 14.8813 54.2929 9.4744 53.9554 5.82657" fill="#FC68A5"/>
-            <path d="M39.5577 29.79C33.4214 36.5842 26.734 41.24 21.5389 42.6803C21.226 42.768 21.048 42.8224 20.7461 42.8866C25.9755 43.4808 35.1187 37.9652 42.756 29.5146C44.4264 27.6564 45.9814 25.6964 47.4123 23.6457H44.4558C42.952 25.7947 41.3162 27.8468 39.5577 29.79Z" fill="#FC68A5"/>
-            <path d="M45.1245 5.43869C45.813 8.73939 43.5536 14.8813 40.0817 20.2882H42.9805C46.3948 14.8813 48.3928 9.41757 48.0516 5.77346C48.0323 5.05175 47.8599 4.34253 47.546 3.69337C47.2321 3.0442 46.7839 2.47008 46.2315 2.00951C45.451 1.38291 44.4901 1.02715 43.4923 0.995335C43.4923 0.995335 38.7133 0.995335 38.6875 0.995335C39.1011 1.00892 42.5878 1.38939 42.5878 1.38939C43.3103 1.80036 43.9204 2.38524 44.3633 3.09169C44.8062 3.79814 45.0682 4.60411 45.1258 5.43745" fill="#FC68A5"/>
-            <path d="M33.1359 29.79C26.9995 36.5842 20.3145 41.24 15.1195 42.6803C14.8041 42.768 14.6286 42.8224 14.3242 42.8866C19.5524 43.4808 28.6968 37.9652 36.3378 29.5146C38.0064 27.6558 39.5602 25.6959 40.9904 23.6457H38.0364C36.5314 25.7944 34.8947 27.8465 33.1359 29.79Z" fill="#FC68A5"/>
-            <path d="M38.9601 5.56345C39.6474 8.86416 37.388 14.88 33.916 20.2882H36.8148C40.2291 14.88 42.2345 9.51516 41.897 5.86857C41.8769 5.13244 41.7038 4.40872 41.3888 3.74404C41.0739 3.07937 40.624 2.48849 40.0683 2.00951C39.2869 1.38296 38.3252 1.02724 37.3266 0.995335C37.3266 0.995335 34.7653 0.995335 34.7395 0.995335C35.1519 1.00769 35.4477 1.38939 35.8613 1.38939C36.7258 1.70555 37.4797 2.26902 38.0304 3.01055C38.5812 3.75208 38.9035 4.63938 38.9601 5.56345Z" fill="#FC68A5"/>
-            <path d="M26.6605 29.79C20.5242 36.5842 13.8404 41.24 8.64539 42.6803C8.32752 42.768 8.15447 42.8224 7.84766 42.8866C13.0758 43.4808 22.2215 37.9652 29.8625 29.5146C31.5313 27.6554 33.0859 25.6954 34.5175 23.6457H31.561C30.0561 25.7941 28.4186 27.8461 26.6605 29.79Z" fill="#FC68A5"/>
-            <path d="M33.0762 0.999039H49.0185C48.5602 1.25067 48.0315 1.3411 47.5163 1.25598C43.1951 0.805098 32.8872 6.41951 23.744 17.7731C17.7243 25.2479 14.9445 33.05 14.9445 36.9498C15.0322 38.3988 15.6575 39.7617 16.6965 40.7684C17.7356 41.7751 19.1125 42.3522 20.5544 42.3851C21.4081 42.3798 22.254 42.2204 23.0519 41.9145L22.3364 42.8039C21.3975 42.9622 20.4455 43.0272 19.494 42.9978H5.15455C3.86046 43.0413 2.60009 42.5777 1.6387 41.7047C0.677303 40.8317 0.0898593 39.6174 0 38.3173C0 30.7116 4.95941 22.4549 11.1805 15.1753C18.846 6.20457 28.0456 0.913811 33.1008 1.00152" fill="#FC68A5"/>
-            <text fill="#1A1A1A" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="15" font-weight="bold" letter-spacing="0em"><tspan x="73.9922" y="12.4545">筑邦銀行グループ</tspan></text>
-            <text fill="#1A1A1A" xml:space="preserve" style="white-space: pre" font-family="Inter" font-size="24" font-weight="bold" letter-spacing="0em"><tspan x="73.9922" y="42.2273">株式会社ちくぎん地域経済研究所</tspan></text>
-          </g>
-        </svg>
-      </div>
-      <div class="nav-right">
-        <div class="nav-actions">
-          <button class="phone-btn">
-            <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.3333 0H2.66667C1.95942 0 1.28115 0.270918 0.781049 0.753154C0.280952 1.23539 0 1.88944 0 2.57143V21.4286C0 22.1106 0.280952 22.7646 0.781049 23.2468C1.28115 23.7291 1.95942 24 2.66667 24H13.3333C14.0406 24 14.7189 23.7291 15.219 23.2468C15.719 22.7646 16 22.1106 16 21.4286V2.57143C16 1.88944 15.719 1.23539 15.219 0.753154C14.7189 0.270918 14.0406 0 13.3333 0ZM2.66667 1.71429H13.3333C13.5691 1.71429 13.7952 1.80459 13.9619 1.96534C14.1286 2.12608 14.2222 2.3441 14.2222 2.57143V3.42857H1.77778V2.57143C1.77778 2.3441 1.87143 2.12608 2.03813 1.96534C2.20483 1.80459 2.43092 1.71429 2.66667 1.71429ZM13.3333 22.2857H2.66667C2.43092 22.2857 2.20483 22.1954 2.03813 22.0347C1.87143 21.8739 1.77778 21.6559 1.77778 21.4286V20.5714H14.2222V21.4286C14.2222 21.6559 14.1286 21.8739 13.9619 22.0347C13.7952 22.1954 13.5691 22.2857 13.3333 22.2857Z" fill="white"/>
-            </svg>
-            <div class="phone-info">
-              <div class="phone-number">0942-46-5081</div>
-              <div class="phone-hours">（平日 9:00～17:00）</div>
-            </div>
-          </button>
-          <button class="login-btn">ログイン</button>
-          <div class="menu-icon">
-            <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 2H24" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2 12H24" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2 22H24" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="nav-menu">
-          <a href="#">トップ</a>
-          <span class="divider">|</span>
-          <a href="#">会員サービスのご案内</a>
-          <span class="divider">|</span>
-          <a href="#">会社概要</a>
-          <span class="divider">|</span>
-          <a href="#">お知らせ</a>
-          <span class="divider">|</span>
-          <a href="#">よくあるご質問</a>
-        </div>
-      </div>
-    </nav>
+    <Navigation />
 
     <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-content">
-        <div class="hero-text">
-          <div class="hero-subtitle">seminar</div>
-          <h1 class="hero-title">セミナー申し込み</h1>
-        </div>
-      </div>
-    </div>
+    <HeroSection 
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
+      heroImage="/img/Image_fx2.jpg"
+      mediaKey="hero_seminar"
+    />
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
@@ -435,9 +384,22 @@
 </template>
 
 <script>
+import Navigation from './Navigation.vue';
+import HeroSection from './HeroSection.vue';
 import AccessSection from './AccessSection.vue';
 export default {
   name: "SeminarRegistrationPage",
+  components: {
+    Navigation,
+    HeroSection,
+    AccessSection
+  },
+  data() {
+    return {
+      pageTitle: 'セミナー申し込み',
+      pageSubtitle: 'seminar'
+    };
+  },
   methods: {
     goToContact() {
       this.$router.push('/contact');
@@ -466,138 +428,7 @@ export default {
   font-family: 'Inter', -apple-system, Roboto, Helvetica, sans-serif;
 }
 
-/* Navigation */
-.navigation {
-  display: flex;
-  width: 100%;
-  padding: 10px 20px;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--color-white);
-  box-shadow: 0 3px 20px rgba(0, 0, 0, 0.15);
-  height: 88px;
-}
 
-.nav-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  width: 541px;
-}
-
-.nav-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 15px;
-  margin-left: 220px;
-}
-
-.phone-btn {
-  display: flex;
-  height: 40px;
-  padding: 0 20px 0 24px;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  border-radius: 8px;
-  background: var(--color-black);
-  border: none;
-  cursor: pointer;
-}
-
-.phone-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.phone-number {
-  color: var(--color-white);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 150%;
-}
-
-.phone-hours {
-  color: var(--color-white);
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 150%;
-}
-
-.login-btn {
-  display: flex;
-  height: 40px;
-  padding: 0 24px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  background: var(--color-black);
-  color: var(--color-white);
-  font-size: 13px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-}
-
-.nav-menu {
-  display: inline-flex;
-  align-items: center;
-  gap: 15px;
-  height: 23px;
-}
-
-.nav-menu a {
-  color: var(--color-black);
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  line-height: 150%;
-}
-
-.divider {
-  color: var(--color-black);
-  font-size: 15px;
-}
-
-/* Hero Section */
-.hero-section {
-  display: flex;
-  width: 100%;
-  height: 396px;
-  background: linear-gradient(rgba(77, 77, 77, 0.70), rgba(77, 77, 77, 0.70)), url('/img/hero-bg.jpg');
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.hero-content {
-  display: flex;
-  width: 100%;
-  padding: 50px 30px;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-}
-
-.hero-subtitle {
-  color: var(--color-white);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 250%;
-  letter-spacing: -0.48px;
-  margin-bottom: 10px;
-}
-
-.hero-title {
-  color: var(--color-white);
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 150%;
-  letter-spacing: -0.8px;
-  margin: 0;
-}
 
 /* Breadcrumb */
 .breadcrumb {
@@ -1166,24 +997,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .navigation {
-    flex-direction: column;
-    height: auto;
-    padding: 20px;
-  }
-  
-  .nav-right {
-    width: 100%;
-  }
-  
-  .nav-actions {
-    margin-left: 0;
-    justify-content: center;
-  }
-  
-  .hero-title {
-    font-size: 28px;
-  }
   
   .section-title {
     font-size: 28px;
