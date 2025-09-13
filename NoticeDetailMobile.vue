@@ -28,7 +28,7 @@
               </div>
             </div>
             
-            <div class="notice-title-mobile">{{ hotInfomationVol319 }}</div>
+            <div class="notice-title-mobile">{{ hotInformationVol319 }}</div>
             
             <div class="notice-body-mobile">
               <p class="notice-text-mobile">
@@ -97,7 +97,7 @@ export default {
       type: String,
       default: "重要",
     },
-    hotInfomationVol319: {
+    hotInformationVol319: {
       type: String,
       default: "Hot information Vol.319を掲載しました！",
     },

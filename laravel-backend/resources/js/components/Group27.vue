@@ -15,7 +15,7 @@
       </div>
     </div>
     <p class="copyright-c-the-ch valign-text-middle">
-      Copyright (C) The Chikugin Reserch Institute For Regional Economy Co.,Ltd All rights reserved.
+      Copyright (C) The Chikugin Research Institute For Regional Economy Co.,Ltd All rights reserved.
     </p>
   </div>
 </template>

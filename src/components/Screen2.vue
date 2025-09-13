@@ -41,7 +41,7 @@
           <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }">
             <div class="frame-1321317491-3">
               <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text70 }}</div>
-              <div class="infomation valign-text-middle inter-bold-white-24px">{{ infomation1 }}</div>
+              <div class="Information valign-text-middle inter-bold-white-24px">{{ Information1 }}</div>
             </div>
           </div>
           <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }">
@@ -109,7 +109,7 @@
           <div class="view">
             <div class="frame-1321317480">
               <div class="group-10">
-                <div class="infomation-1 valign-text-middle inter-bold-black-48px">{{ infomation2 }}</div>
+                <div class="Information-1 valign-text-middle inter-bold-black-48px">{{ Information2 }}</div>
                 <div class="flex-row">
                   <img
                     class="vector-6"
@@ -126,7 +126,7 @@
                 <div class="frame-13">
                   <div class="date valign-text-middle inter-normal-sonic-silver-18px">{{ date1 }}</div>
                   <x-button4 />
-                  <div class="hot-info valign-text-middle inter-normal-ship-gray-18px">{{ hotInfomationVol319 }}</div>
+                  <div class="hot-info valign-text-middle inter-normal-ship-gray-18px">{{ hotInformationVol319 }}</div>
                   <div class="caret-circle-right">
                     <div class="overlap-group">
                       <img
@@ -304,7 +304,7 @@
                 />
                 <div class="text-39 valign-text-middle inter-bold-black-24px">{{ text104 }}</div>
               </div>
-              <div class="ation valign-text-middle inter-bold-black-48px">{{ otherInfomation }}</div>
+              <div class="ation valign-text-middle inter-bold-black-48px">{{ otherInformation }}</div>
             </div>
           </div>
           <div class="view-1">
@@ -468,7 +468,7 @@ export default {
     "publications1",
     "frame13213174902",
     "text70",
-    "infomation1",
+    "Information1",
     "frame1321317492",
     "text71",
     "membership",
@@ -477,10 +477,10 @@ export default {
     "text113",
     "image1",
     "text120",
-    "infomation2",
+    "Information2",
     "text121",
     "date1",
-    "hotInfomationVol319",
+    "hotInformationVol319",
     "vector3",
     "date2",
     "text123",
@@ -501,7 +501,7 @@ export default {
     "viweMore1",
     "hotInformationVol324",
     "text104",
-    "otherInfomation",
+    "otherInformation",
     "x222",
     "text108",
     "viweMore2",
@@ -717,7 +717,7 @@ export default {
 
 .seminar,
 .publications,
-.infomation {
+.Information {
   align-self: stretch;
   letter-spacing: -0.48px;
   line-height: 60px;
@@ -1023,7 +1023,7 @@ export default {
   width: 313px;
 }
 
-.infomation-1 {
+.Information-1 {
   height: 72px;
   left: 0;
   letter-spacing: 0;

@@ -38,9 +38,9 @@ if (homePage) {
   console.log('=== Current Data Values ===');
   console.log('seminar:', homePage.seminar);
   console.log('publications1:', homePage.publications1);
-  console.log('infomation1:', homePage.infomation1);
+  console.log('Information1:', homePage.Information1);
   console.log('date1:', homePage.date1);
-  console.log('hotInfomationVol319:', homePage.hotInfomationVol319);
+  console.log('hotInformationVol319:', homePage.hotInformationVol319);
   console.log('date2:', homePage.date2);
   console.log('text123:', homePage.text123);
   console.log('===========================');
@@ -58,9 +58,9 @@ if (homePage) {
   // 直接データを変更
   homePage.seminar = '【テスト】セミナー(99件)';
   homePage.publications1 = '【テスト】刊行物(88件)';
-  homePage.infomation1 = '【テスト】お知らせ(77件)';
+  homePage.Information1 = '【テスト】お知らせ(77件)';
   homePage.date1 = '2025.12.31';
-  homePage.hotInfomationVol319 = '【テスト】これは手動更新のテストです';
+  homePage.hotInformationVol319 = '【テスト】これは手動更新のテストです';
   
   // 強制的に再描画
   homePage.$forceUpdate();
@@ -80,11 +80,11 @@ if (homePage) {
 console.log('=== DOM Elements ===');
 const seminarEl = document.querySelector('.seminar');
 const publicationsEl = document.querySelector('.publications');
-const infomationEl = document.querySelector('.infomation');
+const InformationEl = document.querySelector('.Information');
 
 console.log('Seminar element text:', seminarEl ? seminarEl.textContent : 'Not found');
 console.log('Publications element text:', publicationsEl ? publicationsEl.textContent : 'Not found');
-console.log('Infomation element text:', infomationEl ? infomationEl.textContent : 'Not found');
+console.log('Information element text:', InformationEl ? InformationEl.textContent : 'Not found');
 
 // ニュース項目を確認
 const dates = document.querySelectorAll('.date');

@@ -31,7 +31,7 @@
           <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }" @click="goToNews" style="cursor: pointer;">
             <div class="frame-1321317491-3">
               <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text70 }}</div>
-              <div class="infomation valign-text-middle inter-bold-white-24px">{{ infomation1 }}</div>
+              <div class="Information valign-text-middle inter-bold-white-24px">{{ Information1 }}</div>
             </div>
           </div>
           <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }" @click="goToMembership" style="cursor: pointer;">
@@ -90,23 +90,25 @@
               </div>
             </div>
           </div>
-                     <div class="content-view">
+           
+          
+          <div class="content-view">
              <div class="frame-1321317480">
                <div class="group-10">
                  <div class="group-20">
                    <img
                      class="vector-6"
-                     :src="vector63"
+                     :src="vector11"
                      alt="Vector 6"
                    />
-                   <div class="text-56 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
+                   <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
                  </div>
-                 <div class="infomation-1 valign-text-middle inter-bold-black-48px">{{ infomation2 }}</div>
+                 <div class="ation valign-text-middle inter-bold-black-48px">{{ Information2 }}</div>
                </div>
                <x-button3 class="desktop-button" @click="goToNewsList" />
              </div>
              <div class="frame-1321317467">
-                              <article 
+              <article 
                   v-for="(item, index) in dynamicNewsItems.slice(0, 5)" 
                   :key="index"
                   class="news-item"
@@ -130,7 +132,7 @@
                       </svg>
                     </div>
                   </div>
-                                </article>
+              </article>
                </div>
                <x-button3 class="mobile-button" @click="goToNewsList" />
              </div>
@@ -140,13 +142,15 @@
         <ContactSection cms-page-key="home" />
         
         <div class="frame-1321317484">
-        <div class="content-view">
-          <div class="group-25">
-            <div class="group-10-1">
+        
+        
+          <div class="content-view">
+          <div class="frame-1321317480">
+            <div class="group-10">
               <div class="group-20">
                 <img
                   class="vector-6"
-                  :src="vector6"
+                  :src="vector11"
                   alt="Vector 6"
                 />
                 <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text101 }}</div>
@@ -227,18 +231,20 @@
             </div>
           </div>
         </div>
+
+
         <div class="content-view">
-          <div class="group-25-1">
-            <div class="group-10-2">
-              <div class="group-20-1">
+          <div class="frame-1321317480">
+            <div class="group-10">
+              <div class="group-20">
                 <img
                   class="vector-6"
-                  src="/img/vector-6.svg"
+                  :src="vector11"
                   alt="Vector 6"
                 />
-                <div class="text-39 valign-text-middle inter-bold-black-24px">{{ text104 }}</div>
+                <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text104 }}</div>
               </div>
-              <div class="ation valign-text-middle inter-bold-black-48px">{{ otherInfomation }}</div>
+              <div class="ation valign-text-middle inter-bold-black-48px">{{ otherInformation }}</div>
             </div>
           </div>
           <div class="content-view-1">
@@ -299,6 +305,8 @@
             </div>
           </div>
         </div>
+
+
       </div>
       </div>
       <svg class="vector-14-1" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -360,13 +368,15 @@ import apiClient from "@/services/apiClient"; // apiClientをインポート
 import vector35 from "../../public/img/vector-35.svg";
 import vector152 from "../../public/img/vector-15-2.svg";
 import vector63 from "../../public/img/vector-6-3.svg";
+import vector11 from "../../public/img/vector-11.svg";
+import vector121 from "../../public/img/vector-12-1.svg";
+import vector131 from "../../public/img/vector-13.svg";
+import vector132 from "../../public/img/vector-13-2.svg";
 import vector74 from "../../public/img/vector-74.svg";
 import vector6 from "../../public/img/vector-6.svg";
 import vector91 from "../../public/img/vector-9-1.svg";
 import vector101 from "../../public/img/vector-10-1.svg";
 import vector111 from "../../public/img/vector-11-1.svg";
-import vector132 from "../../public/img/vector-13-2.svg";
-import vector121 from "../../public/img/vector-12-1.svg";
 import vector65 from "../../public/img/vector-65.svg";
 import vector61 from "../../public/img/vector-61.svg";
 import vector5 from "../../public/img/vector-5.svg";
@@ -434,7 +444,7 @@ export default {
       publications1: homePageData.publications1,
       frame13213174902: homePageData.frame13213174902,
       text70: homePageData.text70,
-      infomation1: homePageData.infomation1,
+      Information1: homePageData.Information1,
       frame1321317492: homePageData.frame1321317492,
       text71: homePageData.text71,
       membership: homePageData.membership,
@@ -443,10 +453,10 @@ export default {
       text113: homePageData.text113,
       image1: homePageData.image1,
       text120: homePageData.text120,
-      infomation2: homePageData.infomation2,
+      Information2: homePageData.Information2,
       text121: homePageData.text121,
       date1: homePageData.date1,
-      hotInfomationVol319: homePageData.hotInfomationVol319,
+      hotInformationVol319: homePageData.hotInformationVol319,
       vector3: homePageData.vector3,
       date2: homePageData.date2,
       text123: homePageData.text123,
@@ -466,7 +476,7 @@ export default {
       viweMore1: homePageData.viweMore1,
       hotInformationVol324: homePageData.hotInformationVol324,
       text104: homePageData.text104,
-      otherInfomation: homePageData.otherInfomation,
+      otherInformation: homePageData.otherInformation,
       x222: homePageData.x222,
       text108: homePageData.text108,
       viweMore2: homePageData.viweMore2,
@@ -504,6 +514,10 @@ export default {
       vector35,
       vector152,
       vector63,
+      vector11,
+      vector121,
+      vector131,
+      vector132,
       vector74,
       vector6,
       vector91,
@@ -587,7 +601,7 @@ export default {
         // 1件目
         const news1 = latestNews[0];
         this.date1 = this.formatDate(news1.date);
-        this.hotInfomationVol319 = news1.title;
+        this.hotInformationVol319 = news1.title;
         
         // 2件目
         if (latestNews[1]) {
@@ -619,10 +633,10 @@ export default {
       }
       
       // セミナー件数表示を削除
-      this.seminar = 'SEMINAR';
+      this.seminar = 'seminar';
       
       // 刊行物件数表示を削除
-      this.publications1 = 'PUBLICATIONS';
+      this.publications1 = 'publications';
       const publicationArray = Array.isArray(publications) ? publications : [];
       if (publicationArray.length > 0) {
         this.allPublications = publicationArray; // 全データを保存
@@ -631,7 +645,7 @@ export default {
       }
       
       // お知らせ件数表示を削除
-      this.infomation1 = 'INFOMATION';
+      this.Information1 = 'information';
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -1021,17 +1035,21 @@ export default {
   line-height: 60px;
   position: relative;
   text-align: center;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .seminar,
 .publications,
-.infomation {
+.Information {
   align-self: stretch;
   letter-spacing: -0.48px;
   line-height: 60px;
   margin-top: -30px;
   position: relative;
   text-align: center;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 .frame-1321317491-1 {
@@ -1142,6 +1160,8 @@ export default {
   text-align: center;
   white-space: nowrap;
   width: fit-content;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 
@@ -1366,9 +1386,7 @@ export default {
   width: 100%;
 }
 
-.group-10,
-.group-10-1,
-.group-10-2 {
+.group-10 {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
@@ -1377,13 +1395,6 @@ export default {
   width: auto;
 }
 
-.infomation-1 {
-  height: auto;
-  letter-spacing: 0;
-  line-height: 72px;
-  white-space: nowrap;
-  font-size: 48px;
-}
 
 .flex-row {
   align-items: center;
@@ -1397,22 +1408,14 @@ export default {
 }
 
 .vector-6 {
-  height: 1px;
+  height: 2px;
   object-fit: cover;
   width: 60px;
+  min-height: 2px;
 }
 
-.text-56 {
-  height: 36px;
-  letter-spacing: 0;
-  line-height: 36px;
-  min-width: 95px;
-  white-space: nowrap;
-}
 
-.text-56,
-.text-36,
-.text-39 {
+.text-36 {
   font-size: 24px !important;
 }
 
@@ -1856,24 +1859,27 @@ export default {
 }
 
 .vector-11 {
-  height: 1px;
+  height: 2px;
   object-fit: cover;
   width: 48.7%;
   max-width: 603px;
+  min-height: 2px;
 }
 
 .vector-13-1 {
-  height: 1px;
+  height: 2px;
   object-fit: cover;
   width: 14.8%;
   max-width: 184px;
+  min-height: 2px;
 }
 
 .vector-12 {
-  height: 1px;
+  height: 2px;
   object-fit: cover;
   width: 36.5%;
   max-width: 452px;
+  min-height: 2px;
 }
 
 .group-25-1 {
@@ -1882,20 +1888,6 @@ export default {
   width: auto;
 }
 
-.group-20-1 {
-  align-items: center;
-  display: flex;
-  gap: 26px;
-  min-width: 263px;
-}
-
-.text-39 {
-  height: 36px;
-  letter-spacing: 0;
-  line-height: 36px;
-  min-width: 144px;
-  white-space: nowrap;
-}
 
 .content-view-1 {
   height: 398px;
@@ -2292,18 +2284,20 @@ export default {
   .frame-1321317491-1 .text-1,
   .frame-1321317490-1 .text-2,
   .frame-1321317492 .text-2 {
-    font-size: 13px;
+    font-size: 16px;
     line-height: 50px;
     margin-bottom: -10px;
+    font-weight: 600;
   }
   
   .frame-1321317490 .seminar,
   .frame-1321317491-1 .publications,
-  .frame-1321317490-1 .infomation,
+  .frame-1321317490-1 .Information,
   .frame-1321317492 .membership {
-    font-size: 20px;
+    font-size: 24px;
     line-height: 50px;
     margin-top: 0;
+    font-weight: 700;
   }
   
   .frame-1321317482 {
@@ -2474,25 +2468,29 @@ export default {
     line-height: 52px !important;
   }
 
-  .infomation-1 {
-    font-size: 44px !important;
-    line-height: 52px !important;
-  }
   
   .divider-text {
     font-size: 18px !important;
   }
 
-  .text-56,
-  .text-36,
-  .text-39 {
+  .text-36 {
     font-size: 22px !important;
   }
 
-  .group-10,
-  .group-10-1,
-  .group-10-2 {
+  .group-10 {
     gap: 15px !important;
+  }
+
+  .vector-6 {
+    height: 2px !important;
+    min-height: 2px !important;
+  }
+
+  .vector-11,
+  .vector-13-1,
+  .vector-12 {
+    height: 2px !important;
+    min-height: 2px !important;
   }
 
   .overlap-group2,
@@ -2536,10 +2534,6 @@ export default {
     line-height: 48px !important;
   }
 
-  .infomation-1 {
-    font-size: 40px !important;
-    line-height: 48px !important;
-  }
   
   .hero-button-text {
     font-size: 16px;
@@ -2580,18 +2574,20 @@ export default {
   .frame-1321317491-1 .text-1,
   .frame-1321317490-1 .text-2,
   .frame-1321317492 .text-2 {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 40px;
     margin-bottom: 6px;
+    font-weight: 600;
   }
   
   .frame-1321317490 .seminar,
   .frame-1321317491-1 .publications,
-  .frame-1321317490-1 .infomation,
+  .frame-1321317490-1 .Information,
   .frame-1321317492 .membership {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 40px;
     margin-top: 0;
+    font-weight: 700;
   }
   
   .main {
@@ -2715,9 +2711,7 @@ export default {
     height: auto;
   }
 
-  .text-56,
-  .text-36,
-  .text-39 {
+  .text-36 {
     font-size: 20px !important;
   }
 }
@@ -2746,10 +2740,6 @@ export default {
     line-height: 44px !important;
   }
 
-  .infomation-1 {
-    font-size: 36px;
-    line-height: 44px;
-  }
   
   .hero-button-wrapper {
     padding: 12px 20px;
@@ -2852,18 +2842,20 @@ export default {
   .frame-1321317491-1 .text-1,
   .frame-1321317490-1 .text-2,
   .frame-1321317492 .text-2 {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 25px;
     margin-bottom: 4px;
+    font-weight: 600;
   }
   
   .frame-1321317490 .seminar,
   .frame-1321317491-1 .publications,
-  .frame-1321317490-1 .infomation,
+  .frame-1321317490-1 .Information,
   .frame-1321317492 .membership {
-    font-size: 15px;
+    font-size: 17px;
     line-height: 25px;
     margin-top: 0;
+    font-weight: 700;
   }
   
   .main {
@@ -2963,10 +2955,6 @@ export default {
     gap: 20px;
   }
   
-  .text-56 {
-    font-size: 20px;
-    line-height: 28px;
-  }
   
   .frame-13 {
     padding: 10px 0;
@@ -3112,18 +3100,26 @@ export default {
     max-width: 100%;
   }
 
-  .text-56,
-  .text-36,
-  .text-39 {
+  .text-36 {
     font-size: 19px !important;
   }
 
 
 
-  .group-10,
-  .group-10-1,
-  .group-10-2 {
+  .group-10 {
     gap: 15px;
+  }
+
+  .vector-6 {
+    height: 2px !important;
+    min-height: 2px !important;
+  }
+
+  .vector-11,
+  .vector-13-1,
+  .vector-12 {
+    height: 2px !important;
+    min-height: 2px !important;
   }
 
   .group-20 {
@@ -3173,10 +3169,6 @@ export default {
     line-height: 40px !important;
   }
 
-  .infomation-1 {
-    font-size: 32px !important;
-    line-height: 40px !important;
-  }
   
   .section-header {
     gap: 18px !important;
@@ -3282,18 +3274,20 @@ export default {
   .frame-1321317491-1 .text-1,
   .frame-1321317490-1 .text-2,
   .frame-1321317492 .text-2 {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 20px;
     margin-bottom: 3px;
+    font-weight: 600;
   }
   
   .frame-1321317490 .seminar,
   .frame-1321317491-1 .publications,
-  .frame-1321317490-1 .infomation,
+  .frame-1321317490-1 .Information,
   .frame-1321317492 .membership {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 20px;
     margin-top: 0;
+    font-weight: 700;
   }
   
   .main {
@@ -3334,10 +3328,6 @@ export default {
     gap: 15px;
   }
   
-  .text-56 {
-    font-size: 18px;
-    line-height: 24px;
-  }
   
   .frame-13 {
     padding: 10px 0;
@@ -3540,19 +3530,24 @@ export default {
     margin-top: 20px;
   }
 
-  .text-56,
-  .text-36,
-  .text-39 {
+  .text-36 {
     font-size: 18px !important;
   }
 
   .vector-6 {
     width: 40px !important;
+    height: 2px !important;
+    min-height: 2px !important;
   }
 
-  .group-10,
-  .group-10-1,
-  .group-10-2 {
+  .vector-11,
+  .vector-13-1,
+  .vector-12 {
+    height: 2px !important;
+    min-height: 2px !important;
+  }
+
+  .group-10 {
     gap: 10px !important;
   }
 }

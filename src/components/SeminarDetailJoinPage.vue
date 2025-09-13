@@ -93,7 +93,7 @@
 <!-- Action Button Section -->
 <ActionButton 
   primary-text="お問い合わせはこちら"
-  secondary-text="メンバー登録はコチラ"
+  secondary-text="メンバー登録はこちら"
   max-width="1500px"
   @primary-click="handleContactClick"
   @secondary-click="handleJoinClick"

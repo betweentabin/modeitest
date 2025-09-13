@@ -3,12 +3,21 @@
     <router-link to="/" class="breadcrumb-item">トップ</router-link>
     <template v-for="(item, index) in breadcrumbs">
       <span :key="`separator-${index}`" class="breadcrumb-separator">></span>
+      <router-link 
+        v-if="item.link && index !== breadcrumbs.length - 1"
+        :key="`item-${index}`"
+        :to="item.link"
+        class="breadcrumb-item"
+      >
+        {{ item.text || item }}
+      </router-link>
       <span 
+        v-else
         :key="`item-${index}`"
         class="breadcrumb-item"
         :class="{ current: index === breadcrumbs.length - 1 }"
       >
-        {{ item }}
+        {{ item.text || item }}
       </span>
     </template>
   </div>
