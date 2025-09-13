@@ -480,7 +480,8 @@ class ApiClient {
     return this.put('/api/admin/media/rename', { old_path: oldPath, new_name: newName })
   }
   async deleteMedia(path) {
-    return this.delete('/api/admin/media/delete', { data: { path } })
+    // Laravel expects JSON body with { path } on DELETE
+    return this.delete('/api/admin/media/delete', { body: { path } })
   }
   async listMediaDirectories() {
     return this.get('/api/admin/media/directories')
