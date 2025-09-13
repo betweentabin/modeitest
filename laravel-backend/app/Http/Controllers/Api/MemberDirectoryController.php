@@ -285,7 +285,10 @@ class MemberDirectoryController extends Controller
 
             $filename = '会員名簿_' . date('Y-m-d_H-i-s') . '.csv';
 
-            return response($csvData, 200, [
+            // Excel互換のためUTF-8 BOMを付与
+            $bom = "\xEF\xBB\xBF";
+
+            return response($bom . $csvData, 200, [
                 'Content-Type' => 'text/csv; charset=UTF-8',
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
                 'Cache-Control' => 'no-cache, no-store, must-revalidate',

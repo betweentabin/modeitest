@@ -59,7 +59,7 @@
                   <div v-else style="color:#888; font-size:12px;">（未設定）</div>
                 </td>
                 <td>{{ row.pageKey }}</td>
-                <td>{{ row.key }}</td>
+                <td>{{ displayKey(row) }}</td>
                 <td class="file-url">{{ row.url }}</td>
                 <td>{{ formatDate(row.updated_at) }}</td>
                 <td>
@@ -128,6 +128,62 @@ export default {
     await this.load()
   },
   methods: {
+    displayKey(row) {
+      try {
+        // HTML埋め込み由来
+        if (row.source === 'html') return '本文中の画像'
+
+        const original = String(row.key || '')
+        // 'images.xxx' などのプレフィックスを除去
+        const afterImages = original.startsWith('images.') ? original.slice('images.'.length) : original
+        const parts = afterImages.split('.')
+        const leaf = parts[parts.length - 1]
+
+        // レスポンシブのバリアント
+        let variant = ''
+        let base = leaf
+        if (leaf.endsWith('_mobile')) { variant = '（モバイル）'; base = leaf.replace(/_mobile$/, '') }
+        else if (leaf.endsWith('_tablet')) { variant = '（タブレット）'; base = leaf.replace(/_tablet$/, '') }
+
+        // 既知キーの日本語マッピング
+        const M = {
+          // 会社概要
+          'company_profile_philosophy': '会社概要・経営理念',
+          'company_profile_message': '会社概要・ご挨拶',
+          'company_profile_staff_morita': '会社概要・所員（森田）',
+          'company_profile_staff_mizokami': '会社概要・所員（溝上）',
+          'company_profile_staff_kuga': '会社概要・所員（空閑）',
+          'company_profile_staff_takada': '会社概要・所員（髙田）',
+          'company_profile_staff_nakamura': '会社概要・所員（中村）',
+          // セクション背景
+          'contact_section_bg': 'お問い合わせセクション・背景',
+        }
+        if (M[base]) return M[base] + variant
+
+        // company_profile_* の一般処理
+        if (base.startsWith('company_profile_')) {
+          const rest = base.replace('company_profile_', '')
+          if (rest.startsWith('staff_')) {
+            const name = rest.replace('staff_', '')
+            return `会社概要・所員（${this.jaName(name)}）` + variant
+          }
+          return '会社概要・' + this.humanize(rest) + variant
+        }
+
+        // それ以外は人間可読化
+        return this.humanize(base) + variant
+      } catch (_) { return row.key || '' }
+    },
+    humanize(s) {
+      if (!s) return ''
+      return String(s).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+    },
+    jaName(k) {
+      const map = {
+        morita: '森田', mizokami: '溝上', kuga: '空閑', takada: '髙田', nakamura: '中村'
+      }
+      return map[k] || this.humanize(k)
+    },
     isRegistryKey(key) {
       if (!key || typeof key !== 'string') return false
       return key.startsWith('hero_') || key.startsWith('company_profile_') || key === 'contact_section_bg'
