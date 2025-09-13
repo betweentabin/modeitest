@@ -35,7 +35,18 @@
           class="dot"
           :class="{ active: currentSlide === index }"
           @click="goToSlide(index)"
-        ></button>
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <circle 
+              cx="6" 
+              cy="6" 
+              r="5" 
+              :fill="currentSlide === index ? 'white' : 'none'" 
+              :stroke="currentSlide === index ? 'white' : 'white'" 
+              stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
       
     </div>
@@ -242,15 +253,20 @@ export default {
 .dot {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
-  border: 2px solid white;
   background: transparent;
+  border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.dot.active {
-  background: white;
+.dot svg {
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
 }
 
 
@@ -287,6 +303,11 @@ export default {
   .button-icon {
     width: 22px;
     height: 22px;
+  }
+  
+  .dot {
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -328,6 +349,15 @@ export default {
     width: 20px;
     height: 20px;
   }
+  
+  .slider-dots {
+    bottom: 200px;
+  }
+  
+  .dot {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 @media (max-width: 1000px) {
@@ -361,6 +391,11 @@ export default {
   .button-icon {
     width: 18px;
     height: 18px;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
   }
 }
 
@@ -396,11 +431,20 @@ export default {
     width: 16px;
     height: 16px;
   }
+
+  .slider-dots {
+    bottom: 190px;
+  }
+  
+  .dot {
+    width: 11px;
+    height: 11px;
+  }
 }
 
 @media (max-width: 768px) {
   .hero-slider {
-    height: 500px;
+    height: 600px;
     padding: 20px 15px;
     padding-top: 75px;
   }
@@ -430,15 +474,20 @@ export default {
     width: 14px;
     height: 14px;
   }
-  
+
   .slider-dots {
-    display: none;
+    bottom: 110px;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
   }
 }
 
 @media (max-width: 600px) {
   .hero-slider {
-    height: 350px;
+    height: 450px;
     padding: 15px 10px;
     padding-top: 70px;
   }
@@ -462,11 +511,20 @@ export default {
     padding: 8px 16px;
     gap: 10px;
   }
+
+  .slider-dots {
+    bottom: 55px;
+  }
+  
+  .dot {
+    width: 9px;
+    height: 9px;
+  }
 }
 
 @media (max-width: 480px) {
   .hero-slider {
-    height: 280px;
+    height: 400px;
     padding: 8px 5px;
     padding-top: 58px;
   }
@@ -489,6 +547,15 @@ export default {
     font-size: 10px;
     padding: 6px 12px;
     gap: 8px;
+  }
+
+  .slider-dots {
+    bottom: 60px;
+  }
+  
+  .dot {
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -522,6 +589,11 @@ export default {
   .button-icon {
     width: 8px;
     height: 8px;
+  }
+  
+  .dot {
+    width: 7px;
+    height: 7px;
   }
 }
 </style>
