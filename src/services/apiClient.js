@@ -797,13 +797,11 @@ class ApiClient {
   
   // Page content API methods
   async getPageContents() {
-    // Add cache-buster to avoid stale responses on first load
-    return this.get('/api/public/pages', { params: { _t: Date.now() } })
+    return this.get('/api/public/pages')
   }
   
   async getPageContent(pageKey) {
-    // Add cache-buster to avoid stale responses on first load
-    return this.get(`/api/public/pages/${pageKey}`, { params: { _t: Date.now() } })
+    return this.get(`/api/public/pages/${pageKey}`)
   }
 
   // デバッグ用: 管理者トークンを自動取得

@@ -30,20 +30,14 @@ export default {
     fallback: { type: String, default: '' },
     // When true, allow empty string to render as blank (no fallback)
     allowEmpty: { type: Boolean, default: false },
-    // Defer rendering fallback until first load completes to avoid showing stale static text
-    deferFallback: { type: Boolean, default: true },
   },
   setup(props) {
     const pageText = usePageText(props.pageKey)
     pageText.load().catch(() => {})
     const display = computed(() => {
-      const isLoading = !!(pageText.loading && pageText.loading.value)
-      const hasPage = !!(pageText.page && pageText.page.value)
-      const shouldDefer = !!props.deferFallback && isLoading && !hasPage
-      const fb = shouldDefer ? '' : props.fallback
-      if (props.type === 'html') return pageText.getHtml(props.fieldKey, fb, { allowEmpty: props.allowEmpty })
-      if (props.type === 'link') return pageText.getLink(props.fieldKey, fb, { allowEmpty: props.allowEmpty })
-      return pageText.getText(props.fieldKey, fb, { allowEmpty: props.allowEmpty })
+      if (props.type === 'html') return pageText.getHtml(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
+      if (props.type === 'link') return pageText.getLink(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
+      return pageText.getText(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
     })
     // Preview key broadcasting: helps admin editor collect keys used on page
     const hasPreview = () => {
