@@ -126,35 +126,41 @@
           <template v-if="currentPage && currentPage.slug==='company' && layoutMode">
             <!-- 経営理念（Philosophy） -->
             <div class="section-title">経営理念（Philosophy）</div>
-            <div class="field">
-              <label>見出し</label>
-              <input v-model="companyTexts.philosophy_title" class="input" placeholder="経営理念" />
-            </div>
-            <div class="field">
-              <label>英字</label>
-              <input v-model="companyTexts.philosophy_subtitle" class="input" placeholder="philosophy" />
-            </div>
-            <div class="field">
-              <label>MISSION ラベル</label>
-              <input v-model="companyTexts.mission_label" class="input" placeholder="OUR MISSION" />
-            </div>
-            <div class="field">
-              <label>MISSION 見出し</label>
-              <input v-model="companyTexts.mission_title" class="input" placeholder="産官学金のネットワーク活用による地域貢献" />
-            </div>
-            <div class="field">
-              <label>MISSION 本文（HTML）</label>
-              <textarea v-model="companyHtmls.mission_body" class="textarea" rows="4"></textarea>
-            </div>
-            <div class="field">
-              <label>セクション画像（company_profile_philosophy）</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_philosophy') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-key">images.company_profile_philosophy</div>
-                  <div class="img-actions">
-                    <input ref="img_company_profile_philosophy" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_philosophy', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_philosophy')">アップロードファイル</button>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field">
+                  <label>見出し</label>
+                  <input v-model="companyTexts.philosophy_title" class="input" placeholder="経営理念" />
+                </div>
+                <div class="field">
+                  <label>英字</label>
+                  <input v-model="companyTexts.philosophy_subtitle" class="input" placeholder="philosophy" />
+                </div>
+                <div class="field">
+                  <label>MISSION ラベル</label>
+                  <input v-model="companyTexts.mission_label" class="input" placeholder="OUR MISSION" />
+                </div>
+                <div class="field">
+                  <label>MISSION 見出し</label>
+                  <input v-model="companyTexts.mission_title" class="input" placeholder="産官学金のネットワーク活用による地域貢献" />
+                </div>
+                <div class="field">
+                  <label>MISSION 本文（HTML）</label>
+                  <textarea v-model="companyHtmls.mission_body" class="textarea" rows="4"></textarea>
+                </div>
+              </div>
+              <div class="image-col">
+                <div class="field">
+                  <label>セクション画像（company_profile_philosophy）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('company_profile_philosophy') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.company_profile_philosophy</div>
+                      <div class="img-actions">
+                        <input ref="img_company_profile_philosophy" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_philosophy', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('company_profile_philosophy')">アップロードファイル</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -162,31 +168,37 @@
 
             <!-- ご挨拶（Message） -->
             <div class="section-title">ご挨拶（Message）</div>
-            <div class="field">
-              <label>見出し</label>
-              <input v-model="companyTexts.message_title" class="input" placeholder="ご挨拶" />
-            </div>
-            <div class="field">
-              <label>英字</label>
-              <input v-model="companyTexts.message_subtitle" class="input" placeholder="message" />
-            </div>
-            <div class="field">
-              <label>本文（HTML）</label>
-              <textarea v-model="companyHtmls.message_body" class="textarea" rows="6"></textarea>
-            </div>
-            <div class="field">
-              <label>署名</label>
-              <input v-model="companyTexts.message_signature" class="input" placeholder="代表取締役社長 ・・・" />
-            </div>
-            <div class="field">
-              <label>セクション画像（company_profile_message）</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_message') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-key">images.company_profile_message</div>
-                  <div class="img-actions">
-                    <input ref="img_company_profile_message" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_message', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_message')">アップロードファイル</button>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field">
+                  <label>見出し</label>
+                  <input v-model="companyTexts.message_title" class="input" placeholder="ご挨拶" />
+                </div>
+                <div class="field">
+                  <label>英字</label>
+                  <input v-model="companyTexts.message_subtitle" class="input" placeholder="message" />
+                </div>
+                <div class="field">
+                  <label>本文（HTML）</label>
+                  <textarea v-model="companyHtmls.message_body" class="textarea" rows="6"></textarea>
+                </div>
+                <div class="field">
+                  <label>署名</label>
+                  <input v-model="companyTexts.message_signature" class="input" placeholder="代表取締役社長 ・・・" />
+                </div>
+              </div>
+              <div class="image-col">
+                <div class="field">
+                  <label>セクション画像（company_profile_message）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('company_profile_message') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.company_profile_message</div>
+                      <div class="img-actions">
+                        <input ref="img_company_profile_message" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_message', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('company_profile_message')">アップロードファイル</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1423,4 +1435,11 @@ export default {
   .img-meta{ display:flex; flex-direction:column; gap:6px; }
   .img-key{ font-weight:600; }
   .img-file{ color:#777; font-size:12px; }
+  /* Layout oriented editor */
+  .layout-grid{ display:grid; grid-template-columns: 1fr 280px; gap:16px; align-items:start; }
+  .text-col{ display:flex; flex-direction:column; gap:8px; }
+  .image-col{ display:flex; flex-direction:column; gap:8px; }
+  @media (max-width: 960px){
+    .layout-grid{ grid-template-columns: 1fr; }
+  }
   </style>
