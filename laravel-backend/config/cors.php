@@ -19,13 +19,16 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:8080,http://localhost:5173')))),
+    // Exact origins (no wildcards). For production, set CORS_ALLOWED_ORIGINS env, comma-separated.
+    'allowed_origins' => array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:8080,http://localhost:5173,https://modeitest.vercel.app')))),
 
+    // Regex patterns for dynamic subdomains (works with credentials as the matched origin is echoed back)
     'allowed_origins_patterns' => array_filter(array_map(function ($p) { return trim($p); }, explode(',', (string) env('CORS_ALLOWED_ORIGIN_PATTERNS', '/^https:\/\/.*\.vercel\.app$/,/^https:\/\/.*\.railway\.app$/')))),
 
-    'allowed_headers' => ['*'],
+    // Be explicit for some proxies that dislike '*'
+    'allowed_headers' => array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_HEADERS', 'Accept,Authorization,Content-Type,Origin,X-Requested-With')))),
 
-    'exposed_headers' => [],
+    'exposed_headers' => array_filter(array_map('trim', explode(',', (string) env('CORS_EXPOSED_HEADERS', 'Authorization,X-RateLimit-Limit,X-RateLimit-Remaining,X-Request-Id')))),
 
     // ブラウザにプリフライト結果をキャッシュさせ、不要なOPTIONSを減らす
     'max_age' => (int) env('CORS_MAX_AGE', 600),

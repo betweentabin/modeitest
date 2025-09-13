@@ -187,6 +187,15 @@
             </div>
           </template>
 
+          <!-- contact: シンプル構成ビュー（layoutMode） -->
+          <template v-if="currentPage && currentPage.slug==='contact' && layoutMode">
+            <div class="section-title">お問い合わせ（Contact）</div>
+            <div class="field"><label>フォーム見出し</label><input v-model="contactTexts.form_title" class="input" placeholder="お問い合わせフォーム" /></div>
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            </div>
+          </template>
+
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
           <div v-if="currentPage" class="field">
             <label>ページタイトル（見出し）</label>
@@ -200,6 +209,7 @@
             <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_title" class="input" />
             <input v-else v-model="privacyTexts.page_title" class="input" />
           </div>
           <div v-if="currentPage" class="field">
@@ -214,6 +224,7 @@
             <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_subtitle" class="input" />
             <input v-else v-model="privacyTexts.page_subtitle" class="input" />
           </div>
           <div v-if="currentPage && currentPage.slug==='privacy-policy'" class="field">
@@ -1070,6 +1081,7 @@ export default {
       membershipTexts: {},
       standardTexts: {},
       premiumTexts: {},
+      contactTexts: {},
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
       genericHtmls: {},
@@ -1226,6 +1238,10 @@ export default {
           cat_main: 'カテゴリ: メイン', cat_services: 'カテゴリ: サービス', cat_membership: 'カテゴリ: 会員', cat_support: 'カテゴリ: サポート', cat_legal: 'カテゴリ: 法務',
           link_home: 'リンク: ホーム', link_company: 'リンク: 会社概要', link_about: 'リンク: 研究所について', link_seminar: 'リンク: セミナー', link_publications: 'リンク: 刊行物', link_consulting: 'リンク: コンサルティング', link_research: 'リンク: 調査研究', link_training: 'リンク: 研修', link_membership: 'リンク: 入会案内', link_news: 'リンク: お知らせ', link_faq: 'リンク: FAQ', link_contact: 'リンク: お問い合わせ', link_privacy: 'リンク: プライバシー', link_terms: 'リンク: 利用規約', link_legal: 'リンク: 特商法'
         },
+        contact: {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          form_title: 'フォーム見出し'
+        },
         glossary: {
           page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
           intro: '導入（本文）',
@@ -1252,7 +1268,7 @@ export default {
       if (!key) return false
       if (this.excludeKeys.has(key)) return false
       // 既に専用UIがあるものは除外
-      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','about','membership','standard-membership','premium-membership'])
+      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','about','membership','standard-membership','premium-membership','contact'])
       if (specialized.has(key)) return false
       // texts/htmls のどちらかがあるときに表示
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
@@ -1302,6 +1318,7 @@ export default {
       if (s.includes('premium') && s.includes('membership')) return 'premium-membership'
       if (s.includes('standard') && s.includes('membership')) return 'standard-membership'
       if (s.includes('membership')) return 'membership'
+      if (s.includes('contact')) return 'contact'
       if (s === 'home') return 'home'
       if (s.includes('services')) return 'services'
       return null
@@ -1350,6 +1367,7 @@ export default {
         else if (slug.includes('premium')) this.pageContentKey = 'premium-membership'
         else if (slug.includes('standard') && slug.includes('membership')) this.pageContentKey = 'standard-membership'
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
+        else if (slug.includes('contact')) this.pageContentKey = 'contact'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'services'
         // プレビュー機能は撤去
@@ -1412,6 +1430,8 @@ export default {
             this.standardTexts = { ...(this.standardTexts || {}), ...(texts || {}) }
           } else if (this.pageContentKey === 'premium-membership') {
             this.premiumTexts = { ...(this.premiumTexts || {}), ...(texts || {}) }
+          } else if (this.pageContentKey === 'contact') {
+            this.contactTexts = { ...(this.contactTexts || {}), ...(texts || {}) }
           } else if (this.pageContentKey === 'glossary') {
             // Glossary: texts/htmls はそのまま、items をロード
             this.genericTexts = {}
@@ -1807,6 +1827,8 @@ export default {
           patch.content.texts = { ...this.standardTexts }
         } else if (this.pageContentKey === 'premium-membership') {
           patch.content.texts = { ...this.premiumTexts }
+        } else if (this.pageContentKey === 'contact') {
+          patch.content.texts = { ...this.contactTexts }
         } else {
           // generic fallback: 動的に集めたtexts/htmlsを保存
           const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)
