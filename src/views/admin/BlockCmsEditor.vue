@@ -34,7 +34,7 @@
           </div>
 
           <!-- Layout view toggle (for key pages like company) -->
-          <div class="field" v-if="currentPage && currentPage.slug==='company'">
+          <div class="field" v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('company'))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -92,7 +92,7 @@
 
           <!-- company / consulting / about: 動的テキスト一覧（小コンポーネント） -->
           <div v-if="currentPage && (currentPage.slug==='company' || currentPage.slug==='cri-consulting' || currentPage.slug==='aboutus')" class="section-title">小コンポーネントの文言一覧（texts）</div>
-          <template v-if="currentPage && currentPage.slug==='company' && !layoutMode">
+          <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('company')) && !layoutMode">
             <div class="field" v-for="(val, key) in companyTexts" :key="`company-${key}`">
               <label>{{ displayLabel(key) }}</label>
               <input v-model="companyTexts[key]" class="input" />
@@ -123,7 +123,7 @@
           </template>
 
           <!-- Company: layout oriented editor -->
-          <template v-if="currentPage && currentPage.slug==='company' && layoutMode">
+          <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('company')) && layoutMode">
             <!-- 経営理念（Philosophy） -->
             <div class="section-title">経営理念（Philosophy）</div>
             <div class="layout-grid">
