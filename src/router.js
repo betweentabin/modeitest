@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import { usePageText } from '@/composables/usePageText'
 import HomePage from "./components/HomePage";
 import CompanyProfile from "./components/CompanyProfile";
 import AboutInstitutePage from "./components/AboutInstitutePage";
@@ -722,8 +723,28 @@ const router = new Router({
   ],
 });
 
-// ページタイトルを自動更新するナビゲーションガード
-router.beforeEach((to, from, next) => {
+// ルートごとに必要なCMSページキーを定義（初回描画前に事前取得）
+const PAGE_KEYS_BY_ROUTE = {
+  // Public pages with CMS text usage
+  top: ['home'],
+  company: ['company-profile'],
+  aboutus: ['about-institute'],
+  privacy: ['privacy'],
+  terms: ['terms'],
+  legal: ['transaction-law'],
+  news: ['news'],
+  newsDetail: ['news'],
+  contact: ['contact'],
+  membership: ['membership'],
+  standardMembership: ['standard-membership'],
+  premiumMembership: ['premium-membership'],
+  premiumMembershipShort: ['premium-membership'],
+  glossary: ['glossary'],
+  faq: ['faq'],
+}
+
+// ページタイトル更新 + 必要なCMSテキストの事前読み込み
+router.beforeEach(async (to, from, next) => {
   // ルートのメタ情報からタイトルを取得
   const title = to.meta?.title || 'ちくぎん地域経済研究所 - CMS管理システム';
   document.title = title;
@@ -734,6 +755,14 @@ router.beforeEach((to, from, next) => {
       return next('/admin')
     }
   }
+  try {
+    const keys = PAGE_KEYS_BY_ROUTE[to.name] || []
+    if (keys.length) {
+      await Promise.all(keys.map(k => {
+        try { return usePageText(k).load() } catch (e) { return Promise.resolve() }
+      }))
+    }
+  } catch (e) { /* ignore prefetch errors */ }
   next();
 });
 
