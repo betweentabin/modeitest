@@ -156,7 +156,8 @@ export default {
         const isPlaceholder = (u) => {
           if (!u) return true
           return u === '/img/hero-image.png' || u === 'img/hero-image.png' ||
-                 u === '/img/-----1-1.png' || u === 'img/-----1-1.png'
+                 u === '/img/-----1-1.png' || u === 'img/-----1-1.png' ||
+                 u === '/img/image-1.png' || u === 'img/image-1.png'
         }
         const resolveUrl = (rawUrl) => {
           let url = rawUrl || ''
@@ -313,7 +314,8 @@ export default {
   computed: {
     filteredRows() {
       const kw = (this.searchKeyword || '').toLowerCase().trim()
-      let list = this.allRows
+      // Exclude model thumbnails (publication/economic_report/seminar) to avoid混同
+      let list = this.allRows.filter(r => !this.isModelRow(r))
       if (kw) {
         list = list.filter(r =>
           (r.pageKey||'').toLowerCase().includes(kw) ||

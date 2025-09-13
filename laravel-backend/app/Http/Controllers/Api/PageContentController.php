@@ -213,6 +213,9 @@ class PageContentController extends Controller
     public function mediaUsage(): JsonResponse
     {
         $pages = PageContent::all();
+        // Optionally include model rows (publications/seminars/economic reports) when explicitly requested.
+        // Default is OFF to avoid mixing page media with model thumbnails in Media Management UI.
+        $includeModels = (string) (request()->query('include_models', '0')) === '1';
         $items = [];
 
         foreach ($pages as $page) {
@@ -373,18 +376,18 @@ class PageContentController extends Controller
             }
         } catch (\Throwable $e) {}
 
-        try {
-            // Publications
-            if (class_exists(\App\Models\Publication::class)) {
-                $pubs = \App\Models\Publication::query()->get();
-                foreach ($pubs as $p) {
-                    if (!empty($p->cover_image)) {
+        if ($includeModels) {
+            try {
+                if (class_exists(\App\Models\Publication::class)) {
+                    $pubs = \App\Models\Publication::query()->get();
+                    foreach ($pubs as $p) {
+                        $url = (string)($p->cover_image ?? '');
                         $items[] = [
                             'page_key' => 'publications',
                             'model' => 'publication',
                             'id' => $p->id,
                             'key' => 'cover_image',
-                            'url' => (string)$p->cover_image,
+                            'url' => $url,
                             'path' => null,
                             'filename' => null,
                             'source' => 'column',
@@ -392,21 +395,21 @@ class PageContentController extends Controller
                         ];
                     }
                 }
-            }
-        } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {}
+        }
 
-        try {
-            // Economic Reports
-            if (class_exists(\App\Models\EconomicReport::class)) {
-                $reps = \App\Models\EconomicReport::query()->get();
-                foreach ($reps as $r) {
-                    if (!empty($r->cover_image)) {
+        if ($includeModels) {
+            try {
+                if (class_exists(\App\Models\EconomicReport::class)) {
+                    $reps = \App\Models\EconomicReport::query()->get();
+                    foreach ($reps as $r) {
+                        $url = (string)($r->cover_image ?? '');
                         $items[] = [
                             'page_key' => 'economic-reports',
                             'model' => 'economic_report',
                             'id' => $r->id,
                             'key' => 'cover_image',
-                            'url' => (string)$r->cover_image,
+                            'url' => $url,
                             'path' => null,
                             'filename' => null,
                             'source' => 'column',
@@ -414,21 +417,21 @@ class PageContentController extends Controller
                         ];
                     }
                 }
-            }
-        } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {}
+        }
 
-        try {
-            // Seminars
-            if (class_exists(\App\Models\Seminar::class)) {
-                $sems = \App\Models\Seminar::query()->get();
-                foreach ($sems as $s) {
-                    if (!empty($s->featured_image)) {
+        if ($includeModels) {
+            try {
+                if (class_exists(\App\Models\Seminar::class)) {
+                    $sems = \App\Models\Seminar::query()->get();
+                    foreach ($sems as $s) {
+                        $url = (string)($s->featured_image ?? '');
                         $items[] = [
                             'page_key' => 'seminars',
                             'model' => 'seminar',
                             'id' => $s->id,
                             'key' => 'featured_image',
-                            'url' => (string)$s->featured_image,
+                            'url' => $url,
                             'path' => null,
                             'filename' => null,
                             'source' => 'column',
@@ -436,8 +439,8 @@ class PageContentController extends Controller
                         ];
                     }
                 }
-            }
-        } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {}
+        }
 
         // 追加: コード上で使用しているが media レジストリに未登録の共有画像キーを補完
         try {

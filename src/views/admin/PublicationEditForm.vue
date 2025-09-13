@@ -11,8 +11,28 @@
         </div>
         <div class="header-actions">
           <button @click="handleLogout" class="logout-btn">ログアウト</button>
+          </div>
         </div>
-      </div>
+
+        <!-- 画像・ファイルアップロード -->
+        <div class="form-section">
+          <h3 class="section-title">サムネイル・PDF</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">サムネイル画像（カバー）</label>
+              <div class="image-picker">
+                <img v-if="coverPreview || formData.cover_image" :src="coverPreview || formData.cover_image" alt="cover preview" class="image-preview" />
+                <input type="file" accept="image/*" @change="onPickCover" />
+              </div>
+              <p class="form-help">推奨サイズの比率を維持してアップロードしてください。（最大5MB）</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">PDFファイル</label>
+              <input type="file" accept="application/pdf" @change="onPickPdf" />
+              <p class="form-help">20MBまで。既存のPDFは置き換えられます。</p>
+            </div>
+          </div>
+        </div>
 
       <!-- フォームコンテナ -->
       <div class="form-container">
@@ -299,6 +319,9 @@ export default {
         is_published: false,
         membership_level: 'free'
       },
+      coverImageFile: null,
+      pdfFile: null,
+      coverPreview: '',
       // カテゴリー選択肢（管理のカテゴリー管理と同期）
       categories: [],
       loading: false,
@@ -353,6 +376,19 @@ export default {
     }
   },
   methods: {
+    onPickCover(e) {
+      const f = e?.target?.files?.[0]
+      this.coverImageFile = f || null
+      if (f) {
+        try { this.coverPreview = URL.createObjectURL(f) } catch(_) { this.coverPreview = '' }
+      } else {
+        this.coverPreview = ''
+      }
+    },
+    onPickPdf(e) {
+      const f = e?.target?.files?.[0]
+      this.pdfFile = f || null
+    },
     async loadCategories() {
       try {
         // 管理APIからカテゴリー一覧を取得
@@ -410,18 +446,29 @@ export default {
           this.$router.push('/admin')
           return
         }
-        if (this.isNew) {
-          // 管理用の既存エンドポイントに合わせる
-          const res = await apiClient.post('/api/admin/publications', this.formData)
-          if (!res?.success) throw new Error(res?.message || res?.error || '作成に失敗')
-          this.successMessage = '刊行物を作成しました'
-          setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
-        } else {
-          // 管理用の既存エンドポイントに合わせる
-          const res = await apiClient.put(`/api/admin/publications/${this.publicationId}`, this.formData)
-          if (!res?.success) throw new Error(res?.message || res?.error || '更新に失敗')
-          this.successMessage = '刊行物を更新しました'
+        // Build multipart form
+        const fd = new FormData()
+        const payload = { ...this.formData }
+        // Normalize booleans to 1/0
+        Object.entries(payload).forEach(([k, v]) => {
+          if (v === null || v === undefined) return
+          if (typeof v === 'boolean') fd.append(k, v ? '1' : '0')
+          else fd.append(k, v)
+        })
+        if (this.coverImageFile) fd.append('cover_image', this.coverImageFile)
+        if (this.pdfFile) fd.append('pdf_file', this.pdfFile)
+
+        let endpoint = '/api/admin/publications'
+        let method = 'POST'
+        if (!this.isNew) {
+          endpoint = `/api/admin/publications/${this.publicationId}`
+          // Use POST with _method=PUT for wide PHP compatibility
+          fd.append('_method', 'PUT')
         }
+        const res = await apiClient.upload(endpoint, fd, { method })
+        if (!res?.success) throw new Error(res?.message || res?.error || '保存に失敗')
+        this.successMessage = this.isNew ? '刊行物を作成しました' : '刊行物を更新しました'
+        if (this.isNew) setTimeout(() => { this.$router.push('/admin/publication') }, 1200)
       } catch (err) {
         if (err.response?.data?.errors) {
           this.submitError = Object.values(err.response.data.errors).flat().join(', ')
@@ -453,6 +500,9 @@ export default {
   overflow: hidden;
   min-height: calc(100vh - 120px);
 }
+
+.image-picker { display:flex; gap:12px; align-items:center; }
+.image-preview { width:160px; height:100px; object-fit:cover; border:1px solid #e5e5e5; border-radius:6px; }
 
 .page-header {
   display: flex;
