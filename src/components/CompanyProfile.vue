@@ -472,6 +472,9 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
+    displayedReports() {
+      return this.financialReports;
+    },
     historyList() {
       try {
         const c = this._pageText?.page?.value?.content
@@ -507,11 +510,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
-  },
-  computed: {
-    displayedReports() {
-      return this.financialReports;
-    }
   },
   methods: {
     scrollTo(id) {
