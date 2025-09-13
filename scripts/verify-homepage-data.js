@@ -40,9 +40,9 @@ if (publicationsElement) {
 }
 
 // Check information/notices counter
-const infomationElement = document.querySelector('.infomation');
-if (infomationElement) {
-    console.log(`- Information text: "${infomationElement.textContent.trim()}"`);
+const InformationElement = document.querySelector('.Information');
+if (InformationElement) {
+    console.log(`- Information text: "${InformationElement.textContent.trim()}"`);
 } else {
     console.log('- Information element not found');
 }

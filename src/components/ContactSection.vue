@@ -12,7 +12,7 @@
           alt="Vector 16"
         />
         <div class="about-us valign-text-middle inter-bold-white-20px">
-          <CmsText :pageKey="cmsKey" fieldKey="contact_label" tag="span" :fallback="'About us'" />
+          <CmsText :pageKey="cmsKey" fieldKey="contact_label" tag="span" :fallback="'CONTACT'" />
         </div>
         <img
           class="vector-15-1"

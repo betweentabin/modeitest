@@ -4,10 +4,9 @@
 
     <!-- Hero Section -->
     <HeroSection 
-      :title="pageTitle"
-      :subtitle="pageSubtitle"
+      title="会社概要"
+      subtitle="company"
       heroImage="/img/Image_fx10.jpg"
-      mediaKey="hero_company_profile"
     />
 
     <!-- Breadcrumbs -->
@@ -391,14 +390,6 @@
             </div>
           </div>
           
-          <!-- Show More Button -->
-          <button v-if="financialReports.length > 2" class="show-more-btn" @click="toggleShowAll">
-            <span>{{ showAllReports ? '表示を減らす' : 'さらに表示' }}</span>
-            <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-              <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
-              <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
-            </svg>
-          </button>
         </div>
       </div>
     </section>
@@ -452,7 +443,6 @@ export default {
       frame132131753022Props: frame132131753022Data,
       financialReports: [],
       loadingReports: false,
-      showAllReports: false,
       carouselIndicators: [],
       currentCarouselIndex: 0,
       defaultMessageBody: `
@@ -520,10 +510,7 @@ export default {
   },
   computed: {
     displayedReports() {
-      if (this.showAllReports) {
-        return this.financialReports;
-      }
-      return this.financialReports.slice(0, 2);
+      return this.financialReports;
     }
   },
   methods: {
@@ -779,9 +766,6 @@ export default {
         }
       });
     },
-    toggleShowAll() {
-      this.showAllReports = !this.showAllReports;
-    }
   }
 };
 </script>

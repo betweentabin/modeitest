@@ -148,7 +148,7 @@
                   <CmsText :pageKey="cmsKey" fieldKey="membership_benefits_label" tag="span" :fallback="'会員のメリット'" />
                 </div>
                 <div class="table-content">
-                  <CmsText :pageKey="cmsKey" fieldKey="membership_benefits_text" tag="div" :fallback="'浜銀総合研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。'" />
+                  <CmsText :pageKey="cmsKey" fieldKey="membership_benefits_text" tag="div" :fallback="'ちくぎん地域経済研究所では、会員の皆さまに、企業経営に必要な各種情報、人材育成のための各種サービスを提供するとともに、経営相談に応じています。会員の皆さまは、各種サービスを無料または会員価格でご利用になれます。'" />
                 </div>
               </div>
               <div class="table-row">

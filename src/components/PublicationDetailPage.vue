@@ -11,7 +11,7 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="[pageTitle]" />
+    <Breadcrumbs :breadcrumbs="breadcrumbs" />
 
     <!-- Publication Detail Section -->
     <section class="publication-detail-section" v-if="publication">
@@ -161,7 +161,13 @@ export default {
     pageTitle() { return this._pageText?.getText('page_title', '刊行物') || '刊行物' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'publications') || 'publications' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
-    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はコチラ') || 'メンバー登録はコチラ' },
+    ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はこちら') || 'メンバー登録はこちら' },
+    breadcrumbs() {
+      return [
+        { text: '刊行物', link: '/publications' },
+        { text: this.publication?.title || '刊行物詳細' }
+      ]
+    },
     // 必要会員レベル（members_only=true かつ level未指定はstandardとみなす）
     requiredLevel() {
       if (!this.publication) return 'free'

@@ -56,7 +56,7 @@
     <section class="hero-section">
       <div class="hero-overlay">
         <div class="hero-content">
-          <div class="hero-title-en">apply</div>
+          <div class="hero-title-en">APPLY</div>
           <div class="hero-title-jp">お申込み</div>
         </div>
       </div>
