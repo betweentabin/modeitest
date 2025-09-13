@@ -186,18 +186,26 @@ Route::prefix('admin')->group(function () {
         Route::post('/mfa/enable', [AdminAuthController::class, 'mfaEnable']);
         Route::post('/mfa/disable', [AdminAuthController::class, 'mfaDisable']);
         
-        Route::prefix('pages')->middleware('can:manage-content')->group(function () {
-            Route::get('/', [PageContentController::class, 'index']);
-            Route::get('/media-usage', [PageContentController::class, 'mediaUsage']);
-            Route::post('/', [PageContentController::class, 'store']);
-            // 管理者は公開フラグに関係なく参照可能
-            Route::get('/{pageKey}', [PageContentController::class, 'adminShow']);
-            Route::put('/{pageKey}', [PageContentController::class, 'update']);
-            Route::delete('/{pageKey}', [PageContentController::class, 'destroy']);
-            Route::post('/{pageKey}/upload-image', [PageContentController::class, 'uploadImage']);
-            Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
-            Route::post('/{pageKey}/replace-image', [PageContentController::class, 'replaceImage']);
-            Route::post('/{pageKey}/replace-html-image', [PageContentController::class, 'replaceHtmlImage']);
+        // ページ管理: 閲覧系は viewer まで許可、更新系は editor 以上
+        Route::prefix('pages')->group(function () {
+            // Read-only
+            Route::middleware('can:view-admin')->group(function () {
+                Route::get('/', [PageContentController::class, 'index']);
+                Route::get('/media-usage', [PageContentController::class, 'mediaUsage']);
+                // 管理者は公開フラグに関係なく参照可能
+                Route::get('/{pageKey}', [PageContentController::class, 'adminShow']);
+            });
+
+            // Mutations
+            Route::middleware('can:manage-content')->group(function () {
+                Route::post('/', [PageContentController::class, 'store']);
+                Route::put('/{pageKey}', [PageContentController::class, 'update']);
+                Route::delete('/{pageKey}', [PageContentController::class, 'destroy']);
+                Route::post('/{pageKey}/upload-image', [PageContentController::class, 'uploadImage']);
+                Route::delete('/{pageKey}/delete-image', [PageContentController::class, 'deleteImage']);
+                Route::post('/{pageKey}/replace-image', [PageContentController::class, 'replaceImage']);
+                Route::post('/{pageKey}/replace-html-image', [PageContentController::class, 'replaceHtmlImage']);
+            });
         });
 
         // モデル画像置換（お知らせ・刊行物・レポート・セミナーなど）

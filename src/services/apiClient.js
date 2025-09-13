@@ -464,6 +464,30 @@ class ApiClient {
     fd.append('file', file)
     return this.upload('/api/admin/cms-v2/media', fd)
   }
+
+  // Media Library (generic files under storage)
+  async listMedia(params = {}) {
+    return this.get('/api/admin/media', { params })
+  }
+  async uploadMedia(file, { directory = 'public/media', name = '' } = {}) {
+    const fd = new FormData()
+    fd.append('file', file)
+    if (directory) fd.append('directory', directory)
+    if (name) fd.append('name', name)
+    return this.upload('/api/admin/media/upload', fd)
+  }
+  async renameMedia(oldPath, newName) {
+    return this.put('/api/admin/media/rename', { old_path: oldPath, new_name: newName })
+  }
+  async deleteMedia(path) {
+    return this.delete('/api/admin/media/delete', { data: { path } })
+  }
+  async listMediaDirectories() {
+    return this.get('/api/admin/media/directories')
+  }
+  async mediaStats() {
+    return this.get('/api/admin/media/stats')
+  }
   async listCmsPageVersions(id) {
     return this.get(`/api/admin/cms-v2/pages/${id}/versions`)
   }
@@ -478,6 +502,27 @@ class ApiClient {
   }
   async adminUpdatePageContent(pageKey, data) {
     return this.put(`/api/admin/pages/${encodeURIComponent(pageKey)}`, data)
+  }
+  async adminReplacePageImage(pageKey, key, file) {
+    const fd = new FormData()
+    fd.append('key', key)
+    fd.append('image', file)
+    const url = getApiUrl(`/api/admin/pages/${encodeURIComponent(pageKey)}/replace-image`)
+    const adminTokenLS = localStorage.getItem('admin_token')
+    const headers = {
+      'Accept': 'application/json',
+      ...(adminTokenLS ? { 'Authorization': adminTokenLS.startsWith('Bearer ') ? adminTokenLS : `Bearer ${adminTokenLS}` } : {})
+    }
+    const res = await fetch(url, { method: 'POST', headers, body: fd })
+    if (!res.ok) {
+      let msg = ''
+      try { msg = await res.text() } catch(e) {}
+      try { msg = JSON.parse(msg).message || msg } catch(e) {}
+      return { success: false, error: msg || `HTTP ${res.status}` }
+    }
+    const ct = res.headers.get('Content-Type') || ''
+    if (ct.includes('application/json')) return await res.json()
+    return { success: true }
   }
   async issueCmsPreviewToken(pageId) { return this.post(`/api/admin/cms-v2/pages/${pageId}/preview-token`) }
 

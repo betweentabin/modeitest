@@ -34,5 +34,16 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
             ]
         );
+
+        Admin::updateOrCreate(
+            ['email' => 'viewer@chikugin-cri.co.jp'],
+            [
+                'username' => 'viewer',
+                'password' => Hash::make('viewer123'),
+                'full_name' => '閲覧者',
+                'role' => 'viewer',
+                'is_active' => true,
+            ]
+        );
     }
 }

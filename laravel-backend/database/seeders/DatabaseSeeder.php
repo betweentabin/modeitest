@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             RemoveHeroImagesFromMediaSeeder::class,
             // Ensure each page has a hero placeholder field to manage from the page editor
             PageHeroPlaceholdersSeeder::class,
+            // Set initial real hero images per page to avoid identical placeholders
+            PageHeroRealImagesSeeder::class,
             TermsPageJsonSeeder::class,
             PrivacyPageJsonSeeder::class,
             FaqPageJsonSeeder::class,

@@ -26,6 +26,7 @@ import EconomicIndicatorCategoryManagement from "./views/admin/EconomicIndicator
 import NoticeManagement from "./views/admin/NoticeManagement";
 import InquiryManagement from "./views/admin/InquiryManagement";
 import MediaManagement from "./views/admin/MediaManagement";
+import MediaLibrary from "./views/admin/MediaLibrary.vue";
 import PageEditForm from "./views/admin/PageEditForm";
 import NewPageEditForm from "./views/admin/NewPageEditForm";
 import SeminarEditForm from "./views/admin/SeminarEditForm";
@@ -510,6 +511,12 @@ const router = new Router({
       name: "mediaManagement",
       component: MediaManagement,
       meta: { title: "メディア管理 - ちくぎん地域経済研究所" }
+    },
+    {
+      path: "/admin/media-library",
+      name: "mediaLibrary",
+      component: MediaLibrary,
+      meta: { title: "メディアライブラリ - ちくぎん地域経済研究所" }
     },
     {
       path: "/admin/media/new",

@@ -64,6 +64,11 @@
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/media-library" class="nav-item" :class="{ active: isActive('/admin/media-library') }">
+              メディアライブラリ
+            </router-link>
+          </li>
+          <li>
             <router-link v-if="false" to="/admin/pages" class="nav-item" :class="{ active: isActive('/admin/pages') }">
               各ページ管理
             </router-link>

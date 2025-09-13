@@ -330,15 +330,54 @@
             <button class="btn" @click="importExistingPrivacy">既存文言を取り込む</button>
             <button class="btn" @click="syncRichToPageContentHtml">本文をPageContentに同期</button>
           </div>
-          <div v-if="currentPage" class="field" style="margin-top:8px;">
-            <label>PageContentのページキー（必要に応じて変更）</label>
-            <input v-model="pageContentKey" class="input" placeholder="privacy / privacy-poricy など" />
-            <div class="help">取り込み/保存はこのキーで行います</div>
+        <div v-if="currentPage" class="field" style="margin-top:8px;">
+          <label>PageContentのページキー（必要に応じて変更）</label>
+          <input v-model="pageContentKey" class="input" placeholder="privacy / privacy-poricy など" />
+          <div class="help">取り込み/保存はこのキーで行います</div>
+        </div>
+
+        <!-- Page images management -->
+        <div v-if="currentPage" class="section-title">ページ内画像（content.images）</div>
+        <div v-if="currentPage" class="field">
+          <div v-if="pageImages.length === 0" class="help">登録済みの画像がありません</div>
+          <div v-for="(img, idx) in pageImages" :key="`pimg-${idx}`" class="page-image-row">
+            <div class="img-preview" v-if="img.url"><img :src="img.url" alt="preview"/></div>
+            <div class="img-meta">
+              <div class="img-key">{{ img.key }}</div>
+              <div class="img-file">{{ img.filename || '' }}</div>
+              <div class="img-actions">
+                <input :ref="`replace_${idx}`" type="file" accept="image/*" style="display:none" @change="onReplacePageImage(idx, $event)" />
+                <button class="btn" @click="triggerReplace(idx)">差し替え</button>
+              </div>
+            </div>
+          </div>
+          <div class="actions-row" style="margin-top:8px; gap:8px; align-items:center;">
+            <input v-model="newImageKey" class="input" placeholder="新規キー（例: hero, content.main など）" style="max-width:260px" />
+            <input ref="newImageInput" type="file" accept="image/*" style="display:none" @change="onAddNewPageImage" />
+            <button class="btn" @click="triggerAddNew">新規追加</button>
+            <span class="help">キー未入力の場合は追加できません</span>
           </div>
         </div>
-        <div v-else class="empty">ページを選択してください</div>
       </div>
-      <div class="pane right" style="display:none"></div>
+      <div v-else class="empty">ページを選択してください</div>
+    </div>
+      <div class="pane right">
+        <div class="preview-panel" v-if="currentPage && showPreview">
+          <div class="preview-toolbar">
+            <div class="label">プレビュー</div>
+            <div class="spacer"></div>
+            <button class="btn" :class="{active: previewDevice==='desktop'}" @click="setPreviewDevice('desktop')">PC</button>
+            <button class="btn" :class="{active: previewDevice==='tablet'}" @click="setPreviewDevice('tablet')">Tablet</button>
+            <button class="btn" :class="{active: previewDevice==='mobile'}" @click="setPreviewDevice('mobile')">SP</button>
+            <button class="btn" @click="reloadPreview">再読込</button>
+            <a class="btn" :href="rawPreviewUrl" target="_blank" rel="noopener">別タブ</a>
+          </div>
+          <div class="preview-viewport" :style="previewViewportStyle">
+            <iframe v-if="previewUrl" :key="previewUrl" class="preview-frame" :src="previewUrl"></iframe>
+            <div v-else class="help">プレビューURLが未設定です</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Create modal -->
@@ -374,10 +413,14 @@ export default {
       showCreate: false,
       createForm: { slug: '', title: '' },
       previewUrl: '',
+      rawPreviewUrl: '',
       kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
       // エディタ（本文）の表示切替。既定は非表示
       showContentEditor: false,
+      // 右ペイン: ライブプレビュー
+      showPreview: true,
+      previewDevice: 'desktop', // 'desktop' | 'tablet' | 'mobile'
       privacyTexts: {
         page_title: '', page_subtitle: '', intro: '',
         collection_title: '', collection_body: '',
@@ -403,6 +446,9 @@ export default {
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
       genericHtmls: {},
+      // Page images (content.images)
+      pageImages: [],
+      newImageKey: '',
       // glossary: 用語リスト（items）の編集
         glossaryItems: [],
         // faq: Q/A リストの編集
@@ -560,9 +606,47 @@ export default {
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
       const hasHtmls = this.genericHtmls && Object.keys(this.genericHtmls).length > 0
       return hasTexts || hasHtmls
+    },
+    previewViewportStyle(){
+      const map = {
+        desktop: 1200,
+        tablet: 768,
+        mobile: 375,
+      }
+      const w = map[this.previewDevice] || 1200
+      return { width: w + 'px', height: 'calc(100% - 46px)' }
     }
   },
   methods: {
+    setPreviewDevice(d){ this.previewDevice = d },
+    getRoutePathFromSlug(slug){
+      const s = (slug||'').toLowerCase()
+      if (s === 'home') return ''
+      if (s.includes('company')) return 'company'
+      if (s.includes('aboutus')) return 'aboutus'
+      if (s.includes('about')) return 'aboutus'
+      if (s.includes('legal') || s.includes('transaction')) return 'legal'
+      if (s.includes('privacy')) return 'privacy'
+      if (s.includes('terms')) return 'terms'
+      if (s.includes('faq')) return 'faq'
+      if (s.includes('glossary')) return 'glossary'
+      if (s.includes('sitemap')) return 'sitemap'
+      if (s.includes('publication')) return 'publications-public'
+      return s.replace(/^\/+/, '')
+    },
+    buildPreviewUrl(){
+      try {
+        const slug = (this.currentPage && this.currentPage.slug) || ''
+        const route = this.getRoutePathFromSlug(slug)
+        const base = window.location.origin
+        const path = route ? `/#/${route}` : '/#/'
+        const t = Date.now()
+        const qs = `cmsPreview=1&_t=${t}`
+        this.rawPreviewUrl = `${base}${path}?${qs}`
+        this.previewUrl = this.rawPreviewUrl
+      } catch(_) { this.previewUrl=''; this.rawPreviewUrl='' }
+    },
+    reloadPreview(){ this.buildPreviewUrl() },
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
       if (res.success) this.pages = res.data.data || []
@@ -653,6 +737,8 @@ export default {
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'services'
+        // プレビューURL構築
+        this.buildPreviewUrl()
         else if (slug.includes('company')) this.pageContentKey = 'company-profile'
         else if (slug.includes('consult')) this.pageContentKey = 'cri-consulting'
         else if (slug.includes('about')) this.pageContentKey = 'about-institute'
@@ -662,10 +748,16 @@ export default {
           // 切替時に汎用フィールドを初期化（前ページのキーが残らないように）
           this.genericTexts = {}
           this.genericHtmls = {}
-          const page = await apiClient.adminGetPageContent(this.pageContentKey)
-          const content = page?.data?.page?.content || {}
+        const page = await apiClient.adminGetPageContent(this.pageContentKey)
+        const content = page?.data?.page?.content || {}
           const texts = (content && typeof content === 'object' && content.texts && typeof content.texts === 'object') ? content.texts : {}
-          const htmls = (content && typeof content === 'object' && content.htmls && typeof content.htmls === 'object') ? content.htmls : {}
+        const htmls = (content && typeof content === 'object' && content.htmls && typeof content.htmls === 'object') ? content.htmls : {}
+        // images map → pageImages
+        const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
+        this.pageImages = Object.keys(imgs).map(k => {
+          const v = imgs[k]
+          return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
+        })
           // Reset minimal headings
           if (this.pageContentKey === 'privacy') {
             // 既存のprivacyTextsにAPIの全キーをマージ
@@ -728,6 +820,62 @@ export default {
         } catch(_) { /* noop */ }
       }
     },
+    triggerReplace(idx){
+      const r = this.$refs[`replace_${idx}`]
+      if (r && r[0] && typeof r[0].click === 'function') r[0].click()
+      else if (r && typeof r.click === 'function') r.click()
+    },
+    async onReplacePageImage(idx, e){
+      try {
+        const file = (e.target.files && e.target.files[0]) || null
+        if (!file) return
+        const item = this.pageImages[idx]
+        if (!item || !this.pageContentKey) return
+        const res = await apiClient.adminReplacePageImage(this.pageContentKey, item.key, file)
+        if (res && res.success !== false) {
+          // refresh current images list
+          try {
+            const r = await apiClient.adminGetPageContent(this.pageContentKey)
+            const content = r?.data?.page?.content || {}
+            const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
+            this.pageImages = Object.keys(imgs).map(k => {
+              const v = imgs[k]
+              return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
+            })
+          } catch(_) {}
+          alert('画像を差し替えました')
+        } else {
+          alert('差し替えに失敗しました')
+        }
+      } catch(_) { alert('差し替えに失敗しました') }
+    },
+    triggerAddNew(){
+      if (!this.newImageKey) { alert('新規キーを入力してください'); return }
+      if (this.$refs.newImageInput && typeof this.$refs.newImageInput.click === 'function') this.$refs.newImageInput.click()
+    },
+    async onAddNewPageImage(e){
+      try {
+        const file = (e.target.files && e.target.files[0]) || null
+        if (!file || !this.newImageKey || !this.pageContentKey) return
+        const res = await apiClient.adminReplacePageImage(this.pageContentKey, this.newImageKey, file)
+        if (res && res.success !== false) {
+          // push to list
+          try {
+            const r = await apiClient.adminGetPageContent(this.pageContentKey)
+            const content = r?.data?.page?.content || {}
+            const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
+            this.pageImages = Object.keys(imgs).map(k => {
+              const v = imgs[k]
+              return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
+            })
+          } catch(_) {}
+          this.newImageKey = ''
+          alert('画像を追加しました')
+        } else {
+          alert('追加に失敗しました')
+        }
+      } catch(_) { alert('追加に失敗しました') }
+    },
     kvPreviewFromProps(props){
       if (!props || !props.image_id || !props.ext) return ''
       return getApiUrl(`/api/public/m/${encodeURIComponent(props.image_id)}/md.${encodeURIComponent(props.ext)}`)
@@ -759,8 +907,27 @@ export default {
     async savePageMeta(){ if (!this.currentPage) return; await apiClient.updateCmsPage(this.currentPage.id, { title: this.currentPage.title }) },
     async saveHero(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'hero', { sort:10, component_type:'Hero', props_json:{ title: this.hero.title }, status:'draft' }) },
     async saveRich(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'rich', { sort:20, component_type:'RichText', props_json:{ html: this.richText.html }, status:'draft' }) },
+    async syncCompanyPageContentIfApplicable(){
+      try {
+        const slug = (this.currentPage && this.currentPage.slug || '').toLowerCase()
+        if (!slug.includes('company')) return
+        // Bridge: push company texts/htmls/history to legacy PageContent (company-profile)
+        const hist = Array.isArray(this.companyHistory) ? this.companyHistory
+          .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
+          .filter(h => h.year || h.date || h.body) : []
+        const patch = { content: {} }
+        if (this.companyTexts && Object.keys(this.companyTexts).length) patch.content.texts = { ...this.companyTexts }
+        if (this.companyHtmls && Object.keys(this.companyHtmls).length) patch.content.htmls = { ...this.companyHtmls }
+        patch.content.history = hist
+        // Also mark published to make it visible on public API
+        const payload = { ...patch, is_published: true }
+        await apiClient.adminUpdatePageContent('company-profile', payload)
+      } catch (_) { /* non-blocking */ }
+    },
     async publish(){
       if (!this.currentPage) return
+      // Bridge legacy PageContent before publishing v2 (non-blocking)
+      try { await this.syncCompanyPageContentIfApplicable() } catch(_) {}
       const res = await apiClient.publishCmsPage(this.currentPage.id)
       if (res.success) {
         try { await apiClient.setCmsOverride({ slug: this.currentPage.slug, page_id: this.currentPage.id, enabled: true }) } catch(_){ /* ignore */ }
@@ -1000,12 +1167,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.cms{ display:flex; gap:0; min-height: calc(100vh - 140px); background:#fff; border-radius:8px; overflow:hidden; }
-.pane{ border-right:1px solid #eee; }
-.left{ width:280px; }
-.center{ flex:1; padding:16px; }
-.right{ width:360px; }
+  <style scoped>
+  .cms{ display:flex; gap:0; min-height: calc(100vh - 140px); background:#fff; border-radius:8px; overflow:hidden; }
+  .pane{ border-right:1px solid #eee; }
+  .left{ width:280px; }
+  .center{ flex:1; padding:16px; }
+  .right{ width:420px; }
 .toolbar{ display:flex; gap:8px; padding:10px; border-bottom:1px solid #eee; }
 .list{ overflow:auto; height: calc(100% - 50px); }
 .item{ padding:10px 12px; border-bottom:1px solid #f4f4f4; cursor:pointer; }
@@ -1021,11 +1188,27 @@ export default {
 .modal{ position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
 .modal-inner{ background:#fff; border-radius:8px; padding:16px; width:360px; display:flex; flex-direction:column; gap:10px; }
 .actions{ display:flex; justify-content:flex-end; }
-.actions-row{ display:flex; gap:8px; justify-content:center; padding-top:8px; }
-.section-title{ background:#e6f0ff; color:#1a3a7c; padding:6px 10px; border-left:4px solid #2d5bd1; margin:10px 0; font-weight:600; }
-.kv-uploader{ border:1px dashed #bbb; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; background:#fafafa; cursor:pointer; }
-.kv-placeholder{ display:flex; flex-direction:column; align-items:center; color:#666; gap:6px; }
-.kv-icon{ font-size:22px; }
-.kv-preview{ width:100%; height:100%; background-size:cover; background-position:center; border-radius:8px; }
-.help{ color:#777; font-size:12px; }
-</style>
+  .actions-row{ display:flex; gap:8px; justify-content:center; padding-top:8px; }
+  .section-title{ background:#e6f0ff; color:#1a3a7c; padding:6px 10px; border-left:4px solid #2d5bd1; margin:10px 0; font-weight:600; }
+  .kv-uploader{ border:1px dashed #bbb; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; background:#fafafa; cursor:pointer; }
+  .kv-placeholder{ display:flex; flex-direction:column; align-items:center; color:#666; gap:6px; }
+  .kv-icon{ font-size:22px; }
+  .kv-preview{ width:100%; height:100%; background-size:cover; background-position:center; border-radius:8px; }
+  .help{ color:#777; font-size:12px; }
+  /* Preview panel */
+  .preview-panel{ display:flex; flex-direction:column; height:100%; }
+  .preview-toolbar{ display:flex; gap:8px; padding:8px; border-bottom:1px solid #eee; align-items:center; }
+  .preview-toolbar .label{ font-weight:600; color:#333; }
+  .preview-toolbar .spacer{ flex:1; }
+  .preview-viewport{ flex:1; overflow:auto; display:flex; align-items:flex-start; justify-content:center; padding:10px; background:#f9f9f9; }
+  .preview-frame{ width:100%; height:100%; border:1px solid #ddd; background:#fff; }
+  .btn.active{ background:#2d5bd1; }
+  
+  /* Device widths: container width is set inline via :style */
+  .page-image-row{ display:flex; gap:12px; align-items:center; border:1px solid #eee; border-radius:8px; padding:10px; margin-bottom:8px; background:#fafafa; }
+  .img-preview{ width:120px; height:80px; background:#fff; border:1px solid #eee; display:flex; align-items:center; justify-content:center; }
+  .img-preview img{ max-width:100%; max-height:100%; object-fit:contain; }
+  .img-meta{ display:flex; flex-direction:column; gap:6px; }
+  .img-key{ font-weight:600; }
+  .img-file{ color:#777; font-size:12px; }
+  </style>
