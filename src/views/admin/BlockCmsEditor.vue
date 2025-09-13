@@ -33,6 +33,16 @@
             <input v-model="currentPage.title" class="input" @change="savePageMeta" />
           </div>
 
+          <!-- Layout view toggle (for key pages like company) -->
+          <div class="field" v-if="currentPage && currentPage.slug==='company'">
+            <label>編集モード</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <label style="display:flex; gap:6px; align-items:center;">
+                <input type="checkbox" v-model="layoutMode" /> ページ構成ビューで編集（実ページに近い配置）
+              </label>
+            </div>
+          </div>
+
           <template v-if="showContentEditor">
             <div class="section-title">コンテンツ</div>
             <div class="field">
@@ -82,7 +92,7 @@
 
           <!-- company / consulting / about: 動的テキスト一覧（小コンポーネント） -->
           <div v-if="currentPage && (currentPage.slug==='company' || currentPage.slug==='cri-consulting' || currentPage.slug==='aboutus')" class="section-title">小コンポーネントの文言一覧（texts）</div>
-          <template v-if="currentPage && currentPage.slug==='company'">
+          <template v-if="currentPage && currentPage.slug==='company' && !layoutMode">
             <div class="field" v-for="(val, key) in companyTexts" :key="`company-${key}`">
               <label>{{ displayLabel(key) }}</label>
               <input v-model="companyTexts[key]" class="input" />
@@ -109,6 +119,98 @@
             </div>
             <div class="actions" style="justify-content:flex-start;">
               <button class="btn" @click="companyHistory.push({ year:'', date:'', body:'' })">+ 沿革を追加</button>
+            </div>
+          </template>
+
+          <!-- Company: layout oriented editor -->
+          <template v-if="currentPage && currentPage.slug==='company' && layoutMode">
+            <!-- 経営理念（Philosophy） -->
+            <div class="section-title">経営理念（Philosophy）</div>
+            <div class="field">
+              <label>見出し</label>
+              <input v-model="companyTexts.philosophy_title" class="input" placeholder="経営理念" />
+            </div>
+            <div class="field">
+              <label>英字</label>
+              <input v-model="companyTexts.philosophy_subtitle" class="input" placeholder="philosophy" />
+            </div>
+            <div class="field">
+              <label>MISSION ラベル</label>
+              <input v-model="companyTexts.mission_label" class="input" placeholder="OUR MISSION" />
+            </div>
+            <div class="field">
+              <label>MISSION 見出し</label>
+              <input v-model="companyTexts.mission_title" class="input" placeholder="産官学金のネットワーク活用による地域貢献" />
+            </div>
+            <div class="field">
+              <label>MISSION 本文（HTML）</label>
+              <textarea v-model="companyHtmls.mission_body" class="textarea" rows="4"></textarea>
+            </div>
+            <div class="field">
+              <label>セクション画像（company_profile_philosophy）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_philosophy') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.company_profile_philosophy</div>
+                  <div class="img-actions">
+                    <input ref="img_company_profile_philosophy" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_philosophy', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_philosophy')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ご挨拶（Message） -->
+            <div class="section-title">ご挨拶（Message）</div>
+            <div class="field">
+              <label>見出し</label>
+              <input v-model="companyTexts.message_title" class="input" placeholder="ご挨拶" />
+            </div>
+            <div class="field">
+              <label>英字</label>
+              <input v-model="companyTexts.message_subtitle" class="input" placeholder="message" />
+            </div>
+            <div class="field">
+              <label>本文（HTML）</label>
+              <textarea v-model="companyHtmls.message_body" class="textarea" rows="6"></textarea>
+            </div>
+            <div class="field">
+              <label>署名</label>
+              <input v-model="companyTexts.message_signature" class="input" placeholder="代表取締役社長 ・・・" />
+            </div>
+            <div class="field">
+              <label>セクション画像（company_profile_message）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_message') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.company_profile_message</div>
+                  <div class="img-actions">
+                    <input ref="img_company_profile_message" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_message', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_message')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 沿革（History） -->
+            <div class="section-title">沿革（History）</div>
+            <div class="help">年/日付/本文(HTML) を編集できます</div>
+            <div v-for="(h, idx) in companyHistory" :key="`hist-l-${idx}`" class="field" style="border:1px solid #eee; padding:10px; border-radius:8px;">
+              <label>年（year）</label>
+              <input v-model="h.year" class="input" placeholder="例: 2011" />
+              <label>日付（date）</label>
+              <input v-model="h.date" class="input" placeholder="例: 平成23年7月1日" />
+              <label>本文（HTML）</label>
+              <textarea v-model="h.body" class="textarea" rows="3" placeholder="本文（HTML）"></textarea>
+              <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+                <button class="btn" @click="companyHistory.splice(idx,1)">削除</button>
+                <button class="btn" @click="companyHistory.splice(Math.max(0, idx-1), 0, companyHistory.splice(idx,1)[0])" :disabled="idx===0">上へ</button>
+                <button class="btn" @click="companyHistory.splice(Math.min(companyHistory.length, idx+2), 0, companyHistory.splice(idx,1)[0])" :disabled="idx===companyHistory.length-1">下へ</button>
+              </div>
+            </div>
+            <div class="actions" style="justify-content:flex-start;">
+              <button class="btn" @click="companyHistory.push({ year:'', date:'', body:'' })">+ 沿革を追加</button>
+              <button class="btn primary" style="margin-left:8px" @click="savePrivacyTexts">文言を保存（PageContent）</button>
             </div>
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
@@ -418,6 +520,8 @@ export default {
       lastContentImgUrl: '',
       // エディタ（本文）の表示切替。既定は非表示
       showContentEditor: false,
+      // ページ構成ビュー（実ページに近い配置で編集）
+      layoutMode: false,
       // 右ペイン: ライブプレビュー
       showPreview: true,
       previewDevice: 'desktop', // 'desktop' | 'tablet' | 'mobile'
@@ -983,6 +1087,41 @@ export default {
           alert('画像アップロードに失敗しました')
         }
       } catch(_){ alert('画像アップロードに失敗しました') }
+    },
+    getImageUrlByKey(key){
+      try {
+        const item = (this.pageImages || []).find(it => it.key === key)
+        return item ? (item.url || '') : ''
+      } catch(_) { return '' }
+    },
+    triggerCompanyImageUpload(key){
+      const refName = `img_${key}`
+      const el = this.$refs[refName]
+      if (el && el[0] && typeof el[0].click === 'function') el[0].click()
+      else if (el && typeof el.click === 'function') el.click()
+    },
+    async onCompanyImageSelected(key, e){
+      try {
+        const file = (e.target.files && e.target.files[0]) || null
+        if (!file || !this.pageContentKey) return
+        const res = await apiClient.adminReplacePageImage(this.pageContentKey, key, file)
+        if (res && res.success !== false) {
+          await this.refreshPageImages()
+        } else {
+          alert('画像アップロードに失敗しました')
+        }
+      } catch(_) { alert('画像アップロードに失敗しました') }
+    },
+    async refreshPageImages(){
+      try {
+        const r = await apiClient.adminGetPageContent(this.pageContentKey)
+        const content = r?.data?.page?.content || {}
+        const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
+        this.pageImages = Object.keys(imgs).map(k => {
+          const v = imgs[k]
+          return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
+        })
+      } catch(_) {}
     },
     insertLastContentImage(){
       if (!this.lastContentImgUrl) return
