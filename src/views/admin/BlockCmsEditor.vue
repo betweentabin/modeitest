@@ -192,6 +192,59 @@
               </div>
             </div>
 
+            <!-- 会社概要（Company Profile） -->
+            <div class="section-title">会社概要（Company Profile）</div>
+            <div class="field">
+              <label>見出し</label>
+              <input v-model="companyTexts.profile_title" class="input" placeholder="会社概要" />
+            </div>
+            <div class="field">
+              <label>英字</label>
+              <input v-model="companyTexts.profile_subtitle" class="input" placeholder="company profile" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_company_name_label') }}</label>
+              <input v-model="companyTexts.profile_company_name_label" class="input" />
+              <label>{{ displayLabel('profile_company_name_value') }}</label>
+              <input v-model="companyTexts.profile_company_name_value" class="input" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_established_label') }}</label>
+              <input v-model="companyTexts.profile_established_label" class="input" />
+              <label>{{ displayLabel('profile_established_value') }}</label>
+              <input v-model="companyTexts.profile_established_value" class="input" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_address_label') }}</label>
+              <input v-model="companyTexts.profile_address_label" class="input" />
+              <label>{{ displayLabel('profile_address_value', true) }}</label>
+              <textarea v-model="companyHtmls.profile_address_value" class="textarea" rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_representative_label') }}</label>
+              <input v-model="companyTexts.profile_representative_label" class="input" />
+              <label>{{ displayLabel('profile_representative_value') }}</label>
+              <input v-model="companyTexts.profile_representative_value" class="input" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_capital_label') }}</label>
+              <input v-model="companyTexts.profile_capital_label" class="input" />
+              <label>{{ displayLabel('profile_capital_value') }}</label>
+              <input v-model="companyTexts.profile_capital_value" class="input" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_shareholders_label') }}</label>
+              <input v-model="companyTexts.profile_shareholders_label" class="input" />
+              <label>{{ displayLabel('profile_shareholders_value') }}</label>
+              <input v-model="companyTexts.profile_shareholders_value" class="input" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('profile_organization_label') }}</label>
+              <input v-model="companyTexts.profile_organization_label" class="input" />
+              <label>{{ displayLabel('profile_organization_value') }}</label>
+              <input v-model="companyTexts.profile_organization_value" class="input" />
+            </div>
+
             <!-- 沿革（History） -->
             <div class="section-title">沿革（History）</div>
             <div class="help">年/日付/本文(HTML) を編集できます</div>
@@ -208,10 +261,94 @@
                 <button class="btn" @click="companyHistory.splice(Math.min(companyHistory.length, idx+2), 0, companyHistory.splice(idx,1)[0])" :disabled="idx===companyHistory.length-1">下へ</button>
               </div>
             </div>
-            <div class="actions" style="justify-content:flex-start;">
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
               <button class="btn" @click="companyHistory.push({ year:'', date:'', body:'' })">+ 沿革を追加</button>
-              <button class="btn primary" style="margin-left:8px" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
             </div>
+
+            <!-- 所員紹介（Staff） -->
+            <div class="section-title">所員紹介（Staff）</div>
+            <div class="field">
+              <label>見出し</label>
+              <input v-model="companyTexts.staff_title" class="input" placeholder="所員紹介" />
+            </div>
+            <div class="field">
+              <label>英字</label>
+              <input v-model="companyTexts.staff_subtitle" class="input" placeholder="About us" />
+            </div>
+            <div class="field">
+              <label>写真（森田） company_profile_staff_morita</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_morita') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_company_profile_staff_morita" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_morita', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_morita')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>写真（溝上） company_profile_staff_mizokami</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_mizokami') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_company_profile_staff_mizokami" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_mizokami', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_mizokami')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>写真（空閑） company_profile_staff_kuga</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_kuga') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_company_profile_staff_kuga" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_kuga', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_kuga')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>写真（髙田） company_profile_staff_takada</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_takada') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_company_profile_staff_takada" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_takada', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_takada')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>写真（中村） company_profile_staff_nakamura</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_nakamura') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_company_profile_staff_nakamura" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_nakamura', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_nakamura')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 決算報告（Financial Reports） -->
+            <div class="section-title">決算報告（Financial Reports）</div>
+            <div class="field">
+              <label>見出し</label>
+              <input v-model="companyTexts.financial_reports_title" class="input" placeholder="決算報告" />
+            </div>
+            <div class="field">
+              <label>英字</label>
+              <input v-model="companyTexts.financial_reports_subtitle" class="input" placeholder="financial reports" />
+            </div>
+            <div class="help">決算データは別管理（自動表示）です。タイトルのみ編集できます。</div>
+
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
@@ -438,9 +575,14 @@
           <div class="help">取り込み/保存はこのキーで行います</div>
         </div>
 
-        <!-- Page images management -->
-        <div v-if="currentPage" class="section-title">ページ内画像（content.images）</div>
-        <div v-if="currentPage" class="field">
+        <!-- Page images management (optional) -->
+        <div v-if="currentPage" class="section-title" style="display:flex; align-items:center; gap:8px;">
+          ページ内画像（content.images）
+          <label style="margin-left:auto; font-weight:normal; font-size:12px; color:#555; display:flex; gap:6px; align-items:center;">
+            <input type="checkbox" v-model="showImageList" /> 一覧を表示
+          </label>
+        </div>
+        <div v-if="currentPage && showImageList" class="field">
           <div v-if="pageImages.length === 0" class="help">登録済みの画像がありません</div>
           <div v-for="(img, idx) in pageImages" :key="`pimg-${idx}`" class="page-image-row">
             <div class="img-preview" v-if="img.url"><img :src="img.url" alt="preview"/></div>
@@ -532,6 +674,7 @@ export default {
       genericHtmls: {},
       // Page images (content.images)
       pageImages: [],
+      showImageList: false,
       newImageKey: '',
       // glossary: 用語リスト（items）の編集
         glossaryItems: [],
