@@ -107,9 +107,7 @@
             <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="membershipTexts.cta_primary" class="input" /></div>
             <div class="field"><label>入会（ボタン文言）</label><input v-model="membershipTexts.cta_secondary" class="input" /></div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <!-- membership: 非レイアウト（一覧） -->
@@ -162,9 +160,7 @@
             <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="standardTexts.cta_primary" class="input" /></div>
             <div class="field"><label>入会（ボタン文言）</label><input v-model="standardTexts.cta_secondary" class="input" /></div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <!-- premium-membership: 構成ビュー（layoutMode） -->
@@ -182,18 +178,14 @@
             <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="premiumTexts.cta_primary" class="input" /></div>
             <div class="field"><label>入会（ボタン文言）</label><input v-model="premiumTexts.cta_secondary" class="input" /></div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <!-- contact: シンプル構成ビュー（layoutMode） -->
           <template v-if="currentPage && currentPage.slug==='contact' && layoutMode">
             <div class="section-title">お問い合わせ（Contact）</div>
             <div class="field"><label>フォーム見出し</label><input v-model="contactTexts.form_title" class="input" placeholder="お問い合わせフォーム" /></div>
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
@@ -231,10 +223,7 @@
             <label>導入文</label>
             <textarea v-model="privacyTexts.intro" class="textarea" rows="4"></textarea>
           </div>
-          <div v-if="currentPage" class="actions" style="justify-content:flex-start; gap:8px;">
-            <button class="btn" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            <span class="help">ページ内のCmsTextに反映（公開デザインはそのまま）</span>
-          </div>
+          
 
           <!-- company / consulting / about: 動的テキスト一覧（小コンポーネント） -->
           <div v-if="currentPage && (currentPage.slug==='company' || currentPage.slug==='cri-consulting' || currentPage.slug==='aboutus')" class="section-title">小コンポーネントの文言一覧（texts）</div>
@@ -421,7 +410,6 @@
             </div>
             <div class="actions" style="justify-content:flex-start; gap:8px;">
               <button class="btn" @click="companyHistory.push({ year:'', date:'', body:'' })">+ 沿革を追加</button>
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
             </div>
 
             <!-- 所員紹介（Staff） -->
@@ -533,9 +521,7 @@
             <div class="field"><label>ルート2</label><input v-model="companyTexts.access_route_2" class="input" /></div>
             <div class="field"><label>ルート3</label><input v-model="companyTexts.access_route_3" class="input" /></div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <!-- AboutUs: layout oriented editor -->
@@ -610,9 +596,7 @@
               <textarea v-model="aboutHtmls.service3_list" class="textarea" rows="4"></textarea>
             </div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <!-- About (旧 about): layout oriented editor -->
@@ -719,9 +703,7 @@
             <div class="field"><label>スタッフ2（役職/氏名）</label><input v-model="aboutTexts.staff2_title" class="input" /><input v-model="aboutTexts.staff2_name" class="input" /></div>
             <div class="field"><label>スタッフ3（役職/氏名）</label><input v-model="aboutTexts.staff3_title" class="input" /><input v-model="aboutTexts.staff3_name" class="input" /></div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
 
           <!-- CRI Consulting: layout oriented editor -->
@@ -755,9 +737,7 @@
             <div class="field"><label>見出し</label><input v-model="consultingTexts.achievements_title" class="input" /></div>
             <div class="field"><label>英字</label><input v-model="consultingTexts.achievements_subtitle" class="input" /></div>
 
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
-              <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
-            </div>
+            
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
@@ -970,13 +950,14 @@
           <div class="actions-row">
             <button class="btn primary" :disabled="!currentPage" @click="publish">公開する</button>
             <button class="btn" :disabled="!currentPage" @click="unpublish">公開を停止する</button>
-            <button class="btn" :disabled="!currentPage" @click="issuePreview">プレビューリンク</button>
+            <button class="btn" :disabled="!currentPage" @click="issuePreview" v-if="false">プレビューリンク</button>
             <a v-if="previewUrl" :href="previewUrl" target="_blank" rel="noopener" class="btn">開く</a>
           </div>
 
           <div v-if="currentPage" class="actions-row" style="margin-top:8px;">
-            <button class="btn" @click="importExistingPrivacy">既存文言を取り込む</button>
-            <button class="btn" @click="syncRichToPageContentHtml">本文をPageContentに同期</button>
+            <button class="btn primary" @click="savePrivacyTexts">文言を保存（PageContent）</button>
+            <button class="btn" @click="importExistingPrivacy" v-if="false">既存文言を取り込む</button>
+            <button class="btn" @click="syncRichToPageContentHtml" v-if="false">本文をPageContentに同期</button>
           </div>
         <div v-if="currentPage" class="field" style="margin-top:8px;">
           <label>PageContentのページキー（必要に応じて変更）</label>
