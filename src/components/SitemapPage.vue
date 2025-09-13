@@ -17,21 +17,21 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="content-header">
-        <h2 class="page-title">
-          <CmsText pageKey="sitemap" fieldKey="page_title" tag="span" :fallback="pageTitle" />
-        </h2>
-        <div class="title-decoration">
-          <div class="line-left"></div>
-          <span class="title-english">
-            <CmsText pageKey="sitemap" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
-          </span>
-          <div class="line-right"></div>
+      <div class="page-content">
+        <div class="section-header">
+          <h2 class="section-title">
+            <CmsText pageKey="sitemap" fieldKey="page_title" tag="span" :fallback="pageTitle" />
+          </h2>
+          <div class="section-divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">
+              <CmsText pageKey="sitemap" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle" />
+            </span>
+            <div class="divider-line"></div>
+          </div>
         </div>
       </div>
-      <!-- CMS Body (optional) -->
-      <!-- CMS Body removed -->
-
+      
       <div class="content-container">
                  <!-- Sitemap Content -->
          <div class="sitemap-section">
@@ -244,47 +244,39 @@ export default {
   gap: 40px;
 }
 
-.content-header {
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 29px;
 }
 
-.page-title {
+.section-title {
   color: #1A1A1A;
-  font-family: var(--font-family-inter);
   font-size: 36px;
   font-weight: 700;
-  line-height: 150%;
   margin: 0;
   text-align: center;
+  letter-spacing: -0.72px;
 }
 
-.title-decoration {
+.section-divider {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 20px;
-  width: auto;
-  min-width: 306px;
+  align-items: center;
+  gap: 15px;
 }
 
-.line-left,
-.line-right {
-  width: 80px;
+.divider-line {
+  width: 69px;
   height: 2px;
   background: #DA5761;
-  flex-shrink: 0;
 }
 
-.title-english {
+.divider-text {
   color: #DA5761;
-  font-family: var(--font-family-inter);
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 150%;
-  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .content-container {
@@ -308,7 +300,6 @@ export default {
   font-size: 24px;
   font-weight: 700;
   line-height: 150%;
-  margin: 0 0 30px 0;
 }
 
 .section-content {
@@ -449,15 +440,15 @@ export default {
     padding: 50px 30px !important;
   }
 
-  .content-header {
+  .section-header {
     gap: 25px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 32px !important;
   }
   
-  .title-english {
+  .divider-text {
     font-size: 18px !important;
   }
   
@@ -490,15 +481,15 @@ export default {
     padding: 30px 20px !important;
   }
   
-  .content-header {
+  .section-header {
     gap: 22px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 29px !important;
   }
   
-  .title-english {
+  .divider-text {
     font-size: 17px !important;
   }
   
@@ -571,15 +562,15 @@ export default {
     display: none;
   }
   
-  .content-header {
+  .section-header {
     gap: 20px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 27px !important;
   }
   
-  .title-english {
+  .divider-text {
     font-size: 16px !important;
   }
   
@@ -610,16 +601,16 @@ export default {
     padding: 20px 15px !important;
   }
   
-  .content-header {
+  .section-header {
     gap: 18px !important;
     margin-bottom: 20px;
   }
   
-  .page-title {
+  .section-title {
     font-size: 22px !important;
   }
   
-  .title-english {
+  .divider-text {
     font-size: 13px !important;
   }
   
