@@ -37,7 +37,20 @@
             <div class="section-title">コンテンツ</div>
             <div class="field">
               <label>エディター</label>
-              <textarea v-model="richText.html" class="textarea" rows="18" @change="saveRich"></textarea>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:#555;">
+                  <input type="checkbox" v-model="useWysiwyg" @change="persistWysiwyg" />
+                  WYSIWYGを使用（実験的）
+                </label>
+                <span class="help">チェックでリッチエディタ／未チェックで従来テキストエリア</span>
+              </div>
+              <div v-if="useWysiwyg">
+                <MinimalEditor v-model="richText.html" placeholder="本文を入力..." />
+              </div>
+              <textarea v-else v-model="richText.html" class="textarea" rows="18"></textarea>
+              <div class="actions-row" style="margin-top:8px;">
+                <button class="btn" @click="saveRich">本文を保存</button>
+              </div>
             </div>
             <div class="field">
               <label>本文用画像</label>
@@ -356,12 +369,13 @@
 
 <script>
 import AdminLayout from './AdminLayout.vue'
+import MinimalEditor from '@/components/MinimalEditor.vue'
 import apiClient from '@/services/apiClient'
 import { getApiUrl } from '@/config/api.js'
 
 export default {
   name: 'BlockCmsEditor',
-  components: { AdminLayout },
+  components: { AdminLayout, MinimalEditor },
   data(){
       return {
       pages: [],
@@ -378,6 +392,8 @@ export default {
       lastContentImgUrl: '',
       // エディタ（本文）の表示切替。既定は非表示
       showContentEditor: false,
+      // リッチエディタ使用可否（簡易トグル）
+      useWysiwyg: false,
       privacyTexts: {
         page_title: '', page_subtitle: '', intro: '',
         collection_title: '', collection_body: '',
@@ -538,6 +554,13 @@ export default {
       pageContentKey: 'privacy',
     }
   },
+  created(){
+    // Restore WYSIWYG preference
+    try {
+      const v = localStorage.getItem('block_cms_use_wysiwyg')
+      this.useWysiwyg = (v === '1')
+    } catch (_) { this.useWysiwyg = false }
+  },
   mounted(){ this.loadPages() },
   computed: {
     // 除外ページ: 刊行物/お知らせ/セミナー/経済統計・指標/会員ログイン/マイページ/お問い合わせ
@@ -563,6 +586,9 @@ export default {
     }
   },
   methods: {
+    persistWysiwyg(){
+      try { localStorage.setItem('block_cms_use_wysiwyg', this.useWysiwyg ? '1' : '0') } catch(_) {}
+    },
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
       if (res.success) this.pages = res.data.data || []

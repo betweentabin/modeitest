@@ -31,7 +31,7 @@
       </div>
       
       <div class="content-container">
-        <img src="https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940" alt="Consulting Image" class="content-image" />
+        <img :src="pageImage('what_image', 'https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940')" alt="Consulting Image" class="content-image" />
         <div class="content-text">
           <h3 class="content-subtitle"><CmsText pageKey="cri-consulting" fieldKey="what_content_subtitle" tag="span" :fallback="`What's CRI Management Consulting`" /></h3>
           <h4 class="content-heading"><CmsText pageKey="cri-consulting" fieldKey="what_content_heading" tag="span" :fallback="'CRI経営コンサルティングとは、事業でお悩みの皆様に対し、アドバイス、サポートするサービスです'" /></h4>
@@ -62,7 +62,7 @@
             <CmsText pageKey="cri-consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<div>・経営戦略策定のサポート</div><div>・ビジネスマッチィングの支援</div><div>・事業継承の支援（後継者育成支援）</div><div>・社員研修、経営計画策定のための人材育成</div><div>・税務、財務、事務など各業務の課題解決力の育成</div><div>・事務省力化のサポート</div><div>・人事制度の策定</div><div>・ワンストップのよろず差相談</div>`" />
           </div>
         </div>
-        <img src="https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304" alt="Main Duties Image" class="duties-image" />
+        <img :src="pageImage('duties_image', 'https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304')" alt="Main Duties Image" class="duties-image" />
       </div>
       
       <p class="duties-description">
@@ -175,7 +175,7 @@
       <div class="achievements-content">
         <div class="achievements-grid">
           <div class="achievement-card">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/ec6122758f12e1bfbe99ee61905a31ea4d49a78c?width=574" alt="Achievement 1" class="achievement-image" />
+            <img :src="pageImage('achievements_item1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/ec6122758f12e1bfbe99ee61905a31ea4d49a78c?width=574')" alt="Achievement 1" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
                 <span class="achievement-date">2025.6.27</span>
@@ -189,7 +189,7 @@
           </div>
           
           <div class="achievement-card">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/95f39033c1a29bc732f48805d8362c58b24c766c?width=574" alt="Achievement 2" class="achievement-image" />
+            <img :src="pageImage('achievements_item2_image', 'https://api.builder.io/api/v1/image/assets/TEMP/95f39033c1a29bc732f48805d8362c58b24c766c?width=574')" alt="Achievement 2" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
                 <span class="achievement-date">2025.6.27</span>
@@ -203,7 +203,7 @@
           </div>
           
           <div class="achievement-card">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/9c17e76e3ac6cf114e40472b8f2ce93b5bfa00f3?width=574" alt="Achievement 3" class="achievement-image" />
+            <img :src="pageImage('achievements_item3_image', 'https://api.builder.io/api/v1/image/assets/TEMP/9c17e76e3ac6cf114e40472b8f2ce93b5bfa00f3?width=574')" alt="Achievement 3" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
                 <span class="achievement-date">2025.6.27</span>
@@ -217,7 +217,7 @@
           </div>
           
           <div class="achievement-card">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/5dabcf000de42e14f9010cb47622d830cacdf698?width=574" alt="Achievement 4" class="achievement-image" />
+            <img :src="pageImage('achievements_item4_image', 'https://api.builder.io/api/v1/image/assets/TEMP/5dabcf000de42e14f9010cb47622d830cacdf698?width=574')" alt="Achievement 4" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
                 <span class="achievement-date">2025.6.27</span>
@@ -314,6 +314,15 @@ export default {
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
+    pageImage(key, fallback = '') {
+      try {
+        const page = this._pageText?.page?.value
+        const v = page?.content?.images?.[key]
+        if (typeof v === 'string' && v) return v
+        if (v && typeof v === 'object' && v.url) return v.url
+      } catch (_) {}
+      return fallback
+    },
     // Equal-height for paired images/text is handled with CSS Grid
     adjustRectangleHeight() {
       this.$nextTick(() => {
