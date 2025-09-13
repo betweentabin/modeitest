@@ -13,12 +13,33 @@ export default {
   components: {
     Frame1321317481,
   },
-  props: ["image", "className", "frame1321317481Props"],
+  props: ["image", "className", "frame1321317481Props", "linkTo"],
   methods: {
     handleCardClick() {
       console.log('Card clicked:', this.frame1321317481Props);
-      // カードクリック時の処理
-      alert('カードがクリックされました');
+      
+      // リンクが指定されている場合はそのページに遷移
+      if (this.linkTo) {
+        this.$router.push(this.linkTo);
+        return;
+      }
+      
+      // カードのタイトルに基づいて遷移先を決定
+      const cardTitle = this.frame1321317481Props?.text49;
+      
+      if (cardTitle === "調査研究") {
+        // 開発・研究ページ（AboutInstitutePageの最初のサービスカード）に遷移
+        this.$router.push('/aboutus#service-development');
+      } else if (cardTitle === "人財開発") {
+        // 人材開発ページに遷移
+        this.$router.push('/aboutus#service-human-resources');
+      } else if (cardTitle === "経営支援 (経営サポート)") {
+        // 経営支援ページに遷移
+        this.$router.push('/aboutus#service-management-support');
+      } else {
+        // デフォルトは研究所についてページに遷移
+        this.$router.push('/aboutus');
+      }
     }
   }
 };

@@ -75,7 +75,7 @@
             </div>
             
             <p class="password-reset-text">
-              パスワードを忘れた方はこちらから再設定してください
+              パスワードを忘れた方は<router-link to="/contact" class="password-reset-link">こちらからお問い合わせ</router-link>してください
             </p>
           </form>
         </div>
@@ -372,6 +372,18 @@ export default {
   text-decoration: underline;
 }
 
+.password-reset-link {
+  color: #DA5761 !important;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.password-reset-link:hover {
+  text-decoration: underline;
+  color: #C44A54 !important;
+}
+
 
 
 /* Responsive Design */
@@ -388,6 +400,12 @@ export default {
     font-size: 28px;
   }
   
+  .password-reset-text {
+    font-size: 16px;
+    white-space: normal;
+    line-height: 1.6;
+  }
+  
 }
 
 @media (max-width: 480px) {
@@ -401,6 +419,12 @@ export default {
   
   .page-title {
     font-size: 24px;
+  }
+  
+  .password-reset-text {
+    font-size: 14px;
+    white-space: normal;
+    line-height: 1.5;
   }
 }
 </style>

@@ -61,7 +61,7 @@
       </div>
       
       <div class="service-cards">
-        <div class="service-card">
+        <div class="service-card" id="service-development">
           <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870" alt="開発・研究" />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service1_title" tag="span" :fallback="'開発・研究'" /></h3>
@@ -72,7 +72,7 @@
           </div>
         </div>
         
-        <div class="service-card">
+        <div class="service-card" id="service-human-resources">
           <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870" alt="人材開発、セミナー" />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service2_title" tag="span" :fallback="'人材開発、セミナー'" /></h3>
@@ -89,7 +89,7 @@
           </div>
         </div>
         
-        <div class="service-card">
+        <div class="service-card" id="service-management-support">
           <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870" alt="経営支援" />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service3_title" tag="span" :fallback="'経営支援(経営サポート)'" /></h3>
@@ -367,6 +367,7 @@ export default {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  scroll-margin-top: 100px; /* アンカーリンク用のスクロールマージン */
 }
 
 .service-image {
