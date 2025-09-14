@@ -375,7 +375,7 @@ const STORAGE_KEY = 'cms_mock_data'
 class MockAPIServer {
   constructor() {
     // 本番環境ではmockServerを無効化
-    this.isEnabled = process.env.NODE_ENV !== 'production' && !window.location.host.includes('.railway.app') && !window.location.host.includes('vercel.app')
+    this.isEnabled = process.env.NODE_ENV !== 'production'
     
     if (this.isEnabled) {
       this.loadData()
