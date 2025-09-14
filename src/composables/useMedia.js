@@ -25,8 +25,9 @@ const FORCE_LOCAL_DEFAULT = (() => {
       undefined
     if (typeof v !== 'undefined') return String(v) === '1' || String(v).toLowerCase() === 'true'
   } catch (_) {}
-  // Default ON for now; set to false when backend media registry is ready.
-  return true
+  // Backend media registry is ready by default.
+  // If no env overrides are found, do NOT force local.
+  return false
 })()
 
 function isForceLocal() {
@@ -92,7 +93,16 @@ async function loadMedia() {
     const out = {}
     if (images && typeof images === 'object') {
       for (const [k, v] of Object.entries(images)) {
-        out[k] = resolveMediaUrl(typeof v === 'string' ? v : (v?.url || ''))
+        const meta = (v && typeof v === 'object') ? v : null
+        let url = resolveMediaUrl(typeof v === 'string' ? v : (meta?.url || ''))
+        // Add a lightweight cache-buster for API-served media endpoints to avoid stale CDN/browser caches
+        try {
+          if (typeof url === 'string' && url.startsWith('/api/public/m/')) {
+            const ver = meta?.uploaded_at ? Date.parse(meta.uploaded_at) || Date.now() : Date.now()
+            url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+          }
+        } catch (_) { /* ignore */ }
+        out[k] = url
       }
     }
     return out
@@ -104,6 +114,7 @@ async function loadMedia() {
     if (cached) {
       state.images = normalize(cached)
       // keep loaded=false to allow network to refresh; UI can already render from cache
+      try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('cms-media-updated')) } catch (_) {}
     }
   } catch (_) { /* ignore */ }
 
@@ -154,6 +165,7 @@ async function loadMedia() {
         state.images = normalize(images)
         try { writePersistentCache(images) } catch (_) {}
         state.loaded = true
+        try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('cms-media-updated')) } catch (_) {}
         return
       }
     }
@@ -171,6 +183,7 @@ async function loadMedia() {
       state.images = normalize(images)
       try { writePersistentCache(images) } catch (_) {}
       state.loaded = true
+      try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('cms-media-updated')) } catch (_) {}
       return
     }
     throw new Error('media page not found')

@@ -54,8 +54,14 @@ export default {
     this.updateLogoSectionHeight();
     window.addEventListener('resize', this.checkScreenSize);
     window.addEventListener('resize', this.updateLogoSectionHeight);
+    // Re-render app when media registry updates so <img/hero backgrounds> refresh without manual resize
+    try { window.addEventListener('cms-media-updated', this._onMediaUpdated) } catch (_) {}
   },
   methods: {
+    _onMediaUpdated() {
+      try { this.$root && this.$root.$forceUpdate() } catch(_) {}
+      try { this.$forceUpdate() } catch(_) {}
+    },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
       this.toggleBodyScroll();
@@ -87,6 +93,7 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.checkScreenSize);
     window.removeEventListener('resize', this.updateLogoSectionHeight);
+    try { window.removeEventListener('cms-media-updated', this._onMediaUpdated) } catch (_) {}
     // メニューが開いている状態でコンポーネントが破棄される場合の処理
     if (this.isMenuOpen) {
       document.body.style.overflow = '';
