@@ -899,6 +899,11 @@ export default {
       }
     },
     isCompanyProfile() { const k = (this.formData.page_key || this.pageKey || '').trim(); return k === 'company-profile' },
+    // Show Financial Reports editor for Company Profile and dedicated Financial Reports page
+    isFinancialReports() {
+      const k = (this.formData.page_key || this.pageKey || '').trim()
+      return k === 'company-profile' || k === 'financial-reports'
+    },
   },
   watch: {
     contentJson(newValue) {

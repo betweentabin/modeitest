@@ -364,26 +364,27 @@
         <div v-if="loadingReports" class="loading-message">
           決算報告を読み込み中...
         </div>
-        <div v-else-if="financialReports.length === 0" class="no-reports-message">
+        <div v-else-if="displayedReports.length === 0" class="no-reports-message">
           決算報告はありません
         </div>
         <div v-else class="report-content">
           <div class="report-card">
             <div 
-              v-for="report in displayedReports" 
-              :key="report.id" 
+              v-for="(report, rIdx) in displayedReports" 
+              :key="report.id || rIdx" 
               class="report-year-section"
             >
               <h2 class="year-title">{{ report.fiscal_year }}</h2>
               <div class="report-info">
-                <div class="report-date">{{ report.report_info }}</div>
+                <div class="report-date">{{ report.date_label }}</div>
                 <div class="report-links">
                   <div 
-                    v-for="(link, index) in report.report_links" 
+                    v-for="(item, index) in (report.items || [])" 
                     :key="index" 
                     class="link-text"
                   >
-                    {{ link }}
+                    <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">{{ item.label || item.url }}</a>
+                    <span v-else>{{ item.label }}</span>
                   </div>
                 </div>
               </div>
@@ -416,6 +417,7 @@ import HeroSection from "./HeroSection.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { usePageText } from '@/composables/usePageText'
+import { usePageMedia } from '@/composables/usePageMedia'
 import CmsBlock from '@/components/CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
 
@@ -473,7 +475,28 @@ export default {
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
     displayedReports() {
-      return this.financialReports;
+      try {
+        const c = this._pageText?.page?.value?.content
+        const arr = Array.isArray(c?.financial_reports) ? c.financial_reports : []
+        if (arr.length) {
+          return arr.map((r, i) => ({
+            id: r.id || i,
+            fiscal_year: r.fiscal_year || '',
+            date_label: r.date_label || '',
+            items: Array.isArray(r.items) ? r.items.map(it => ({
+              label: typeof it?.label === 'string' ? it.label : (typeof it === 'string' ? it : ''),
+              url: typeof it?.url === 'string' ? it.url : ''
+            })) : []
+          }))
+        }
+      } catch(_) {}
+      // Fallback to local static structure if CMS has no data
+      return (this.financialReports || []).map((fr, i) => ({
+        id: fr.id || i,
+        fiscal_year: fr.fiscal_year || '',
+        date_label: fr.report_info || '',
+        items: Array.isArray(fr.report_links) ? fr.report_links.map(s => ({ label: s, url: '' })) : []
+      }))
     },
     historyList() {
       try {
@@ -505,11 +528,27 @@ export default {
     } catch(e) { /* noop */ }
     this.loadFinancialReports();
     // lazy media registry (for staff/philosophy/message images)
-    import('@/composables/useMedia').then(mod => {
+    import('@/composables/usePageMedia').then(mod => {
       try {
-        const { useMedia } = mod
-        this._media = useMedia()
-        this._media.ensure()
+        const { usePageMedia } = mod
+        this._pageMedia = usePageMedia()
+        this._pageMedia.ensure(this.pageKey)
+        // also keep direct media ref for watchers
+        this._media = this._pageMedia._media
+        // Reactivity bridge: re-render when media images map changes
+        try {
+          const readVersion = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            return val ? Object.keys(val).join('|') : ''
+          }
+          this.$watch(readVersion, () => { this.$forceUpdate() })
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch (_) { /* noop */ }
       } catch(e) { /* noop */ }
     })
   },
@@ -529,13 +568,13 @@ export default {
     },
     media(key, fallback = '') {
       try {
+        if (this._pageMedia) {
+          // slot = key, default mediaKey = key
+          return this._pageMedia.getResponsiveSlot(key, key, fallback) || fallback
+        }
         if (this._media) {
-          if (this._media.getResponsiveImage) {
-            return this._media.getResponsiveImage(key, fallback) || fallback
-          }
-          if (this._media.getImage) {
-            return this._media.getImage(key, fallback) || fallback
-          }
+          if (this._media.getResponsiveImage) return this._media.getResponsiveImage(key, fallback) || fallback
+          if (this._media.getImage) return this._media.getImage(key, fallback) || fallback
         }
       } catch(e) {}
       return fallback

@@ -147,6 +147,7 @@ export default {
       hideTimer: null
     };
   },
+  
   mounted() {
     this.updateNavigationHeight();
     window.addEventListener('resize', this.updateNavigationHeight);

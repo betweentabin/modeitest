@@ -62,10 +62,25 @@ export default {
   async mounted() {
     if (this.mediaKey) {
       try {
-        const mod = await import('@/composables/useMedia')
-        const { useMedia } = mod
-        this._media = useMedia()
-        this._media.ensure()
+        const mod = await import('@/composables/usePageMedia')
+        const { usePageMedia } = mod
+        this._pageMedia = usePageMedia()
+        await this._pageMedia.ensure(this.cmsKey)
+        this._media = this._pageMedia._media
+        // Reactivity bridge: re-render when media images resolve
+        try {
+          const readVersion = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            return val ? Object.keys(val).join('|') : ''
+          }
+          this.$watch(readVersion, () => { this.$forceUpdate() })
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch (_) { /* noop */ }
       } catch (e) { /* noop */ }
     }
   },
@@ -75,17 +90,18 @@ export default {
       return this.cmsPageKey || 'contact'
     },
     resolvedBg() {
-      const key = this.mediaKey
-      if (key && this._media) {
-        if (this._media.getResponsiveImage) {
-          const v = this._media.getResponsiveImage(key, this.backgroundImage)
-          return v || this.backgroundImage
+      try {
+        if (this._pageMedia) {
+          // Use slot=mediaKey with default=mediaKey (per-page mapping allows override)
+          const v = this._pageMedia.getResponsiveSlot(this.mediaKey, this.mediaKey, this.backgroundImage)
+          if (v) return v
         }
-        if (this._media.getImage) {
-          const v = this._media.getImage(key, this.backgroundImage)
-          return v || this.backgroundImage
+        const key = this.mediaKey
+        if (key && this._media) {
+          if (this._media.getResponsiveImage) return this._media.getResponsiveImage(key, this.backgroundImage) || this.backgroundImage
+          if (this._media.getImage) return this._media.getImage(key, this.backgroundImage) || this.backgroundImage
         }
-      }
+      } catch(_) {}
       return this.backgroundImage
     },
     bgStyle() {

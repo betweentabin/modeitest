@@ -493,7 +493,38 @@
               <label>英字</label>
               <input v-model="companyTexts.financial_reports_subtitle" class="input" placeholder="financial reports" />
             </div>
-            <div class="help">決算データは別管理（自動表示）です。タイトルのみ編集できます。</div>
+            <!-- Financial reports editor (bridged to PageContent.content.financial_reports) -->
+            <div class="help">年度ごとの決算項目とリンクを管理できます（公開でPageContentへ反映）。</div>
+            <div class="actions" style="justify-content:flex-start;">
+              <button class="btn" @click="addCompanyReport">+ 年度を追加</button>
+            </div>
+            <div v-for="(r, ri) in companyFinancialReports" :key="`fr-${ri}`" class="field" style="border:1px solid #eee; padding:10px; border-radius:8px; margin-bottom:8px;">
+              <div style="display:grid; grid-template-columns: 1fr 1fr auto; gap:8px; align-items:center;">
+                <div>
+                  <label>年度</label>
+                  <input v-model="r.fiscal_year" class="input" placeholder="例）2025年3月期" />
+                </div>
+                <div>
+                  <label>日付/補足</label>
+                  <input v-model="r.date_label" class="input" placeholder="例）決算短信（2025年5月12日）" />
+                </div>
+                <div style="display:flex; gap:6px; align-items:end;">
+                  <button class="btn" @click="companyFinancialReports.splice(ri,1)">削除</button>
+                </div>
+              </div>
+              <div style="margin-top:8px;">
+                <label>項目（ラベルとURL）</label>
+                <div v-for="(it, ii) in (r.items || (r.items = []))" :key="`r-${ri}-it-${ii}`" style="display:grid; grid-template-columns: 1.2fr 2fr auto auto; gap:8px; align-items:center; margin:6px 0;">
+                  <input v-model="it.label" class="input" placeholder="例）決算要旨（PDF：...）" />
+                  <input v-model="it.url" class="input" placeholder="/storage/media/xxx.pdf または https://..." />
+                  <button class="btn" @click="uploadCompanyReportItemPdf(ri, ii)">PDFアップ</button>
+                  <button class="btn" @click="removeCompanyReportItem(ri, ii)">削除</button>
+                </div>
+                <div class="actions" style="justify-content:flex-start;">
+                  <button class="btn" @click="addCompanyReportItem(ri)">+ 項目を追加</button>
+                </div>
+              </div>
+            </div>
 
           </template>
 
@@ -1002,6 +1033,28 @@
             <span class="help">キー未入力の場合は追加できません</span>
           </div>
         </div>
+
+        <!-- Media key overrides (content.media_keys) -->
+        <div v-if="currentPage" class="section-title">メディアキー割当（media_keys）</div>
+        <div v-if="currentPage" class="field">
+          <div v-for="(val, key) in mediaKeys" :key="`mkey-${key}`" style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+            <div style="width:220px;">
+              <label>スロット</label>
+              <input class="input" :value="key" disabled />
+            </div>
+            <div style="flex:1;">
+              <label>mediaキー</label>
+              <input class="input" v-model="mediaKeys[key]" placeholder="例: hero_terms" />
+            </div>
+            <button class="btn" @click="delete mediaKeys[key]">削除</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input class="input" v-model="newMediaSlot" placeholder="スロット（例: hero）" style="max-width:220px;" />
+            <input class="input" v-model="newMediaKey" placeholder="mediaキー（例: hero_terms）" />
+            <button class="btn" @click="()=>{ if(newMediaSlot&&newMediaKey){ mediaKeys[newMediaSlot]=newMediaKey; newMediaSlot=''; newMediaKey=''; } }">追加</button>
+          </div>
+          <div class="help">指定したスロットはページの画像解決時に優先されます</div>
+        </div>
       </div>
       <div v-else class="empty">ページを選択してください</div>
     </div>
@@ -1065,6 +1118,7 @@ export default {
       // 会社概要 / コンサル / 研究所について（小コンポーネント文言）
       companyTexts: {},
       companyHtmls: {},
+      companyFinancialReports: [],
       consultingTexts: {},
       consultingHtmls: {},
       aboutTexts: {},
@@ -1080,6 +1134,10 @@ export default {
       pageImages: [],
       showImageList: false,
       newImageKey: '',
+      // Per-page media key mapping
+      mediaKeys: {},
+      newMediaSlot: '',
+      newMediaKey: '',
       missingImageKeys: [],
       // glossary: 用語リスト（items）の編集
         glossaryItems: [],
@@ -1379,6 +1437,8 @@ export default {
           const v = imgs[k]
           return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
         })
+        const mkeys = (content && typeof content === 'object' && content.media_keys && typeof content.media_keys === 'object') ? content.media_keys : {}
+        this.mediaKeys = { ...mkeys }
         this.missingImageKeys = this.calculateMissingImages()
           // Reset minimal headings
           if (this.pageContentKey === 'privacy') {
@@ -1403,6 +1463,15 @@ export default {
               year: typeof h?.year === 'string' ? h.year : '',
               date: typeof h?.date === 'string' ? h.date : '',
               body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : '')
+            })) : []
+            // financial_reports
+            this.companyFinancialReports = Array.isArray(content?.financial_reports) ? content.financial_reports.map((r) => ({
+              fiscal_year: typeof r?.fiscal_year === 'string' ? r.fiscal_year : '',
+              date_label: typeof r?.date_label === 'string' ? r.date_label : '',
+              items: Array.isArray(r?.items) ? r.items.map(it => ({
+                label: typeof it?.label === 'string' ? it.label : (typeof it === 'string' ? it : ''),
+                url: typeof it?.url === 'string' ? it.url : ''
+              })) : []
             })) : []
             if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'cri-consulting') {
@@ -1565,6 +1634,45 @@ export default {
     async savePageMeta(){ if (!this.currentPage) return; await apiClient.updateCmsPage(this.currentPage.id, { title: this.currentPage.title }) },
     async saveHero(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'hero', { sort:10, component_type:'Hero', props_json:{ title: this.hero.title }, status:'draft' }) },
     async saveRich(){ if (!this.currentPage) return; await apiClient.upsertCmsSection(this.currentPage.id, 'rich', { sort:20, component_type:'RichText', props_json:{ html: this.richText.html }, status:'draft' }) },
+    // Financial reports editor actions
+    addCompanyReport(){
+      if (!Array.isArray(this.companyFinancialReports)) this.companyFinancialReports = []
+      this.companyFinancialReports.push({ fiscal_year: '', date_label: '', items: [] })
+    },
+    addCompanyReportItem(ri){
+      const r = (this.companyFinancialReports || [])[ri]
+      if (!r) return
+      if (!Array.isArray(r.items)) r.items = []
+      r.items.push({ label: '', url: '' })
+    },
+    removeCompanyReportItem(ri, ii){
+      const r = (this.companyFinancialReports || [])[ri]
+      if (!r || !Array.isArray(r.items)) return
+      r.items.splice(ii, 1)
+    },
+    async uploadCompanyReportItemPdf(ri, ii){
+      try {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'application/pdf'
+        input.onchange = async (e) => {
+          const file = e.target.files[0]
+          if (!file) return
+          const res = await apiClient.uploadMedia(file, { directory: 'public/media/uploads' })
+          const url = res?.file?.url || res?.data?.file?.url || res?.data?.url || ''
+          if (url) {
+            const r = (this.companyFinancialReports || [])[ri]
+            if (r && Array.isArray(r.items) && r.items[ii]) { r.items[ii].url = url }
+            alert('PDFをアップロードしました')
+          } else {
+            alert(res?.message || 'アップロードに失敗しました')
+          }
+        }
+        input.click()
+      } catch(_) {
+        alert('アップロードに失敗しました')
+      }
+    },
     async syncCompanyPageContentIfApplicable(){
       try {
         const slug = (this.currentPage && this.currentPage.slug || '').toLowerCase()
@@ -1573,10 +1681,20 @@ export default {
         const hist = Array.isArray(this.companyHistory) ? this.companyHistory
           .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
           .filter(h => h.year || h.date || h.body) : []
+        // Financial reports (sanitize)
+        const reports = Array.isArray(this.companyFinancialReports) ? this.companyFinancialReports.map(r => ({
+          fiscal_year: String(r?.fiscal_year || '').trim(),
+          date_label: String(r?.date_label || '').trim(),
+          items: Array.isArray(r?.items) ? r.items.map(it => ({
+            label: String((it && it.label) || (typeof it === 'string' ? it : '') || '').trim(),
+            url: String((it && it.url) || '').trim()
+          })).filter(it => it.label || it.url) : []
+        })).filter(r => r.fiscal_year || r.date_label || (r.items && r.items.length)) : []
         const patch = { content: {} }
         if (this.companyTexts && Object.keys(this.companyTexts).length) patch.content.texts = { ...this.companyTexts }
         if (this.companyHtmls && Object.keys(this.companyHtmls).length) patch.content.htmls = { ...this.companyHtmls }
         patch.content.history = hist
+        if (reports && reports.length) patch.content.financial_reports = reports
         // Also mark published to make it visible on public API
         const payload = { ...patch, is_published: true }
         await apiClient.adminUpdatePageContent('company-profile', payload)
@@ -1754,6 +1872,8 @@ export default {
           const v = imgs[k]
           return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
         })
+        const mkeys = (content && typeof content === 'object' && content.media_keys && typeof content.media_keys === 'object') ? content.media_keys : {}
+        this.mediaKeys = { ...mkeys }
       } catch(_) {}
     },
     insertLastContentImage(){
@@ -1860,6 +1980,7 @@ export default {
         const html = this.richText.html || ''
         // Sync to both html and htmls.body for backward compatibility
         const patch = { content: { html, htmls: { body: html } } }
+        if (this.mediaKeys && Object.keys(this.mediaKeys).length) patch.content.media_keys = { ...this.mediaKeys }
         const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('PageContentに本文を同期しました')
       } catch (e) {

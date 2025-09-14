@@ -32,6 +32,7 @@
 import CmsText from '@/components/CmsText.vue'
 import HeroSlider from '@/components/HeroSlider.vue'
 import { usePageText } from '@/composables/usePageText'
+import { usePageMedia } from '@/composables/usePageMedia'
 
 export default {
   name: "HeroSection",
@@ -88,13 +89,37 @@ export default {
   },
   components: { CmsText, HeroSlider },
   async mounted() {
-    // lazy load media registry if mediaKey is provided
-    if (this.mediaKey) {
+    // lazy load media registry (for mediaKey or per-page mapping)
+    if (this.mediaKey || this.cmsPageKey) {
       try {
-        const mod = await import('@/composables/useMedia')
-        const { useMedia } = mod
-        this._media = useMedia()
-        this._media.ensure()
+        // Prefer per-page media mapping when cmsPageKey is provided
+        if (this.cmsPageKey) {
+          const modPM = await import('@/composables/usePageMedia')
+          const { usePageMedia } = modPM
+          this._pageMedia = usePageMedia()
+          await this._pageMedia.ensure(this.cmsPageKey)
+          this._media = this._pageMedia._media || null
+        } else {
+          const mod = await import('@/composables/useMedia')
+          const { useMedia } = mod
+          this._media = useMedia()
+          this._media.ensure()
+        }
+        // Reactivity bridge: force re-render when media images map updates
+        try {
+          const readVersion = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            return val ? Object.keys(val).join('|') : ''
+          }
+          this.$watch(readVersion, () => { this.$forceUpdate() })
+          // Also watch loaded flag if present
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch (_) { /* noop */ }
       } catch (e) { /* noop */ }
     }
     // load page content for per-page KV hero (managed on each page)
@@ -108,11 +133,15 @@ export default {
   },
   computed: {
     resolvedImage() {
-      // 1) per-page KV: use a single 'hero' image for all devices
-      const fromPage = this.pageHero()
-      if (fromPage) return fromPage
+      // Prefer media registry with per-page mapping if available
+      try {
+        if (this._pageMedia && (this.cmsPageKey || '').length > 0) {
+          const v = this._pageMedia.getResponsiveSlot('hero', this.mediaKey || '', this.heroImage)
+          if (v) return v
+        }
+      } catch (_) {}
 
-      // 2) legacy media registry fallback
+      // Legacy media registry fallback
       const key = this.mediaKey
       if (key && this._media) {
         if (this._media.getResponsiveImage) {
@@ -124,7 +153,7 @@ export default {
           return v || this.heroImage
         }
       }
-      // 3) static fallback
+      // Static fallback
       return this.heroImage
     },
     heroStyle() {

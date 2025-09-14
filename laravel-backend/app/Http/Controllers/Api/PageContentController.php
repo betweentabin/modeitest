@@ -666,7 +666,8 @@ class PageContentController extends Controller
                 $merged = $existing;
 
                 // Keys that must be replaced entirely when provided
-                $replaceListKeys = ['history', 'items'];
+                // Note: arrays like 'financial_reports' are top-level lists and should fully replace
+                $replaceListKeys = ['history', 'items', 'financial_reports'];
                 foreach ($replaceListKeys as $rk) {
                     if (array_key_exists($rk, $incoming) && is_array($incoming[$rk])) {
                         $merged[$rk] = $incoming[$rk];
