@@ -1,5 +1,8 @@
 // API設定
 const API_CONFIG = {
+  mock: {
+    baseURL: 'http://localhost:3001', // ローカルモックサーバー
+  },
   development: {
     baseURL: 'https://heroic-celebration-production.up.railway.app',
   },
@@ -10,9 +13,16 @@ const API_CONFIG = {
 
 // 現在の環境を判定
 const getCurrentEnvironment = () => {
+  // Vercelデプロイ時は本番APIを使用
   if (process.env.NODE_ENV === 'production') {
     return 'production'
   }
+  
+  // ローカルホストの時はモックサーバーを使用
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'mock'
+  }
+  
   return 'development'
 }
 
@@ -40,8 +50,22 @@ export const getApiUrl = (endpoint) => {
   return `${baseUrl}${normalizedEndpoint}`
 }
 
+// デバッグ用：現在の環境とAPI設定を表示
+export const debugApiConfig = () => {
+  const env = getCurrentEnvironment()
+  const config = API_CONFIG[env]
+  console.log('🔧 API Config Debug:', {
+    environment: env,
+    baseURL: config.baseURL,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+    nodeEnv: process.env.NODE_ENV
+  })
+  return { environment: env, config }
+}
+
 export default {
   getApiConfig,
   getApiBaseUrl,
-  getApiUrl
+  getApiUrl,
+  debugApiConfig
 }
