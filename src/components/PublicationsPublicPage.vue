@@ -589,7 +589,7 @@ export default {
         publish_date: item.publication_date,
         publication_date: item.publication_date,
         category: item.category,
-        image: item.cover_image || '/img/image-1.png',
+        image: item.cover_image_url || item.cover_image || '/img/image-1.png',
         description: item.description,
         author: item.author,
         pages: item.pages,

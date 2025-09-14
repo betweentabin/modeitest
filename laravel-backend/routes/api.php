@@ -531,6 +531,11 @@ Route::get('/debug/admins', function() {
     }
 });
 
+// CORS preflight fallback for any API path
+Route::options('/{any}', function () {
+    return response()->noContent(204);
+})->where('any', '.*');
+
 // デバッグ用: 管理者パスワード修正エンドポイント
 Route::post('/debug/fix-admin-password', function() {
     try {

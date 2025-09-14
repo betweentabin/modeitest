@@ -238,7 +238,7 @@ export default {
             .sort((a, b) => toTs(b) - toTs(a))
           this.seminarsFromServer = currentSeminars.map(s => ({
             id: s.id,
-            image: s.featured_image || '/img/image-1.png',
+            image: s.featured_image_url || s.featured_image || '/img/image-1.png',
             reservationPeriod: `${s.start_time || '10:00'}〜${s.end_time || '12:00'}`,
             date: this.formatDate(s.date),
             title: s.title,

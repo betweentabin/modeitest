@@ -4,7 +4,7 @@
     <div v-if="!canAccess" class="restricted-card" @click="handleRestrictedClick">
       <div class="restricted-content">
         <div class="publication-image blurred">
-          <img :src="publication.image_url || defaultImage" :alt="publication.title" />
+          <img :src="cardImage" :alt="publication.title" />
           <div class="restriction-overlay">
             <div class="lock-icon">&#x1F512;</div>
             <p class="restriction-message">{{ restrictionMessage }}</p>
@@ -27,7 +27,7 @@
     <!-- アクセス可能な場合 -->
     <div v-else class="publication-card" @click="goToPublication">
       <div class="publication-image">
-        <img :src="publication.image_url || defaultImage" :alt="publication.title" />
+        <img :src="cardImage" :alt="publication.title" />
         <div v-if="isNew" class="publication-badge">NEW</div>
       </div>
       <div class="publication-content">
@@ -83,6 +83,12 @@ export default {
     },
     restrictionMessage() {
       return this.getAccessMessage(this.publication.membershipLevel)
+    },
+    cardImage() {
+      const p = this.publication || {}
+      return (
+        p.cover_image_url || p.cover_image || p.image_url || p.image || this.defaultImage
+      )
     }
   },
   methods: {

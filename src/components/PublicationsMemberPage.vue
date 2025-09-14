@@ -518,7 +518,7 @@ export default {
           this.publications = allPublications.map(item => ({
             id: item.id,
             title: item.title,
-            image: item.cover_image || item.image_url || '/img/-----2-2-4.png',
+            image: item.cover_image_url || item.cover_image || item.image_url || '/img/-----2-2-4.png',
             description: item.description,
             category: item.category || 'special',
             publication_date: item.publication_date,
@@ -545,7 +545,7 @@ export default {
         publication_date: item.publication_date,
         year: new Date(item.publication_date).getFullYear(),
         category: item.category,
-        image: item.cover_image || '/img/image-1.png',
+        image: item.cover_image_url || item.cover_image || '/img/image-1.png',
         description: item.description,
         author: item.author,
         pages: item.pages,

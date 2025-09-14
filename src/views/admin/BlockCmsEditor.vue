@@ -972,6 +972,16 @@
             <input type="checkbox" v-model="showImageList" /> 一覧を表示
           </label>
         </div>
+        <!-- 未設定画像チェック -->
+        <div v-if="currentPage && missingImageKeys && missingImageKeys.length" class="field" style="background:#fff7e6; border:1px solid #ffd8a8; padding:10px; border-radius:8px;">
+          <div style="font-weight:600; color:#9c5700; margin-bottom:6px;">未設定の画像キー</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <div v-for="k in missingImageKeys" :key="`miss-${k}`" style="display:flex; gap:6px; align-items:center; background:#fff; border:1px solid #ffe8cc; border-radius:6px; padding:6px 8px;">
+              <code style="background:transparent; padding:0; color:#9c5700;">{{ k }}</code>
+              <button class="btn" style="padding:4px 8px;" @click="uploadForKey(k)">アップロード</button>
+            </div>
+          </div>
+        </div>
         <div v-if="currentPage && showImageList" class="field">
           <div v-if="pageImages.length === 0" class="help">登録済みの画像がありません</div>
           <div v-for="(img, idx) in pageImages" :key="`pimg-${idx}`" class="page-image-row">
@@ -1070,6 +1080,7 @@ export default {
       pageImages: [],
       showImageList: false,
       newImageKey: '',
+      missingImageKeys: [],
       // glossary: 用語リスト（items）の編集
         glossaryItems: [],
         // faq: Q/A リストの編集
@@ -1368,6 +1379,7 @@ export default {
           const v = imgs[k]
           return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
         })
+        this.missingImageKeys = this.calculateMissingImages()
           // Reset minimal headings
           if (this.pageContentKey === 'privacy') {
             // 既存のprivacyTextsにAPIの全キーをマージ
@@ -1465,6 +1477,7 @@ export default {
               return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
             })
           } catch(_) {}
+          this.missingImageKeys = this.calculateMissingImages()
           alert('画像を差し替えました')
         } else {
           alert('差し替えに失敗しました')
@@ -1492,6 +1505,7 @@ export default {
             })
           } catch(_) {}
           this.newImageKey = ''
+          this.missingImageKeys = this.calculateMissingImages()
           alert('画像を追加しました')
         } else {
           alert('追加に失敗しました')
@@ -1614,6 +1628,72 @@ export default {
         const item = (this.pageImages || []).find(it => it.key === key)
         return item ? (item.url || '') : ''
       } catch(_) { return '' }
+    },
+    expectedImageKeys(){
+      const key = this.pageContentKey || ''
+      if (key === 'company-profile') {
+        return [
+          'company_profile_philosophy',
+          'company_profile_message',
+          'company_profile_staff_morita',
+          'company_profile_staff_mizokami',
+          'company_profile_staff_kuga',
+          'company_profile_staff_takada',
+          'company_profile_staff_nakamura',
+        ]
+      }
+      if (key === 'about' || key === 'about-institute') {
+        return ['hero','content','message']
+      }
+      if (key === 'cri-consulting') {
+        return [
+          'what_image',
+          'duties_image',
+          'achievements_item1_image',
+          'achievements_item2_image',
+          'achievements_item3_image',
+          'achievements_item4_image',
+        ]
+      }
+      if (key === 'home') {
+        return ['banner_seminar','banner_publications','banner_info','banner_membership']
+      }
+      return []
+    },
+    isPlaceholderUrl(url){
+      if (!url) return true
+      const u = String(url)
+      if (u.startsWith('/img/hero-image')) return true
+      if (u.includes('/img/---')) return true
+      if (u.includes('/img/--')) return true
+      if (u.includes('/img/image-')) return true
+      if (u.includes('TEMP/')) return true
+      return false
+    },
+    calculateMissingImages(){
+      try {
+        const expected = this.expectedImageKeys()
+        if (!expected || expected.length === 0) return []
+        const map = {}
+        for (const it of (this.pageImages||[])) { map[it.key] = it.url || '' }
+        const missing = []
+        for (const k of expected) {
+          const url = map[k]
+          if (!url || this.isPlaceholderUrl(url)) missing.push(k)
+        }
+        return missing
+      } catch(_) { return [] }
+    },
+    uploadForKey(key){
+      try {
+        const idx = (this.pageImages||[]).findIndex(it => it.key === key)
+        if (idx >= 0) {
+          this.triggerReplace(idx)
+        } else {
+          this.newImageKey = key
+          if (this.$refs.newImageInput && typeof this.$refs.newImageInput.click === 'function') this.$refs.newImageInput.click()
+        }
+      } catch(_) {}
     },
     triggerCompanyImageUpload(key){
       const refName = `img_${key}`

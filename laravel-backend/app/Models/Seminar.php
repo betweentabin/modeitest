@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Seminar extends Model
 {
@@ -45,6 +46,9 @@ class Seminar extends Model
         'standard_open_at' => 'datetime',
         'free_open_at' => 'datetime',
     ];
+
+    // 表示用の派生プロパティ
+    protected $appends = ['featured_image_url'];
 
     // リレーションシップ
     public function creator()
@@ -181,6 +185,39 @@ class Seminar extends Model
         }
 
         return true;
+    }
+
+    /**
+     * 画像のフルURL（/storage, 相対パスのいずれでも可）
+     */
+    public function getFeaturedImageUrlAttribute()
+    {
+        $path = $this->featured_image;
+
+        if (!$path) {
+            return '/img/image-1.png';
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        if (str_starts_with($path, '/')) {
+            return $path;
+        }
+        $normalized = ltrim($path, '/');
+        if (str_starts_with($normalized, 'storage/')) {
+            $normalized = substr($normalized, 8);
+        }
+        if (str_starts_with($normalized, 'public/')) {
+            $normalized = substr($normalized, 7);
+        }
+        try {
+            if (Storage::disk('public')->exists($normalized)) {
+                return asset('storage/' . $normalized);
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+        return '/img/image-1.png';
     }
 
     // ヘルパーメソッド
