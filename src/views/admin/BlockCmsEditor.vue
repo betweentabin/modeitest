@@ -769,6 +769,88 @@
             <div class="field"><label>見出し</label><input v-model="consultingTexts.achievements_title" class="input" /></div>
             <div class="field"><label>英字</label><input v-model="consultingTexts.achievements_subtitle" class="input" /></div>
 
+            <!-- 画像（レイアウト近似配置） -->
+            <div class="layout-grid">
+              <div class="image-col" style="flex:1;">
+                <div class="field">
+                  <label>「CRIとは？」画像（what_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('what_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.what_image</div>
+                      <div class="img-actions">
+                        <input ref="img_what_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('what_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('what_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>主な業務 画像（duties_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('duties_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.duties_image</div>
+                      <div class="img-actions">
+                        <input ref="img_duties_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('duties_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('duties_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="image-col" style="flex:1;">
+                <div class="field">
+                  <label>実績1（achievements_item1_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('achievements_item1_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-actions">
+                        <input ref="img_achievements_item1_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('achievements_item1_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('achievements_item1_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>実績2（achievements_item2_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('achievements_item2_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-actions">
+                        <input ref="img_achievements_item2_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('achievements_item2_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('achievements_item2_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>実績3（achievements_item3_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('achievements_item3_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-actions">
+                        <input ref="img_achievements_item3_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('achievements_item3_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('achievements_item3_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>実績4（achievements_item4_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('achievements_item4_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-actions">
+                        <input ref="img_achievements_item4_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('achievements_item4_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('achievements_item4_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
