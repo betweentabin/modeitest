@@ -1150,7 +1150,7 @@ export default {
   }
   
   .download-btn {
-    padding: 12px 40px !important;
+    padding: 12px 10px !important;
     font-size: 16px !important;
     width: 100% !important;
   }

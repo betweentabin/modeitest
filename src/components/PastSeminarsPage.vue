@@ -27,7 +27,7 @@
         </div>
 
         <div class="past-seminars-content">
-          <div class="past-seminar-card" v-for="(seminar, index) in pastSeminars" :key="index">
+          <div class="past-seminar-card" v-for="(seminar, index) in pastSeminars" :key="index" @click="goToSeminarDetail(seminar)">
             <div class="past-seminar-info">
               <div class="past-info-row">
                 <div class="info-label info-label-date">
@@ -175,6 +175,10 @@ export default {
     goBack() {
       if (window.history.length > 1) this.$router.go(-1)
       else this.$router.push('/')
+    },
+    goToSeminarDetail(seminar) {
+      // セミナー詳細ページに遷移
+      this.$router.push(`/seminar/${seminar.id}`);
     }
   }
 };
