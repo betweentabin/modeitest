@@ -203,3 +203,16 @@ export function usePageText(pageKey) {
 }
 
 export default usePageText
+
+// Utility: force-reload all pages currently present in the cache
+export async function refreshLoadedPages(options = {}) {
+  try {
+    const keys = Object.keys(state.pages || {})
+    for (const k of keys) {
+      try {
+        const inst = usePageText(k)
+        await inst.load({ force: true, ...(options || {}) })
+      } catch (_) { /* ignore individual failures */ }
+    }
+  } catch (_) { /* noop */ }
+}

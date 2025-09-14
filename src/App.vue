@@ -7,6 +7,7 @@
 
 <script>
 import EditModeToggle from './components/EditModeToggle.vue'
+import { refreshLoadedPages } from '@/composables/usePageText'
 export default {
   name: "App",
   components: { EditModeToggle },
@@ -20,6 +21,8 @@ export default {
   methods: {
     _onMediaUpdated() {
       try { this.$forceUpdate() } catch (_) {}
+      // Proactively refresh any page texts so images stored in PageContent.content.images also update
+      try { refreshLoadedPages({}) } catch (_) {}
     }
   }
 };

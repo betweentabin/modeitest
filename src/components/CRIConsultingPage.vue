@@ -321,7 +321,7 @@ export default {
           const readVersion = () => {
             const imgs = m && m.images
             const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
-            return val ? Object.keys(val).join('|') : ''
+            try { return val ? JSON.stringify(val) : '' } catch(_) { return val ? Object.keys(val).join('|') : '' }
           }
           this.$watch(readVersion, () => { this.$forceUpdate() })
           const readLoaded = () => {
