@@ -1467,6 +1467,12 @@ export default {
         if (!item || !this.pageContentKey) return
         const res = await apiClient.adminReplacePageImage(this.pageContentKey, item.key, file)
         if (res && res.success !== false) {
+          // Bridge: mirror into media registry for company_profile_* keys used by useMedia()
+          try {
+            if (String(item.key).startsWith('company_profile_')) {
+              await apiClient.adminReplacePageImage('media', item.key, file)
+            }
+          } catch(_) { /* ignore */ }
           // refresh current images list
           try {
             const r = await apiClient.adminGetPageContent(this.pageContentKey)
@@ -1494,6 +1500,12 @@ export default {
         if (!file || !this.newImageKey || !this.pageContentKey) return
         const res = await apiClient.adminReplacePageImage(this.pageContentKey, this.newImageKey, file)
         if (res && res.success !== false) {
+          // Bridge to media registry when applicable
+          try {
+            if (String(this.newImageKey).startsWith('company_profile_')) {
+              await apiClient.adminReplacePageImage('media', this.newImageKey, file)
+            }
+          } catch(_) { /* ignore */ }
           // push to list
           try {
             const r = await apiClient.adminGetPageContent(this.pageContentKey)
@@ -1706,6 +1718,12 @@ export default {
         if (!file || !this.pageContentKey) return
         const res = await apiClient.adminReplacePageImage(this.pageContentKey, key, file)
         if (res && res.success !== false) {
+          // Bridge: also mirror to media registry for company_profile_* keys
+          try {
+            if (String(key).startsWith('company_profile_')) {
+              await apiClient.adminReplacePageImage('media', key, file)
+            }
+          } catch(_) { /* ignore */ }
           await this.refreshPageImages()
         } else {
           alert('画像アップロードに失敗しました')
