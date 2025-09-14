@@ -1473,6 +1473,11 @@ export default {
               await apiClient.adminReplacePageImage('media', item.key, file)
             }
           } catch(_) { /* ignore */ }
+          // Invalidate media cache so the latest images are used immediately
+          try {
+            const mod = await import('@/composables/useMedia')
+            if (mod.invalidateMediaCache) mod.invalidateMediaCache()
+          } catch(_) { /* ignore */ }
           // refresh current images list
           try {
             const r = await apiClient.adminGetPageContent(this.pageContentKey)
@@ -1505,6 +1510,11 @@ export default {
             if (String(this.newImageKey).startsWith('company_profile_')) {
               await apiClient.adminReplacePageImage('media', this.newImageKey, file)
             }
+          } catch(_) { /* ignore */ }
+          // Invalidate media cache after adding new image key
+          try {
+            const mod = await import('@/composables/useMedia')
+            if (mod.invalidateMediaCache) mod.invalidateMediaCache()
           } catch(_) { /* ignore */ }
           // push to list
           try {
@@ -1723,6 +1733,11 @@ export default {
             if (String(key).startsWith('company_profile_')) {
               await apiClient.adminReplacePageImage('media', key, file)
             }
+          } catch(_) { /* ignore */ }
+          // Invalidate media cache after replacing company-specific image
+          try {
+            const mod = await import('@/composables/useMedia')
+            if (mod.invalidateMediaCache) mod.invalidateMediaCache()
           } catch(_) { /* ignore */ }
           await this.refreshPageImages()
         } else {

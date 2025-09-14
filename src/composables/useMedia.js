@@ -177,6 +177,15 @@ async function loadMedia() {
   }
 }
 
+export function invalidateMediaCache() {
+  try {
+    state.loaded = false
+    state.loading = false
+    state.error = null
+    state.images = {}
+  } catch (_) {}
+}
+
 export function useMedia() {
   const ensure = () => loadMedia()
   const getImage = (key, fallback = '') => {
