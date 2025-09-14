@@ -96,7 +96,45 @@ const mockData = {
   ]
 }
 
-// 会員ログイン
+// 会員ログイン（フロントエンド用エンドポイント）
+app.post('/api/member-auth/login', (req, res) => {
+  const { email, password } = req.body
+  
+  if (password === 'password123') {
+    const member = mockData.members.find(m => m.email === email && m.status === 'active')
+    
+    if (member) {
+      const token = 'member_token_' + Date.now()
+      const userData = {
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        company: member.company,
+        membershipType: member.membershipType,
+        expiryDate: '2025-12-31',
+        token: token
+      }
+      
+      res.json({
+        success: true,
+        user: userData,
+        token: token
+      })
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'メールアドレスまたはパスワードが正しくありません'
+      })
+    }
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'メールアドレスまたはパスワードが正しくありません'
+    })
+  }
+})
+
+// 会員ログイン（旧エンドポイント）
 app.post('/api/members/login', (req, res) => {
   const { email, password } = req.body
   
@@ -226,6 +264,7 @@ app.get('/', (req, res) => {
     message: 'Mock API Server is running',
     version: '1.0.0',
     endpoints: [
+      'POST /api/member-auth/login',
       'POST /api/members/login',
       'GET /api/members/me',
       'GET /api/publications',
