@@ -220,6 +220,28 @@ app.post('/api/admin/login', (req, res) => {
   }
 })
 
+// ルートパス
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Mock API Server is running',
+    version: '1.0.0',
+    endpoints: [
+      'POST /api/members/login',
+      'GET /api/members/me',
+      'GET /api/publications',
+      'GET /api/seminars',
+      'GET /api/news',
+      'POST /api/admin/login',
+      'GET /api/health'
+    ],
+    testAccounts: {
+      premium: 'yamada@example.com / password123',
+      standard: 'suzuki@example.com / password123',
+      admin: 'admin@example.com / password123'
+    }
+  })
+})
+
 // ヘルスチェック
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Mock server is running' })
