@@ -61,6 +61,27 @@ function readLocalMock() {
   return null
 }
 
+// Persistent cache (SWR): keep last successful media map in localStorage
+function readPersistentCache() {
+  try {
+    const raw = localStorage.getItem('cms_media_cache')
+    if (!raw) return null
+    const data = JSON.parse(raw)
+    if (!data || typeof data !== 'object') return null
+    const ttlMs = 5 * 60 * 1000 // 5 minutes TTL
+    if (!data.ts || (Date.now() - data.ts) > ttlMs) return null
+    const images = data.images
+    return (images && typeof images === 'object') ? images : null
+  } catch (_) { return null }
+}
+
+function writePersistentCache(images) {
+  try {
+    if (!images || typeof images !== 'object') return
+    localStorage.setItem('cms_media_cache', JSON.stringify({ ts: Date.now(), images }))
+  } catch (_) {}
+}
+
 async function loadMedia() {
   if (state.loaded || state.loading) return
   state.loading = true
@@ -76,6 +97,15 @@ async function loadMedia() {
     }
     return out
   }
+
+  // SWR: serve last-known-good images from persistent cache immediately
+  try {
+    const cached = readPersistentCache()
+    if (cached) {
+      state.images = normalize(cached)
+      // keep loaded=false to allow network to refresh; UI can already render from cache
+    }
+  } catch (_) { /* ignore */ }
 
   // Force-local mode: never hit API, use local mock or built-ins
   if (isForceLocal()) {
@@ -122,6 +152,7 @@ async function loadMedia() {
       const images = page?.content?.images || null
       if (images) {
         state.images = normalize(images)
+        try { writePersistentCache(images) } catch (_) {}
         state.loaded = true
         return
       }
@@ -138,6 +169,7 @@ async function loadMedia() {
     const images = page?.content?.images || null
     if (images) {
       state.images = normalize(images)
+      try { writePersistentCache(images) } catch (_) {}
       state.loaded = true
       return
     }

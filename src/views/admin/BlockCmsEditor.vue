@@ -1637,6 +1637,7 @@ export default {
           try {
             const mod = await import('@/composables/useMedia')
             if (mod.invalidateMediaCache) mod.invalidateMediaCache()
+            try { localStorage.removeItem('cms_media_cache') } catch(_) {}
           } catch(_) { /* ignore */ }
           // refresh current images list
           try {
@@ -1675,6 +1676,7 @@ export default {
           try {
             const mod = await import('@/composables/useMedia')
             if (mod.invalidateMediaCache) mod.invalidateMediaCache()
+            try { localStorage.removeItem('cms_media_cache') } catch(_) {}
           } catch(_) { /* ignore */ }
           // push to list
           try {
@@ -2013,6 +2015,7 @@ export default {
           try {
             const mod = await import('@/composables/useMedia')
             if (mod.invalidateMediaCache) mod.invalidateMediaCache()
+            try { localStorage.removeItem('cms_media_cache') } catch(_) {}
           } catch(_) { /* ignore */ }
           await this.refreshPageImages()
         } else {
