@@ -1421,6 +1421,8 @@ export default {
         else if (slug.includes('contact')) this.pageContentKey = 'contact'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'services'
+        // consulting ページはデフォルトでページ配置ビューON
+        try { if ((slug||'').includes('consult')) this.layoutMode = true } catch(_) {}
         // プレビュー機能は撤去
 
         // 既存テキストの読み込み

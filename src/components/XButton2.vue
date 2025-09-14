@@ -15,21 +15,40 @@ export default {
   name: "XButton2",
   data() {
     return {
-      forceKey: 0
+      forceKey: 0,
+      lsLoggedIn: false
     }
   },
   computed: {
     loggedIn() {
+      // Vuexを優先（リアクティブ）。未設定時はローカルストレージの反応型フラグを参照
+      const viaStore = this.$store?.getters?.['auth/isAuthenticated']
+      if (typeof viaStore === 'boolean') return viaStore
+      return this.lsLoggedIn
+    }
+  },
+  mounted() {
+    this.updateLsLoggedIn()
+    window.addEventListener('storage', this.updateLsLoggedIn)
+    window.addEventListener('focus', this.updateLsLoggedIn)
+    document.addEventListener('visibilitychange', this.updateLsLoggedIn)
+  },
+  beforeDestroy() {
+    window.removeEventListener('storage', this.updateLsLoggedIn)
+    window.removeEventListener('focus', this.updateLsLoggedIn)
+    document.removeEventListener('visibilitychange', this.updateLsLoggedIn)
+  },
+  methods: {
+    updateLsLoggedIn() {
       try {
         const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
         const user = localStorage.getItem('memberUser')
-        return !!token && !!user
+        this.lsLoggedIn = !!token && !!user
       } catch (e) {
-        return false
+        this.lsLoggedIn = false
       }
     }
-  },
-  methods: {}
+  }
 };
 </script>
 
