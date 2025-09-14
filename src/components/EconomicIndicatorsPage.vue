@@ -14,12 +14,12 @@
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <div class="page-content">
-      <div class="content-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
-        <div class="title-decoration">
-          <div class="line-left"></div>
-          <span class="title-english">{{ pageSubtitle }}</span>
-          <div class="line-right"></div>
+      <div class="section-header">
+        <h2 class="section-title">{{ pageTitle }}</h2>
+        <div class="section-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">{{ pageSubtitle }}</span>
+          <div class="divider-line"></div>
         </div>
       </div>
       
@@ -165,7 +165,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '経済指標一覧') || '経済指標一覧' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Economic Indicators') || 'Economic Indicators' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'economic indicators') || 'economic indicators' },
   },
   async mounted() {
     // ページ文言（タイトル等）をCMSから読込
@@ -313,7 +313,7 @@ export default {
   padding: 70px 50px;
 }
 
-.content-header {
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -321,37 +321,32 @@ export default {
   margin-bottom: 40px;
 }
 
-.page-title {
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+.section-title {
+  color: #1A1A1A;
   font-size: 36px;
   font-weight: 700;
-  color: #1A1A1A;
-  letter-spacing: -0.72px;
-  text-align: center;
   margin: 0;
+  text-align: center;
+  letter-spacing: -0.72px;
 }
 
-.title-decoration {
+.section-divider {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 15px;
-  width: auto;
-  min-width: 306px;
 }
 
-.line-left, .line-right {
-  width: 80px;
+.divider-line {
+  width: 69px;
   height: 2px;
   background: #DA5761;
-  flex-shrink: 0;
 }
 
-.title-english {
-  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+.divider-text {
+  color: #DA5761;
   font-size: 20px;
   font-weight: 700;
-  color: #DA5761;
 }
 
 /* Description */
@@ -547,15 +542,15 @@ export default {
 }
 
 @media (max-width: 1150px) {
-  .content-header {
+  .section-header {
     gap: 25px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 32px !important;
   }
   
-  .title-english {
+  .divider-text {
     font-size: 18px !important;
   }
 }
@@ -565,7 +560,7 @@ export default {
     padding: 30px 20px;
   }
   
-  .content-header {
+  .section-header {
     gap: 22px !important;
   }
   
@@ -586,7 +581,7 @@ export default {
     font-size: 17px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 29px !important;
   }
   
@@ -600,7 +595,7 @@ export default {
     padding: 40px 15px;
   }
   
-  .content-header {
+  .section-header {
     gap: 20px !important;
   }
   
@@ -629,7 +624,7 @@ export default {
     font-size: 16px !important;
   }
   
-  .page-title {
+  .section-title {
     font-size: 27px !important;
   }
   
@@ -684,18 +679,18 @@ export default {
     margin-right: 8px;
   }
 
-  .content-header {
+  .section-header {
     gap: 18px !important;
     margin-bottom: 20px;
   }
 
-  .page-title {
+  .section-title {
     font-size: 22px !important;
   }
 
-  .title-english {
-  font-size: 13px;
-}
+  .divider-text {
+    font-size: 13px !important;
+  }
 }
 
 

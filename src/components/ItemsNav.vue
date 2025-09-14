@@ -30,12 +30,15 @@
       src="/img/vector-1.svg"
       alt="Vector 4"
     />
-    <div class="text-6 valign-text-middle dropdown-item" @mouseenter="showDropdown('membership')" @mouseleave="hideDropdown('membership')" style="cursor: pointer; position: relative;">
+    <div v-if="!loggedIn" class="text-6 valign-text-middle dropdown-item" @mouseenter="showDropdown('membership')" @mouseleave="hideDropdown('membership')" style="cursor: pointer; position: relative;">
       入会案内
       <div class="dropdown-menu" v-show="activeDropdown === 'membership'" @mouseenter="showDropdown('membership')" @mouseleave="hideDropdown('membership')">
-        <div class="dropdown-sub-item" @click="navigateTo('standard-membership')">スタンダード</div>
-        <div class="dropdown-sub-item" @click="navigateTo('premium-membership')">プレミアム</div>
+        <div class="dropdown-sub-item" @click="navigateTo('membership/standard')">スタンダード</div>
+        <div class="dropdown-sub-item" @click="navigateTo('membership/premium')">プレミアム</div>
       </div>
+    </div>
+    <div v-if="loggedIn" class="text-6 valign-text-middle" @click="navigateTo('membership/premium')" style="cursor: pointer;">
+      プレミアム会員の特典
     </div>
     <img
       class="vector-22"
@@ -66,6 +69,17 @@ export default {
       activeDropdown: null,
       hideTimer: null
     };
+  },
+  computed: {
+    loggedIn() {
+      try {
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken')
+        const user = localStorage.getItem('memberUser')
+        return !!token && !!user
+      } catch (e) {
+        return false
+      }
+    }
   },
   methods: {
     navigateTo(route) {
