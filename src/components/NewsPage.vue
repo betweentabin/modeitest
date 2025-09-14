@@ -8,6 +8,7 @@
       :subtitle="pageSubtitle || 'information'"
       heroImage="/img/Image_fx3.jpg"
       mediaKey="hero_news"
+      cms-page-key="news"
     />
     
     <!-- Breadcrumbs -->

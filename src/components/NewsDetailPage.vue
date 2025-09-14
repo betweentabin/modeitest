@@ -7,6 +7,8 @@
       title="お知らせ詳細"
       subtitle="news detail"
       heroImage="/img/Image_fx3.jpg"
+      mediaKey="hero_news"
+      cms-page-key="news"
     />
     
     <!-- Breadcrumbs -->

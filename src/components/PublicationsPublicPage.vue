@@ -8,6 +8,7 @@
       :subtitle="pageSubtitle"
       heroImage="/img/hero-image.png"
       mediaKey="hero_publications"
+      cms-page-key="publications"
     />
     
     <!-- Breadcrumbs -->

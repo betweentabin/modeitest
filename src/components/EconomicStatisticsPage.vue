@@ -8,6 +8,7 @@
       :subtitle="pageSubtitle"
       heroImage="/img/Image_fx6.jpg"
       mediaKey="hero_economic_statistics"
+      cms-page-key="economic-statistics"
     />
     
     <!-- Breadcrumbs -->

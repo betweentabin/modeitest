@@ -7,6 +7,8 @@
       title="経済・調査統計"
       subtitle="economic statistics"
       heroImage="/img/Image_fx6.jpg"
+      mediaKey="hero_economic_statistics"
+      cms-page-key="economic-statistics"
     />
 
     <!-- Breadcrumbs -->

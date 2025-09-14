@@ -7,6 +7,8 @@
       title="お問い合わせ確認"
       subtitle="contact confirm"
       heroImage="/img/Image_fx2.jpg"
+      mediaKey="hero_contact"
+      cms-page-key="contact"
     />
 
     <!-- Breadcrumbs -->

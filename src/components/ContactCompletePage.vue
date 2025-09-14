@@ -7,6 +7,8 @@
       title="お問い合わせ完了"
       subtitle="contact complete"
       heroImage="/img/Image_fx2.jpg"
+      mediaKey="hero_contact"
+      cms-page-key="contact"
     />
 
     <!-- Breadcrumbs -->

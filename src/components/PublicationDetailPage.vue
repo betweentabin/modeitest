@@ -8,6 +8,7 @@
       :subtitle="pageSubtitle"
       heroImage="/img/Image_fx5.jpg"
       mediaKey="hero_publications"
+      cms-page-key="publications"
     />
 
     <!-- Breadcrumbs -->
