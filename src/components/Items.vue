@@ -33,8 +33,8 @@
     <div class="text-6 valign-text-middle dropdown-item" @mouseenter="showDropdown('membership')" @mouseleave="hideDropdown('membership')" style="cursor: pointer; position: relative;">
       入会案内
       <div class="dropdown-menu" v-show="activeDropdown === 'membership'" @mouseenter="showDropdown('membership')" @mouseleave="hideDropdown('membership')">
-        <div class="dropdown-sub-item" @click="navigateTo('standard-membership')">スタンダード</div>
-        <div class="dropdown-sub-item" @click="navigateTo('premium-membership')">プレミアム</div>
+        <div class="dropdown-sub-item" @click="navigateTo('membership/standard')">スタンダード</div>
+        <div class="dropdown-sub-item" @click="navigateTo('membership/premium')">プレミアム</div>
       </div>
     </div>
     <img

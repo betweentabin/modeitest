@@ -10,7 +10,7 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細（予約受付中）']" />
+    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細']" />
 
     <!-- Seminar Detail Section -->
     <section class="seminar-detail-section" v-if="seminar">
@@ -60,7 +60,7 @@
              </div>
            </div>
            
-           <div class="seminar-image" :class="{ blurred: shouldBlur }">
+           <div v-if="!isPastSeminar" class="seminar-image" :class="{ blurred: shouldBlur }">
              <img :src="seminar.image || '/img/image-1.png'" :alt="seminar.title" />
              <MembershipBadge 
                v-if="seminar.membershipRequirement && seminar.membershipRequirement !== 'free'" 
@@ -81,7 +81,7 @@
         </div>
 
         <!-- Action Section based on Auth State -->
-        <div class="action-section">
+        <div v-if="!isPastSeminar" class="action-section">
           <!-- 非会員の場合 -->
           <div v-if="authState.type === 'non_member'" class="members-only-section">
             <p class="members-only-notice">{{ authState.message }}</p>
@@ -119,7 +119,7 @@
         </div>
         
         <!-- セミナー終了時の表示 -->
-        <div v-if="seminar && seminar.status === 'ended'" class="ended-section">
+        <div v-if="isPastSeminar" class="ended-section">
           <p class="ended-notice">このセミナーは終了しました</p>
         </div>
 
@@ -198,6 +198,10 @@ export default {
     await this.loadSeminar();
   },
   computed: {
+    isPastSeminar() {
+      // 過去のセミナーかどうかを判定
+      return this.seminar && (this.seminar.status === 'ended' || this.seminar.status === 'completed' || this.seminar.status === 'past')
+    },
     showRegistrationSection() {
       // サーバー側の登録可否を優先（会員レベルはボタン活性で制御）
       return this.serverCanRegisterForUser || this.serverCanRegister || (this.seminar && this.seminar.status === 'current')

@@ -875,6 +875,7 @@ export default {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 30px;
+  margin-top: 50px;
 }
 
 /* ダッシュボードサマリー */
