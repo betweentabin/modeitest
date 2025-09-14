@@ -114,11 +114,10 @@ class ReportPageImagesDiff extends Command
     private function isPlaceholder(string $url): bool
     {
         $u = strtolower($url);
-        if (str_starts_with($u, '/img/hero-image')) return true;
-        if (str_contains($u, '/img/image-')) return true;
-        if (str_contains($u, '/img/---')) return true || str_contains($u, '/img/--');
+        // Treat only obvious placeholders as such
+        if (str_contains($u, 'hero-image.png')) return true;
         if (str_contains($u, 'temp/')) return true; // builder temp
+        // Local static assets under /img are considered valid
         return false;
     }
 }
-

@@ -1663,11 +1663,10 @@ export default {
     isPlaceholderUrl(url){
       if (!url) return true
       const u = String(url)
-      if (u.startsWith('/img/hero-image')) return true
-      if (u.includes('/img/---')) return true
-      if (u.includes('/img/--')) return true
-      if (u.includes('/img/image-')) return true
-      if (u.includes('TEMP/')) return true
+      // Only treat obvious placeholders as such
+      if (u.includes('hero-image.png')) return true
+      if (u.includes('TEMP/')) return true // builder temporary CDN marker
+      // Local static assets like /img/image-*.png or /img/---*.png are valid
       return false
     },
     calculateMissingImages(){
