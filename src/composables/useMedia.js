@@ -9,6 +9,28 @@ const state = reactive({
   images: {}, // key -> url
 })
 
+let storageHooked = false
+function hookStorageBroadcast() {
+  if (storageHooked) return
+  storageHooked = true
+  try {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        try {
+          if (!e) return
+          const k = e.key || ''
+          if (k === 'cms_media_cache' || k === 'cms_media_cache_bust') {
+            // Re-fetch media registry when another tab updates cache
+            state.loaded = false
+            state.loading = false
+            loadMedia()
+          }
+        } catch (_) {}
+      })
+    }
+  } catch (_) { /* ignore */ }
+}
+
 // Temporary default: force local media without hitting API.
 // Configure with env vars (set one of these to "1" or "true"):
 // - VITE_MEDIA_FORCE_LOCAL (Vite)
@@ -84,6 +106,7 @@ function writePersistentCache(images) {
 }
 
 async function loadMedia() {
+  hookStorageBroadcast()
   if (state.loaded || state.loading) return
   state.loading = true
   state.error = null
@@ -114,7 +137,13 @@ async function loadMedia() {
     if (cached) {
       state.images = normalize(cached)
       // keep loaded=false to allow network to refresh; UI can already render from cache
-      try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('cms-media-updated')) } catch (_) {}
+      try {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cms-media-updated'))
+          // Also trigger a synthetic resize to nudge components that react on viewport changes
+          window.dispatchEvent(new Event('resize'))
+        }
+      } catch (_) {}
     }
   } catch (_) { /* ignore */ }
 
@@ -165,7 +194,12 @@ async function loadMedia() {
         state.images = normalize(images)
         try { writePersistentCache(images) } catch (_) {}
         state.loaded = true
-        try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('cms-media-updated')) } catch (_) {}
+        try {
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('cms-media-updated'))
+            window.dispatchEvent(new Event('resize'))
+          }
+        } catch (_) {}
         return
       }
     }
@@ -183,7 +217,12 @@ async function loadMedia() {
       state.images = normalize(images)
       try { writePersistentCache(images) } catch (_) {}
       state.loaded = true
-      try { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('cms-media-updated')) } catch (_) {}
+      try {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cms-media-updated'))
+          window.dispatchEvent(new Event('resize'))
+        }
+      } catch (_) {}
       return
     }
     throw new Error('media page not found')
