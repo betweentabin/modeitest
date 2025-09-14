@@ -497,6 +497,7 @@
             <div class="help">年度ごとの決算項目とリンクを管理できます（公開でPageContentへ反映）。</div>
             <div class="actions" style="justify-content:flex-start;">
               <button class="btn" @click="addCompanyReport">+ 年度を追加</button>
+              <button class="btn" @click="saveCompanyFinancialReports" style="margin-left:8px;">決算報告を保存</button>
             </div>
             <div v-for="(r, ri) in companyFinancialReports" :key="`fr-${ri}`" class="field" style="border:1px solid #eee; padding:10px; border-radius:8px; margin-bottom:8px;">
               <div style="display:grid; grid-template-columns: 1fr 1fr auto; gap:8px; align-items:center;">
@@ -1473,7 +1474,13 @@ export default {
                 url: typeof it?.url === 'string' ? it.url : ''
               })) : []
             })) : []
+            // 初回は既存（静的）テキストをデフォルトとして投入
+            if (!this.companyFinancialReports || this.companyFinancialReports.length === 0) {
+              this.companyFinancialReports = this.defaultCompanyFinancialReports()
+            }
             if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
+            if (!this.companyTexts.financial_reports_title) this.companyTexts.financial_reports_title = '決算報告'
+            if (!this.companyTexts.financial_reports_subtitle) this.companyTexts.financial_reports_subtitle = 'financial reports'
           } else if (this.pageContentKey === 'cri-consulting') {
             this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
             this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
@@ -1671,6 +1678,72 @@ export default {
         input.click()
       } catch(_) {
         alert('アップロードに失敗しました')
+      }
+    },
+    defaultCompanyFinancialReports(){
+      // CompanyProfile.vue の既存ダミー表示を初期値として反映（URLは空で作成）
+      return [
+        {
+          fiscal_year: '2025年3月期',
+          date_label: '決算情報（2025年5月12日）',
+          items: [
+            { label: '決算情報（2025年5月12日）', url: '' },
+            { label: '決算要旨（PDF ： 1.28MB／全31ページ）', url: '' },
+            { label: '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 384KB／全22ページ）', url: '' },
+            { label: '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 620KB／全11ページ）', url: '' },
+            { label: 'メディア向け決算説明会の模様をご覧いただけます', url: '' },
+          ]
+        },
+        {
+          fiscal_year: '2024年3月期',
+          date_label: '決算情報（2024年5月12日）',
+          items: [
+            { label: '決算情報（2024年5月12日）', url: '' },
+            { label: '決算要旨（PDF ： 1.25MB／全30ページ）', url: '' },
+            { label: '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 380KB／全21ページ）', url: '' },
+            { label: '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 615KB／全10ページ）', url: '' },
+            { label: 'メディア向け決算説明会の模様をご覧いただけます', url: '' },
+          ]
+        },
+        {
+          fiscal_year: '2023年3月期',
+          date_label: '決算情報（2023年5月12日）',
+          items: [
+            { label: '決算情報（2023年5月12日）', url: '' },
+            { label: '決算要旨（PDF ： 1.22MB／全29ページ）', url: '' },
+            { label: '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 375KB／全20ページ）', url: '' },
+            { label: '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 610KB／全9ページ）', url: '' },
+            { label: 'メディア向け決算説明会の模様をご覧いただけます', url: '' },
+          ]
+        },
+        {
+          fiscal_year: '2022年3月期',
+          date_label: '決算情報（2022年5月12日）',
+          items: [
+            { label: '決算情報（2022年5月12日）', url: '' },
+            { label: '決算要旨（PDF ： 1.20MB／全28ページ）', url: '' },
+            { label: '決算説明会 第Ⅰ部（決算報告）資料（PDF ： 370KB／全19ページ）', url: '' },
+            { label: '決算説明会 第Ⅱ部（社長メッセージ）スピーチ（PDF ： 605KB／全8ページ）', url: '' },
+            { label: 'メディア向け決算説明会の模様をご覧いただけます', url: '' },
+          ]
+        }
+      ]
+    },
+    async saveCompanyFinancialReports(){
+      try {
+        const reports = Array.isArray(this.companyFinancialReports) ? this.companyFinancialReports.map(r => ({
+          fiscal_year: String(r?.fiscal_year || '').trim(),
+          date_label: String(r?.date_label || '').trim(),
+          items: Array.isArray(r?.items) ? r.items.map(it => ({
+            label: String((it && it.label) || (typeof it === 'string' ? it : '') || '').trim(),
+            url: String((it && it.url) || '').trim()
+          })).filter(it => it.label || it.url) : []
+        })).filter(r => r.fiscal_year || r.date_label || (r.items && r.items.length)) : []
+        const payload = { content: { financial_reports: reports }, is_published: true }
+        await apiClient.adminUpdatePageContent('company-profile', payload)
+        alert('決算報告を保存しました')
+      } catch (e) {
+        alert('保存に失敗しました')
       }
     },
     async syncCompanyPageContentIfApplicable(){
