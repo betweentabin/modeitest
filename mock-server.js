@@ -172,7 +172,7 @@ app.post('/api/members/login', (req, res) => {
   }
 })
 
-// 現在の会員情報取得
+// 現在の会員情報取得（複数エンドポイント対応）
 app.get('/api/members/me', (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '')
   
@@ -183,15 +183,48 @@ app.get('/api/members/me', (req, res) => {
   const member = mockData.members.find(m => m.status === 'active')
   if (member) {
     res.json({
-      id: member.id,
-      name: member.name,
-      email: member.email,
-      company: member.company,
-      membershipType: member.membershipType,
-      expiryDate: '2025-12-31'
+      success: true,
+      data: {
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        company: member.company,
+        membershipType: member.membershipType,
+        membership_type: member.membershipType, // 互換性のため
+        expiryDate: '2025-12-31',
+        expiry_date: '2025-12-31' // 互換性のため
+      }
     })
   } else {
-    res.status(404).json({ message: 'Member not found' })
+    res.status(404).json({ success: false, message: 'Member not found' })
+  }
+})
+
+// フロントエンド用の会員情報取得エンドポイント
+app.get('/api/member-auth/me', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  
+  if (!token || !token.startsWith('member_token_')) {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+  
+  const member = mockData.members.find(m => m.status === 'active')
+  if (member) {
+    res.json({
+      success: true,
+      data: {
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        company: member.company,
+        membershipType: member.membershipType,
+        membership_type: member.membershipType, // 互換性のため
+        expiryDate: '2025-12-31',
+        expiry_date: '2025-12-31' // 互換性のため
+      }
+    })
+  } else {
+    res.status(404).json({ success: false, message: 'Member not found' })
   }
 })
 
@@ -267,6 +300,7 @@ app.get('/', (req, res) => {
       'POST /api/member-auth/login',
       'POST /api/members/login',
       'GET /api/members/me',
+      'GET /api/member-auth/me',
       'GET /api/publications',
       'GET /api/seminars',
       'GET /api/news',
