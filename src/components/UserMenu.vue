@@ -78,9 +78,8 @@ export default {
     });
 
     const checkAuth = () => {
-      const token = localStorage.getItem('auth_token');
-      const userData = localStorage.getItem('user');
-      
+      const token = localStorage.getItem('auth_token') || localStorage.getItem('memberToken');
+      const userData = localStorage.getItem('memberUser') || localStorage.getItem('user');
       if (token && userData) {
         try {
           user.value = JSON.parse(userData);

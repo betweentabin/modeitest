@@ -125,6 +125,8 @@
 
 <script>
 import { ref, reactive, watch } from 'vue';
+import { useStore } from 'vuex';
+import apiClient from '@/services/apiClient';
 import { getApiUrl } from '@/config/api';
 
 export default {
@@ -137,6 +139,7 @@ export default {
   },
   emits: ['close', 'login-success'],
   setup(props, { emit }) {
+    const store = useStore();
     const isLoginMode = ref(true);
     const isLoading = ref(false);
     const errorMessage = ref('');
@@ -177,41 +180,65 @@ export default {
       successMessage.value = '';
 
       try {
-        const endpoint = isLoginMode.value ? '/api/login' : '/api/register';
-        const response = await fetch(`${getApiUrl(endpoint)}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify(formData)
-        });
+        if (isLoginMode.value) {
+          // 会員ログインフローに統一
+          const res = await apiClient.login({ email: formData.email, password: formData.password });
+          if (res && res.success && (res.access_token || res.token || res.data?.access_token)) {
+            const token = res.access_token || res.token || res.data?.access_token;
+            const user = res.member || res.data?.member || res.user || res.data?.user || null;
 
-        const data = await response.json();
+            // ローカルストレージ（全ヘッダーと他ページで統一して参照）
+            localStorage.setItem('auth_token', token);
+            localStorage.setItem('memberToken', token);
+            if (user) localStorage.setItem('memberUser', JSON.stringify(user));
 
-        if (response.ok && data.success) {
-          successMessage.value = isLoginMode.value ? 'ログイン成功！' : '登録成功！';
-          
-          localStorage.setItem('auth_token', data.access_token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          
-          emit('login-success', data);
-          
-          setTimeout(() => {
-            closeModal();
-          }, 1500);
-        } else {
-          if (data.errors) {
-            const firstError = Object.values(data.errors)[0];
-            errorMessage.value = Array.isArray(firstError) ? firstError[0] : firstError;
+            // Vuexへも反映（セミナー詳細などの表示切替に必要）
+            try { store.commit('auth/SET_AUTH', { token, user }); } catch (e) { /* store 未登録環境も想定 */ }
+
+            successMessage.value = 'ログイン成功！';
+            // 親に正規化して通知（data.user を期待する呼び出し元互換）
+            emit('login-success', { user });
+
+            setTimeout(() => { closeModal(); }, 800);
           } else {
-            errorMessage.value = data.message || 'エラーが発生しました';
+            throw new Error(res?.message || res?.error || 'ログインに失敗しました');
+          }
+        } else {
+          // 既存の登録フローは維持（戻り値に合わせてできる限り整合）
+          const endpoint = '/api/register';
+          const response = await fetch(`${getApiUrl(endpoint)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          });
+          const data = await response.json();
+          if (response.ok && data.success) {
+            const token = data.access_token || data.token || null;
+            const user = data.member || data.user || null;
+            if (token) {
+              localStorage.setItem('auth_token', token);
+              localStorage.setItem('memberToken', token);
+            }
+            if (user) localStorage.setItem('memberUser', JSON.stringify(user));
+            try { if (token && user) store.commit('auth/SET_AUTH', { token, user }); } catch(e) {}
+            successMessage.value = '登録成功！';
+            emit('login-success', { user });
+            setTimeout(() => { closeModal(); }, 800);
+          } else {
+            if (data.errors) {
+              const firstError = Object.values(data.errors)[0];
+              errorMessage.value = Array.isArray(firstError) ? firstError[0] : firstError;
+            } else {
+              errorMessage.value = data.message || 'エラーが発生しました';
+            }
           }
         }
       } catch (error) {
         console.error('Error:', error);
-        errorMessage.value = 'ネットワークエラーが発生しました';
+        errorMessage.value = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。';
       } finally {
         isLoading.value = false;
       }
