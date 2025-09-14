@@ -772,6 +772,17 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   try {
+    // Prefetch media registry once before first route resolves
+    try {
+      if (typeof window !== 'undefined' && !window.__MEDIA_READY__) {
+        const mod = await import('@/composables/useMedia')
+        const { useMedia } = mod
+        const m = useMedia()
+        await m.ensure()
+        window.__MEDIA_READY__ = true
+      }
+    } catch (_) { /* ignore media prefetch errors */ }
+
     const keys = PAGE_KEYS_BY_ROUTE[to.name] || []
     if (keys.length) {
       await Promise.all(keys.map(k => {
