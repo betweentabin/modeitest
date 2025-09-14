@@ -10,7 +10,7 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細（予約受付中）']" />
+    <Breadcrumbs :breadcrumbs="['セミナー', 'セミナー詳細']" />
 
     <!-- Seminar Detail Section -->
     <section class="seminar-detail-section" v-if="seminar">
