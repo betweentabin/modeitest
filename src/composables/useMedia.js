@@ -116,7 +116,8 @@ async function loadMedia() {
     // 1) If admin session exists, fetch the media page through admin API
     // Avoid hitting admin endpoint when not authenticated to prevent spurious 404 logs
     if (apiClient.isAdminAuthenticated()) {
-      const adminPage = await apiClient.get('/api/admin/pages/media', { silent: true })
+      // cache-buster to avoid stale admin responses
+      const adminPage = await apiClient.get('/api/admin/pages/media', { silent: true, params: { _t: Date.now() } })
       const page = adminPage?.data?.page || adminPage?.data?.data?.page || adminPage?.page
       const images = page?.content?.images || null
       if (images) {
@@ -131,7 +132,8 @@ async function loadMedia() {
 
   try {
     // 2) Public endpoint (published media page)
-    const res = await apiClient.get('/api/public/pages/media', { silent: true })
+    // cache-buster to avoid stale public responses
+    const res = await apiClient.get('/api/public/pages/media', { silent: true, params: { _t: Date.now() } })
     const page = res?.data?.page || res?.data?.data?.page
     const images = page?.content?.images || null
     if (images) {
