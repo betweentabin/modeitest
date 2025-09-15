@@ -228,6 +228,130 @@ app.get('/api/member-auth/me', (req, res) => {
   }
 })
 
+// MyAccountPage用のプロフィール取得エンドポイント
+app.get('/api/member/my-profile', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  
+  if (!token || !token.startsWith('member_token_')) {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+  
+  const member = mockData.members.find(m => m.status === 'active')
+  if (member) {
+    res.json({
+      success: true,
+      data: {
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        company: member.company,
+        membershipType: member.membershipType,
+        membership_type: member.membershipType,
+        expiryDate: '2025-12-31',
+        expiry_date: '2025-12-31',
+        joinedDate: member.joinedDate,
+        phone: '090-1234-5678',
+        postalCode: '100-0001',
+        address: '東京都千代田区千代田1-1'
+      }
+    })
+  } else {
+    res.status(404).json({ success: false, message: 'Member not found' })
+  }
+})
+
+// ダッシュボード情報取得エンドポイント
+app.get('/api/member/dashboard', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  
+  if (!token || !token.startsWith('member_token_')) {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+  
+  res.json({
+    success: true,
+    data: {
+      totalDownloads: 15,
+      favoriteSeminars: 3,
+      upcomingSeminars: 2,
+      recentActivity: [
+        { type: 'download', title: '九州の未来 vol.45', date: '2025-01-10' },
+        { type: 'seminar', title: '2025年度経済展望セミナー', date: '2025-01-08' }
+      ]
+    }
+  })
+})
+
+// お気に入り一覧取得エンドポイント
+app.get('/api/member/favorites', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  
+  if (!token || !token.startsWith('member_token_')) {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+  
+  res.json({
+    success: true,
+    data: []
+  })
+})
+
+// CMSページコンテンツ取得エンドポイント
+app.get('/api/page-content/:pageName', (req, res) => {
+  const { pageName } = req.params
+  
+  // 基本的なCMSコンテンツを返す
+  const cmsContent = {
+    my_account: {
+      labels: {
+        tabs: {
+          profile: 'アカウント情報',
+          seminars: 'セミナー',
+          seminarFavorites: 'セミナーお気に入り',
+          registrations: '申込状況',
+          membership: '会員プラン',
+          downloads: 'ダウンロード履歴',
+          favorites: 'お気に入り',
+          settings: '設定'
+        },
+        buttons: {
+          cancel: 'キャンセル',
+          submit: '送信する',
+          submitting: '送信中...'
+        }
+      }
+    }
+  }
+  
+  res.json({
+    success: true,
+    data: {
+      page: {
+        content: cmsContent[pageName] || {}
+      }
+    }
+  })
+})
+
+// 業種マスタ取得エンドポイント
+app.get('/api/industries', (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      { id: 1, name: '製造業' },
+      { id: 2, name: '建設業' },
+      { id: 3, name: '小売業' },
+      { id: 4, name: 'サービス業' },
+      { id: 5, name: 'IT・通信業' },
+      { id: 6, name: '金融業' },
+      { id: 7, name: '不動産業' },
+      { id: 8, name: '運輸業' },
+      { id: 9, name: '農業' },
+      { id: 10, name: 'その他' }
+    ]
+  })
+})
+
 // 刊行物一覧
 app.get('/api/publications', (req, res) => {
   res.json({
@@ -301,6 +425,11 @@ app.get('/', (req, res) => {
       'POST /api/members/login',
       'GET /api/members/me',
       'GET /api/member-auth/me',
+      'GET /api/member/my-profile',
+      'GET /api/member/dashboard',
+      'GET /api/member/favorites',
+      'GET /api/page-content/:pageName',
+      'GET /api/industries',
       'GET /api/publications',
       'GET /api/seminars',
       'GET /api/news',

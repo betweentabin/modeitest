@@ -228,7 +228,7 @@ export const screen2Data = {
     x19Km23: "五郎丸：約1.9km 徒歩で約23分 乗換案内 | 徒歩ルート",
     text78: "お車でお越しの場合",
     x497M6: "【予約制】軒先パーキング 合川スタンド跡駐車場 | 約497m 徒歩で約6分",
-    x811M10: "タイムズ合川町混 | 約811m 徒歩で約10分",
+    x811M10: "タイムズ合川町 | 約811m 徒歩で約10分",
     d1830M10: "Dパーキング諏訪野町第1 | 約830m 徒歩で約10分",
     image2: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---3@2x.png",
     image3: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/---4@2x.png",
