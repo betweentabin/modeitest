@@ -83,7 +83,14 @@ export default {
 
     let msgHandler = null
     onMounted(async () => {
-      try { await pageText.load() } catch (_) {}
+      try {
+        let opts = {}
+        try {
+          const t = (typeof window !== 'undefined') ? (localStorage.getItem('admin_token') || '') : ''
+          if (t && t.length > 0) opts.preferAdmin = true
+        } catch (_) {}
+        await pageText.load(opts)
+      } catch (_) {}
       syncFromDisplay()
 
       // Listen for parent admin request to save all dirty fields from live preview

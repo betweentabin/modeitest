@@ -124,8 +124,12 @@ export default {
     if (this.cmsPageKey) {
       try {
         this._pageText = usePageText(this.cmsPageKey)
-        // Prefer admin when editing; otherwise public is fine. Force load to get fresh hero.
-        await this._pageText.load({ force: true })
+        const opts = { force: true }
+        try {
+          const t = (typeof window !== 'undefined') ? (localStorage.getItem('admin_token') || '') : ''
+          if (t && t.length > 0) opts.preferAdmin = true
+        } catch (_) {}
+        await this._pageText.load(opts)
       } catch (e) { /* noop */ }
     }
   },

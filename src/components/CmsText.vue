@@ -33,7 +33,13 @@ export default {
   },
   setup(props) {
     const pageText = usePageText(props.pageKey)
-    pageText.load().catch(() => {})
+    // 管理者ログイン時は管理APIを優先して即時反映（未公開の編集中も取得）
+    let loadOpts = {}
+    try {
+      const t = (typeof window !== 'undefined') ? (localStorage.getItem('admin_token') || '') : ''
+      if (t && t.length > 0) loadOpts.preferAdmin = true
+    } catch (_) {}
+    pageText.load(loadOpts).catch(() => {})
     const display = computed(() => {
       if (props.type === 'html') return pageText.getHtml(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
       if (props.type === 'link') return pageText.getLink(props.fieldKey, props.fallback, { allowEmpty: props.allowEmpty })
