@@ -1705,6 +1705,9 @@ export default {
               localStorage.removeItem('cms_media_cache')
               localStorage.setItem('cms_media_cache_bust', String(Date.now()))
             } catch(_) {}
+            try {
+              if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() }
+            } catch(_) { /* ignore */ }
           } catch(_) { /* ignore */ }
           // refresh current images list
           try {
@@ -1747,6 +1750,7 @@ export default {
               localStorage.removeItem('cms_media_cache')
               localStorage.setItem('cms_media_cache_bust', String(Date.now()))
             } catch(_) {}
+            try { if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() } } catch(_) {}
           } catch(_) { /* ignore */ }
           // push to list
           try {
@@ -2102,6 +2106,7 @@ export default {
               localStorage.removeItem('cms_media_cache')
               localStorage.setItem('cms_media_cache_bust', String(Date.now()))
             } catch(_) {}
+            try { if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() } } catch(_) {}
           } catch(_) { /* ignore */ }
         await this.refreshPageImages()
       } else {
