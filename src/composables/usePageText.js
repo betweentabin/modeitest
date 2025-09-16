@@ -119,6 +119,20 @@ export function usePageText(pageKey) {
       const adminToken = isBrowser ? (localStorage.getItem('admin_token') || '') : ''
       const isEditing = !!(enabled && enabled.value)
 
+      // 1) Instant local cache hydration (no flicker)
+      if (isBrowser && !force) {
+        try {
+          const raw = localStorage.getItem('page_content_cache:' + pageKey)
+          if (raw && !entry.page) {
+            const cached = JSON.parse(raw)
+            if (cached && typeof cached === 'object') {
+              entry.page = cached
+            }
+          }
+        } catch (_) { /* ignore cache read errors */ }
+      }
+
+      // 2) Fetch fresh from API
       let res
       // Prefer admin endpoint when: explicit preferAdmin, or URL preview/edit, or edit mode, and token present
       if ((preferAdmin || isPreview || isEditing) && adminToken) {
@@ -134,6 +148,11 @@ export function usePageText(pageKey) {
       const body = res?.data || res
       const page = body?.page || body?.data?.page || null
       entry.page = page
+
+      // 3) Write-through cache for next reload
+      if (isBrowser && page) {
+        try { localStorage.setItem('page_content_cache:' + pageKey, JSON.stringify(page)) } catch (_) {}
+      }
     } catch (e) {
       entry.error = e?.message || 'Failed to load page content'
     } finally {

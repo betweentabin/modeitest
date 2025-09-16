@@ -179,12 +179,22 @@ export default {
           const updatedPage = body?.page || body?.data?.page || null
           if (updatedPage) {
             pageText.page.value = updatedPage
+            // Persist to local cache to eliminate reload flicker
+            try { localStorage.setItem('page_content_cache:' + normalizedKey, JSON.stringify(updatedPage)) } catch(_) {}
           } else {
             // 念のため管理APIで再取得（公開APIで上書きされないようpreferAdmin + force）
             await pageText.load({ preferAdmin: true, force: true })
+            try {
+              const pg = pageText.page?.value
+              if (pg) localStorage.setItem('page_content_cache:' + normalizedKey, JSON.stringify(pg))
+            } catch(_) {}
           }
         } catch (_) {
           await pageText.load({ preferAdmin: true, force: true })
+          try {
+            const pg = pageText.page?.value
+            if (pg) localStorage.setItem('page_content_cache:' + normalizedKey, JSON.stringify(pg))
+          } catch(_) {}
         }
         syncFromDisplay()
       } catch (e) {

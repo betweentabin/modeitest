@@ -41,7 +41,7 @@
       <!-- PDF Download Button -->
       <div class="download-section">
         <button class="download-btn" @click="downloadPDF">
-          <div class="text-44 valign-text-middle inter-bold-white-15px">PDFダウンロード</div>
+          <div class="text-44 valign-text-middle inter-bold-white-15px"><CmsText pageKey="glossary" fieldKey="download_pdf" tag="span" :fallback="'PDFダウンロード'" /></div>
           <div class="pdf-icon-wrapper">
             <img class="pdf-icon" src="/img/pdfaicon.png" alt="PDF" width="24" height="24" />
           </div>

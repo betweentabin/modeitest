@@ -3,22 +3,22 @@
     <div class="frame-1321317530">
       <div class="frame-1321317521">
       <router-link to="/" class="footer-link">
-        <frame13213175225 :text14="frame132131752251Props.text14" />
+        <frame13213175225 :text14="footer_link_home" />
       </router-link>
       <router-link to="/company" class="footer-link">
-        <frame13213175225 :text14="frame132131752252Props.text14" />
+        <frame13213175225 :text14="footer_link_company" />
       </router-link>
       <router-link to="/aboutus" class="footer-link">
-        <frame13213175225 :text14="'私たちについて'" />
+        <frame13213175225 :text14="footer_link_about" />
       </router-link>
       <router-link to="/news" class="footer-link">
-        <frame13213175225 :text14="frame132131752253Props.text14" />
+        <frame13213175225 :text14="footer_link_news" />
       </router-link>
       <router-link to="/faq" class="footer-link">
-        <frame13213175225 :text14="frame132131752254Props.text14" />
+        <frame13213175225 :text14="footer_link_faq" />
       </router-link>
       <router-link to="/contact" class="footer-link">
-        <frame13213175225 :text14="frame132131752255Props.text14" />
+        <frame13213175225 :text14="footer_link_contact" />
       </router-link>
     </div>
 
@@ -26,10 +26,10 @@
     
     <div class="frame-1321317522">
       <router-link to="/seminar" class="footer-link">
-        <frame13213175222 :text19="frame132131752221Props.text19" />
+        <frame13213175222 :text19="footer_link_seminar" />
       </router-link>
       <router-link to="/publication" class="footer-link">
-        <frame13213175222 :text19="frame132131752222Props.text19" />
+        <frame13213175222 :text19="footer_link_publication" />
       </router-link>
       <frame13213175273
         :frame13213175222Props="frame132131752731Props.frame13213175222Props"
@@ -37,7 +37,7 @@
         :frame13213175252Props="frame132131752731Props.frame13213175252Props"
       />
       <router-link to="/glossary" class="footer-link">
-        <frame13213175222 :text19="'用語集'" />
+        <frame13213175222 :text19="footer_link_glossary" />
       </router-link>
     </div>
 
@@ -47,17 +47,17 @@
       <div class="frame-container">
         <div class="frame-132131752-2">
           <router-link to="/services" class="footer-link">
-            <frame13213175222 :text19="'入会案内'" />
+            <frame13213175222 :text19="footer_link_membership" />
           </router-link>
           <router-link to="/membership/standard" class="footer-link">
-            <frame13213175255 :text22="frame1321317525221Props.text26" />
+            <frame13213175255 :text22="footer_link_membership_standard" />
           </router-link>
           <router-link to="/membership/premium" class="footer-link">
-            <frame13213175255 :text22="frame1321317525222Props.text26" />
+            <frame13213175255 :text22="footer_link_membership_premium" />
           </router-link>
         </div>
         <router-link to="/cri-consulting" class="footer-link">
-          <frame13213175222 :text19="'CRI 経営コンサルティング'" />
+          <frame13213175222 :text19="footer_link_cri_consulting" />
         </router-link>
       </div>
     </div>
@@ -67,19 +67,19 @@
     <div class="frame-1321317524-1">
       <div class="frame-container-1">
         <router-link to="/member-login" class="footer-link">
-          <frame13213175223 :text29="frame132131752231Props.text29" />
+          <frame13213175223 :text29="footer_link_member_login" />
         </router-link>
         <router-link to="/legal" class="footer-link">
-          <frame13213175223 :text29="frame132131752232Props.text29" :className="frame132131752232Props.className" />
+          <frame13213175223 :text29="footer_link_legal" :className="frame132131752232Props.className" />
         </router-link>
         <router-link to="/privacy" class="footer-link">
-          <frame13213175223 :text29="frame132131752233Props.text29" :className="frame132131752233Props.className" />
+          <frame13213175223 :text29="footer_link_privacy" :className="frame132131752233Props.className" />
         </router-link>
         <router-link to="/terms" class="footer-link">
-          <frame13213175223 :text29="frame132131752234Props.text29" :className="frame132131752234Props.className" />
+          <frame13213175223 :text29="footer_link_terms" :className="frame132131752234Props.className" />
         </router-link>
         <router-link to="/sitemap" class="footer-link">
-          <frame13213175223 :text29="frame132131752235Props.text29" />
+          <frame13213175223 :text29="footer_link_sitemap" />
         </router-link>
       </div>
     </div>
@@ -101,6 +101,7 @@ import Frame132131752522 from "./Frame132131752522";
 import Frame13213175223 from "./Frame13213175223";
 import Frame13213175255 from "./Frame13213175255";
 import Group27 from "./Group27";
+import { usePageText } from '@/composables/usePageText'
 export default {
   name: "Footer",
   components: {
@@ -130,6 +131,38 @@ export default {
     "frame132131752234Props",
     "frame132131752235Props",
   ],
+  data() {
+    return {
+      _pageText: null,
+    }
+  },
+  computed: {
+    footer_link_home() { return this._pageText?.getText('link_home', this.frame132131752251Props?.text14 || 'トップページ') || 'トップページ' },
+    footer_link_company() { return this._pageText?.getText('link_company', this.frame132131752252Props?.text14 || '会社概要') || '会社概要' },
+    footer_link_about() { return this._pageText?.getText('link_about', '私たちについて') || '私たちについて' },
+    footer_link_news() { return this._pageText?.getText('link_news', this.frame132131752253Props?.text14 || 'お知らせ') || 'お知らせ' },
+    footer_link_faq() { return this._pageText?.getText('link_faq', this.frame132131752254Props?.text14 || 'よくある質問') || 'よくある質問' },
+    footer_link_contact() { return this._pageText?.getText('link_contact', this.frame132131752255Props?.text14 || 'お問い合わせ') || 'お問い合わせ' },
+    footer_link_seminar() { return this._pageText?.getText('link_seminar', this.frame132131752221Props?.text19 || 'セミナー') || 'セミナー' },
+    footer_link_publication() { return this._pageText?.getText('link_publication', this.frame132131752222Props?.text19 || '刊行物') || '刊行物' },
+    footer_link_glossary() { return this._pageText?.getText('link_glossary', '用語集') || '用語集' },
+    footer_link_membership() { return this._pageText?.getText('link_membership', '入会案内') || '入会案内' },
+    footer_link_membership_standard() { return this._pageText?.getText('link_membership_standard', this.frame1321317525221Props?.text26 || 'スタンダード') || 'スタンダード' },
+    footer_link_membership_premium() { return this._pageText?.getText('link_membership_premium', this.frame1321317525222Props?.text26 || 'プレミアム') || 'プレミアム' },
+    footer_link_cri_consulting() { return this._pageText?.getText('link_cri_consulting', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
+    footer_link_member_login() { return this._pageText?.getText('link_member_login', this.frame132131752231Props?.text29 || '会員ログイン') || '会員ログイン' },
+    footer_link_legal() { return this._pageText?.getText('link_legal', this.frame132131752232Props?.text29 || '特定商取引法に関する表記') || '特定商取引法に関する表記' },
+    footer_link_privacy() { return this._pageText?.getText('link_privacy', this.frame132131752233Props?.text29 || 'プライバシーポリシー') || 'プライバシーポリシー' },
+    footer_link_terms() { return this._pageText?.getText('link_terms', this.frame132131752234Props?.text29 || '利用規約') || '利用規約' },
+    footer_link_sitemap() { return this._pageText?.getText('link_sitemap', this.frame132131752235Props?.text29 || 'サイトマップ') || 'サイトマップ' },
+  },
+  mounted() {
+    try {
+      const p = usePageText('footer')
+      this._pageText = p
+      p.load({ force: true })
+    } catch (e) { /* noop */ }
+  }
 };
 </script>
 

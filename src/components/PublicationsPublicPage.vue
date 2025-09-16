@@ -43,7 +43,7 @@
         </div>
 
         <!-- Download Button -->
-        <button class="filter-download-btn">さらに表示
+        <button class="filter-download-btn"><CmsText pageKey="publications" fieldKey="show_more" tag="span" :fallback="'さらに表示'" />
           <div class="icon-box">
             <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="23" height="23" rx="5" fill="white"/>
@@ -71,7 +71,7 @@
             @change="selectCategory(selectedCategory)"
             class="category-select-mobile"
           >
-            <option value="">すべてのカテゴリ</option>
+            <option value=""><CmsText pageKey="publications" fieldKey="all_categories" tag="span" :fallback="'すべてのカテゴリ'" /></option>
             <option 
               v-for="category in categories" 
               :key="category.id"
@@ -128,7 +128,7 @@
               </div>
             </div>
 
-            <button class="download-btn" @click.stop="goToRegister">入会してダウンロード
+            <button class="download-btn" @click.stop="goToRegister"><CmsText pageKey="publications" fieldKey="join_to_download" tag="span" :fallback="'入会してダウンロード'" />
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
                   <img class="pdf-icon" src="/img/arrow-icon.svg" alt="入会" width="24" height="24" />
@@ -164,7 +164,7 @@
                 <span class="featured-year">{{ formatDate(publication.publication_date) }}</span>
               </div>
               <h3 class="publication-title">{{ publication.title }}</h3>
-              <button class="publication-download">入会してダウンロード
+              <button class="publication-download"><CmsText pageKey="publications" fieldKey="join_to_download" tag="span" :fallback="'入会してダウンロード'" />
               <div class="icon-box">
                 <div class="pdf-icon-wrapper">
                   <img class="pdf-icon" src="/img/arrow-icon.svg" alt="入会" width="24" height="24" />
@@ -177,7 +177,7 @@
       </div>
 
       <div v-if="loading" class="loading">
-        読み込み中...
+        <CmsText pageKey="publications" fieldKey="loading" tag="span" :fallback="'読み込み中...'" />
       </div>
     </div>
 
@@ -230,6 +230,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
+import CmsText from '@/components/CmsText.vue'
 import apiClient from '../services/apiClient.js';
 import mockServer from '@/mockServer';
 import { usePageText } from '@/composables/usePageText'
@@ -245,7 +246,8 @@ export default {
     ContactSection,
     AccessSection,
     FixedSideButtons,
-    CmsBlock
+    CmsBlock,
+    CmsText
   },
   data() {
     return {

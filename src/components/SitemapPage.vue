@@ -193,7 +193,6 @@ export default {
     return {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      
     };
   },
   computed: {

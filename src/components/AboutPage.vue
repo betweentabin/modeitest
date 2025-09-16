@@ -232,7 +232,9 @@
         </div>
 
         <div class="staff-more">
-          <button class="more-button">続きを見る</button>
+          <button class="more-button">
+            <CmsText pageKey="about" fieldKey="staff_more" tag="span" :fallback="'続きを見る'" />
+          </button>
         </div>
       </div>
     </section>

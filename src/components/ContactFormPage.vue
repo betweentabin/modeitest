@@ -41,14 +41,14 @@
         <form class="contact-form" @submit.prevent="submitForm">
           <!-- Subject -->
           <div class="form-field">
-            <label class="field-label">件名<span class="required-mark">*</span></label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_subject" tag="span" :fallback="'件名'" /><span class="required-mark">*</span></label>
             <div class="field-input">
               <select v-model="formData.subject" class="select-field">
-                <option value="">選択してください</option>
-                <option value="inquiry">サービスに関するお問い合わせ</option>
-                <option value="membership">会員に関するお問い合わせ</option>
-                <option value="seminar">セミナーに関するお問い合わせ</option>
-                <option value="other">その他</option>
+                <option value=""><CmsText pageKey="contact" fieldKey="form_placeholder_select" tag="span" :fallback="'選択してください'" /></option>
+                <option value="inquiry"><CmsText pageKey="contact" fieldKey="form_option_inquiry" tag="span" :fallback="'サービスに関するお問い合わせ'" /></option>
+                <option value="membership"><CmsText pageKey="contact" fieldKey="form_option_membership" tag="span" :fallback="'会員に関するお問い合わせ'" /></option>
+                <option value="seminar"><CmsText pageKey="contact" fieldKey="form_option_seminar" tag="span" :fallback="'セミナーに関するお問い合わせ'" /></option>
+                <option value="other"><CmsText pageKey="contact" fieldKey="form_option_other" tag="span" :fallback="'その他'" /></option>
               </select>
               <svg class="select-arrow" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.0312 10.0306L12.5312 17.5306C12.4616 17.6004 12.3788 17.6557 12.2878 17.6934C12.1967 17.7312 12.0992 17.7506 12.0006 17.7506C11.902 17.7506 11.8044 17.7312 11.7134 17.6934C11.6223 17.6557 11.5396 17.6004 11.47 17.5306L3.96997 10.0306C3.86496 9.92573 3.79343 9.79204 3.76444 9.64648C3.73546 9.50092 3.75031 9.35002 3.80712 9.21291C3.86394 9.07579 3.96016 8.95861 4.0836 8.87621C4.20705 8.79381 4.35217 8.74988 4.50059 8.75H19.5006C19.649 8.74988 19.7941 8.79381 19.9176 8.87621C20.041 8.95861 20.1372 9.07579 20.1941 9.21291C20.2509 9.35002 20.2657 9.50092 20.2367 9.64648C20.2078 9.79204 20.1362 9.92573 20.0312 10.0306Z" fill="#727272"/>
@@ -58,7 +58,7 @@
 
           <!-- Name -->
           <div class="form-field">
-            <label class="field-label">お名前<span class="required-mark">*</span></label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_name" tag="span" :fallback="'お名前'" /><span class="required-mark">*</span></label>
             <div class="field-input">
               <div class="name-inputs">
                 <input v-model="formData.lastName" type="text" placeholder="性" class="text-input" />
@@ -69,7 +69,7 @@
 
           <!-- Furigana -->
           <div class="form-field">
-            <label class="field-label">ふりがな（全角ひらがな）</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_kana" tag="span" :fallback="'ふりがな（全角ひらがな）'" /></label>
             <div class="field-input">
               <div class="name-inputs">
                 <input v-model="formData.lastNameKana" type="text" placeholder="せい" class="text-input" />
@@ -80,7 +80,7 @@
 
           <!-- Company Name -->
           <div class="form-field">
-            <label class="field-label">会社名</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_company" tag="span" :fallback="'会社名'" /></label>
             <div class="field-input">
               <input v-model="formData.companyName" type="text" class="text-input single" />
             </div>
@@ -88,7 +88,7 @@
 
           <!-- Position -->
           <div class="form-field">
-            <label class="field-label">役職</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_position" tag="span" :fallback="'役職'" /></label>
             <div class="field-input">
               <input v-model="formData.position" type="text" class="text-input single" />
             </div>
@@ -96,7 +96,7 @@
 
           <!-- Phone -->
           <div class="form-field">
-            <label class="field-label">電話番号</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_phone" tag="span" :fallback="'電話番号'" /></label>
             <div class="field-input">
               <input v-model="formData.phone" type="tel" class="text-input single" />
             </div>
@@ -104,7 +104,7 @@
 
           <!-- Email -->
           <div class="form-field">
-            <label class="field-label">メールアドレス<span class="required-mark">*</span></label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_email" tag="span" :fallback="'メールアドレス'" /><span class="required-mark">*</span></label>
             <div class="field-input">
               <input v-model="formData.email" type="email" class="text-input single" />
             </div>
@@ -112,7 +112,7 @@
 
           <!-- Inquiry Content -->
           <div class="form-field">
-            <label class="field-label">お問い合わせ内容<span class="required-mark">*</span></label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_content" tag="span" :fallback="'お問い合わせ内容'" /><span class="required-mark">*</span></label>
             <div class="field-input">
               <textarea v-model="formData.content" class="textarea-input" placeholder="お問い合わせ内容をご記入ください"></textarea>
             </div>
@@ -180,16 +180,16 @@
             </div>
 
             <div class="privacy-section">
-              <p class="privacy-text">弊社のプライバシーポリシー（個人情報保護方針）に同意をされる場合は、下記のチェックボックスにチェックを入れてください。</p>
+              <p class="privacy-text"><CmsText pageKey="contact" fieldKey="form_privacy_note" tag="span" :fallback="'弊社のプライバシーポリシー（個人情報保護方針）に同意をされる場合は、下記のチェックボックスにチェックを入れてください。'" /></p>
               <div class="privacy-checkbox">
                 <input type="checkbox" id="privacy-agree" v-model="formData.privacyAgreement" />
-                <label for="privacy-agree">個人情報保護方針に同意します<span class="required-mark">*</span></label>
+                <label for="privacy-agree"><CmsText pageKey="contact" fieldKey="form_privacy_agree" tag="span" :fallback="'個人情報保護方針に同意します'" /><span class="required-mark">*</span></label>
               </div>
             </div>
 
             <div class="submit-section">
               <button type="submit" class="submit-btn" :disabled="!canSubmit">
-                確認する
+                <CmsText pageKey="contact" fieldKey="form_button_confirm" tag="span" :fallback="'確認する'" />
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
                   <path d="M18.0302 12.4415L13.5581 17.0412C13.4649 17.1371 13.3384 17.191 13.2066 17.191C13.0747 17.191 12.9482 17.1371 12.855 17.0412C12.7618 16.9453 12.7094 16.8152 12.7094 16.6796C12.7094 16.544 12.7618 16.4139 12.855 16.318L16.4793 12.5909L6.7469 12.5909C6.61511 12.5909 6.48872 12.5371 6.39554 12.4413C6.30235 12.3454 6.25 12.2154 6.25 12.0799C6.25 11.9443 6.30235 11.8143 6.39554 11.7185C6.48872 11.6226 6.61511 11.5688 6.7469 11.5688L16.4793 11.5688L12.855 7.84171C12.7618 7.74581 12.7094 7.61574 12.7094 7.48012C12.7094 7.34449 12.7618 7.21443 12.855 7.11853C12.9482 7.02263 13.0747 6.96875 13.2066 6.96875C13.3384 6.96875 13.4649 7.02263 13.5581 7.11853L18.0302 11.7183C18.0764 11.7657 18.113 11.8221 18.138 11.8841C18.1631 11.9462 18.1759 12.0127 18.1759 12.0799C18.1759 12.147 18.1631 12.2135 18.138 12.2756C18.113 12.3376 18.0764 12.394 18.0302 12.4415Z" fill="#1A1A1A"/>
