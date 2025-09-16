@@ -34,7 +34,7 @@
           </div>
 
           <!-- Layout view toggle (for key pages like company/aboutus/about/consult/membership) -->
-          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
+          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -111,7 +111,7 @@
           </template>
 
           <!-- membership: 非レイアウト（一覧） -->
-          <template v-if="currentPage && currentPage.slug==='membership' && !layoutMode">
+          <template v-if="currentPage && (currentPage.slug==='membership' || currentPage.slug==='services') && !layoutMode">
             <div class="field" v-for="(val, key) in membershipTexts" :key="`membership-${key}`">
               <label>{{ displayLabel(key) }}</label>
               <input v-model="membershipTexts[key]" class="input" />
@@ -1221,8 +1221,8 @@ export default {
       lastContentImgUrl: '',
       // エディタ（本文）の表示切替。既定は非表示
       showContentEditor: false,
-      // ページ構成ビュー（実ページに近い配置で編集）
-      layoutMode: false,
+      // ページ構成ビュー（実ページに近い配置で編集）: 既定ON（ローカル保存がなければ）
+      layoutMode: true,
       privacyTexts: {
         page_title: '', page_subtitle: '', intro: '',
         collection_title: '', collection_body: '',
@@ -1425,7 +1425,23 @@ export default {
       pageContentKey: 'privacy',
     }
   },
-  mounted(){ this.loadPages() },
+  mounted(){
+    try {
+      const pref = localStorage.getItem('cms_layout_mode')
+      if (pref === null) {
+        // 既定は ON
+        this.layoutMode = true
+      } else {
+        this.layoutMode = (pref === '1' || pref === 'true')
+      }
+    } catch(_) { this.layoutMode = true }
+    this.loadPages()
+  },
+  watch: {
+    layoutMode(val){
+      try { localStorage.setItem('cms_layout_mode', val ? '1' : '0') } catch(_) {}
+    }
+  },
   computed: {
     // 除外ページ: 刊行物/お知らせ/セミナー/経済統計・指標/会員ログイン/マイページ/お問い合わせ
     excludeKeys(){
@@ -1471,7 +1487,9 @@ export default {
     },
     displayLabel(key, isHtml=false){
       const slug = (this.currentPage && this.currentPage.slug) || ''
-      const map = this.labelMaps[slug] || {}
+      // services ページは membership と同じラベルマップを使用
+      const effective = slug === 'services' ? 'membership' : slug
+      const map = this.labelMaps[effective] || {}
       const base = map[key] || key
       if (isHtml && !/（HTML）$/.test(base)) return `${base}（HTML）`
       return base
@@ -1544,8 +1562,13 @@ export default {
         else if (slug.includes('contact')) this.pageContentKey = 'contact'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'membership'
-        // consulting / services ページはデフォルトでページ配置ビューON
-        try { if ((slug||'').includes('consult') || (slug||'').includes('services')) this.layoutMode = true } catch(_) {}
+        // consulting / services ページは既定ONだが、ユーザ保存がある場合は尊重
+        try {
+          const pref = localStorage.getItem('cms_layout_mode')
+          if (pref === null) {
+            if ((slug||'').includes('consult') || (slug||'').includes('services')) this.layoutMode = true
+          }
+        } catch(_) {}
         // プレビュー機能は撤去
 
         // 既存テキストの読み込み
