@@ -115,6 +115,93 @@
       />
     </div>
 
+    <!-- 会員詳細モーダル -->
+    <div v-if="viewingMember" class="modal-overlay" @click="closeDetailModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>会員詳細</h3>
+          <button @click="closeDetailModal" class="close-btn">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>会社名</label>
+              <div class="readonly-text">{{ viewingMember.company_name || '-' }}</div>
+            </div>
+            <div class="form-group">
+              <label>代表者名</label>
+              <div class="readonly-text">{{ viewingMember.representative_name || '-' }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>メールアドレス</label>
+              <div class="readonly-text">{{ viewingMember.email || '-' }}</div>
+            </div>
+            <div class="form-group">
+              <label>電話番号</label>
+              <div class="readonly-text">{{ viewingMember.phone || '-' }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>郵便番号</label>
+              <div class="readonly-text">{{ viewingMember.postal_code || '-' }}</div>
+            </div>
+            <div class="form-group">
+              <label>役職</label>
+              <div class="readonly-text">{{ viewingMember.position || '-' }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>会員種別</label>
+              <div class="readonly-text">{{ getMembershipTypeLabel(viewingMember.membership_type) }}</div>
+            </div>
+            <div class="form-group">
+              <label>ステータス</label>
+              <div class="readonly-text">{{ getStatusLabel(viewingMember.status) }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>有効期限</label>
+              <div class="readonly-text">
+                <template v-if="viewingMember.membership_expires_at">{{ formatDate(viewingMember.membership_expires_at) }}</template>
+                <template v-else>無期限</template>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>登録日</label>
+              <div class="readonly-text">{{ formatDate(viewingMember.created_at) }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>資本金（円）</label>
+              <div class="readonly-text">{{ viewingMember.capital != null ? viewingMember.capital : '-' }}</div>
+            </div>
+            <div class="form-group">
+              <label>業種</label>
+              <div class="readonly-text">{{ viewingMember.industry || '-' }}</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>お困りごと</label>
+            <div class="readonly-text">{{ viewingMember.concerns || '-' }}</div>
+          </div>
+          <div class="form-group">
+            <label>備考</label>
+            <div class="readonly-text">{{ viewingMember.notes || '-' }}</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="closeDetailModal" class="cancel-btn">閉じる</button>
+          <button @click="editMember(viewingMember)" class="save-btn">編集する</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 会員編集モーダル -->
     <div v-if="editingMember" class="modal-overlay" @click="closeEditModal">
       <div class="modal-content" @click.stop>
@@ -511,6 +598,8 @@ export default {
       editingMember: null,
       editForm: {},
       saving: false,
+      // 詳細表示
+      viewingMember: null,
       
       // 期限延長関連
       showExtendModal: false,
@@ -763,8 +852,10 @@ export default {
     },
     
     viewDetails(member) {
-      console.log('View details:', member)
-      // 詳細表示機能は今後実装
+      this.viewingMember = { ...member }
+    },
+    closeDetailModal() {
+      this.viewingMember = null
     },
     
     getMembershipTypeLabel(type) {
@@ -1272,6 +1363,18 @@ export default {
   border: 1px solid #d0d0d0;
   border-radius: 4px;
   font-size: 14px;
+}
+
+.readonly-text {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  color: #333;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {

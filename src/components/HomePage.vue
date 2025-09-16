@@ -5,7 +5,7 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      :slides="heroSlides"
+      :slides="resolvedHeroSlides"
       :autoPlay="true"
       :autoPlayInterval="6000"
       cmsPageKey="home"
@@ -414,6 +414,7 @@ import vector7 from "../../public/img/vector-7.svg";
 import CmsBlock from './CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
 import HeroSection from '@/components/HeroSection.vue'
+import { usePageText } from '@/composables/usePageText'
 export default {
   name: "HomePage",
   components: {
@@ -461,6 +462,7 @@ export default {
           onClick: () => this.goToMembership()
         }
       ],
+      cmsSlides: [],
       // Import data from homePageData
       heroImage: homePageData.heroImage,
       text66: homePageData.text66,
@@ -567,8 +569,45 @@ export default {
     this.loadLatestData().catch(error => {
       console.error('データの読み込みに失敗しました:', error);
     });
+    // CMS（PageContent: home）からヒーロースライダー画像を取得
+    this.loadCmsHeroSlides().catch(() => {});
   },
   methods: {
+    async loadCmsHeroSlides() {
+      try {
+        const cms = usePageText('home')
+        await cms.load({ preferAdmin: true })
+        const page = cms.page && cms.page.value ? cms.page.value : null
+        const images = (page && page.content && page.content.images) ? page.content.images : {}
+        const getImg = (key) => {
+          const v = images ? images[key] : null
+          if (!v) return ''
+          if (typeof v === 'string') return v
+          if (typeof v === 'object' && v.url) return v.url
+          return ''
+        }
+        const getText = (key, fb='') => (cms.getText ? cms.getText(key, fb, { allowEmpty: true }) : fb)
+        const getLink = (key, fb='') => (cms.getLink ? cms.getLink(key, fb, { allowEmpty: true }) : fb)
+
+        const defaults = this.heroSlides || []
+        const merged = [1,2,3].map((i, idx) => {
+          const key = `hero_slide_${i}`
+          const def = defaults[idx] || {}
+          const img = getImg(key) || def.image || ''
+          const title = getText(`${key}_title`, def.title || '')
+          const subtitle = getText(`${key}_subtitle`, def.subtitle || '')
+          const buttonText = getText(`${key}_button`, def.buttonText || '')
+          const link = getLink(`${key}_link`, '')
+          const onClick = def.onClick || (link ? (() => this.$router.push(link)) : undefined)
+          return { image: img, title, subtitle, buttonText, onClick, link }
+        })
+        // If at least one image overridden, use merged
+        const hasOverride = merged.some((s, idx) => s.image && s.image !== (defaults[idx] && defaults[idx].image))
+        if (hasOverride) this.cmsSlides = merged
+      } catch (e) {
+        // 非致命: フォールバックに任せる
+      }
+    },
     async loadLatestData() {
       try {
         // MockServerが有効な場合はそれを使用する（開発時など）
@@ -818,6 +857,12 @@ export default {
     goToFinancialReport() {
       // 財務報告書ページに遷移
       this.$router.push('/financial-report');
+    }
+  }
+  ,
+  computed: {
+    resolvedHeroSlides() {
+      return (this.cmsSlides && this.cmsSlides.length) ? this.cmsSlides : this.heroSlides
     }
   }
 };

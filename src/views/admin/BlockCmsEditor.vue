@@ -61,7 +61,7 @@
           </template>
           
           <!-- membership: 構成ビュー（layoutMode） -->
-          <template v-if="currentPage && currentPage.slug==='membership' && layoutMode">
+          <template v-if="currentPage && (currentPage.slug==='membership' || currentPage.slug==='services') && layoutMode">
             <div class="section-title">導入（Introduction）</div>
             <div class="field"><label>見出し</label><input v-model="membershipTexts.intro_title" class="input" placeholder="ご入会に際しまして" /></div>
             <div class="field"><label>本文</label><textarea v-model="membershipTexts.intro_text" class="textarea" rows="4"></textarea></div>
@@ -198,7 +198,7 @@
             <input v-else-if="currentPage.slug==='company'" v-model="companyTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='aboutus'" v-model="aboutTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='about'" v-model="aboutTexts.page_title" class="input" />
-            <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='membership' || currentPage.slug==='services'" v-model="membershipTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_title" class="input" />
@@ -213,7 +213,7 @@
             <input v-else-if="currentPage.slug==='company'" v-model="companyTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='aboutus'" v-model="aboutTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='about'" v-model="aboutTexts.page_subtitle" class="input" />
-            <input v-else-if="currentPage.slug==='membership'" v-model="membershipTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='membership' || currentPage.slug==='services'" v-model="membershipTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_subtitle" class="input" />
@@ -1138,6 +1138,46 @@
           </div>
           <div class="help">指定したスロットはページの画像解決時に優先されます</div>
         </div>
+
+        <!-- Home: Hero Slider Images (3 slides) -->
+        <div v-if="currentPage && currentPage.slug==='home'" class="section-title">トップ: スライダー画像（3枚）</div>
+        <div v-if="currentPage && currentPage.slug==='home'" class="field">
+          <label>スライド1（キー: hero_slide_1）</label>
+          <div class="page-image-row">
+            <div class="img-preview"><img :src="getImageUrlByKey('hero_slide_1') || ''" alt="preview"/></div>
+            <div class="img-meta">
+              <div class="img-actions">
+                <input ref="img_hero_slide_1" type="file" accept="image/*" style="display:none" @change="onHomeSlideSelected('hero_slide_1', $event)" />
+                <button class="btn" @click="triggerHomeSlideUpload('hero_slide_1')">アップロードファイル</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="currentPage && currentPage.slug==='home'" class="field">
+          <label>スライド2（キー: hero_slide_2）</label>
+          <div class="page-image-row">
+            <div class="img-preview"><img :src="getImageUrlByKey('hero_slide_2') || ''" alt="preview"/></div>
+            <div class="img-meta">
+              <div class="img-actions">
+                <input ref="img_hero_slide_2" type="file" accept="image/*" style="display:none" @change="onHomeSlideSelected('hero_slide_2', $event)" />
+                <button class="btn" @click="triggerHomeSlideUpload('hero_slide_2')">アップロードファイル</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="currentPage && currentPage.slug==='home'" class="field">
+          <label>スライド3（キー: hero_slide_3）</label>
+          <div class="page-image-row">
+            <div class="img-preview"><img :src="getImageUrlByKey('hero_slide_3') || ''" alt="preview"/></div>
+            <div class="img-meta">
+              <div class="img-actions">
+                <input ref="img_hero_slide_3" type="file" accept="image/*" style="display:none" @change="onHomeSlideSelected('hero_slide_3', $event)" />
+                <button class="btn" @click="triggerHomeSlideUpload('hero_slide_3')">アップロードファイル</button>
+              </div>
+            </div>
+          </div>
+          <div class="help">未設定の場合はデフォルト画像が表示されます（/img/Image_fx*.jpg）。</div>
+        </div>
       </div>
       <div v-else class="empty">ページを選択してください</div>
     </div>
@@ -1453,7 +1493,8 @@ export default {
       if (s.includes('membership')) return 'membership'
       if (s.includes('contact')) return 'contact'
       if (s === 'home') return 'home'
-      if (s.includes('services')) return 'services'
+      // '/services' uses MembershipPage content
+      if (s.includes('services')) return 'membership'
       return null
     },
     async applyPrettyTitles(){
@@ -1502,9 +1543,9 @@ export default {
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
         else if (slug.includes('contact')) this.pageContentKey = 'contact'
         else if (slug === 'home') this.pageContentKey = 'home'
-        else if (slug.includes('services')) this.pageContentKey = 'services'
-        // consulting ページはデフォルトでページ配置ビューON
-        try { if ((slug||'').includes('consult')) this.layoutMode = true } catch(_) {}
+        else if (slug.includes('services')) this.pageContentKey = 'membership'
+        // consulting / services ページはデフォルトでページ配置ビューON
+        try { if ((slug||'').includes('consult') || (slug||'').includes('services')) this.layoutMode = true } catch(_) {}
         // プレビュー機能は撤去
 
         // 既存テキストの読み込み
@@ -1960,8 +2001,18 @@ export default {
           'achievements_item4_image',
         ]
       }
+      if (key === 'membership' || key === 'standard-membership') {
+        return [
+          'premium_service1_image',
+          'standard_service1_image',
+          'standard_service2_image',
+          'standard_service3_image',
+          'standard_service4_image',
+          'standard_service5_image',
+        ]
+      }
       if (key === 'home') {
-        return ['banner_seminar','banner_publications','banner_info','banner_membership']
+        return ['hero_slide_1','hero_slide_2','hero_slide_3','banner_seminar','banner_publications','banner_info','banner_membership']
       }
       return []
     },
@@ -2005,6 +2056,9 @@ export default {
       if (el && el[0] && typeof el[0].click === 'function') el[0].click()
       else if (el && typeof el.click === 'function') el.click()
     },
+    triggerHomeSlideUpload(key){
+      this.triggerCompanyImageUpload(key)
+    },
     async onCompanyImageSelected(key, e){
       try {
         const file = (e.target.files && e.target.files[0]) || null
@@ -2026,11 +2080,15 @@ export default {
               localStorage.setItem('cms_media_cache_bust', String(Date.now()))
             } catch(_) {}
           } catch(_) { /* ignore */ }
-          await this.refreshPageImages()
-        } else {
-          alert('画像アップロードに失敗しました')
-        }
-      } catch(_) { alert('画像アップロードに失敗しました') }
+        await this.refreshPageImages()
+      } else {
+        alert('画像アップロードに失敗しました')
+      }
+    } catch(_) { alert('画像アップロードに失敗しました') }
+    },
+    async onHomeSlideSelected(key, e){
+      // 同じ実装（homeページの content.images.<key> へ保存）
+      return this.onCompanyImageSelected(key, e)
     },
     async refreshPageImages(){
       try {
