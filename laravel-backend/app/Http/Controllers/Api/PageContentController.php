@@ -520,7 +520,7 @@ class PageContentController extends Controller
             // other relative paths without leading slash: try public disk mapping
             if (!str_starts_with($u, '/')) {
                 $path = ltrim(preg_replace('/^public\//', '', $u), '/');
-                $it['url'] = Storage::url($path); // '/storage/...'
+                $it['url'] = Storage::disk('public')->url($path); // '/storage/...'
                 continue;
             }
 
@@ -726,7 +726,7 @@ class PageContentController extends Controller
             }
             
             $content['images'][$request->type] = [
-                'url' => Storage::url($path),
+                'url' => Storage::disk('public')->url($path),
                 'path' => $path,
                 'filename' => $fileName,
                 'uploaded_at' => now()
@@ -822,7 +822,7 @@ class PageContentController extends Controller
         if (!is_array($content)) { $content = ['html' => (string)$content]; }
 
         $newValue = [
-            'url' => Storage::url($path),
+            'url' => Storage::disk('public')->url($path),
             'path' => $path,
             'filename' => $fileName,
             'uploaded_at' => now()
@@ -926,7 +926,7 @@ class PageContentController extends Controller
         $file = $request->file('image');
         $fileName = Str::slug($pageKey) . '-htmlimg-' . time() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('pages/' . $pageKey, $fileName, 'public');
-        $newUrl = Storage::url($path);
+        $newUrl = Storage::disk('public')->url($path);
 
         // 既存のHTML内画像(old_url)の寸法を可能であれば取得し、新しい画像を同寸法にリサイズ
         try {

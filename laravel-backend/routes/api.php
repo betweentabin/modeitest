@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MediaReplaceController;
 use App\Http\Controllers\Api\MemberAccessController;
+use App\Http\Controllers\Api\DebugController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,12 @@ Route::get('/health', function () {
         'timestamp' => now(),
         'service' => 'chikugin-api'
     ]);
+});
+
+// Debug endpoints (enabled only with ENABLE_DEBUG_ENDPOINTS=true or local)
+Route::prefix('debug')->group(function () {
+    Route::get('/storage', [DebugController::class, 'storage']);
+    Route::get('/rate-limits', [DebugController::class, 'rateLimits']);
 });
 
 // 認証エンドポイント
@@ -290,21 +297,21 @@ Route::prefix('admin')->group(function () {
         });
 
         // CMS v2（ブロック型CMS）管理
-        Route::prefix('cms-v2')->middleware(['auth:sanctum','can:manage-content','throttle:60,1'])->group(function () {
+        Route::prefix('cms-v2')->middleware(['auth:sanctum','can:manage-content','throttle:admin-cms'])->group(function () {
             Route::get('/pages', [App\Http\Controllers\Admin\CmsV2Controller::class, 'index']);
             Route::post('/pages', [App\Http\Controllers\Admin\CmsV2Controller::class, 'store']);
             Route::get('/pages/{id}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'show']);
             Route::put('/pages/{id}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'update']);
             Route::put('/pages/{id}/sections/{sid}', [App\Http\Controllers\Admin\CmsV2Controller::class, 'upsertSection']);
-            Route::post('/pages/{id}/publish', [App\Http\Controllers\Admin\CmsV2Controller::class, 'publish'])->middleware('throttle:10,1');
+            Route::post('/pages/{id}/publish', [App\Http\Controllers\Admin\CmsV2Controller::class, 'publish'])->middleware('throttle:admin-publish');
             Route::get('/pages/{id}/versions', [App\Http\Controllers\Admin\CmsV2Controller::class, 'versions']);
             Route::post('/pages/{id}/versions/{vid}/rollback', [App\Http\Controllers\Admin\CmsV2Controller::class, 'rollback']);
-            Route::post('/media', [App\Http\Controllers\Admin\CmsV2Controller::class, 'uploadMedia'])->middleware('throttle:30,1');
+            Route::post('/media', [App\Http\Controllers\Admin\CmsV2Controller::class, 'uploadMedia'])->middleware('throttle:admin-media');
             // overrides
             Route::get('/overrides', [App\Http\Controllers\Admin\CmsV2Controller::class, 'listOverrides']);
-            Route::post('/overrides', [App\Http\Controllers\Admin\CmsV2Controller::class, 'setOverride'])->middleware('throttle:20,1');
+            Route::post('/overrides', [App\Http\Controllers\Admin\CmsV2Controller::class, 'setOverride'])->middleware('throttle:admin-overrides');
             // preview token
-            Route::post('/pages/{id}/preview-token', [App\Http\Controllers\Admin\CmsV2Controller::class, 'issuePreviewToken'])->middleware('throttle:30,1');
+            Route::post('/pages/{id}/preview-token', [App\Http\Controllers\Admin\CmsV2Controller::class, 'issuePreviewToken'])->middleware('throttle:admin-preview');
         });
 
         // メールグループ管理

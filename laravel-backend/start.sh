@@ -46,8 +46,15 @@ mkdir -p storage/logs
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
-# 公開ストレージのシンボリックリンク作成（存在してもOK）
-php artisan storage:link || echo "storage:link 既存/失敗 (続行)"
+# 公開ストレージの配置
+if [ "${PUBLIC_DISK_IN_PUBLIC}" = "true" ]; then
+  # 直書きモード: public/storage を用意（symlink不要）
+  mkdir -p public/storage || true
+  echo "✅ Using public/storage as PUBLIC disk root (no symlink)"
+else
+  # 通常モード: storage/app/public を public/storage にリンク
+  php artisan storage:link || echo "storage:link 既存/失敗 (続行)"
+fi
 
 # マイグレーション実行（エラーでも続行）
 php artisan migrate --force || echo "マイグレーション失敗、続行します"

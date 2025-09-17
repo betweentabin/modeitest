@@ -30,13 +30,13 @@
         </div>
       </div>
 
-      <!-- Render sanitized full HTML when content.html or htmls.body exists -->
-      <div class="content-container" v-if="hasHtml && !isEditPreview">
+      <!-- Render sanitized full HTML only in CMS preview/edit mode -->
+      <div class="content-container" v-if="hasHtml && isEditPreview">
         <div class="cms-body" v-html="_pageText?.getHtml('body', '')"></div>
       </div>
 
-      <!-- Structured fallback (texts) when no full HTML provided -->
-      <div class="content-container" v-if="!hasHtml && !isEditPreview">
+      <!-- Structured content (texts) in normal viewing or when no full HTML provided -->
+      <div class="content-container" v-if="!isEditPreview || !hasHtml">
         <!-- Introduction -->
         <div class="intro-section">
           <p class="intro-text">
@@ -147,9 +147,9 @@ export default {
     isEditPreview() {
       try {
         const hash = window.location.hash || ''
-        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
         const params = new URLSearchParams(qs)
-        return params.has('cmsPreview') && (params.has('cmsEdit') || params.get('cmsPreview') === 'edit')
+        return params.has('cmsPreview') || params.has('cmsEdit')
       } catch (_) { return false }
     },
     hasHtml() {

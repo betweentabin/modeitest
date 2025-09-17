@@ -225,9 +225,9 @@ export default {
     isEditPreview() {
       try {
         const hash = window.location.hash || ''
-        const qs = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1)
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
         const params = new URLSearchParams(qs)
-        return params.has('cmsPreview') && (params.has('cmsEdit') || params.get('cmsPreview') === 'edit')
+        return params.has('cmsPreview') || params.has('cmsEdit')
       } catch (_) { return false }
     },
     hasHtml() {

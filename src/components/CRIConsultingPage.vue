@@ -14,11 +14,15 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
     
-    <!-- CMS Body (optional) -->
-    <!-- CMS Body removed -->
+    <!-- CMS Preview Body under hero when preview/edit flags present -->
+    <div class="main-content" v-if="isEditPreview">
+      <div class="content-container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </div>
     
     <!-- What is CRI Consulting Section -->
-    <div class="what-is-section">
+    <div class="what-is-section" v-if="!isEditPreview">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="cri-consulting" fieldKey="what_title" tag="span" :fallback="'CRI 経営コンサルティングとは？'" />
@@ -43,7 +47,7 @@
     </div>
     
     <!-- Main Duties Section -->
-    <div class="main-duties-section">
+    <div class="main-duties-section" v-if="!isEditPreview">
       <div class="section-header">
         <h2 class="section-title"><CmsText pageKey="cri-consulting" fieldKey="duties_title" tag="span" :fallback="'CRI経営コンサルティングの主な業務'" /></h2>
         <div class="section-divider">
@@ -182,7 +186,7 @@
                 <span class="achievement-category">カテゴリー</span>
               </div>
               <h4 class="achievement-title"><CmsText pageKey="cri-consulting" fieldKey="achievements_item1_title" tag="span" :fallback="'分析（新たな課題認識）'" /></h4>
-              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item1_desc" tag="span" :fallback="'有限会社AliveCast 中村理氏による…'" /></p>
+              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item1_desc" tag="div" type="html" :fallback="'有限会社AliveCast 中村理氏による…'" /></p>
             </div>
           </div>
           
@@ -194,7 +198,7 @@
               <span class="achievement-category"><CmsText pageKey="cri-consulting" fieldKey="achievements_item2_category" tag="span" :fallback="'カテゴリー'" /></span>
               </div>
               <h4 class="achievement-title"><CmsText pageKey="cri-consulting" fieldKey="achievements_item2_title" tag="span" :fallback="'分析（新たな課題認識）'" /></h4>
-              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item2_desc" tag="span" :fallback="'在上海中国ビジネスウォッチャー…'" /></p>
+              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item2_desc" tag="div" type="html" :fallback="'在上海中国ビジネスウォッチャー…'" /></p>
             </div>
           </div>
           
@@ -206,7 +210,7 @@
               <span class="achievement-category"><CmsText pageKey="cri-consulting" fieldKey="achievements_item3_category" tag="span" :fallback="'カテゴリー'" /></span>
               </div>
               <h4 class="achievement-title"><CmsText pageKey="cri-consulting" fieldKey="achievements_item3_title" tag="span" :fallback="'分析（新たな課題認識）'" /></h4>
-              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item3_desc" tag="span" :fallback="'Excel 2010 講座を開催…'" /></p>
+              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item3_desc" tag="div" type="html" :fallback="'Excel 2010 講座を開催…'" /></p>
             </div>
           </div>
           
@@ -218,7 +222,7 @@
               <span class="achievement-category"><CmsText pageKey="cri-consulting" fieldKey="achievements_item4_category" tag="span" :fallback="'カテゴリー'" /></span>
               </div>
               <h4 class="achievement-title"><CmsText pageKey="cri-consulting" fieldKey="achievements_item4_title" tag="span" :fallback="'分析（新たな課題認識）'" /></h4>
-              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item4_desc" tag="span" :fallback="'上海経済事情視察ツアーを実施…'" /></p>
+              <p class="achievement-description"><CmsText pageKey="cri-consulting" fieldKey="achievements_item4_desc" tag="div" type="html" :fallback="'上海経済事情視察ツアーを実施…'" /></p>
             </div>
           </div>
         </div>
@@ -294,6 +298,14 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'consulting') || 'consulting' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
   },
   mounted() {
     this.adjustRectangleHeight();
