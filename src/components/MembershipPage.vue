@@ -15,11 +15,15 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
-    <!-- CMS Body (optional) -->
-    <!-- CMS Body removed -->
+    <!-- CMS Preview Body under hero when preview/edit flags present -->
+    <section class="introduction-section" v-if="isEditPreview">
+      <div class="container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </section>
 
     <!-- Introduction Section -->
-    <section class="introduction-section">
+    <section class="introduction-section" v-if="!isEditPreview">
       <div class="container">
         <div class="intro-content">
           <h2 class="intro-title">
@@ -33,7 +37,7 @@
     </section>
 
     <!-- Services Section -->
-    <section class="services-section">
+    <section class="services-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -180,7 +184,7 @@
     </section>
 
     <!-- Flow Section -->
-    <section class="flow-section">
+    <section class="flow-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -313,6 +317,14 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', this.cmsKey === 'standard-membership' ? 'standard membership' : 'membership') || (this.cmsKey === 'standard-membership' ? 'standard membership' : 'membership') },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
   },
   mounted() {
     try {

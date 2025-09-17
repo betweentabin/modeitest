@@ -24,10 +24,12 @@
         </div>
       </div>
       
-      <!-- CMS Body (optional) -->
-      <!-- CMS Body removed -->
+      <!-- CMS Preview Body under hero when preview/edit flags present -->
+      <div class="content-container" v-if="isEditPreview">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
       
-      <div class="glossary-description">
+      <div class="glossary-description" v-if="!isEditPreview">
         <CmsText
           pageKey="glossary"
           fieldKey="intro"
@@ -48,7 +50,7 @@
         </button>
       </div>
       
-      <div class="glossary-list">
+      <div class="glossary-list" v-if="!isEditPreview">
         <div v-for="(item, index) in paginatedGlossary" :key="index" class="glossary-item">
           <div class="glossary-term" @click="toggleDefinition(index)">
             <div class="term-line"></div>
@@ -70,7 +72,7 @@
       </div>
       
       <!-- Pagination (dynamic) -->
-      <div class="pagination" v-if="totalPages > 1">
+      <div class="pagination" v-if="!isEditPreview && totalPages > 1">
         <button class="pagination-btn" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">‹</button>
         <template v-for="(p, i) in pagesToShow">
           <span v-if="p === '…'" class="pagination-dots" :key="`dots-${i}`">…</span>
@@ -189,6 +191,14 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '用語集') || '用語集' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Glossary') || 'Glossary' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
 
     // Filtering
     filteredGlossary() {

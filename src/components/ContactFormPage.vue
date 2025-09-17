@@ -14,11 +14,15 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
-    <!-- CMS Body (optional) -->
-    <!-- CMS Body removed -->
+    <!-- CMS Preview Body (full HTML) under hero when preview/edit flags present -->
+    <section class="form-section" v-if="isEditPreview">
+      <div class="form-container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </section>
 
     <!-- Form Section -->
-    <section class="form-section">
+    <section class="form-section" v-if="!isEditPreview">
       <div class="form-container">
         <div class="form-header">
           <h1 class="form-title">
@@ -271,6 +275,14 @@ export default {
     pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'contact') || 'contact' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
   },
   mounted() {
     // URLパラメータからフォームデータを復元

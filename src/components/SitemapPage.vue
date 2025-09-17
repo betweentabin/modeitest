@@ -15,8 +15,15 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- CMS Preview Body: render full HTML under hero when preview/edit flags present -->
+    <div class="main-content" v-if="isEditPreview">
+      <div class="content-container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </div>
+
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" v-if="!isEditPreview">
       <div class="page-content">
         <div class="section-header">
           <h2 class="section-title">
@@ -201,6 +208,14 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'sitemap') || 'sitemap' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
   },
   mounted() {
     try {

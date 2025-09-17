@@ -124,7 +124,7 @@ class MediaReplaceController extends Controller
         $file = $request->file('image');
         $fileName = Str::slug($validated['model']) . '-' . $validated['id'] . '-' . Str::slug($validated['field']) . '-' . time() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('models/' . Str::slug($validated['model']) . '/' . $validated['id'], $fileName, 'public');
-        $newUrl = Storage::url($path);
+        $newUrl = Storage::disk('public')->url($path);
 
         // Resize to match previous dimensions if possible
         try {
@@ -169,7 +169,7 @@ class MediaReplaceController extends Controller
         $file = $request->file('image');
         $fileName = Str::slug($validated['model']) . '-' . $validated['id'] . '-htmlimg-' . time() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('models/' . Str::slug($validated['model']) . '/' . $validated['id'], $fileName, 'public');
-        $newUrl = Storage::url($path);
+        $newUrl = Storage::disk('public')->url($path);
 
         $html = (string)($record->{$validated['field']} ?? '');
         if ($html === '') return response()->json(['success' => false, 'message' => 'HTML content not found'], 400);

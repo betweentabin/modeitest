@@ -38,7 +38,12 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            // In shared hosting (e.g. Xserver), symlinks may be restricted.
+            // Toggle by env to write directly under public/storage instead of storage/app/public.
+            // Set PUBLIC_DISK_IN_PUBLIC=true in production to avoid needing `storage:link`.
+            'root' => env('PUBLIC_DISK_IN_PUBLIC', false)
+                ? public_path('storage')
+                : storage_path('app/public'),
             // Prefer dedicated public storage base URL if provided; fallback to APP_URL
             'url' => env('PUBLIC_STORAGE_URL', env('APP_URL').'/storage'),
             'visibility' => 'public',

@@ -106,13 +106,13 @@ class PublicationManagementController extends Controller
             // カバー画像のアップロード
             if ($request->hasFile('cover_image')) {
                 $coverPath = $request->file('cover_image')->store('publications/covers', 'public');
-                $validated['cover_image'] = Storage::url($coverPath);
+                $validated['cover_image'] = Storage::disk('public')->url($coverPath);
             }
 
             // PDFファイルのアップロード
             if ($request->hasFile('pdf_file')) {
                 $pdfPath = $request->file('pdf_file')->store('publications/pdfs', 'public');
-                $validated['file_url'] = Storage::url($pdfPath);
+                $validated['file_url'] = Storage::disk('public')->url($pdfPath);
                 
                 // ファイルサイズを記録
                 $fileSize = $request->file('pdf_file')->getSize() / 1048576; // MB
@@ -186,7 +186,7 @@ class PublicationManagementController extends Controller
                 }
                 
                 $coverPath = $request->file('cover_image')->store('publications/covers', 'public');
-                $validated['cover_image'] = Storage::url($coverPath);
+                $validated['cover_image'] = Storage::disk('public')->url($coverPath);
             }
 
             // PDFファイルの更新
@@ -198,7 +198,7 @@ class PublicationManagementController extends Controller
                 }
                 
                 $pdfPath = $request->file('pdf_file')->store('publications/pdfs', 'public');
-                $validated['file_url'] = Storage::url($pdfPath);
+                $validated['file_url'] = Storage::disk('public')->url($pdfPath);
                 
                 // ファイルサイズを記録
                 $fileSize = $request->file('pdf_file')->getSize() / 1048576; // MB
@@ -292,7 +292,7 @@ class PublicationManagementController extends Controller
             $fileSize = $request->file('pdf_file')->getSize() / 1048576; // MB
             
             $publication->update([
-                'file_url' => Storage::url($pdfPath),
+                'file_url' => Storage::disk('public')->url($pdfPath),
                 'file_size' => round($fileSize, 2),
                 'is_downloadable' => true
             ]);

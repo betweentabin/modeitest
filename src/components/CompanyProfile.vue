@@ -12,8 +12,15 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- CMS Preview Body under hero when preview/edit flags present -->
+    <div class="main-content" v-if="isEditPreview">
+      <div class="content-container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </div>
+
     <!-- In-page Navigation -->
-    <nav class="inpage-nav" aria-label="セクション内リンク">
+    <nav class="inpage-nav" aria-label="セクション内リンク" v-if="!isEditPreview">
       <ul class="inpage-list">
         <li class="inpage-item">
           <a href="#philosophy" @click.prevent="scrollTo('philosophy')">
@@ -57,7 +64,7 @@
     <!-- CMS Body removed -->
 
     <!-- Philosophy Section -->
-    <section id="philosophy" class="philosophy-section">
+    <section id="philosophy" class="philosophy-section" v-if="!isEditPreview">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="philosophy_title" tag="span" :fallback="'経営理念'" />
@@ -102,7 +109,7 @@
     </section>
 
     <!-- Message Section -->
-    <section id="message" class="message-section">
+    <section id="message" class="message-section" v-if="!isEditPreview">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="message_title" tag="span" :fallback="'ご挨拶'" />
@@ -138,10 +145,10 @@
     </section>
 
     <!-- Contact CTA Section -->
-    <ContactSection cms-page-key="company-profile" />
+    <ContactSection cms-page-key="company-profile" v-if="!isEditPreview" />
 
     <!-- Company Profile Section -->
-    <section id="profile" class="company-profile-section">
+    <section id="profile" class="company-profile-section" v-if="!isEditPreview">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="profile_title" tag="span" :fallback="'会社概要'" />
@@ -215,7 +222,7 @@
     </section>    
 
     <!-- History Section -->
-    <section id="history" class="history-section">
+    <section id="history" class="history-section" v-if="!isEditPreview">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="history_title" tag="span" :fallback="'沿革'" />
@@ -474,6 +481,14 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
     displayedReports() {
       try {
         const c = this._pageText?.page?.value?.content

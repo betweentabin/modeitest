@@ -13,9 +13,14 @@
       subtitleFieldKey="page_subtitle"
     />
 
-    <!-- CMS Body removed -->
+    <!-- CMS Preview Body under hero (slides remain) -->
+    <section class="section" v-if="isEditPreview">
+      <div class="container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </section>
 
-      <div class="frame-1321317457">
+      <div class="frame-1321317457" v-if="!isEditPreview">
           <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }" @click="goToSeminar" style="cursor: pointer;">
             <div class="frame-1321317491">
               <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text72 }}</div>
@@ -571,6 +576,11 @@ export default {
     });
     // CMS（PageContent: home）からヒーロースライダー画像を取得
     this.loadCmsHeroSlides().catch(() => {});
+    // Load PageContent for home page (for preview full body)
+    try {
+      this._pageText = usePageText('home')
+      this._pageText.load({ force: true })
+    } catch (e) { /* noop */ }
   },
   methods: {
     async loadCmsHeroSlides() {
@@ -607,7 +617,17 @@ export default {
       } catch (e) {
         // 非致命: フォールバックに任せる
       }
-    },
+  },
+  computed: {
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    }
+  },
     async loadLatestData() {
       try {
         // MockServerが有効な場合はそれを使用する（開発時など）

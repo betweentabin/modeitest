@@ -14,8 +14,15 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="['入会案内', 'プレミアム会員の特典']" />
 
+    <!-- CMS Preview Body under hero when preview/edit flags present -->
+    <section class="introduction-section" v-if="isEditPreview">
+      <div class="container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </section>
+
     <!-- Introduction Section -->
-    <section class="introduction-section">
+    <section class="introduction-section" v-if="!isEditPreview">
       <div class="container">
         <div class="intro-content">
           <h2 class="intro-title">プレミアム会員について</h2>
@@ -27,7 +34,7 @@
     </section>
 
     <!-- Featured Publication Section -->
-    <section class="publications-section">
+    <section class="publications-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -135,6 +142,14 @@ export default {
     pageSubtitle() { try { return this._pageText?.getText('page_subtitle', 'premium membership') || 'premium membership' } catch(e){ return 'premium membership' } },
     ctaPrimaryText() { try { return this._pageText?.getText('cta_primary', '会員についてお問い合わせ') || '会員についてお問い合わせ' } catch(e){ return '会員についてお問い合わせ' } },
     ctaSecondaryText() { try { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' } catch(e){ return '入会はこちら' } },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
+    },
   },
   mounted() {
     try {

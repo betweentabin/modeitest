@@ -72,3 +72,70 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - Scheduler: run `php artisan schedule:run` every minute to enqueue scheduled campaigns.
 - Mail: set SMTP envs (`MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, `MAIL_FROM_NAME`).
 - Dry-run: set `MAIL_DRY_RUN=true` to skip real sends while testing.
+
+## Xserver（エックスサーバー）でメール送信（SMTP）を使う
+
+Xserverで作成したメールボックス（例: `info@your-domain.jp`）を使ってLaravelから送信する場合の設定例です。Railway等の外部からXserverのSMTPに接続して送信できます（認証必須）。
+
+1) 事前準備（Xserver側）
+- メールアカウントを作成（Xserverサーバーパネル）。
+- クライアント設定情報（SMTPサーバー名、ポート、暗号化方式、ユーザー名/パスワード）を控える。
+  - 一般的には以下のいずれか:
+    - 465（SSL）/ `MAIL_ENCRYPTION=ssl`
+    - 587（TLS）/ `MAIL_ENCRYPTION=tls`
+  - ユーザー名は「メールアドレス（フル）」、パスワードはそのメールボックスのパスワード。
+  - ホスト名は Xserver 発行のサーバー名（例: `svXXX.xserver.jp`）または `mail.your-domain.jp` を利用。
+
+2) Laravel 環境変数（Railway の環境変数に設定）
+
+```env
+# SMTP（Xserver）例
+MAIL_MAILER=smtp
+MAIL_HOST=svXXX.xserver.jp          # 例: Xserverのサーバー名 or mail.your-domain.jp
+
+# いずれか片方を使用
+# 465 で SSL の場合
+MAIL_PORT=465
+MAIL_ENCRYPTION=ssl
+# 587 で TLS の場合（こちらを使う場合は上の2行をコメントアウト）
+# MAIL_PORT=587
+# MAIL_ENCRYPTION=tls
+
+MAIL_USERNAME=info@your-domain.jp    # Xserverのメールアカウント（フルのメールアドレス）
+MAIL_PASSWORD=your_mailbox_password  # そのメールボックスのパスワード
+
+MAIL_FROM_ADDRESS=info@your-domain.jp
+MAIL_FROM_NAME="ちくぎん地域経済研究所"
+
+# HELO/EHLOで名乗るドメイン（任意・配信改善に有効な場合あり）
+MAIL_EHLO_DOMAIN=your-domain.jp
+
+# 本番は false（true だと実送信をスキップ）
+MAIL_DRY_RUN=false
+```
+
+3) 動作確認（管理画面の即時送信）
+- 管理者トークンを取得して、`POST /api/admin/emails/send-simple` を実行。
+- サンプルボディ:
+
+```json
+{
+  "to": "your-address@example.com",
+  "subject": "Xserver SMTP テスト",
+  "body_text": "Hello from Xserver SMTP",
+  "from": { "address": "info@your-domain.jp", "name": "ちくぎん地域経済研究所" }
+}
+```
+
+期待レスポンス: `{"success":true, "mailer":"smtp"}`。届かない場合は下記を参照。
+
+4) 配信品質/エラー対処のヒント
+- Fromとユーザー名（送信元メールアドレス）は一致させる。
+- ポートと暗号化の組み合わせ（465/ssl または 587/tls）を必ず正しく設定。
+- SPF/DKIM/DMARC をドメインDNSに設定して配信到達率を改善（Xserverのガイドに従って有効化）。
+- 典型的なエラー:
+  - Connection timed out: デプロイ先が外向きSMTPを制限している可能性。APIベース（Resend/SendGrid）も検討。
+  - 530/535 認証エラー: ユーザー名がメールアドレスであること、パスワードが正しいことを確認。
+  - 553 From拒否: `MAIL_FROM_ADDRESS` が利用可能な送信元であること、認証済みドメインであることを確認。
+
+メモ: 本リポジトリは Resend 経由もサポートしています（`MAIL_MAILER=resend` と `RESEND_API_KEY`）。ホスティングでSMTPが使えない場合はResend利用を推奨します。

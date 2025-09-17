@@ -16,12 +16,15 @@ class MediaController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $directory = $request->get('directory', 'public/media');
+        $disk = Storage::disk('public');
+        $directory = $request->get('directory', 'media');
+        // allow legacy 'public/...' input
+        $directory = ltrim(preg_replace('#^public/#', '', $directory), '/');
         $search = $request->get('search', '');
         $type = $request->get('type', ''); // image, document, video, etc.
         
         try {
-            $files = Storage::files($directory);
+            $files = $disk->files($directory);
             $mediaFiles = [];
 
             foreach ($files as $file) {
@@ -35,13 +38,13 @@ class MediaController extends Controller
                 $fileInfo = [
                     'id' => md5($file),
                     'name' => $fileName,
-                    'path' => $file,
-                    'url' => Storage::url($file),
-                    'size' => Storage::size($file),
+                    'path' => 'public/' . ltrim($file, '/'),
+                    'url' => $disk->url($file),
+                    'size' => $disk->size($file),
                     'type' => $this->getFileType($fileName),
-                    'mime_type' => Storage::mimeType($file),
-                    'last_modified' => Storage::lastModified($file),
-                    'created_at' => Storage::lastModified($file), // Fallback
+                    'mime_type' => $disk->mimeType($file),
+                    'last_modified' => $disk->lastModified($file),
+                    'created_at' => $disk->lastModified($file), // Fallback
                 ];
 
                 // タイプフィルター
@@ -108,7 +111,9 @@ class MediaController extends Controller
 
         try {
             $file = $request->file('file');
-            $directory = $request->get('directory', 'public/media');
+            $disk = Storage::disk('public');
+            $directory = $request->get('directory', 'media');
+            $directory = ltrim(preg_replace('#^public/#', '', $directory), '/');
             
             // ファイル名を生成
             $fileName = $request->get('name');
@@ -119,15 +124,15 @@ class MediaController extends Controller
             }
 
             // ファイルを保存
-            $path = $file->storeAs($directory, $fileName);
+            $path = $file->storeAs($directory, $fileName, 'public');
 
             $fileInfo = [
                 'id' => md5($path),
                 'name' => $fileName,
                 'original_name' => $file->getClientOriginalName(),
-                'path' => $path,
-                'url' => Storage::url($path),
-                'size' => Storage::size($path),
+                'path' => 'public/' . ltrim($path, '/'),
+                'url' => $disk->url($path),
+                'size' => $disk->size($path),
                 'type' => $this->getFileType($fileName),
                 'mime_type' => $file->getMimeType(),
                 'uploaded_at' => now(),
@@ -163,15 +168,17 @@ class MediaController extends Controller
         }
 
         try {
+            $disk = Storage::disk('public');
             $path = $request->path;
+            $path = ltrim(preg_replace('#^public/#', '', $path), '/');
             
-            if (!Storage::exists($path)) {
+            if (!$disk->exists($path)) {
                 return response()->json([
                     'message' => 'ファイルが見つかりません'
                 ], 404);
             }
 
-            Storage::delete($path);
+            $disk->delete($path);
 
             return response()->json([
                 'message' => 'ファイルを削除しました'
@@ -203,10 +210,11 @@ class MediaController extends Controller
         }
 
         try {
-            $oldPath = $request->old_path;
+            $disk = Storage::disk('public');
+            $oldPath = ltrim(preg_replace('#^public/#', '', $request->old_path), '/');
             $newName = $request->new_name;
             
-            if (!Storage::exists($oldPath)) {
+            if (!$disk->exists($oldPath)) {
                 return response()->json([
                     'message' => 'ファイルが見つかりません'
                 ], 404);
@@ -219,16 +227,16 @@ class MediaController extends Controller
             $newPath = $directory . '/' . $newFileName;
 
             // ファイルを移動（名前変更）
-            Storage::move($oldPath, $newPath);
+            $disk->move($oldPath, $newPath);
 
             $fileInfo = [
                 'id' => md5($newPath),
                 'name' => $newFileName,
-                'path' => $newPath,
-                'url' => Storage::url($newPath),
-                'size' => Storage::size($newPath),
+                'path' => 'public/' . ltrim($newPath, '/'),
+                'url' => $disk->url($newPath),
+                'size' => $disk->size($newPath),
                 'type' => $this->getFileType($newFileName),
-                'mime_type' => Storage::mimeType($newPath),
+                'mime_type' => $disk->mimeType($newPath),
                 'updated_at' => now(),
             ];
 
@@ -251,12 +259,13 @@ class MediaController extends Controller
     public function directories(): JsonResponse
     {
         try {
-            $directories = Storage::directories('public');
-            $formattedDirectories = array_map(function ($dir) {
+            $disk = Storage::disk('public');
+            $directories = $disk->directories('');
+            $formattedDirectories = array_map(function ($dir) use ($disk) {
                 return [
                     'name' => basename($dir),
-                    'path' => $dir,
-                    'file_count' => count(Storage::files($dir)),
+                    'path' => 'public/' . ltrim($dir, '/'),
+                    'file_count' => count($disk->files($dir)),
                 ];
             }, $directories);
 
@@ -288,23 +297,25 @@ class MediaController extends Controller
         }
 
         try {
-            $parent = $request->get('parent', 'public');
+            $disk = Storage::disk('public');
+            $parent = $request->get('parent', '');
+            $parent = ltrim(preg_replace('#^public/#', '', $parent), '/');
             $name = Str::slug($request->name);
-            $directoryPath = $parent . '/' . $name;
+            $directoryPath = ltrim(rtrim($parent, '/'). '/' . $name, '/');
 
-            if (Storage::exists($directoryPath)) {
+            if ($disk->exists($directoryPath)) {
                 return response()->json([
                     'message' => 'ディレクトリは既に存在します'
                 ], 409);
             }
 
-            Storage::makeDirectory($directoryPath);
+            $disk->makeDirectory($directoryPath);
 
             return response()->json([
                 'message' => 'ディレクトリを作成しました',
                 'directory' => [
                     'name' => $name,
-                    'path' => $directoryPath,
+                    'path' => 'public/' . $directoryPath,
                 ]
             ], 201);
 
@@ -322,7 +333,8 @@ class MediaController extends Controller
     public function stats(): JsonResponse
     {
         try {
-            $files = Storage::allFiles('public/media');
+            $disk = Storage::disk('public');
+            $files = $disk->allFiles('media');
             $totalSize = 0;
             $typeCount = [
                 'image' => 0,
@@ -333,7 +345,7 @@ class MediaController extends Controller
             ];
 
             foreach ($files as $file) {
-                $totalSize += Storage::size($file);
+                $totalSize += $disk->size($file);
                 $type = $this->getFileType(basename($file));
                 $typeCount[$type] = ($typeCount[$type] ?? 0) + 1;
             }

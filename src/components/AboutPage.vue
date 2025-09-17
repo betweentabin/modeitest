@@ -16,10 +16,16 @@
       </div>
     </div>
 
-    <!-- Our Mission Section -->
-    <!-- CMS Body removed -->
-    <section class="section mission-section">
+    <!-- CMS Preview Body: render full HTML under hero when preview/edit flags present -->
+    <section class="section" v-if="isEditPreview">
       <div class="container">
+        <div class="cms-body" v-html="_pageText?.getHtml('body','')"></div>
+      </div>
+    </section>
+
+    <!-- Our Mission Section (hidden during preview/edit) -->
+    <section class="section mission-section">
+      <div class="container" v-if="!isEditPreview">
         <div class="section-header">
           <h2 class="section-title">
             <CmsText pageKey="about" fieldKey="philosophy_title" tag="span" :fallback="'経営理念'" />
@@ -46,7 +52,7 @@
     </section>
 
     <!-- Message Section -->
-    <section class="section message-section">
+    <section class="section message-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -82,7 +88,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section">
+    <section class="cta-section" v-if="!isEditPreview">
       <div class="container">
         <div class="cta-content">
           <h2>
@@ -99,7 +105,7 @@
     </section>
 
     <!-- Company Info Section -->
-    <section class="section company-section">
+    <section class="section company-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -142,7 +148,7 @@
     </section>
 
     <!-- History Section -->
-    <section class="section history-section">
+    <section class="section history-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -172,7 +178,7 @@
     </section>
 
     <!-- Staff Section -->
-    <section class="section staff-section">
+    <section class="section staff-section" v-if="!isEditPreview">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
@@ -342,6 +348,14 @@ export default {
     },
     visibleHistory() {
       return this.historyItems.slice(0, this.visibleHistoryCount)
+    },
+    isEditPreview() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        return params.has('cmsPreview') || params.has('cmsEdit')
+      } catch (_) { return false }
     }
   },
   async mounted() {
