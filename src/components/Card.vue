@@ -28,17 +28,46 @@ export default {
       const cardTitle = this.frame1321317481Props?.text49;
       
       if (cardTitle === "調査研究") {
-        // 開発・研究ページ（AboutInstitutePageの最初のサービスカード）に遷移
-        this.$router.push('/aboutus#service-development');
+        // 開発・研究セクションに遷移
+        this.navigateToSection('/aboutus', 'service-development');
       } else if (cardTitle === "人財開発") {
-        // 人材開発ページに遷移
-        this.$router.push('/aboutus#service-human-resources');
+        // 人材開発セクションに遷移
+        this.navigateToSection('/aboutus', 'service-human-resources');
       } else if (cardTitle === "経営支援 (経営サポート)") {
-        // 経営支援ページに遷移
-        this.$router.push('/aboutus#service-management-support');
+        // 経営支援セクションに遷移
+        this.navigateToSection('/aboutus', 'service-management-support');
       } else {
         // デフォルトは研究所についてページに遷移
         this.$router.push('/aboutus');
+      }
+    },
+    
+    navigateToSection(path, sectionId) {
+      // 同じページにいる場合は直接スクロール
+      if (this.$route.path === path) {
+        this.scrollToSection(sectionId);
+      } else {
+        // 別のページからの場合は遷移してからスクロール
+        this.$router.push(path).then(() => {
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.scrollToSection(sectionId);
+            }, 100);
+          });
+        });
+      }
+    },
+    
+    scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerHeight = 100; // ヘッダーの高さを考慮
+        const elementPosition = element.offsetTop - headerHeight;
+        
+        window.scrollTo({
+          top: elementPosition,
+          behavior: 'smooth'
+        });
       }
     }
   }

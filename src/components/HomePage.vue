@@ -523,10 +523,10 @@ export default {
       vector21: homePageData.vector21,
 
 
-      image2: homePageData.image2,
-      image3: homePageData.image3,
-      image4: homePageData.image4,
-      image5: homePageData.image5,
+      image2: "/img/bnr_cri200.gif",
+      image3: "/img/bnr_c_lease200.gif",
+      image4: "/img/bnr_c_ts2.png",
+      image5: "/img/bnr_c_partners.png",
       card1Props: homePageData.card1Props,
       card2Props: homePageData.card2Props,
       frame1321317481Props: homePageData.frame1321317481Props,
@@ -2182,50 +2182,30 @@ export default {
   align-self: center;
   display: flex;
   flex: 0 0 auto;
-  gap: 22px;
+  gap: 20px;
   position: relative;
   width: 100%;
-  max-width: 2000px;
-  justify-content: center;
+  max-width: 1200px;
+  justify-content: space-between;
   box-sizing: border-box;
 }
 
 .content-view-3 a {
   display: block;
-  width: calc((100% - 66px) / 4);
+  width: calc((100% - 60px) / 4);
   text-decoration: none;
+  flex: 1;
 }
 
-.image-1 {
-  height: auto;
-  object-fit: cover;
-  position: relative;
-  width: 100%;
-  aspect-ratio: 318 / 118;
-}
-
-.image-2 {
-  height: auto;
-  object-fit: cover;
-  position: relative;
-  width: 100%;
-  aspect-ratio: 319 / 96;
-}
-
-.image-3 {
-  height: auto;
-  object-fit: cover;
-  position: relative;
-  width: 100%;
-  aspect-ratio: 319 / 129;
-}
-
+.image-1,
+.image-2,
+.image-3,
 .image-4 {
-  height: auto;
-  object-fit: cover;
+  height: 100px;
+  object-fit: contain;
   position: relative;
   width: 100%;
-  aspect-ratio: 318 / 129;
+  background: transparent;
 }
 
 .vector-5-1 {
@@ -3613,6 +3593,31 @@ export default {
 
   .group-10 {
     gap: 10px !important;
+  }
+}
+
+/* 大画面での画像コンテナの幅制御 */
+@media (min-width: 1400px) {
+  .frame-1321317457-1 {
+    max-width: 1000px;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .content-view-3 a {
+    width: 220px;
+    flex: none;
+  }
+}
+
+@media (min-width: 1600px) {
+  .frame-1321317457-1 {
+    max-width: 1200px;
+    gap: 40px;
+  }
+  
+  .content-view-3 a {
+    width: 250px;
   }
 }
 
