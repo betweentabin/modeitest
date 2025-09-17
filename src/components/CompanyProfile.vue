@@ -4,9 +4,13 @@
 
     <!-- Hero Section -->
     <HeroSection 
-      title="会社概要"
-      subtitle="company"
-      heroImage="/img/Image_fx10.jpg"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
+      :heroImage="media('hero_company_profile', '/img/Image_fx10.jpg')"
+      cmsPageKey="company-profile"
+      titleFieldKey="page_title"
+      subtitleFieldKey="page_subtitle"
+      mediaKey="hero_company_profile"
     />
 
     <!-- Breadcrumbs -->
@@ -283,7 +287,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="staff_subtitle" tag="span" :fallback="'About us'" />
+            <CmsText pageKey="company-profile" fieldKey="staff_subtitle" tag="span" :fallback="'MEMBER'" />
           </span>
           <div class="divider-line"></div>
         </div>

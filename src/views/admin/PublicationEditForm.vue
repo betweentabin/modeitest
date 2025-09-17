@@ -14,9 +14,9 @@
           </div>
         </div>
 
-        <!-- 画像・ファイルアップロード -->
+        <!-- 画像アップロード（PDFファイルのアップロードは廃止。URL入力を使用） -->
         <div class="form-section">
-          <h3 class="section-title">サムネイル・PDF</h3>
+          <h3 class="section-title">サムネイル</h3>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">サムネイル画像（カバー）</label>
@@ -25,11 +25,6 @@
                 <input type="file" accept="image/*" @change="onPickCover" />
               </div>
               <p class="form-help">推奨サイズの比率を維持してアップロードしてください。（最大5MB）</p>
-            </div>
-            <div class="form-group">
-              <label class="form-label">PDFファイル</label>
-              <input type="file" accept="application/pdf" @change="onPickPdf" />
-              <p class="form-help">20MBまで。既存のPDFは置き換えられます。</p>
             </div>
           </div>
         </div>
@@ -320,7 +315,6 @@ export default {
         membership_level: 'free'
       },
       coverImageFile: null,
-      pdfFile: null,
       coverPreview: '',
       // カテゴリー選択肢（管理のカテゴリー管理と同期）
       categories: [],
@@ -384,10 +378,6 @@ export default {
       } else {
         this.coverPreview = ''
       }
-    },
-    onPickPdf(e) {
-      const f = e?.target?.files?.[0]
-      this.pdfFile = f || null
     },
     async loadCategories() {
       try {
@@ -463,7 +453,6 @@ export default {
           fd.append(k, v)
         })
         if (this.coverImageFile) fd.append('cover_image', this.coverImageFile)
-        if (this.pdfFile) fd.append('pdf_file', this.pdfFile)
 
         let endpoint = '/api/admin/publications'
         let method = 'POST'

@@ -12,13 +12,15 @@
       <div class="hero-content">
         <!-- When cmsPageKey provided, render inline-editable texts -->
         <template v-if="cmsPageKey">
-          <div class="hero-subtitle">Contact</div>
+          <div class="hero-subtitle">
+            <CmsText :pageKey="cmsPageKey" :fieldKey="subtitleFieldKey" tag="span" :fallback="subtitle || ''" />
+          </div>
           <div class="hero-title">
             <CmsText :pageKey="cmsPageKey" :fieldKey="titleFieldKey" tag="span" :fallback="title || ''" />
           </div>
         </template>
         <template v-else>
-          <div class="hero-subtitle">Contact</div>
+          <div class="hero-subtitle">{{ subtitle }}</div>
           <div class="hero-title">{{ title }}</div>
         </template>
       </div>

@@ -12,7 +12,7 @@ class CompanyProfilePageJsonSeeder extends Seeder
         $key = 'company-profile';
         $texts = [
             'page_title' => '会社概要',
-            'page_subtitle' => 'About Us',
+            'page_subtitle' => 'company',
             // In-page navigation labels
             'nav_philosophy' => '経営理念',
             'nav_message' => 'ご挨拶',
@@ -51,7 +51,7 @@ class CompanyProfilePageJsonSeeder extends Seeder
             'history_title' => '沿革',
             'history_subtitle' => 'history',
             'staff_title' => '所員紹介',
-            'staff_subtitle' => 'About us',
+            'staff_subtitle' => 'MEMBER',
         ];
 
         $defaultHtmls = [
