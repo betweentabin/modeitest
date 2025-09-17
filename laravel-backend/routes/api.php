@@ -196,7 +196,7 @@ Route::prefix('admin')->group(function () {
         // ページ管理: 閲覧系は viewer まで許可、更新系は editor 以上
         Route::prefix('pages')->group(function () {
             // Read-only
-            Route::middleware('can:view-admin')->group(function () {
+            Route::middleware(['can:view-admin','throttle:admin-cms'])->group(function () {
                 Route::get('/', [PageContentController::class, 'index']);
                 Route::get('/media-usage', [PageContentController::class, 'mediaUsage']);
                 // 管理者は公開フラグに関係なく参照可能
@@ -438,7 +438,7 @@ Route::prefix('admin')->group(function () {
 Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
 
 // 公開ページコンテンツAPI（認証不要）
-Route::prefix('public')->group(function () {
+Route::prefix('public')->middleware('throttle:public-pages')->group(function () {
     Route::get('/pages', [PageContentController::class, 'index']);
     Route::get('/pages/{pageKey}', [PageContentController::class, 'show']);
     // CMS v2 public page snapshot

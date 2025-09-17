@@ -30,6 +30,12 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute($perMinute)->by($id);
         });
 
+        // Public content pages: allow a higher limit than generic API
+        RateLimiter::for('public-pages', function (Request $request) {
+            $perMinute = (int) env('PUBLIC_PAGES_RATE_PER_MIN', 600);
+            return Limit::perMinute($perMinute)->by($request->ip());
+        });
+
         // Admin login throttle (env-driven)
         RateLimiter::for('admin-login', function (Request $request) {
             $maxAttempts = (int) env('ADMIN_LOGIN_MAX_ATTEMPTS', 5);
