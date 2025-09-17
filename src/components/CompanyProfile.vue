@@ -298,37 +298,52 @@
             <div class="staff-member">
               <img class="staff-photo" :src="media('company_profile_staff_morita', 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452')" alt="森田 祥子" />
               <div class="staff-info">
-                <div class="staff-position">企画部　部長代理</div>
-                <div class="staff-name">森田 祥子 <span class="staff-reading">- もりた さちこ -</span></div>
-                <div class="staff-note">（アジア福岡パートナーズへ出向）</div>
+                <CmsText pageKey="company-profile" fieldKey="staff_morita_position" tag="div" class="staff-position" :fallback="'企画部　部長代理'" />
+                <div class="staff-name">
+                  <CmsText pageKey="company-profile" fieldKey="staff_morita_name" tag="span" :fallback="'森田 祥子'" />
+                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_morita_reading" tag="span" :fallback="'もりた さちこ'" /> -</span>
+                </div>
+                <CmsText pageKey="company-profile" fieldKey="staff_morita_note" tag="div" class="staff-note" :fallback="'（アジア福岡パートナーズへ出向）'" allowEmpty />
               </div>
             </div>
             <div class="staff-member">
               <img class="staff-photo" :src="media('company_profile_staff_mizokami', 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451')" alt="溝上 浩文" />
               <div class="staff-info">
-                <div class="staff-position">取締役企画部長　兼調査部長</div>
-                <div class="staff-name">溝上 浩文 <span class="staff-reading">- みぞかみ ひろふみ -</span></div>
+                <CmsText pageKey="company-profile" fieldKey="staff_mizokami_position" tag="div" class="staff-position" :fallback="'取締役企画部長　兼調査部長'" />
+                <div class="staff-name">
+                  <CmsText pageKey="company-profile" fieldKey="staff_mizokami_name" tag="span" :fallback="'溝上 浩文'" />
+                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_mizokami_reading" tag="span" :fallback="'みぞかみ ひろふみ'" /> -</span>
+                </div>
               </div>
             </div>
             <div class="staff-member">
               <img class="staff-photo" :src="media('company_profile_staff_kuga', 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451')" alt="空閑 重信" />
               <div class="staff-info">
-                <div class="staff-position">代表取締役社長</div>
-                <div class="staff-name">空閑 重信 <span class="staff-reading">- くが しげのぶ -</span></div>
+                <CmsText pageKey="company-profile" fieldKey="staff_kuga_position" tag="div" class="staff-position" :fallback="'代表取締役社長'" />
+                <div class="staff-name">
+                  <CmsText pageKey="company-profile" fieldKey="staff_kuga_name" tag="span" :fallback="'空閑 重信'" />
+                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_kuga_reading" tag="span" :fallback="'くが しげのぶ'" /> -</span>
+                </div>
               </div>
             </div>
             <div class="staff-member">
               <img class="staff-photo" :src="media('company_profile_staff_takada', 'https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451')" alt="髙田 友里恵" />
               <div class="staff-info">
-                <div class="staff-position">調査部　主任</div>
-                <div class="staff-name">髙田 友里恵 <span class="staff-reading">- たかだ ゆりえ -</span></div>
+                <CmsText pageKey="company-profile" fieldKey="staff_takada_position" tag="div" class="staff-position" :fallback="'調査部　主任'" />
+                <div class="staff-name">
+                  <CmsText pageKey="company-profile" fieldKey="staff_takada_name" tag="span" :fallback="'髙田 友里恵'" />
+                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_takada_reading" tag="span" :fallback="'たかだ ゆりえ'" /> -</span>
+                </div>
               </div>
             </div>
             <div class="staff-member">
               <img class="staff-photo" :src="media('company_profile_staff_nakamura', 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451')" alt="中村 公栄" />
               <div class="staff-info">
-                <div class="staff-position"></div>
-                <div class="staff-name">中村 公栄 <span class="staff-reading">- なかむら きえみ -</span></div>
+                <CmsText pageKey="company-profile" fieldKey="staff_nakamura_position" tag="div" class="staff-position" :fallback="''" allowEmpty />
+                <div class="staff-name">
+                  <CmsText pageKey="company-profile" fieldKey="staff_nakamura_name" tag="span" :fallback="'中村 公栄'" />
+                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_nakamura_reading" tag="span" :fallback="'なかむら きえみ'" /> -</span>
+                </div>
               </div>
             </div>
           </div>

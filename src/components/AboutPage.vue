@@ -195,8 +195,8 @@
               <img src="/img/image.png" alt="スタッフ1" />
             </div>
             <div class="staff-info">
-              <h4><CmsText pageKey="about" fieldKey="staff1_title" tag="span" :fallback="'代表取締役社長'" /></h4>
-              <p><CmsText pageKey="about" fieldKey="staff1_name" tag="span" :fallback="'田中 太郎'" /></p>
+              <h4><CmsText pageKey="company-profile" fieldKey="staff_kuga_position" tag="span" :fallback="'代表取締役社長'" /></h4>
+              <p><CmsText pageKey="company-profile" fieldKey="staff_kuga_name" tag="span" :fallback="'空閑 重信'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -204,8 +204,8 @@
               <img src="/img/image-1.png" alt="スタッフ2" />
             </div>
             <div class="staff-info">
-              <h4><CmsText pageKey="about" fieldKey="staff2_title" tag="span" :fallback="'常務取締役'" /></h4>
-              <p><CmsText pageKey="about" fieldKey="staff2_name" tag="span" :fallback="'佐藤 花子'" /></p>
+              <h4><CmsText pageKey="company-profile" fieldKey="staff_mizokami_position" tag="span" :fallback="'取締役企画部長　兼調査部長'" /></h4>
+              <p><CmsText pageKey="company-profile" fieldKey="staff_mizokami_name" tag="span" :fallback="'溝上 浩文'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -213,8 +213,8 @@
               <img src="/img/image-2.png" alt="スタッフ3" />
             </div>
             <div class="staff-info">
-              <h4><CmsText pageKey="about" fieldKey="staff3_title" tag="span" :fallback="'研究部長'" /></h4>
-              <p><CmsText pageKey="about" fieldKey="staff3_name" tag="span" :fallback="'山田 次郎'" /></p>
+              <h4><CmsText pageKey="company-profile" fieldKey="staff_morita_position" tag="span" :fallback="'企画部　部長代理'" /></h4>
+              <p><CmsText pageKey="company-profile" fieldKey="staff_morita_name" tag="span" :fallback="'森田 祥子'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -222,8 +222,8 @@
               <img src="/img/image.png" alt="スタッフ4" />
             </div>
             <div class="staff-info">
-              <h4>コンサルティング部長</h4>
-              <p>鈴木 美咲</p>
+              <h4><CmsText pageKey="company-profile" fieldKey="staff_takada_position" tag="span" :fallback="'調査部　主任'" /></h4>
+              <p><CmsText pageKey="company-profile" fieldKey="staff_takada_name" tag="span" :fallback="'髙田 友里恵'" /></p>
             </div>
           </div>
           <div class="staff-card">
@@ -231,8 +231,8 @@
               <img src="/img/image-1.png" alt="スタッフ5" />
             </div>
             <div class="staff-info">
-              <h4>シニアアナリスト</h4>
-              <p>高橋 一郎</p>
+              <h4><CmsText pageKey="company-profile" fieldKey="staff_nakamura_position" tag="span" :fallback="''" /></h4>
+              <p><CmsText pageKey="company-profile" fieldKey="staff_nakamura_name" tag="span" :fallback="'中村 公栄'" /></p>
             </div>
           </div>
         </div>

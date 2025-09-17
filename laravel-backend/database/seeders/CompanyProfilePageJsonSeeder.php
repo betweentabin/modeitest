@@ -52,6 +52,23 @@ class CompanyProfilePageJsonSeeder extends Seeder
             'history_subtitle' => 'history',
             'staff_title' => '所員紹介',
             'staff_subtitle' => 'MEMBER',
+            // Staff entries (position/name/reading/note)
+            'staff_morita_position' => '企画部　部長代理',
+            'staff_morita_name' => '森田 祥子',
+            'staff_morita_reading' => 'もりた さちこ',
+            'staff_morita_note' => '（アジア福岡パートナーズへ出向）',
+            'staff_mizokami_position' => '取締役企画部長　兼調査部長',
+            'staff_mizokami_name' => '溝上 浩文',
+            'staff_mizokami_reading' => 'みぞかみ ひろふみ',
+            'staff_kuga_position' => '代表取締役社長',
+            'staff_kuga_name' => '空閑 重信',
+            'staff_kuga_reading' => 'くが しげのぶ',
+            'staff_takada_position' => '調査部　主任',
+            'staff_takada_name' => '髙田 友里恵',
+            'staff_takada_reading' => 'たかだ ゆりえ',
+            'staff_nakamura_position' => '',
+            'staff_nakamura_name' => '中村 公栄',
+            'staff_nakamura_reading' => 'なかむら きえみ',
         ];
 
         $defaultHtmls = [

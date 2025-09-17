@@ -1,214 +1,292 @@
-# ちくぎん地域経済研究所
+# ちくぎん地域経済研究所 — 本番引き継ぎ用 README（Xserver + ConoHa）
 
-地域経済研究のためのWebアプリケーションです。
+このREADMEだけで本番環境（Xserver と ConoHa）への引き継ぎ・アップロードまで完結できるようにまとめています。メール設定、APIの切替、CORS、スケジューラ／キューなど運用に必要なポイントも網羅しています。
 
-## 技術スタック
+## 構成と前提
 
-- **フロントエンド**: Vue.js 2.6.11
-- **バックエンド**: Laravel 10
-- **ビルドツール**: Vite
+- フロントエンド: Vue.js 2.x（Vue CLI 4）／ビルド成果物は `dist/`
+- バックエンド: Laravel 10（`laravel-backend/`）
+- 推奨構成: フロント= Xserver（静的ホスティング）, API= ConoHa VPS（Nginx + PHP-FPM）
+- ドメイン例: `www.example.com`（フロント） / `api.example.com`（API）
 
-## ローカル環境での起動方法
+ディレクトリ概要
+- `src/` フロントのソース
+- `dist/` フロントのビルド出力
+- `laravel-backend/` Laravel API 一式
+- `deploy/konoha/` ConoHa向け Nginx/PHP-FPM サンプル
 
-### 前提条件
+## 必要要件
 
-- Node.js (v16以上推奨)
-- PHP 8.1以上
-- Composer
-- npm
+- Xserver: FTP/SFTP で `dist/` をアップできる権限、.htaccess 有効、独自ドメイン + SSL
+- ConoHa: Ubuntu 22.04 など、Nginx、PHP 8.2、Composer 2、MySQL 8 または PostgreSQL 14、git（任意）
 
-### 1. 依存関係のインストール
+## 本番手順の全体像（チェックリスト）
 
+1) APIドメインを決める（例: `api.example.com`）/ フロントドメイン（例: `www.example.com`）
+2) ConoHa に API を配置（後述の手順 A）
+3) Xserver にフロント（`dist/`）を配置し、.htaccess を設定（後述の手順 B）
+4) フロントの API 接続先を本番 API ドメインに切替（`src/config/api.js`）
+5) 画像/PDF配信の整合性（/storage）を調整（PUBLIC_STORAGE_URL or .htaccess リライト）
+6) メール送信（SMTP/Resend等）の環境変数設定と動作確認
+7) スケジューラ（cron）／キューワーカー（queue:work）を有効化
+
+---
+
+## 手順 A: ConoHa へ API（Laravel）をデプロイ
+
+1. サーバー準備（Ubuntu 22.04 の例）
 ```bash
-# フロントエンドの依存関係をインストール
-npm install
-
-# バックエンドの依存関係をインストール
-cd laravel-backend
-composer install
-npm install
-cd ..
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y nginx php8.2 php8.2-fpm \
+  php8.2-mbstring php8.2-xml php8.2-curl php8.2-zip php8.2-gd \
+  php8.2-pgsql php8.2-mysql unzip git curl
+# Composer
+cd /usr/local/bin && sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 ```
 
-### 2. 環境設定
-
+2. コード配置
 ```bash
-# Laravelの環境設定
+sudo mkdir -p /var/www/cri-app && sudo chown -R $USER:www-data /var/www/cri-app
+cd /var/www/cri-app
+# いずれか（git clone か SFTPアップロード）
+git clone <this-repo-url> .
 cd laravel-backend
+composer install --no-dev --optimize-autoloader
 cp .env.example .env
 php artisan key:generate
-cd ..
 ```
 
-### 3. プロジェクトの起動
+3. .env 設定（代表値）
+`laravel-backend/.env` を編集。最低限以下を設定してください。
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://api.example.com
+LOG_CHANNEL=stack
+LOG_LEVEL=info
 
-#### 方法1: 自動起動スクリプトを使用（推奨）
+# CORS（フロントの本番ドメインを許可）
+CORS_ALLOWED_ORIGINS=https://www.example.com
 
-```bash
-./start-local.sh
+# ストレージURL（絶対URLで返す）
+PUBLIC_STORAGE_URL=https://api.example.com/storage
+
+# DB: PostgreSQL の例（デフォルト）
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=cri
+DB_USERNAME=cri
+DB_PASSWORD=your_password
+
+# DB: MySQL を使う場合はこちら
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=cri
+# DB_USERNAME=cri
+# DB_PASSWORD=your_password
+
+# Queue / Cache / Session
+QUEUE_CONNECTION=database
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+# メール（XserverのSMTPを使う例）
+MAIL_MAILER=smtp
+MAIL_HOST=svXXX.xserver.jp
+MAIL_PORT=465
+MAIL_ENCRYPTION=ssl
+# 587/TLS を使う場合
+# MAIL_PORT=587
+# MAIL_ENCRYPTION=tls
+MAIL_USERNAME=info@your-domain.jp
+MAIL_PASSWORD=mailbox_password
+MAIL_FROM_ADDRESS=info@your-domain.jp
+MAIL_FROM_NAME="ちくぎん地域経済研究所"
+MAIL_EHLO_DOMAIN=your-domain.jp
+
+# 送信を一時停止したい場合（テスト用）
+# MAIL_DRY_RUN=true
+
+# 代替: Resend を使う場合
+# MAIL_MAILER=resend
+# RESEND_API_KEY=your_resend_api_key
 ```
 
-#### 方法2: 手動で起動
-
-**ターミナル1 - フロントエンド:**
+4. ストレージとDB初期化
 ```bash
-npm start
+cd /var/www/cri-app/laravel-backend
+php artisan storage:link
+php artisan migrate --force
+php artisan db:seed --force
+```
+初期管理者（Seeder）
+- Admin（API管理画面用）
+  - `admin@chikugin-cri.co.jp` / `admin123`（初回ログイン後に必ず変更）
+  - `editor@chikugin-cri.co.jp` / `editor123`
+  - `viewer@chikugin-cri.co.jp` / `viewer123`
+
+5. パーミッション
+```bash
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo find storage -type d -exec chmod 775 {} \;
+sudo find storage -type f -exec chmod 664 {} \;
 ```
 
-**ターミナル2 - Laravelバックエンド:**
+6. Nginx 設定
+- サンプル: `deploy/konoha/nginx.conf`
+  - `root` を `.../laravel-backend/public` に変更
+  - `server_name` を `api.example.com` に変更
 ```bash
-cd laravel-backend
-php artisan serve
+sudo cp deploy/konoha/nginx.conf /etc/nginx/sites-available/cri-app
+sudo ln -s /etc/nginx/sites-available/cri-app /etc/nginx/sites-enabled/cri-app
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
-**ターミナル3 - Vite開発サーバー:**
+7. PHP-FPM 調整（任意）
+- サンプル: `deploy/konoha/php-fpm-pool.conf`
 ```bash
-cd laravel-backend
+sudo systemctl restart php8.2-fpm
+```
+
+8. スケジューラ/キュー
+```bash
+# 毎分スケジューラ（メール配信などのジョブ投入）
+crontab -e
+* * * * * cd /var/www/cri-app/laravel-backend && php artisan schedule:run >> /dev/null 2>&1
+
+# キューワーカー（常駐）
+# Supervisor例: /etc/supervisor/conf.d/laravel-worker.conf を作成
+# [program:laravel-worker]
+# command=php /var/www/cri-app/laravel-backend/artisan queue:work --queue=default --sleep=3 --tries=3 --max-time=3600
+# autostart=true
+# autorestart=true
+# user=www-data
+# redirect_stderr=true
+# stdout_logfile=/var/log/supervisor/laravel-worker.log
+# 反映
+# sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl start laravel-worker:*
+```
+
+9. 動作確認
+```bash
+curl -s https://api.example.com/api/health | jq
+curl -s https://api.example.com/api/test | jq
+```
+
+---
+
+## 手順 B: Xserver へフロント（Vueビルド）をデプロイ
+
+1. フロントのビルド
+```bash
+npm ci
+# API先を本番に切り替える（2つの方法のどちらか）
+# A) `src/config/api.js` の production.baseURL を https://api.example.com に変更
+# B) 環境変数方式に改修した場合: VUE_APP_API_URL=https://api.example.com を設定してビルド
+npm run build
+```
+
+2. Xserver にアップロード
+- サーバーパネルで対象ドメインの「公開フォルダ（ドキュメントルート）」を確認
+- `dist/` の中身をその公開フォルダ直下へアップロード（SFTP/FTP）
+
+3. .htaccess を配置（SPA 用 + /storage リライト）
+`deploy/xserver/.htaccess` を公開フォルダ直下に置くか、以下内容を作成してください。
+```apache
+RewriteEngine On
+RewriteBase /
+
+# APIが返す相対パス /storage/... をAPIへ転送
+RewriteRule ^storage/(.*)$ https://api.example.com/storage/$1 [L,PT]
+
+# SPA の履歴リライト
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+注: API側で `PUBLIC_STORAGE_URL=https://api.example.com/storage` を設定していれば、返却URLが絶対URLになり、上記 /storage リライトは不要です（どちらでも可）。
+
+4. SSL と動作確認
+- Xserver で独自SSLを有効化し、`https://www.example.com` にアクセス
+- 管理ログイン: `https://www.example.com/#/admin`（ハッシュモード）
+- 管理ログイン後は API の `POST /api/admin/login` が成功することを確認
+
+---
+
+## メール送信（本番）
+
+本プロジェクトは SMTP（例: Xserver）、Resend、SendGrid、Gmail API（制限環境用）に対応します。最小構成は SMTP です。
+
+- SMTP（Xserver）の例は上記 .env を参照
+- 送信テスト（管理API）: `POST /api/admin/emails/send-simple`
+  - Body 例:
+  ```json
+  {
+    "to": "your-address@example.com",
+    "subject": "SMTP テスト",
+    "body_text": "Hello via SMTP",
+    "from": {"address": "info@your-domain.jp", "name": "ちくぎん地域経済研究所"}
+  }
+  ```
+- うまく届かない場合の典型:
+  - 530/535 認証: ユーザー名=メールアドレス、ポート/暗号化の組み合わせを再確認
+  - 553 From 拒否: `MAIL_FROM_ADDRESS` が送信許可されたドメインであるか
+  - タイムアウト: サーバー外向きSMTP制限→Resend/SendGrid検討
+
+詳細なSMTPガイドは `laravel-backend/README.md` 参照。
+
+---
+
+## API ベースURLの切替（フロント）
+
+- 現状（既定）: `src/config/api.js` の `production.baseURL` を本番APIへ書き換える
+- 改修（推奨）: `process.env.VUE_APP_API_URL` があればそれを優先する実装に変更し、
+  ビルド時に `VUE_APP_API_URL=https://api.example.com npm run build`
+
+---
+
+## CORS とストレージ
+
+- CORS 許可: `laravel-backend/config/cors.php` は `CORS_ALLOWED_ORIGINS`（カンマ区切り）を参照
+- 画像/PDFのURL: `PUBLIC_STORAGE_URL` を設定すると絶対URLを返すため、フロント側での `/storage` リライトが不要に
+
+---
+
+## ローカル開発（参考）
+
+前提
+- Node.js 16+ / npm
+- PHP 8.1+ / Composer
+
+セットアップ
+```bash
+npm ci
+cd laravel-backend && composer install && cp .env.example .env && php artisan key:generate && cd ..
+```
+
+起動
+```bash
+# フロント（http://localhost:8080）
 npm run dev
+
+# API（http://localhost:8000）
+cd laravel-backend && php artisan serve
 ```
 
-### アクセスURL
+APIをローカルに向けたい場合は `src/config/api.js` の baseURL を `http://127.0.0.1:8000` に一時変更するか、
+環境変数方式へ改修してください。
 
-- **フロントエンド**: http://localhost:8080
-- **バックエンド**: http://localhost:8000
-- **Vite開発サーバー**: http://localhost:5173
+---
 
-## 開発
+## 付録: よく使う確認コマンド
 
-### フロントエンド開発
-
-Vue.jsコンポーネントは `src/components/` ディレクトリにあります。
-
-### バックエンド開発
-
-Laravelのコントローラーは `laravel-backend/app/Http/Controllers/` にあります。
-
-## トラブルシューティング
-
-### ポートが使用中の場合
-
-```bash
-# 使用中のポートを確認
-lsof -i :8080
-lsof -i :8000
-lsof -i :5173
-
-# プロセスを終了
-kill -9 <PID>
-```
-
-### 依存関係のエラー
-
-```bash
-# node_modulesを削除して再インストール
-rm -rf node_modules
-npm install
-
-# Laravelの依存関係も再インストール
-cd laravel-backend
-rm -rf vendor
-composer install
-```
-
-## 環境ごとの設定ガイド（どこを変更するか）
-
-本プロジェクトをローカル、Vercel、本番（ConoHa + Xserver + PostgreSQL）で運用する際の設定ポイントをまとめます。必要に応じて、以下のファイルの設定を変更してください。
-
-### 1. 変更対象ファイル一覧（要点）
-
-- フロントエンドのAPI接続先
-  - `src/config/api.js`（APIベースURLの決定ロジックを管理します）
-  - `vercel.json`（Vercel上での`/storage/*`リライトとSPAルーティングを定義します）
-  - `vue.config.js`（ローカル開発サーバの履歴リライトを設定します）
-- バックエンドの公開URL/CORS
-  - `laravel-backend/.env` の `APP_URL`（`Storage::url()` の基準URLになります）
-  - `laravel-backend/config/cors.php`（許可するオリジンを設定します）
-- データベース
-  - `laravel-backend/.env` の `DB_CONNECTION=pgsql` ほか `DB_*` 各種設定
-
-補足: 現在の`src/config/api.js`は開発・本番ともに同一のAPIベースURL（RailwayのURL）を参照する構成です。移行の際は、ベースURLの切り替え方法を下記から選択してください。
-
-### 2. ローカル環境（localhost）
-
-- フロントエンド: `npm run dev` または `npm start` で起動します。
-- バックエンド: `php artisan serve --port=8000` で起動します。
-- API接続先の決め方:
-  - 現状のままでは、`src/config/api.js` が本番API（Railway）へ向きます。ローカルのLaravelを参照したい場合は、`src/config/api.js` のベースURLを一時的に `http://127.0.0.1:8000` に変更してください。
-  - もしくは、環境変数で切り替え可能な実装に改修した上で、`.env.local` に `VUE_APP_API_URL=http://127.0.0.1:8000` を設定して起動します（実装方針は「5. APIベースURLの切り替え方」を参照してください）。
-- `/storage/*` の表示:
-  - ローカルではVercelの`rewrites`は効きません。必要であれば `vue.config.js` に `/storage` をバックエンドへプロキシする設定を追加してください。
-
-### 3. Vercel（現行構成）
-
-- `vercel.json` にて以下を設定しています。
-  - `/storage/*` → バックエンド（Railway）の `/storage/*` へリライト
-  - SPA向けの履歴リライト（`/index.html`へ）
-- フロントのAPI接続先は `src/config/api.js` が参照するベースURLに依存します。
-
-### 4. 本番（ConoHa：API + PostgreSQL、Xserver：フロント）
-
-- 推奨アーキテクチャ:
-  - API: ConoHa VPS 上の Nginx + PHP-FPM + Laravel + PostgreSQL
-  - フロント: Xserver に `dist/` を配置（SPA）
-  - ドメインは `api.example.com`（API）と `www.example.com`（フロント）に分離します。
-
-- Xserver 側（フロント）
-  - `dist/` をアップロードします。
-  - `.htaccess` に SPA 向けリライトを設定します（例）：
-    ```
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^index\.html$ - [L]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . /index.html [L]
-    ```
-  - 画像やPDFなど `/storage/*` のURLは、API側の `APP_URL` を用いて「絶対URL」で返す構成にすると、フロント側で追加設定をせずに表示できます。
-
-- ConoHa 側（API）
-  - Nginx/PHP-FPMの設定例は `deploy/konoha/` を参照してください。
-  - `laravel-backend/.env` を本番用に設定します。
-    - `APP_URL=https://api.example.com`
-    - `DB_CONNECTION=pgsql` と各 `DB_*` をPostgreSQLに合わせて設定します。
-  - 初期化手順（例）
-    - `composer install --no-dev --optimize-autoloader`
-    - `php artisan key:generate`
-    - `php artisan storage:link`
-    - `php artisan migrate --force`（必要に応じて `db:seed`）
-  - `laravel-backend/config/cors.php` の `allowed_origins` にフロントの本番ドメイン（例: `https://www.example.com`）を追加します。
-
-### 5. APIベースURLの切り替え方
-
-移行後も環境ごとにAPI先を柔軟に切り替えたい場合は、以下のどちらかの方針をお選びください。
-
-- 方針A（現状維持）: `src/config/api.js` に本番APIの固定URLを書き、移行のタイミングで当該URLを書き換えます。
-  - メリット: コードが簡単です。
-  - デメリット: 環境ごとの切り替えにビルドが必要です。
-
-- 方針B（推奨）: `src/config/api.js` を環境変数（例: `VUE_APP_API_URL`）で切り替えられるように改修します。
-  - 例: 変数があればそれを優先し、なければ本番URLへフォールバックする実装にします。
-  - ローカルでは `.env.local` に `VUE_APP_API_URL=http://127.0.0.1:8000` を設定して起動します。
-  - Xserver（本番）では `VUE_APP_API_URL=https://api.example.com` をビルド時に設定します。
-
-### 6. PostgreSQL の設定
-
-- `laravel-backend/.env` で以下を設定します。
-  - `DB_CONNECTION=pgsql`
-  - `DB_HOST`
-  - `DB_PORT`
-  - `DB_DATABASE`
-  - `DB_USERNAME`
-  - `DB_PASSWORD`
-- 既存データを移行する場合は、`pg_dump` / `pg_restore` によりダンプ・リストアを実施してください。
-
-### 7. CORS とストレージURLの方針
-
-- CORS: フロントドメインを `laravel-backend/config/cors.php` の許可オリジンに設定してください。
-- 画像/PDFのURLは、`APP_URL` を正しく設定し、`/storage/*` を「絶対URL」で返す構成にすると環境差異の影響を受けにくくなります。
-
-### 8. チェックリスト（本番切替時）
-
-- DNS 切替の前に `APP_URL` と CORS 設定を確認します。
-- SSL 証明書を有効化し、HTTPS での動作を確認します。
-- フロントのAPI接続先（固定URLまたは `VUE_APP_API_URL`）を本番に合わせてビルドします。
-- 画像/PDFが正しく表示されるか（`/storage/*` のURL解決）を確認します。
+- API稼働確認: `curl -s https://api.example.com/api/health | jq`
+- ルート一覧: `curl -s https://api.example.com/api/debug-routes | jq`
+- 権限/パス: `ls -ld laravel-backend/storage laravel-backend/bootstrap/cache`
+- ジョブテーブル: `
+  php artisan migrate:status | grep jobs
+  `（`2019_08_19_000001_create_jobs_table.php` 等が適用済みであること）
