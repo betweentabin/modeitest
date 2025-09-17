@@ -4,16 +4,16 @@ namespace App\Services\Mailer;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Resend\Resend;
 
 class ResendMailer
 {
-    protected Resend $client;
+    /** @var \Resend\Client */
+    protected $client;
 
     public function __construct(?string $apiKey = null)
     {
         $apiKey = $apiKey ?: env('RESEND_API_KEY');
-        $this->client = new Resend($apiKey);
+        $this->client = \Resend::client($apiKey);
     }
 
     /**
@@ -75,4 +75,3 @@ class ResendMailer
         }
     }
 }
-

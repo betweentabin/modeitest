@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MediaReplaceController;
 use App\Http\Controllers\Api\MemberAccessController;
+use App\Http\Controllers\Api\DebugController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,12 @@ Route::get('/health', function () {
         'timestamp' => now(),
         'service' => 'chikugin-api'
     ]);
+});
+
+// Debug endpoints (enabled only with ENABLE_DEBUG_ENDPOINTS=true or local)
+Route::prefix('debug')->group(function () {
+    Route::get('/storage', [DebugController::class, 'storage']);
+    Route::get('/rate-limits', [DebugController::class, 'rateLimits']);
 });
 
 // 認証エンドポイント
