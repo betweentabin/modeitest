@@ -211,7 +211,16 @@ export default {
         const imgs = this._pageText?.page?.value?.content?.images
         const v = imgs && imgs[key]
         if (typeof v === 'string' && v) return v
-        if (v && typeof v === 'object' && v.url) return v.url
+        if (v && typeof v === 'object' && v.url) {
+          let u = v.url
+          try {
+            if (u.startsWith('/storage/') && v.uploaded_at) {
+              const ver = Date.parse(v.uploaded_at) || Date.now()
+              u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
+          } catch(_) {}
+          return u
+        }
       } catch (_) {}
       return fallback
     },

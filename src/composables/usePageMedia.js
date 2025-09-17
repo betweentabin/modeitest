@@ -74,7 +74,15 @@ export function usePageMedia() {
       const imgs = page && page.content && page.content.images
       if (imgs && Object.prototype.hasOwnProperty.call(imgs, slotKey)) {
         const v = imgs[slotKey]
-        const url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+        let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+        // Add cache-buster for storage file when uploaded_at is present
+        try {
+          const meta = (v && typeof v === 'object') ? v : null
+          const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
+          if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+            url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+          }
+        } catch (_) {}
         if (typeof url === 'string' && url.length) return resolveMediaUrl(url)
       }
     } catch (_) { /* ignore and fallback to registry */ }
@@ -110,7 +118,14 @@ export function usePageMedia() {
         for (const k of tryKeys) {
           if (!Object.prototype.hasOwnProperty.call(imgs, k)) continue
           const v = imgs[k]
-          const url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+          let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+          try {
+            const meta = (v && typeof v === 'object') ? v : null
+            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
+            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+              url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
+          } catch (_) {}
           if (typeof url === 'string' && url.length) return resolveMediaUrl(url)
         }
       }

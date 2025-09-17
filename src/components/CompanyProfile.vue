@@ -608,7 +608,14 @@ export default {
         const imgs = page && page.content && page.content.images
         if (imgs && Object.prototype.hasOwnProperty.call(imgs, key)) {
           const v = imgs[key]
-          const url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+          let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+          try {
+            const meta = (v && typeof v === 'object') ? v : null
+            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
+            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+              url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
+          } catch(_) {}
           if (typeof url === 'string' && url.length) return resolveMediaUrl(url)
         }
 
