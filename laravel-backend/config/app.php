@@ -111,6 +111,9 @@ return [
 
     'faker_locale' => 'en_US',
 
+    // Enable debug-only API endpoints (guarded in controllers)
+    'enable_debug_endpoints' => env('ENABLE_DEBUG_ENDPOINTS', false),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

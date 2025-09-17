@@ -11,7 +11,8 @@ class DebugController extends Controller
 {
     private function guard(): void
     {
-        if (!app()->environment('local') && !env('ENABLE_DEBUG_ENDPOINTS', false)) {
+        $enabled = (bool) config('app.enable_debug_endpoints', false);
+        if (!app()->environment('local') && !$enabled) {
             abort(404);
         }
     }
@@ -94,4 +95,3 @@ class DebugController extends Controller
         ]);
     }
 }
-
