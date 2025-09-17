@@ -180,6 +180,11 @@ export function usePageText(pageKey) {
     const page = state.pages[pageKey]?.page
     const htmls = page?.content?.htmls || page?.content?.rich || null
     let raw = htmls && Object.prototype.hasOwnProperty.call(htmls, key) ? htmls[key] : undefined
+    // Fallback to texts[key] when htmls[key] is not provided (editor differences)
+    if ((raw === undefined || raw === null || raw === '') && page?.content?.texts && Object.prototype.hasOwnProperty.call(page.content.texts, key)) {
+      const tval = page.content.texts[key]
+      if (typeof tval === 'string') raw = tval
+    }
     // フォールバック: 'body' キーのみ単体の content.html を本文として扱う
     if ((raw === undefined || raw === null || raw === '') && key === 'body' && allowBodyFallback && typeof page?.content?.html === 'string') {
       raw = page.content.html
