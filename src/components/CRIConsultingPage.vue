@@ -342,20 +342,20 @@ export default {
   },
   methods: {
     slotImage(slotKey, fallback = '') {
-      // Prefer media registry via per-page mapping (slotKey -> mediaKey)
-      try {
-        if (this._pageMedia) {
-          const v = this._pageMedia.getSlot(slotKey, slotKey, fallback)
-          if (v && v !== fallback) return v
-        }
-      } catch(_) {}
-      // Fallback to per-page content.images
+      // 方針A: ページ管理の content.images を最優先
       try {
         const page = this._pageText?.page?.value
         const v = page?.content?.images?.[slotKey]
         if (typeof v === 'string' && v) return v
         if (v && typeof v === 'object' && v.url) return v.url
       } catch (_) {}
+      // 次にレジストリ（ページマッピング）
+      try {
+        if (this._pageMedia) {
+          const v = this._pageMedia.getSlot(slotKey, slotKey, fallback)
+          if (v && v !== fallback) return v
+        }
+      } catch(_) {}
       return fallback
     },
     // Equal-height for paired images/text is handled with CSS Grid
