@@ -1139,6 +1139,8 @@
               <button class="btn" style="padding:4px 8px;" @click="uploadForKey(k)">アップロード</button>
             </div>
           </div>
+          <!-- 一覧が非表示でもアップロードできるように、ここにも隠しinputを常設する -->
+          <input ref="newImageInputGlobal" type="file" accept="image/*" style="display:none" @change="onAddNewPageImage" />
         </div>
         <div v-if="currentPage && showImageList" class="field">
           <div v-if="pageImages.length === 0" class="help">登録済みの画像がありません</div>
@@ -2167,7 +2169,12 @@ export default {
           this.triggerReplace(idx)
         } else {
           this.newImageKey = key
-          if (this.$refs.newImageInput && typeof this.$refs.newImageInput.click === 'function') this.$refs.newImageInput.click()
+          // 一覧表示がオフのときでも動作させる（グローバル用 hidden input をフォールバック）
+          if (this.$refs.newImageInput && typeof this.$refs.newImageInput.click === 'function') {
+            this.$refs.newImageInput.click()
+          } else if (this.$refs.newImageInputGlobal && typeof this.$refs.newImageInputGlobal.click === 'function') {
+            this.$refs.newImageInputGlobal.click()
+          }
         }
       } catch(_) {}
     },
