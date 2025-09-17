@@ -15,6 +15,26 @@ export function usePageMedia() {
     ready: false,
   })
 
+  // Map legacy PageContent page_key -> CMS v2 slug
+  const toCmsSlug = (key) => {
+    const k = String(key || '').toLowerCase()
+    const map = {
+      'company-profile': 'company',
+      'about-institute': 'aboutus',
+      // Some pages share the same slug/key; leave them as-is
+      // Provide a couple of common aliases defensively
+      'premium-membership': 'premium-membership',
+      'standard-membership': 'standard-membership',
+      'cri-consulting': 'cri-consulting',
+      'membership': 'membership',
+      'services': 'services',
+      'about': 'about',
+      'contact': 'contact',
+      'home': 'home',
+    }
+    return map[k] || k
+  }
+
   const ensure = async (pageKey) => {
     try {
       state.pageKey = pageKey || ''
@@ -29,7 +49,9 @@ export function usePageMedia() {
         try {
           const api = await import('@/services/apiClient')
           const apiClient = api.default || api
-          const res = await apiClient.get(`/api/public/pages-v2/${state.pageKey}`, { silent: true, params: { _t: Date.now() } })
+          // Bridge to v2 by slug (pageKey may differ from CMS slug)
+          const slug = toCmsSlug(state.pageKey)
+          const res = await apiClient.get(`/api/public/pages-v2/${slug}`, { silent: true, params: { _t: Date.now() } })
           const sections = res?.data?.sections || res?.data?.data?.sections || res?.sections || []
           const map = {}
           if (Array.isArray(sections)) {

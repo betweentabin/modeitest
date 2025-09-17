@@ -2036,7 +2036,27 @@ export default {
           const mime = (up.data.mime||'').toLowerCase()
           const ext = mime.includes('png')? 'png' : mime.includes('webp')? 'webp' : mime.includes('gif')? 'gif' : 'jpg'
           await apiClient.upsertCmsSection(this.currentPage.id, 'kv', { sort:15, component_type:'KV', props_json:{ image_id:id, ext }, status:'draft' })
-          this.kv = { id, ext, previewUrl: getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`) }
+          const url = getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`)
+          this.kv = { id, ext, previewUrl: url }
+
+          // Bridge hero image to legacy PageContent for this page
+          try {
+            // Infer PageContent key from current slug
+            const pageKey = this.pageContentKey || this.pageContentKeyFromSlug(this.currentPage.slug)
+            if (pageKey) {
+              const patch = { content: { images: { hero: url }, media_keys: { hero: `hero_${String(pageKey).replace(/-/g,'_')}` } }, is_published: true }
+              await apiClient.adminUpdatePageContent(pageKey, patch)
+              // Also mirror to global media registry for fallback usage
+              const heroKey = `hero_${String(pageKey).replace(/-/g,'_')}`
+              await apiClient.adminUpdatePageContent('media', { content: { images: { [heroKey]: url } }, is_published: true })
+              // Invalidate media cache so new hero appears immediately
+              try {
+                const mod = await import('@/composables/useMedia')
+                if (mod.invalidateMediaCache) mod.invalidateMediaCache()
+                try { localStorage.removeItem('cms_media_cache'); localStorage.setItem('cms_media_cache_bust', String(Date.now())) } catch(_) {}
+              } catch(_) {}
+            }
+          } catch(_) { /* non-blocking */ }
         } else {
           alert('画像アップロードに失敗しました')
         }
@@ -2308,7 +2328,7 @@ export default {
       try {
         const html = this.richText.html || ''
         // Sync to both html and htmls.body for backward compatibility
-        const patch = { content: { html, htmls: { body: html } } }
+        const patch = { content: { html, htmls: { body: html } }, is_published: true }
         if (this.mediaKeys && Object.keys(this.mediaKeys).length) patch.content.media_keys = { ...this.mediaKeys }
         const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('PageContentに本文を同期しました')
@@ -2394,6 +2414,8 @@ export default {
             patch.content.texts = { ...this.privacyTexts }
           }
         }
+        // すべての保存を「保存＝公開」に統一
+        patch.is_published = true
         const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
         if (res) alert('保存しました')
       } catch(_) { alert('保存に失敗しました') }
