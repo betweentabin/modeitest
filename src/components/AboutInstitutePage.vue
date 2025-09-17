@@ -94,7 +94,7 @@
         </div>
         
         <div class="service-card" id="service-management-support">
-          <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870" alt="経営支援" />
+          <img class="service-image" :src="img('service3_image', 'https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870')" alt="経営支援" />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service3_title" tag="span" :fallback="'経営支援(経営サポート)'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service3_desc" tag="span" :fallback="'企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。'" /></p>

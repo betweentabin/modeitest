@@ -11,6 +11,7 @@ export function usePageMedia() {
     pageKey: '',
     _media: null,
     _pageText: null,
+    _v2images: null, // images resolved from CMS v2 snapshot (e.g., KV)
     ready: false,
   })
 
@@ -24,6 +25,30 @@ export function usePageMedia() {
       if (state.pageKey) {
         state._pageText = usePageText(state.pageKey)
         await state._pageText.load({ force: true })
+        // Also try CMS v2 public snapshot to capture KV image (hero)
+        try {
+          const api = await import('@/services/apiClient')
+          const apiClient = api.default || api
+          const res = await apiClient.get(`/api/public/pages-v2/${state.pageKey}`, { silent: true, params: { _t: Date.now() } })
+          const sections = res?.data?.sections || res?.data?.data?.sections || res?.sections || []
+          const map = {}
+          if (Array.isArray(sections)) {
+            for (const s of sections) {
+              const type = (s?.component_type || '').toUpperCase()
+              const props = s?.props || s?.props_json || {}
+              if (type === 'KV') {
+                const id = props?.image_id || props?.id
+                const ext = props?.ext || 'jpg'
+                if (id) {
+                  // use medium preset for hero by default
+                  const url = (await import('@/config/api.js')).getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`)
+                  map['hero'] = url
+                }
+              }
+            }
+          }
+          state._v2images = Object.keys(map).length ? map : null
+        } catch (_) { state._v2images = state._v2images || null }
       }
       state.ready = true
     } catch (_) { state.ready = true }
@@ -54,6 +79,13 @@ export function usePageMedia() {
       }
     } catch (_) { /* ignore and fallback to registry */ }
 
+    // Next, CMS v2 snapshot-derived images (e.g., hero from KV)
+    try {
+      const v2 = state._v2images
+      const url2 = v2 && v2[slotKey]
+      if (typeof url2 === 'string' && url2.length) return url2
+    } catch (_) {}
+
     const mk = resolveMediaKey(slotKey, defaultMediaKey)
     return state._media ? state._media.getImage(mk, fallback) : (fallback || '')
   }
@@ -83,6 +115,13 @@ export function usePageMedia() {
         }
       }
     } catch (_) { /* ignore and fallback to registry */ }
+
+    // Then try CMS v2 snapshot-derived images
+    try {
+      const v2 = state._v2images
+      const url2 = v2 && v2[slotKey]
+      if (typeof url2 === 'string' && url2.length) return url2
+    } catch (_) {}
 
     const mk = resolveMediaKey(slotKey, defaultMediaKey)
     return state._media ? state._media.getResponsiveImage(mk, fallback) : (fallback || '')
