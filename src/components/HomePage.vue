@@ -569,8 +569,9 @@ export default {
     this.loadLatestData().catch(error => {
       console.error('データの読み込みに失敗しました:', error);
     });
-    // CMS（PageContent: home）からヒーロースライダー画像を取得
+    // CMS（PageContent: home）からヒーロースライダー/バナー画像を取得
     this.loadCmsHeroSlides().catch(() => {});
+    this.loadCmsHomeImages().catch(() => {});
   },
   methods: {
     async loadCmsHeroSlides() {
@@ -607,6 +608,25 @@ export default {
       } catch (e) {
         // 非致命: フォールバックに任せる
       }
+    },
+    async loadCmsHomeImages() {
+      try {
+        const cms = usePageText('home')
+        await cms.load({ preferAdmin: true })
+        const page = cms.page && cms.page.value ? cms.page.value : null
+        const images = (page && page.content && page.content.images) ? page.content.images : {}
+        const getImg = (key, defVal) => {
+          const v = images && images[key]
+          if (!v) return defVal
+          if (typeof v === 'string') return v
+          if (typeof v === 'object' && v.url) return v.url
+          return defVal
+        }
+        this.frame13213174901 = getImg('banner_seminar', this.frame13213174901)
+        this.frame1321317491  = getImg('banner_publications', this.frame1321317491)
+        this.frame13213174902 = getImg('banner_info', this.frame13213174902)
+        this.frame1321317492  = getImg('banner_membership', this.frame1321317492)
+      } catch (_) { /* noop */ }
     },
     async loadLatestData() {
       try {

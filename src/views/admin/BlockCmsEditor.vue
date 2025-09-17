@@ -2025,12 +2025,23 @@ export default {
         ]
       }
       if (key === 'about' || key === 'about-institute') {
-        return ['hero','content','message']
+        return [
+          'hero','content','message',
+          // About Institute specific
+          'about_image','service1_image','service2_image','service3_image'
+        ]
       }
       if (key === 'cri-consulting') {
         return [
           'what_image',
           'duties_image',
+          // Support section images (FREE/PAID)
+          'support_free_consultation',
+          'support_free_problem',
+          'support_paid_strategy',
+          'support_paid_improvement',
+          'support_paid_analysis',
+          'support_paid_newbiz',
           'achievements_item1_image',
           'achievements_item2_image',
           'achievements_item3_image',

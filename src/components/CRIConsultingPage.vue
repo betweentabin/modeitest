@@ -94,14 +94,14 @@
           <h3 class="category-title"><CmsText pageKey="cri-consulting" fieldKey="support_free_title" tag="span" :fallback="'無料 -FREE-'" /></h3>
           <div class="service-grid">
             <div class="service-card">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590" alt="Consultation" class="service-image" />
+              <img :src="slotImage('support_free_consultation', 'https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590')" alt="Consultation" class="service-image" />
               <div class="service-info">
                 <span class="service-label">consultation</span>
                 <h4 class="service-title">ご相談</h4>
               </div>
             </div>
             <div class="service-card">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590" alt="Problem Analysis" class="service-image" />
+              <img :src="slotImage('support_free_problem', 'https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590')" alt="Problem Analysis" class="service-image" />
               <div class="service-info">
                 <span class="service-label">problem</span>
                 <h4 class="service-title">問題点・課題の整理</h4>
@@ -116,28 +116,28 @@
           <h3 class="category-title"><CmsText pageKey="cri-consulting" fieldKey="support_paid_title" tag="span" :fallback="'有料 -PAID-'" /></h3>
           <div class="service-grid">
             <div class="service-card">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590" alt="Strategy Planning" class="service-image" />
+              <img :src="slotImage('support_paid_strategy', 'https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590')" alt="Strategy Planning" class="service-image" />
               <div class="service-info">
                 <span class="service-label">consultation</span>
                 <h4 class="service-title">対応策の立案</h4>
               </div>
             </div>
             <div class="service-card">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590" alt="Improvement Activities" class="service-image" />
+              <img :src="slotImage('support_paid_improvement', 'https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590')" alt="Improvement Activities" class="service-image" />
               <div class="service-info">
                 <span class="service-label">problem</span>
                 <h4 class="service-title">改善に向けた活動</h4>
               </div>
             </div>
             <div class="service-card">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590" alt="Analysis" class="service-image" />
+              <img :src="slotImage('support_paid_analysis', 'https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590')" alt="Analysis" class="service-image" />
               <div class="service-info">
                 <span class="service-label">problem</span>
                 <h4 class="service-title">分析（新たな課題認識）</h4>
               </div>
             </div>
             <div class="service-card">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590" alt="New Business Activities" class="service-image" />
+              <img :src="slotImage('support_paid_newbiz', 'https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590')" alt="New Business Activities" class="service-image" />
               <div class="service-info">
                 <span class="service-label">problem</span>
                 <h4 class="service-title">新たな事業活動</h4>

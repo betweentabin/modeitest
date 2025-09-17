@@ -53,6 +53,9 @@ class DatabaseSeeder extends Seeder
             GlossaryPageJsonSeeder::class,
             FinancialReportsPageJsonSeeder::class,
             EconomicIndicatorSeeder::class,
+            // Home page defaults (texts + hero slides + links)
+            HomePageJsonSeeder::class,
+            HomePageSlidesSeeder::class,
         ]);
     }
 }

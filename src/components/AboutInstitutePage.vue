@@ -34,7 +34,7 @@
       </div>
       
       <div class="about-content">
-        <img class="about-image" src="https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340" alt="会社画像" />
+        <img class="about-image" :src="img('about_image', 'https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340')" alt="会社画像" />
         <div class="about-text">
           <div class="about-headline">
             <CmsText 
@@ -66,7 +66,7 @@
       
       <div class="service-cards">
         <div class="service-card" id="service-development">
-          <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870" alt="開発・研究" />
+          <img class="service-image" :src="img('service1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870')" alt="開発・研究" />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service1_title" tag="span" :fallback="'開発・研究'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service1_desc" tag="span" :fallback="'ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。'" /></p>
@@ -77,7 +77,7 @@
         </div>
         
         <div class="service-card" id="service-human-resources">
-          <img class="service-image" src="https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870" alt="人材開発、セミナー" />
+          <img class="service-image" :src="img('service2_image', 'https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870')" alt="人材開発、セミナー" />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service2_title" tag="span" :fallback="'人材開発、セミナー'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service2_desc" tag="span" :fallback="'企業幹部、従業員または後継者(次世代育成)にマッチする効果的な研修を行います。ご要望に合わせて各種講演会、セミナー等の企画・運営を行うほか、様々なニーズに合わせて、外部専門家等の紹介・斡旋をいたします。'" /></p>
@@ -206,6 +206,15 @@ export default {
     // no observer to clean up
   },
   methods: {
+    img(key, fallback = '') {
+      try {
+        const imgs = this._pageText?.page?.value?.content?.images
+        const v = imgs && imgs[key]
+        if (typeof v === 'string' && v) return v
+        if (v && typeof v === 'object' && v.url) return v.url
+      } catch (_) {}
+      return fallback
+    },
     adjustRectangleHeight() {
       this.$nextTick(() => {
         const frame1321317466 = this.$el.querySelector('.frame-1321317466');

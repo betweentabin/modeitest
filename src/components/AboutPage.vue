@@ -383,6 +383,15 @@ export default {
       this.visibleHistoryCount = Math.min(next, this.historyItems.length)
     },
     getImageUrl(type) {
+      // 1) ページ管理の画像を最優先
+      try {
+        const imgs = this._pageText?.page?.value?.content?.images
+        const v = imgs && imgs[type]
+        if (typeof v === 'string' && v) return v
+        if (v && typeof v === 'object' && v.url) return v.url
+      } catch (_) {}
+
+      // 2) 旧APIのpageDataフォールバック
       if (this.pageData?.content?.images?.[type]?.url) {
         const u = this.pageData.content.images[type].url
         if (!u) return null

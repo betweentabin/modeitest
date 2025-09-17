@@ -38,6 +38,10 @@ run_seed GlossaryPageJsonSeeder
 run_seed FaqPageJsonSeeder
 run_seed HomePageJsonSeeder
 
+# Images for per-page sections and Home hero slides/banners
+run_seed PageNonKvImagesSeeder
+run_seed HomePageSlidesSeeder
+
 # Pre-create Block CMS (CMS v2) page entries so the list is populated
 run_seed CmsV2DefaultPagesSeeder
 
