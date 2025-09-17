@@ -7,7 +7,7 @@
           <button class="btn" @click="openCreate">新規</button>
         </div>
         <div class="list">
-          <div v-for="p in pages" :key="p.id" :class="['item',{active: currentPage && currentPage.id===p.id}]" @click="selectPage(p)">
+          <div v-for="p in visiblePages" :key="p.id" :class="['item',{active: currentPage && currentPage.id===p.id}]" @click="selectPage(p)">
             <div class="title">{{ p.title }}</div>
             <div class="slug">/{{ p.slug }}</div>
           </div>
@@ -729,11 +729,7 @@
 
             <!-- 所員紹介（Staff） -->
             <div class="section-title">所属紹介（Staff）</div>
-            <div class="field"><label>見出し</label><input v-model="aboutTexts.staff_title" class="input" /></div>
-            <div class="field"><label>英字</label><input v-model="aboutTexts.staff_subtitle" class="input" /></div>
-            <div class="field"><label>スタッフ1（役職/氏名）</label><input v-model="aboutTexts.staff1_title" class="input" /><input v-model="aboutTexts.staff1_name" class="input" /></div>
-            <div class="field"><label>スタッフ2（役職/氏名）</label><input v-model="aboutTexts.staff2_title" class="input" /><input v-model="aboutTexts.staff2_name" class="input" /></div>
-            <div class="field"><label>スタッフ3（役職/氏名）</label><input v-model="aboutTexts.staff3_title" class="input" /><input v-model="aboutTexts.staff3_name" class="input" /></div>
+            <div class="help">このセクションの文言・氏名・役職は「会社概要（/company）」で編集します。About 側は company-profile の文言を参照して表示のみです。</div>
 
             
           </template>
@@ -1341,9 +1337,6 @@ export default {
           company_label_tel: '電話番号（ラベル）', company_value_tel: '電話番号（値）',
           company_label_business_hours: '営業時間（ラベル）', company_value_business_hours: '営業時間（値）',
           staff_title: '所属紹介（見出し）', staff_subtitle: '所属紹介（英字）',
-          staff1_title: 'スタッフ1（役職）', staff1_name: 'スタッフ1（氏名）',
-          staff2_title: 'スタッフ2（役職）', staff2_name: 'スタッフ2（氏名）',
-          staff3_title: 'スタッフ3（役職）', staff3_name: 'スタッフ3（氏名）',
           // HTMLs
           message_body: 'ご挨拶（本文）', company_value_address_html: '所在地（値HTML）'
         }
@@ -1463,6 +1456,21 @@ export default {
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
       const hasHtmls = this.genericHtmls && Object.keys(this.genericHtmls).length > 0
       return hasTexts || hasHtmls
+    },
+    // CMSブロックエディタの左リストから非表示にするスラッグ
+    hiddenCmsSlugs(){
+      return new Set([
+        'company-profile',
+        'membership-premium',
+        'about'
+      ])
+    },
+    // 表示用にフィルタ済みのページ一覧
+    visiblePages(){
+      try {
+        const hidden = this.hiddenCmsSlugs
+        return (this.pages || []).filter(p => !hidden.has(String(p?.slug || '').toLowerCase()))
+      } catch(_) { return this.pages || [] }
     }
   },
   methods: {
@@ -1476,7 +1484,8 @@ export default {
       const slug = this.$route.params.slug || this.$route.query.slug
       if (slug) {
         const match = (this.pages || []).find(p => p.slug === slug)
-        if (match) { await this.selectPage(match) }
+        // 非表示対象は自動選択しない
+        if (match && !this.hiddenCmsSlugs.has(String(match.slug || '').toLowerCase())) { await this.selectPage(match) }
         else {
           // If not exists, prefill create modal with slug
           this.createForm.slug = slug
@@ -2267,8 +2276,16 @@ export default {
           patch.content.texts = { ...this.aboutTexts }
           patch.content.htmls = { ...this.aboutHtmls }
         } else if (this.pageContentKey === 'about') {
-          patch.content.texts = { ...this.aboutTexts }
-          patch.content.htmls = { ...this.aboutHtmls }
+          // About: 所員紹介（スタッフ）文言は /company（company-profile）で一元管理
+          const aboutSanitized = { ...(this.aboutTexts || {}) }
+          try {
+            Object.keys(aboutSanitized).forEach(k => {
+              if (/^staff\d+_(title|name)$/.test(k)) delete aboutSanitized[k]
+              if (k === 'staff_title' || k === 'staff_subtitle') delete aboutSanitized[k]
+            })
+          } catch(_) {}
+          patch.content.texts = { ...aboutSanitized }
+          patch.content.htmls = { ...(this.aboutHtmls || {}) }
         } else if (this.pageContentKey === 'glossary') {
           // texts/htmls は既存どおり（intro等）。items も保存
           if (Object.keys(this.genericTexts||{}).length) patch.content.texts = { ...this.genericTexts }

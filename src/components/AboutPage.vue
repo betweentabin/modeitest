@@ -182,10 +182,10 @@
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
-            <CmsText pageKey="about" fieldKey="staff_title" tag="span" :fallback="'所属紹介'" />
+            <CmsText pageKey="company-profile" fieldKey="staff_title" tag="span" :fallback="'所属紹介'" />
           </h2>
           <p class="section-subtitle">
-            <CmsText pageKey="about" fieldKey="staff_subtitle" tag="span" :fallback="'OUR TEAM'" />
+            <CmsText pageKey="company-profile" fieldKey="staff_subtitle" tag="span" :fallback="'OUR TEAM'" />
           </p>
         </div>
         

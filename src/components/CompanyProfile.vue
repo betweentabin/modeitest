@@ -301,7 +301,7 @@
                 <CmsText pageKey="company-profile" fieldKey="staff_morita_position" tag="div" class="staff-position" :fallback="'企画部　部長代理'" />
                 <div class="staff-name">
                   <CmsText pageKey="company-profile" fieldKey="staff_morita_name" tag="span" :fallback="'森田 祥子'" />
-                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_morita_reading" tag="span" :fallback="'もりた さちこ'" /> -</span>
+                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_morita_reading" tag="span" :fallback="'もりた さちこ'" /></span>
                 </div>
                 <CmsText pageKey="company-profile" fieldKey="staff_morita_note" tag="div" class="staff-note" :fallback="'（アジア福岡パートナーズへ出向）'" allowEmpty />
               </div>
@@ -312,7 +312,7 @@
                 <CmsText pageKey="company-profile" fieldKey="staff_mizokami_position" tag="div" class="staff-position" :fallback="'取締役企画部長　兼調査部長'" />
                 <div class="staff-name">
                   <CmsText pageKey="company-profile" fieldKey="staff_mizokami_name" tag="span" :fallback="'溝上 浩文'" />
-                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_mizokami_reading" tag="span" :fallback="'みぞかみ ひろふみ'" /> -</span>
+                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_mizokami_reading" tag="span" :fallback="'みぞかみ ひろふみ'" /></span>
                 </div>
               </div>
             </div>
@@ -322,7 +322,7 @@
                 <CmsText pageKey="company-profile" fieldKey="staff_kuga_position" tag="div" class="staff-position" :fallback="'代表取締役社長'" />
                 <div class="staff-name">
                   <CmsText pageKey="company-profile" fieldKey="staff_kuga_name" tag="span" :fallback="'空閑 重信'" />
-                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_kuga_reading" tag="span" :fallback="'くが しげのぶ'" /> -</span>
+                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_kuga_reading" tag="span" :fallback="'くが しげのぶ'" /></span>
                 </div>
               </div>
             </div>
@@ -332,7 +332,7 @@
                 <CmsText pageKey="company-profile" fieldKey="staff_takada_position" tag="div" class="staff-position" :fallback="'調査部　主任'" />
                 <div class="staff-name">
                   <CmsText pageKey="company-profile" fieldKey="staff_takada_name" tag="span" :fallback="'髙田 友里恵'" />
-                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_takada_reading" tag="span" :fallback="'たかだ ゆりえ'" /> -</span>
+                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_takada_reading" tag="span" :fallback="'たかだ ゆりえ'" /></span>
                 </div>
               </div>
             </div>
@@ -342,7 +342,7 @@
                 <CmsText pageKey="company-profile" fieldKey="staff_nakamura_position" tag="div" class="staff-position" :fallback="''" allowEmpty />
                 <div class="staff-name">
                   <CmsText pageKey="company-profile" fieldKey="staff_nakamura_name" tag="span" :fallback="'中村 公栄'" />
-                  <span class="staff-reading">- <CmsText pageKey="company-profile" fieldKey="staff_nakamura_reading" tag="span" :fallback="'なかむら きえみ'" /> -</span>
+                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_nakamura_reading" tag="span" :fallback="'なかむら きえみ'" /></span>
                 </div>
               </div>
             </div>
