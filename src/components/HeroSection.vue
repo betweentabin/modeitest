@@ -137,7 +137,13 @@ export default {
   },
   computed: {
     resolvedImage() {
-      // Prefer media registry with per-page mapping if available
+      // 1) Prefer page-managed hero image (PageContent.content.images.hero)
+      try {
+        const pageHero = this.pageHero && this.pageHero()
+        if (typeof pageHero === 'string' && pageHero.length) return pageHero
+      } catch (_) {}
+
+      // 2) Fallback to media registry with per-page mapping if available
       try {
         if (this._pageMedia && (this.cmsPageKey || '').length > 0) {
           const v = this._pageMedia.getResponsiveSlot('hero', this.mediaKey || '', this.heroImage)
@@ -145,7 +151,7 @@ export default {
         }
       } catch (_) {}
 
-      // Legacy media registry fallback
+      // 3) Legacy media registry fallback
       const key = this.mediaKey
       if (key && this._media) {
         if (this._media.getResponsiveImage) {
@@ -157,7 +163,7 @@ export default {
           return v || this.heroImage
         }
       }
-      // Static fallback
+      // 4) Static fallback
       return this.heroImage
     },
     heroStyle() {

@@ -444,6 +444,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { usePageText } from '@/composables/usePageText'
 import { usePageMedia } from '@/composables/usePageMedia'
+import { resolveMediaUrl } from '@/utils/url.js'
 import CmsBlock from '@/components/CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
 
@@ -602,6 +603,15 @@ export default {
     },
     media(key, fallback = '') {
       try {
+        // A-方針: ページ管理の content.images を最優先（文言と同じ経路で即時反映）
+        const page = this._pageText && this._pageText.page && this._pageText.page.value
+        const imgs = page && page.content && page.content.images
+        if (imgs && Object.prototype.hasOwnProperty.call(imgs, key)) {
+          const v = imgs[key]
+          const url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+          if (typeof url === 'string' && url.length) return resolveMediaUrl(url)
+        }
+
         if (this._pageMedia) {
           // slot = key, default mediaKey = key
           return this._pageMedia.getResponsiveSlot(key, key, fallback) || fallback
