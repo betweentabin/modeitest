@@ -479,8 +479,26 @@ const RECOMMENDED_KEYS = {
     // History controls
     'history_more'
   ],
-  // CompanyProfile：ご挨拶、ミッション、会社概要見出しまで
-  'company-profile': ['page_title', 'page_subtitle', 'philosophy_title', 'philosophy_subtitle', 'message_title', 'message_subtitle', 'message_label', 'message_signature', 'mission_title', 'mission_body', 'profile_title', 'profile_subtitle'],
+  // CompanyProfile：ご挨拶、ミッション、会社概要、所員紹介（スタッフカードの文言も含む）
+  'company-profile': [
+    'page_title', 'page_subtitle',
+    'philosophy_title', 'philosophy_subtitle',
+    'message_title', 'message_subtitle', 'message_label', 'message_signature',
+    'mission_title', 'mission_body',
+    'profile_title', 'profile_subtitle',
+    // 所員紹介 見出し
+    'staff_title', 'staff_subtitle',
+    // 所員：森田
+    'staff_morita_position','staff_morita_name','staff_morita_reading','staff_morita_note',
+    // 所員：溝上
+    'staff_mizokami_position','staff_mizokami_name','staff_mizokami_reading',
+    // 所員：空閑
+    'staff_kuga_position','staff_kuga_name','staff_kuga_reading',
+    // 所員：髙田
+    'staff_takada_position','staff_takada_name','staff_takada_reading',
+    // 所員：中村
+    'staff_nakamura_position','staff_nakamura_name','staff_nakamura_reading'
+  ],
   // Consulting：主要セクションをCMS化
   consulting: ['page_title', 'page_subtitle', 'what_title', 'what_subtitle', 'what_content_subtitle', 'what_content_heading', 'what_content_body', 'duties_title', 'duties_subtitle', 'duties_intro', 'duties_label', 'duties_heading', 'duties_list', 'support_title', 'support_subtitle_en', 'support_intro', 'support_free_title', 'support_paid_title', 'achievements_title', 'achievements_subtitle', 'cta_primary', 'cta_secondary'],
   // About Institute：導入とサービス概要
@@ -537,7 +555,24 @@ const TEXT_LIMITS = {
   cta_primary: 30,
   cta_secondary: 30,
   mission_title: 40,
-  mission_body: 200
+  mission_body: 200,
+  // 所員紹介：控えめに上限（レイアウト保護の目安）
+  staff_morita_position: 40,
+  staff_morita_name: 20,
+  staff_morita_reading: 24,
+  staff_morita_note: 40,
+  staff_mizokami_position: 40,
+  staff_mizokami_name: 20,
+  staff_mizokami_reading: 24,
+  staff_kuga_position: 40,
+  staff_kuga_name: 20,
+  staff_kuga_reading: 24,
+  staff_takada_position: 40,
+  staff_takada_name: 20,
+  staff_takada_reading: 24,
+  staff_nakamura_position: 40,
+  staff_nakamura_name: 20,
+  staff_nakamura_reading: 24,
 }
 
 // 初心者向けのキー説明
@@ -616,6 +651,30 @@ const KEY_LOCATIONS = {
     nav_staff: 'ページ内ナビ：所員紹介',
     nav_financial: 'ページ内ナビ：決算報告',
     nav_access: 'ページ内ナビ：アクセス',
+    // 所員紹介 見出し
+    staff_title: '所員紹介セクション見出し',
+    staff_subtitle: '所員紹介セクション英字',
+    // 所員カード（森田）
+    staff_morita_position: '所員紹介：森田 役職',
+    staff_morita_name: '所員紹介：森田 氏名',
+    staff_morita_reading: '所員紹介：森田 ふりがな',
+    staff_morita_note: '所員紹介：森田 注記',
+    // 所員カード（溝上）
+    staff_mizokami_position: '所員紹介：溝上 役職',
+    staff_mizokami_name: '所員紹介：溝上 氏名',
+    staff_mizokami_reading: '所員紹介：溝上 ふりがな',
+    // 所員カード（空閑）
+    staff_kuga_position: '所員紹介：空閑 役職',
+    staff_kuga_name: '所員紹介：空閑 氏名',
+    staff_kuga_reading: '所員紹介：空閑 ふりがな',
+    // 所員カード（髙田）
+    staff_takada_position: '所員紹介：髙田 役職',
+    staff_takada_name: '所員紹介：髙田 氏名',
+    staff_takada_reading: '所員紹介：髙田 ふりがな',
+    // 所員カード（中村）
+    staff_nakamura_position: '所員紹介：中村 役職（空可）',
+    staff_nakamura_name: '所員紹介：中村 氏名',
+    staff_nakamura_reading: '所員紹介：中村 ふりがな',
   },
   'privacy': {
     page_title: 'ヒーロー・パンくず・見出し（PrivacyPolicyPage）',

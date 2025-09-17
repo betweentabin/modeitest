@@ -420,7 +420,55 @@
             </div>
             <div class="field">
               <label>英字</label>
-              <input v-model="companyTexts.staff_subtitle" class="input" placeholder="About us" />
+              <input v-model="companyTexts.staff_subtitle" class="input" placeholder="MEMBER" />
+            </div>
+            <!-- Staff cards: 文言編集（画像は下の各写真アップロードで管理） -->
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field-group">
+                  <div class="group-title">森田</div>
+                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_morita_position" class="input" /></div>
+                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_morita_name" class="input" /></div>
+                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_morita_reading" class="input" /></div>
+                  <div class="field"><label>注記</label><input v-model="companyTexts.staff_morita_note" class="input" placeholder="（空でも可）" /></div>
+                </div>
+              </div>
+              <div class="text-col">
+                <div class="field-group">
+                  <div class="group-title">溝上</div>
+                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_mizokami_position" class="input" /></div>
+                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_mizokami_name" class="input" /></div>
+                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_mizokami_reading" class="input" /></div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field-group">
+                  <div class="group-title">空閑</div>
+                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_kuga_position" class="input" /></div>
+                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_kuga_name" class="input" /></div>
+                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_kuga_reading" class="input" /></div>
+                </div>
+              </div>
+              <div class="text-col">
+                <div class="field-group">
+                  <div class="group-title">髙田</div>
+                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_takada_position" class="input" /></div>
+                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_takada_name" class="input" /></div>
+                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_takada_reading" class="input" /></div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid">
+              <div class="text-col">
+                <div class="field-group">
+                  <div class="group-title">中村</div>
+                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_nakamura_position" class="input" placeholder="（空でも可）" /></div>
+                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_nakamura_name" class="input" /></div>
+                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_nakamura_reading" class="input" /></div>
+                </div>
+              </div>
             </div>
             <div class="field">
               <label>写真（森田） company_profile_staff_morita</label>
@@ -1288,6 +1336,12 @@ export default {
           profile_organization_label: '組織体制（ラベル）', profile_organization_value: '組織体制（値）',
           history_title: '沿革（見出し）', history_subtitle: '沿革（英字）',
           staff_title: '所員紹介（見出し）', staff_subtitle: '所員紹介（英字）',
+          // Staff cards
+          staff_morita_position: '森田：役職', staff_morita_name: '森田：氏名', staff_morita_reading: '森田：ふりがな', staff_morita_note: '森田：注記',
+          staff_mizokami_position: '溝上：役職', staff_mizokami_name: '溝上：氏名', staff_mizokami_reading: '溝上：ふりがな',
+          staff_kuga_position: '空閑：役職', staff_kuga_name: '空閑：氏名', staff_kuga_reading: '空閑：ふりがな',
+          staff_takada_position: '髙田：役職', staff_takada_name: '髙田：氏名', staff_takada_reading: '髙田：ふりがな',
+          staff_nakamura_position: '中村：役職', staff_nakamura_name: '中村：氏名', staff_nakamura_reading: '中村：ふりがな',
           // HTMLs
           message_body: 'ご挨拶（本文）', mission_body: 'ミッション（本文）',
           // Access
@@ -2280,6 +2334,9 @@ export default {
             .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
             .filter(h => h.year || h.date || h.body) : []
           patch.content.history = hist
+          // Ensure immediate reflection on public site like financial reports
+          // Public API returns only published content, so publish on save
+          patch.is_published = true
         } else if (this.pageContentKey === 'cri-consulting') {
           patch.content.texts = { ...this.consultingTexts }
           patch.content.htmls = { ...this.consultingHtmls }
@@ -2390,6 +2447,8 @@ export default {
   .layout-grid{ display:grid; grid-template-columns: 1fr 280px; gap:16px; align-items:start; }
   .text-col{ display:flex; flex-direction:column; gap:8px; }
   .image-col{ display:flex; flex-direction:column; gap:8px; }
+  .field-group{ border:1px solid #eee; border-radius:8px; padding:10px; background:#fff; }
+  .group-title{ font-weight:600; color:#1A1A1A; margin-bottom:6px; }
   @media (max-width: 960px){
     .layout-grid{ grid-template-columns: 1fr; }
   }
