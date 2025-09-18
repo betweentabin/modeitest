@@ -1,7 +1,18 @@
 {
   "rewrites": [
     {
-      "source": "/storage/(.*)",
+      Access to fetch at 'https://heroic-celebration-production.up.railway.app/api/admin/emails/8/send-now' from origin 'https://modeitest.vercel.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+
+      heroic-celebration-p…emails/8/send-now:1 
+       Failed to load resource: net::ERR_FAILED
+      apiClient.js:156 API request failed: TypeError: Failed to fetch
+          at i.request (apiClient.js:112:30)
+          at i.post (apiClient.js:172:17)
+          at i.sendEmailCampaignNow (apiClient.js:398:17)
+          at s.sendNow (EmailCampaignManagement.vue:394:1)
+          at click (EmailCampaignManagement.vue:1:6914)
+      request	@	apiClient.js:156
+            "source": "/storage/(.*)",
       "destination": "https://heroic-celebration-production.up.railway.app/storage/$1"
     },
     {

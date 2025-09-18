@@ -9,6 +9,6 @@ class CmsV2Media extends Model
     protected $table = 'cms_v2_media';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['id','filename','mime','size','data'];
+    // checksum もコントローラでセットしているため、fillable に追加する
+    protected $fillable = ['id','filename','mime','size','data','checksum'];
 }
-
