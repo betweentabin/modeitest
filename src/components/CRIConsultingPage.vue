@@ -336,9 +336,26 @@ export default {
         } catch(_) {}
       })
     } catch(_) { /* noop */ }
+
+    // Reflect admin edits to PageContent immediately (images/texts) without full reload
+    try {
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:' + this.pageKey) {
+          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
+          // force UI refresh to re-resolve slotImage()
+          try { this.$forceUpdate() } catch(_) {}
+        }
+      }
+      window.addEventListener('storage', this.__onStorage)
+      this.__onVis = () => { if (document.visibilityState === 'visible') { try { this._pageText.load({ force: true }) } catch(_) {} } }
+      document.addEventListener('visibilitychange', this.__onVis)
+    } catch(_) {}
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
   },
   methods: {
     slotImage(slotKey, fallback = '') {

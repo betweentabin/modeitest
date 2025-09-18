@@ -199,11 +199,26 @@ export default {
     // note: small text is handled via inline span in mainHeadlineText
     window.addEventListener('resize', this.adjustRectangleHeight);
     window.addEventListener('resize', this.adjustMainHeadline);
+    // Reflect admin edits immediately: listen for localStorage cache updates and reload PageContent
+    try {
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:' + this.pageKey) {
+          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
+        }
+      }
+      window.addEventListener('storage', this.__onStorage)
+      // Also refresh when tab becomes visible again
+      this.__onVis = () => { if (document.visibilityState === 'visible') { try { this._pageText.load({ force: true }) } catch(_) {} } }
+      document.addEventListener('visibilitychange', this.__onVis)
+    } catch(_) {}
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);
     window.removeEventListener('resize', this.adjustMainHeadline);
     // no observer to clean up
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
   },
   methods: {
     img(key, fallback = '') {

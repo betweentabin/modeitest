@@ -1162,6 +1162,8 @@
             <span class="help">キー未入力の場合は追加できません</span>
           </div>
         </div>
+        <!-- どの表示状態でも確実に使えるフォールバックのhidden input -->
+        <input ref="newImageInputAny" type="file" accept="image/*" style="display:none" @change="onAddNewPageImage" />
 
         <!-- Media key overrides (content.media_keys) -->
         <div v-if="currentPage" class="section-title">メディアキー割当（media_keys）</div>
@@ -1799,6 +1801,8 @@ export default {
       try {
         const file = (e.target.files && e.target.files[0]) || null
         if (!file || !this.newImageKey || !this.pageContentKey) return
+        // 同じファイル名での再選択でも change が発火するように、値を即クリア
+        try { e.target.value = '' } catch(_) {}
         const res = await apiClient.adminReplacePageImage(this.pageContentKey, this.newImageKey, file)
         if (res && res.success !== false) {
           // Bridge to media registry when applicable
