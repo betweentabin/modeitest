@@ -626,6 +626,28 @@ export default {
         this.frame1321317491  = getImg('banner_publications', this.frame1321317491)
         this.frame13213174902 = getImg('banner_info', this.frame13213174902)
         this.frame1321317492  = getImg('banner_membership', this.frame1321317492)
+
+        const card1Image = getImg('about_card1_image', this.card1Props?.image)
+        if (card1Image && card1Image !== this.card1Props?.image) {
+          this.card1Props = { ...(this.card1Props || {}), image: card1Image }
+        }
+        const card2Image = getImg('about_card2_image', this.card2Props?.image)
+        if (card2Image && card2Image !== this.card2Props?.image) {
+          this.card2Props = { ...(this.card2Props || {}), image: card2Image }
+        }
+        const card3Image = getImg('about_card3_image', this.image1)
+        if (card3Image && card3Image !== this.image1) {
+          this.image1 = card3Image
+        }
+
+        const partner1 = getImg('home_partner_logo1', this.image2)
+        if (partner1 && partner1 !== this.image2) this.image2 = partner1
+        const partner2 = getImg('home_partner_logo2', this.image3)
+        if (partner2 && partner2 !== this.image3) this.image3 = partner2
+        const partner3 = getImg('home_partner_logo3', this.image4)
+        if (partner3 && partner3 !== this.image4) this.image4 = partner3
+        const partner4 = getImg('home_partner_logo4', this.image5)
+        if (partner4 && partner4 !== this.image5) this.image5 = partner4
       } catch (_) { /* noop */ }
     },
     async loadLatestData() {

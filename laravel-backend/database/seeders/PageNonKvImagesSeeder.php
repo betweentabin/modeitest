@@ -45,6 +45,16 @@ class PageNonKvImagesSeeder extends Seeder
             'banner_publications' => '/img/--.png',
             'banner_info' => '/img/---1.png',
             'banner_membership' => '/img/---7.png',
+            'hero_slide_1' => '/img/Image_fx1.jpg',
+            'hero_slide_2' => '/img/Image_fx6.jpg',
+            'hero_slide_3' => '/img/Image_fx3.jpg',
+            'about_card1_image' => '/img/image.png',
+            'about_card2_image' => '/img/image-1.png',
+            'about_card3_image' => '/img/image-2.png',
+            'home_partner_logo1' => '/img/---3.png',
+            'home_partner_logo2' => '/img/---4.png',
+            'home_partner_logo3' => '/img/---5.png',
+            'home_partner_logo4' => '/img/---6.png',
         ]);
 
         // ABOUT-INSTITUTE: main image + service images

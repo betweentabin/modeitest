@@ -1200,12 +1200,95 @@
             <input class="input" v-model="newMediaSlot" placeholder="スロット（例: hero）" style="max-width:220px;" />
             <input class="input" v-model="newMediaKey" placeholder="mediaキー（例: hero_terms）" />
             <button class="btn" @click="()=>{ if(newMediaSlot&&newMediaKey){ mediaKeys[newMediaSlot]=newMediaKey; newMediaSlot=''; newMediaKey=''; } }">追加</button>
-          </div>
-          <div class="help">指定したスロットはページの画像解決時に優先されます</div>
         </div>
+        <div class="help">指定したスロットはページの画像解決時に優先されます</div>
+      </div>
 
-        <!-- Home: Hero Slider Images (3 slides) -->
-        <div v-if="currentPage && currentPage.slug==='home'" class="section-title">トップ: スライダー画像（3枚）</div>
+      <!-- Home: About cards images -->
+      <div v-if="currentPage && currentPage.slug==='home'" class="section-title">トップ: 研究所についてカード画像</div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>カード1（キー: about_card1_image）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('about_card1_image') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('about_card1_image')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>カード2（キー: about_card2_image）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('about_card2_image') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('about_card2_image')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>カード3（キー: about_card3_image）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('about_card3_image') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('about_card3_image')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home: Partner logos -->
+      <div v-if="currentPage && currentPage.slug==='home'" class="section-title">トップ: パートナーロゴ</div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>ロゴ1（キー: home_partner_logo1）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo1') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('home_partner_logo1')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>ロゴ2（キー: home_partner_logo2）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo2') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('home_partner_logo2')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>ロゴ3（キー: home_partner_logo3）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo3') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('home_partner_logo3')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentPage && currentPage.slug==='home'" class="field">
+        <label>ロゴ4（キー: home_partner_logo4）</label>
+        <div class="page-image-row">
+          <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo4') || ''" alt="preview"/></div>
+          <div class="img-meta">
+            <div class="img-actions">
+              <button class="btn" @click="uploadForKey('home_partner_logo4')">アップロードファイル</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home: Hero Slider Images (3 slides) -->
+      <div v-if="currentPage && currentPage.slug==='home'" class="section-title">トップ: スライダー画像（3枚）</div>
         <div v-if="currentPage && currentPage.slug==='home'" class="field">
           <label>スライド1（キー: hero_slide_1）</label>
           <div class="page-image-row">
@@ -2143,7 +2226,12 @@ export default {
         ]
       }
       if (key === 'home') {
-        return ['hero_slide_1','hero_slide_2','hero_slide_3','banner_seminar','banner_publications','banner_info','banner_membership']
+        return [
+          'hero_slide_1','hero_slide_2','hero_slide_3',
+          'banner_seminar','banner_publications','banner_info','banner_membership',
+          'about_card1_image','about_card2_image','about_card3_image',
+          'home_partner_logo1','home_partner_logo2','home_partner_logo3','home_partner_logo4'
+        ]
       }
       return []
     },
