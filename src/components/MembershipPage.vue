@@ -354,6 +354,18 @@ export default {
         } catch (_) {}
       } catch(_) {}
     })
+
+    // Reflect admin edits without requiring viewport resize
+    try {
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:' + this.cmsKey) {
+          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
+          try { this.$forceUpdate() } catch(_) {}
+        }
+      }
+      window.addEventListener('storage', this.__onStorage)
+    } catch(_) {}
   },
   watch: {
     cmsKey(newKey, oldKey) {
