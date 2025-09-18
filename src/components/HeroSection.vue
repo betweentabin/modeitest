@@ -126,12 +126,30 @@ export default {
     if (this.cmsPageKey) {
       try {
         this._pageText = usePageText(this.cmsPageKey)
-        const opts = { force: true }
+        const opts = {}
+        let hasAdminToken = false
         try {
-          const t = (typeof window !== 'undefined') ? (localStorage.getItem('admin_token') || '') : ''
-          if (t && t.length > 0) opts.preferAdmin = true
-        } catch (_) {}
-        await this._pageText.load(opts)
+          hasAdminToken = !!((typeof window !== 'undefined') ? (localStorage.getItem('admin_token') || '') : '')
+        } catch (_) { hasAdminToken = false }
+        const previewFlag = (() => {
+          try {
+            const hash = window.location.hash || ''
+            const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+            const params = new URLSearchParams(qs)
+            if (params.has('cmsPreview')) return true
+            if (params.has('cmsEdit')) return true
+            return params.get('cmsPreview') === 'edit'
+          } catch (_) { return false }
+        })()
+        if (hasAdminToken || previewFlag) {
+          opts.preferAdmin = true
+          opts.force = true
+        }
+        if (Object.keys(opts).length > 0) {
+          await this._pageText.load(opts)
+        } else {
+          await this._pageText.load()
+        }
       } catch (e) { /* noop */ }
     }
   },

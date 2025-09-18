@@ -3,6 +3,29 @@ import { useMedia } from '@/composables/useMedia'
 import { usePageText } from '@/composables/usePageText'
 import { resolveMediaUrl } from '@/utils/url.js'
 
+// Micro-cache shared across usePageMedia callers so we don't hammer the CMS API
+const v2ImageCache = new Map() // slug -> images map | null
+const missingV2Slugs = new Set() // slug -> fetched 404, skip further fetches unless forced
+
+function hasAdminToken() {
+  if (typeof window === 'undefined') return false
+  try { return !!localStorage.getItem('admin_token') } catch (_) { return false }
+}
+
+function hasPreviewFlag() {
+  if (typeof window === 'undefined') return false
+  try {
+    const hash = window.location.hash || ''
+    const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+    const params = new URLSearchParams(qs)
+    if (params.has('cmsPreview')) return true
+    if (params.has('cmsEdit')) return true
+    return params.get('cmsPreview') === 'edit'
+  } catch (_) {
+    return false
+  }
+}
+
 // Provide per-page media key mapping over the global media registry
 // PageContent.content.media_keys: { slotKey: mediaKey }
 
@@ -35,7 +58,7 @@ export function usePageMedia() {
     return map[k] || k
   }
 
-  const ensure = async (pageKey) => {
+  const ensure = async (pageKey, options = {}) => {
     try {
       state.pageKey = pageKey || ''
       // media registry
@@ -44,33 +67,84 @@ export function usePageMedia() {
       // page mapping (optional)
       if (state.pageKey) {
         state._pageText = usePageText(state.pageKey)
-        await state._pageText.load({ force: true })
+
+        const detectedPreview = hasPreviewFlag()
+        const detectedAdmin = hasAdminToken()
+        const force = options.force === true || (!!options.preferAdmin && !options.force) || (!('preferAdmin' in options) && (detectedPreview || detectedAdmin))
+        const preferAdmin = options.preferAdmin === true || (!('preferAdmin' in options) && (detectedPreview || detectedAdmin))
+
+        const loadOpts = {}
+        if (force) loadOpts.force = true
+        if (preferAdmin) loadOpts.preferAdmin = true
+        // Respect cache when not forcing; usePageText handles concurrent callers gracefully
+        if (Object.keys(loadOpts).length > 0) {
+          await state._pageText.load(loadOpts)
+        } else {
+          await state._pageText.load()
+        }
+
         // Also try CMS v2 public snapshot to capture KV image (hero)
         try {
           const api = await import('@/services/apiClient')
           const apiClient = api.default || api
-          // Bridge to v2 by slug (pageKey may differ from CMS slug)
+          const apiConfig = await import('@/config/api.js')
           const slug = toCmsSlug(state.pageKey)
-          const res = await apiClient.get(`/api/public/pages-v2/${slug}`, { silent: true, params: { _t: Date.now() } })
-          const sections = res?.data?.sections || res?.data?.data?.sections || res?.sections || []
-          const map = {}
-          if (Array.isArray(sections)) {
-            for (const s of sections) {
-              const type = (s?.component_type || '').toUpperCase()
-              const props = s?.props || s?.props_json || {}
-              if (type === 'KV') {
-                const id = props?.image_id || props?.id
-                const ext = props?.ext || 'jpg'
-                if (id) {
-                  // use medium preset for hero by default
-                  const url = (await import('@/config/api.js')).getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`)
-                  map['hero'] = url
+
+          if (!force) {
+            if (v2ImageCache.has(slug)) {
+              state._v2images = v2ImageCache.get(slug)
+              state.ready = true
+              return
+            }
+            if (missingV2Slugs.has(slug)) {
+              state._v2images = null
+              state.ready = true
+              return
+            }
+          }
+
+          const params = force ? { _t: Date.now() } : {}
+          const res = await apiClient.get(`/api/public/pages-v2/${slug}`, { silent: true, params })
+
+          if (!res || res.success === false) {
+            if (!force && Number(res?.code) === 404) missingV2Slugs.add(slug)
+            state._v2images = v2ImageCache.get(slug) || null
+          } else {
+            const payload = res.data || res
+            const sections = payload?.sections || payload?.data?.sections || payload?.data?.data?.sections || res?.sections || []
+            const map = {}
+            if (Array.isArray(sections)) {
+              for (const s of sections) {
+                const type = (s?.component_type || '').toUpperCase()
+                const props = s?.props || s?.props_json || {}
+                if (type === 'KV') {
+                  const id = props?.image_id || props?.id
+                  const ext = props?.ext || 'jpg'
+                  if (id) {
+                    const url = apiConfig.getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`)
+                    map['hero'] = url
+                  }
                 }
               }
             }
+            const normalized = Object.keys(map).length ? map : null
+            state._v2images = normalized
+            if (normalized === null) {
+              if (!force) missingV2Slugs.add(slug)
+              else {
+                v2ImageCache.delete(slug)
+                missingV2Slugs.add(slug)
+              }
+            } else {
+              v2ImageCache.set(slug, normalized)
+              missingV2Slugs.delete(slug)
+            }
           }
-          state._v2images = Object.keys(map).length ? map : null
-        } catch (_) { state._v2images = state._v2images || null }
+        } catch (_) {
+          const slug = toCmsSlug(state.pageKey)
+          if (!force) missingV2Slugs.add(slug)
+          state._v2images = state._v2images || null
+        }
       }
       state.ready = true
     } catch (_) { state.ready = true }
