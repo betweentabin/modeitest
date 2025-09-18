@@ -359,7 +359,7 @@ export default {
   },
   methods: {
     slotImage(slotKey, fallback = '') {
-      // 方針A: ページ管理の content.images を最優先
+      // 方針A: ページ管理の content.images を最優先（モバイルでも確実に反映）
       try {
         const page = this._pageText?.page?.value
         const v = page?.content?.images?.[slotKey]
@@ -375,10 +375,10 @@ export default {
           return u
         }
       } catch (_) {}
-      // 次にレジストリ（ページマッピング）
+      // 次にレジストリ（ページマッピング）: viewportに応じたキーも解決
       try {
         if (this._pageMedia) {
-          const v = this._pageMedia.getSlot(slotKey, slotKey, fallback)
+          const v = this._pageMedia.getResponsiveSlot(slotKey, slotKey, fallback)
           if (v && v !== fallback) return v
         }
       } catch(_) {}

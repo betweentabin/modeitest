@@ -53,7 +53,7 @@
         <div class="featured-publication">
           <div class="featured-content">
             <div class="featured-image">
-              <img src="/img/image-1.png" alt="話題の特典" />
+              <img :src="slotImage('featured_image', '/img/image-1.png')" alt="話題の特典" />
             </div>
                          <div class="featured-info">
                <div class="content-box">
@@ -156,8 +156,70 @@ export default {
       this._pageText = usePageText('premium-membership')
       this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
+    // Load media registry and per-page mappings so mobile images update instantly
+    import('@/composables/usePageMedia').then(mod => {
+      try {
+        const { usePageMedia } = mod
+        this._pageMedia = usePageMedia()
+        this._pageMedia.ensure('premium-membership')
+        this._media = this._pageMedia._media
+        try {
+          const readImages = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            try { return val ? JSON.stringify(val) : '' } catch(_) { return val ? Object.keys(val).join('|') : '' }
+          }
+          this.$watch(readImages, () => { this.$forceUpdate() })
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch(_) {}
+      } catch(_) {}
+    })
+    // Reflect admin edits without reload
+    try {
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:premium-membership') {
+          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
+          try { this.$forceUpdate() } catch(_) {}
+        }
+      }
+      window.addEventListener('storage', this.__onStorage)
+    } catch(_) {}
   },
   methods: {
+    slotImage(slotKey, fallback = '') {
+      // Page-managed first (with cache-busting), then responsive media registry
+      try {
+        const page = this._pageText?.page?.value
+        const v = page?.content?.images?.[slotKey]
+        if (typeof v === 'string' && v) return v
+        if (v && typeof v === 'object' && v.url) {
+          let u = v.url
+          try {
+            if (u.startsWith('/storage/') && v.uploaded_at) {
+              const ver = Date.parse(v.uploaded_at) || Date.now()
+              u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
+          } catch(_) {}
+          return u
+        }
+      } catch(_) {}
+      try {
+        if (this._pageMedia) {
+          const v = this._pageMedia.getResponsiveSlot(slotKey, slotKey, fallback)
+          if (v) return v
+        }
+        if (this._media) {
+          if (this._media.getResponsiveImage) return this._media.getResponsiveImage(slotKey, fallback) || fallback
+          if (this._media.getImage) return this._media.getImage(slotKey, fallback) || fallback
+        }
+      } catch(_) {}
+      return fallback
+    },
     handleContactClick() {
       // Navigate to contact page
       this.$router.push('/contact');

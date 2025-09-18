@@ -331,6 +331,29 @@ export default {
       this._pageText = usePageText(this.cmsKey)
       this._pageText.load({ force: true })
     } catch(e) { /* noop */ }
+    // Ensure media registry for responsive images and per-page overrides
+    import('@/composables/usePageMedia').then(mod => {
+      try {
+        const { usePageMedia } = mod
+        this._pageMedia = usePageMedia()
+        this._pageMedia.ensure(this.cmsKey)
+        this._media = this._pageMedia._media
+        // Watch for registry updates to reflect changes immediately (incl. mobile)
+        try {
+          const readImages = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            try { return val ? JSON.stringify(val) : '' } catch (_) { return val ? Object.keys(val).join('|') : '' }
+          }
+          this.$watch(readImages, () => { this.$forceUpdate() })
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch (_) {}
+      } catch(_) {}
+    })
   },
   watch: {
     cmsKey(newKey, oldKey) {
@@ -344,15 +367,37 @@ export default {
   },
   methods: {
     getImage(key, fallback = '') {
+      // 1) Page-managed images first (cache-busted, ensures admin updates reflect instantly)
       try {
-        const page = this._pageText && this._pageText.page && this._pageText.page.value
-        const images = page && page.content && page.content.images
-        const v = images && Object.prototype.hasOwnProperty.call(images, key) ? images[key] : null
-        if (!v) return fallback
-        if (typeof v === 'string') return v || fallback
-        if (typeof v === 'object' && v.url) return v.url
-        return fallback
-      } catch (_) { return fallback }
+        const page = this._pageText?.page?.value
+        const images = page?.content?.images || {}
+        if (Object.prototype.hasOwnProperty.call(images, key)) {
+          const v = images[key]
+          if (typeof v === 'string' && v) return v
+          if (v && typeof v === 'object' && v.url) {
+            let url = v.url
+            try {
+              if (url.startsWith('/storage/') && v.uploaded_at) {
+                const ver = Date.parse(v.uploaded_at) || Date.now()
+                url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
+            } catch (_) {}
+            return url
+          }
+        }
+      } catch (_) {}
+      // 2) Per-page media registry (supports responsive variants, e.g., _mobile)
+      try {
+        if (this._pageMedia) {
+          const v = this._pageMedia.getResponsiveSlot(key, key, fallback)
+          if (v) return v
+        }
+        if (this._media) {
+          if (this._media.getResponsiveImage) return this._media.getResponsiveImage(key, fallback) || fallback
+          if (this._media.getImage) return this._media.getImage(key, fallback) || fallback
+        }
+      } catch (_) {}
+      return fallback
     },
     handleContactClick() {
       const link = this._pageText?.getLink('cta_primary', '/contact') || '/contact'
