@@ -294,11 +294,54 @@ export default {
         console.error('フォームデータの復元に失敗しました:', e);
       }
     }
-    // Load page texts
+    // Load page texts with admin/preview support and force to avoid stale
     try {
       this._pageText = usePageText(this.pageKey)
-      this._pageText.load()
+      const opts = { force: true }
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+        const token = localStorage.getItem('admin_token') || ''
+        if (preview || (token && token.length > 0)) opts.preferAdmin = true
+      } catch (_) {}
+      this._pageText.load(opts)
+      // Reflect admin edits instantly
+      try {
+        this.__lastReloadAt = 0
+        this.__reloading = false
+        this.__onStorage = (ev) => {
+          const k = ev && ev.key ? String(ev.key) : ''
+          if (k === 'page_content_cache:' + this.pageKey) {
+            const now = Date.now()
+            if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+            this.__reloading = true
+            try {
+              const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+              Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+            } catch(_) { this.__reloading = false }
+          }
+        }
+        window.addEventListener('storage', this.__onStorage)
+        this.__onVis = () => {
+          if (document.visibilityState === 'visible') {
+            const now = Date.now()
+            if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+            this.__reloading = true
+            try {
+              const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+              Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+            } catch(_) { this.__reloading = false }
+          }
+        }
+        document.addEventListener('visibilitychange', this.__onVis)
+      } catch(_) {}
     } catch(e) { /* noop */ }
+  },
+  beforeDestroy() {
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
   },
   methods: {
     async submitForm() {

@@ -2,19 +2,13 @@
   <div class="page-container">
     <Navigation />
     
-    <!-- Hero Section -->
-    <div class="hero-section" :style="heroBackgroundStyle">
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <h1 class="hero-title">
-            <CmsText pageKey="about" fieldKey="page_title" tag="span" :fallback="pageTitle || '会社概要'" />
-          </h1>
-          <p class="hero-subtitle">
-            <CmsText pageKey="about" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle || ''" />
-          </p>
-        </div>
-      </div>
-    </div>
+    <!-- Hero Section (unified) -->
+    <HeroSection
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
+      cms-page-key="about"
+      heroImage="/img/hero-image.png"
+    />
 
     <!-- CMS Preview Body: render full HTML under hero when preview/edit flags present -->
     <section class="section" v-if="isEditPreview">
@@ -258,6 +252,8 @@ import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
 import AccessSection from "./AccessSection.vue";
+import HeroSection from "./HeroSection.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
 import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
 import axios from 'axios';
@@ -272,6 +268,8 @@ export default {
     Footer,
     Group27,
     AccessSection,
+    HeroSection,
+    Breadcrumbs,
     CmsBlock,
     CmsText
   },
@@ -284,6 +282,8 @@ export default {
       // 沿革の「さらに表示」用: 初期は5件表示
       visibleHistoryCount: 5,
       frame132131753022Props: frame132131753022Data,
+      _pageMedia: null,
+      _media: null,
       defaultAboutMessage: `
         <p>変化の激しい経済環境の中で、企業が持続的な成長を遂げるためには、正確な情報と深い洞察に基づく戦略的な意思決定が不可欠です。</p>
         <p>私たちちくぎん地域経済研究所は、長年培ってきた調査研究の知見と幅広いネットワークを活用し、地域の皆様の課題解決と成長を全力でサポートしてまいります。</p>
@@ -294,6 +294,10 @@ export default {
         </div>
       `,
     };
+  },
+  beforeDestroy() {
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
   },
   computed: {
     pageTitle() {
@@ -359,19 +363,85 @@ export default {
     }
   },
   async mounted() {
+    // Legacy fallback (kept): old endpoint for historical content
     try {
       const response = await axios.get(getApiUrl('/api/pages/about'));
       this.pageData = response.data;
       this.loading = false;
     } catch (err) {
-      console.error('Failed to fetch page data:', err);
       this.error = 'ページデータの取得に失敗しました';
       this.loading = false;
     }
+    // Load CMS page text with immediate preview/admin support
     try {
       this._pageText = usePageText(this.pageKey)
-      this._pageText.load()
+      const opts = { force: true }
+      try {
+        // Prefer admin preview when editing
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+        const token = localStorage.getItem('admin_token') || ''
+        if (preview || (token && token.length > 0)) opts.preferAdmin = true
+      } catch (_) {}
+      await this._pageText.load(opts)
     } catch(e) { /* noop */ }
+
+    // Page/media registry for responsive image fallback + live rerender
+    import('@/composables/usePageMedia').then(mod => {
+      try {
+        const { usePageMedia } = mod
+        this._pageMedia = usePageMedia()
+        this._pageMedia.ensure(this.pageKey)
+        this._media = this._pageMedia._media
+        // Watch underlying registry updates to refresh bindings without manual resize
+        try {
+          const readImages = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            try { return val ? JSON.stringify(val) : '' } catch(_) { return val ? Object.keys(val).join('|') : '' }
+          }
+          this.$watch(readImages, () => { this.$forceUpdate() })
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch (_) {}
+      } catch (_) {}
+    })
+
+    // Reflect admin edits instantly: reload when localStorage cache updates or tab becomes visible
+    try {
+      this.__lastReloadAt = 0
+      this.__reloading = false
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:' + this.pageKey) {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
+        }
+      }
+      window.addEventListener('storage', this.__onStorage)
+      this.__onVis = () => {
+        if (document.visibilityState === 'visible') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+          } catch(_) { this.__reloading = false }
+        }
+      }
+      document.addEventListener('visibilitychange', this.__onVis)
+    } catch(_) {}
   },
   methods: {
     scrollToContact() {
@@ -383,7 +453,7 @@ export default {
       this.visibleHistoryCount = Math.min(next, this.historyItems.length)
     },
     getImageUrl(type) {
-      // 1) ページ管理の画像を最優先
+      // 1) ページ管理の画像を最優先（cache-busted）
       try {
         const imgs = this._pageText?.page?.value?.content?.images
         const v = imgs && imgs[type]
@@ -400,7 +470,19 @@ export default {
         }
       } catch (_) {}
 
-      // 2) 旧APIのpageDataフォールバック
+      // 2) ページ・メディアレジストリ（レスポンシブ対応）
+      try {
+        if (this._pageMedia) {
+          const v = this._pageMedia.getResponsiveSlot(type, type, null)
+          if (v) return v
+        }
+        if (this._media) {
+          if (this._media.getResponsiveImage) return this._media.getResponsiveImage(type, null)
+          if (this._media.getImage) return this._media.getImage(type, null)
+        }
+      } catch(_) {}
+
+      // 3) 旧APIのpageDataフォールバック
       if (this.pageData?.content?.images?.[type]?.url) {
         const u = this.pageData.content.images[type].url
         if (!u) return null

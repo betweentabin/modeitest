@@ -238,15 +238,33 @@ export default {
     window.addEventListener('resize', this.adjustMainHeadline);
     // Reflect admin edits immediately: listen for localStorage cache updates and reload PageContent
     try {
+      this.__lastReloadAt = 0
+      this.__reloading = false
       this.__onStorage = (ev) => {
         const k = ev && ev.key ? String(ev.key) : ''
         if (k === 'page_content_cache:' + this.pageKey) {
-          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+          } catch(_) { this.__reloading = false }
         }
       }
       window.addEventListener('storage', this.__onStorage)
-      // Also refresh when tab becomes visible again
-      this.__onVis = () => { if (document.visibilityState === 'visible') { try { this._pageText.load({ force: true }) } catch(_) {} } }
+      // Also refresh when tab becomes visible again (throttled)
+      this.__onVis = () => {
+        if (document.visibilityState === 'visible') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+          } catch(_) { this.__reloading = false }
+        }
+      }
       document.addEventListener('visibilitychange', this.__onVis)
     } catch(_) {}
   },

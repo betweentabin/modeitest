@@ -339,16 +339,32 @@ export default {
 
     // Reflect admin edits to PageContent immediately (images/texts) without full reload
     try {
+      this.__lastReloadAt = 0
+      this.__reloading = false
       this.__onStorage = (ev) => {
         const k = ev && ev.key ? String(ev.key) : ''
         if (k === 'page_content_cache:' + this.pageKey) {
-          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
-          // force UI refresh to re-resolve slotImage()
-          try { this.$forceUpdate() } catch(_) {}
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
         }
       }
       window.addEventListener('storage', this.__onStorage)
-      this.__onVis = () => { if (document.visibilityState === 'visible') { try { this._pageText.load({ force: true }) } catch(_) {} } }
+      this.__onVis = () => {
+        if (document.visibilityState === 'visible') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+          } catch(_) { this.__reloading = false }
+        }
+      }
       document.addEventListener('visibilitychange', this.__onVis)
     } catch(_) {}
   },
