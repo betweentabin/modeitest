@@ -15,6 +15,7 @@ export default {
     return {
       _refreshLock: false,
       _lastRefreshAt: 0,
+      _refreshTimer: null,
     }
   },
   mounted() {
@@ -23,6 +24,10 @@ export default {
   },
   beforeDestroy() {
     try { window.removeEventListener('cms-media-updated', this._onMediaUpdated) } catch (_) {}
+    if (this._refreshTimer) {
+      clearTimeout(this._refreshTimer)
+      this._refreshTimer = null
+    }
   },
   methods: {
     _hasAdminToken() {
@@ -36,23 +41,34 @@ export default {
         return params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
       } catch (_) { return false }
     },
-    async _onMediaUpdated() {
+    async _onMediaUpdated(event) {
       try { this.$forceUpdate() } catch (_) {}
       // Avoid hammering API for public users. Only refresh PageContent
       // when admin/preview is active, and throttle bursts.
       const isAdmin = this._hasAdminToken()
       const isPreview = this._hasPreviewFlag()
       if (!isAdmin && !isPreview) return
-      const now = Date.now()
-      if (this._refreshLock || (now - this._lastRefreshAt) < 3000) return
-      this._refreshLock = true
-      try {
-        await refreshLoadedPages({ preferAdmin: isAdmin })
-      } catch (_) { /* noop */ }
-      finally {
-        this._lastRefreshAt = Date.now()
-        this._refreshLock = false
+      if (this._refreshTimer) {
+        clearTimeout(this._refreshTimer)
+        this._refreshTimer = null
       }
+      const detail = event?.detail || {}
+      const delay = typeof detail.delay === 'number'
+        ? Math.max(0, detail.delay)
+        : (detail.reason === 'media-cache-cleared' ? 600 : 180)
+      this._refreshTimer = setTimeout(async () => {
+        this._refreshTimer = null
+        const now = Date.now()
+        if (this._refreshLock || (now - this._lastRefreshAt) < 1200) return
+        this._refreshLock = true
+        try {
+          await refreshLoadedPages({ preferAdmin: isAdmin })
+        } catch (_) { /* noop */ }
+        finally {
+          this._lastRefreshAt = Date.now()
+          this._refreshLock = false
+        }
+      }, delay)
     }
   }
 };

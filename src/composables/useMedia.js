@@ -9,6 +9,29 @@ const state = reactive({
   images: {}, // key -> url
 })
 
+let broadcastPending = false
+let pendingDetail = null
+function scheduleMediaBroadcast(detail = {}) {
+  if (typeof window === 'undefined') return
+  pendingDetail = pendingDetail ? { ...pendingDetail, ...detail } : { ...detail }
+  if (broadcastPending) return
+  broadcastPending = true
+  const emit = () => {
+    broadcastPending = false
+    const detailPayload = pendingDetail || {}
+    pendingDetail = null
+    try { window.dispatchEvent(new CustomEvent('cms-media-updated', { detail: detailPayload })) } catch (_) {}
+    if (detailPayload.requestResize) {
+      try { window.dispatchEvent(new Event('resize')) } catch (_) {}
+    }
+  }
+  if (typeof window.requestAnimationFrame === 'function') {
+    window.requestAnimationFrame(emit)
+  } else {
+    setTimeout(emit, 0)
+  }
+}
+
 let storageHooked = false
 function hookStorageBroadcast() {
   if (storageHooked) return
@@ -138,11 +161,7 @@ async function loadMedia() {
       state.images = normalize(cached)
       // keep loaded=false to allow network to refresh; UI can already render from cache
       try {
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('cms-media-updated'))
-          // Also trigger a synthetic resize to nudge components that react on viewport changes
-          window.dispatchEvent(new Event('resize'))
-        }
+        scheduleMediaBroadcast({ reason: 'media-cache-hit', source: 'persistent-cache', requestResize: true })
       } catch (_) {}
     }
   } catch (_) { /* ignore */ }
@@ -154,6 +173,7 @@ async function loadMedia() {
       if (images) {
         state.images = normalize(images)
         state.loaded = true
+        scheduleMediaBroadcast({ reason: 'media-local-mock', source: 'local', requestResize: true })
         return
       }
       // Built-in defaults
@@ -194,12 +214,7 @@ async function loadMedia() {
         state.images = normalize(images)
         try { writePersistentCache(images) } catch (_) {}
         state.loaded = true
-        try {
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('cms-media-updated'))
-            window.dispatchEvent(new Event('resize'))
-          }
-        } catch (_) {}
+        try { scheduleMediaBroadcast({ reason: 'media-admin-sync', source: 'admin', requestResize: true }) } catch (_) {}
         return
       }
     }
@@ -217,12 +232,7 @@ async function loadMedia() {
       state.images = normalize(images)
       try { writePersistentCache(images) } catch (_) {}
       state.loaded = true
-      try {
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('cms-media-updated'))
-          window.dispatchEvent(new Event('resize'))
-        }
-      } catch (_) {}
+      try { scheduleMediaBroadcast({ reason: 'media-public-sync', source: 'public', requestResize: true }) } catch (_) {}
       return
     }
     throw new Error('media page not found')
@@ -255,6 +265,7 @@ async function loadMedia() {
         contact_section_bg: '/img/-----1-1.png',
       })
       state.loaded = true
+      scheduleMediaBroadcast({ reason: 'media-fallback', source: 'fallback', requestResize: true })
     } catch (err) {
       state.error = err?.message || 'Failed to load media registry'
     }
@@ -269,6 +280,7 @@ export function invalidateMediaCache() {
     state.loading = false
     state.error = null
     state.images = {}
+    scheduleMediaBroadcast({ reason: 'media-cache-cleared', source: 'invalidate' })
   } catch (_) {}
 }
 

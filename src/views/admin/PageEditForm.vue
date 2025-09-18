@@ -318,12 +318,7 @@ export default {
       try {
         const response = await axios.post(
           getApiUrl(`/api/admin/pages/${this.pageKey}/upload-image`),
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
+          formData
         )
 
         // contentを更新
