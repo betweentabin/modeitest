@@ -1992,37 +1992,21 @@ export default {
         alert('保存に失敗しました')
       }
     },
-    async syncCompanyPageContentIfApplicable(){
+    async syncLegacyPageContentIfApplicable(){
       try {
-        const slug = (this.currentPage && this.currentPage.slug || '').toLowerCase()
-        if (!slug.includes('company')) return
-        // Bridge: push company texts/htmls/history to legacy PageContent (company-profile)
-        const hist = Array.isArray(this.companyHistory) ? this.companyHistory
-          .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
-          .filter(h => h.year || h.date || h.body) : []
-        // Financial reports (sanitize)
-        const reports = Array.isArray(this.companyFinancialReports) ? this.companyFinancialReports.map(r => ({
-          fiscal_year: String(r?.fiscal_year || '').trim(),
-          date_label: String(r?.date_label || '').trim(),
-          items: Array.isArray(r?.items) ? r.items.map(it => ({
-            label: String((it && it.label) || (typeof it === 'string' ? it : '') || '').trim(),
-            url: String((it && it.url) || '').trim()
-          })).filter(it => it.label || it.url) : []
-        })).filter(r => r.fiscal_year || r.date_label || (r.items && r.items.length)) : []
-        const patch = { content: {} }
-        if (this.companyTexts && Object.keys(this.companyTexts).length) patch.content.texts = { ...this.companyTexts }
-        if (this.companyHtmls && Object.keys(this.companyHtmls).length) patch.content.htmls = { ...this.companyHtmls }
-        patch.content.history = hist
-        if (reports && reports.length) patch.content.financial_reports = reports
-        // Also mark published to make it visible on public API
-        const payload = { ...patch, is_published: true }
-        await apiClient.adminUpdatePageContent('company-profile', payload)
-      } catch (_) { /* non-blocking */ }
+        if (!this.currentPage) return
+        const slug = (this.currentPage.slug || '').toLowerCase()
+        const inferredKey = this.pageContentKey || this.pageContentKeyFromSlug(slug)
+        if (!inferredKey) return
+        const built = this.buildLegacyPageContentPayload(inferredKey)
+        if (!built) return
+        await apiClient.adminUpdatePageContent(built.pageKey, built.payload)
+      } catch (_) { /* non-blocking bridge */ }
     },
     async publish(){
       if (!this.currentPage) return
       // Bridge legacy PageContent before publishing v2 (non-blocking)
-      try { await this.syncCompanyPageContentIfApplicable() } catch(_) {}
+      try { await this.syncLegacyPageContentIfApplicable() } catch(_) {}
       const res = await apiClient.publishCmsPage(this.currentPage.id)
       if (res.success) {
         try { await apiClient.setCmsOverride({ slug: this.currentPage.slug, page_id: this.currentPage.id, enabled: true }) } catch(_){ /* ignore */ }
@@ -2368,87 +2352,107 @@ export default {
         alert('同期に失敗しました')
       }
     },
+    buildLegacyPageContentPayload(pageKeyOverride = null){
+      const key = pageKeyOverride || this.pageContentKey
+      if (!key) return null
+      const patch = { content: {} }
+      const hasEntries = (obj) => !!(obj && Object.keys(obj).length)
+
+      if (key === 'privacy') {
+        if (hasEntries(this.privacyTexts)) patch.content.texts = { ...this.privacyTexts }
+      } else if (key === 'terms') {
+        if (hasEntries(this.termsTexts)) patch.content.texts = { ...this.termsTexts }
+        if (hasEntries(this.termsHtmls)) patch.content.htmls = { ...this.termsHtmls }
+      } else if (key === 'transaction-law') {
+        if (hasEntries(this.tlTexts)) patch.content.texts = { ...this.tlTexts }
+        if (hasEntries(this.tlHtmls)) patch.content.htmls = { ...this.tlHtmls }
+      } else if (key === 'company-profile') {
+        if (hasEntries(this.companyTexts)) patch.content.texts = { ...this.companyTexts }
+        if (hasEntries(this.companyHtmls)) patch.content.htmls = { ...this.companyHtmls }
+        const hist = Array.isArray(this.companyHistory) ? this.companyHistory
+          .map(h => ({ year: String(h?.year || '').trim(), date: String(h?.date || '').trim(), body: String(h?.body || '').trim() }))
+          .filter(h => h.year || h.date || h.body) : []
+        patch.content.history = hist
+        const reports = Array.isArray(this.companyFinancialReports) ? this.companyFinancialReports.map(r => ({
+          fiscal_year: String(r?.fiscal_year || '').trim(),
+          date_label: String(r?.date_label || '').trim(),
+          items: Array.isArray(r?.items) ? r.items.map(it => ({
+            label: String((it && it.label) || (typeof it === 'string' ? it : '') || '').trim(),
+            url: String((it && it.url) || '').trim()
+          })).filter(it => it.label || it.url) : []
+        })).filter(r => r.fiscal_year || r.date_label || (r.items && r.items.length)) : []
+        if (reports.length) patch.content.financial_reports = reports
+      } else if (key === 'cri-consulting') {
+        if (hasEntries(this.consultingTexts)) patch.content.texts = { ...this.consultingTexts }
+        if (hasEntries(this.consultingHtmls)) patch.content.htmls = { ...this.consultingHtmls }
+      } else if (key === 'about-institute') {
+        if (hasEntries(this.aboutTexts)) patch.content.texts = { ...this.aboutTexts }
+        if (hasEntries(this.aboutHtmls)) patch.content.htmls = { ...this.aboutHtmls }
+      } else if (key === 'about') {
+        const aboutSanitized = { ...(this.aboutTexts || {}) }
+        try {
+          Object.keys(aboutSanitized).forEach(k => {
+            if (/^staff\d+_(title|name)$/.test(k)) delete aboutSanitized[k]
+            if (k === 'staff_title' || k === 'staff_subtitle') delete aboutSanitized[k]
+          })
+        } catch (_) {}
+        if (hasEntries(aboutSanitized)) patch.content.texts = { ...aboutSanitized }
+        if (hasEntries(this.aboutHtmls)) patch.content.htmls = { ...this.aboutHtmls }
+      } else if (key === 'glossary') {
+        if (hasEntries(this.genericTexts)) patch.content.texts = { ...this.genericTexts }
+        if (hasEntries(this.genericHtmls)) patch.content.htmls = { ...this.genericHtmls }
+        const items = Array.isArray(this.glossaryItems) ? this.glossaryItems
+          .map(it => ({
+            term: String(it?.term || '').trim(),
+            category: String(it?.category || '').trim(),
+            definition: String(it?.definition || '').trim()
+          }))
+          .filter(it => it.term && it.definition) : []
+        patch.content.items = items
+      } else if (key === 'faq') {
+        if (hasEntries(this.genericTexts)) patch.content.texts = { ...this.genericTexts }
+        if (hasEntries(this.genericHtmls)) patch.content.htmls = { ...this.genericHtmls }
+        const faqs = Array.isArray(this.faqItems) ? this.faqItems.map((it, idx) => ({
+          category: String((it?.category || 'all')).trim() || 'all',
+          question: String(it?.question || '').trim(),
+          answer: String(it?.answer || '').trim(),
+          tags: Array.isArray(it?.tags) ? it.tags.map(t => String(t).trim()).filter(Boolean) : [],
+          _id: (typeof it?._id === 'number' || typeof it?._id === 'string') ? it._id : idx
+        })).filter(it => it.question || it.answer) : []
+        patch.content.faqs = faqs
+      } else if (key === 'membership') {
+        if (hasEntries(this.membershipTexts)) patch.content.texts = { ...this.membershipTexts }
+      } else if (key === 'standard-membership') {
+        if (hasEntries(this.standardTexts)) patch.content.texts = { ...this.standardTexts }
+      } else if (key === 'premium-membership') {
+        if (hasEntries(this.premiumTexts)) patch.content.texts = { ...this.premiumTexts }
+      } else if (key === 'contact') {
+        if (hasEntries(this.contactTexts)) patch.content.texts = { ...this.contactTexts }
+      } else {
+        const hasGeneric = (hasEntries(this.genericTexts) || hasEntries(this.genericHtmls))
+        if (hasEntries(this.genericTexts)) patch.content.texts = { ...this.genericTexts }
+        if (hasEntries(this.genericHtmls)) patch.content.htmls = { ...this.genericHtmls }
+        if (!hasGeneric && hasEntries(this.privacyTexts)) {
+          patch.content.texts = { ...this.privacyTexts }
+        }
+      }
+
+      if (this.mediaKeys && Object.keys(this.mediaKeys).length) {
+        patch.content.media_keys = { ...this.mediaKeys }
+      }
+
+      if (!Object.keys(patch.content).length) return null
+      patch.is_published = true
+      return { pageKey: key, payload: patch }
+    },
     async savePrivacyTexts(){
       try {
-        let patch = { content: {} }
-        if (this.pageContentKey === 'privacy') {
-          patch.content.texts = { ...this.privacyTexts }
-        } else if (this.pageContentKey === 'terms') {
-          patch.content.texts = { ...this.termsTexts }
-          patch.content.htmls = { ...this.termsHtmls }
-        } else if (this.pageContentKey === 'transaction-law') {
-          patch.content.texts = { ...this.tlTexts }
-          patch.content.htmls = { ...this.tlHtmls }
-        } else if (this.pageContentKey === 'company-profile') {
-          patch.content.texts = { ...this.companyTexts }
-          patch.content.htmls = { ...this.companyHtmls }
-          const hist = Array.isArray(this.companyHistory) ? this.companyHistory
-            .map(h => ({ year: String(h.year||'').trim(), date: String(h.date||'').trim(), body: String(h.body||'').trim() }))
-            .filter(h => h.year || h.date || h.body) : []
-          patch.content.history = hist
-          // Ensure immediate reflection on public site like financial reports
-          // Public API returns only published content, so publish on save
-          patch.is_published = true
-        } else if (this.pageContentKey === 'cri-consulting') {
-          patch.content.texts = { ...this.consultingTexts }
-          patch.content.htmls = { ...this.consultingHtmls }
-        } else if (this.pageContentKey === 'about-institute') {
-          patch.content.texts = { ...this.aboutTexts }
-          patch.content.htmls = { ...this.aboutHtmls }
-        } else if (this.pageContentKey === 'about') {
-          // About: 所員紹介（スタッフ）文言は /company（company-profile）で一元管理
-          const aboutSanitized = { ...(this.aboutTexts || {}) }
-          try {
-            Object.keys(aboutSanitized).forEach(k => {
-              if (/^staff\d+_(title|name)$/.test(k)) delete aboutSanitized[k]
-              if (k === 'staff_title' || k === 'staff_subtitle') delete aboutSanitized[k]
-            })
-          } catch(_) {}
-          patch.content.texts = { ...aboutSanitized }
-          patch.content.htmls = { ...(this.aboutHtmls || {}) }
-        } else if (this.pageContentKey === 'glossary') {
-          // texts/htmls は既存どおり（intro等）。items も保存
-          if (Object.keys(this.genericTexts||{}).length) patch.content.texts = { ...this.genericTexts }
-          if (Object.keys(this.genericHtmls||{}).length) patch.content.htmls = { ...this.genericHtmls }
-          // normalize items
-          const items = Array.isArray(this.glossaryItems) ? this.glossaryItems
-            .map(it => ({ term: String(it.term||'').trim(), category: String(it.category||'').trim(), definition: String(it.definition||'').trim() }))
-            .filter(it => it.term && it.definition) : []
-          patch.content.items = items
-        } else if (this.pageContentKey === 'faq') {
-          // FAQ: texts（カテゴリ名など）と faqs 配列を保存
-          if (Object.keys(this.genericTexts||{}).length) patch.content.texts = { ...this.genericTexts }
-          if (Object.keys(this.genericHtmls||{}).length) patch.content.htmls = { ...this.genericHtmls }
-          const faqs = Array.isArray(this.faqItems) ? this.faqItems.map((it, idx) => ({
-            category: String((it.category||'all')).trim() || 'all',
-            question: String(it.question||'').trim(),
-            answer: String(it.answer||'').trim(),
-            tags: Array.isArray(it.tags) ? it.tags.map(t=>String(t).trim()).filter(Boolean) : [],
-            _id: (typeof it._id === 'number' || typeof it._id === 'string') ? it._id : idx
-          })).filter(it => it.question || it.answer) : []
-          patch.content.faqs = faqs
-        } else if (this.pageContentKey === 'membership') {
-          patch.content.texts = { ...this.membershipTexts }
-        } else if (this.pageContentKey === 'standard-membership') {
-          patch.content.texts = { ...this.standardTexts }
-        } else if (this.pageContentKey === 'premium-membership') {
-          patch.content.texts = { ...this.premiumTexts }
-        } else if (this.pageContentKey === 'contact') {
-          patch.content.texts = { ...this.contactTexts }
-        } else {
-          // generic fallback: 動的に集めたtexts/htmlsを保存
-          const hasGeneric = (this.genericTexts && Object.keys(this.genericTexts).length) || (this.genericHtmls && Object.keys(this.genericHtmls).length)
-          if (hasGeneric) {
-            if (this.genericTexts && Object.keys(this.genericTexts).length) patch.content.texts = { ...this.genericTexts }
-            if (this.genericHtmls && Object.keys(this.genericHtmls).length) patch.content.htmls = { ...this.genericHtmls }
-          } else {
-            // last resort
-            patch.content.texts = { ...this.privacyTexts }
-          }
+        const built = this.buildLegacyPageContentPayload()
+        if (!built) {
+          alert('保存対象のデータがありません')
+          return
         }
-        // すべての保存を「保存＝公開」に統一
-        patch.is_published = true
-        const res = await apiClient.adminUpdatePageContent(this.pageContentKey, patch)
+        const res = await apiClient.adminUpdatePageContent(built.pageKey, built.payload)
         if (res) alert('保存しました')
       } catch(_) { alert('保存に失敗しました') }
     },
