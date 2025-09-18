@@ -363,29 +363,33 @@ export default {
     }
   },
   async mounted() {
-    // Legacy fallback (kept): old endpoint for historical content
-    try {
-      const response = await axios.get(getApiUrl('/api/pages/about'));
-      this.pageData = response.data;
-      this.loading = false;
-    } catch (err) {
-      this.error = 'ページデータの取得に失敗しました';
-      this.loading = false;
-    }
+    // Legacy fallback（必要時のみ）: まずは新CMSを読み、失敗時にのみ使用
     // Load CMS page text with immediate preview/admin support
     try {
       this._pageText = usePageText(this.pageKey)
-      const opts = { force: true }
+      const opts = {}
       try {
         // Prefer admin preview when editing
         const hash = window.location.hash || ''
         const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
         const params = new URLSearchParams(qs)
         const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
-        const token = localStorage.getItem('admin_token') || ''
-        if (preview || (token && token.length > 0)) opts.preferAdmin = true
+        if (preview) opts.preferAdmin = true
       } catch (_) {}
-      await this._pageText.load(opts)
+      try {
+        await this._pageText.load(opts)
+        this.loading = false
+      } catch (_) {
+        // 新CMSが失敗した場合のみ旧APIへフォールバック
+        try {
+          const response = await axios.get(getApiUrl('/api/pages/about'))
+          this.pageData = response.data
+        } catch (err) {
+          this.error = 'ページデータの取得に失敗しました'
+        } finally {
+          this.loading = false
+        }
+      }
     } catch(e) { /* noop */ }
 
     // Page/media registry for responsive image fallback + live rerender

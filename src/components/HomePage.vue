@@ -577,7 +577,15 @@ export default {
     async loadCmsHeroSlides() {
       try {
         const cms = usePageText('home')
-        await cms.load({ preferAdmin: true })
+        const opts = {}
+        try {
+          const hash = window.location.hash || ''
+          const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+          const params = new URLSearchParams(qs)
+          const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+          if (preview) opts.preferAdmin = true
+        } catch (_) {}
+        await cms.load(opts)
         const page = cms.page && cms.page.value ? cms.page.value : null
         const images = (page && page.content && page.content.images) ? page.content.images : {}
         const getImg = (key) => {
@@ -612,7 +620,15 @@ export default {
     async loadCmsHomeImages() {
       try {
         const cms = usePageText('home')
-        await cms.load({ preferAdmin: true })
+        const opts = {}
+        try {
+          const hash = window.location.hash || ''
+          const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+          const params = new URLSearchParams(qs)
+          const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+          if (preview) opts.preferAdmin = true
+        } catch (_) {}
+        await cms.load(opts)
         const page = cms.page && cms.page.value ? cms.page.value : null
         const images = (page && page.content && page.content.images) ? page.content.images : {}
         const getImg = (key, defVal) => {

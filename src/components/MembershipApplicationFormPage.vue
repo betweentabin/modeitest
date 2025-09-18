@@ -273,14 +273,13 @@ export default {
     // Load page texts with admin/preview support and force to avoid stale
     try {
       this._pageText = usePageText(this.pageKey)
-      const opts = { force: true }
+      const opts = {}
       try {
         const hash = window.location.hash || ''
         const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
         const params = new URLSearchParams(qs)
         const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
-        const token = localStorage.getItem('admin_token') || ''
-        if (preview || (token && token.length > 0)) opts.preferAdmin = true
+        if (preview) opts.preferAdmin = true
       } catch (_) {}
       this._pageText.load(opts)
       // Reflect admin edits instantly

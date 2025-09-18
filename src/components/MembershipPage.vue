@@ -329,7 +329,15 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText(this.cmsKey)
-      this._pageText.load({ force: true })
+      const opts = {}
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+        if (preview) opts.preferAdmin = true
+      } catch (_) {}
+      this._pageText.load(opts)
     } catch(e) { /* noop */ }
     // Ensure media registry for responsive images and per-page overrides
     import('@/composables/usePageMedia').then(mod => {

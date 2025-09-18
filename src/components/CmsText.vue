@@ -17,6 +17,7 @@
 import { computed, onMounted, onBeforeUnmount } from 'vue'
 import InlineEditable from '@/components/InlineEditable.vue'
 import { usePageText } from '@/composables/usePageText'
+import { useEditMode } from '@/composables/useEditMode'
 
 export default {
   name: 'CmsText',
@@ -33,11 +34,19 @@ export default {
   },
   setup(props) {
     const pageText = usePageText(props.pageKey)
-    // 管理者ログイン時は管理APIを優先して即時反映（未公開の編集中も取得）
+    // 管理APIは「プレビュー/編集中のみ」優先。通常閲覧は公開APIで十分（高速）。
     let loadOpts = {}
     try {
-      const t = (typeof window !== 'undefined') ? (localStorage.getItem('admin_token') || '') : ''
-      if (t && t.length > 0) loadOpts.preferAdmin = true
+      const isBrowser = typeof window !== 'undefined'
+      const { enabled } = useEditMode()
+      let isPreview = false
+      if (isBrowser) {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        isPreview = !!(params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit')
+      }
+      if (isPreview || (enabled && enabled.value)) loadOpts.preferAdmin = true
     } catch (_) {}
     pageText.load(loadOpts).catch(() => {})
     const display = computed(() => {

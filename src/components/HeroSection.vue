@@ -33,6 +33,7 @@ import CmsText from '@/components/CmsText.vue'
 import HeroSlider from '@/components/HeroSlider.vue'
 import { usePageText } from '@/composables/usePageText'
 import { usePageMedia } from '@/composables/usePageMedia'
+import { resolveMediaUrl } from '@/utils/url.js'
 
 export default {
   name: "HeroSection",
@@ -141,10 +142,8 @@ export default {
             return params.get('cmsPreview') === 'edit'
           } catch (_) { return false }
         })()
-        if (hasAdminToken || previewFlag) {
-          opts.preferAdmin = true
-          opts.force = true
-        }
+        // プレビュー時のみ管理APIを優先。forceは使わず、重複呼び出しを回避
+        if (previewFlag) { opts.preferAdmin = true }
         if (Object.keys(opts).length > 0) {
           await this._pageText.load(opts)
         } else {
@@ -203,8 +202,20 @@ export default {
     getFromImagesMap(images, key) {
       const val = images?.[key]
       if (!val) return ''
-      if (typeof val === 'string') return val
-      if (typeof val === 'object' && val.url) return val.url
+      // String value (already a URL)
+      if (typeof val === 'string') return resolveMediaUrl(val)
+      // Object with metadata
+      if (typeof val === 'object' && val.url) {
+        let url = String(val.url)
+        try {
+          if (url.startsWith('/storage/')) {
+            // Cache-bust storage URLs using uploaded_at when available
+            const ver = val.uploaded_at ? (Date.parse(val.uploaded_at) || Date.now()) : Date.now()
+            url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+          }
+        } catch (_) { /* noop */ }
+        return resolveMediaUrl(url)
+      }
       return ''
     },
     pageHero() {

@@ -197,10 +197,13 @@ export default {
     // Load CMS page text once
     try {
       this._pageText = usePageText(this.pageKey)
-      const opts = { force: true }
+      const opts = {}
       try {
-        const token = localStorage.getItem('admin_token')
-        if (token && token.length > 0) opts.preferAdmin = true
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+        if (preview) opts.preferAdmin = true
       } catch (_) {}
       this._pageText.load(opts)
     } catch (_) {}
