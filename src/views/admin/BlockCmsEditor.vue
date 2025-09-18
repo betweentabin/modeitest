@@ -813,6 +813,23 @@
             <div class="field"><label>見出し</label><input v-model="consultingTexts.achievements_title" class="input" /></div>
             <div class="field"><label>英字</label><input v-model="consultingTexts.achievements_subtitle" class="input" /></div>
 
+            <!-- ヒーロー画像 -->
+            <div class="section-title">ページ上部ヒーロー</div>
+            <div class="field">
+              <label>ヒーロー画像（hero）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero</div>
+                  <div class="img-actions">
+                    <input ref="img_hero" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">PC のヒーロー背景に使用されます。差し替え後は即座にデスクトップにも反映されます。</div>
+            </div>
+
             <!-- 画像（レイアウト近似配置） -->
             <div class="layout-grid">
               <div class="image-col" style="flex:1;">
@@ -2095,6 +2112,7 @@ export default {
       const key = this.pageContentKey || ''
       if (key === 'company-profile') {
         return [
+          'hero',
           'company_profile_philosophy',
           'company_profile_message',
           'company_profile_staff_morita',
@@ -2113,6 +2131,7 @@ export default {
       }
       if (key === 'cri-consulting') {
         return [
+          'hero',
           'what_image',
           'duties_image',
           // Support section images (FREE/PAID)
@@ -2128,8 +2147,9 @@ export default {
           'achievements_item4_image',
         ]
       }
-      if (key === 'membership' || key === 'standard-membership') {
+      if (key === 'membership' || key === 'standard-membership' || key === 'premium-membership') {
         return [
+          'hero',
           'premium_service1_image',
           'standard_service1_image',
           'standard_service2_image',
@@ -2149,6 +2169,7 @@ export default {
       // Only treat obvious placeholders as such
       if (u.includes('hero-image.png')) return true
       if (u.includes('TEMP/')) return true // builder temporary CDN marker
+      if (/Image_fx\d+\.jpg/i.test(u)) return true // legacy static hero placeholders
       // Local static assets like /img/image-*.png or /img/---*.png are valid
       return false
     },

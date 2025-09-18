@@ -7,7 +7,9 @@
       :title="pageTitle"
       :subtitle="pageSubtitle"
       cms-page-key="about-institute"
-      heroImage="/img/Image_fx10.jpg"
+      title-field-key="page_title"
+      subtitle-field-key="page_subtitle"
+      :heroImage="media('hero', '/img/Image_fx10.jpg', 'hero_about_institute')"
       mediaKey="hero_about_institute"
     />
 
@@ -149,6 +151,7 @@ import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
 import CmsText from '@/components/CmsText.vue'
 import CmsBlock from '@/components/CmsBlock.vue'
+import { resolveMediaUrl } from '@/utils/url.js'
 
 export default {
   name: "AboutInstitutePage",
@@ -171,6 +174,8 @@ export default {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       mainHeadlineText: '産・官・学・金<span class="small-text">(金融機関)</span><br>をつなぐ架け橋へ',
+      _pageMedia: null,
+      _media: null,
     };
   },
   computed: {
@@ -190,7 +195,39 @@ export default {
   },
   mounted() {
     // Load CMS page text once
-    try { this._pageText = usePageText(this.pageKey); this._pageText.load({ force: true }) } catch (_) {}
+    try {
+      this._pageText = usePageText(this.pageKey)
+      const opts = { force: true }
+      try {
+        const token = localStorage.getItem('admin_token')
+        if (token && token.length > 0) opts.preferAdmin = true
+      } catch (_) {}
+      this._pageText.load(opts)
+    } catch (_) {}
+
+    // Media registry (page-scoped + global) for responsive assets
+    import('@/composables/usePageMedia').then(mod => {
+      try {
+        const { usePageMedia } = mod
+        this._pageMedia = usePageMedia()
+        this._pageMedia.ensure(this.pageKey)
+        this._media = this._pageMedia._media
+        // Re-render when media payload updates
+        try {
+          const readImages = () => {
+            const imgs = this._media && this._media.images
+            const val = imgs && (imgs.value !== undefined ? imgs.value : imgs)
+            try { return val ? JSON.stringify(val) : '' } catch (_) { return val ? Object.keys(val).join('|') : '' }
+          }
+          this.$watch(readImages, () => { this.$forceUpdate() })
+          const readLoaded = () => {
+            const ld = this._media && this._media.loaded
+            return ld && (ld.value !== undefined ? ld.value : ld)
+          }
+          this.$watch(readLoaded, () => { this.$forceUpdate() })
+        } catch (_) {}
+      } catch (_) {}
+    })
 
     // Layout adjustments
     this.adjustRectangleHeight();
@@ -221,23 +258,47 @@ export default {
     try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
   },
   methods: {
-    img(key, fallback = '') {
+    media(key, fallback = '', mediaKey = '') {
       try {
-        const imgs = this._pageText?.page?.value?.content?.images
-        const v = imgs && imgs[key]
-        if (typeof v === 'string' && v) return v
-        if (v && typeof v === 'object' && v.url) {
-          let u = v.url
+        const page = this._pageText && this._pageText.page && this._pageText.page.value
+        const imgs = page && page.content && page.content.images
+        if (imgs && Object.prototype.hasOwnProperty.call(imgs, key)) {
+          const v = imgs[key]
+          let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
           try {
-            if (u.startsWith('/storage/') && v.uploaded_at) {
-              const ver = Date.parse(v.uploaded_at) || Date.now()
-              u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            const meta = (v && typeof v === 'object') ? v : null
+            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
+            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+              url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
             }
-          } catch(_) {}
-          return u
+          } catch (_) {}
+          if (typeof url === 'string' && url.length) {
+            return resolveMediaUrl(url)
+          }
+        }
+      } catch (_) {}
+
+      try {
+        if (this._pageMedia) {
+          const slot = this._pageMedia.getResponsiveSlot(key, mediaKey || key, fallback)
+          if (slot && typeof slot === 'string' && slot.length) return slot
+        }
+        if (this._media) {
+          const lookupKey = mediaKey || key
+          if (this._media.getResponsiveImage) {
+            const img = this._media.getResponsiveImage(lookupKey, fallback)
+            if (img && typeof img === 'string' && img.length) return img
+          }
+          if (this._media.getImage) {
+            const img = this._media.getImage(lookupKey, fallback)
+            if (img && typeof img === 'string' && img.length) return img
+          }
         }
       } catch (_) {}
       return fallback
+    },
+    img(key, fallback = '') {
+      return this.media(key, fallback)
     },
     adjustRectangleHeight() {
       this.$nextTick(() => {
