@@ -4,9 +4,9 @@
     <template v-for="(item, index) in breadcrumbs">
       <span :key="`separator-${index}`" class="breadcrumb-separator">></span>
       <router-link 
-        v-if="item.link && index !== breadcrumbs.length - 1"
+        v-if="index !== breadcrumbs.length - 1"
         :key="`item-${index}`"
-        :to="item.link"
+        :to="getBreadcrumbLink(item, index)"
         class="breadcrumb-item"
       >
         {{ item.text || item }}
@@ -14,8 +14,7 @@
       <span 
         v-else
         :key="`item-${index}`"
-        class="breadcrumb-item"
-        :class="{ current: index === breadcrumbs.length - 1 }"
+        class="breadcrumb-item current"
       >
         {{ item.text || item }}
       </span>
@@ -30,6 +29,48 @@ export default {
     breadcrumbs: {
       type: Array,
       default: () => []
+    }
+  },
+  methods: {
+    getBreadcrumbLink(item, index) {
+      // オブジェクト形式でリンクが指定されている場合
+      if (typeof item === 'object' && item.link) {
+        return item.link;
+      }
+      
+      // 文字列の場合、パンくずリストのテキストから適切なリンクを推定
+      const text = item.text || item;
+      const linkMap = {
+        'セミナー': '/seminars',
+        '現在のセミナー': '/seminars/current',
+        '過去のセミナー': '/seminar/archive',
+        'セミナー詳細': '/seminars',
+        'セミナー詳細（予約受付中）': '/seminars',
+        'セミナー詳細（予約済み）': '/seminars',
+        'セミナー詳細（参加済み）': '/seminars',
+        'セミナー申し込み': '/seminars',
+        'お知らせ': '/news',
+        'ニュース': '/news',
+        '刊行物': '/publications',
+        '会社概要': '/company',
+        '私たちについて': '/aboutus',
+        'よくあるご質問': '/faq',
+        'FAQ': '/faq',
+        '入会案内': '/membership',
+        '会員登録': '/membership',
+        'スタンダード会員': '/membership/standard',
+        'プレミアム会員': '/membership/premium',
+        '各種情報': '/economic-indicators',
+        '経済指標一覧': '/economic-indicators',
+        '経済・調査統計': '/economic-statistics',
+        'サイトマップ': '/sitemap',
+        'プライバシーポリシー': '/privacy',
+        '利用規約': '/terms',
+        '特定商取引法': '/legal',
+        'お問い合わせ': '/contact'
+      };
+      
+      return linkMap[text] || '/';
     }
   }
 };

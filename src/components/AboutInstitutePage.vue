@@ -73,7 +73,7 @@
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service1_title" tag="span" :fallback="'開発・研究'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service1_desc" tag="span" :fallback="'ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。'" /></p>
               <div class="service-details">
-                <CmsText pageKey="about-institute" fieldKey="service1_list" tag="div" type="html" :fallback="'・主な定期刊行物<br>・ちくぎん地域経済レポート（四半期毎）<br>・Hot Information（1ヶ月に2回）<br>・メールマガジン（毎週2回）'" />
+                <CmsText pageKey="about-institute" fieldKey="service1_list" tag="div" type="html" :fallback="'<ul><li>・主な定期刊行物</li><li>・ちくぎん地域経済レポート（四半期毎）</li><li>・Hot Information（1ヶ月に2回）</li><li>・メールマガジン（毎週2回）</li></ul>'" />
               </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
                 fieldKey="service2_list" 
                 tag="div" 
                 type="html"
-                :fallback="'・人材紹介、斡旋<br>・外部専門家の紹介、斡旋<br>・教育・研修<br>・社員研修<br>・講演会<br>・セミナー'" 
+                :fallback="'<ul><li>・人材紹介、斡旋</li><li>・外部専門家の紹介、斡旋</li><li>・教育・研修</li><li>・社員研修</li><li>・講演会</li><li>・セミナー</li></ul>'" 
               />
             </div>
           </div>
@@ -106,7 +106,7 @@
                 fieldKey="service3_list" 
                 tag="div" 
                 type="html"
-                :fallback="'・コンサルティング<br>・経営課題解決サポート<br>・ビジネスマッチング<br>・国内外企業の紹介<br>・新ビジネスモデルの発展<br>・業務提携等の支援'" 
+                :fallback="'<ul><li>・コンサルティング</li><li>・経営課題解決サポート</li><li>・ビジネスマッチング</li><li>・国内外企業の紹介</li><li>・新ビジネスモデルの発展</li><li>・業務提携等の支援</li></ul>'" 
               />
             </div>
           </div>

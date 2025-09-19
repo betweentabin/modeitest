@@ -76,13 +76,13 @@ export const frame132131752223Data = {
 };
 
 export const frame132131752551Data = {
-    text22: "経済指標一覧",
+    text22: "経済指標",
     link: "/economic-indicators",
 };
 
 export const frame132131752552Data = {
-    text22: "経済調査統計一覧",
-    link: "/statistics",
+    text22: "経済調査統計",
+    link: "/economic-research",
 };
 
 export const frame132131752731Data = {

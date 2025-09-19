@@ -112,8 +112,8 @@
                   <CmsText pageKey="sitemap" fieldKey="cat_info" tag="span" :fallback="'各種情報'" />
                 </h4>
                 <ul class="link-list">
-                  <li><router-link to="/economic-indicators" class="sitemap-link"><img class="footer-arrow" src="/img/vector.svg" alt="Vector" /><CmsText pageKey="sitemap" fieldKey="link_indicators" tag="span" :fallback="'経済指標一覧'" /></router-link></li>
-                  <li><router-link to="/economic-surveys" class="sitemap-link"><img class="footer-arrow" src="/img/vector.svg" alt="Vector" /><CmsText pageKey="sitemap" fieldKey="link_surveys" tag="span" :fallback="'経済調査統計一覧'" /></router-link></li>
+                  <li><router-link to="/economic-indicators" class="sitemap-link"><img class="footer-arrow" src="/img/vector.svg" alt="Vector" /><CmsText pageKey="sitemap" fieldKey="link_indicators" tag="span" :fallback="'経済指標'" /></router-link></li>
+                  <li><router-link to="/economic-research" class="sitemap-link"><img class="footer-arrow" src="/img/vector.svg" alt="Vector" /><CmsText pageKey="sitemap" fieldKey="link_surveys" tag="span" :fallback="'経済調査統計'" /></router-link></li>
                 </ul>
               </div>
               

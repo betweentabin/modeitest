@@ -40,16 +40,6 @@
         />
       </div>
       
-      <!-- PDF Download Button -->
-      <div class="download-section">
-        <button class="download-btn" @click="downloadPDF">
-          <div class="text-44 valign-text-middle inter-bold-white-15px"><CmsText pageKey="glossary" fieldKey="download_pdf" tag="span" :fallback="'PDFダウンロード'" /></div>
-          <div class="pdf-icon-wrapper">
-            <img class="pdf-icon" src="/img/pdfaicon.png" alt="PDF" width="24" height="24" />
-          </div>
-        </button>
-      </div>
-      
       <div class="glossary-list" v-if="!isEditPreview">
         <div v-for="(item, index) in paginatedGlossary" :key="index" class="glossary-item">
           <div class="glossary-term" @click="toggleDefinition(index)">
@@ -283,12 +273,6 @@ export default {
       } else {
         this.openItems.push(index);
       }
-    },
-    
-    downloadPDF() {
-      // 用語集のPDFファイルURL（実際のファイルパスに変更してください）
-      const pdfUrl = '/pdf/glossary.pdf';
-      window.open(pdfUrl, '_blank');
     }
   }
 };
@@ -361,47 +345,6 @@ export default {
   align-items: center;
 }
 
-/* Download Section */
-.download-section {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
-}
-
-.download-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 30px;
-  background: #1A1A1A;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.download-btn:hover {
-  background: #333;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.pdf-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pdf-icon {
-  width: 24px;
-  height: 24px;
-  filter: brightness(0) invert(1);
-}
 
 .glossary-description p {
   color: #666;
