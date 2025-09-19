@@ -63,7 +63,7 @@
           <h3 class="duties-title"><CmsText pageKey="cri-consulting" fieldKey="duties_label" tag="span" :fallback="'MAIN DUTIES'" /></h3>
           <h4 class="duties-heading"><CmsText pageKey="cri-consulting" fieldKey="duties_heading" tag="span" :fallback="'事業にまつわる様々な悩みを一緒に解決します'" /></h4>
           <div class="duties-list">
-            <CmsText pageKey="cri-consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<div>・経営戦略策定のサポート</div><div>・ビジネスマッチィングの支援</div><div>・事業継承の支援（後継者育成支援）</div><div>・社員研修、経営計画策定のための人材育成</div><div>・税務、財務、事務など各業務の課題解決力の育成</div><div>・事務省力化のサポート</div><div>・人事制度の策定</div><div>・ワンストップのよろず差相談</div>`" />
+            <CmsText pageKey="cri-consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<div>・経営戦略策定のサポート</div><div>・ビジネスマッチィングの支援</div><div>・事業継承の支援（後継者育成支援）</div><div>・社員研修、経営計画策定のための人材育成</div><div>・税務、財務、事務など各業務の課題解決力の育成</div><div>・事務省力化のサポート</div><div>・人事制度の策定</div><div>・ワンストップのよろず屋相談</div>`" />
           </div>
         </div>
         <img :src="slotImage('duties_image', 'https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304')" alt="Main Duties Image" class="duties-image" />
@@ -118,28 +118,28 @@
             <div class="service-card">
               <img :src="slotImage('support_paid_strategy', 'https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590')" alt="Strategy Planning" class="service-image" />
               <div class="service-info">
-                <span class="service-label">consultation</span>
+                <span class="service-label">solutions</span>
                 <h4 class="service-title">対応策の立案</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="slotImage('support_paid_improvement', 'https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590')" alt="Improvement Activities" class="service-image" />
               <div class="service-info">
-                <span class="service-label">problem</span>
+                <span class="service-label">improvement</span>
                 <h4 class="service-title">改善に向けた活動</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="slotImage('support_paid_analysis', 'https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590')" alt="Analysis" class="service-image" />
               <div class="service-info">
-                <span class="service-label">problem</span>
+                <span class="service-label">analysis</span>
                 <h4 class="service-title">分析（新たな課題認識）</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="slotImage('support_paid_newbiz', 'https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590')" alt="New Business Activities" class="service-image" />
               <div class="service-info">
-                <span class="service-label">problem</span>
+                <span class="service-label">new business</span>
                 <h4 class="service-title">新たな事業活動</h4>
               </div>
             </div>

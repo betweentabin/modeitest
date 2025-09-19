@@ -627,14 +627,37 @@ export default {
 
 .service-details {
   color: #3F3F3F;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 400;
-  line-height: 1.8;
+  line-height: 1.6;
+}
+
+.service-details ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-details li {
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 
 
 /* Responsive Design */
+@media (max-width: 1900px) {
+  .service-image {
+    max-height: 450px;
+  }
+
+  .service-content {
+    max-height: 450px;
+  }
+}
+
 @media (max-width: 1150px) {
   /* セクションのパディング調整 */
   .about-section,
@@ -714,7 +737,8 @@ export default {
     font-size: 18px !important;
   }
 
-  .service-details {
+  .service-details,
+  .service-details li {
     font-size: 18px !important;
   }
 }
@@ -779,7 +803,8 @@ export default {
     font-size: 17px !important;
   }
 
-  .service-details {
+  .service-details,
+  .service-details li {
     font-size: 17px !important;
   }
 }
@@ -825,7 +850,8 @@ export default {
     font-size: 16px !important;
   }
 
-  .service-details {
+  .service-details,
+  .service-details li {
     font-size: 16px !important;
   }
 }
@@ -880,7 +906,8 @@ export default {
     font-size: 13px !important;
   }
   
-  .service-details {
+  .service-details,
+  .service-details li {
     font-size: 13px !important;
   }
 
