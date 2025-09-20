@@ -3015,21 +3015,10 @@ export default {
               if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() }
             } catch(_) { /* ignore */ }
           } catch(_) { /* ignore */ }
-          // refresh current images list
-          try {
-            const r = await apiClient.adminGetPageContent(this.pageContentKey)
-            const content = r?.data?.page?.content || {}
-            const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
-            this.pageImages = Object.keys(imgs).map(k => {
-              const v = imgs[k]
-              return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
-            })
-          } catch(_) {}
-          this.missingImageKeys = this.calculateMissingImages()
+          const page = await this.refreshPageImages()
           // Notify public pages to reload PageContent cache immediately
           try {
-            const k = 'page_content_cache:' + String(this.pageContentKey)
-            localStorage.setItem(k, String(Date.now()))
+            await this.writePageContentCache(page)
           } catch(_) { /* ignore */ }
           alert('画像を差し替えました')
         } else {
@@ -3065,28 +3054,38 @@ export default {
             } catch(_) {}
             try { if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() } } catch(_) {}
           } catch(_) { /* ignore */ }
-          // push to list
-          try {
-            const r = await apiClient.adminGetPageContent(this.pageContentKey)
-            const content = r?.data?.page?.content || {}
-            const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
-            this.pageImages = Object.keys(imgs).map(k => {
-              const v = imgs[k]
-              return { key: k, url: (typeof v === 'string') ? v : (v?.url || ''), filename: (typeof v === 'object' ? (v.filename || '') : '') }
-            })
-          } catch(_) {}
+          const page = await this.refreshPageImages()
           this.newImageKey = ''
-          this.missingImageKeys = this.calculateMissingImages()
           // Broadcast page content cache update to live pages
           try {
-            const k = 'page_content_cache:' + String(this.pageContentKey)
-            localStorage.setItem(k, String(Date.now()))
+            await this.writePageContentCache(page)
           } catch(_) { /* ignore */ }
           alert('画像を追加しました')
         } else {
           alert('追加に失敗しました')
         }
       } catch(_) { alert('追加に失敗しました') }
+    },
+    async writePageContentCache(page){
+      const key = String(this.pageContentKey || '').trim()
+      if (!key) return
+      let target = page
+      if (!target) {
+        target = await this.fetchPageContent(key)
+      }
+      try {
+        if (target && typeof target === 'object') {
+          localStorage.setItem('page_content_cache:' + key, JSON.stringify(target))
+        }
+      } catch(_) {
+        try { localStorage.setItem('page_content_cache:' + key, String(Date.now())) } catch(_) {}
+      }
+    },
+    async fetchPageContent(key = this.pageContentKey){
+      try {
+        const res = await apiClient.adminGetPageContent(key)
+        return res?.data?.page || null
+      } catch(_) { return null }
     },
     collectWarnings(sections){
       const warn = []
@@ -3605,22 +3604,23 @@ export default {
             } catch(_) {}
             try { if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() } } catch(_) {}
           } catch(_) { /* ignore */ }
-        await this.refreshPageImages()
+          const page = await this.refreshPageImages()
 
-        // Ensure legacy PageContent is published so public API reflects the change
-        try {
-          await apiClient.adminUpdatePageContent(this.pageContentKey, { is_published: true })
-        } catch(_) { /* non-blocking */ }
+          // Ensure legacy PageContent is published so public API reflects the change
+          try {
+            await apiClient.adminUpdatePageContent(this.pageContentKey, { is_published: true })
+          } catch(_) { /* non-blocking */ }
 
-        // Notify other tabs (public page) to reload page content cache immediately
-        try {
-          const k = 'page_content_cache:' + String(this.pageContentKey)
-          localStorage.setItem(k, String(Date.now()))
-        } catch(_) { /* ignore */ }
-      } else {
+          // Notify other tabs (public page) to reload page content cache immediately
+          try {
+            await this.writePageContentCache(page)
+          } catch(_) { /* ignore */ }
+        } else {
+          alert('画像アップロードに失敗しました')
+        }
+      } catch(_) {
         alert('画像アップロードに失敗しました')
       }
-    } catch(_) { alert('画像アップロードに失敗しました') }
     },
     async onHomeSlideSelected(key, e){
       // 同じ実装（homeページの content.images.<key> へ保存）
@@ -3628,8 +3628,9 @@ export default {
     },
     async refreshPageImages(){
       try {
-        const r = await apiClient.adminGetPageContent(this.pageContentKey)
-        const content = r?.data?.page?.content || {}
+        const res = await apiClient.adminGetPageContent(this.pageContentKey)
+        const page = res?.data?.page || null
+        const content = page?.content || {}
         const imgs = (content && typeof content === 'object' && content.images && typeof content.images === 'object') ? content.images : {}
         this.pageImages = Object.keys(imgs).map(k => {
           const v = imgs[k]
@@ -3640,7 +3641,8 @@ export default {
         this.missingImageKeys = this.calculateMissingImages()
         // Prepare media registries for editor-side fallback resolution
         await this.ensureMediaRefs()
-      } catch(_) {}
+        return page
+      } catch(_) { return null }
     },
     insertLastContentImage(){
       if (!this.lastContentImgUrl) return

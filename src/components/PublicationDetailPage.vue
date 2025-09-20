@@ -60,7 +60,11 @@
            </div>
            
            <div class="publication-image">
-             <img :src="publication.image_url || '/img/image-1.png'" :alt="publication.title" />
+             <img 
+               :src="publication.cover_image_url || publication.cover_image || publication.image_url || '/img/image-1.png'" 
+               :alt="publication.title"
+               @error="onImgError"
+             />
            </div>
          </div>
 
@@ -205,6 +209,9 @@ export default {
     }
   },
   methods: {
+    onImgError(e) {
+      if (e && e.target) e.target.src = '/img/image-1.png'
+    },
     async loadPublication() {
       try {
         this.loading = true;
@@ -259,6 +266,8 @@ export default {
     formatPublicationData(publicationData, meta = {}) {
       return {
         ...publicationData,
+        // 画像プロパティを統一（cover_image_url を優先）
+        image_url: publicationData.cover_image_url || publicationData.cover_image || publicationData.image_url || '/img/image-1.png',
         isDownloadable: publicationData.is_downloadable || false,
         membersOnly: publicationData.members_only || false,
         membershipLevel: publicationData.membership_level || (publicationData.members_only ? 'standard' : 'free'),

@@ -41,7 +41,8 @@ return [
         ],
         'smtp' => [
             'transport' => 'smtp',
-            'url' => env('MAIL_URL'),
+            // IMPORTANT: do not reuse MAIL_URL here because it may contain non-SMTP DSNs (e.g. gmail+api)
+            'url' => env('MAIL_SMTP_URL'),
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
@@ -93,6 +94,7 @@ return [
         // MAIL_URL=gmail+api://USER@gmail.com@default?client_id=XXX&client_secret=YYY&refresh_token=ZZZ
         'gmail' => [
             'transport' => 'gmail',
+            // Use MAIL_URL for Gmail API DSN: gmail+api://CLIENT_ID:CLIENT_SECRET@default?refresh_token=...
             'url' => env('MAIL_URL'),
             // Optional explicit params (when not using DSN)
             'user' => env('GOOGLE_GMAIL_USER'),
