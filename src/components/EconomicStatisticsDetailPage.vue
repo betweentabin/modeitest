@@ -13,7 +13,7 @@
 
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[
-      { text: '経済・調査統計', link: '/economic-statistics' },
+      { text: '経済・調査統計', link: '/economic-research' },
       { text: statistics?.title || '経済・調査統計詳細' }
     ]" />
 
