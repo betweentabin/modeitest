@@ -73,6 +73,84 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - Mail: set SMTP envs (`MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, `MAIL_FROM_NAME`).
 - Dry-run: set `MAIL_DRY_RUN=true` to skip real sends while testing.
 
+## Gmail でメール送信する（簡単: SMTP／推奨手順）
+
+Gmailを送信元にする最短手順です。Googleアカウントで2段階認証を有効化し、「アプリ パスワード」を発行してSMTPで送信します。
+
+1) 下準備（Googleアカウント）
+- Googleアカウントの「2段階認証」を有効化。
+- セキュリティ > アプリ パスワード から「メール」「その他の端末」で16桁のアプリパスワードを生成。
+
+2) 環境変数（Railway の環境変数に設定）
+
+```env
+# Gmail SMTP
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_ENCRYPTION=tls
+MAIL_USERNAME=your-account@gmail.com
+MAIL_PASSWORD=your_16_digit_app_password
+MAIL_FROM_ADDRESS=your-account@gmail.com
+MAIL_FROM_NAME="ちくぎん地域経済研究所"
+
+# 実送信する場合は false（true だと実送信スキップ）
+MAIL_DRY_RUN=false
+```
+
+補足:
+- From は基本的に Gmail アドレスに合わせてください（`MAIL_FROM_ADDRESS` と `MAIL_USERNAME` を同じにする）。
+- Gmail には送信上限があります。大量配信には不向きです。
+
+3) 動作確認（管理画面の即時送信）
+- 管理者でログインし、「メール送信（即時）」からテスト送信。
+- もしくは `POST /api/admin/emails/send-simple` にて、
+
+```json
+{
+  "to": "your-destination@example.com",
+  "subject": "Gmail SMTP テスト",
+  "body_text": "Hello from Gmail SMTP"
+}
+```
+
+レスポンスの `mailer` が `smtp` で、実際に届けば設定完了です。
+
+## Gmail API（SMTPがブロックされる環境向け）
+
+サーバー環境で外向きSMTPが使えない場合は、Gmail API を利用できます（このリポジトリは `symfony/google-mailer` を同梱済み）。
+
+1) 下準備（Google Cloud）
+- プロジェクト作成 → Gmail API を有効化。
+- OAuth クライアントID/シークレットを発行し、オフラインアクセスのリフレッシュトークンを取得。
+
+2) 環境変数（どちらかの方式）
+
+方式A: DSN を使う
+
+```env
+MAIL_MAILER=gmail
+MAIL_URL=gmail+api://USER@gmail.com@default?client_id=XXX&client_secret=YYY&refresh_token=ZZZ
+MAIL_FROM_ADDRESS=USER@gmail.com
+MAIL_FROM_NAME="ちくぎん地域経済研究所"
+```
+
+方式B: 個別キーを使う
+
+```env
+MAIL_MAILER=gmail
+GOOGLE_GMAIL_USER=USER@gmail.com
+GOOGLE_CLIENT_ID=XXX
+GOOGLE_CLIENT_SECRET=YYY
+GOOGLE_REFRESH_TOKEN=ZZZ
+MAIL_FROM_ADDRESS=USER@gmail.com
+MAIL_FROM_NAME="ちくぎん地域経済研究所"
+```
+
+3) 動作確認
+- 管理画面もしくは `POST /api/admin/emails/send-simple` でテスト。
+- レスポンスの `mailer` が `gmail` になればOK。
+
 ## Xserver（エックスサーバー）でメール送信（SMTP）を使う
 
 Xserverで作成したメールボックス（例: `info@your-domain.jp`）を使ってLaravelから送信する場合の設定例です。Railway等の外部からXserverのSMTPに接続して送信できます（認証必須）。
