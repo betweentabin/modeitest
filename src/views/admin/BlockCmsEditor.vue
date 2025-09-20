@@ -2658,7 +2658,10 @@ export default {
       return new Set([
         'company-profile',
         'membership-premium',
-        'about'
+        'about',
+        // リクエストにより非表示
+        'about-institute',
+        'terms-of-service',
       ])
     },
     // 表示用にフィルタ済みのページ一覧
@@ -2760,6 +2763,10 @@ export default {
     },
     pageContentKeyFromSlug(slug){
       const s = (slug||'').toLowerCase()
+      // Flow pages (confirm/complete) → 既存のPageContentにブリッジ
+      if (s.startsWith('contact-') && (s.endsWith('-confirm') || s.endsWith('-complete'))) return 'contact'
+      if (s.startsWith('membership-application-') && (s.endsWith('-confirm') || s.endsWith('-complete'))) return 'membership-application'
+      if (s.startsWith('seminar-application-') && (s.endsWith('-confirm') || s.endsWith('-complete'))) return 'seminar-application'
       if (s.includes('privacy')) return 'privacy'
       if (s.includes('legal') || s.includes('transaction')) return 'transaction-law'
       if (s.includes('terms')) return 'terms'
@@ -2835,6 +2842,7 @@ export default {
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
         else if (slug.includes('navigation')) this.pageContentKey = 'navigation'
         else if (slug.includes('footer')) this.pageContentKey = 'footer'
+        else if (slug.startsWith('contact-') && (slug.endsWith('-confirm') || slug.endsWith('-complete'))) this.pageContentKey = 'contact'
         else if (slug.includes('contact')) this.pageContentKey = 'contact'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'membership'

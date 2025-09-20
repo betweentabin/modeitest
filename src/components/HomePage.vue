@@ -1059,7 +1059,8 @@ export default {
       // メイン: 常に最新（配列の先頭）
       const main = this.allPublications[0]
       this.dynamicMainPublication = {
-        x22: main?.cover_image || main?.image_url || this.frame13213174741Props.x22,
+        // 画像URLの候補を広げ、欠損時はデフォルトにフォールバック
+        x22: main?.cover_image_url || main?.cover_image?.url || main?.cover_image || main?.image_url || this.frame13213174741Props.x22,
         title: main?.title || '',
         date: main?.publication_date ? this.formatDate(main.publication_date) : ''
       }
@@ -1079,7 +1080,8 @@ export default {
         const absolute = 1 + ((this.currentIndex + i) % othersLen)
         const item = this.allPublications[absolute]
         list.push({
-          x22: item?.cover_image || item?.image_url || defaultImages[i],
+          // APIの差異に対応（cover_image_url / cover_image.url を優先）
+          x22: item?.cover_image_url || item?.cover_image?.url || item?.cover_image || item?.image_url || defaultImages[i],
           hotInformationVol324: item?.title || '',
           date: item?.publication_date ? this.formatDate(item.publication_date) : '',
           id: item?.id

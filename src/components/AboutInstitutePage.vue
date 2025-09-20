@@ -5,10 +5,10 @@
     <!-- Hero Section -->
     <HeroSection 
       :title="pageTitle"
-      :subtitle="pageSubtitle"
+      :subtitle="'CONTACT'"
       cms-page-key="about-institute"
       title-field-key="page_title"
-      subtitle-field-key="page_subtitle"
+      subtitle-field-key="page_subtitle_contact"
       :heroImage="media('hero', '/img/Image_fx10.jpg', 'hero_about_institute')"
       mediaKey="hero_about_institute"
     />
