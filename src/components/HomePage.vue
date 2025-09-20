@@ -30,7 +30,7 @@
                 fieldKey="tile_seminar_subtitle"
                 tag="div"
                 class="seminar valign-text-middle inter-bold-white-24px"
-                :fallback="'seminar'"
+                :fallback="'SEMINAR'"
               />
             </div>
           </div>
@@ -48,7 +48,7 @@
                 fieldKey="tile_publications_subtitle"
                 tag="div"
                 class="publications valign-text-middle inter-bold-white-24px"
-                :fallback="'publications'"
+                :fallback="'PUBLICATIONS'"
               />
             </div>
           </div>
@@ -66,7 +66,7 @@
                 fieldKey="tile_information_subtitle"
                 tag="div"
                 class="Information valign-text-middle inter-bold-white-24px"
-                :fallback="'information'"
+                :fallback="'INFORMATION'"
               />
             </div>
           </div>
@@ -84,7 +84,7 @@
                 fieldKey="tile_membership_subtitle"
                 tag="div"
                 class="membership valign-text-middle inter-bold-white-24px"
-                :fallback="'membership'"
+                :fallback="'MEMBERSHIP'"
               />
             </div>
           </div>

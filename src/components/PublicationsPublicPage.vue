@@ -33,7 +33,7 @@
         <!-- Year Filter -->
         <div class="year-filter">
           <button 
-            v-for="year in years" 
+            v-for="year in displayedYears" 
             :key="year"
             :class="['year-btn', { active: selectedYear === year }]"
             @click="selectYear(year)"
@@ -43,7 +43,8 @@
         </div>
 
         <!-- Download Button -->
-        <button class="filter-download-btn"><CmsText pageKey="publications" fieldKey="show_more" tag="span" :fallback="'さらに表示'" />
+        <button v-if="hasMoreYears" @click="toggleShowAllYears" class="filter-download-btn">
+          <span>{{ showAllYears ? '少なく表示' : 'さらに表示' }}</span>
           <div class="icon-box">
             <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="23" height="23" rx="5" fill="white"/>
@@ -51,6 +52,9 @@
             </svg>
           </div>
         </button>
+
+        <!-- Divider Line -->
+        <div class="filter-divider"></div>
 
         <!-- Category Filter -->
         <div class="category-filter">
@@ -257,10 +261,11 @@ export default {
       loading: true,
       selectedYear: 'all',
       selectedCategory: 'all',
+      showAllYears: false,
       error: null,
       currentPage: 1,
       totalPages: 1,
-      years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
+      years: [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015],
       categories: [ { id: 'all', name: '全て' } ],
       featuredPublication: {
         id: 1,
@@ -460,6 +465,14 @@ export default {
       }
       
       return filtered.slice(0, 12);
+    },
+    // 表示する年のリスト（最新10個、または全て）
+    displayedYears() {
+      return this.showAllYears ? this.years : this.years.slice(0, 10);
+    },
+    // 11個目以上の年があるかどうか
+    hasMoreYears() {
+      return this.years.length > 10;
     }
   },
   mounted() {
@@ -647,6 +660,9 @@ export default {
       this.currentPage = 1;
       await this.loadPublications();
     },
+    toggleShowAllYears() {
+      this.showAllYears = !this.showAllYears;
+    },
     async selectCategory(categoryId) {
       this.selectedCategory = categoryId;
       this.currentPage = 1;
@@ -791,6 +807,14 @@ export default {
 
 .filter-download-btn:hover {
   opacity: 0.8;
+}
+
+/* Filter Divider */
+.filter-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #E0E0E0;
+  margin: 10px 0;
 }
 
 .icon-box {
