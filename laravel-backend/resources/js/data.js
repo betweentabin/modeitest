@@ -205,7 +205,7 @@ export const screen2Data = {
     text104: "その他の情報",
     otherInformation: "OTHER Information",
     x222: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-2-5.png",
-    text108: "経済指標バナー",
+    text108: "経済指標",
     viweMore2: "Viwe More .",
     vector17: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/6864caac2aac575f0a6d49d5/img/rectangle-6-7@2x.png",
     x23: "https://cdn.animaapp.com/projects/68131d325b4f63697a4e5f8d/releases/686212ebd414fb8b862fbd75/img/-----2-3.png",
