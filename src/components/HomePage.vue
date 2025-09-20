@@ -572,12 +572,44 @@ export default {
     // CMS（PageContent: home）からヒーロースライダー/バナー画像を取得
     this.loadCmsHeroSlides().catch(() => {});
     this.loadCmsHomeImages().catch(() => {});
+
+    // 編集反映を即時に感じられるよう、storage/visibility/cms-media-updated を監視して再読込
+    try {
+      this.__lastReloadAt = 0
+      this.__reloading = false
+      this.__reloadNow = () => {
+        const now = Date.now()
+        if (this.__reloading || (now - (this.__lastReloadAt || 0) < 300)) return
+        this.__reloading = true
+        Promise.all([
+          this.loadCmsHeroSlides(true),
+          this.loadCmsHomeImages(true),
+        ]).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false })
+      }
+      // 他タブ/編集画面からの PageContent 更新通知
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:home') this.__reloadNow()
+      }
+      window.addEventListener('storage', this.__onStorage)
+      // タブがアクティブになったタイミングで再読込（編集直後の戻りなど）
+      this.__onVis = () => { if (document.visibilityState === 'visible') this.__reloadNow() }
+      document.addEventListener('visibilitychange', this.__onVis)
+      // メディアレジストリの更新（KV/画像差し替え）
+      this.__onMediaUpdated = () => { this.__reloadNow() }
+      window.addEventListener('cms-media-updated', this.__onMediaUpdated)
+    } catch (_) { /* noop */ }
+  },
+  beforeDestroy() {
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch (_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch (_) {}
+    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch (_) {}
   },
   methods: {
-    async loadCmsHeroSlides() {
+    async loadCmsHeroSlides(force = false) {
       try {
         const cms = usePageText('home')
-        const opts = {}
+        const opts = { }
         try {
           const hash = window.location.hash || ''
           const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
@@ -585,6 +617,7 @@ export default {
           const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
           if (preview) opts.preferAdmin = true
         } catch (_) {}
+        if (force) opts.force = true
         await cms.load(opts)
         const page = cms.page && cms.page.value ? cms.page.value : null
         const images = (page && page.content && page.content.images) ? page.content.images : {}
@@ -617,10 +650,10 @@ export default {
         // 非致命: フォールバックに任せる
       }
     },
-    async loadCmsHomeImages() {
+    async loadCmsHomeImages(force = false) {
       try {
         const cms = usePageText('home')
-        const opts = {}
+        const opts = { }
         try {
           const hash = window.location.hash || ''
           const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
@@ -628,6 +661,7 @@ export default {
           const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
           if (preview) opts.preferAdmin = true
         } catch (_) {}
+        if (force) opts.force = true
         await cms.load(opts)
         const page = cms.page && cms.page.value ? cms.page.value : null
         const images = (page && page.content && page.content.images) ? page.content.images : {}

@@ -238,6 +238,22 @@
               <label>{{ displayLabel(key) }}</label>
               <input v-model="contactTexts[key]" class="input" />
             </div>
+
+            <!-- 画像（レイアウト近似配置）: お問い合わせセクション背景 -->
+            <div class="section-title">背景画像</div>
+            <div class="field">
+              <label>お問い合わせセクション背景（contact_section_bg）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('contact_section_bg') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.contact_section_bg</div>
+                  <div class="img-actions">
+                    <input ref="img_contact_section_bg" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('contact_section_bg', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('contact_section_bg')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </template>
 
           <template v-if="currentPage && currentPage.slug==='membership-application' && layoutMode">
@@ -278,6 +294,145 @@
             </div>
           </template>
 
+          <!-- home: レイアウト近似編集（layoutMode） -->
+          <template v-if="currentPage && currentPage.slug==='home' && layoutMode">
+            <div class="section-title">研究所についてカード画像</div>
+            <div class="field">
+              <label>カード1（about_card1_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('about_card1_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.about_card1_image</div>
+                  <div class="img-actions">
+                    <input ref="img_about_card1_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('about_card1_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('about_card1_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>カード2（about_card2_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('about_card2_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.about_card2_image</div>
+                  <div class="img-actions">
+                    <input ref="img_about_card2_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('about_card2_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('about_card2_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>カード3（about_card3_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('about_card3_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.about_card3_image</div>
+                  <div class="img-actions">
+                    <input ref="img_about_card3_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('about_card3_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('about_card3_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-title">パートナーロゴ</div>
+            <div class="field">
+              <label>ロゴ1（home_partner_logo1）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo1') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.home_partner_logo1</div>
+                  <div class="img-actions">
+                    <input ref="img_home_partner_logo1" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('home_partner_logo1', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('home_partner_logo1')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>ロゴ2（home_partner_logo2）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo2') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.home_partner_logo2</div>
+                  <div class="img-actions">
+                    <input ref="img_home_partner_logo2" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('home_partner_logo2', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('home_partner_logo2')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>ロゴ3（home_partner_logo3）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo3') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.home_partner_logo3</div>
+                  <div class="img-actions">
+                    <input ref="img_home_partner_logo3" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('home_partner_logo3', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('home_partner_logo3')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>ロゴ4（home_partner_logo4）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('home_partner_logo4') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.home_partner_logo4</div>
+                  <div class="img-actions">
+                    <input ref="img_home_partner_logo4" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('home_partner_logo4', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('home_partner_logo4')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-title">スライダー画像（3枚）</div>
+            <div class="field">
+              <label>スライド1（hero_slide_1）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero_slide_1') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero_slide_1</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_slide_1" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero_slide_1', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero_slide_1')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スライド2（hero_slide_2）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero_slide_2') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero_slide_2</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_slide_2" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero_slide_2', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero_slide_2')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スライド3（hero_slide_3）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero_slide_3') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero_slide_3</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_slide_3" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero_slide_3', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero_slide_3')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="help">未設定の場合はデフォルト画像が表示されます（/img/Image_fx*.jpg）。</div>
+          </template>
           <template v-if="currentPage && currentPage.slug==='seminar-application' && layoutMode">
             <div class="section-title">セミナー申込フォーム</div>
             <div class="field" v-for="key in seminarApplicationBasicKeys" :key="`seminar-app-basic-${key}`">
@@ -911,6 +1066,7 @@
                 </div>
               </div>
               <div class="help">PC のヒーロー背景に使用されます。差し替え後は即座にデスクトップにも反映されます。</div>
+              <div class="help">上部の「KV画像」でもヒーローを設定できます（推奨）。</div>
             </div>
 
             <!-- 画像（レイアウト近似配置） -->
@@ -2878,6 +3034,11 @@ export default {
           'banner_seminar','banner_publications','banner_info','banner_membership',
           'about_card1_image','about_card2_image','about_card3_image',
           'home_partner_logo1','home_partner_logo2','home_partner_logo3','home_partner_logo4'
+        ]
+      }
+      if (key === 'contact') {
+        return [
+          'contact_section_bg'
         ]
       }
       return []
