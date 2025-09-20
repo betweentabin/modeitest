@@ -205,7 +205,7 @@ export const homePageData = {
     text104: "その他の情報",
     otherInformation: "OTHER Information",
     x222: "/img/-----2-2-5.png",
-    text108: "経済指標バナー",
+    text108: "経済指標",
     viweMore2: "Viwe More .",
     vector17: "/img/rectangle-6-7.png",
     x23: "/img/-----2-3.png",

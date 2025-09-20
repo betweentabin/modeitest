@@ -19,7 +19,7 @@ class MembershipPageJsonSeeder extends Seeder
             'intro_title' => 'ご入会に際しまして',
             'intro_text' => 'ちくぎん地域経済研究所では各種サービスを気軽にご利用いただけるよう、会員制度「ちくぎん地域経済クラブ」を設けております。会員の皆さまには地域経済の情報誌「ちくぎん地域経済レポート」をお届けするとともに、企業経営に関する各種サービスの提供や講演会・セミナーの案内など、御社のビジネスをバックアップします。',
             // Services section headings
-            'services_title' => '主な会員が受けられるサービス内容',
+            'services_title' => '会員が受けられる主なサービス内容',
             'services_label' => 'service',
             // Categories
             'premium_category_title' => 'プレミアサービス',

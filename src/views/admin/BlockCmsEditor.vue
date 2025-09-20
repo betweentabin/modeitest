@@ -67,7 +67,7 @@
             <div class="field"><label>本文</label><textarea v-model="membershipTexts.intro_text" class="textarea" rows="4"></textarea></div>
 
             <div class="section-title">サービス（Services）</div>
-            <div class="field"><label>見出し</label><input v-model="membershipTexts.services_title" class="input" placeholder="主な会員が受けられるサービス内容" /></div>
+            <div class="field"><label>見出し</label><input v-model="membershipTexts.services_title" class="input" placeholder="会員が受けられる主なサービス内容" /></div>
             <div class="field"><label>英字</label><input v-model="membershipTexts.services_label" class="input" placeholder="service" /></div>
 
             <div class="field"><label>プレミアサービス（見出し）</label><input v-model="membershipTexts.premium_category_title" class="input" /></div>

@@ -41,7 +41,7 @@
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">
-            <CmsText :pageKey="cmsKey" fieldKey="services_title" tag="span" :fallback="'主な会員が受けられるサービス内容'" />
+            <CmsText :pageKey="cmsKey" fieldKey="services_title" tag="span" :fallback="'会員が受けられる主なサービス内容'" />
           </h2>
           <div class="section-decoration">
             <div class="decoration-line"></div>
