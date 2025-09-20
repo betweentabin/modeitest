@@ -154,7 +154,15 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('premium-membership')
-      this._pageText.load({ force: true })
+      const opts = {}
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+        if (preview) opts.preferAdmin = true
+      } catch(_) {}
+      this._pageText.load({ force: true, ...opts })
     } catch(e) { /* noop */ }
     // Load media registry and per-page mappings so mobile images update instantly
     import('@/composables/usePageMedia').then(mod => {
@@ -180,15 +188,43 @@ export default {
     })
     // Reflect admin edits without reload
     try {
+      this.__lastReloadAt = 0
+      this.__reloading = false
       this.__onStorage = (ev) => {
         const k = ev && ev.key ? String(ev.key) : ''
         if (k === 'page_content_cache:premium-membership') {
-          try { this._pageText && this._pageText.load && this._pageText.load({ force: true }) } catch(_) {}
-          try { this.$forceUpdate() } catch(_) {}
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 800)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
         }
       }
       window.addEventListener('storage', this.__onStorage)
+      // Re-fetch when tab becomes visible (after saving in admin)
+      this.__onVis = () => {
+        if (document.visibilityState === 'visible') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 800)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
+        }
+      }
+      document.addEventListener('visibilitychange', this.__onVis)
+      // Re-render when global media registry updates (KV/replace image)
+      this.__onMediaUpdated = () => { try { this.$forceUpdate() } catch(_) {} }
+      window.addEventListener('cms-media-updated', this.__onMediaUpdated)
     } catch(_) {}
+  },
+  beforeDestroy() {
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
+    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
   },
   methods: {
     slotImage(slotKey, fallback = '') {

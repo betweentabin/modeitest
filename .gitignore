@@ -21,3 +21,14 @@ yarn-error.log*
 *.sw*
 .config/
 .vercel
+*.pem
+*.p12
+*.p8
+*.crt
+*.key
+*.der
+*service-account*.json
+*service_account*.json
+*gcp-credentials*.json
+*credentials*.json
+*.secrets.json

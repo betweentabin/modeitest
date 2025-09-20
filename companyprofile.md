@@ -82,3 +82,33 @@ CRI/研究所ページを会社概要と同じ優先順に統一（公開）
 編集プレビューも「公開と同じ順序」で画像解決、編集→公開の見え方を一致
 postgresql://postgres:RgvdpkoBgfjrvxjobxANPJrHfNIeyRkh@shinkansen.proxy.rlwy.net:47420/railway
 dbのパブリックurlです
+
+# 画像が“すぐ反映されない”ように見える理由と対処（要点）
+
+テキストは即時反映しやすい一方で、画像はキャッシュや読み込み経路の違いにより遅延が発生することがあります。会社概要（/company）では遅延要因を潰していますが、他ページでは未統一箇所が残る場合があります。ポイントと対処を整理します。
+
+- テキストが速い理由
+  - `PageContent` を `usePageText.load({ force:true })` で再取得し、`localStorage('page_content_cache:<key>')` と `visibilitychange`、`cms-media-updated` を監視して即時再描画する実装が全ページで進行中。
+  - 文字列はブラウザ/中間キャッシュの影響が小さく、URLも変わらないため即差し替わる。
+
+- 画像が遅れる主因
+  - ブラウザ/CDNの強いキャッシュ: 同一URLだと古いバイナリが残りやすい。
+  - グローバルメディア（`useMedia`）のローカル永続キャッシュ: `localStorage('cms_media_cache')` を5分TTLでSWR読みするため、初回描画が旧画像→バックグラウンド更新になることがある。
+  - ページによっては、画像読込が`PageContent`優先/キャッシュバスト未対応の箇所が残っていた（今回、順次統一中）。
+
+- 会社概要で遅延が起きにくい理由（実装済み）
+  - 画像URLにアップロード時刻ベースのキャッシュバスター（`?_t=<uploaded_at>`）を付与し、/storage配下でも確実に最新を取得（`src/components/CompanyProfile.vue`）。
+  - `storage`/`visibilitychange`/`cms-media-updated` を監視し、画像・文言ともに再取得＋強制再描画。
+  - 編集UI側（Block CMS）で差し替え後に `invalidateMediaCache()` を呼び、`cms_media_cache` を即時無効化して全タブへブロードキャスト。
+
+- 他ページで“画像がすぐ出ない”ときの対処
+  - `PageContent.content.images` に `uploaded_at` が入る更新経路（`replaceImage`）を使う。これにより `?_t=` が付与されキャッシュを確実に回避。
+  - 可能なら KV（ヒーロー）はDB媒体（`/api/public/m/:id/:preset`）を使う。IDが変わるためURL自体が更新され、即時反映しやすい。
+  - 反映が遅いページは、会社概要と同じ監視・解決順に統一する（`cms-media-updated` 監視、`usePageText(...).load({force:true})`、画像は `_t=` 付与）。Home/Sitemap/Glossary等は対応済み。
+  - 管理画面からの保存直後に「見えない」場合: ブラウザの強制再読込よりも、編集UI側の更新（差し替え・KV更新）を使うのが確実。内部でキャッシュ無効化→イベント送出→公開タブ再読込が走る。
+
+- 運用TIP
+  - テキスト変更だけならそのままでOK。画像変更は「差し替え（replace）」か「KV経由のアップロード」を使用する（どちらもURL更新 or `_t=` 付与で即時化）。
+  - 汎用画像は `media` レジストリにもミラーを置くとフォールバックが安定。
+
+この方針で「文言は即時、画像もほぼ即時」を実現しています。もし特定ページで遅延が残る場合は、そのページの画像解決箇所を会社概要と同じ作法（`PageContent`優先＋`?_t=`付与＋イベント監視）に寄せれば解消できます。

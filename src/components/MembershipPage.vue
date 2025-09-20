@@ -380,6 +380,19 @@ export default {
         }
       }
       window.addEventListener('storage', this.__onStorage)
+      // also refresh when tab becomes visible (e.g. after saving in another tab)
+      this.__onVis = () => {
+        if (document.visibilityState === 'visible') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
+        }
+      }
+      document.addEventListener('visibilitychange', this.__onVis)
       // Also re-render when media registry broadcasts updates (KV/replace-image)
       this.__onMediaUpdated = () => { try { this.$forceUpdate() } catch(_) {} }
       window.addEventListener('cms-media-updated', this.__onMediaUpdated)
@@ -396,6 +409,7 @@ export default {
   },
   beforeDestroy() {
     try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
     try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
   },
   watch: {

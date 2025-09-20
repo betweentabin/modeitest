@@ -34,7 +34,7 @@
           </div>
 
           <!-- Layout view toggle (for key pages like company/aboutus/about/consult/membership) -->
-          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services','membership-application','seminar-application','contact','navigation','footer'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
+          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services','membership-application','seminar-application','contact','navigation','footer','economic','publications'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -107,6 +107,87 @@
             <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="membershipTexts.cta_primary" class="input" /></div>
             <div class="field"><label>入会（ボタン文言）</label><input v-model="membershipTexts.cta_secondary" class="input" /></div>
 
+            <!-- 画像（レイアウト近似配置） -->
+            <div class="section-title">画像（レイアウト）</div>
+            <div class="field">
+              <label>プレミア項目1（premium_service1_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('premium_service1_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.premium_service1_image</div>
+                  <div class="img-actions">
+                    <input ref="img_premium_service1_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('premium_service1_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('premium_service1_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スタンダード項目1（standard_service1_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service1_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.standard_service1_image</div>
+                  <div class="img-actions">
+                    <input ref="img_standard_service1_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service1_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service1_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スタンダード項目2（standard_service2_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service2_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.standard_service2_image</div>
+                  <div class="img-actions">
+                    <input ref="img_standard_service2_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service2_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service2_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スタンダード項目3（standard_service3_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service3_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.standard_service3_image</div>
+                  <div class="img-actions">
+                    <input ref="img_standard_service3_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service3_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service3_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スタンダード項目4（standard_service4_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service4_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.standard_service4_image</div>
+                  <div class="img-actions">
+                    <input ref="img_standard_service4_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service4_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service4_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>スタンダード項目5（standard_service5_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service5_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.standard_service5_image</div>
+                  <div class="img-actions">
+                    <input ref="img_standard_service5_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service5_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service5_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             
           </template>
 
@@ -128,6 +209,69 @@
             <div class="field"><label>見出し</label><input v-model="standardTexts.services_title" class="input" /></div>
             <div class="field"><label>英字</label><input v-model="standardTexts.services_label" class="input" /></div>
             <div class="field"><label>スタンダードサービス（見出し）</label><input v-model="standardTexts.standard_category_title" class="input" /></div>
+
+            <!-- 画像（レイアウト近似配置） -->
+            <div class="section-title">画像（レイアウト）</div>
+            <div class="field">
+              <label>項目1（standard_service1_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service1_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_std_service1_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service1_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service1_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>項目2（standard_service2_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service2_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_std_service2_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service2_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service2_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>項目3（standard_service3_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service3_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_std_service3_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service3_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service3_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>項目4（standard_service4_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service4_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_std_service4_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service4_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service4_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>項目5（standard_service5_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('standard_service5_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_std_service5_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('standard_service5_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('standard_service5_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="field"><label>項目1（タグ）</label><input v-model="standardTexts.standard_service1_tag" class="input" /></div>
             <div class="field"><label>項目1（名称）</label><input v-model="standardTexts.standard_service1_name" class="input" /></div>
             <div class="field"><label>項目2（タグ）</label><input v-model="standardTexts.standard_service2_tag" class="input" /></div>
@@ -178,6 +322,21 @@
             <div class="field"><label>お問い合わせ（ボタン文言）</label><input v-model="premiumTexts.cta_primary" class="input" /></div>
             <div class="field"><label>入会（ボタン文言）</label><input v-model="premiumTexts.cta_secondary" class="input" /></div>
 
+            <!-- 画像（レイアウト近似配置） -->
+            <div class="section-title">特集画像（Featured）</div>
+            <div class="field">
+              <label>特集画像（featured_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('featured_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.featured_image</div>
+                  <div class="img-actions">
+                    <input ref="img_featured_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('featured_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('featured_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             
           </template>
 
@@ -391,6 +550,60 @@
               </div>
             </div>
 
+            <div class="section-title">バナー画像</div>
+            <div class="field">
+              <label>セミナー（banner_seminar）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('banner_seminar') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.banner_seminar</div>
+                  <div class="img-actions">
+                    <input ref="img_banner_seminar" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('banner_seminar', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('banner_seminar')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>刊行物（banner_publications）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('banner_publications') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.banner_publications</div>
+                  <div class="img-actions">
+                    <input ref="img_banner_publications" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('banner_publications', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('banner_publications')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>お知らせ（banner_info）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('banner_info') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.banner_info</div>
+                  <div class="img-actions">
+                    <input ref="img_banner_info" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('banner_info', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('banner_info')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>入会案内（banner_membership）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('banner_membership') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.banner_membership</div>
+                  <div class="img-actions">
+                    <input ref="img_banner_membership" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('banner_membership', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('banner_membership')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="section-title">スライダー画像（3枚）</div>
             <div class="field">
               <label>スライド1（hero_slide_1）</label>
@@ -530,6 +743,25 @@
             <label>導入文</label>
             <textarea v-model="privacyTexts.intro" class="textarea" rows="4"></textarea>
           </div>
+
+          <!-- privacy/terms/transaction-law: ヒーロー画像（レイアウト近似配置） -->
+          <template v-if="currentPage && (currentPage.slug==='privacy-policy' || currentPage.slug==='terms' || currentPage.slug==='transaction-law')">
+            <div class="section-title">ページ上部ヒーロー</div>
+            <div class="field">
+              <label>ヒーロー画像（hero）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_common" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">上部「KV画像」でも設定できます（推奨）。</div>
+            </div>
+          </template>
           
 
           <!-- company / consulting / about: 動的テキスト一覧（小コンポーネント） -->
@@ -3148,7 +3380,7 @@ export default {
         ]
       }
       if (key === 'membership' || key === 'standard-membership' || key === 'premium-membership') {
-        return [
+        const base = [
           'hero',
           'premium_service1_image',
           'standard_service1_image',
@@ -3157,6 +3389,8 @@ export default {
           'standard_service4_image',
           'standard_service5_image',
         ]
+        if (key === 'premium-membership') base.push('featured_image')
+        return base
       }
       if (key === 'home') {
         return [
@@ -3170,6 +3404,9 @@ export default {
         return [
           'contact_section_bg'
         ]
+      }
+      if (key === 'privacy' || key === 'terms' || key === 'transaction-law') {
+        return ['hero']
       }
       return []
     },
