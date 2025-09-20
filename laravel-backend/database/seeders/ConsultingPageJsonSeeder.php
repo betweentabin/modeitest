@@ -49,6 +49,13 @@ class ConsultingPageJsonSeeder extends Seeder
             // CTA
             'cta_primary' => 'お問い合わせはこちら',
             'cta_secondary' => '入会はこちら',
+            // Small labels (FREE/PAID cards)
+            'free_consultation_label' => 'consultation',
+            'free_problem_label' => 'problem',
+            'paid_strategy_label' => 'solutions',
+            'paid_improvement_label' => 'improvement',
+            'paid_analysis_label' => 'analysis',
+            'paid_newbiz_label' => 'new business',
         ];
 
         $htmls = [

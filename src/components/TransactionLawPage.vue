@@ -133,64 +133,64 @@
         
         <div class="terms-content">
           <div class="terms-article">
-            <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article1_title" tag="span" :fallback="'第1条(目的）'" /></h3>
+              <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article1_title" tag="span" :fallback="'第1条(目的）'" /></h3>
             <p class="terms-text">
               <CmsText pageKey="transaction-law" fieldKey="article1_body" tag="span" :fallback="'「ちくぎん地域経済クラブ」（以下、「本会」という）は、株式会社ちくぎん地域経済研究所（以下、「当社」という）が運営するサービスであり、産・官・学・金（金融機関）のネットワーク構築や会員相互の交流等を通じて、企業経営等に役立つ様々な情報や機会提供により、会員企業等がともに発展し、ひいては地域の振興・発展に寄与することを目的とします。'" />
             </p>
           </div>
           
           <div class="terms-article">
-            <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article2_title" tag="span" :fallback="'第2条(会員）'" /></h3>
+              <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article2_title" tag="span" :fallback="'第2条(会員）'" /></h3>
             <p class="terms-text">
               <CmsText pageKey="transaction-law" fieldKey="article2_body" tag="div" type="html" :fallback="'本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人の方を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。<br>会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。'" />
             </p>
           </div>
           
           <div class="terms-article">
-            <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article3_title" tag="span" :fallback="'第3条(会員種別および会員サービス）'" /></h3>
+              <h3 class="terms-title"><CmsText pageKey="transaction-law" fieldKey="article3_title" tag="span" :fallback="'第3条(会員種別および会員サービス）'" /></h3>
             <p class="terms-text">
               <CmsText pageKey="transaction-law" fieldKey="article3_body" tag="span" :fallback="'本会の会員は、スタンダード会員とプレミアムネット会員の2種類とし、その会員種別に応じた次のサービス（以下、「会員サービス」という）を利用できるものとします。'" />
             </p>
             
             <div class="service-section">
-              <h4 class="service-title">【スタンダード会員】</h4>
+              <h4 class="service-title"><CmsText pageKey="transaction-law" fieldKey="standard_title" tag="span" :fallback="'【スタンダード会員】'" /></h4>
               <div class="service-item">
                 <span class="service-number">①</span>
-                <span class="service-text">機関誌「ちくぎん地域経済レポート」等、当社が発行する刊行物並びにダイレクトメール、E-Mail等による経済、産業、企業動向等、企業経営に役立つ情報サービス</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="standard_item1" tag="span" :fallback="'機関誌「ちくぎん地域経済レポート」等、当社が発行する刊行物並びにダイレクトメール、E-Mail等による経済、産業、企業動向等、企業経営に役立つ情報サービス'" /></span>
               </div>
               <div class="service-item">
                 <span class="service-number">②</span>
-                <span class="service-text">各種の経営相談に対する課題解決に向けた提案（相談の内容によっては有料）</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="standard_item2" tag="span" :fallback="'各種の経営相談に対する課題解決に向けた提案（相談の内容によっては有料）'" /></span>
               </div>
               <div class="service-item">
                 <span class="service-number">③</span>
-                <span class="service-text">当社主催の各種セミナー、企画、イベント等の割引料金による案内</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="standard_item3" tag="span" :fallback="'当社主催の各種セミナー、企画、イベント等の割引料金による案内'" /></span>
               </div>
               <div class="service-item">
                 <span class="service-number">④</span>
-                <span class="service-text">当社が運営するインターネットサイト（スタンダード会員サイト）の利用</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="standard_item4" tag="span" :fallback="'当社が運営するインターネットサイト（スタンダード会員サイト）の利用'" /></span>
               </div>
               
-              <h4 class="service-title">【プレミアムネット会員】</h4>
-              <p class="service-subtitle">スタンダード会員が利用できる上記①から④までのサービスに加えて</p>
+              <h4 class="service-title"><CmsText pageKey="transaction-law" fieldKey="premium_title" tag="span" :fallback="'【プレミアムネット会員】'" /></h4>
+              <p class="service-subtitle"><CmsText pageKey="transaction-law" fieldKey="premium_intro" tag="span" :fallback="'スタンダード会員が利用できる上記①から④までのサービスに加えて'" /></p>
               <div class="service-item">
                 <span class="service-number">⑤</span>
-                <span class="service-text">プレミアムネット会員専用インターネットサイト（販路拡大等を目的としたビジネスマッチングサービスを含む）による企業経営に役立つ各種ビジネス情報の提供</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="premium_item5" tag="span" :fallback="'プレミアムネット会員専用インターネットサイト（販路拡大等を目的としたビジネスマッチングサービスを含む）による企業経営に役立つ各種ビジネス情報の提供'" /></span>
               </div>
               <div class="service-item">
                 <span class="service-number">⑥</span>
-                <span class="service-text">会員企業PR情報掲載サービス</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="premium_item6" tag="span" :fallback="'会員企業PR情報掲載サービス'" /></span>
               </div>
               <div class="service-item">
                 <span class="service-number">⑦</span>
-                <span class="service-text">日経BP発刊「日経トップリーダー」の送付。同社主催の「日経トップリーダー 経営セミナー」の案内</span>
+                <span class="service-text"><CmsText pageKey="transaction-law" fieldKey="premium_item7" tag="span" :fallback="'日経BP発刊「日経トップリーダー」の送付。同社主催の「日経トップリーダー 経営セミナー」の案内'" /></span>
               </div>
             </div>
           </div>
         </div>
         
         <div class="pdf-download" @click="downloadPDF">
-          <span>会員規約をPDFでダウンロード</span>
+          <span><CmsText pageKey="transaction-law" fieldKey="terms_download_label" tag="span" :fallback="'会員規約をPDFでダウンロード'" /></span>
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15 2.8125C12.5895 2.8125 10.2332 3.52728 8.22899 4.86646C6.22477 6.20564 4.66267 8.10907 3.74022 10.336C2.81778 12.563 2.57643 15.0135 3.04668 17.3777C3.51694 19.7418 4.67769 21.9134 6.38214 23.6179C8.08659 25.3223 10.2582 26.4831 12.6223 26.9533C14.9865 27.4236 17.437 27.1822 19.664 26.2598C21.8909 25.3373 23.7944 23.7752 25.1335 21.771C26.4727 19.7668 27.1875 17.4105 27.1875 15C27.1841 11.7687 25.899 8.67076 23.6141 6.3859C21.3292 4.10104 18.2313 2.81591 15 2.8125ZM18.4758 15.6633L13.7883 20.3508C13.7012 20.4379 13.5978 20.507 13.484 20.5541C13.3702 20.6013 13.2482 20.6255 13.125 20.6255C13.0018 20.6255 12.8798 20.6013 12.766 20.5541C12.6522 20.507 12.5488 20.4379 12.4617 20.3508C12.3746 20.2637 12.3055 20.1603 12.2584 20.0465C12.2112 19.9327 12.187 19.8107 12.187 19.6875C12.187 19.5643 12.2112 19.4423 12.2584 19.3285C12.3055 19.2147 12.3746 19.1113 12.4617 19.0242L16.4871 15L12.4617 10.9758C12.2858 10.7999 12.187 10.5613 12.187 10.3125C12.187 10.0637 12.2858 9.82513 12.4617 9.64922C12.6376 9.47331 12.8762 9.37448 13.125 9.37448C13.3738 9.37448 13.6124 9.47331 13.7883 9.64922L18.4758 14.3367C18.563 14.4238 18.6321 14.5272 18.6793 14.641C18.7265 14.7548 18.7507 14.8768 18.7507 15C18.7507 15.1232 18.7265 15.2452 18.6793 15.359C18.6321 15.4728 18.563 15.5762 18.4758 15.6633Z" fill="#DA5761"/>
           </svg>

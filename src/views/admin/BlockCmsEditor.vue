@@ -202,15 +202,36 @@
               <input v-model="contactTexts[key]" class="input" />
             </div>
 
-            <div class="section-title">規約案内</div>
-            <div class="field" v-for="key in contactTextareaKeys" :key="`contact-textarea-${key}`">
-              <label>{{ displayLabel(key) }}</label>
-              <textarea v-model="contactTexts[key]" class="textarea" rows="4"></textarea>
-            </div>
-            <div class="field" v-for="key in contactAgreementKeys" :key="`contact-agree-${key}`">
-              <label>{{ displayLabel(key) }}</label>
-              <input v-model="contactTexts[key]" class="input" />
-            </div>
+          <div class="section-title">規約案内</div>
+          <div class="field" v-for="key in contactTextareaKeys" :key="`contact-textarea-${key}`">
+            <label>{{ displayLabel(key) }}</label>
+            <textarea v-model="contactTexts[key]" class="textarea" rows="4"></textarea>
+          </div>
+          <div class="field" v-for="key in contactAgreementKeys" :key="`contact-agree-${key}`">
+            <label>{{ displayLabel(key) }}</label>
+            <input v-model="contactTexts[key]" class="input" />
+          </div>
+
+            <div class="section-title">規約テキスト（Contact専用）</div>
+            <div class="field"><label>第1条（見出し）</label><input v-model="contactTexts.article1_title" class="input" placeholder="第1条(目的）" /></div>
+            <div class="field"><label>第1条（本文・テキスト）</label><textarea v-model="contactTexts.article1_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>第2条（見出し）</label><input v-model="contactTexts.article2_title" class="input" placeholder="第2条(会員）" /></div>
+            <div class="field"><label>第2条（本文・HTML）</label><textarea v-model="contactHtmls.article2_body" class="textarea" rows="6"></textarea></div>
+            <div class="field"><label>第3条（見出し）</label><input v-model="contactTexts.article3_title" class="input" placeholder="第3条(会員種別および会員サービス）" /></div>
+            <div class="field"><label>第3条（導入テキスト）</label><textarea v-model="contactTexts.article3_body" class="textarea" rows="3"></textarea></div>
+
+            <div class="section-title">会員サービス（第3条・リスト）</div>
+            <div class="field"><label>スタンダード会員（見出し）</label><input v-model="contactTexts.standard_title" class="input" /></div>
+            <div class="field"><label>スタンダード①</label><input v-model="contactTexts.standard_item1" class="input" /></div>
+            <div class="field"><label>スタンダード②</label><input v-model="contactTexts.standard_item2" class="input" /></div>
+            <div class="field"><label>スタンダード③</label><input v-model="contactTexts.standard_item3" class="input" /></div>
+            <div class="field"><label>スタンダード④</label><input v-model="contactTexts.standard_item4" class="input" /></div>
+            <div class="field"><label>プレミアムネット会員（見出し）</label><input v-model="contactTexts.premium_title" class="input" /></div>
+            <div class="field"><label>プレミアム（導入）</label><input v-model="contactTexts.premium_intro" class="input" /></div>
+            <div class="field"><label>プレミアム⑤</label><input v-model="contactTexts.premium_item5" class="input" /></div>
+            <div class="field"><label>プレミアム⑥</label><input v-model="contactTexts.premium_item6" class="input" /></div>
+            <div class="field"><label>プレミアム⑦</label><input v-model="contactTexts.premium_item7" class="input" /></div>
+            <div class="field"><label>規約PDFリンク文言</label><input v-model="contactTexts.terms_download_label" class="input" placeholder="会員規約をPDFでダウンロード" /></div>
 
             <div class="section-title">連絡先ブロック</div>
             <div class="field" v-for="key in contactInfoKeys" :key="`contact-info-${key}`">
@@ -977,6 +998,15 @@
             
           </template>
           <template v-if="currentPage && currentPage.slug==='cri-consulting'">
+            <div class="section-title">小ラベル（FREE/PAID）</div>
+            <div class="field"><label>FREE ラベル①</label><input v-model="consultingTexts.free_consultation_label" class="input" placeholder="consultation" /></div>
+            <div class="field"><label>FREE ラベル②</label><input v-model="consultingTexts.free_problem_label" class="input" placeholder="problem" /></div>
+            <div class="field"><label>PAID ラベル：対応策の立案</label><input v-model="consultingTexts.paid_strategy_label" class="input" placeholder="solutions" /></div>
+            <div class="field"><label>PAID ラベル：改善に向けた活動</label><input v-model="consultingTexts.paid_improvement_label" class="input" placeholder="improvement" /></div>
+            <div class="field"><label>PAID ラベル：分析</label><input v-model="consultingTexts.paid_analysis_label" class="input" placeholder="analysis" /></div>
+            <div class="field"><label>PAID ラベル：新たな事業活動</label><input v-model="consultingTexts.paid_newbiz_label" class="input" placeholder="new business" /></div>
+
+            <div class="section-title">テキスト一覧（その他）</div>
             <div class="field" v-for="(val, key) in consultingTexts" :key="`consult-${key}`">
               <label>{{ displayLabel(key) }}</label>
               <input v-model="consultingTexts[key]" class="input" />
@@ -1182,6 +1212,28 @@
             <div class="field"><label>返金（ラベル）</label><input v-model="tlTexts.refund_label" class="input" /></div>
             <div class="field"><label>返金（本文HTML）</label><textarea v-model="tlHtmls.refund_body" class="textarea" rows="3"></textarea></div>
             <div class="field"><label>会員規約注記</label><input v-model="tlTexts.terms_note" class="input" /></div>
+
+            <div class="section-title">規約テキスト（第1条〜第3条）</div>
+            <div class="field"><label>第1条（見出し）</label><input v-model="tlTexts.article1_title" class="input" /></div>
+            <div class="field"><label>第1条（本文・テキスト）</label><textarea v-model="tlTexts.article1_body" class="textarea" rows="4"></textarea></div>
+            <div class="field"><label>第2条（見出し）</label><input v-model="tlTexts.article2_title" class="input" /></div>
+            <div class="field"><label>第2条（本文・HTML）</label><textarea v-model="tlHtmls.article2_body" class="textarea" rows="6"></textarea></div>
+            <div class="field"><label>第3条（見出し）</label><input v-model="tlTexts.article3_title" class="input" /></div>
+            <div class="field"><label>第3条（導入テキスト）</label><textarea v-model="tlTexts.article3_body" class="textarea" rows="3"></textarea></div>
+
+            <div class="section-title">会員サービス（第3条・リスト）</div>
+            <div class="field"><label>スタンダード会員（見出し）</label><input v-model="tlTexts.standard_title" class="input" /></div>
+            <div class="field"><label>スタンダード①</label><input v-model="tlTexts.standard_item1" class="input" /></div>
+            <div class="field"><label>スタンダード②</label><input v-model="tlTexts.standard_item2" class="input" /></div>
+            <div class="field"><label>スタンダード③</label><input v-model="tlTexts.standard_item3" class="input" /></div>
+            <div class="field"><label>スタンダード④</label><input v-model="tlTexts.standard_item4" class="input" /></div>
+            <div class="field"><label>プレミアムネット会員（見出し）</label><input v-model="tlTexts.premium_title" class="input" /></div>
+            <div class="field"><label>プレミアム（導入）</label><input v-model="tlTexts.premium_intro" class="input" /></div>
+            <div class="field"><label>プレミアム⑤</label><input v-model="tlTexts.premium_item5" class="input" /></div>
+            <div class="field"><label>プレミアム⑥</label><input v-model="tlTexts.premium_item6" class="input" /></div>
+            <div class="field"><label>プレミアム⑦</label><input v-model="tlTexts.premium_item7" class="input" /></div>
+
+            <div class="field"><label>規約PDFリンク文言</label><input v-model="tlTexts.terms_download_label" class="input" /></div>
           </template>
 
           <div class="actions-row">
@@ -1602,6 +1654,7 @@ export default {
       standardTexts: {},
       premiumTexts: {},
       contactTexts: {},
+      contactHtmls: {},
       membershipApplicationTexts: {},
       seminarApplicationTexts: {},
       navigationTexts: {},
@@ -2190,6 +2243,7 @@ export default {
             this.premiumTexts = { ...(this.premiumTexts || {}), ...(texts || {}) }
           } else if (this.pageContentKey === 'contact') {
             this.contactTexts = { ...(this.contactTexts || {}), ...(texts || {}) }
+            this.contactHtmls = { ...(this.contactHtmls || {}), ...(htmls || {}) }
           } else if (this.pageContentKey === 'membership-application') {
             this.membershipApplicationTexts = { ...(this.membershipApplicationTexts || {}), ...(texts || {}) }
             if (!this.membershipApplicationTexts.page_title) this.membershipApplicationTexts.page_title = this.currentPage.title || ''
@@ -3066,6 +3120,7 @@ export default {
         if (hasEntries(this.premiumTexts)) patch.content.texts = { ...this.premiumTexts }
       } else if (key === 'contact') {
         if (hasEntries(this.contactTexts)) patch.content.texts = { ...this.contactTexts }
+        if (hasEntries(this.contactHtmls)) patch.content.htmls = { ...this.contactHtmls }
       } else if (key === 'membership-application') {
         if (hasEntries(this.membershipApplicationTexts)) patch.content.texts = { ...this.membershipApplicationTexts }
       } else if (key === 'seminar-application') {
