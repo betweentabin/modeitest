@@ -342,7 +342,7 @@
           </template>
 
           <!-- contact: シンプル構成ビュー（layoutMode） -->
-          <template v-if="currentPage && currentPage.slug==='contact' && layoutMode">
+          <template v-if="currentPage && (currentPage.slug==='contact' || currentPage.slug.startsWith('contact-')) && layoutMode">
             <div class="section-title">お問い合わせ（Contact）</div>
 
             <div class="field" v-for="key in contactBasicKeys" :key="`contact-basic-${key}`">
@@ -416,7 +416,7 @@
             </div>
           </template>
 
-          <template v-if="currentPage && currentPage.slug==='membership-application' && layoutMode">
+          <template v-if="currentPage && (currentPage.slug==='membership-application' || currentPage.slug.startsWith('membership-application-')) && layoutMode">
             <div class="section-title">会員申込フォーム</div>
             <div class="field" v-for="key in membershipApplicationBasicKeys" :key="`membership-app-basic-${key}`">
               <label>{{ displayLabel(key) }}</label>
@@ -664,7 +664,7 @@
             </div>
             <div class="help">未設定の場合はデフォルト画像が表示されます（/img/Image_fx*.jpg）。</div>
           </template>
-          <template v-if="currentPage && currentPage.slug==='seminar-application' && layoutMode">
+          <template v-if="currentPage && (currentPage.slug==='seminar-application' || currentPage.slug.startsWith('seminar-application-')) && layoutMode">
             <div class="section-title">セミナー申込フォーム</div>
             <div class="field" v-for="key in seminarApplicationBasicKeys" :key="`seminar-app-basic-${key}`">
               <label>{{ displayLabel(key) }}</label>

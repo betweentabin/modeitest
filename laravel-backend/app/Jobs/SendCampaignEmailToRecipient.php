@@ -67,14 +67,25 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                         'attachments' => $mapped,
                     ]);
                 } else {
-                    $mailable = new CampaignMail(
-                        subjectLine: $campaign->subject,
-                        bodyHtml: $campaign->body_html,
-                        bodyText: $campaign->body_text,
-                        attachmentsMeta: $attachments,
-                    );
-                    $mailable->to($recipient->email);
-                    Mail::send($mailable);
+                    $mailUrl = (string) env('MAIL_URL', '');
+                    if (str_starts_with($mailUrl, 'gmail+api://')) {
+                        // Bypass Laravel Mailer and use Gmail API directly
+                        (new \App\Services\Mailer\GmailApiMailer())->send([
+                            'to' => $recipient->email,
+                            'subject' => $campaign->subject,
+                            'body_html' => $campaign->body_html,
+                            'body_text' => $campaign->body_text,
+                        ]);
+                    } else {
+                        $mailable = new CampaignMail(
+                            subjectLine: $campaign->subject,
+                            bodyHtml: $campaign->body_html,
+                            bodyText: $campaign->body_text,
+                            attachmentsMeta: $attachments,
+                        );
+                        $mailable->to($recipient->email);
+                        Mail::send($mailable);
+                    }
                 }
             } else {
                 Log::info('[MAIL_DRY_RUN] Skipping send', [

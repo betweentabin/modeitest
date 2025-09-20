@@ -637,7 +637,9 @@ export default {
       dynamicMainPublication: homePageData.frame13213174741Props, // デフォルト値
       dynamicPublications: [], // 右側に表示する3件（循環）
       allPublications: [], // 全ての刊行物データ（ID参照用）
-      currentIndex: 0, // 右側リストの先頭オフセット（メインは常に最新=0）
+      currentIndex: 0, // 右側リストの先頭オフセット
+      mainPublicationIndex: 0, // メインに使用する実インデックス
+      othersIndices: [], // メイン以外のインデックス一覧
       // Dynamic news data
       dynamicNewsItems: [], // CMSから取得したお知らせデータ（カテゴリー情報含む）
       // Vector images for UI elements
@@ -1023,49 +1025,56 @@ export default {
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
     goToMainPublication() {
-      // メインは常に最新の1件目（allPublications[0]）
-      const main = this.allPublications[0]
+      // メインは計算済みインデックスを参照
+      const idx = this.mainPublicationIndex || 0
+      const main = this.allPublications[idx]
       if (main && main.id) this.$router.push(`/publication/${main.id}`)
     },
     goToPublication(index) {
       // 右側の相対インデックスから遷移（others配列から）
-      const len = this.allPublications.length
-      if (len <= 1) return
-      const othersLen = len - 1
-      const absolute = 1 + ((this.currentIndex + index) % othersLen + othersLen) % othersLen
+      const othersLen = (this.othersIndices || []).length
+      if (!othersLen) return
+      const idx = ((this.currentIndex + index) % othersLen + othersLen) % othersLen
+      const absolute = this.othersIndices[idx]
       const publication = this.allPublications[absolute]
       if (publication && publication.id) this.$router.push(`/publication/${publication.id}`)
     },
     prevPublication() {
-      const len = this.allPublications.length
-      if (len <= 1) return
-      // 最新（currentIndex = 0）より左には行かないように制限
-      if (this.currentIndex <= 0) return
-      this.currentIndex = this.currentIndex - 1
+      const othersLen = (this.othersIndices || []).length
+      if (!othersLen) return
+      this.currentIndex = (this.currentIndex - 1 + othersLen) % othersLen
       this.refreshVisiblePublications()
     },
     nextPublication() {
-      const len = this.allPublications.length
-      if (len <= 1) return
-      const othersLen = len - 1
-      // 最後（currentIndex >= othersLen - 1）より右には行かないように制限
-      if (this.currentIndex >= othersLen - 1) return
-      this.currentIndex = this.currentIndex + 1
+      const othersLen = (this.othersIndices || []).length
+      if (!othersLen) return
+      this.currentIndex = (this.currentIndex + 1) % othersLen
       this.refreshVisiblePublications()
     },
     refreshVisiblePublications() {
       const len = this.allPublications.length
       if (!len) return
-      // メイン: 常に最新（配列の先頭）
-      const main = this.allPublications[0]
+      // 画像URL取得ヘルパ
+      const pickImage = (item) => (item?.cover_image_url || item?.cover_image?.url || item?.cover_image || item?.image_url || '')
+
+      // メイン: 画像を持つ最初の要素を優先（無ければ先頭）
+      let mainIdx = 0
+      for (let i = 0; i < len; i++) {
+        if (pickImage(this.allPublications[i])) { mainIdx = i; break }
+      }
+      this.mainPublicationIndex = mainIdx
+      const main = this.allPublications[mainIdx]
       this.dynamicMainPublication = {
         // 画像URLの候補を広げ、欠損時はデフォルトにフォールバック
-        x22: main?.cover_image_url || main?.cover_image?.url || main?.cover_image || main?.image_url || this.frame13213174741Props.x22,
+        x22: pickImage(main) || this.frame13213174741Props.x22,
         title: main?.title || '',
         date: main?.publication_date ? this.formatDate(main.publication_date) : ''
       }
-      // 右側: 先頭を除いたothersを循環で3件表示
-      const othersLen = Math.max(0, len - 1)
+      // 右側: メイン以外を循環で3件表示
+      const others = []
+      for (let i = 0; i < len; i++) if (i !== mainIdx) others.push(i)
+      this.othersIndices = others
+      const othersLen = others.length
       const defaultImages = [
         this.frame13213174751Props.x22,
         this.frame13213174752Props.x22,
@@ -1077,11 +1086,11 @@ export default {
           list.push({ x22: defaultImages[i], hotInformationVol324: '', date: '' })
           continue
         }
-        const absolute = 1 + ((this.currentIndex + i) % othersLen)
-        const item = this.allPublications[absolute]
+        const absoluteIdx = others[(this.currentIndex + i) % othersLen]
+        const item = this.allPublications[absoluteIdx]
         list.push({
           // APIの差異に対応（cover_image_url / cover_image.url を優先）
-          x22: item?.cover_image_url || item?.cover_image?.url || item?.cover_image || item?.image_url || defaultImages[i],
+          x22: pickImage(item) || defaultImages[i],
           hotInformationVol324: item?.title || '',
           date: item?.publication_date ? this.formatDate(item.publication_date) : '',
           id: item?.id
