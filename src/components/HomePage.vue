@@ -566,7 +566,15 @@ export default {
   created() {
     // Pre-hydrate from local cache to avoid initial flicker for first-time visitors
     try {
-      try { if (localStorage.getItem('cms_disable_prefill') === '1') return } catch(_) {}
+      const hasQsOptOut = (() => {
+        try {
+          const hash = window.location.hash || ''
+          const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+          const params = new URLSearchParams(qs)
+          return params.get('cmsDisablePrefill') === '1' || params.get('cms_disable_prefill') === '1'
+        } catch(_) { return false }
+      })()
+      try { if (localStorage.getItem('cms_disable_prefill') === '1' || hasQsOptOut) return } catch(_) {}
       const raw = localStorage.getItem('page_content_cache:home')
       if (raw) {
         const cached = (raw.trim().startsWith('{') || raw.trim().startsWith('[')) ? JSON.parse(raw) : null

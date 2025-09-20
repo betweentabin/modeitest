@@ -98,7 +98,16 @@ export default {
   created() {
     // Synchronously hydrate from localStorage before first render
     try {
-      try { if (localStorage.getItem('cms_disable_prefill') === '1') return } catch(_) {}
+      // Opt-out via LS flag or query/hash parameter
+      const hasQsOptOut = (() => {
+        try {
+          const hash = window.location.hash || ''
+          const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+          const params = new URLSearchParams(qs)
+          return params.get('cmsDisablePrefill') === '1' || params.get('cms_disable_prefill') === '1'
+        } catch(_) { return false }
+      })()
+      try { if (localStorage.getItem('cms_disable_prefill') === '1' || hasQsOptOut) return } catch(_) {}
       if (this.cmsPageKey) {
         const raw = localStorage.getItem('page_content_cache:' + this.cmsPageKey)
         if (raw) {
