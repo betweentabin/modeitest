@@ -34,7 +34,7 @@
           </div>
 
           <!-- Layout view toggle (for key pages like company/aboutus/about/consult/membership) -->
-          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services','membership-application','seminar-application','contact','navigation','footer','economic','publications'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
+          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services','membership-application','seminar-application','contact','navigation','footer','economic','publications','faq','glossary','sitemap'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -451,6 +451,23 @@
               <label>{{ displayLabel(key) }}</label>
               <input v-model="membershipApplicationTexts[key]" class="input" />
             </div>
+
+            <!-- 共通ヒーロー（メディアレジストリ：hero_membership） -->
+            <div class="section-title">ページ上部ヒーロー（共通）</div>
+            <div class="field">
+              <label>ヒーロー画像（hero_membership）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getRegistryImageUrl('hero_membership') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">media.hero_membership</div>
+                  <div class="img-actions">
+                    <input ref="img_registry_hero_membership" type="file" accept="image/*" style="display:none" @change="onReplaceRegistryImage('hero_membership', $event)" />
+                    <button class="btn" @click="triggerRegistryUpload('hero_membership')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">確認/完了ページ等でも共通で使用されます。</div>
+            </div>
           </template>
 
           <!-- home: レイアウト近似編集（layoutMode） -->
@@ -682,6 +699,23 @@
               <label>{{ displayLabel(key) }}</label>
               <input v-model="seminarApplicationTexts[key]" class="input" />
             </div>
+
+            <!-- 共通ヒーロー（メディアレジストリ：hero_seminar） -->
+            <div class="section-title">ページ上部ヒーロー（共通）</div>
+            <div class="field">
+              <label>ヒーロー画像（hero_seminar）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getRegistryImageUrl('hero_seminar') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">media.hero_seminar</div>
+                  <div class="img-actions">
+                    <input ref="img_registry_hero_seminar" type="file" accept="image/*" style="display:none" @change="onReplaceRegistryImage('hero_seminar', $event)" />
+                    <button class="btn" @click="triggerRegistryUpload('hero_seminar')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">確認/完了ページ等でも共通で使用されます。</div>
+            </div>
           </template>
 
           <template v-if="currentPage && currentPage.slug==='navigation' && layoutMode">
@@ -755,6 +789,44 @@
                   <div class="img-key">images.hero</div>
                   <div class="img-actions">
                     <input ref="img_hero_common" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">上部「KV画像」でも設定できます（推奨）。</div>
+            </div>
+          </template>
+
+          <!-- economic/publications: ヒーロー画像（レイアウト近似配置） -->
+          <template v-if="currentPage && (((currentPage.slug||'').toLowerCase().includes('economic')) || ((currentPage.slug||'').toLowerCase().includes('publications'))) && layoutMode">
+            <div class="section-title">ページ上部ヒーロー</div>
+            <div class="field">
+              <label>ヒーロー画像（hero）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_economic" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">上部「KV画像」でも設定できます（推奨）。</div>
+            </div>
+          </template>
+
+          <!-- faq/glossary/sitemap: ヒーロー画像（レイアウト近似配置） -->
+          <template v-if="currentPage && ((currentPage.slug==='faq' || currentPage.slug==='glossary' || currentPage.slug==='sitemap')) && layoutMode">
+            <div class="section-title">ページ上部ヒーロー</div>
+            <div class="field">
+              <label>ヒーロー画像（hero）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_misc" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
                     <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
                   </div>
                 </div>
@@ -2518,6 +2590,8 @@ export default {
       }
     } catch(_) { this.layoutMode = true }
     this.loadPages()
+    // Ensure media registries are available for registry previews
+    try { this.ensureMediaRefs() } catch(_) {}
   },
   watch: {
     layoutMode(val){
@@ -2563,6 +2637,39 @@ export default {
     }
   },
   methods: {
+    getRegistryImageUrl(key){
+      try {
+        const m = this._media
+        if (m && typeof m.getResponsiveImage === 'function') return m.getResponsiveImage(key, '') || ''
+        if (m && typeof m.getImage === 'function') return m.getImage(key, '') || ''
+      } catch(_) {}
+      return ''
+    },
+    triggerRegistryUpload(key){
+      const refName = `img_registry_${key}`
+      const el = this.$refs[refName]
+      if (el && el[0] && typeof el[0].click === 'function') el[0].click()
+      else if (el && typeof el.click === 'function') el.click()
+    },
+    async onReplaceRegistryImage(key, e){
+      try{
+        const file = (e.target.files && e.target.files[0]) || null
+        if (!file) return
+        const res = await apiClient.adminReplacePageImage('media', key, file)
+        if (res && res.success !== false){
+          // Invalidate and reload media registry so preview updates
+          try {
+            const mod = await import('@/composables/useMedia')
+            if (mod.invalidateMediaCache) mod.invalidateMediaCache()
+            try { localStorage.removeItem('cms_media_cache'); localStorage.setItem('cms_media_cache_bust', String(Date.now())) } catch(_) {}
+            try { this.ensureMediaRefs() } catch(_) {}
+          } catch(_) {}
+          alert('画像を差し替えました')
+        } else {
+          alert('差し替えに失敗しました')
+        }
+      } catch(_) { alert('差し替えに失敗しました') }
+    },
     async ensureMediaRefs(){
       try {
         if (!this._media) {
@@ -2623,6 +2730,9 @@ export default {
       if (s.includes('privacy')) return 'privacy'
       if (s.includes('legal') || s.includes('transaction')) return 'transaction-law'
       if (s.includes('terms')) return 'terms'
+      if (s.includes('economic-indicators')) return 'economic-indicators'
+      if (s.includes('economic-statistics')) return 'economic-statistics'
+      if (s.includes('publications')) return 'publications'
       if (s.includes('company')) return 'company-profile'
       if (s.includes('consult')) return 'cri-consulting'
       if (s.includes('aboutus')) return 'about-institute'
@@ -2678,6 +2788,9 @@ export default {
         else if (slug.includes('legal') || slug.includes('transaction')) this.pageContentKey = 'transaction-law'
         else if (slug.includes('terms')) this.pageContentKey = 'terms'
         else if (slug.includes('company')) this.pageContentKey = 'company-profile'
+        else if (slug.includes('economic-indicators')) this.pageContentKey = 'economic-indicators'
+        else if (slug.includes('economic-statistics')) this.pageContentKey = 'economic-statistics'
+        else if (slug.includes('publications')) this.pageContentKey = 'publications'
         else if (slug.includes('consult')) this.pageContentKey = 'cri-consulting'
         else if (slug.includes('aboutus')) this.pageContentKey = 'about-institute'
         else if (slug.includes('about')) this.pageContentKey = 'about'
@@ -3406,6 +3519,12 @@ export default {
         ]
       }
       if (key === 'privacy' || key === 'terms' || key === 'transaction-law') {
+        return ['hero']
+      }
+      if (key === 'economic-indicators' || key === 'economic-statistics' || key === 'publications') {
+        return ['hero']
+      }
+      if (key === 'faq' || key === 'glossary' || key === 'sitemap') {
         return ['hero']
       }
       return []

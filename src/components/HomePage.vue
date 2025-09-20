@@ -581,10 +581,24 @@ export default {
         const now = Date.now()
         if (this.__reloading || (now - (this.__lastReloadAt || 0) < 300)) return
         this.__reloading = true
-        Promise.all([
-          this.loadCmsHeroSlides(true),
-          this.loadCmsHomeImages(true),
-        ]).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false })
+        try {
+          const isAdmin = !!localStorage.getItem('admin_token')
+          const isPreview = (() => {
+            try {
+              const hash = window.location.hash || ''
+              const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+              const params = new URLSearchParams(qs)
+              return params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
+            } catch(_) { return false }
+          })()
+          const force = isAdmin || isPreview
+          Promise.all([
+            this.loadCmsHeroSlides(force),
+            this.loadCmsHomeImages(force),
+          ]).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false })
+        } catch(_) {
+          this.__reloading = false
+        }
       }
       // 他タブ/編集画面からの PageContent 更新通知
       this.__onStorage = (ev) => {

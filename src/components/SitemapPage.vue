@@ -241,7 +241,11 @@ export default {
         if (this.__reloading || (now - (this.__lastReloadAt || 0) < 800)) return
         this.__reloading = true
         try {
-          const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+          const isAdmin = !!localStorage.getItem('admin_token')
+          const isPreview = this.isEditPreview
+          const p = this._pageText && this._pageText.load 
+            ? this._pageText.load(isAdmin || isPreview ? { force: true } : {}) 
+            : Promise.resolve()
           Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
         } catch(_) { this.__reloading = false }
       }

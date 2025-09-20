@@ -64,8 +64,8 @@ class EmailImmediateController extends Controller
 
         $to = is_array($data['to']) ? $data['to'] : [$data['to']];
 
-        // Build PendingMail with recipients first to ensure Symfony Email has a To header
-        $pending = Mail::to($to)->mailer($mailer);
+        // Build mailer first, then set recipients to ensure proper method chain
+        $pending = Mail::mailer($mailer)->to($to);
         if (!empty($data['from']['address'])) {
             $pending->alwaysFrom($data['from']['address'], $data['from']['name'] ?? null);
         }
