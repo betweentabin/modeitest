@@ -200,10 +200,12 @@ export default {
         if (v && typeof v === 'object' && v.url) {
           let u = v.url
           try {
-            if (u.startsWith('/storage/') && v.uploaded_at) {
-              const ver = Date.parse(v.uploaded_at) || Date.now()
+          if (u.startsWith('/storage/') && v.uploaded_at) {
+            const ver = Date.parse(v.uploaded_at) || null
+            if (ver !== null) {
               u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
             }
+          }
           } catch(_) {}
           return u
         }

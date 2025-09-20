@@ -1984,6 +1984,9 @@ export default {
       },
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
       pageContentKey: 'privacy',
+      // editor-side media registry refs for public-like preview resolution
+      _media: null,
+      _pageMedia: null,
     }
   },
   mounted(){
@@ -2042,6 +2045,32 @@ export default {
     }
   },
   methods: {
+    async ensureMediaRefs(){
+      try {
+        if (!this._media) {
+          const mod = await import('@/composables/useMedia')
+          const { useMedia } = mod
+          this._media = useMedia()
+          try { this._media.ensure() } catch(_) {}
+        }
+        if (this.pageContentKey) {
+          const modPM = await import('@/composables/usePageMedia')
+          const { usePageMedia } = modPM
+          if (!this._pageMedia) this._pageMedia = usePageMedia()
+          try { await this._pageMedia.ensure(this.pageContentKey) } catch(_) {}
+        }
+      } catch(_) { /* ignore */ }
+    },
+    defaultMediaKeyForSlot(slot){
+      try {
+        const key = String(slot||'')
+        if (key === 'hero') {
+          const p = String(this.pageContentKey||'').replace(/-/g,'_')
+          return p ? `hero_${p}` : 'hero'
+        }
+        return key
+      } catch(_) { return slot }
+    },
     // preview helpers removed
     async loadPages(){
       const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
@@ -2754,7 +2783,27 @@ export default {
     getImageUrlByKey(key){
       try {
         const item = (this.pageImages || []).find(it => it.key === key)
-        return item ? (item.url || '') : ''
+        const direct = item ? (item.url || '') : ''
+        if (direct && !this.isPlaceholderUrl(direct)) return direct
+        // Try per-page mapping and global media like the public pages do
+        try {
+          const mk = (this.mediaKeys && this.mediaKeys[key]) ? this.mediaKeys[key] : this.defaultMediaKeyForSlot(key)
+          if (this._pageMedia && typeof this._pageMedia.getResponsiveSlot === 'function') {
+            const slot = this._pageMedia.getResponsiveSlot(key, mk, '')
+            if (slot) return slot
+          }
+          if (this._media) {
+            if (typeof this._media.getResponsiveImage === 'function') {
+              const v = this._media.getResponsiveImage(mk, '')
+              if (v) return v
+            }
+            if (typeof this._media.getImage === 'function') {
+              const v = this._media.getImage(mk, '')
+              if (v) return v
+            }
+          }
+        } catch(_) {}
+        return direct || ''
       } catch(_) { return '' }
     },
     expectedImageKeys(){
@@ -2927,6 +2976,8 @@ export default {
         const mkeys = (content && typeof content === 'object' && content.media_keys && typeof content.media_keys === 'object') ? content.media_keys : {}
         this.mediaKeys = { ...mkeys }
         this.missingImageKeys = this.calculateMissingImages()
+        // Prepare media registries for editor-side fallback resolution
+        await this.ensureMediaRefs()
       } catch(_) {}
     },
     insertLastContentImage(){

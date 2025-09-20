@@ -404,10 +404,12 @@ export default {
           if (v && typeof v === 'object' && v.url) {
             let url = v.url
             try {
-              if (url.startsWith('/storage/') && v.uploaded_at) {
-                const ver = Date.parse(v.uploaded_at) || Date.now()
-                url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
-              }
+            if (url.startsWith('/storage/') && v.uploaded_at) {
+                const ver = Date.parse(v.uploaded_at) || null
+                if (ver !== null) {
+                  url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+                }
+            }
             } catch (_) {}
             return url
           }

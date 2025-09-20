@@ -466,8 +466,10 @@ export default {
           let u = v.url
           try {
             if (u.startsWith('/storage/') && v.uploaded_at) {
-              const ver = Date.parse(v.uploaded_at) || Date.now()
-              u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              const ver = Date.parse(v.uploaded_at) || null
+              if (ver !== null) {
+                u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
             }
           } catch(_) {}
           return u

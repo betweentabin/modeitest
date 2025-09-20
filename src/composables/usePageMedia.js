@@ -103,8 +103,8 @@ export function usePageMedia() {
             }
           }
 
-          const params = force ? { _t: Date.now() } : {}
-          const res = await apiClient.get(`/api/public/pages-v2/${slug}`, { silent: true, params })
+          // Always include cache-buster to avoid stale snapshot responses
+          const res = await apiClient.get(`/api/public/pages-v2/${slug}`, { silent: true, params: { _t: Date.now() } })
 
           if (!res || res.success === false) {
             if (!force && Number(res?.code) === 404) missingV2Slugs.add(slug)
@@ -172,13 +172,13 @@ export function usePageMedia() {
         const v = imgs[slotKey]
         let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
         // Add cache-buster for storage file when uploaded_at is present
-        try {
-          const meta = (v && typeof v === 'object') ? v : null
-          const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
-          if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
-            url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
-          }
-        } catch (_) {}
+            try {
+              const meta = (v && typeof v === 'object') ? v : null
+              const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || null) : null
+              if (ver !== null && typeof url === 'string' && url.startsWith('/storage/')) {
+                url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
+            } catch (_) {}
         if (typeof url === 'string' && url.length) return resolveMediaUrl(url)
       }
     } catch (_) { /* ignore and fallback to registry */ }
@@ -217,8 +217,8 @@ export function usePageMedia() {
           let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
           try {
             const meta = (v && typeof v === 'object') ? v : null
-            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
-            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || null) : null
+            if (ver !== null && typeof url === 'string' && url.startsWith('/storage/')) {
               url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
             }
           } catch (_) {}

@@ -392,8 +392,8 @@ export default {
           let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
           try {
             const meta = (v && typeof v === 'object') ? v : null
-            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
-            if (ver && typeof url === 'string' && url.indexOf('/storage/') !== -1) {
+            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || null) : null
+            if (ver !== null && typeof url === 'string' && url.indexOf('/storage/') !== -1) {
               url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
             }
           } catch(_) {}
@@ -430,8 +430,10 @@ export default {
           let u = v.url
           try {
             if (u.startsWith('/storage/') && v.uploaded_at) {
-              const ver = Date.parse(v.uploaded_at) || Date.now()
-              u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              const ver = Date.parse(v.uploaded_at) || null
+              if (ver !== null) {
+                u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
             }
           } catch(_) {}
           return u
