@@ -258,14 +258,32 @@ class EmailCampaignController extends Controller
         return response()->json(['success' => true, 'data' => $campaign]);
     }
 
-    public function sendNow($id)
+    public function sendNow(Request $request, $id)
     {
         $campaign = EmailCampaign::findOrFail($id);
         $campaign->update(['status' => 'sending']);
 
-        \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
+        $forceSync = filter_var($request->get('sync', false), FILTER_VALIDATE_BOOLEAN)
+            || filter_var(env('CAMPAIGN_FORCE_SYNC', false), FILTER_VALIDATE_BOOLEAN)
+            || config('queue.default') === 'sync';
 
-        return response()->json(['success' => true, 'message' => '送信キューに投入しました']);
+        if ($forceSync) {
+            // 同期モード: ワーカー無しでその場で送る
+            \App\Models\EmailRecipient::where('campaign_id', $campaign->id)
+                ->where('status', 'pending')
+                ->orderBy('id')
+                ->chunkById(500, function ($recipients) {
+                    foreach ($recipients as $recipient) {
+                        \App\Jobs\SendCampaignEmailToRecipient::dispatchSync($recipient->id);
+                    }
+                });
+
+            return response()->json(['success' => true, 'message' => '送信しました（同期モード）']);
+        } else {
+            // 非同期: ワーカー前提
+            \App\Jobs\SendEmailCampaignJob::dispatch($campaign->id);
+            return response()->json(['success' => true, 'message' => '送信キューに投入しました']);
+        }
     }
 
     // Attachments: list

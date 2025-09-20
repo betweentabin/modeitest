@@ -248,6 +248,11 @@ export default {
     // note: small text is handled via inline span in mainHeadlineText
     window.addEventListener('resize', this.adjustRectangleHeight);
     window.addEventListener('resize', this.adjustMainHeadline);
+    // When media registry updates (e.g., KV or images replaced), force re-render without resize
+    try {
+      this.__onMediaUpdated = () => { try { this.$forceUpdate() } catch(_) {} }
+      window.addEventListener('cms-media-updated', this.__onMediaUpdated)
+    } catch(_) {}
     // Reflect admin edits immediately: listen for localStorage cache updates and reload PageContent
     try {
       this.__lastReloadAt = 0
@@ -286,6 +291,7 @@ export default {
     // no observer to clean up
     try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
     try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
+    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
   },
   methods: {
     media(key, fallback = '', mediaKey = '') {

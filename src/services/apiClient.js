@@ -416,8 +416,11 @@ class ApiClient {
     return this.post(`/api/admin/emails/${id}/schedule`, { scheduled_at: scheduledAt })
   }
 
-  async sendEmailCampaignNow(id) {
-    return this.post(`/api/admin/emails/${id}/send-now`)
+  async sendEmailCampaignNow(id, options = {}) {
+    // options.sync === true で同期送信（ワーカー不要）
+    const payload = {}
+    if (options.sync === true) payload.sync = true
+    return this.post(`/api/admin/emails/${id}/send-now`, payload)
   }
 
   async resendFailedRecipients(id) {

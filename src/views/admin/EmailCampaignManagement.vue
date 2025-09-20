@@ -391,7 +391,8 @@ export default {
     async sendNow(c) {
       if (!confirm('今すぐ送信しますか？')) return
       try {
-        const res = await apiClient.sendEmailCampaignNow(c.id)
+        // 同期モードで実行（ワーカー不要）
+        const res = await apiClient.sendEmailCampaignNow(c.id, { sync: true })
         if (res.success) { alert('送信しました'); this.loadCampaigns(this.pagination.current_page) }
         else alert(res.error || '送信に失敗しました')
       } catch (e) { alert('送信に失敗しました') }
