@@ -264,7 +264,18 @@ export default {
           if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
           this.__reloading = true
           try {
-            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            const isAdmin = !!localStorage.getItem('admin_token')
+            const isPreview = (() => {
+              try {
+                const hash = window.location.hash || ''
+                const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+                const params = new URLSearchParams(qs)
+                return params.has('cmsPreview') || params.has('cmsEdit')
+              } catch(_) { return false }
+            })()
+            const p = this._pageText && this._pageText.load 
+              ? this._pageText.load(isAdmin || isPreview ? { force: true } : {}) 
+              : Promise.resolve()
             Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
           } catch(_) { this.__reloading = false }
         }
@@ -277,7 +288,18 @@ export default {
           if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
           this.__reloading = true
           try {
-            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            const isAdmin = !!localStorage.getItem('admin_token')
+            const isPreview = (() => {
+              try {
+                const hash = window.location.hash || ''
+                const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+                const params = new URLSearchParams(qs)
+                return params.has('cmsPreview') || params.has('cmsEdit')
+              } catch(_) { return false }
+            })()
+            const p = this._pageText && this._pageText.load 
+              ? this._pageText.load(isAdmin || isPreview ? { force: true } : {}) 
+              : Promise.resolve()
             Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
           } catch(_) { this.__reloading = false }
         }
