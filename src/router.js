@@ -757,6 +757,14 @@ const PAGE_KEYS_BY_ROUTE = {
   premiumMembershipShort: ['premium-membership'],
   glossary: ['glossary'],
   faq: ['faq'],
+  // Added: ensure first paint uses CMS texts for these routes too
+  publicationsPublic: ['publications'],
+  publication: ['publications'],
+  publicationDetail: ['publications'],
+  publicationPublicDetail: ['publications'],
+  economicIndicators: ['economic-indicators'],
+  economicResearch: ['economic-statistics'],
+  criConsulting: ['cri-consulting'],
 }
 
 // ページタイトル更新 + 必要なCMSテキストの事前読み込み
