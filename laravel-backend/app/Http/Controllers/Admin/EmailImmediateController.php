@@ -37,6 +37,8 @@ class EmailImmediateController extends Controller
         $smtpHost = config('mail.mailers.smtp.host');
         $smtpDsn  = config('mail.mailers.smtp.url');
         $dryRun = filter_var(env('MAIL_DRY_RUN', false), FILTER_VALIDATE_BOOLEAN);
+        $mailUrl = (string) env('MAIL_URL', '');
+        $useGmailApi = str_starts_with($mailUrl, 'gmail+api://');
         if ($mailer === 'resend') {
             // Use Resend API path
             if ($dryRun) {
@@ -62,20 +64,20 @@ class EmailImmediateController extends Controller
             $mailer = 'log';
         }
 
-        $mailable = new SimpleMail($data);
-
-        $to = is_array($data['to']) ? $data['to'] : [$data['to']];
-
-        // Build mailer first, then set recipients to ensure proper method chain
-        $pending = Mail::mailer($mailer)->to($to);
-        if (!empty($data['from']['address'])) {
-            $pending->alwaysFrom($data['from']['address'], $data['from']['name'] ?? null);
+        // Gmail API path (HTTP)
+        if ($useGmailApi) {
+            (new \App\Services\Mailer\GmailApiMailer())->send($data);
+        } else {
+            $mailable = new SimpleMail($data);
+            $to = is_array($data['to']) ? $data['to'] : [$data['to']];
+            $pending = Mail::mailer($mailer)->to($to);
+            if (!empty($data['from']['address'])) {
+                $pending->alwaysFrom($data['from']['address'], $data['from']['name'] ?? null);
+            }
+            if (!empty($data['cc'])) $pending->cc($data['cc']);
+            if (!empty($data['bcc'])) $pending->bcc($data['bcc']);
+            $pending->send($mailable);
         }
-        if (!empty($data['cc'])) $pending->cc($data['cc']);
-        if (!empty($data['bcc'])) $pending->bcc($data['bcc']);
-
-        // Send synchronously
-        $pending->send($mailable);
 
         return response()->json([
             'success' => true,

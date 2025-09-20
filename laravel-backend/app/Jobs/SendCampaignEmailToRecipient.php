@@ -54,6 +54,7 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                     ->map(fn($a) => ['disk' => $a->disk, 'path' => $a->path, 'filename' => $a->filename])
                     ->toArray();
 
+                $mailUrl = (string) env('MAIL_URL', '');
                 if (config('mail.default') === 'resend') {
                     // Send via Resend API
                     $mapped = array_map(function ($a) {
@@ -66,6 +67,14 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                         'body_text' => $campaign->body_text,
                         'attachments' => $mapped,
                     ]);
+                } elseif (str_starts_with($mailUrl, 'gmail+api://')) {
+                    // Send via Gmail API (HTTP)
+                    (new \App\Services\Mailer\GmailApiMailer())->send([
+                        'to' => $recipient->email,
+                        'subject' => $campaign->subject,
+                        'body_html' => $campaign->body_html,
+                        'body_text' => $campaign->body_text,
+                    ]);
                 } else {
                     $mailable = new CampaignMail(
                         subjectLine: $campaign->subject,
@@ -73,7 +82,6 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                         bodyText: $campaign->body_text,
                         attachmentsMeta: $attachments,
                     );
-                    // Ensure To header is present on the Email object for Symfony Mailer
                     $mailable->to($recipient->email);
                     Mail::send($mailable);
                 }

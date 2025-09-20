@@ -16,19 +16,6 @@
       <div class="pane center">
         <div v-if="currentPage" class="editor-form">
           <div class="field">
-            <label>KV画像</label>
-            <div class="kv-uploader" @click="selectKvFile">
-              <input ref="kvInput" type="file" accept="image/*" style="display:none" @change="onKvSelected" />
-              <div v-if="kv.previewUrl" class="kv-preview" :style="{backgroundImage: `url(${kv.previewUrl})`}"></div>
-              <div v-else class="kv-placeholder">
-                <span class="kv-icon">🖼</span>
-                <span>アップロードファイル</span>
-              </div>
-            </div>
-            <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）</div>
-          </div>
-
-          <div class="field">
             <label>ページタイトル</label>
             <input v-model="currentPage.title" class="input" @change="savePageMeta" />
           </div>
@@ -819,7 +806,7 @@
                   </div>
                 </div>
               </div>
-              <div class="help">上部「KV画像」でも設定できます（推奨）。</div>
+              <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）。</div>
             </div>
           </template>
 
@@ -838,7 +825,7 @@
                   </div>
                 </div>
               </div>
-              <div class="help">上部「KV画像」でも設定できます（推奨）。</div>
+              <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）。</div>
             </div>
           </template>
 
@@ -857,7 +844,7 @@
                   </div>
                 </div>
               </div>
-              <div class="help">上部「KV画像」でも設定できます（推奨）。</div>
+              <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）。</div>
             </div>
           </template>
           
@@ -2236,7 +2223,6 @@ export default {
       showCreate: false,
       createForm: { slug: '', title: '' },
       previewUrl: '',
-      kv: { id:'', ext:'', previewUrl:'' },
       lastContentImgUrl: '',
       // エディタ（本文）の表示切替。既定は非表示
       showContentEditor: false,
@@ -2809,10 +2795,8 @@ export default {
         // very small mapping to two demo sections: hero (sort 10) and rich (sort 20)
         const secs = (res.data.sections||[])
         const hero = secs.find(s=>s.sort===10) || { id: 'hero', sort: 10, component_type:'Hero', props_json:{ title: '' } }
-        const kv = secs.find(s=>s.sort===15) || { id: 'kv', sort: 15, component_type:'KV', props_json:{ image_id:'', ext:'' } }
         const rich = secs.find(s=>s.sort===20) || { id: 'rich', sort: 20, component_type:'RichText', props_json:{ html: '' } }
         this.hero = { title: (hero.props_json&&hero.props_json.title)||'' }
-        this.kv = { id: (kv.props_json&&kv.props_json.image_id)||'', ext:(kv.props_json&&kv.props_json.ext)||'', previewUrl: this.kvPreviewFromProps((kv.props_json||{})) }
         this.richText = { html: (rich.props_json&&rich.props_json.html)||'' }
         this.collectWarnings([hero, rich])
         // 推奨のPageContentキーを推定
@@ -3081,10 +3065,6 @@ export default {
           alert('追加に失敗しました')
         }
       } catch(_) { alert('追加に失敗しました') }
-    },
-    kvPreviewFromProps(props){
-      if (!props || !props.image_id || !props.ext) return ''
-      return getApiUrl(`/api/public/m/${encodeURIComponent(props.image_id)}/md.${encodeURIComponent(props.ext)}`)
     },
     collectWarnings(sections){
       const warn = []
@@ -3404,43 +3384,6 @@ export default {
           alert('プレビューリンクを作成しました。開くボタンで確認できます。')
         }
       }catch(_){ alert('プレビューリンクの作成に失敗しました') }
-    },
-    selectKvFile(){ this.$refs.kvInput && this.$refs.kvInput.click() },
-    async onKvSelected(e){
-      const f = (e.target.files && e.target.files[0]) || null
-      if (!f || !this.currentPage) return
-      try{
-        const up = await apiClient.uploadCmsMedia(f)
-        if (up && up.success){
-          const id = up.data.id
-          const mime = (up.data.mime||'').toLowerCase()
-          const ext = mime.includes('png')? 'png' : mime.includes('webp')? 'webp' : mime.includes('gif')? 'gif' : 'jpg'
-          await apiClient.upsertCmsSection(this.currentPage.id, 'kv', { sort:15, component_type:'KV', props_json:{ image_id:id, ext }, status:'draft' })
-          const url = getApiUrl(`/api/public/m/${encodeURIComponent(id)}/md.${encodeURIComponent(ext)}`)
-          this.kv = { id, ext, previewUrl: url }
-
-          // Bridge hero image to legacy PageContent for this page
-          try {
-            // Infer PageContent key from current slug
-            const pageKey = this.pageContentKey || this.pageContentKeyFromSlug(this.currentPage.slug)
-            if (pageKey) {
-              const patch = { content: { images: { hero: url }, media_keys: { hero: `hero_${String(pageKey).replace(/-/g,'_')}` } }, is_published: true }
-              await apiClient.adminUpdatePageContent(pageKey, patch)
-              // Also mirror to global media registry for fallback usage
-              const heroKey = `hero_${String(pageKey).replace(/-/g,'_')}`
-              await apiClient.adminUpdatePageContent('media', { content: { images: { [heroKey]: url } }, is_published: true })
-              // Invalidate media cache so new hero appears immediately
-              try {
-                const mod = await import('@/composables/useMedia')
-                if (mod.invalidateMediaCache) mod.invalidateMediaCache()
-                try { localStorage.removeItem('cms_media_cache'); localStorage.setItem('cms_media_cache_bust', String(Date.now())) } catch(_) {}
-              } catch(_) {}
-            }
-          } catch(_) { /* non-blocking */ }
-        } else {
-          alert('画像アップロードに失敗しました')
-        }
-      } catch(_){ alert('画像アップロードに失敗しました') }
     },
     selectContentImage(){ this.$refs.contentImgInput && this.$refs.contentImgInput.click() },
     async onContentImageSelected(e){
@@ -3991,10 +3934,6 @@ export default {
 .actions{ display:flex; justify-content:flex-end; }
   .actions-row{ display:flex; gap:8px; justify-content:center; padding-top:8px; }
   .section-title{ background:#e6f0ff; color:#1a3a7c; padding:6px 10px; border-left:4px solid #2d5bd1; margin:10px 0; font-weight:600; }
-  .kv-uploader{ border:1px dashed #bbb; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; background:#fafafa; cursor:pointer; }
-  .kv-placeholder{ display:flex; flex-direction:column; align-items:center; color:#666; gap:6px; }
-  .kv-icon{ font-size:22px; }
-  .kv-preview{ width:100%; height:100%; background-size:cover; background-position:center; border-radius:8px; }
   .help{ color:#777; font-size:12px; }
   /* Preview panel removed */
   .page-image-row{ display:flex; gap:12px; align-items:center; border:1px solid #eee; border-radius:8px; padding:10px; margin-bottom:8px; background:#fafafa; }
