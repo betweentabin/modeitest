@@ -75,8 +75,6 @@
       <!-- Breadcrumb -->
       <div class="breadcrumb-section">
         <div class="breadcrumb">
-          <span>トップ</span>
-          <span>></span>
           <span>経済・調査統計</span>
           <span>></span>
           <span>経済・調査統計詳細</span>
