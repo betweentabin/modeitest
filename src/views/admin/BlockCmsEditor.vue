@@ -875,6 +875,19 @@
                     </div>
                   </div>
                 </div>
+                <div class="field">
+                  <label>セクション画像（about_image）</label>
+                  <div class="page-image-row">
+                    <div class="img-preview"><img :src="getImageUrlByKey('about_image') || ''" alt="preview"/></div>
+                    <div class="img-meta">
+                      <div class="img-key">images.about_image</div>
+                      <div class="img-actions">
+                        <input ref="img_about_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('about_image', $event)" />
+                        <button class="btn" @click="triggerCompanyImageUpload('about_image')">アップロードファイル</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -898,6 +911,19 @@
               <textarea v-model="aboutHtmls.service1_list" class="textarea" rows="4"></textarea>
             </div>
             <div class="field">
+              <label>サービス1（service1_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('service1_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.service1_image</div>
+                  <div class="img-actions">
+                    <input ref="img_service1_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('service1_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('service1_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
               <label>サービス2（見出し）</label>
               <input v-model="aboutTexts.service2_title" class="input" />
               <label>サービス2（説明）</label>
@@ -906,12 +932,38 @@
               <textarea v-model="aboutHtmls.service2_list" class="textarea" rows="4"></textarea>
             </div>
             <div class="field">
+              <label>サービス2（service2_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('service2_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.service2_image</div>
+                  <div class="img-actions">
+                    <input ref="img_service2_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('service2_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('service2_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
               <label>サービス3（見出し）</label>
               <input v-model="aboutTexts.service3_title" class="input" />
               <label>サービス3（説明）</label>
               <input v-model="aboutTexts.service3_desc" class="input" />
               <label>サービス3（リストHTML）</label>
               <textarea v-model="aboutHtmls.service3_list" class="textarea" rows="4"></textarea>
+            </div>
+            <div class="field">
+              <label>サービス3（service3_image）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('service3_image') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.service3_image</div>
+                  <div class="img-actions">
+                    <input ref="img_service3_image" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('service3_image', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('service3_image')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             
@@ -1045,6 +1097,84 @@
             <div class="field"><label>導入（HTML）</label><textarea v-model="consultingHtmls.support_intro" class="textarea" rows="4"></textarea></div>
             <div class="field"><label>無料（見出し）</label><input v-model="consultingTexts.support_free_title" class="input" /></div>
             <div class="field"><label>有料（見出し）</label><input v-model="consultingTexts.support_paid_title" class="input" /></div>
+
+            <!-- 無料サポート（画像） -->
+            <div class="section-title">無料サポート（画像）</div>
+            <div class="field">
+              <label>相談（support_free_consultation）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('support_free_consultation') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_support_free_consultation" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('support_free_consultation', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('support_free_consultation')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>問題把握（support_free_problem）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('support_free_problem') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_support_free_problem" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('support_free_problem', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('support_free_problem')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 有料サポート（画像） -->
+            <div class="section-title">有料サポート（画像）</div>
+            <div class="field">
+              <label>戦略策定（support_paid_strategy）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('support_paid_strategy') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_support_paid_strategy" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('support_paid_strategy', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('support_paid_strategy')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>改善活動（support_paid_improvement）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('support_paid_improvement') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_support_paid_improvement" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('support_paid_improvement', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('support_paid_improvement')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>分析（support_paid_analysis）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('support_paid_analysis') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_support_paid_analysis" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('support_paid_analysis', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('support_paid_analysis')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>新規事業活動（support_paid_newbiz）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('support_paid_newbiz') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-actions">
+                    <input ref="img_support_paid_newbiz" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('support_paid_newbiz', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('support_paid_newbiz')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <!-- 実績（任意） -->
             <div class="section-title">実績紹介（Achievements）</div>

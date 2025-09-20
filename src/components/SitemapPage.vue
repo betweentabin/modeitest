@@ -141,20 +141,7 @@
               </div>
               
             </div>
-            <!-- Auto-generated links from public DB (API) -->
-            <div class="sitemap-category" v-if="hasDynamicLinks">
-              <h4 class="category-title">
-                <span>自動生成リンク</span>
-              </h4>
-              <ul class="link-list">
-                <li v-for="(lnk, idx) in dynamicLinks" :key="idx">
-                  <router-link :to="lnk.path" class="sitemap-link">
-                    <img class="footer-arrow" src="/img/vector.svg" alt="Vector" />
-                    <span>{{ lnk.label }}</span>
-                  </router-link>
-                </li>
-              </ul>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -192,7 +179,6 @@ import ActionButton from "./ActionButton.vue";
 import CmsText from '@/components/CmsText.vue'
 import CmsBlock from '@/components/CmsBlock.vue'
 import { usePageText } from '@/composables/usePageText'
-import apiClient from '@/services/apiClient.js'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -215,7 +201,6 @@ export default {
     return {
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
-      dynamicLinks: [],
     };
   },
   computed: {
@@ -268,16 +253,11 @@ export default {
       window.addEventListener('cms-media-updated', this.__onMediaUpdated)
     } catch(_) {}
 
-    // 公開DB（API）から完成済みページを列挙して自動セクションに追加
-    this.loadDynamicPages().catch(() => {})
   },
   beforeDestroy() {
     try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
     try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
     try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
-  },
-  computed: {
-    hasDynamicLinks() { return Array.isArray(this.dynamicLinks) && this.dynamicLinks.length > 0 }
   },
   methods: {
     handleContactClick() {
@@ -287,40 +267,6 @@ export default {
     handleJoinClick() {
       const link = this._pageText?.getLink('cta_secondary', '/membership/apply') || '/membership/apply'
       this.$router.push(link);
-    },
-    async loadDynamicPages() {
-      try {
-        const res = await apiClient.get('/api/public/pages', { params: { _t: Date.now() }, silent: true })
-        const pages = res?.data?.pages || res?.pages || []
-        if (!Array.isArray(pages)) return
-        const routeMap = {
-          'home': '/',
-          'company-profile': '/company',
-          'about': '/aboutus',
-          'faq': '/faq',
-          'sitemap': '/sitemap',
-          'privacy': '/privacy',
-          'terms': '/terms',
-          'transaction-law': '/legal',
-          'membership': '/membership',
-          'premium-membership': '/premium-membership',
-          'contact': '/contact',
-          'economic-indicators': '/economic-indicators',
-          'economic-statistics': '/economic-research',
-        }
-        const seen = new Set()
-        const links = []
-        for (const p of pages) {
-          const key = (p && (p.page_key || p.key)) ? String(p.page_key || p.key) : ''
-          const path = routeMap[key]
-          if (!path) continue
-          if (seen.has(path)) continue
-          seen.add(path)
-          const label = (p && p.title) ? String(p.title) : key
-          links.push({ path, label })
-        }
-        this.dynamicLinks = links
-      } catch (_) { /* noop */ }
     }
   }
 
