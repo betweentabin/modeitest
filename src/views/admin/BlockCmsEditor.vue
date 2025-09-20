@@ -2356,6 +2356,11 @@ export default {
             })
           } catch(_) {}
           this.missingImageKeys = this.calculateMissingImages()
+          // Notify public pages to reload PageContent cache immediately
+          try {
+            const k = 'page_content_cache:' + String(this.pageContentKey)
+            localStorage.setItem(k, String(Date.now()))
+          } catch(_) { /* ignore */ }
           alert('画像を差し替えました')
         } else {
           alert('差し替えに失敗しました')
@@ -2402,6 +2407,11 @@ export default {
           } catch(_) {}
           this.newImageKey = ''
           this.missingImageKeys = this.calculateMissingImages()
+          // Broadcast page content cache update to live pages
+          try {
+            const k = 'page_content_cache:' + String(this.pageContentKey)
+            localStorage.setItem(k, String(Date.now()))
+          } catch(_) { /* ignore */ }
           alert('画像を追加しました')
         } else {
           alert('追加に失敗しました')
