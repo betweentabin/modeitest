@@ -563,6 +563,19 @@ export default {
       vector7,
     };
   },
+  created() {
+    // Pre-hydrate from local cache to avoid initial flicker for first-time visitors
+    try {
+      try { if (localStorage.getItem('cms_disable_prefill') === '1') return } catch(_) {}
+      const raw = localStorage.getItem('page_content_cache:home')
+      if (raw) {
+        const cached = (raw.trim().startsWith('{') || raw.trim().startsWith('[')) ? JSON.parse(raw) : null
+        if (cached && typeof cached === 'object') {
+          this._prefillFromCachedHomePage(cached)
+        }
+      }
+    } catch (_) { /* ignore cache read errors */ }
+  },
   mounted() {
     // トップのお知らせ/お知らせ・セミナー・刊行物などを読み込む
     // モック有効時はモックから、無効時はAPIから取得（内部でエラーハンドリング済み）
@@ -620,6 +633,80 @@ export default {
     try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch (_) {}
   },
   methods: {
+    _prefillFromCachedHomePage(cachedPage) {
+      try {
+        const content = cachedPage && cachedPage.content ? cachedPage.content : {}
+        const images = (content && typeof content === 'object' && content.images) ? content.images : {}
+        const texts = (content && typeof content === 'object' && content.texts) ? content.texts : {}
+        const links = (content && typeof content === 'object' && content.links) ? content.links : {}
+        const getImg = (key, defVal='') => {
+          const v = images && images[key]
+          if (!v) return defVal
+          if (typeof v === 'string') return v
+          if (typeof v === 'object' && v.url) {
+            let url = v.url
+            try {
+              if (typeof url === 'string' && url.startsWith('/storage/') && v.uploaded_at) {
+                const ver = Date.parse(v.uploaded_at) || null
+                if (ver !== null) url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
+            } catch (_) {}
+            return url
+          }
+          return defVal
+        }
+        const getText = (key, fb='') => {
+          const v = texts && Object.prototype.hasOwnProperty.call(texts, key) ? texts[key] : undefined
+          return (typeof v === 'string') ? v : fb
+        }
+        const getLink = (key, fb='') => {
+          const v = links && Object.prototype.hasOwnProperty.call(links, key) ? links[key] : undefined
+          return (typeof v === 'string') ? v : fb
+        }
+
+        // Prefill hero slides from cache
+        try {
+          const defaults = this.heroSlides || []
+          const merged = [1,2,3].map((i, idx) => {
+            const key = `hero_slide_${i}`
+            const def = defaults[idx] || {}
+            const img = getImg(key, def.image || '')
+            const title = getText(`${key}_title`, def.title || '')
+            const subtitle = getText(`${key}_subtitle`, def.subtitle || '')
+            const buttonText = getText(`${key}_button`, def.buttonText || '')
+            const link = getLink(`${key}_link`, '')
+            const onClick = def.onClick || (link ? (() => this.$router.push(link)) : undefined)
+            return { image: img, title, subtitle, buttonText, onClick, link }
+          })
+          const hasAny = merged.some(s => typeof s.image === 'string' && s.image.length)
+          if (hasAny) this.cmsSlides = merged
+        } catch (_) { /* noop */ }
+
+        // Prefill home partner/banner/card images from cache
+        try {
+          const card1Image = getImg('about_card1_image', this.card1Props?.image)
+          if (card1Image && card1Image !== this.card1Props?.image) {
+            this.card1Props = { ...(this.card1Props || {}), image: card1Image }
+          }
+          const card2Image = getImg('about_card2_image', this.card2Props?.image)
+          if (card2Image && card2Image !== this.card2Props?.image) {
+            this.card2Props = { ...(this.card2Props || {}), image: card2Image }
+          }
+          const card3Image = getImg('about_card3_image', this.image1)
+          if (card3Image && card3Image !== this.image1) {
+            this.image1 = card3Image
+          }
+          const partner1 = getImg('home_partner_logo1', this.image2)
+          if (partner1 && partner1 !== this.image2) this.image2 = partner1
+          const partner2 = getImg('home_partner_logo2', this.image3)
+          if (partner2 && partner2 !== this.image3) this.image3 = partner2
+          const partner3 = getImg('home_partner_logo3', this.image4)
+          if (partner3 && partner3 !== this.image4) this.image4 = partner3
+          const partner4 = getImg('home_partner_logo4', this.image5)
+          if (partner4 && partner4 !== this.image5) this.image5 = partner4
+        } catch (_) { /* noop */ }
+      } catch (_) { /* noop */ }
+    },
     async loadCmsHeroSlides(force = false) {
       try {
         const cms = usePageText('home')

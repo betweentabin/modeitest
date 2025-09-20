@@ -89,6 +89,40 @@ export default {
     }
   },
   components: { CmsText, HeroSlider },
+  data() {
+    return {
+      // Use any locally cached PageContent hero URL to avoid initial flicker
+      cachedHeroUrl: ''
+    }
+  },
+  created() {
+    // Synchronously hydrate from localStorage before first render
+    try {
+      try { if (localStorage.getItem('cms_disable_prefill') === '1') return } catch(_) {}
+      if (this.cmsPageKey) {
+        const raw = localStorage.getItem('page_content_cache:' + this.cmsPageKey)
+        if (raw) {
+          // guard: parse only when it looks like JSON
+          const cached = (raw.trim().startsWith('{') || raw.trim().startsWith('[')) ? JSON.parse(raw) : null
+          const images = cached?.content?.images || null
+          const v = images ? images.hero : null
+          if (typeof v === 'string' && v) this.cachedHeroUrl = v
+          else if (v && typeof v === 'object' && v.url) {
+            let url = String(v.url)
+            try {
+              if (url.startsWith('/storage/') && v.uploaded_at) {
+                const ver = (Date.parse(v.uploaded_at) || null)
+                if (ver !== null) {
+                  url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+                }
+              }
+            } catch (_) {}
+            this.cachedHeroUrl = url
+          }
+        }
+      }
+    } catch (_) { /* ignore */ }
+  },
   async mounted() {
     // lazy load media registry (for mediaKey or per-page mapping)
     if (this.mediaKey || this.cmsPageKey) {
@@ -154,6 +188,8 @@ export default {
   },
   computed: {
     resolvedImage() {
+      // 0) Immediate local cache (pre-mount hydration) to suppress initial static flicker
+      try { if (this.cachedHeroUrl && typeof this.cachedHeroUrl === 'string') return this.cachedHeroUrl } catch(_) {}
       // 1) Prefer page-managed hero image (PageContent.content.images.hero)
       try {
         const pageHero = this.pageHero && this.pageHero()
