@@ -298,6 +298,7 @@ export default {
   beforeDestroy() {
     try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
     try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
+    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
   },
   computed: {
     pageTitle() {
@@ -367,28 +368,19 @@ export default {
     // Load CMS page text with immediate preview/admin support
     try {
       this._pageText = usePageText(this.pageKey)
-      const opts = {}
       try {
-        // Prefer admin preview when editing
-        const hash = window.location.hash || ''
-        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
-        const params = new URLSearchParams(qs)
-        const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
-        if (preview) opts.preferAdmin = true
-      } catch (_) {}
-      try {
-        await this._pageText.load(opts)
-        this.loading = false
-      } catch (_) {
-        // 新CMSが失敗した場合のみ旧APIへフォールバック
-        try {
-          const response = await axios.get(getApiUrl('/api/pages/about'))
-          this.pageData = response.data
-        } catch (err) {
-          this.error = 'ページデータの取得に失敗しました'
-        } finally {
-          this.loading = false
+        const loaded = await this.reloadPageContent()
+        if (!loaded) {
+          // 新CMSが失敗した場合のみ旧APIへフォールバック
+          try {
+            const response = await axios.get(getApiUrl('/api/pages/about'))
+            this.pageData = response.data
+          } catch (err) {
+            this.error = 'ページデータの取得に失敗しました'
+          }
         }
+      } finally {
+        this.loading = false
       }
     } catch(e) { /* noop */ }
 
@@ -397,7 +389,7 @@ export default {
       try {
         const { usePageMedia } = mod
         this._pageMedia = usePageMedia()
-        this._pageMedia.ensure(this.pageKey)
+        this.ensurePageMedia()
         this._media = this._pageMedia._media
         // Watch underlying registry updates to refresh bindings without manual resize
         try {
@@ -420,39 +412,35 @@ export default {
     try {
       this.__lastReloadAt = 0
       this.__reloading = false
+      this.__reloadNow = (force = false) => {
+        const now = Date.now()
+        if (this.__reloading || (now - (this.__lastReloadAt || 0) < 300)) return
+        this.__reloading = true
+        const shouldForce = force || this.isAdminOrPreview()
+        Promise.all([
+          this.reloadPageContent(shouldForce),
+          this.ensurePageMedia(shouldForce)
+        ]).finally(() => {
+          this.__lastReloadAt = Date.now()
+          this.__reloading = false
+          try { this.$forceUpdate() } catch (_) {}
+        })
+      }
       this.__onStorage = (ev) => {
         const k = ev && ev.key ? String(ev.key) : ''
-        if (k === 'page_content_cache:' + this.pageKey) {
-          const now = Date.now()
-          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
-          this.__reloading = true
-          try {
-            const isAdmin = !!localStorage.getItem('admin_token')
-            const isPreview = this.isEditPreview
-            const p = this._pageText && this._pageText.load 
-              ? this._pageText.load(isAdmin || isPreview ? { force: true } : {}) 
-              : Promise.resolve()
-            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
-          } catch(_) { this.__reloading = false }
-        }
+        if (k === 'page_content_cache:' + this.pageKey) this.__reloadNow(true)
       }
       window.addEventListener('storage', this.__onStorage)
       this.__onVis = () => {
         if (document.visibilityState === 'visible') {
-          const now = Date.now()
-          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
-          this.__reloading = true
-          try {
-            const isAdmin = !!localStorage.getItem('admin_token')
-            const isPreview = this.isEditPreview
-            const p = this._pageText && this._pageText.load 
-              ? this._pageText.load(isAdmin || isPreview ? { force: true } : {}) 
-              : Promise.resolve()
-            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
-          } catch(_) { this.__reloading = false }
+          if (this.__reloadNow) this.__reloadNow()
         }
       }
       document.addEventListener('visibilitychange', this.__onVis)
+      this.__onMediaUpdated = () => {
+        if (this.__reloadNow) this.__reloadNow(true)
+      }
+      window.addEventListener('cms-media-updated', this.__onMediaUpdated)
     } catch(_) {}
   },
   methods: {
@@ -507,6 +495,40 @@ export default {
         return `/storage/${u.replace(/^public\//,'')}`
       }
       return null;
+    },
+    isAdminOrPreview() {
+      try {
+        const isAdmin = !!localStorage.getItem('admin_token')
+        const isPreview = this.isEditPreview
+        return isAdmin || isPreview
+      } catch(_) { return this.isEditPreview }
+    },
+    async reloadPageContent(force = false) {
+      if (!this._pageText || !this._pageText.load) return false
+      const opts = {}
+      if (this.isAdminOrPreview()) opts.preferAdmin = true
+      if (force || this.isAdminOrPreview()) opts.force = true
+      try {
+        await this._pageText.load(opts)
+        return true
+      } catch (_) {
+        if (!force) {
+          try {
+            await this._pageText.load({ ...opts, force: true })
+            return true
+          } catch (_) { /* noop */ }
+        }
+      }
+      return false
+    },
+    async ensurePageMedia(force = false) {
+      if (!this._pageMedia || typeof this._pageMedia.ensure !== 'function') return
+      const opts = {}
+      if (this.isAdminOrPreview()) opts.preferAdmin = true
+      if (force) opts.force = true
+      try {
+        await this._pageMedia.ensure(this.pageKey, opts)
+      } catch(_) { /* ignore ensure errors */ }
     }
   }
 };
