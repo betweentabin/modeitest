@@ -117,7 +117,7 @@
                   fieldKey="about_body"
                   tag="div"
                   type="html"
-                  :fallback="'当研究所は、産・官・学・金(金融機関)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。'"
+                  :fallback="'産・官・学・金(金融)のネットワークによる<br><br>様々な分野の調査研究を通じ、企業活動などをサポートします。'"
                 />
               </div>
             </div>
@@ -251,16 +251,16 @@
                     :style="{ cursor: currentIndex > 0 ? 'pointer' : 'default' }"
                   />
                   <img
-                    :class="['vector-10', { 'vector-10-disabled': currentIndex >= (allPublications.length - 2), 'vector-10-enabled': currentIndex < (allPublications.length - 2) }]"
+                    :class="['vector-10', { 'vector-10-disabled': currentIndex >= 7, 'vector-10-enabled': currentIndex < 7 }]"
                     :src="vector101"
                     alt="Vector 10"
-                    @click="currentIndex < (allPublications.length - 2) ? nextPublication() : null"
-                    :style="{ cursor: currentIndex < (allPublications.length - 2) ? 'pointer' : 'default' }"
+                    @click="currentIndex < 7 ? nextPublication() : null"
+                    :style="{ cursor: currentIndex < 7 ? 'pointer' : 'default' }"
                   />
                 </div>
                 <x-button3 class="desktop-publication-button" @click="goToPublicationList" />
               </div>
-              <div class="frame-1321317486">
+              <div class="frame-1321317486" :style="{ transform: `translateX(${slideOffset}px)` }">
                 <div class="publication-item-wrapper" @click="goToPublication(0)">
                   <frame1321317475
                     :x22="dynamicPublications[0] ? dynamicPublications[0].x22 : frame13213174751Props.x22"
@@ -640,6 +640,7 @@ export default {
       currentIndex: 0, // 右側リストの先頭オフセット
       mainPublicationIndex: 0, // メインに使用する実インデックス
       othersIndices: [], // メイン以外のインデックス一覧
+      slideOffset: 0, // スライドアニメーション用のオフセット
       // Dynamic news data
       dynamicNewsItems: [], // CMSから取得したお知らせデータ（カテゴリー情報含む）
       // Vector images for UI elements
@@ -1040,15 +1041,15 @@ export default {
       if (publication && publication.id) this.$router.push(`/publication/${publication.id}`)
     },
     prevPublication() {
-      const othersLen = (this.othersIndices || []).length
-      if (!othersLen) return
-      this.currentIndex = (this.currentIndex - 1 + othersLen) % othersLen
+      // 最新（currentIndex = 0）より左には行かないように制限
+      if (this.currentIndex <= 0) return
+      this.currentIndex = this.currentIndex - 1
       this.refreshVisiblePublications()
     },
     nextPublication() {
-      const othersLen = (this.othersIndices || []).length
-      if (!othersLen) return
-      this.currentIndex = (this.currentIndex + 1) % othersLen
+      // 最後（currentIndex = 7）より右には行かないように制限（10個中3個表示なので7が最大）
+      if (this.currentIndex >= 7) return
+      this.currentIndex = this.currentIndex + 1
       this.refreshVisiblePublications()
     },
     refreshVisiblePublications() {
@@ -1096,8 +1097,11 @@ export default {
           id: item?.id
         })
       }
-      this.dynamicPublications = list
-    },
+        this.dynamicPublications = list
+        // スライドオフセットを計算（各アイテムの幅 + gap）
+        const itemWidth = 259 + 20; // width + gap
+        this.slideOffset = -this.currentIndex * itemWidth
+      },
     getCategoryLabel(newsItem) {
       // お知らせの種類に応じてカテゴリーラベルを返す
       if (!newsItem) return 'NEWS';
@@ -1662,7 +1666,7 @@ export default {
   font-size: var(--font-size-xl);
   font-weight: 400;
   letter-spacing: -0.4px;
-  line-height: 40px;
+  line-height: 22px; /* 行間をさらに狭く調整（28px → 22px）*/
   margin-top: 25px;
   min-height: 80px;
   text-align: center;
@@ -2118,6 +2122,7 @@ export default {
   justify-content: space-between;
   position: relative;
   width: 100%;
+  overflow: hidden; /* スライドエリアの境界を隠す */
 }
 
 /* frame-1321317487のボタンを横並びに（768px以上のみ） */
@@ -2180,6 +2185,13 @@ export default {
   gap: 20px;
   margin-right: -183px;
   position: relative;
+  transition: transform 0.3s ease;
+  width: calc(279px * 10); /* 各アイテムの幅 × 10個 */
+}
+
+.publication-item-wrapper {
+  flex: 0 0 259px; /* 固定幅でflexアイテム */
+  width: 259px;
 }
 
 .frame-1321317475 {
@@ -3252,7 +3264,7 @@ export default {
   
   .text-48 {
     font-size: 16px;
-    line-height: 28px;
+    line-height: 20px; /* 行間をさらに狭く調整 */
     margin-top: 20px;
   }
   
@@ -3679,7 +3691,7 @@ export default {
   
   .text-48 {
     font-size: 14px;
-    line-height: 24px;
+    line-height: 18px; /* 行間をさらに狭く調整 */
     margin-top: 15px;
   }
   
