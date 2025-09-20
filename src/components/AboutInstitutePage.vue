@@ -61,7 +61,7 @@
         <h2 class="section-title"><CmsText pageKey="about-institute" fieldKey="service_title" tag="span" :fallback="'サービス概要'" /></h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text"><CmsText pageKey="about-institute" fieldKey="service_subtitle" tag="span" :fallback="'service'" /></span>
+          <span class="divider-text"><CmsText pageKey="about-institute" fieldKey="service_subtitle" tag="span" :fallback="'SERVICE'" /></span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -181,7 +181,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'ちくぎん地域経済研究所について') || 'ちくぎん地域経済研究所について' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'for you') || 'for you' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'FOR YOU') || 'FOR YOU' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
     isEditPreview() {

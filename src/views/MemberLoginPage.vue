@@ -6,7 +6,7 @@
     <!-- Hero Section -->
     <HeroSection 
       title="会員ログインページ"
-      subtitle="login page"
+      subtitle="LOGIN PAGE"
       heroImage="/img/Image_fx8.jpg"
     />
 
@@ -19,7 +19,7 @@
         <h2 class="page-title">会員ログインページ</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">login page</span>
+          <span class="title-english">LOGIN PAGE</span>
           <div class="line-right"></div>
         </div>
       </div>

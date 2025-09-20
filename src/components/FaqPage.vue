@@ -5,7 +5,7 @@
     <!-- Hero Section -->
     <HeroSection 
       :title="pageTitle || 'よくあるご質問'"
-      :subtitle="pageSubtitle || 'faq'"
+      :subtitle="pageSubtitle || 'FAQ'"
       cms-page-key="faq"
       heroImage="/img/Image_fx4.jpg"
       mediaKey="hero_faq"
@@ -243,7 +243,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'よくあるご質問') || 'よくあるご質問' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'faq') || 'faq' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'FAQ') || 'FAQ' },
     filteredFaqs() {
       let filtered = this.faqs;
       if (this.selectedCategory !== 'all') {

@@ -273,7 +273,7 @@ export default {
     },
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'セミナー申し込み') || 'セミナー申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'seminar application') || 'seminar application' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'SEMINAR APPLICATION') || 'SEMINAR APPLICATION' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
   },
   mounted() {

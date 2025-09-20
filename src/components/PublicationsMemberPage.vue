@@ -5,7 +5,7 @@
     <!-- Hero Section -->
     <HeroSection 
       title="刊行物"
-      subtitle="publications"
+      subtitle="PUBLICATIONS"
       heroImage="/img/Image_fx5.jpg"
     />
     
@@ -18,7 +18,7 @@
         <h2 class="page-title">刊行物</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">publications member</span>
+          <span class="title-english">PUBLICATIONS</span>
           <div class="line-right"></div>
         </div>
       </div>

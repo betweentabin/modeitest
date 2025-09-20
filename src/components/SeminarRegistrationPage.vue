@@ -397,7 +397,7 @@ export default {
   data() {
     return {
       pageTitle: 'セミナー申し込み',
-      pageSubtitle: 'seminar'
+      pageSubtitle: 'SEMINAR'
     };
   },
   methods: {

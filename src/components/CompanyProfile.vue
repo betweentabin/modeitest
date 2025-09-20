@@ -76,7 +76,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="philosophy_subtitle" tag="span" :fallback="'philosophy'" />
+            <CmsText pageKey="company-profile" fieldKey="philosophy_subtitle" tag="span" :fallback="'PHILOSOPHY'" />
           </span>
           <div class="divider-line"></div>
         </div>
@@ -121,7 +121,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="message_subtitle" tag="span" :fallback="'message'" />
+            <CmsText pageKey="company-profile" fieldKey="message_subtitle" tag="span" :fallback="'MESSAGE'" />
           </span>
           <div class="divider-line"></div>
         </div>
@@ -160,7 +160,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="profile_subtitle" tag="span" :fallback="'company profile'" />
+            <CmsText pageKey="company-profile" fieldKey="profile_subtitle" tag="span" :fallback="'COMPANY PROFILE'" />
           </span>
           <div class="divider-line"></div>
         </div>
@@ -234,7 +234,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="history_subtitle" tag="span" :fallback="'history'" />
+            <CmsText pageKey="company-profile" fieldKey="history_subtitle" tag="span" :fallback="'HISTORY'" />
           </span>
           <div class="divider-line"></div>
         </div>
@@ -349,7 +349,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="company-profile" fieldKey="financial_reports_subtitle" tag="span" :fallback="'financial reports'" />
+            <CmsText pageKey="company-profile" fieldKey="financial_reports_subtitle" tag="span" :fallback="'FINANCIAL REPORTS'" />
           </span>
           <div class="divider-line"></div>
         </div>
@@ -536,7 +536,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'ABOUT US') || 'ABOUT US' },
     staffEntries() {
       try {
         const content = this._pageText?.page?.value?.content

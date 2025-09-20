@@ -259,7 +259,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '特定商取引法に関する表記') || '特定商取引法に関する表記' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'transaction law') || 'transaction law' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'TRANSACTION LAW') || 'TRANSACTION LAW' },
     isEditPreview() {
       try {
         const hash = window.location.hash || ''

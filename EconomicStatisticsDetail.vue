@@ -67,7 +67,7 @@
       <!-- Hero Image -->
       <div class="hero-section">
         <div class="hero-overlay">
-          <div class="hero-subtitle">economic and statistical reports</div>
+          <div class="hero-subtitle">ECONOMIC AND STATISTICAL REPORTS</div>
           <div class="hero-title">経済・調査統計</div>
         </div>
       </div>
@@ -90,7 +90,7 @@
           <svg width="484" height="30" viewBox="0 0 484 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_643_2574)">
               <path d="M0 15H69" stroke="#DA5761" stroke-width="2"/>
-              <text fill="#DA5761" xml:space="preserve" font-family="Inter" font-size="20" font-weight="bold" x="84" y="22.2727">economic and statistical reports</text>
+              <text fill="#DA5761" xml:space="preserve" font-family="Inter" font-size="20" font-weight="bold" x="84" y="22.2727">ECONOMIC AND STATISTICAL REPORTS</text>
               <path d="M415 15H484" stroke="#DA5761" stroke-width="2"/>
             </g>
           </svg>

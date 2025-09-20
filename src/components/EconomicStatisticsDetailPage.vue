@@ -5,7 +5,7 @@
     <!-- Hero Section -->
     <HeroSection 
       title="経済・調査統計"
-      subtitle="economic statistics"
+      subtitle="ECONOMIC STATISTICS"
       heroImage="/img/Image_fx6.jpg"
       mediaKey="hero_economic_statistics"
       cms-page-key="economic-statistics"
@@ -20,7 +20,7 @@
         <h2 class="section-title">経済・調査統計</h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">economic statistics</span>
+          <span class="divider-text">ECONOMIC STATISTICS</span>
           <div class="divider-line"></div>
         </div>
       </div>

@@ -177,7 +177,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'contact') || 'contact' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'CONTACT') || 'CONTACT' },
     confirmTitle() { return this._pageText?.getText('confirm_title', 'お問い合わせ確認') || 'お問い合わせ確認' },
     confirmSubtitle() { return this._pageText?.getText('confirm_subtitle', 'contact confirm') || 'contact confirm' },
     confirmLabel() { return this._pageText?.getText('breadcrumb_confirm', '確認') || '確認' },

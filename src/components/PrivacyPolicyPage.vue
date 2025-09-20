@@ -143,7 +143,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'プライバシーポリシー') || 'プライバシーポリシー' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'privacy policy') || 'privacy policy' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'PRIVACY POLICY') || 'PRIVACY POLICY' },
     isEditPreview() {
       try {
         const hash = window.location.hash || ''

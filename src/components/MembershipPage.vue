@@ -46,7 +46,7 @@
           <div class="section-decoration">
             <div class="decoration-line"></div>
             <span class="decoration-text">
-              <CmsText :pageKey="cmsKey" fieldKey="services_label" tag="span" :fallback="'service'" />
+              <CmsText :pageKey="cmsKey" fieldKey="services_label" tag="span" :fallback="'SERVICE'" />
             </span>
             <div class="decoration-line"></div>
           </div>
@@ -63,7 +63,7 @@
                 <img :src="getImage('premium_service1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/ce302535d023990b1eca162e1afd7a0f8380e1dc?width=800')" alt="日経トップリーダー" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText :pageKey="cmsKey" fieldKey="premium_service1_tag" tag="span" :fallback="'consultation'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="premium_service1_tag" tag="span" :fallback="'CONSULTATION'" />
                   </span>
                   <h4 class="service-name">
                     <CmsText :pageKey="cmsKey" fieldKey="premium_service1_name" tag="span" :fallback="'日経トップリーダー'" />
@@ -85,7 +85,7 @@
                 <img :src="getImage('standard_service1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/bd8bbc9de4c9de4eb59eee7bc0cdac4b87af7876?width=800')" alt="ビジネスセミナー" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText :pageKey="cmsKey" fieldKey="standard_service1_tag" tag="span" :fallback="'consultation'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service1_tag" tag="span" :fallback="'CONSULTATION'" />
                   </span>
                   <h4 class="service-name">
                     <CmsText :pageKey="cmsKey" fieldKey="standard_service1_name" tag="span" :fallback="'ビジネスセミナー'" />
@@ -96,7 +96,7 @@
                 <img :src="getImage('standard_service2_image', 'https://api.builder.io/api/v1/image/assets/TEMP/960b36fb39767fc67e6b4a40be6051bee73138a8?width=800')" alt="マッチング" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText :pageKey="cmsKey" fieldKey="standard_service2_tag" tag="span" :fallback="'problem'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service2_tag" tag="span" :fallback="'PROBLEM'" />
                   </span>
                   <h4 class="service-name">
                     <CmsText :pageKey="cmsKey" fieldKey="standard_service2_name" tag="span" :fallback="'マッチング'" />
@@ -107,7 +107,7 @@
                 <img :src="getImage('standard_service3_image', 'https://api.builder.io/api/v1/image/assets/TEMP/33c870bec0d0bf29bf0782915d3a6f8fe1f96623?width=800')" alt="経済統計指標DL" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText :pageKey="cmsKey" fieldKey="standard_service3_tag" tag="span" :fallback="'problem'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service3_tag" tag="span" :fallback="'PROBLEM'" />
                   </span>
                   <h4 class="service-name">
                     <CmsText :pageKey="cmsKey" fieldKey="standard_service3_name" tag="span" :fallback="'経済統計指標DL'" />
@@ -118,7 +118,7 @@
                 <img :src="getImage('standard_service4_image', 'https://api.builder.io/api/v1/image/assets/TEMP/3a52b313c631d4d2f82f6039afa3a0b86b3c4f1e?width=800')" alt="地域経済統計レポート閲覧" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText :pageKey="cmsKey" fieldKey="standard_service4_tag" tag="span" :fallback="'consultation'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service4_tag" tag="span" :fallback="'CONSULTATION'" />
                   </span>
                   <h4 class="service-name">
                     <CmsText :pageKey="cmsKey" fieldKey="standard_service4_name" tag="span" :fallback="'地域経済統計レポート閲覧'" />
@@ -129,7 +129,7 @@
                 <img :src="getImage('standard_service5_image', 'https://api.builder.io/api/v1/image/assets/TEMP/4096c08b8615d6b9ef2adeb87f0b1f03ccb58429?width=800')" alt="経営相談" class="service-image" />
                 <div class="service-overlay">
                   <span class="service-tag">
-                    <CmsText :pageKey="cmsKey" fieldKey="standard_service5_tag" tag="span" :fallback="'problem'" />
+                    <CmsText :pageKey="cmsKey" fieldKey="standard_service5_tag" tag="span" :fallback="'PROBLEM'" />
                   </span>
                   <h4 class="service-name">
                     <CmsText :pageKey="cmsKey" fieldKey="standard_service5_name" tag="span" :fallback="'経営相談'" />
@@ -193,7 +193,7 @@
           <div class="section-decoration">
             <div class="decoration-line"></div>
             <span class="decoration-text">
-              <CmsText :pageKey="cmsKey" fieldKey="flow_label" tag="span" :fallback="'flow of joining'" />
+              <CmsText :pageKey="cmsKey" fieldKey="flow_label" tag="span" :fallback="'FLOW OF JOINING'" />
             </span>
             <div class="decoration-line"></div>
           </div>
@@ -314,7 +314,7 @@ export default {
     },
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', this.cmsKey === 'standard-membership' ? 'スタンダード会員' : '入会案内') || (this.cmsKey === 'standard-membership' ? 'スタンダード会員' : '入会案内') },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', this.cmsKey === 'standard-membership' ? 'standard membership' : 'membership') || (this.cmsKey === 'standard-membership' ? 'standard membership' : 'membership') },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', this.cmsKey === 'standard-membership' ? 'STANDARD MEMBERSHIP' : 'MEMBERSHIP') || (this.cmsKey === 'standard-membership' ? 'STANDARD MEMBERSHIP' : 'MEMBERSHIP') },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
     isEditPreview() {

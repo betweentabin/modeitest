@@ -5,7 +5,7 @@
     <!-- Hero Section -->
     <HeroSection 
       :title="pageTitle || 'お知らせ'"
-      :subtitle="pageSubtitle || 'information'"
+      :subtitle="pageSubtitle || 'INFORMATION'"
       heroImage="/img/Image_fx3.jpg"
       mediaKey="hero_news"
       cms-page-key="news"
@@ -22,7 +22,7 @@
         <div class="title-decoration">
           <div class="line-left"></div>
           <span class="title-english">
-            <CmsText pageKey="news" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle || 'information'" />
+            <CmsText pageKey="news" fieldKey="page_subtitle" tag="span" :fallback="pageSubtitle || 'INFORMATION'" />
           </span>
           <div class="line-right"></div>
         </div>
@@ -189,7 +189,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'お知らせ') || 'お知らせ' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'information') || 'information' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'INFORMATION') || 'INFORMATION' },
     filteredNews() {
       if (this.selectedCategory === 'all') {
         return this.newsItems

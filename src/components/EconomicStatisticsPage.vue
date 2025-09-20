@@ -250,7 +250,7 @@ export default {
       return this._pageText?.getText('page_title', '経済・調査統計') || '経済・調査統計'
     },
     pageSubtitle() {
-      return this._pageText?.getText('page_subtitle', 'economic statistics') || 'economic statistics'
+      return this._pageText?.getText('page_subtitle', 'ECONOMIC STATISTICS') || 'ECONOMIC STATISTICS'
     },
     ctaPrimaryText() {
       return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら'

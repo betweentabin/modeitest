@@ -284,7 +284,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '利用規約') || '利用規約' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'terms of service') || 'terms of service' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'TERMS OF SERVICE') || 'TERMS OF SERVICE' },
     isEditPreview() {
       try {
         const hash = window.location.hash || ''

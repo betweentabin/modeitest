@@ -44,7 +44,7 @@
           <div class="section-decoration">
             <div class="decoration-line"></div>
             <span class="decoration-text">
-              <CmsText pageKey="premium-membership" fieldKey="benefits_label" tag="span" :fallback="'benefits'" />
+              <CmsText pageKey="premium-membership" fieldKey="benefits_label" tag="span" :fallback="'BENEFITS'" />
             </span>
             <div class="decoration-line"></div>
           </div>
@@ -140,7 +140,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { try { return this._pageText?.getText('page_title', 'プレミアム会員') || 'プレミアム会員' } catch(e){ return 'プレミアム会員' } },
-    pageSubtitle() { try { return this._pageText?.getText('page_subtitle', 'premium membership') || 'premium membership' } catch(e){ return 'premium membership' } },
+    pageSubtitle() { try { return this._pageText?.getText('page_subtitle', 'PREMIUM MEMBERSHIP') || 'PREMIUM MEMBERSHIP' } catch(e){ return 'PREMIUM MEMBERSHIP' } },
     ctaPrimaryText() { try { return this._pageText?.getText('cta_primary', '会員についてお問い合わせ') || '会員についてお問い合わせ' } catch(e){ return '会員についてお問い合わせ' } },
     ctaSecondaryText() { try { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' } catch(e){ return '入会はこちら' } },
     isEditPreview() {

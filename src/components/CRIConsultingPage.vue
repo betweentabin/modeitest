@@ -29,7 +29,7 @@
         </h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text"><CmsText pageKey="cri-consulting" fieldKey="what_subtitle" tag="span" :fallback="'consulting'" /></span>
+          <span class="divider-text"><CmsText pageKey="cri-consulting" fieldKey="what_subtitle" tag="span" :fallback="'CONSULTING'" /></span>
           <div class="divider-line"></div>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <h2 class="section-title"><CmsText pageKey="cri-consulting" fieldKey="duties_title" tag="span" :fallback="'CRI経営コンサルティングの主な業務'" /></h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text"><CmsText pageKey="cri-consulting" fieldKey="duties_subtitle" tag="span" :fallback="'main duties'" /></span>
+          <span class="divider-text"><CmsText pageKey="cri-consulting" fieldKey="duties_subtitle" tag="span" :fallback="'MAIN DUTIES'" /></span>
           <div class="divider-line"></div>
         </div>
         <p class="section-subtitle"><CmsText pageKey="cri-consulting" fieldKey="duties_intro" tag="span" type="html" :fallback="'事業にまつわる様々をサポート行います。<br>当研究所のネットワークを活かし、御社の実情に合う専門家もご紹介できます。'" /></p>
@@ -83,7 +83,7 @@
         <h2 class="section-title"><CmsText pageKey="cri-consulting" fieldKey="support_title" tag="span" :fallback="'サポート内容と費用に関して'" /></h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text"><CmsText pageKey="cri-consulting" fieldKey="support_subtitle_en" tag="span" :fallback="'contents and costs'" /></span>
+          <span class="divider-text"><CmsText pageKey="cri-consulting" fieldKey="support_subtitle_en" tag="span" :fallback="'CONTENTS AND COSTS'" /></span>
           <div class="divider-line"></div>
         </div>
         <p class="section-subtitle"><CmsText pageKey="cri-consulting" fieldKey="support_intro" tag="span" type="html" :fallback="'経営改善とは会社の中の「人」が変わることです。<br>ご相談と問題点・課題の整理は無料です。まずは、お気軽にご相談ください。'" /></p>
@@ -96,14 +96,14 @@
             <div class="service-card">
               <img :src="media('support_free_consultation', 'https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590', 'support_free_consultation')" alt="Consultation" class="service-image" />
               <div class="service-info">
-                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="free_consultation_label" tag="span" :fallback="'consultation'" /></span>
+                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="free_consultation_label" tag="span" :fallback="'CONSULTATION'" /></span>
                 <h4 class="service-title">ご相談</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="media('support_free_problem', 'https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590', 'support_free_problem')" alt="Problem Analysis" class="service-image" />
               <div class="service-info">
-                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="free_problem_label" tag="span" :fallback="'problem'" /></span>
+                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="free_problem_label" tag="span" :fallback="'PROBLEM'" /></span>
                 <h4 class="service-title">問題点・課題の整理</h4>
               </div>
             </div>
@@ -118,28 +118,28 @@
             <div class="service-card">
               <img :src="media('support_paid_strategy', 'https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590', 'support_paid_strategy')" alt="Strategy Planning" class="service-image" />
               <div class="service-info">
-                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_strategy_label" tag="span" :fallback="'solutions'" /></span>
+                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_strategy_label" tag="span" :fallback="'SOLUTIONS'" /></span>
                 <h4 class="service-title">対応策の立案</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="media('support_paid_improvement', 'https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590', 'support_paid_improvement')" alt="Improvement Activities" class="service-image" />
               <div class="service-info">
-                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_improvement_label" tag="span" :fallback="'improvement'" /></span>
+                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_improvement_label" tag="span" :fallback="'IMPROVEMENT'" /></span>
                 <h4 class="service-title">改善に向けた活動</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="media('support_paid_analysis', 'https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590', 'support_paid_analysis')" alt="Analysis" class="service-image" />
               <div class="service-info">
-                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_analysis_label" tag="span" :fallback="'analysis'" /></span>
+                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_analysis_label" tag="span" :fallback="'ANALYSIS'" /></span>
                 <h4 class="service-title">分析（新たな課題認識）</h4>
               </div>
             </div>
             <div class="service-card">
               <img :src="media('support_paid_newbiz', 'https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590', 'support_paid_newbiz')" alt="New Business Activities" class="service-image" />
               <div class="service-info">
-                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_newbiz_label" tag="span" :fallback="'new business'" /></span>
+                <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_newbiz_label" tag="span" :fallback="'NEW BUSINESS'" /></span>
                 <h4 class="service-title">新たな事業活動</h4>
               </div>
             </div>
@@ -170,7 +170,7 @@
         <div class="section-divider">
           <div class="divider-line"></div>
           <span class="divider-text">
-            <CmsText pageKey="cri-consulting" fieldKey="achievements_subtitle" tag="span" :fallback="'achievements'" />
+            <CmsText pageKey="cri-consulting" fieldKey="achievements_subtitle" tag="span" :fallback="'ACHIEVEMENTS'" />
           </span>
           <div class="divider-line"></div>
         </div>
@@ -320,7 +320,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'consulting') || 'consulting' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'CONSULTING') || 'CONSULTING' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
     isEditPreview() {

@@ -18,7 +18,7 @@
         <h2 class="section-title">セミナー詳細</h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">seminar</span>
+          <span class="divider-text">SEMINAR</span>
           <div class="divider-line"></div>
         </div>
       </div>
