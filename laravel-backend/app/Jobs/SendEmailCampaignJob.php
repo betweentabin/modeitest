@@ -25,6 +25,13 @@ class SendEmailCampaignJob implements ShouldQueue
 
         $campaign->update(['status' => 'sending']);
 
+        // If there are no pending recipients, immediately mark as sent to avoid being stuck in "sending"
+        $pendingCount = EmailRecipient::where('campaign_id', $campaign->id)->where('status', 'pending')->count();
+        if ($pendingCount === 0) {
+            $campaign->update(['status' => 'sent']);
+            return;
+        }
+
         EmailRecipient::where('campaign_id', $campaign->id)
             ->where('status', 'pending')
             ->orderBy('id')

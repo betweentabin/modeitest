@@ -320,7 +320,17 @@ export default {
         const preview = params.has('cmsPreview') || params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
         if (preview) opts.preferAdmin = true
       } catch (_) {}
-      this._pageText.load(opts)
+      const p = this._pageText.load(opts)
+      if (p && typeof p.then === 'function') { p.then(() => { try { this.$forceUpdate() } catch(_) {} }) }
+      // Re-render when images map changes (ensures immediate reflection without resize)
+      try {
+        const readImages = () => {
+          const page = this._pageText && this._pageText.page && this._pageText.page.value
+          const imgs = page && page.content && page.content.images
+          try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
+        }
+        this.$watch(readImages, () => { try { this.$forceUpdate() } catch(_) {} })
+      } catch(_) {}
     } catch(e) { /* noop */ }
 
     // Setup per-page media mapping + watch for updates
