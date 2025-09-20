@@ -4,21 +4,26 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="刊行物"
-      subtitle="PUBLICATIONS"
+      cmsPageKey="publications"
+      titleFieldKey="page_title"
+      subtitleFieldKey="page_subtitle"
       heroImage="/img/Image_fx5.jpg"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['刊行物']" />
+    <Breadcrumbs :breadcrumbs="breadcrumbs" />
 
     <div class="page-content">
       <!-- Publications Header -->
       <div class="publications-header">
-        <h2 class="page-title">刊行物</h2>
+        <h2 class="page-title">
+          <CmsText pageKey="publications" fieldKey="header_title" tag="span" :fallback="'刊行物'" />
+        </h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">PUBLICATIONS</span>
+          <span class="title-english">
+            <CmsText pageKey="publications" fieldKey="header_subtitle" tag="span" :fallback="'publications member'" />
+          </span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -38,7 +43,8 @@
         </div>
 
         <!-- Download Button -->
-        <button class="filter-download-btn">さらに表示
+        <button class="filter-download-btn">
+          <CmsText pageKey="publications" fieldKey="show_more" tag="span" :fallback="'さらに表示'" />
           <div class="icon-box">
             <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="23" height="23" rx="5" fill="white"/>
@@ -50,7 +56,7 @@
         <!-- Category Filter -->
         <div class="category-filter">
           <button 
-            v-for="category in categories" 
+            v-for="category in displayCategories" 
             :key="category.id"
             :class="['category-btn', { active: selectedCategory === category.id }]"
             @click="selectCategory(category.id)"
@@ -66,9 +72,9 @@
             @change="selectCategory(selectedCategory)"
             class="category-select-mobile"
           >
-            <option value="">すべてのカテゴリ</option>
+            <option value="">{{ allCategoriesLabel }}</option>
             <option 
-              v-for="category in categories" 
+              v-for="category in displayCategories" 
               :key="category.id"
               :value="category.id"
             >
@@ -90,32 +96,32 @@
               <span class="featured-category">{{ getCategoryName(featuredPublication.category) }}</span>
               <MembershipBadge v-if="featuredPublication.membershipLevel && featuredPublication.membershipLevel !== 'free'" :level="featuredPublication.membershipLevel" />
             </div>
-            <div class="featured-details">
-              <div class="past-info-row">
-                <div class="info-label info-label-author">
-                  <span class="label-text">特別寄稿</span>
+              <div class="featured-details">
+                <div class="past-info-row">
+                  <div class="info-label info-label-author">
+                  <CmsText pageKey="publications" fieldKey="featured_author_label" tag="span" class="label-text" :fallback="'特別寄稿'" />
+                  </div>
+                  <div class="info-value">{{ featuredPublication.author }}</div>
                 </div>
-                <div class="info-value">{{ featuredPublication.author }}</div>
-              </div>
-              <div class="past-info-row">
-                <div class="info-label info-label-publisher">
-                  <span class="label-text">寄稿</span>
+                <div class="past-info-row">
+                  <div class="info-label info-label-publisher">
+                  <CmsText pageKey="publications" fieldKey="featured_publisher_label" tag="span" class="label-text" :fallback="'寄稿'" />
+                  </div>
+                  <div class="info-value">{{ featuredPublication.publisher }}</div>
                 </div>
-                <div class="info-value">{{ featuredPublication.publisher }}</div>
-              </div>
-              <div class="past-info-row">
-                <div class="info-label info-label-description">
-                  <span class="label-text">注目企業トップが語る</span>
+                <div class="past-info-row">
+                  <div class="info-label info-label-description">
+                  <CmsText pageKey="publications" fieldKey="featured_description_label" tag="span" class="label-text" :fallback="'注目企業トップが語る'" />
+                  </div>
+                  <div class="info-value">{{ featuredPublication.description }}</div>
                 </div>
-                <div class="info-value">{{ featuredPublication.description }}</div>
-              </div>
-              <div class="past-info-row">
-                <div class="info-label info-label-keywords">
-                  <span class="label-text">オンリーワンを目指して</span>
+                <div class="past-info-row">
+                  <div class="info-label info-label-keywords">
+                  <CmsText pageKey="publications" fieldKey="featured_keywords_label" tag="span" class="label-text" :fallback="'オンリーワンを目指して'" />
+                  </div>
+                  <div class="info-value">{{ featuredPublication.keywords }}</div>
                 </div>
-                <div class="info-value">{{ featuredPublication.keywords }}</div>
               </div>
-            </div>
 
             <button 
               class="download-btn"
@@ -174,17 +180,22 @@
       </div>
 
       <div v-if="loading" class="loading">
-        読み込み中...
+        {{ loadingLabel }}
       </div>
     </div>
 
     <!-- Action Button Section -->
     <ActionButton 
-      primary-text="お問い合わせはこちら"
-      secondary-text="入会はこちら"
       @primary-click="handleContactClick"
       @secondary-click="handleJoinClick"
-    />
+    >
+      <template #primaryText>
+        <CmsText pageKey="publications" fieldKey="cta_primary" tag="span" :fallback="'お問い合わせはこちら'" />
+      </template>
+      <template #secondaryText>
+        <CmsText pageKey="publications" fieldKey="cta_secondary" tag="span" :fallback="'入会はこちら'" />
+      </template>
+    </ActionButton>
 
     <!-- Contact CTA Section -->
     <ContactSection cms-page-key="publications" />
@@ -216,6 +227,8 @@ import apiCache from '@/services/apiCache'
 import mockServer from '@/mockServer';
 import MembershipBadge from './MembershipBadge.vue';
 import { mapGetters } from 'vuex';
+import CmsText from '@/components/CmsText.vue';
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "PublicationsMemberPage",
@@ -229,10 +242,13 @@ export default {
     AccessSection,
     FixedSideButtons,
     ActionButton,
-    MembershipBadge
+    MembershipBadge,
+    CmsText
   },
   data() {
+    const pageText = usePageText('publications')
     return {
+      pageText,
       frame132131753022Props: frame132131753022Data,
       loading: true,
       selectedYear: 'all',
@@ -242,7 +258,7 @@ export default {
       totalPages: 1,
       years: [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016],
       // カテゴリーはAPIから取得（初期は「全て」のみ）
-      categories: [ { id: 'all', name: '全て' } ],
+      categories: [],
       featuredPublication: {
         id: 1,
         title: '経営戦略に関する書籍',
@@ -423,10 +439,11 @@ export default {
     };
   },
   async mounted() {
+    try { await this.pageText.load() } catch (_) { /* ignore */ }
     // 即時描画: キャッシュがあれば使用
     try {
       const cachedCats = apiCache.get('pub:categories:member', 3600)
-      if (Array.isArray(cachedCats) && cachedCats.length) this.categories = cachedCats
+      if (Array.isArray(cachedCats) && cachedCats.length) this.categories = this.normalizeCategories(cachedCats)
       const cachedList = apiCache.get('pub:list:member:last', 300)
       if (Array.isArray(cachedList) && cachedList.length) {
         this.publications = cachedList
@@ -453,49 +470,68 @@ export default {
       });
       // 4列×3行=12個のレイアウトに合わせて最初の12個を返す
       return filtered.slice(0, 12);
+    },
+    breadcrumbs() {
+      const label = this.pageText?.getText ? this.pageText.getText('breadcrumb_label', '刊行物') : '刊行物'
+      return [{ text: label, link: '/publications' }]
+    },
+    allCategoriesLabel() {
+      return this.pageText?.getText ? this.pageText.getText('all_categories', 'すべてのカテゴリ') : 'すべてのカテゴリ'
+    },
+    displayCategories() {
+      const base = Array.isArray(this.categories) ? this.categories : []
+      return [{ id: 'all', name: this.allCategoriesLabel }, ...base]
+    },
+    loadingLabel() {
+      return this.pageText?.getText ? this.pageText.getText('loading', '読み込み中...') : '読み込み中...'
     }
   },
   methods: {
+    normalizeCategories(list) {
+      const seen = new Set()
+      return (Array.isArray(list) ? list : [])
+        .filter(item => item && typeof item.id === 'string')
+        .filter(item => {
+          const id = item.id
+          if (id === 'all') return false
+          if (seen.has(id)) return false
+          seen.add(id)
+          return true
+        })
+        .map(item => ({ id: item.id, name: typeof item.name === 'string' ? item.name : item.id }))
+    },
     async loadCategories() {
       try {
         // 公開APIから取得（管理で設定したカテゴリが反映）
         const res = await apiClient.getPublicPublicationCategories({ timeout: 3500 })
         if (res && res.success && Array.isArray(res.data)) {
-          const cats = [
-            { id: 'all', name: '全て' },
-            ...res.data.map(c => ({ id: c.slug, name: c.name }))
-          ]
-          this.categories = cats
-          apiCache.set('pub:categories:member', cats)
+          const cats = res.data.map(c => ({ id: c.slug, name: c.name }))
+          this.categories = this.normalizeCategories(cats)
+          apiCache.set('pub:categories:member', this.categories)
           return
         }
         // モックにフォールバック
         try {
           const cats = await mockServer.getPublicationCategories()
           if (cats && cats.length) {
-            this.categories = [
-              { id: 'all', name: '全て' },
-              ...cats.map(c => ({ id: c.slug, name: c.name }))
-            ]
+            this.categories = this.normalizeCategories(cats.map(c => ({ id: c.slug, name: c.name })))
             return
           }
         } catch (_) { /* noop */ }
         // 最後のフォールバック
-        this.categories = [
-          { id: 'all', name: '全て' },
+        this.categories = this.normalizeCategories([
           { id: 'research', name: '調査研究' },
           { id: 'quarterly', name: '定期刊行物' },
           { id: 'special', name: '特別企画' },
           { id: 'statistics', name: '統計資料' }
-        ]
+        ])
       } catch (e) {
-        this.categories = [
-          { id: 'all', name: '全て' },
+        this.categories = this.normalizeCategories([
           { id: 'research', name: '調査研究' },
           { id: 'quarterly', name: '定期刊行物' },
           { id: 'special', name: '特別企画' },
           { id: 'statistics', name: '統計資料' }
-        ]
+        ])
       }
     },
     async loadPublications(opts = { silent: false }) {
@@ -596,8 +632,9 @@ export default {
       await this.loadPublications();
     },
     getCategoryName(categoryId) {
+      if (categoryId === 'all') return this.allCategoriesLabel
       const category = this.categories.find(cat => cat.id === categoryId);
-      return category ? category.name : 'ちくぎん地域経済レポート';
+      return category ? category.name : this.pageText?.getText?.('default_category_label', 'ちくぎん地域経済レポート') || 'ちくぎん地域経済レポート';
     },
     formatDate(dateString) {
       if (!dateString) return ''

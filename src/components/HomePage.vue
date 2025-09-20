@@ -18,26 +18,74 @@
       <div class="frame-1321317457">
           <div class="frame-1321317490" :style="{ 'background-image': 'url(' + frame13213174901 + ')' }" @click="goToSeminar" style="cursor: pointer;">
             <div class="frame-1321317491">
-              <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text72 }}</div>
-              <div class="seminar valign-text-middle inter-bold-white-24px">{{ seminar }}</div>
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_seminar_label"
+                tag="div"
+                class="text-1 valign-text-middle inter-bold-white-15px"
+                :fallback="'セミナー'"
+              />
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_seminar_subtitle"
+                tag="div"
+                class="seminar valign-text-middle inter-bold-white-24px"
+                :fallback="'seminar'"
+              />
             </div>
           </div>
           <div class="frame-1321317491-1" :style="{ 'background-image': 'url(' + frame1321317491 + ')' }" @click="goToPublication" style="cursor: pointer;">
             <div class="frame-1321317491-2">
-              <div class="text-1 valign-text-middle inter-bold-white-15px">{{ text69 }}</div>
-              <div class="publications valign-text-middle inter-bold-white-24px">{{ publications1 }}</div>
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_publications_label"
+                tag="div"
+                class="text-1 valign-text-middle inter-bold-white-15px"
+                :fallback="'刊行物'"
+              />
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_publications_subtitle"
+                tag="div"
+                class="publications valign-text-middle inter-bold-white-24px"
+                :fallback="'publications'"
+              />
             </div>
           </div>
           <div class="frame-1321317490-1" :style="{ 'background-image': 'url(' + frame13213174902 + ')' }" @click="goToNews" style="cursor: pointer;">
             <div class="frame-1321317491-3">
-              <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text70 }}</div>
-              <div class="Information valign-text-middle inter-bold-white-24px">{{ Information1 }}</div>
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_information_label"
+                tag="div"
+                class="text-2 valign-text-middle inter-bold-white-16px"
+                :fallback="'各種情報'"
+              />
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_information_subtitle"
+                tag="div"
+                class="Information valign-text-middle inter-bold-white-24px"
+                :fallback="'information'"
+              />
             </div>
           </div>
           <div class="frame-1321317492" :style="{ 'background-image': 'url(' + frame1321317492 + ')' }" @click="goToMembership" style="cursor: pointer;">
             <div class="frame-1321317491-4">
-              <div class="text-2 valign-text-middle inter-bold-white-16px">{{ text71 }}</div>
-              <div class="membership valign-text-middle inter-bold-white-24px">{{ membership }}</div>
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_membership_label"
+                tag="div"
+                class="text-2 valign-text-middle inter-bold-white-16px"
+                :fallback="'会員について'"
+              />
+              <CmsText
+                pageKey="home"
+                fieldKey="tile_membership_subtitle"
+                tag="div"
+                class="membership valign-text-middle inter-bold-white-24px"
+                :fallback="'membership'"
+              />
             </div>
           </div>
         </div>
@@ -64,7 +112,13 @@
                 </div>
               </div>
               <div class="text-48">
-                <CmsText pageKey="home" fieldKey="about_body" tag="div" type="html" :fallback="text113" />
+                <CmsText
+                  pageKey="home"
+                  fieldKey="about_body"
+                  tag="div"
+                  type="html"
+                  :fallback="'当研究所は、産・官・学・金(金融機関)のネットワークによる様々な分野の調査研究を通じ、企業活動などをサポートします。<br><br>経済・社会・産業動向などに関する調査研究及び企業経営や県民の生活のお役に立つ情報をご提供するとともに、各種経済・文化団体の事務局活動等を通じて、地域社会に貢献することを目指しております。'"
+                />
               </div>
             </div>
           </div>
@@ -84,7 +138,7 @@
               </div>
               <div class="button arrow-dark" @click="$router.push('/aboutus')" style="cursor: pointer;">
                 <div class="text-55 valign-text-middle inter-bold-white-15px">
-                  <CmsText pageKey="home" fieldKey="cta_secondary" tag="span" :fallback="text120" />
+                  <CmsText pageKey="home" fieldKey="cta_secondary" tag="span" :fallback="'詳細はこちら'" />
                 </div>
                 <frame13213176122 />
               </div>
@@ -101,9 +155,21 @@
                      :src="vector11"
                      alt="Vector 6"
                    />
-                   <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text121 }}</div>
-                 </div>
-                 <div class="ation valign-text-middle inter-bold-black-48px">{{ Information2 }}</div>
+                  <CmsText
+                    pageKey="home"
+                    fieldKey="news_section_label"
+                    tag="div"
+                    class="text-36 valign-text-middle inter-bold-black-24px"
+                    :fallback="'お知らせ'"
+                  />
+                </div>
+                <CmsText
+                  pageKey="home"
+                  fieldKey="news_section_heading"
+                  tag="div"
+                  class="ation valign-text-middle inter-bold-black-48px"
+                  :fallback="'INFORMATION'"
+                />
                </div>
                <x-button3 class="desktop-button" @click="goToNewsList" />
              </div>
@@ -153,9 +219,21 @@
                   :src="vector11"
                   alt="Vector 6"
                 />
-                <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text101 }}</div>
+                <CmsText
+                  pageKey="home"
+                  fieldKey="publications_section_label"
+                  tag="div"
+                  class="text-36 valign-text-middle inter-bold-black-24px"
+                  :fallback="'刊行物'"
+                />
               </div>
-              <div class="ation valign-text-middle inter-bold-black-48px">{{ publications2 }}</div>
+              <CmsText
+                pageKey="home"
+                fieldKey="publications_section_heading"
+                tag="div"
+                class="ation valign-text-middle inter-bold-black-48px"
+                :fallback="'PUBLICATIONS'"
+              />
             </div>
           </div>
           <div class="frame-1321317472">
@@ -272,9 +350,21 @@
                   :src="vector11"
                   alt="Vector 6"
                 />
-                <div class="text-36 valign-text-middle inter-bold-black-24px">{{ text104 }}</div>
+                <CmsText
+                  pageKey="home"
+                  fieldKey="other_info_section_label"
+                  tag="div"
+                  class="text-36 valign-text-middle inter-bold-black-24px"
+                  :fallback="'その他の情報'"
+                />
               </div>
-              <div class="ation valign-text-middle inter-bold-black-48px">{{ otherInformation }}</div>
+              <CmsText
+                pageKey="home"
+                fieldKey="other_info_section_heading"
+                tag="div"
+                class="ation valign-text-middle inter-bold-black-48px"
+                :fallback="'OTHER Information'"
+              />
             </div>
           </div>
           <div class="content-view-1">
@@ -286,8 +376,20 @@
                     <img class="x2-2-1" :src="x222" alt="2 2" />
                     <div class="overlap-group2">
                       <div class="flex-col-2">
-                        <div class="text-4 valign-text-middle inter-semi-bold-ship-gray-12px">{{ text108 }}</div>
-                        <div class="viwe-more valign-text-middle inter-normal-ship-gray-10px">{{ viweMore2 }}</div>
+                        <CmsText
+                          pageKey="home"
+                          fieldKey="other_info_economic_label"
+                          tag="div"
+                          class="text-4 valign-text-middle inter-semi-bold-ship-gray-12px"
+                          :fallback="'経済指標'"
+                        />
+                        <CmsText
+                          pageKey="home"
+                          fieldKey="other_info_economic_cta"
+                          tag="div"
+                          class="viwe-more valign-text-middle inter-normal-ship-gray-10px"
+                          :fallback="'Viwe More .'"
+                        />
                       </div>
                       <div class="caret-right">
                         <img
@@ -302,8 +404,20 @@
                     <img class="x2-3" :src="x23" alt="2 3" />
                     <div class="overlap-group-2">
                       <div class="flex-col">
-                        <div class="text-4 valign-text-middle inter-semi-bold-ship-gray-12px">{{ text106 }}</div>
-                        <div class="viwe-more valign-text-middle inter-normal-ship-gray-10px">{{ viweMore3 }}</div>
+                        <CmsText
+                          pageKey="home"
+                          fieldKey="other_info_financial_label"
+                          tag="div"
+                          class="text-4 valign-text-middle inter-semi-bold-ship-gray-12px"
+                          :fallback="'決算報告'"
+                        />
+                        <CmsText
+                          pageKey="home"
+                          fieldKey="other_info_financial_cta"
+                          tag="div"
+                          class="viwe-more valign-text-middle inter-normal-ship-gray-10px"
+                          :fallback="'Viwe More .'"
+                        />
                       </div>
                       <div class="caret-right">
                         <img
@@ -318,8 +432,20 @@
                     <img class="x2-4" :src="x24" alt="2 4" />
                     <div class="overlap-group-2">
                       <div class="flex-col">
-                        <div class="text-4 valign-text-middle inter-semi-bold-ship-gray-12px">{{ text107 }}</div>
-                        <div class="viwe-more valign-text-middle inter-normal-ship-gray-10px">{{ viweMore4 }}</div>
+                        <CmsText
+                          pageKey="home"
+                          fieldKey="other_info_glossary_label"
+                          tag="div"
+                          class="text-4 valign-text-middle inter-semi-bold-ship-gray-12px"
+                          :fallback="'用語集'"
+                        />
+                        <CmsText
+                          pageKey="home"
+                          fieldKey="other_info_glossary_cta"
+                          tag="div"
+                          class="viwe-more valign-text-middle inter-normal-ship-gray-10px"
+                          :fallback="'Viwe More .'"
+                        />
                       </div>
                       <div class="caret-right">
                         <img
@@ -465,28 +591,11 @@ export default {
       cmsSlides: [],
       // Import data from homePageData
       heroImage: homePageData.heroImage,
-      text66: homePageData.text66,
-      text67: homePageData.text67,
-      text68: homePageData.text68,
       frame13213174901: homePageData.frame13213174901,
-      text72: homePageData.text72,
-      seminar: homePageData.seminar,
       frame1321317491: homePageData.frame1321317491,
-      text69: homePageData.text69,
-      publications1: homePageData.publications1,
       frame13213174902: homePageData.frame13213174902,
-      text70: homePageData.text70,
-      Information1: homePageData.Information1,
       frame1321317492: homePageData.frame1321317492,
-      text71: homePageData.text71,
-      membership: homePageData.membership,
-      text112: homePageData.text112,
-      forYou: homePageData.forYou,
-      text113: homePageData.text113,
       image1: homePageData.image1,
-      text120: homePageData.text120,
-      Information2: homePageData.Information2,
-      text121: homePageData.text121,
       date1: homePageData.date1,
       hotInformationVol319: homePageData.hotInformationVol319,
       vector3: homePageData.vector3,
@@ -501,25 +610,14 @@ export default {
       date5: homePageData.date5,
       hotInformationVol3162: homePageData.hotInformationVol3162,
       vector12: homePageData.vector12,
-      text101: homePageData.text101,
-      publications2: homePageData.publications2,
       x221: homePageData.x221,
       date6: homePageData.date6,
-      viweMore1: homePageData.viweMore1,
       hotInformationVol324: homePageData.hotInformationVol324,
-      text104: homePageData.text104,
-      otherInformation: homePageData.otherInformation,
       x222: homePageData.x222,
-      text108: homePageData.text108,
-      viweMore2: homePageData.viweMore2,
       vector17: homePageData.vector17,
       x23: homePageData.x23,
-      text106: homePageData.text106,
-      viweMore3: homePageData.viweMore3,
       vector19: homePageData.vector19,
       x24: homePageData.x24,
-      text107: homePageData.text107,
-      viweMore4: homePageData.viweMore4,
       vector21: homePageData.vector21,
 
 

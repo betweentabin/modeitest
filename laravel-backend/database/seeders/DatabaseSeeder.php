@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
             CompanyProfilePageJsonSeeder::class,
             SitemapPageJsonSeeder::class,
             ContactPageJsonSeeder::class,
+            NewsPageJsonSeeder::class,
             NavigationPageJsonSeeder::class,
             FooterPageJsonSeeder::class,
             PublicationsPageJsonSeeder::class,
