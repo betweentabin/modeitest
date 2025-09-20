@@ -12,7 +12,7 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['経済・調査統計']" />
+    <Breadcrumbs :breadcrumbs="[statistics?.title || '経済・調査統計']" />
 
     <!-- Economic Statistics Detail Section -->
     <section class="statistics-detail-section" v-if="statistics">

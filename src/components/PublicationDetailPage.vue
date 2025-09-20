@@ -165,7 +165,6 @@ export default {
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', 'メンバー登録はこちら') || 'メンバー登録はこちら' },
     breadcrumbs() {
       return [
-        { text: '刊行物', link: '/publications' },
         { text: this.publication?.title || '刊行物詳細' }
       ]
     },
