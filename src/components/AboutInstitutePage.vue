@@ -206,6 +206,15 @@ export default {
         if (preview) opts.preferAdmin = true
       } catch (_) {}
       this._pageText.load(opts)
+      // Re-render when page content (especially images) changes
+      try {
+        const readImages = () => {
+          const page = this._pageText && this._pageText.page && this._pageText.page.value
+          const imgs = page && page.content && page.content.images
+          try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
+        }
+        this.$watch(readImages, () => { try { this.$forceUpdate() } catch(_) {} })
+      } catch(_) {}
     } catch (_) {}
 
     // Media registry (page-scoped + global) for responsive assets
@@ -251,7 +260,7 @@ export default {
           this.__reloading = true
           try {
             const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
-            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
           } catch(_) { this.__reloading = false }
         }
       }
@@ -264,7 +273,7 @@ export default {
           this.__reloading = true
           try {
             const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
-            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; })
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
           } catch(_) { this.__reloading = false }
         }
       }
@@ -289,7 +298,7 @@ export default {
           try {
             const meta = (v && typeof v === 'object') ? v : null
             const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
-            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+            if (ver && typeof url === 'string' && url.indexOf('/storage/') !== -1) {
               url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
             }
           } catch (_) {}

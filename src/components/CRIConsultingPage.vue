@@ -393,7 +393,7 @@ export default {
           try {
             const meta = (v && typeof v === 'object') ? v : null
             const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
-            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+            if (ver && typeof url === 'string' && url.indexOf('/storage/') !== -1) {
               url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
             }
           } catch(_) {}
