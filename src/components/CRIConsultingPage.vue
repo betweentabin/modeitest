@@ -292,6 +292,31 @@ export default {
       frame132131753022Props: homePageData.frame132131753022Props,
     };
   },
+  created() {
+    // 1) Pre-hydrate PageContent from local cache to suppress initial flicker
+    try {
+      this._pageText = usePageText(this.pageKey)
+      // Local cache hydration happens inside load(); kick it as early as possible
+      this._pageText.load({}).catch(() => {})
+      // Also keep a shallow copy of cached images for media() to use before async loads
+      try {
+        const raw = localStorage.getItem('page_content_cache:' + this.pageKey)
+        const cached = (raw && (raw.trim().startsWith('{') || raw.trim().startsWith('['))) ? JSON.parse(raw) : null
+        const imgs = cached?.content?.images
+        this._prefillImages = (imgs && typeof imgs === 'object') ? imgs : {}
+      } catch(_) { this._prefillImages = {} }
+    } catch(_) { /* noop */ }
+    // 2) Ensure page media registry early so responsive slots are ready on first render
+    try {
+      import('@/composables/usePageMedia').then(mod => {
+        try {
+          const { usePageMedia } = mod
+          this._pageMedia = usePageMedia()
+          this._pageMedia.ensure(this.pageKey).catch(() => {})
+        } catch(_) {}
+      })
+    } catch(_) {}
+  },
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'CRI 経営コンサルティング') || 'CRI 経営コンサルティング' },
@@ -402,6 +427,23 @@ export default {
   methods: {
     media(key, fallback = '', mediaKey = '') {
       // Prefer page-managed images (with cache-busting), then page media mapping, then global media
+      try {
+        // 0) prefill from cached images to avoid initial static fallback
+        const imgs0 = this._prefillImages
+        if (imgs0 && Object.prototype.hasOwnProperty.call(imgs0, key)) {
+          const v0 = imgs0[key]
+          let u0 = (v0 && typeof v0 === 'object') ? (v0.url || '') : (typeof v0 === 'string' ? v0 : '')
+          if (typeof u0 === 'string' && u0) {
+            try {
+              const ver = (v0 && typeof v0 === 'object' && v0.uploaded_at) ? (Date.parse(v0.uploaded_at) || null) : null
+              if (ver !== null && u0.startsWith('/storage/')) {
+                u0 += (u0.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
+            } catch(_) {}
+            return u0
+          }
+        }
+      } catch(_) {}
       try {
         const page = this._pageText && this._pageText.page && this._pageText.page.value
         const imgs = page && page.content && page.content.images

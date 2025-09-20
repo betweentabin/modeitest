@@ -13,6 +13,19 @@ const API_CONFIG = {
 
 // 現在の環境を判定
 const getCurrentEnvironment = () => {
+  try {
+    // 明示オーバーライド（localStorage or クエリ）
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams((window.location.search || '').replace(/^\?/, ''))
+      const q = params.get('realApi') || params.get('useRealApi') || params.get('use_real_api')
+      if (q === '1' || q === 'true') {
+        try { localStorage.setItem('use_real_api', '1') } catch(_) {}
+      }
+      const ls = (()=>{ try { return localStorage.getItem('use_real_api') } catch(_) { return null } })()
+      if (ls === '1') return 'development' // Railwayの本番APIへ
+    }
+  } catch(_) {}
+
   // Vercelデプロイ時は本番APIを使用
   if (process.env.NODE_ENV === 'production') {
     return 'production'

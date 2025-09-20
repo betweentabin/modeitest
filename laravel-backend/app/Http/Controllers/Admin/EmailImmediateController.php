@@ -35,6 +35,7 @@ class EmailImmediateController extends Controller
         // Decide mailer (fallback to log if SMTP is not configured)
         $mailer = config('mail.default', 'smtp');
         $smtpHost = config('mail.mailers.smtp.host');
+        $smtpDsn  = config('mail.mailers.smtp.url');
         $dryRun = filter_var(env('MAIL_DRY_RUN', false), FILTER_VALIDATE_BOOLEAN);
         if ($mailer === 'resend') {
             // Use Resend API path
@@ -55,7 +56,8 @@ class EmailImmediateController extends Controller
             (new \App\Services\Mailer\ResendMailer())->send($payload);
             return response()->json(['success' => true, 'message' => 'Email sent via Resend', 'mailer' => 'resend']);
         }
-        if ($dryRun || ($mailer === 'smtp' && (empty($smtpHost) || $smtpHost === 'smtp.mailgun.org'))) {
+        // Fallback to log only when SMTP is clearly unconfigured AND no DSN is provided
+        if ($dryRun || ($mailer === 'smtp' && empty($smtpDsn) && (empty($smtpHost) || $smtpHost === 'smtp.mailgun.org'))) {
             // In dry-run or when SMTP looks unconfigured, use log mailer to avoid hanging
             $mailer = 'log';
         }

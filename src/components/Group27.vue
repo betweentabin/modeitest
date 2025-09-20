@@ -10,22 +10,30 @@
         <view3 />
       </div>
         <div class="x839-0864 valign-text-middle">
-          <span class="postal-code">〒839-0864</span><span class="address">福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階</span><br />電話番号. 0942-46-5081　営業時間.
-          平日9:00-17:00
+          <span class="postal-code"><CmsText pageKey="footer" fieldKey="footer_postal_code" tag="span" :fallback="'〒839-0864'" /></span>
+          <span class="address"><CmsText pageKey="footer" fieldKey="footer_address_line" tag="span" type="html" :fallback="'福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階'" /></span>
+          <br />
+          <span class="phone-label"><CmsText pageKey="footer" fieldKey="footer_phone_label" tag="span" :fallback="'電話番号.'" /></span>
+          <span class="phone-value"><CmsText pageKey="footer" fieldKey="footer_phone_value" tag="span" :fallback="'0942-46-5081'" /></span>
+          　
+          <span class="hours-label"><CmsText pageKey="footer" fieldKey="footer_hours_label" tag="span" :fallback="'営業時間.'" /></span>
+          <span class="hours-value"><CmsText pageKey="footer" fieldKey="footer_hours_value" tag="span" :fallback="'平日9:00-17:00'" /></span>
         </div>
     </div>
     <p class="copyright-c-the-ch valign-text-middle">
-      Copyright (C) The Chikugin Research Institute For Regional Economy Co.,Ltd All rights reserved.
+      <CmsText pageKey="footer" fieldKey="footer_copyright" tag="span" :fallback="'Copyright (C) The Chikugin Research Institute For Regional Economy Co.,Ltd All rights reserved.'" />
     </p>
   </div>
 </template>
 
 <script>
 import View3 from "./View3";
+import CmsText from '@/components/CmsText.vue'
 export default {
   name: "Group27",
   components: {
     View3,
+    CmsText,
   },
 };
 </script>

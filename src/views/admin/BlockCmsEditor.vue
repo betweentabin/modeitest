@@ -732,6 +732,32 @@
               <label>{{ displayLabel(key) }}</label>
               <input v-model="footerTexts[key]" class="input" />
             </div>
+
+            <div class="section-title">常設情報（住所・電話・営業時間・著作権）</div>
+            <div class="field">
+              <label>{{ displayLabel('footer_postal_code') }}</label>
+              <input v-model="footerTexts.footer_postal_code" class="input" placeholder="例）〒839-0864" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('footer_address_line', true) }}</label>
+              <textarea v-model="footerTexts.footer_address_line" class="textarea" rows="3" placeholder="住所（HTML可）"></textarea>
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('footer_phone_label') }}</label>
+              <input v-model="footerTexts.footer_phone_label" class="input" placeholder="例）電話番号." />
+              <label>{{ displayLabel('footer_phone_value') }}</label>
+              <input v-model="footerTexts.footer_phone_value" class="input" placeholder="例）0942-46-5081" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('footer_hours_label') }}</label>
+              <input v-model="footerTexts.footer_hours_label" class="input" placeholder="例）営業時間." />
+              <label>{{ displayLabel('footer_hours_value') }}</label>
+              <input v-model="footerTexts.footer_hours_value" class="input" placeholder="例）平日9:00-17:00" />
+            </div>
+            <div class="field">
+              <label>{{ displayLabel('footer_copyright', true) }}</label>
+              <textarea v-model="footerTexts.footer_copyright" class="textarea" rows="2" placeholder="Copyright 表示（HTML可）"></textarea>
+            </div>
           </template>
 
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
@@ -2569,7 +2595,14 @@ export default {
           link_legal: 'フッター：特定商取引法に関する表記',
           link_privacy: 'フッター：プライバシーポリシー',
           link_terms: 'フッター：利用規約',
-          link_sitemap: 'フッター：サイトマップ'
+          link_sitemap: 'フッター：サイトマップ',
+          footer_postal_code: 'フッター：郵便番号',
+          footer_address_line: 'フッター：住所（HTML）',
+          footer_phone_label: 'フッター：電話番号（ラベル）',
+          footer_phone_value: 'フッター：電話番号（値）',
+          footer_hours_label: 'フッター：営業時間（ラベル）',
+          footer_hours_value: 'フッター：営業時間（値）',
+          footer_copyright: 'フッター：著作権表示（HTML）'
         }
       },
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
@@ -3321,8 +3354,13 @@ export default {
           })).filter(it => it.label || it.url) : []
         })).filter(r => r.fiscal_year || r.date_label || (r.items && r.items.length)) : []
         const payload = { content: { financial_reports: reports }, is_published: true }
-        await apiClient.adminUpdatePageContent('company-profile', payload)
-        alert('決算報告を保存しました')
+        const res = await apiClient.adminUpdatePageContent('company-profile', payload)
+        if (res && res.success) {
+          alert('決算報告を保存しました')
+        } else {
+          const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
+          alert(msg)
+        }
       } catch (e) {
         alert('保存に失敗しました')
       }
@@ -3911,7 +3949,12 @@ export default {
           return
         }
         const res = await apiClient.adminUpdatePageContent(built.pageKey, built.payload)
-        if (res) alert('保存しました')
+        if (res && res.success) {
+          alert('保存しました')
+        } else {
+          const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
+          alert(msg)
+        }
       } catch(_) { alert('保存に失敗しました') }
     },
     openCreate(){ this.showCreate = true },

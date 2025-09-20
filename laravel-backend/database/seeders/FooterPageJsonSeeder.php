@@ -33,6 +33,14 @@ class FooterPageJsonSeeder extends Seeder
             'link_privacy' => 'プライバシーポリシー',
             'link_terms' => '利用規約',
             'link_sitemap' => 'サイトマップ',
+            // 常設情報（住所・電話・営業時間・著作権）
+            'footer_postal_code' => '〒839-0864',
+            'footer_address_line' => '福岡県久留米市百年公園1番1号 久留米リサーチセンタービル6階',
+            'footer_phone_label' => '電話番号.',
+            'footer_phone_value' => '0942-46-5081',
+            'footer_hours_label' => '営業時間.',
+            'footer_hours_value' => '平日9:00-17:00',
+            'footer_copyright' => 'Copyright (C) The Chikugin Research Institute For Regional Economy Co.,Ltd All rights reserved.',
         ];
 
         $page = PageContent::where('page_key', $key)->first();
@@ -53,4 +61,3 @@ class FooterPageJsonSeeder extends Seeder
         $page->update(['title' => $page->title ?: 'フッター', 'content' => $content]);
     }
 }
-
