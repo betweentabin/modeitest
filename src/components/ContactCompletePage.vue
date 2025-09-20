@@ -21,7 +21,7 @@
           <h1 class="form-title">お問い合わせ完了</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">contact complete</span>
+            <span class="divider-text">CONTACT COMPLETE</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">

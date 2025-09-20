@@ -167,7 +167,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '経済指標一覧') || '経済指標一覧' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'economic indicators') || 'economic indicators' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'ECONOMIC INDICATORS') || 'ECONOMIC INDICATORS' },
   },
   async mounted() {
     // ページ文言（タイトル等）をCMSから読込

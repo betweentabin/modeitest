@@ -273,7 +273,7 @@ export default {
     },
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'contact') || 'contact' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'CONTACT') || 'CONTACT' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
     isEditPreview() {
       try {

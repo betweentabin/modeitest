@@ -19,7 +19,7 @@
           <h1 class="form-title">セミナー申し込み完了</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">seminar application complete</span>
+            <span class="divider-text">SEMINAR APPLICATION COMPLETE</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">

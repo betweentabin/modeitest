@@ -52,7 +52,7 @@
           <h2 class="section-title">現在予約受付中のセミナー</h2>
           <div class="section-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">seminar</span>
+            <span class="divider-text">SEMINAR</span>
             <div class="divider-line"></div>
           </div>
           <p class="section-description">現在予約受付中のセミナーです。ご興味の方は、ご予約をしてください</p>
@@ -126,7 +126,7 @@
           <h2 class="section-title">過去のセミナー</h2>
           <div class="section-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">seminar</span>
+            <span class="divider-text">SEMINAR</span>
             <div class="divider-line"></div>
           </div>
           <p class="section-description">以前行われたセミナーのバックナンバーです。</p>

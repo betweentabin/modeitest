@@ -5,14 +5,17 @@
     <!-- Hero Section -->
     <HeroSection 
       title="経済・調査統計"
-      subtitle="economic statistics"
+      subtitle="ECONOMIC STATISTICS"
       heroImage="/img/Image_fx6.jpg"
       mediaKey="hero_economic_statistics"
       cms-page-key="economic-statistics"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['経済・調査統計']" />
+    <Breadcrumbs :breadcrumbs="[
+      { text: '経済・調査統計', link: '/economic-statistics' },
+      { text: statistics?.title || '経済・調査統計詳細' }
+    ]" />
 
     <!-- Economic Statistics Detail Section -->
     <section class="statistics-detail-section" v-if="statistics">
@@ -20,7 +23,7 @@
         <h2 class="section-title">経済・調査統計</h2>
         <div class="section-divider">
           <div class="divider-line"></div>
-          <span class="divider-text">economic statistics</span>
+          <span class="divider-text">ECONOMIC STATISTICS</span>
           <div class="divider-line"></div>
         </div>
       </div>

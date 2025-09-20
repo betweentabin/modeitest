@@ -5,7 +5,7 @@
     <!-- Hero Section -->
     <HeroSection 
       :title="pageTitle || '用語集'"
-      :subtitle="pageSubtitle || 'glossary'"
+      :subtitle="pageSubtitle || 'GLOSSARY'"
       cms-page-key="glossary"
       heroImage="/img/hero-image.png"
       mediaKey="hero_glossary"
@@ -180,7 +180,7 @@ export default {
     // Page text helpers
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '用語集') || '用語集' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'Glossary') || 'Glossary' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'GLOSSARY') || 'GLOSSARY' },
     isEditPreview() {
       try {
         const hash = window.location.hash || ''

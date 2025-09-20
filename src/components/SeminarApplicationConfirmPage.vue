@@ -175,7 +175,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'セミナー申し込み') || 'セミナー申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'seminar application') || 'seminar application' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'SEMINAR APPLICATION') || 'SEMINAR APPLICATION' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
     confirmLabel() { return this._pageText?.getText('breadcrumb_confirm', '確認') || '確認' },
     stepInput() { return this._pageText?.getText('step_input', '①お客様情報の入力') || '①お客様情報の入力' },

@@ -630,7 +630,7 @@ const TEXT_LIMITS = {
 // 初心者向けのキー説明
 const KEY_HELP = {
   page_title: { label: 'ページタイトル', desc: 'ページの大見出しに表示されます', placeholder: '例）経済・調査統計' },
-  page_subtitle: { label: 'サブタイトル（英字など）', desc: 'タイトル下に小さく英字等で表示', placeholder: '例）economic statistics' },
+  page_subtitle: { label: 'サブタイトル（英字など）', desc: 'タイトル下に小さく英字等で表示', placeholder: '例）ECONOMIC STATISTICS' },
   lead: { label: 'リード文', desc: 'ページ冒頭の説明文（任意）', placeholder: 'ページの概要を1〜2文で書きます' },
   cta_primary: { label: 'メインボタン文言', desc: '主ボタンのテキスト', placeholder: '例）お問い合わせはこちら' },
   cta_secondary: { label: 'サブボタン文言', desc: '副ボタンのテキスト', placeholder: '例）入会はこちら' },

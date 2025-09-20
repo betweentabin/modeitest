@@ -206,7 +206,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'サイトマップ') || 'サイトマップ' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'sitemap') || 'sitemap' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'SITEMAP') || 'SITEMAP' },
     ctaPrimaryText() { return this._pageText?.getText('cta_primary', 'お問い合わせはこちら') || 'お問い合わせはこちら' },
     ctaSecondaryText() { return this._pageText?.getText('cta_secondary', '入会はこちら') || '入会はこちら' },
     isEditPreview() {
