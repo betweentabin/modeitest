@@ -208,10 +208,12 @@ export default {
       if (typeof val === 'object' && val.url) {
         let url = String(val.url)
         try {
-          if (url.startsWith('/storage/')) {
-            // Cache-bust storage URLs using uploaded_at when available
-            const ver = val.uploaded_at ? (Date.parse(val.uploaded_at) || Date.now()) : Date.now()
-            url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+          if (url.startsWith('/storage/') && val.uploaded_at) {
+            // Cache-bust storage URLs only when uploaded_at is present
+            const ver = (Date.parse(val.uploaded_at) || null)
+            if (ver !== null) {
+              url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
           }
         } catch (_) { /* noop */ }
         return resolveMediaUrl(url)

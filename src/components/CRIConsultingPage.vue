@@ -35,7 +35,7 @@
       </div>
       
       <div class="content-container">
-        <img :src="slotImage('what_image', 'https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940')" alt="Consulting Image" class="content-image" />
+        <img :src="media('what_image', 'https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940', 'what_image')" alt="Consulting Image" class="content-image" />
         <div class="content-text">
           <h3 class="content-subtitle"><CmsText pageKey="cri-consulting" fieldKey="what_content_subtitle" tag="span" :fallback="`What's CRI Management Consulting`" /></h3>
           <h4 class="content-heading"><CmsText pageKey="cri-consulting" fieldKey="what_content_heading" tag="span" :fallback="'CRI経営コンサルティングとは、事業でお悩みの皆様に対し、アドバイス、サポートするサービスです'" /></h4>
@@ -66,7 +66,7 @@
             <CmsText pageKey="cri-consulting" fieldKey="duties_list" tag="div" type="html" :fallback="`<div>・経営戦略策定のサポート</div><div>・ビジネスマッチィングの支援</div><div>・事業継承の支援（後継者育成支援）</div><div>・社員研修、経営計画策定のための人材育成</div><div>・税務、財務、事務など各業務の課題解決力の育成</div><div>・事務省力化のサポート</div><div>・人事制度の策定</div><div>・ワンストップのよろず屋相談</div>`" />
           </div>
         </div>
-        <img :src="slotImage('duties_image', 'https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304')" alt="Main Duties Image" class="duties-image" />
+        <img :src="media('duties_image', 'https://api.builder.io/api/v1/image/assets/TEMP/25a28ba9ea089f902a21c4d02c416034111f837a?width=1304', 'duties_image')" alt="Main Duties Image" class="duties-image" />
       </div>
       
       <p class="duties-description">
@@ -94,14 +94,14 @@
           <h3 class="category-title"><CmsText pageKey="cri-consulting" fieldKey="support_free_title" tag="span" :fallback="'無料 -FREE-'" /></h3>
           <div class="service-grid">
             <div class="service-card">
-              <img :src="slotImage('support_free_consultation', 'https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590')" alt="Consultation" class="service-image" />
+              <img :src="media('support_free_consultation', 'https://api.builder.io/api/v1/image/assets/TEMP/33cee256926cd28b9a1a674d35fd9166a56602c3?width=590', 'support_free_consultation')" alt="Consultation" class="service-image" />
               <div class="service-info">
                 <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="free_consultation_label" tag="span" :fallback="'consultation'" /></span>
                 <h4 class="service-title">ご相談</h4>
               </div>
             </div>
             <div class="service-card">
-              <img :src="slotImage('support_free_problem', 'https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590')" alt="Problem Analysis" class="service-image" />
+              <img :src="media('support_free_problem', 'https://api.builder.io/api/v1/image/assets/TEMP/31768edf86418d36cb69d49cceebe7329e674e2b?width=590', 'support_free_problem')" alt="Problem Analysis" class="service-image" />
               <div class="service-info">
                 <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="free_problem_label" tag="span" :fallback="'problem'" /></span>
                 <h4 class="service-title">問題点・課題の整理</h4>
@@ -116,28 +116,28 @@
           <h3 class="category-title"><CmsText pageKey="cri-consulting" fieldKey="support_paid_title" tag="span" :fallback="'有料 -PAID-'" /></h3>
           <div class="service-grid">
             <div class="service-card">
-              <img :src="slotImage('support_paid_strategy', 'https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590')" alt="Strategy Planning" class="service-image" />
+              <img :src="media('support_paid_strategy', 'https://api.builder.io/api/v1/image/assets/TEMP/3ae2d367ee53d3693e55ab25762bbc22b1e79db3?width=590', 'support_paid_strategy')" alt="Strategy Planning" class="service-image" />
               <div class="service-info">
                 <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_strategy_label" tag="span" :fallback="'solutions'" /></span>
                 <h4 class="service-title">対応策の立案</h4>
               </div>
             </div>
             <div class="service-card">
-              <img :src="slotImage('support_paid_improvement', 'https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590')" alt="Improvement Activities" class="service-image" />
+              <img :src="media('support_paid_improvement', 'https://api.builder.io/api/v1/image/assets/TEMP/314b38f7051166e9dfefd653b917881f2e188fb0?width=590', 'support_paid_improvement')" alt="Improvement Activities" class="service-image" />
               <div class="service-info">
                 <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_improvement_label" tag="span" :fallback="'improvement'" /></span>
                 <h4 class="service-title">改善に向けた活動</h4>
               </div>
             </div>
             <div class="service-card">
-              <img :src="slotImage('support_paid_analysis', 'https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590')" alt="Analysis" class="service-image" />
+              <img :src="media('support_paid_analysis', 'https://api.builder.io/api/v1/image/assets/TEMP/e92448f8521df04fdda36093ecdc836ecfdcbdbb?width=590', 'support_paid_analysis')" alt="Analysis" class="service-image" />
               <div class="service-info">
                 <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_analysis_label" tag="span" :fallback="'analysis'" /></span>
                 <h4 class="service-title">分析（新たな課題認識）</h4>
               </div>
             </div>
             <div class="service-card">
-              <img :src="slotImage('support_paid_newbiz', 'https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590')" alt="New Business Activities" class="service-image" />
+              <img :src="media('support_paid_newbiz', 'https://api.builder.io/api/v1/image/assets/TEMP/ccca71dcedbebcbeb9188be2f5b67ca86225155f?width=590', 'support_paid_newbiz')" alt="New Business Activities" class="service-image" />
               <div class="service-info">
                 <span class="service-label"><CmsText pageKey="cri-consulting" fieldKey="paid_newbiz_label" tag="span" :fallback="'new business'" /></span>
                 <h4 class="service-title">新たな事業活動</h4>
@@ -179,7 +179,7 @@
       <div class="achievements-content">
         <div class="achievements-grid">
           <div class="achievement-card">
-            <img :src="slotImage('achievements_item1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/ec6122758f12e1bfbe99ee61905a31ea4d49a78c?width=574')" alt="Achievement 1" class="achievement-image" />
+            <img :src="media('achievements_item1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/ec6122758f12e1bfbe99ee61905a31ea4d49a78c?width=574', 'achievements_item1_image')" alt="Achievement 1" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
                 <span class="achievement-date">2025.6.27</span>
@@ -191,7 +191,7 @@
           </div>
           
           <div class="achievement-card">
-            <img :src="slotImage('achievements_item2_image', 'https://api.builder.io/api/v1/image/assets/TEMP/95f39033c1a29bc732f48805d8362c58b24c766c?width=574')" alt="Achievement 2" class="achievement-image" />
+            <img :src="media('achievements_item2_image', 'https://api.builder.io/api/v1/image/assets/TEMP/95f39033c1a29bc732f48805d8362c58b24c766c?width=574', 'achievements_item2_image')" alt="Achievement 2" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
               <span class="achievement-date"><CmsText pageKey="cri-consulting" fieldKey="achievements_item2_date" tag="span" :fallback="'2025.6.27'" /></span>
@@ -203,7 +203,7 @@
           </div>
           
           <div class="achievement-card">
-            <img :src="slotImage('achievements_item3_image', 'https://api.builder.io/api/v1/image/assets/TEMP/9c17e76e3ac6cf114e40472b8f2ce93b5bfa00f3?width=574')" alt="Achievement 3" class="achievement-image" />
+            <img :src="media('achievements_item3_image', 'https://api.builder.io/api/v1/image/assets/TEMP/9c17e76e3ac6cf114e40472b8f2ce93b5bfa00f3?width=574', 'achievements_item3_image')" alt="Achievement 3" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
               <span class="achievement-date"><CmsText pageKey="cri-consulting" fieldKey="achievements_item3_date" tag="span" :fallback="'2025.6.27'" /></span>
@@ -215,7 +215,7 @@
           </div>
           
           <div class="achievement-card">
-            <img :src="slotImage('achievements_item4_image', 'https://api.builder.io/api/v1/image/assets/TEMP/5dabcf000de42e14f9010cb47622d830cacdf698?width=574')" alt="Achievement 4" class="achievement-image" />
+            <img :src="media('achievements_item4_image', 'https://api.builder.io/api/v1/image/assets/TEMP/5dabcf000de42e14f9010cb47622d830cacdf698?width=574', 'achievements_item4_image')" alt="Achievement 4" class="achievement-image" />
             <div class="achievement-info">
               <div class="achievement-meta">
               <span class="achievement-date"><CmsText pageKey="cri-consulting" fieldKey="achievements_item4_date" tag="span" :fallback="'2025.6.27'" /></span>

@@ -42,8 +42,11 @@ function hookStorageBroadcast() {
         try {
           if (!e) return
           const k = e.key || ''
-          if (k === 'cms_media_cache' || k === 'cms_media_cache_bust') {
-            // Re-fetch media registry when another tab updates cache
+          // Only react to explicit bust signal to avoid cross-tab ping-pong.
+          // Do NOT reload on 'cms_media_cache' writes because loadMedia() itself
+          // writes that key (with a fresh timestamp), which would otherwise
+          // trigger an endless back-and-forth between tabs.
+          if (k === 'cms_media_cache_bust') {
             state.loaded = false
             state.loading = false
             loadMedia()
@@ -144,8 +147,10 @@ async function loadMedia() {
         // Add a lightweight cache-buster for API-served media endpoints to avoid stale CDN/browser caches
         try {
           if (typeof url === 'string' && url.startsWith('/api/public/m/')) {
-            const ver = meta?.uploaded_at ? Date.parse(meta.uploaded_at) || Date.now() : Date.now()
-            url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            const ver = meta?.uploaded_at ? (Date.parse(meta.uploaded_at) || null) : null
+            if (ver !== null) {
+              url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
           }
         } catch (_) { /* ignore */ }
         out[k] = url
