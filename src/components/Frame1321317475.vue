@@ -1,7 +1,12 @@
 <template>
   <div class="frame-132131747">
     <div class="overlap-group-7">
-      <img class="x2-2-3" :src="x22" alt="2 2" />
+      <img
+        class="x2-2-3"
+        :src="x22 || fallbackImage"
+        alt="publication thumbnail"
+        @error="onImgError"
+      />
       <div class="overlap-group-8">
         <div class="date-3 valign-text-middle inter-normal-ship-gray-10px">{{ date || '2025.04.28' }}</div>
         <div
@@ -22,6 +27,17 @@ export default {
   name: "Frame1321317475",
   props: ["x22", "hotInformationVol324", "date"],
   directives: { shrinkOnWrap },
+  methods: {
+    onImgError(e) {
+      if (e && e.target) e.target.src = this.fallbackImage
+    }
+  },
+  computed: {
+    fallbackImage() {
+      // 小サムネイル用のデフォルト
+      return '/img/-----2-2-4.png'
+    }
+  }
 };
 </script>
 

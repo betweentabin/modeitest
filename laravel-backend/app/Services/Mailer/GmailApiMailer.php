@@ -3,6 +3,7 @@
 namespace App\Services\Mailer;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
 class GmailApiMailer
 {
@@ -67,24 +68,19 @@ class GmailApiMailer
         $subject = (string) ($payload['subject'] ?? '(no subject)');
         $bodyHtml = $payload['body_html'] ?? null;
         $bodyText = $payload['body_text'] ?? null;
+        $attachments = is_array($payload['attachments'] ?? null) ? $payload['attachments'] : [];
 
         $accessToken = $this->fetchAccessToken($cfg);
 
         foreach ($to as $addr) {
-            $headers = [
-                'To' => $addr,
-                'From' => $from,
-                'Subject' => '=?UTF-8?B?'.base64_encode($subject).'?=',
-                'MIME-Version' => '1.0',
-            ];
-
-            if ($bodyHtml) {
-                $headers['Content-Type'] = 'text/html; charset=UTF-8';
-                $mime = $this->headersToString($headers)."\r\n".($bodyHtml);
-            } else {
-                $headers['Content-Type'] = 'text/plain; charset=UTF-8';
-                $mime = $this->headersToString($headers)."\r\n".($bodyText ?? '');
-            }
+            $mime = $this->buildMimeMessage(
+                to: (string) $addr,
+                from: $from,
+                subject: $subject,
+                bodyHtml: $bodyHtml,
+                bodyText: $bodyText,
+                attachments: $attachments
+            );
 
             $raw = $this->base64url($mime);
 
@@ -106,5 +102,94 @@ class GmailApiMailer
         }
         return implode("\r\n", $lines)."\r\n\r\n";
     }
-}
 
+    /**
+     * Build a MIME message string supporting optional HTML/TEXT and attachments.
+     * Attachments support:
+     *  - ['disk'=>..., 'path'=>..., 'filename'=>..., 'mime'=>...?]
+     *  - ['path'=>'storage://<disk>/<path>', 'as'=>'name.ext', 'mime'=>...?]
+     *  - ['path'=>'/abs/or/relative/file', 'as'=>'name.ext', 'mime'=>...?]
+     *  - ['data'=>base64_string, 'as'=>'name.ext', 'mime'=>...?]
+     */
+    protected function buildMimeMessage(string $to, string $from, string $subject, ?string $bodyHtml, ?string $bodyText, array $attachments): string
+    {
+        $baseHeaders = [
+            'To' => $to,
+            'From' => $from,
+            'Subject' => '=?UTF-8?B?'.base64_encode($subject).'?=',
+            'MIME-Version' => '1.0',
+        ];
+
+        $hasAttachments = !empty($attachments);
+        $hasHtml = !empty($bodyHtml);
+        $hasText = !empty($bodyText);
+
+        if (!$hasAttachments) {
+            // Single-part or alternative-only
+            if ($hasHtml && $hasText) {
+                $alt = 'ALT_'.bin2hex(random_bytes(6));
+                $headers = $baseHeaders + ['Content-Type' => 'multipart/alternative; boundary='.$alt];
+                $out = $this->headersToString($headers);
+                $out .= '--'.$alt."\r\n".'Content-Type: text/plain; charset=UTF-8' . "\r\n\r\n" . ($bodyText ?? '') . "\r\n";
+                $out .= '--'.$alt."\r\n".'Content-Type: text/html; charset=UTF-8' . "\r\n\r\n" . ($bodyHtml ?? '') . "\r\n";
+                $out .= '--'.$alt.'--' . "\r\n";
+                return $out;
+            }
+            // Plain single part
+            $headers = $baseHeaders + ['Content-Type' => ($hasHtml ? 'text/html' : 'text/plain').'; charset=UTF-8'];
+            return $this->headersToString($headers) . (($hasHtml ? $bodyHtml : $bodyText) ?? '');
+        }
+
+        // multipart/mixed with optional alternative body
+        $mixed = 'MIXED_'.bin2hex(random_bytes(6));
+        $headers = $baseHeaders + ['Content-Type' => 'multipart/mixed; boundary='.$mixed];
+        $out = $this->headersToString($headers);
+
+        if ($hasHtml && $hasText) {
+            $alt = 'ALT_'.bin2hex(random_bytes(6));
+            $out .= '--'.$mixed."\r\n".'Content-Type: multipart/alternative; boundary='.$alt."\r\n\r\n";
+            $out .= '--'.$alt."\r\n".'Content-Type: text/plain; charset=UTF-8' . "\r\n\r\n" . ($bodyText ?? '') . "\r\n";
+            $out .= '--'.$alt."\r\n".'Content-Type: text/html; charset=UTF-8' . "\r\n\r\n" . ($bodyHtml ?? '') . "\r\n";
+            $out .= '--'.$alt.'--' . "\r\n";
+        } else {
+            // Single body part
+            $out .= '--'.$mixed."\r\n".'Content-Type: '.($hasHtml ? 'text/html' : 'text/plain').'; charset=UTF-8' . "\r\n\r\n" . (($hasHtml ? $bodyHtml : $bodyText) ?? '') . "\r\n";
+        }
+
+        // Append attachments
+        foreach ($attachments as $att) {
+            $filename = $att['as'] ?? $att['filename'] ?? 'attachment';
+            $mime = $att['mime'] ?? 'application/octet-stream';
+            $content = null;
+
+            if (!empty($att['data'])) {
+                // already base64 (common in API payloads)
+                $content = base64_decode($att['data']);
+            } elseif (!empty($att['path'])) {
+                $path = (string) $att['path'];
+                if (str_starts_with($path, 'storage://')) {
+                    // storage://<disk>/<relativePath>
+                    $rel = substr($path, strlen('storage://'));
+                    [$disk, $relPath] = explode('/', $rel, 2);
+                    $content = Storage::disk($disk)->get($relPath);
+                } else {
+                    $content = @file_get_contents($path);
+                }
+            } elseif (!empty($att['disk']) && !empty($att['path'])) {
+                $content = Storage::disk($att['disk'])->get($att['path']);
+            }
+
+            if ($content === null) continue;
+            $b64 = chunk_split(base64_encode($content));
+
+            $out .= '--'.$mixed."\r\n";
+            $out .= 'Content-Type: '.$mime.'; name="'.$filename.'"' . "\r\n";
+            $out .= 'Content-Transfer-Encoding: base64' . "\r\n";
+            $out .= 'Content-Disposition: attachment; filename="'.$filename.'"' . "\r\n\r\n";
+            $out .= $b64 . "\r\n";
+        }
+
+        $out .= '--'.$mixed.'--' . "\r\n";
+        return $out;
+    }
+}

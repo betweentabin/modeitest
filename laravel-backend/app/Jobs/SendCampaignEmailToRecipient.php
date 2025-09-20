@@ -48,11 +48,11 @@ class SendCampaignEmailToRecipient implements ShouldQueue
         $dryRun = filter_var(env('MAIL_DRY_RUN', false), FILTER_VALIDATE_BOOLEAN);
 
         try {
-            if (!$dryRun) {
-                $attachments = EmailAttachment::where('campaign_id', $recipient->campaign_id)
-                    ->get(['disk','path','filename'])
-                    ->map(fn($a) => ['disk' => $a->disk, 'path' => $a->path, 'filename' => $a->filename])
-                    ->toArray();
+                if (!$dryRun) {
+                    $attachments = EmailAttachment::where('campaign_id', $recipient->campaign_id)
+                        ->get(['disk','path','filename','mime'])
+                        ->map(fn($a) => ['disk' => $a->disk, 'path' => $a->path, 'filename' => $a->filename, 'mime' => $a->mime])
+                        ->toArray();
 
                 if (config('mail.default') === 'resend') {
                     // Send via Resend API
@@ -70,12 +70,20 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                     $mailUrl = (string) env('MAIL_URL', '');
                     if (str_starts_with($mailUrl, 'gmail+api://')) {
                         // Bypass Laravel Mailer and use Gmail API directly
-                        (new \App\Services\Mailer\GmailApiMailer())->send([
-                            'to' => $recipient->email,
-                            'subject' => $campaign->subject,
-                            'body_html' => $campaign->body_html,
-                            'body_text' => $campaign->body_text,
-                        ]);
+                    (new \App\Services\Mailer\GmailApiMailer())->send([
+                        'to' => $recipient->email,
+                        'subject' => $campaign->subject,
+                        'body_html' => $campaign->body_html,
+                        'body_text' => $campaign->body_text,
+                        'attachments' => array_map(function ($a) {
+                            return [
+                                'disk' => $a['disk'] ?? 'public',
+                                'path' => $a['path'] ?? null,
+                                'filename' => $a['filename'] ?? 'attachment',
+                                'mime' => $a['mime'] ?? 'application/octet-stream',
+                            ];
+                        }, $attachments),
+                    ]);
                     } else {
                         $mailable = new CampaignMail(
                             subjectLine: $campaign->subject,
