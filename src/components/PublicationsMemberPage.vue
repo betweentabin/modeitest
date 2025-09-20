@@ -7,6 +7,8 @@
       cmsPageKey="publications"
       titleFieldKey="page_title"
       subtitleFieldKey="page_subtitle"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/Image_fx5.jpg"
     />
     
@@ -22,7 +24,7 @@
         <div class="title-decoration">
           <div class="line-left"></div>
           <span class="title-english">
-            <CmsText pageKey="publications" fieldKey="header_subtitle" tag="span" :fallback="'publications member'" />
+            <CmsText pageKey="publications" fieldKey="header_subtitle" tag="span" :fallback="'PUBLICATIONS'" />
           </span>
           <div class="line-right"></div>
         </div>
@@ -466,6 +468,12 @@ export default {
       'canAccess',
       'canViewButRestricted'
     ]),
+    pageTitle() {
+      return this.pageText?.getText('page_title', '刊行物') || '刊行物'
+    },
+    pageSubtitle() {
+      return this.pageText?.getText('page_subtitle', 'PUBLICATIONS') || 'PUBLICATIONS'
+    },
     filteredPublications() {
       const filtered = this.publications.filter(pub => {
         const yearMatch = this.selectedYear === 'all' || pub.year === this.selectedYear;

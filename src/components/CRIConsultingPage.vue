@@ -37,7 +37,7 @@
       <div class="content-container">
         <img :src="media('what_image', 'https://api.builder.io/api/v1/image/assets/TEMP/f016525f0cc061901e592a57545785e894630484?width=940', 'what_image')" alt="Consulting Image" class="content-image" />
         <div class="content-text">
-          <h3 class="content-subtitle"><CmsText pageKey="cri-consulting" fieldKey="what_content_subtitle" tag="span" :fallback="`What's CRI Management Consulting`" /></h3>
+          <h3 class="content-subtitle"><CmsText pageKey="cri-consulting" fieldKey="what_content_subtitle" tag="span" :fallback="`WHAT'S CRI MANAGEMENT CONSULTING`" /></h3>
           <h4 class="content-heading"><CmsText pageKey="cri-consulting" fieldKey="what_content_heading" tag="span" :fallback="'CRI経営コンサルティングとは、事業でお悩みの皆様に対し、アドバイス、サポートするサービスです'" /></h4>
           <div class="content-description">
             <CmsText pageKey="cri-consulting" fieldKey="what_content_body" tag="div" type="html" :fallback="`日常の企業活動の中で、まず自社が抱える様々な問題や課題・顧客ニーズなどに気付き、それらを整理して対応策を講じることができれば、改善に向けて新たなスタートを切ったと言えましょう。<br>しかし、「何か変だ。」と思いながらもとりあえず一日の業務を無事に終えたことに安心していては、身近に存在する重要なことに気付くのが遅れることもあります。`" />
