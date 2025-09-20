@@ -3560,6 +3560,8 @@ export default {
             this.$refs.newImageInput.click()
           } else if (this.$refs.newImageInputGlobal && typeof this.$refs.newImageInputGlobal.click === 'function') {
             this.$refs.newImageInputGlobal.click()
+          } else if (this.$refs.newImageInputAny && typeof this.$refs.newImageInputAny.click === 'function') {
+            this.$refs.newImageInputAny.click()
           }
         }
       } catch(_) {}

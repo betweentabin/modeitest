@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.8",
         "resend/resend-php": "^0.19",
         "symfony/google-mailer": "^6.4",
+        "symfony/http-client": "^7.3",
         "symfony/sendgrid-mailer": "^6.4"
     },
     "require-dev": {
