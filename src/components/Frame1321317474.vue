@@ -203,9 +203,13 @@ export default {
   }
   
   .overlap-group-6 {
-    width: 724px !important;
-    left: 76px !important;
+    width: 75% !important;
+    max-width: 676px !important;
+    right: 0px !important;
+    left: auto !important;
     top: 384px !important;
+    padding: 15px 20px !important;
+    border-radius: 15px 0px 0px 0px !important;
   }
 }
 
