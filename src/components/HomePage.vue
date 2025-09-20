@@ -244,18 +244,18 @@
               <div class="frame-1321317487">
                 <div class="group-18">
                   <img
-                    class="vector-9"
+                    :class="['vector-9', { 'vector-9-disabled': currentIndex <= 0, 'vector-9-enabled': currentIndex > 0 }]"
                     :src="vector91"
                     alt="Vector 9"
-                    @click="prevPublication"
-                    style="cursor: pointer;"
+                    @click="currentIndex > 0 ? prevPublication() : null"
+                    :style="{ cursor: currentIndex > 0 ? 'pointer' : 'default' }"
                   />
                   <img
-                    class="vector-10"
+                    :class="['vector-10', { 'vector-10-disabled': currentIndex >= (allPublications.length - 2), 'vector-10-enabled': currentIndex < (allPublications.length - 2) }]"
                     :src="vector101"
                     alt="Vector 10"
-                    @click="nextPublication"
-                    style="cursor: pointer;"
+                    @click="currentIndex < (allPublications.length - 2) ? nextPublication() : null"
+                    :style="{ cursor: currentIndex < (allPublications.length - 2) ? 'pointer' : 'default' }"
                   />
                 </div>
                 <x-button3 class="desktop-publication-button" @click="goToPublicationList" />
@@ -1039,15 +1039,18 @@ export default {
     prevPublication() {
       const len = this.allPublications.length
       if (len <= 1) return
-      const othersLen = len - 1
-      this.currentIndex = (this.currentIndex - 1 + othersLen) % othersLen
+      // 最新（currentIndex = 0）より左には行かないように制限
+      if (this.currentIndex <= 0) return
+      this.currentIndex = this.currentIndex - 1
       this.refreshVisiblePublications()
     },
     nextPublication() {
       const len = this.allPublications.length
       if (len <= 1) return
       const othersLen = len - 1
-      this.currentIndex = (this.currentIndex + 1) % othersLen
+      // 最後（currentIndex >= othersLen - 1）より右には行かないように制限
+      if (this.currentIndex >= othersLen - 1) return
+      this.currentIndex = this.currentIndex + 1
       this.refreshVisiblePublications()
     },
     refreshVisiblePublications() {
@@ -2130,12 +2133,32 @@ export default {
   width: 23px;
 }
 
+.vector-9-disabled {
+  filter: brightness(0) saturate(100%) invert(0%); /* 黒色 */
+  opacity: 0.5;
+}
+
+.vector-9-enabled {
+  filter: brightness(0) saturate(100%) invert(49%) sepia(69%) saturate(434%) hue-rotate(313deg) brightness(95%) contrast(92%); /* #DA5761と同じ赤色 */
+  opacity: 1;
+}
+
 .vector-10 {
   height: 43px;
   left: 65px;
   position: absolute;
   top: 0;
   width: 24px;
+}
+
+.vector-10-disabled {
+  filter: brightness(0) saturate(100%) invert(0%); /* 黒色 */
+  opacity: 0.5;
+}
+
+.vector-10-enabled {
+  filter: brightness(0) saturate(100%) invert(49%) sepia(69%) saturate(434%) hue-rotate(313deg) brightness(95%) contrast(92%); /* #DA5761の赤色 */
+  opacity: 1;
 }
 
 .frame-1321317486 {
