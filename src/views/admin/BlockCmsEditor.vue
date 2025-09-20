@@ -3118,10 +3118,59 @@ export default {
       } else if (key === 'company-profile') {
         if (hasEntries(this.companyTexts)) patch.content.texts = { ...this.companyTexts }
         if (hasEntries(this.companyHtmls)) patch.content.htmls = { ...this.companyHtmls }
-        const staff = Array.isArray(this.companyStaff)
+
+        // Build staff from UI
+        const staffFromUi = Array.isArray(this.companyStaff)
           ? this.companyStaff.map((member, index) => this.sanitizeCompanyStaffMember(member, index)).filter(Boolean)
           : []
-        patch.content.staff = staff
+
+        // Build override map from legacy text keys (if any staff_* text fields exist)
+        const makeOverrideMapFromTexts = () => {
+          const map = new Map()
+          try {
+            const texts = this.companyTexts || {}
+            let hasAny = false
+            COMPANY_STAFF_LEGACY.forEach(entry => {
+              const o = {}
+              const name = (texts[entry.nameKey] || '').trim()
+              const reading = (texts[entry.readingKey] || '').trim()
+              const position = (texts[entry.positionKey] || '').trim()
+              const note = (texts[entry.noteKey] || '').trim()
+              if (name) { o.name = name; hasAny = true }
+              if (reading) { o.reading = reading; hasAny = true }
+              if (position) { o.position = position; hasAny = true }
+              if (note) { o.note = note; hasAny = true }
+              if (Object.keys(o).length) map.set(entry.id, o)
+            })
+            return hasAny ? map : null
+          } catch (_) { return null }
+        }
+
+        const overrideMap = makeOverrideMapFromTexts()
+
+        // If layout mode is OFF, or there are overrides in texts, merge texts -> staff
+        let finalStaff = staffFromUi
+        if (!this.layoutMode || overrideMap) {
+          // If UI staff is empty, rebuild entirely from texts
+          if ((!finalStaff || finalStaff.length === 0) && overrideMap) {
+            try {
+              const fromTexts = this.buildCompanyStaffFromLegacyTexts().map((m, i) => this.sanitizeCompanyStaffMember(m, i)).filter(Boolean)
+              finalStaff = fromTexts
+            } catch(_) { /* keep as is */ }
+          } else if (overrideMap && Array.isArray(finalStaff) && finalStaff.length) {
+            // Merge overrides field-by-field by id
+            finalStaff = finalStaff.map(member => {
+              try {
+                const id = (member && member.id) ? String(member.id) : ''
+                if (!id || !overrideMap.has(id)) return member
+                const o = overrideMap.get(id) || {}
+                return { ...member, ...o }
+              } catch(_) { return member }
+            })
+          }
+        }
+
+        patch.content.staff = Array.isArray(finalStaff) ? finalStaff : []
         const hist = Array.isArray(this.companyHistory) ? this.companyHistory
           .map(h => ({ year: String(h?.year || '').trim(), date: String(h?.date || '').trim(), body: String(h?.body || '').trim() }))
           .filter(h => h.year || h.date || h.body) : []

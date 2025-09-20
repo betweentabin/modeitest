@@ -380,7 +380,23 @@ export default {
         }
       }
       window.addEventListener('storage', this.__onStorage)
+      // Also re-render when media registry broadcasts updates (KV/replace-image)
+      this.__onMediaUpdated = () => { try { this.$forceUpdate() } catch(_) {} }
+      window.addEventListener('cms-media-updated', this.__onMediaUpdated)
+      // Re-render when page-managed images map changes
+      try {
+        const readImages = () => {
+          const page = this._pageText && this._pageText.page && this._pageText.page.value
+          const imgs = page && page.content && page.content.images
+          try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
+        }
+        this.$watch(readImages, () => { try { this.$forceUpdate() } catch(_) {} })
+      } catch(_) {}
     } catch(_) {}
+  },
+  beforeDestroy() {
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
   },
   watch: {
     cmsKey(newKey, oldKey) {
@@ -404,7 +420,7 @@ export default {
           if (v && typeof v === 'object' && v.url) {
             let url = v.url
             try {
-            if (url.startsWith('/storage/') && v.uploaded_at) {
+            if ((url.includes('/storage/')) && v.uploaded_at) {
                 const ver = Date.parse(v.uploaded_at) || null
                 if (ver !== null) {
                   url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))

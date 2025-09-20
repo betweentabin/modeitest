@@ -279,8 +279,53 @@ export default {
   mounted() {
     try {
       this._pageText = usePageText('transaction-law')
-      this._pageText.load({ force: true })
+      const p = this._pageText.load({ force: true })
+      if (p && typeof p.then === 'function') { p.then(() => { try { this.$forceUpdate() } catch(_) {} }) }
+      // Re-render when images map changes
+      try {
+        const readImages = () => {
+          const page = this._pageText && this._pageText.page && this._pageText.page.value
+          const imgs = page && page.content && page.content.images
+          try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
+        }
+        this.$watch(readImages, () => { try { this.$forceUpdate() } catch(_) {} })
+      } catch(_) {}
+      // storage/visibility/media listeners for instant reflection
+      this.__lastReloadAt = 0
+      this.__reloading = false
+      this.__onStorage = (ev) => {
+        const k = ev && ev.key ? String(ev.key) : ''
+        if (k === 'page_content_cache:transaction-law') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
+        }
+      }
+      window.addEventListener('storage', this.__onStorage)
+      this.__onVis = () => {
+        if (document.visibilityState === 'visible') {
+          const now = Date.now()
+          if (this.__reloading || (now - (this.__lastReloadAt || 0) < 1000)) return
+          this.__reloading = true
+          try {
+            const p = this._pageText && this._pageText.load ? this._pageText.load({ force: true }) : Promise.resolve()
+            Promise.resolve(p).finally(() => { this.__lastReloadAt = Date.now(); this.__reloading = false; try { this.$forceUpdate() } catch(_) {} })
+          } catch(_) { this.__reloading = false }
+        }
+      }
+      document.addEventListener('visibilitychange', this.__onVis)
+      this.__onMediaUpdated = () => { try { this.$forceUpdate() } catch(_) {} }
+      window.addEventListener('cms-media-updated', this.__onMediaUpdated)
     } catch(e) { /* noop */ }
+  },
+  beforeDestroy() {
+    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
+    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
   },
 };
 </script>
