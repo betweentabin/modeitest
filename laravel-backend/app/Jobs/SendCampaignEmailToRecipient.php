@@ -73,7 +73,9 @@ class SendCampaignEmailToRecipient implements ShouldQueue
                         bodyText: $campaign->body_text,
                         attachmentsMeta: $attachments,
                     );
-                    Mail::to($recipient->email)->send($mailable);
+                    // Ensure To header is present on the Email object for Symfony Mailer
+                    $mailable->to($recipient->email);
+                    Mail::send($mailable);
                 }
             } else {
                 Log::info('[MAIL_DRY_RUN] Skipping send', [

@@ -64,19 +64,16 @@ class EmailImmediateController extends Controller
 
         $to = is_array($data['to']) ? $data['to'] : [$data['to']];
 
-        $message = Mail::mailer($mailer);
+        // Build PendingMail with recipients first to ensure Symfony Email has a To header
+        $pending = Mail::to($to)->mailer($mailer);
         if (!empty($data['from']['address'])) {
-            $message->alwaysFrom($data['from']['address'], $data['from']['name'] ?? null);
+            $pending->alwaysFrom($data['from']['address'], $data['from']['name'] ?? null);
         }
+        if (!empty($data['cc'])) $pending->cc($data['cc']);
+        if (!empty($data['bcc'])) $pending->bcc($data['bcc']);
 
-        foreach ($to as $addr) {
-            $message->to($addr);
-        }
-        if (!empty($data['cc'])) $message->cc($data['cc']);
-        if (!empty($data['bcc'])) $message->bcc($data['bcc']);
-
-        // Send (synchronously). In environments where SMTP is unreachable, above fallback prevents timeouts
-        $message->send($mailable);
+        // Send synchronously
+        $pending->send($mailable);
 
         return response()->json([
             'success' => true,
