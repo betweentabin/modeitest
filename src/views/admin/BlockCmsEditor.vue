@@ -20,6 +20,20 @@
             <input v-model="currentPage.title" class="input" @change="savePageMeta" />
           </div>
 
+          <div class="field">
+            <label>ヒーロー画像（hero）</label>
+            <div class="page-image-row">
+              <div class="img-preview"><img :src="getImageUrlByKey('hero') || ''" alt="preview"/></div>
+              <div class="img-meta">
+                <div class="img-key">images.hero</div>
+                <div class="img-actions">
+                  <button class="btn" @click="uploadForKey('hero')">アップロードファイル</button>
+                </div>
+              </div>
+            </div>
+            <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）。</div>
+          </div>
+
           <!-- Layout view toggle (for key pages like company/aboutus/about/consult/membership) -->
           <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services','membership-application','seminar-application','contact','navigation','footer','economic','publications','faq','glossary','sitemap'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
