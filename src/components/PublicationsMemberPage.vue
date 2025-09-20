@@ -212,6 +212,7 @@ import FixedSideButtons from "./FixedSideButtons.vue";
 import ActionButton from "./ActionButton.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
+import apiCache from '@/services/apiCache'
 import mockServer from '@/mockServer';
 import MembershipBadge from './MembershipBadge.vue';
 import { mapGetters } from 'vuex';
@@ -422,8 +423,20 @@ export default {
     };
   },
   async mounted() {
-    await this.loadCategories();
-    await this.loadPublications();
+    // 即時描画: キャッシュがあれば使用
+    try {
+      const cachedCats = apiCache.get('pub:categories:member', 3600)
+      if (Array.isArray(cachedCats) && cachedCats.length) this.categories = cachedCats
+      const cachedList = apiCache.get('pub:list:member:last', 300)
+      if (Array.isArray(cachedList) && cachedList.length) {
+        this.publications = cachedList
+        this.loading = false
+      }
+    } catch (e) { /* noop */ }
+
+    // バックグラウンドで最新データを取得
+    await this.loadCategories()
+    await this.loadPublications({ silent: !!apiCache.get('pub:list:member:last', 300) })
   },
   computed: {
     // 認証系のゲッターはnamespaced module 'auth' から取得
@@ -446,12 +459,14 @@ export default {
     async loadCategories() {
       try {
         // 公開APIから取得（管理で設定したカテゴリが反映）
-        const res = await apiClient.getPublicPublicationCategories()
+        const res = await apiClient.getPublicPublicationCategories({ timeout: 3500 })
         if (res && res.success && Array.isArray(res.data)) {
-          this.categories = [
+          const cats = [
             { id: 'all', name: '全て' },
             ...res.data.map(c => ({ id: c.slug, name: c.name }))
           ]
+          this.categories = cats
+          apiCache.set('pub:categories:member', cats)
           return
         }
         // モックにフォールバック
@@ -483,8 +498,8 @@ export default {
         ]
       }
     },
-    async loadPublications() {
-      this.loading = true;
+    async loadPublications(opts = { silent: false }) {
+      if (!opts || !opts.silent) this.loading = true;
       try {
         // APIから取得（会員限定も含める）
         const params = {
@@ -495,9 +510,11 @@ export default {
         if (this.selectedCategory && this.selectedCategory !== 'all') {
           params.category = this.selectedCategory;
         }
-        const response = await apiClient.getPublications(params);
+        const response = await apiClient.getPublications(params, { timeout: 3500 });
         if (response && response.success && response.data && response.data.publications) {
-          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
+          const list = response.data.publications.map(item => this.formatPublicationItem(item));
+          this.publications = list
+          apiCache.set('pub:list:member:last', list)
           this.totalPages = response.data.pagination.total_pages;
         } else {
           // フォールバック: mockServer

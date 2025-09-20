@@ -149,6 +149,7 @@ import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
 import mockServer from '@/mockServer'
 import AdminPagination from '@/components/admin/AdminPagination.vue'
+import apiCache from '@/services/apiCache'
 
 export default {
   name: 'PublicationManagement',
@@ -177,9 +178,21 @@ export default {
     }
   },
   async mounted() {
+    // 即表示: キャッシュがあれば使う
+    try {
+      const cats = apiCache.get('admin:pub:categories', 3600)
+      if (Array.isArray(cats) && cats.length) this.categories = cats
+      const key = `admin:pub:list:p${this.currentPage}`
+      const cached = apiCache.get(key, 300)
+      if (Array.isArray(cached) && cached.length) {
+        this.publications = cached
+        this.loading = false
+      }
+    } catch(e) { /* noop */ }
+
     await Promise.all([
       this.loadCategories(),
-      this.loadPublications()
+      this.loadPublications({ silent: !!apiCache.get(`admin:pub:list:p${this.currentPage}`, 300) })
     ])
   },
   computed: {
@@ -213,9 +226,11 @@ export default {
     async loadCategories() {
       try {
         // 管理画面ではAPIを優先（最新を反映）。失敗時のみモックにフォールバック。
-        const response = await apiClient.getPublicationCategories()
+        const response = await apiClient.getPublicationCategories({ timeout: 3500 })
         if (response && response.success) {
-          this.categories = Array.isArray(response.data) ? response.data : (response.data?.categories || [])
+          const cats = Array.isArray(response.data) ? response.data : (response.data?.categories || [])
+          this.categories = cats
+          apiCache.set('admin:pub:categories', cats)
           return
         }
 
@@ -289,8 +304,8 @@ export default {
       } catch(e){ alert('削除に失敗しました') }
     },
 
-    async loadPublications() {
-      this.loading = true
+    async loadPublications(opts = { silent: false }) {
+      if (!opts || !opts.silent) this.loading = true
       try {
         // まずmockServerから取得を試みる
         try {
@@ -312,6 +327,7 @@ export default {
             }))
             
             this.totalPages = Math.ceil(this.publications.length / this.itemsPerPage)
+            apiCache.set(`admin:pub:list:p${this.currentPage}`, this.publications)
             return
           }
         } catch (mockError) {
@@ -339,7 +355,7 @@ export default {
         if (this.filters && this.filters.category) params.category = this.filters.category
         if (this.searchKeyword && this.searchKeyword.trim()) params.search = this.searchKeyword.trim()
         
-        const response = await apiClient.getAdminPublications(params) // トークンは自動で付与される
+        const response = await apiClient.getAdminPublications(params, { timeout: 3500 }) // トークンは自動で付与される
         console.log('Admin publications API response:', response)
         if (response.success && response.data) {
           const pag = response.data
@@ -356,6 +372,7 @@ export default {
             is_downloadable: !!pub.file_url
           }))
           this.totalPages = (pag?.pagination?.total_pages) || pag?.last_page || 1
+          apiCache.set(`admin:pub:list:p${this.currentPage}`, this.publications)
           console.log('Publications loaded:', this.publications.length, 'items')
         } else {
           throw new Error('刊行物データの取得に失敗しました')

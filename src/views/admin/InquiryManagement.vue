@@ -241,6 +241,7 @@
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '@/services/apiClient'
 import AdminPagination from '@/components/admin/AdminPagination.vue'
+import apiCache from '@/services/apiCache'
 
 export default {
   name: 'InquiryManagement',
@@ -268,6 +269,16 @@ export default {
     }
   },
   async mounted() {
+    // 即表示: 短期キャッシュ（3分）
+    try {
+      const key = `admin:inquiries:list:p${this.currentPage}`
+      const cached = apiCache.get(key, 180)
+      if (cached && Array.isArray(cached.data)) {
+        this.inquiries = cached.data
+        if (cached.totalPages) this.totalPages = cached.totalPages
+        this.loading = false
+      }
+    } catch(e) { /* noop */ }
     await this.loadInquiries()
   },
   methods: {
@@ -307,11 +318,12 @@ export default {
           params.inquiry_type = this.filters.type
         }
 
-        const response = await apiClient.getAdminInquiries(params, this.authToken)
+        const response = await apiClient.getAdminInquiries(params, this.authToken, { timeout: 3500 })
         
         if (response.success && response.data) {
           this.inquiries = response.data.inquiries
           this.totalPages = response.data.pagination.total_pages
+          apiCache.set(`admin:inquiries:list:p${this.currentPage}`, { data: this.inquiries, totalPages: this.totalPages })
         } else {
           throw new Error('お問い合わせデータの取得に失敗しました')
         }

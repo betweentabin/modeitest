@@ -100,12 +100,34 @@ class ApiClient {
       baseHeaders['Content-Type'] = baseHeaders['Content-Type'] || 'application/json'
     }
 
+    const timeoutMs = (options && typeof options.timeout === 'number' && options.timeout > 0)
+      ? options.timeout
+      : undefined
+
+    // Build signal with timeout fallback if supported
+    let signal = options && options.signal ? options.signal : undefined
+    if (!signal && timeoutMs) {
+      try {
+        if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+          signal = AbortSignal.timeout(timeoutMs)
+        } else if (typeof AbortController !== 'undefined') {
+          const ctrl = new AbortController()
+          setTimeout(() => ctrl.abort(), timeoutMs)
+          signal = ctrl.signal
+        }
+      } catch (_) { /* noop */ }
+    }
+
     const config = {
       headers: baseHeaders,
       mode: 'cors', // CORSモードを明示的に指定
       method,
       ...(body ? { body: typeof body === 'string' ? body : JSON.stringify(body) } : {}),
-      ...options
+      ...(signal ? { signal } : {}),
+      ...options,
+      // Avoid leaking custom options to fetch
+      ...(options && options.params ? { params: undefined } : {}),
+      ...(options && options.timeout ? { timeout: undefined } : {})
     }
 
     try {
@@ -240,8 +262,8 @@ class ApiClient {
   }
 
   // Member Admin APIs
-  async getAdminMembers(params = {}) {
-    return this.get('/api/admin/members', { params })
+  async getAdminMembers(params = {}, options = {}) {
+    return this.get('/api/admin/members', { params, ...(options || {}) })
   }
 
   async createAdminMember(data) {
@@ -561,18 +583,18 @@ class ApiClient {
   }
 
   // Publications API methods
-  async getPublications(params = {}) {
+  async getPublications(params = {}, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/publications-v2?${queryString}` : '/api/publications-v2'
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
-  async getPublication(id) {
-    return this.get(`/api/publications-v2/${id}`)
+  async getPublication(id, options = {}) {
+    return this.get(`/api/publications-v2/${id}`, options)
   }
 
-  async downloadPublication(id) {
-    return this.get(`/api/publications-v2/${id}/download`)
+  async downloadPublication(id, options = {}) {
+    return this.get(`/api/publications-v2/${id}/download`, options)
   }
 
   // 経済統計レポート関連のメソッド
@@ -603,14 +625,14 @@ class ApiClient {
   }
 
   // Economic Indicators (public)
-  async getIndicatorCategories() {
-    return this.get('/api/economic-indicators/categories')
+  async getIndicatorCategories(options = {}) {
+    return this.get('/api/economic-indicators/categories', options)
   }
 
-  async getIndicators(params = {}) {
+  async getIndicators(params = {}, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/economic-indicators?${queryString}` : '/api/economic-indicators'
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
   async createPublication(publicationData, token) {
@@ -669,11 +691,11 @@ class ApiClient {
     })
   }
 
-  async getAdminInquiries(params = {}, token) {
+  async getAdminInquiries(params = {}, token, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/inquiries-v2?${queryString}` : '/api/admin/inquiries-v2'
     // トークンは自動的にrequestメソッドで付与される
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
   async deleteInquiry(id, token) {
@@ -721,17 +743,17 @@ class ApiClient {
   }
 
   // Admin-specific methods with token
-  async getAdminSeminars(params = {}) {
+  async getAdminSeminars(params = {}, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/seminars?${queryString}` : '/api/admin/seminars'
     // トークンは自動的にrequestメソッドで付与される
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
   // Admin seminar registrations management
-  async getAdminSeminarRegistrations(seminarId, params = {}) {
+  async getAdminSeminarRegistrations(seminarId, params = {}, options = {}) {
     const endpoint = `/api/admin/seminars/${seminarId}/registrations`
-    return this.get(endpoint, { params })
+    return this.get(endpoint, { params, ...(options || {}) })
   }
   async approveAdminSeminarRegistration(seminarId, regId) {
     const endpoint = `/api/admin/seminars/${seminarId}/registrations/${regId}/approve`
@@ -747,30 +769,30 @@ class ApiClient {
   }
 
   // Admin: Seminar Categories
-  async getSeminarCategories() { return this.get('/api/admin/seminar-categories') }
+  async getSeminarCategories(options = {}) { return this.get('/api/admin/seminar-categories', options) }
   async createSeminarCategory(data) { return this.post('/api/admin/seminar-categories', data) }
   async updateSeminarCategory(id, data) { return this.put(`/api/admin/seminar-categories/${id}`, data) }
   async deleteSeminarCategory(id) { return this.delete(`/api/admin/seminar-categories/${id}`) }
 
-  async getAdminNews(params = {}) {
+  async getAdminNews(params = {}, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/news-v2?${queryString}` : '/api/admin/news-v2'
     // トークンは自動的にrequestメソッドで付与される
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
-  async getAdminPublications(params = {}) {
+  async getAdminPublications(params = {}, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/publications?${queryString}` : '/api/admin/publications'
     // トークンは自動的にrequestメソッドで付与される
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
   // Admin: Economic Indicators
-  async getAdminIndicators(params = {}) {
+  async getAdminIndicators(params = {}, options = {}) {
     const queryString = new URLSearchParams(params).toString()
     const endpoint = queryString ? `/api/admin/economic-indicators?${queryString}` : '/api/admin/economic-indicators'
-    return this.get(endpoint)
+    return this.get(endpoint, options)
   }
 
   async createAdminIndicator(data) {
@@ -786,8 +808,8 @@ class ApiClient {
   }
 
   // Admin: Indicator Categories
-  async getAdminIndicatorCategories() {
-    return this.get('/api/admin/economic-indicator-categories')
+  async getAdminIndicatorCategories(options = {}) {
+    return this.get('/api/admin/economic-indicator-categories', options)
   }
 
   async createAdminIndicatorCategory(data) {
@@ -803,22 +825,22 @@ class ApiClient {
   }
 
   // News categories API methods
-  async getNewsCategories() {
+  async getNewsCategories(options = {}) {
     // Backward compat: prefer admin notice categories
-    return this.get('/api/admin/notice-categories')
+    return this.get('/api/admin/notice-categories', options)
   }
   async createNoticeCategory(data) { return this.post('/api/admin/notice-categories', data) }
   async updateNoticeCategory(id, data) { return this.put(`/api/admin/notice-categories/${id}`, data) }
   async deleteNoticeCategory(id) { return this.delete(`/api/admin/notice-categories/${id}`) }
 
   // Publication categories API methods
-  async getPublicationCategories() { return this.get('/api/admin/publication-categories') }
+  async getPublicationCategories(options = {}) { return this.get('/api/admin/publication-categories', options) }
   async createPublicationCategory(data) { return this.post('/api/admin/publication-categories', data) }
   async updatePublicationCategory(id, data) { return this.put(`/api/admin/publication-categories/${id}`, data) }
   async deletePublicationCategory(id) { return this.delete(`/api/admin/publication-categories/${id}`) }
 
   // Public publication categories (for frontend filters)
-  async getPublicPublicationCategories() { return this.get('/api/publications-v2/categories') }
+  async getPublicPublicationCategories(options = {}) { return this.get('/api/publications-v2/categories', options) }
 
   // Notices API methods
   async getNotices(params = {}) {
@@ -856,12 +878,12 @@ class ApiClient {
   }
   
   // Page content API methods
-  async getPageContents() {
-    return this.get('/api/public/pages')
+  async getPageContents(options = {}) {
+    return this.get('/api/public/pages', options)
   }
   
-  async getPageContent(pageKey) {
-    return this.get(`/api/public/pages/${pageKey}`)
+  async getPageContent(pageKey, options = {}) {
+    return this.get(`/api/public/pages/${pageKey}`, options)
   }
 
   // デバッグ用: 管理者トークンを自動取得

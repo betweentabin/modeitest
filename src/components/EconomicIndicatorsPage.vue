@@ -105,6 +105,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '@/services/apiClient.js'
+import apiCache from '@/services/apiCache'
 import { usePageText } from '@/composables/usePageText'
 
 export default {
@@ -177,26 +178,49 @@ export default {
 
     // CMSからHTMLが設定されていれば優先表示 + カテゴリ/指標の読込
     try {
-      const [pageRes, catRes, indRes] = await Promise.all([
-        apiClient.getPageContent('economic-indicators'),
-        apiClient.getIndicatorCategories(),
-        apiClient.getIndicators()
+      // 1) 可能ならキャッシュを即時描画
+      const cachedHtml = apiCache.get('econ:pageHtml', 3600)
+      if (cachedHtml) this.pageBodyHtml = cachedHtml
+      const cachedCats = apiCache.get('econ:categories', 3600)
+      if (Array.isArray(cachedCats) && cachedCats.length) this.categories = cachedCats
+      const cachedIndicators = apiCache.get('econ:indicators', 600)
+      if (Array.isArray(cachedIndicators) && cachedIndicators.length) {
+        const groupedCached = {}
+        cachedIndicators.forEach(i => {
+          const key = i.category || 'others'
+          if (!groupedCached[key]) groupedCached[key] = []
+          groupedCached[key].push(i)
+        })
+        this.indicatorsByCategory = groupedCached
+      }
+
+      // 2) バックグラウンドで最新データ取得（短めのタイムアウトでコールドスタート対策）
+      const [pageRes, catRes, indRes] = await Promise.allSettled([
+        apiClient.getPageContent('economic-indicators', { timeout: 3500 }),
+        apiClient.getIndicatorCategories({ timeout: 3500 }),
+        apiClient.getIndicators({ timeout: 3500 })
       ])
-      const html = pageRes?.data?.page?.content?.html
+      const pageOk = pageRes.status === 'fulfilled' ? pageRes.value : null
+      const html = pageOk?.data?.page?.content?.html
       if (typeof html === 'string' && html.trim()) {
         this.pageBodyHtml = html
+        apiCache.set('econ:pageHtml', html)
       }
-      if (catRes?.success) {
-        this.categories = Array.isArray(catRes.data) ? catRes.data : []
+      const catOk = catRes.status === 'fulfilled' ? catRes.value : null
+      if (catOk?.success && Array.isArray(catOk.data)) {
+        this.categories = catOk.data
+        apiCache.set('econ:categories', catOk.data)
       }
-      if (indRes?.success) {
+      const indOk = indRes.status === 'fulfilled' ? indRes.value : null
+      if (indOk?.success && Array.isArray(indOk.data)) {
         const grouped = {}
-        ;(indRes.data || []).forEach(i => {
+        indOk.data.forEach(i => {
           const key = i.category || 'others'
           if (!grouped[key]) grouped[key] = []
           grouped[key].push(i)
         })
         this.indicatorsByCategory = grouped
+        apiCache.set('econ:indicators', indOk.data)
       }
     } catch (e) { /* noop */ }
   },

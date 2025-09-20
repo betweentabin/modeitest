@@ -222,6 +222,7 @@
 import AdminLayout from './AdminLayout.vue'
 import AdminPagination from '@/components/admin/AdminPagination.vue'
 import apiClient from '../../services/apiClient.js'
+import apiCache from '@/services/apiCache'
 import mockServer from '@/mockServer'
 
 export default {
@@ -260,6 +261,18 @@ export default {
     }
   },
   async mounted() {
+    // 即表示: キャッシュ
+    try {
+      const cachedCats = apiCache.get('admin:seminar:categories', 3600)
+      if (Array.isArray(cachedCats) && cachedCats.length) this.categories = cachedCats
+      const key = `admin:seminars:list:p${this.currentPage}`
+      const cached = apiCache.get(key, 180)
+      if (cached && Array.isArray(cached.items)) {
+        this.seminars = cached.items
+        this.totalPages = cached.totalPages || this.totalPages
+        this.loading = false
+      }
+    } catch(e) { /* noop */ }
     await Promise.all([this.loadCategories(), this.loadSeminars()])
   },
   computed: {
@@ -326,7 +339,7 @@ export default {
           ...this.filters
         }
         
-        const response = await apiClient.getAdminSeminars(params) // トークンは自動で付与される
+        const response = await apiClient.getAdminSeminars(params, { timeout: 3500 }) // トークンは自動で付与される
         if (response.success && response.data) {
           this.seminars = response.data.seminars.map(seminar => ({
             id: seminar.id,
@@ -344,6 +357,7 @@ export default {
           }))
           
           this.totalPages = response.data.pagination.total_pages
+          apiCache.set(`admin:seminars:list:p${this.currentPage}`, { items: this.seminars, totalPages: this.totalPages })
         } else {
           throw new Error('セミナーデータの取得に失敗しました')
         }
@@ -356,8 +370,9 @@ export default {
     },
     async loadCategories() {
       try {
-        const res = await apiClient.getSeminarCategories()
+        const res = await apiClient.getSeminarCategories({ timeout: 3500 })
         this.categories = (res && res.success) ? (res.data || []) : []
+        if (this.categories && this.categories.length) apiCache.set('admin:seminar:categories', this.categories)
       } catch(e){ this.categories = [] }
     },
     async addCategory(){ if(!this.cat.newName.trim()) return; const r=await apiClient.createSeminarCategory({ name:this.cat.newName }); if(r&&r.success){ this.cat.newName=''; this.loadCategories() } else { alert(r?.message||'追加に失敗') } },

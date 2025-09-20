@@ -29,7 +29,8 @@ class EconomicIndicatorsController extends Controller
                 ];
             });
 
-        return response()->json(['success' => true, 'data' => $categories]);
+        return response()->json(['success' => true, 'data' => $categories])
+            ->header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
     }
 
     // 公開API: 指標一覧（カテゴリーで絞り込み可能）
@@ -57,6 +58,7 @@ class EconomicIndicatorsController extends Controller
             ];
         });
 
-        return response()->json(['success' => true, 'data' => $indicators]);
+        return response()->json(['success' => true, 'data' => $indicators])
+            ->header('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
     }
 }

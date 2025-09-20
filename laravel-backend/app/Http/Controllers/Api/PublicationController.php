@@ -60,7 +60,7 @@ class PublicationController extends Controller
                         'per_page' => $publications->perPage()
                     ]
                 ]
-            ]);
+            ])->header('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -162,7 +162,7 @@ class PublicationController extends Controller
                         'sort_order' => $c->sort_order,
                     ];
                 })->values()
-            ]);
+            ])->header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

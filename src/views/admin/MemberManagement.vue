@@ -567,6 +567,7 @@
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
 import AdminPagination from '@/components/admin/AdminPagination.vue'
+import apiCache from '@/services/apiCache'
 import { getMembershipOptions, getMembershipLabel } from '@/utils/membershipTypes'
 
 export default {
@@ -647,6 +648,16 @@ export default {
     }
   },
   mounted() {
+    // 即表示: 短期キャッシュを使用（3分）
+    try {
+      const key = `admin:members:list:p${this.pagination.current_page}`
+      const cached = apiCache.get(key, 180)
+      if (cached && Array.isArray(cached.data)) {
+        this.members = cached.data
+        if (cached.pagination) this.pagination = cached.pagination
+        this.loading = false
+      }
+    } catch(e) { /* noop */ }
     this.loadMembers()
     this.loadMasters()
   },
@@ -681,7 +692,7 @@ export default {
           params.status = this.selectedStatus
         }
         
-        const response = await apiClient.getAdminMembers(params)
+        const response = await apiClient.getAdminMembers(params, { timeout: 3500 })
         
         if (response.success) {
           this.members = response.data.data
@@ -691,6 +702,7 @@ export default {
             per_page: response.data.per_page,
             total: response.data.total
           }
+          apiCache.set(`admin:members:list:p${this.pagination.current_page}`, { data: this.members, pagination: this.pagination })
         } else {
           this.error = response.message || '会員データの取得に失敗しました'
         }

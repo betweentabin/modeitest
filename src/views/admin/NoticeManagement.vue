@@ -145,6 +145,7 @@
 import AdminLayout from './AdminLayout.vue'
 import apiClient from '../../services/apiClient.js'
 import AdminPagination from '@/components/admin/AdminPagination.vue'
+import apiCache from '@/services/apiCache'
 
 export default {
   name: 'NoticeManagement',
@@ -173,6 +174,18 @@ export default {
     }
   },
   async mounted() {
+    // 即表示: キャッシュ
+    try {
+      const cats = apiCache.get('admin:notice:categories', 3600)
+      if (Array.isArray(cats) && cats.length) this.categories = cats
+      const key = `admin:notices:list:p${this.currentPage}`
+      const cached = apiCache.get(key, 180)
+      if (cached && Array.isArray(cached.items)) {
+        this.notices = cached.items
+        this.totalPages = cached.totalPages || this.totalPages
+        this.loading = false
+      }
+    } catch(e) { /* noop */ }
     await Promise.all([
       this.loadCategories(),
       this.loadNotices()
@@ -208,9 +221,10 @@ export default {
   methods: {
     async loadCategories() {
       try {
-        const res = await apiClient.getNewsCategories()
+        const res = await apiClient.getNewsCategories({ timeout: 3500 })
         const list = (res && res.success) ? (Array.isArray(res.data) ? res.data : []) : []
         this.categories = list
+        apiCache.set('admin:notice:categories', list)
       } catch (err) {
         console.error('カテゴリー読み込みエラー:', err)
         this.categories = []
@@ -230,7 +244,7 @@ export default {
       this.loading = true
       try {
         const params = { page: this.currentPage, per_page: this.itemsPerPage }
-        const response = await apiClient.get('/api/admin/notices', { params })
+        const response = await apiClient.get('/api/admin/notices', { params, timeout: 3500 })
         // apiClient wraps non-success into {success:true, data:paginator}
         const paginator = response?.data || response
         const items = paginator?.data || []
@@ -244,6 +258,7 @@ export default {
           is_featured: !!n.is_featured
         }))
         this.totalPages = paginator?.last_page || 1
+        apiCache.set(`admin:notices:list:p${this.currentPage}`, { items: this.notices, totalPages: this.totalPages })
       } catch (err) {
         this.error = err.message || 'お知らせデータの読み込みに失敗しました'
         console.error('お知らせ読み込みエラー:', err)

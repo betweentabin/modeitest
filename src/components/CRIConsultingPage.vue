@@ -7,7 +7,7 @@
       :title="pageTitle"
       :subtitle="pageSubtitle"
       cms-page-key="cri-consulting"
-      heroImage="/img/Image_fx9.jpg"
+      :heroImage="media('hero', '/img/Image_fx9.jpg', 'hero_consulting')"
       mediaKey="hero_consulting"
     />
     
@@ -382,6 +382,44 @@ export default {
     try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
   },
   methods: {
+    media(key, fallback = '', mediaKey = '') {
+      // Prefer page-managed images (with cache-busting), then page media mapping, then global media
+      try {
+        const page = this._pageText && this._pageText.page && this._pageText.page.value
+        const imgs = page && page.content && page.content.images
+        if (imgs && Object.prototype.hasOwnProperty.call(imgs, key)) {
+          const v = imgs[key]
+          let url = (v && typeof v === 'object') ? (v.url || '') : (typeof v === 'string' ? v : '')
+          try {
+            const meta = (v && typeof v === 'object') ? v : null
+            const ver = meta && meta.uploaded_at ? (Date.parse(meta.uploaded_at) || Date.now()) : null
+            if (ver && typeof url === 'string' && url.startsWith('/storage/')) {
+              url += (url.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
+          } catch(_) {}
+          if (typeof url === 'string' && url.length) return url
+        }
+      } catch (_) {}
+
+      try {
+        if (this._pageMedia) {
+          const slot = this._pageMedia.getResponsiveSlot(key, mediaKey || key, fallback)
+          if (slot && typeof slot === 'string' && slot.length) return slot
+        }
+        if (this._media) {
+          const lookupKey = mediaKey || key
+          if (this._media.getResponsiveImage) {
+            const img = this._media.getResponsiveImage(lookupKey, fallback)
+            if (img && typeof img === 'string' && img.length) return img
+          }
+          if (this._media.getImage) {
+            const img = this._media.getImage(lookupKey, fallback)
+            if (img && typeof img === 'string' && img.length) return img
+          }
+        }
+      } catch (_) {}
+      return fallback
+    },
     slotImage(slotKey, fallback = '') {
       // 方針A: ページ管理の content.images を最優先（モバイルでも確実に反映）
       try {

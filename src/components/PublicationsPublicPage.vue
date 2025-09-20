@@ -232,6 +232,7 @@ import { frame132131753022Data } from "../data.js";
 import CmsBlock from './CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
 import apiClient from '../services/apiClient.js';
+import apiCache from '@/services/apiCache'
 import mockServer from '@/mockServer';
 import { usePageText } from '@/composables/usePageText'
 
@@ -462,8 +463,20 @@ export default {
     }
   },
   mounted() {
-    this.loadCategories();
-    this.loadPublications();
+    // 可能ならキャッシュから即時描画
+    try {
+      const cachedCats = apiCache.get('pub:categories:public', 3600)
+      if (Array.isArray(cachedCats) && cachedCats.length) this.categories = cachedCats
+      const cachedList = apiCache.get('pub:list:public:last', 300)
+      if (Array.isArray(cachedList) && cachedList.length) {
+        this.publications = cachedList
+        this.loading = false
+      }
+    } catch (e) { /* noop */ }
+
+    // バックグラウンド更新（タイムアウト短縮で初速改善）
+    this.loadCategories()
+    this.loadPublications({ silent: !!apiCache.get('pub:list:public:last', 300) })
     try {
       this._pageText = usePageText(this.pageKey)
       this._pageText.load({ force: true })
@@ -488,12 +501,14 @@ export default {
     async loadCategories() {
       try {
         // 公開APIから取得（管理で設定したカテゴリが反映される）
-        const res = await apiClient.getPublicPublicationCategories()
+        const res = await apiClient.getPublicPublicationCategories({ timeout: 3500 })
         if (res && res.success && Array.isArray(res.data)) {
-          this.categories = [
+          const cats = [
             { id: 'all', name: '全て' },
             ...res.data.map(c => ({ id: c.slug, name: c.name }))
           ]
+          this.categories = cats
+          apiCache.set('pub:categories:public', cats)
           return
         }
         // モックにフォールバック
@@ -533,8 +548,8 @@ export default {
       const dd = String(d.getDate()).padStart(2, '0')
       return `${d.getFullYear()}/${mm}/${dd}`
     },
-    async loadPublications() {
-      this.loading = true;
+    async loadPublications(opts = { silent: false }) {
+      if (!opts || !opts.silent) this.loading = true;
       try {
         // まずAPIから取得（本番データを優先）
         const params = {
@@ -543,11 +558,14 @@ export default {
           category: this.selectedCategory !== 'all' ? this.selectedCategory : null
         }
         
-        const response = await apiClient.getPublications(params);
+        const response = await apiClient.getPublications(params, { timeout: 3500 });
         
         if (response && response.success && response.data && response.data.publications) {
-          this.publications = response.data.publications.map(item => this.formatPublicationItem(item));
+          const list = response.data.publications.map(item => this.formatPublicationItem(item));
+          this.publications = list
           this.totalPages = response.data.pagination.total_pages;
+          // キャッシュ更新（初回描画高速化用）
+          apiCache.set('pub:list:public:last', list)
           return
         }
 
