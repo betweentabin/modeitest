@@ -12,7 +12,11 @@
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="[statistics?.title || '経済・調査統計']" />
+    <Breadcrumbs :breadcrumbs="[
+      { text: 'トップ', link: '/' },
+      { text: '経済・調査統計', link: '/economic-statistics' },
+      { text: statistics?.title || '経済・調査統計詳細' }
+    ]" />
 
     <!-- Economic Statistics Detail Section -->
     <section class="statistics-detail-section" v-if="statistics">

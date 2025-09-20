@@ -693,6 +693,7 @@ export default {
 /* Category Filter */
 .category-filter {
   display: flex;
+  justify-content: center;
   gap: 0;
   border-radius: 8px;
   overflow-x: auto;
