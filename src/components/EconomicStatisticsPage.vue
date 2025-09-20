@@ -57,11 +57,24 @@
 
         <!-- Category Filter -->
         <div class="category-filter">
-          <select 
-            v-model="selectedCategory"
-            @change="selectCategory(selectedCategory)"
-            class="category-select"
+          <button 
+            v-for="category in categories" 
+            :key="category.id"
+            :class="['category-btn', { active: selectedCategory === category.id }]"
+            @click="selectCategory(category.id)"
           >
+            {{ category.name }}
+          </button>
+        </div>
+
+        <!-- Category Filter Mobile -->
+        <div class="category-filter-mobile">
+          <select 
+            v-model="selectedCategory" 
+            @change="selectCategory(selectedCategory)"
+            class="category-select-mobile"
+          >
+            <option value="">すべてのカテゴリ</option>
             <option 
               v-for="category in categories" 
               :key="category.id"
@@ -213,7 +226,20 @@ export default {
       currentPage: 1,
       totalPages: 1,
       years: [],
-      categories: [ { id: 'all', name: '全て' } ],
+      categories: [
+        { id: 'all', name: '全て' },
+        { id: 'gdp', name: 'GDPと日銀短観' },
+        { id: 'economy', name: '景気' },
+        { id: 'regional', name: '景況（福岡市・北九州市・久留米市）' },
+        { id: 'consumption', name: '個人消費' },
+        { id: 'public', name: '公共投資' },
+        { id: 'investment', name: '民間企業設備投資' },
+        { id: 'trade', name: '貿易' },
+        { id: 'production', name: '生産' },
+        { id: 'employment', name: '雇用' },
+        { id: 'market', name: '株価と外国為替' },
+        { id: 'bankruptcy', name: '企業倒産' }
+      ],
       featuredPublication: null,
       publications: [],
       // レガシー: 全体ブラーの既定値（個別判定に移行）
@@ -667,16 +693,79 @@ export default {
 /* Category Filter */
 .category-filter {
   display: flex;
-  justify-content: flex-end;
+  gap: 0;
+  border-radius: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
+  scrollbar-width: thin;
+  scrollbar-color: #DA5761 #F6D5D8;
+  padding-bottom: 5px;
 }
 
-.category-select {
+.category-filter::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-filter::-webkit-scrollbar-track {
+  background: #F6D5D8;
+  border-radius: 3px;
+}
+
+.category-filter::-webkit-scrollbar-thumb {
+  background: #DA5761;
+  border-radius: 3px;
+}
+
+.category-filter::-webkit-scrollbar-thumb:hover {
+  background: #c44a54;
+}
+
+.category-btn {
+  flex-shrink: 0;
+  min-width: max-content;
+  padding: 15px 20px;
   background: #F6D5D8;
   border: none;
+  border-right: 1px solid #DA5761;
+  color: #666;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.category-btn:hover {
+  background: #da5761;
+  color: white;
+}
+
+.category-btn.active {
+  background: #da5761;
+  color: white;
+}
+
+.category-btn:last-child {
+  border-right: none;
+}
+
+/* Category Filter Mobile */
+.category-filter-mobile {
+  display: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.category-select-mobile {
+  width: 100%;
   padding: 15px 20px;
+  background: #F6D5D8;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
@@ -684,20 +773,19 @@ export default {
   color: #1A1A1A;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  min-width: 300px;
   outline: none;
 }
 
-.category-select:hover {
+.category-select-mobile:hover {
   background: #da5761;
   color: white;
 }
 
-.category-select:focus {
+.category-select-mobile:focus {
   box-shadow: none;
 }
 
-.category-select option {
+.category-select-mobile option {
   background: white;
   color: #1A1A1A;
   padding: 10px;
@@ -1026,12 +1114,13 @@ export default {
 /* Responsive Design */
 @media (max-width: 1200px) {
   .category-filter {
-    justify-content: center !important;
+    display: none;
   }
   
-  .category-select {
-    width: 100% !important;
-    max-width: 100% !important;
+  .category-filter-mobile {
+    display: block;
+    margin-bottom: 40px;
+    width: 100%;
   }
 }
 
@@ -1164,9 +1253,21 @@ export default {
     justify-content: center !important;
   }
   
-  .category-select {
-    min-width: 100% !important;
-    padding: 12px 18px !important;
+  .category-filter {
+    overflow-x: auto !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    padding-bottom: 5px !important;
+  }
+  
+  .category-btn {
+    flex-shrink: 0 !important;
+    min-width: max-content !important;
+    width: auto !important;
+    border-right: 1px solid #DA5761 !important;
+    border-bottom: none !important;
+    font-size: 0.8rem !important;
+    padding: 12px 16px !important;
   }
 }
 
@@ -1228,9 +1329,21 @@ export default {
     margin: 0 auto !important;
   }
   
-  .category-select {
-    min-width: 100% !important;
-    padding: 10px 15px !important;
+  .category-filter {
+    overflow-x: auto !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    padding-bottom: 5px !important;
+  }
+  
+  .category-btn {
+    flex-shrink: 0 !important;
+    min-width: max-content !important;
+    padding: 8px 10px !important;
+    font-size: 0.6rem !important;
+    border-right: 1px solid #DA5761 !important;
+    border-bottom: none !important;
+    border-radius: 0 !important;
   }
 }
 
@@ -1299,9 +1412,22 @@ export default {
     font-size: 0.8rem !important;
   }
   
-  .category-select {
-    min-width: 100% !important;
-    padding: 8px 12px !important;
+  .category-filter {
+    overflow-x: auto !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    padding-bottom: 5px !important;
+  }
+  
+  .category-btn {
+    flex-shrink: 0 !important;
+    min-width: max-content !important;
+    width: auto !important;
+    padding: 15px 20px !important;
+    font-size: 14px !important;
+    border-right: 1px solid #DA5761 !important;
+    border-bottom: none !important;
+    border-radius: 0 !important;
   }
 }
 
