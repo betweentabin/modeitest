@@ -19,6 +19,7 @@ class CmsV2DefaultPagesSeeder extends Seeder
             ['slug' => 'aboutus', 'title' => 'aboutus'],
             ['slug' => 'about-institute', 'title' => 'about-institute'],
             ['slug' => 'services', 'title' => 'services'],
+            ['slug' => 'contact', 'title' => 'contact'],
 
             // Membership related
             ['slug' => 'membership', 'title' => 'membership'],
@@ -31,12 +32,17 @@ class CmsV2DefaultPagesSeeder extends Seeder
             ['slug' => 'terms', 'title' => 'terms'],
             ['slug' => 'transaction-law', 'title' => 'transaction-law'],
             ['slug' => 'privacy-policy', 'title' => 'privacy-policy'],
+            ['slug' => 'navigation', 'title' => 'navigation'],
+            ['slug' => 'footer', 'title' => 'footer'],
 
             // Misc
             ['slug' => 'glossary', 'title' => 'glossary'],
             ['slug' => 'faq', 'title' => 'faq'],
             ['slug' => 'sitemap', 'title' => 'sitemap'],
             ['slug' => 'cri-consulting', 'title' => 'cri-consulting'],
+            // Applications
+            ['slug' => 'membership-application', 'title' => 'membership-application'],
+            ['slug' => 'seminar-application', 'title' => 'seminar-application'],
         ];
 
         foreach ($pages as $p) {

@@ -279,7 +279,7 @@
     </section>
 
     <!-- Staff Section -->
-    <section id="staff" class="staff-section">
+    <section id="staff" class="staff-section" v-if="staffCount">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="staff_title" tag="span" :fallback="'所員紹介'" />
@@ -295,55 +295,23 @@
       <div class="staff-carousel">
         <div class="carousel-container">
           <div class="staff-members">
-            <div class="staff-member">
-              <img class="staff-photo" :src="media('company_profile_staff_morita', 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452')" alt="森田 祥子" />
+            <div
+              class="staff-member"
+              v-for="(member, index) in staffEntries"
+              :key="member.id || index"
+            >
+              <img
+                class="staff-photo"
+                :src="resolveStaffImage(member, index)"
+                :alt="member.alt || member.name || `Staff ${index + 1}`"
+              />
               <div class="staff-info">
-                <CmsText pageKey="company-profile" fieldKey="staff_morita_position" tag="div" class="staff-position" :fallback="'企画部　部長代理'" />
+                <div class="staff-position" v-if="member.position">{{ member.position }}</div>
                 <div class="staff-name">
-                  <CmsText pageKey="company-profile" fieldKey="staff_morita_name" tag="span" :fallback="'森田 祥子'" />
-                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_morita_reading" tag="span" :fallback="'もりた さちこ'" /></span>
+                  <span>{{ member.name }}</span>
+                  <span v-if="member.reading" class="staff-reading">{{ member.reading }}</span>
                 </div>
-                <CmsText pageKey="company-profile" fieldKey="staff_morita_note" tag="div" class="staff-note" :fallback="'（アジア福岡パートナーズへ出向）'" allowEmpty />
-              </div>
-            </div>
-            <div class="staff-member">
-              <img class="staff-photo" :src="media('company_profile_staff_mizokami', 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451')" alt="溝上 浩文" />
-              <div class="staff-info">
-                <CmsText pageKey="company-profile" fieldKey="staff_mizokami_position" tag="div" class="staff-position" :fallback="'取締役企画部長　兼調査部長'" />
-                <div class="staff-name">
-                  <CmsText pageKey="company-profile" fieldKey="staff_mizokami_name" tag="span" :fallback="'溝上 浩文'" />
-                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_mizokami_reading" tag="span" :fallback="'みぞかみ ひろふみ'" /></span>
-                </div>
-              </div>
-            </div>
-            <div class="staff-member">
-              <img class="staff-photo" :src="media('company_profile_staff_kuga', 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451')" alt="空閑 重信" />
-              <div class="staff-info">
-                <CmsText pageKey="company-profile" fieldKey="staff_kuga_position" tag="div" class="staff-position" :fallback="'代表取締役社長'" />
-                <div class="staff-name">
-                  <CmsText pageKey="company-profile" fieldKey="staff_kuga_name" tag="span" :fallback="'空閑 重信'" />
-                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_kuga_reading" tag="span" :fallback="'くが しげのぶ'" /></span>
-                </div>
-              </div>
-            </div>
-            <div class="staff-member">
-              <img class="staff-photo" :src="media('company_profile_staff_takada', 'https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451')" alt="髙田 友里恵" />
-              <div class="staff-info">
-                <CmsText pageKey="company-profile" fieldKey="staff_takada_position" tag="div" class="staff-position" :fallback="'調査部　主任'" />
-                <div class="staff-name">
-                  <CmsText pageKey="company-profile" fieldKey="staff_takada_name" tag="span" :fallback="'髙田 友里恵'" />
-                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_takada_reading" tag="span" :fallback="'たかだ ゆりえ'" /></span>
-                </div>
-              </div>
-            </div>
-            <div class="staff-member">
-              <img class="staff-photo" :src="media('company_profile_staff_nakamura', 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451')" alt="中村 公栄" />
-              <div class="staff-info">
-                <CmsText pageKey="company-profile" fieldKey="staff_nakamura_position" tag="div" class="staff-position" :fallback="''" allowEmpty />
-                <div class="staff-name">
-                  <CmsText pageKey="company-profile" fieldKey="staff_nakamura_name" tag="span" :fallback="'中村 公栄'" />
-                  <span class="staff-reading"><CmsText pageKey="company-profile" fieldKey="staff_nakamura_reading" tag="span" :fallback="'なかむら きえみ'" /></span>
-                </div>
+                <div v-if="member.note" class="staff-note">{{ member.note }}</div>
               </div>
             </div>
           </div>
@@ -474,6 +442,7 @@ export default {
       loadingReports: false,
       carouselIndicators: [],
       currentCarouselIndex: 0,
+      carouselInitialized: false,
       defaultMessageBody: `
         <p>皆さま方には、平素より筑邦銀行グループをご利用お引き立ていただき誠にありがとうございます。</p>
         <p>私どもは「地域社会へのご奉仕」という基本理念のもと、総合金融サービスの向上・充実に努めてまいりました。こうした中で、地元のさらなる発展に貢献するため、「(株)ちくぎん地域経済研究所」を設立いたしました。</p>
@@ -489,6 +458,73 @@ export default {
           <li>未来を支える「人」づくり</li>
         </ul>
       `,
+      defaultStaffRecords: [
+        {
+          id: 'morita',
+          name: '森田 祥子',
+          nameKey: 'staff_morita_name',
+          reading: 'もりた さちこ',
+          readingKey: 'staff_morita_reading',
+          position: '企画部　部長代理',
+          positionKey: 'staff_morita_position',
+          note: '（アジア福岡パートナーズへ出向）',
+          noteKey: 'staff_morita_note',
+          imageKey: 'company_profile_staff_morita',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452',
+        },
+        {
+          id: 'mizokami',
+          name: '溝上 浩文',
+          nameKey: 'staff_mizokami_name',
+          reading: 'みぞかみ ひろふみ',
+          readingKey: 'staff_mizokami_reading',
+          position: '取締役企画部長　兼調査部長',
+          positionKey: 'staff_mizokami_position',
+          note: '',
+          noteKey: 'staff_mizokami_note',
+          imageKey: 'company_profile_staff_mizokami',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451',
+        },
+        {
+          id: 'kuga',
+          name: '空閑 重信',
+          nameKey: 'staff_kuga_name',
+          reading: 'くが しげのぶ',
+          readingKey: 'staff_kuga_reading',
+          position: '代表取締役社長',
+          positionKey: 'staff_kuga_position',
+          note: '',
+          noteKey: 'staff_kuga_note',
+          imageKey: 'company_profile_staff_kuga',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451',
+        },
+        {
+          id: 'takada',
+          name: '髙田 友里恵',
+          nameKey: 'staff_takada_name',
+          reading: 'たかだ ゆりえ',
+          readingKey: 'staff_takada_reading',
+          position: '調査部　主任',
+          positionKey: 'staff_takada_position',
+          note: '',
+          noteKey: 'staff_takada_note',
+          imageKey: 'company_profile_staff_takada',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451',
+        },
+        {
+          id: 'nakamura',
+          name: '中村 公栄',
+          nameKey: 'staff_nakamura_name',
+          reading: 'なかむら きえみ',
+          readingKey: 'staff_nakamura_reading',
+          position: '',
+          positionKey: 'staff_nakamura_position',
+          note: '',
+          noteKey: 'staff_nakamura_note',
+          imageKey: 'company_profile_staff_nakamura',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451',
+        },
+      ],
       aboutInstituteDescription: `
         <p>株式会社ちくぎん地域経済研究所は、筑邦銀行グループの一員として、地域社会の発展に貢献することを使命としています。</p>
         <p>私たちは産・官・学・金（金融機関）のネットワークを構築し、バイオ・アグリ・医療・介護をはじめとする様々な分野の調査研究を専門的に行っています。</p>
@@ -501,6 +537,51 @@ export default {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'About Us') || 'About Us' },
+    staffEntries() {
+      try {
+        const content = this._pageText?.page?.value?.content
+        if (Array.isArray(content?.staff) && content.staff.length) {
+          return content.staff
+            .map((member, index) => {
+              if (!member || typeof member !== 'object') return null
+              const imageObj = member.image && typeof member.image === 'object' ? member.image : null
+              return {
+                id: member.id || `staff-${index}`,
+                name: member.name || '',
+                reading: member.reading || '',
+                position: member.position || '',
+                note: member.note || '',
+                imageKey: member.image_key || member.imageKey || '',
+                imageUrl: member.image_url || member.imageUrl || (imageObj?.url || ''),
+                alt: member.alt || member.name || '',
+              }
+            })
+            .filter(Boolean)
+        }
+      } catch (_) {}
+
+      return this.defaultStaffRecords.map((record, index) => {
+        const get = (key, fallback) => {
+          if (!key) return fallback
+          try { return this._pageText?.getText(key, fallback) || fallback } catch (_) { return fallback }
+        }
+        const name = get(record.nameKey, record.name)
+        return {
+          id: record.id || `default-${index}`,
+          name,
+          reading: get(record.readingKey, record.reading || ''),
+          position: get(record.positionKey, record.position || ''),
+          note: get(record.noteKey, record.note || ''),
+          imageKey: record.imageKey || '',
+          imageUrl: record.imageUrl || '',
+          alt: record.alt || name || '',
+          fallbackImage: record.fallbackImage || '',
+        }
+      })
+    },
+    staffCount() {
+      return Array.isArray(this.staffEntries) ? this.staffEntries.length : 0
+    },
     isEditPreview() {
       try {
         const hash = window.location.hash || ''
@@ -559,8 +640,19 @@ export default {
         const token = localStorage.getItem('admin_token')
         if (token && token.length > 0) opts.preferAdmin = true
       } catch (_) {}
-      this._pageText.load(opts)
+      const loadResult = this._pageText.load(opts)
+      if (loadResult && typeof loadResult.then === 'function') {
+        loadResult.then(() => this.recalculateStaffCarousel()).catch(() => {})
+      } else {
+        this.recalculateStaffCarousel()
+      }
     } catch(e) { /* noop */ }
+    try {
+      this.$watch(
+        () => this.staffEntries.length,
+        () => { this.recalculateStaffCarousel() },
+      )
+    } catch (_) {}
     this.loadFinancialReports();
     // lazy media registry (for staff/philosophy/message images)
     import('@/composables/usePageMedia').then(mod => {
@@ -630,31 +722,53 @@ export default {
       } catch(e) {}
       return fallback
     },
+    resolveStaffImage(member, index = 0) {
+      if (!member) return ''
+      const direct = member.imageUrl || member.image_url
+      if (typeof direct === 'string' && direct.length) return direct
+
+      const imageObj = member.image && typeof member.image === 'object' ? member.image : null
+      const imageFromObject = imageObj?.url
+      if (typeof imageFromObject === 'string' && imageFromObject.length) return imageFromObject
+
+      const key = member.imageKey || member.image_key || ''
+      const fallbackMeta = this.defaultStaffRecords[index] || {}
+      const fallbackImage = member.fallbackImage || fallbackMeta.fallbackImage || ''
+      const lookupKey = key || fallbackMeta.imageKey || ''
+      return this.media(lookupKey, fallbackImage)
+    },
     calculateCarouselIndicators() {
+      const totalStaffCount = this.staffCount;
+      if (!totalStaffCount) {
+        this.carouselIndicators = [];
+        return;
+      }
+
       const screenWidth = window.innerWidth;
-      const totalStaffCount = 5; // 実際のstaff-memberの数
-      
+
       if (screenWidth > 1400) {
         // 1400px以上は全員表示で横スクロールなし
         this.carouselIndicators = [];
-      } else if (screenWidth > 900) {
-        // 900px〜1400pxは4人表示で1人ずつスクロール
-        const visibleCount = 4;
-        const scrollableCount = totalStaffCount - visibleCount + 1; // 5 - 4 + 1 = 2
-        this.carouselIndicators = Array(scrollableCount).fill(null);
-      } else if (screenWidth > 600) {
-        // 600px〜900pxは3人表示で1人ずつスクロール
-        const visibleCount = 3;
-        const scrollableCount = totalStaffCount - visibleCount + 1; // 5 - 3 + 1 = 3
-        this.carouselIndicators = Array(scrollableCount).fill(null);
-      } else {
-        // 600px以下は2人表示で1人ずつスクロール
-        const visibleCount = 2;
-        const scrollableCount = totalStaffCount - visibleCount + 1; // 5 - 2 + 1 = 4
-        this.carouselIndicators = Array(scrollableCount).fill(null);
+        return;
       }
+
+      let visibleCount = 4;
+      if (screenWidth <= 900 && screenWidth > 600) {
+        visibleCount = 3;
+      } else if (screenWidth <= 600) {
+        visibleCount = 2;
+      }
+
+      if (totalStaffCount <= visibleCount) {
+        this.carouselIndicators = [];
+        return;
+      }
+
+      const scrollableCount = Math.max(totalStaffCount - visibleCount + 1, 0);
+      this.carouselIndicators = scrollableCount > 1 ? Array(scrollableCount).fill(null) : [];
     },
     scrollToCarouselIndex(index) {
+      if (!this.staffCount) return;
       const staffMembers = document.querySelector('.staff-members');
       if (!staffMembers) return;
 
@@ -682,6 +796,11 @@ export default {
     },
     setupCarouselScroll() {
       this.$nextTick(() => {
+        if (!this.staffCount) {
+          this.carouselIndicators = [];
+          this.currentCarouselIndex = 0;
+          return;
+        }
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const staffMembers = document.querySelector('.staff-members');
@@ -746,7 +865,20 @@ export default {
             this.calculateCarouselIndicators();
             this.currentCarouselIndex = 0;
           });
+
+          this.carouselInitialized = true;
         }
+      });
+    },
+    recalculateStaffCarousel() {
+      this.$nextTick(() => {
+        if (!this.staffCount) {
+          this.carouselIndicators = [];
+          this.currentCarouselIndex = 0;
+          return;
+        }
+        this.calculateCarouselIndicators();
+        this.currentCarouselIndex = 0;
       });
     },
     async loadFinancialReports() {

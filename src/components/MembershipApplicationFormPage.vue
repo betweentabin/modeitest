@@ -33,14 +33,17 @@
         <form class="contact-form" @submit.prevent="submitForm">
           <!-- Subject -->
           <div class="form-field">
-             <label class="field-label">会員タイプ<span class="required-mark">*</span></label>
+             <label class="field-label">
+               <CmsText pageKey="membership-application" fieldKey="form_label_subject" tag="span" :fallback="'会員タイプ'" />
+               <span class="required-mark">*</span>
+             </label>
             <div class="field-input">
                <select v-model="formData.subject" class="select-field">
-                 <option value="">選択してください</option>
-                 <option value="standard">スタンダード会員</option>
-                 <option value="premium">プレミアムネット会員</option>
-                 <option value="inquiry">会員に関するお問い合わせ</option>
-                 <option value="other">その他</option>
+                 <option value=""><CmsText pageKey="membership-application" fieldKey="form_placeholder_select" tag="span" :fallback="'選択してください'" /></option>
+                 <option value="standard"><CmsText pageKey="membership-application" fieldKey="form_option_standard" tag="span" :fallback="'スタンダード会員'" /></option>
+                 <option value="premium"><CmsText pageKey="membership-application" fieldKey="form_option_premium" tag="span" :fallback="'プレミアムネット会員'" /></option>
+                 <option value="inquiry"><CmsText pageKey="membership-application" fieldKey="form_option_inquiry" tag="span" :fallback="'会員に関するお問い合わせ'" /></option>
+                 <option value="other"><CmsText pageKey="membership-application" fieldKey="form_option_other" tag="span" :fallback="'その他'" /></option>
                </select>
               <svg class="select-arrow" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.0312 10.0306L12.5312 17.5306C12.4616 17.6004 12.3788 17.6557 12.2878 17.6934C12.1967 17.7312 12.0992 17.7506 12.0006 17.7506C11.902 17.7506 11.8044 17.7312 11.7134 17.6934C11.6223 17.6557 11.5396 17.6004 11.47 17.5306L3.96997 10.0306C3.86496 9.92573 3.79343 9.79204 3.76444 9.64648C3.73546 9.50092 3.75031 9.35002 3.80712 9.21291C3.86394 9.07579 3.96016 8.95861 4.0836 8.87621C4.20705 8.79381 4.35217 8.74988 4.50059 8.75H19.5006C19.649 8.74988 19.7941 8.79381 19.9176 8.87621C20.041 8.95861 20.1372 9.07579 20.1941 9.21291C20.2509 9.35002 20.2657 9.50092 20.2367 9.64648C20.2078 9.79204 20.1362 9.92573 20.0312 10.0306Z" fill="#727272"/>
@@ -50,7 +53,7 @@
 
           <!-- Name -->
           <div class="form-field">
-            <label class="field-label">お名前<span class="required-mark">*</span></label>
+            <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_name" tag="span" :fallback="'お名前'" /><span class="required-mark">*</span></label>
             <div class="field-input">
               <div class="name-inputs">
                 <input v-model="formData.lastName" type="text" placeholder="性" class="text-input" />
@@ -61,7 +64,7 @@
 
           <!-- Furigana -->
           <div class="form-field">
-            <label class="field-label">ふりがな（全角ひらがな）</label>
+            <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_kana" tag="span" :fallback="'ふりがな（全角ひらがな）'" /></label>
             <div class="field-input">
               <div class="name-inputs">
                 <input v-model="formData.lastNameKana" type="text" placeholder="せい" class="text-input" />
@@ -72,7 +75,7 @@
 
           <!-- Company Name -->
           <div class="form-field">
-            <label class="field-label">会社名</label>
+            <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_company" tag="span" :fallback="'会社名'" /></label>
             <div class="field-input">
               <input v-model="formData.companyName" type="text" class="text-input single" />
             </div>
@@ -80,7 +83,7 @@
 
           <!-- Position -->
           <div class="form-field">
-            <label class="field-label">役職</label>
+            <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_position" tag="span" :fallback="'役職'" /></label>
             <div class="field-input">
               <input v-model="formData.position" type="text" class="text-input single" />
             </div>
@@ -88,7 +91,7 @@
 
           <!-- Phone -->
           <div class="form-field">
-            <label class="field-label">電話番号</label>
+            <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_phone" tag="span" :fallback="'電話番号'" /></label>
             <div class="field-input">
               <input v-model="formData.phone" type="tel" class="text-input single" />
             </div>
@@ -96,7 +99,7 @@
 
           <!-- Email -->
           <div class="form-field">
-            <label class="field-label">メールアドレス<span class="required-mark">*</span></label>
+            <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_email" tag="span" :fallback="'メールアドレス'" /><span class="required-mark">*</span></label>
             <div class="field-input">
               <input v-model="formData.email" type="email" class="text-input single" />
             </div>
@@ -104,7 +107,7 @@
 
            <!-- Inquiry Content -->
            <div class="form-field">
-             <label class="field-label">入会希望内容・特記事項<span class="required-mark">*</span></label>
+             <label class="field-label"><CmsText pageKey="membership-application" fieldKey="form_label_content" tag="span" :fallback="'入会希望内容・特記事項'" /><span class="required-mark">*</span></label>
              <div class="field-input">
                <textarea v-model="formData.content" class="textarea-input" placeholder="入会希望内容や特記事項をご記入ください"></textarea>
              </div>
@@ -114,74 +117,92 @@
           <div class="terms-section">
             <div class="terms-content">
               <div class="terms-article">
-                <h3 class="terms-title">第1条(目的）</h3>
-                <p class="terms-text">「ちくさん地域経済クラブ」（以下、「本会」という）は、株式会社ちくさん地域経済研究所（以下、「当社」という）が運営するサービスであり、産・食・学・金（金機関）のネットワーク菜や会員相互の交流等を通じて、企業務営等に役立つ様々な情報や機会提供により、会員企業等がともに発展し、ひいては地域の振興・発展に買することを目的とします。</p>
+                <h3 class="terms-title">
+                  <CmsText pageKey="membership-application" fieldKey="terms_article1_title" tag="span" :fallback="'第1条(目的）'" />
+                </h3>
+                <div class="terms-text">
+                  <CmsText pageKey="membership-application" fieldKey="terms_article1_body" tag="div" type="html" :fallback="'「ちくさん地域経済クラブ」（以下、「本会」という）は、株式会社ちくさん地域経済研究所（以下、「当社」という）が運営するサービスであり、産・食・学・金（金機関）のネットワーク等や会員相互の交流等を通じて、企業経営等に役立つ様々な情報や機会提供により、会員企業等がともに発展し、ひいては地域の振興・発展に貢献することを目的とします。'" />
+                </div>
               </div>
 
               <div class="terms-article">
-                <h3 class="terms-title">第2条(会員）</h3>
-                <p class="terms-text">本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。</p>
+                <h3 class="terms-title">
+                  <CmsText pageKey="membership-application" fieldKey="terms_article2_title" tag="span" :fallback="'第2条(会員）'" />
+                </h3>
+                <div class="terms-text">
+                  <CmsText pageKey="membership-application" fieldKey="terms_article2_body" tag="div" type="html" :fallback="'本規約を了承のうえ当社所定の形式により入会の手続きをされた法人およびそれに準ずる団体、個人事業主または個人のうち、当社が会員入会を承認した方を本会の会員とします（以下、会員入会を承認した法人およびそれに準ずる団体または個人事業主の方を「法人会員」、会員入会を承認した個人を「個人会員」という）。なお、法人会員は、複数口の入会が可能です。会員は、会員資格を第三者に利用させたり、貸与、譲渡、売買、質入等をすることはできないものとします。'" />
+                </div>
               </div>
 
               <div class="terms-article">
-                <h3 class="terms-title">第3条(会員種別および会員サービス）</h3>
-                <p class="terms-text">本会の会員は、スタンダード会員とプレミアムネット会員の2種類とし、その会員種別に応じた次のサービス（以下、「会員サービス」という）を利用できるものとします。</p>
+                <h3 class="terms-title">
+                  <CmsText pageKey="membership-application" fieldKey="terms_article3_title" tag="span" :fallback="'第3条(会員種別および会員サービス）'" />
+                </h3>
+                <div class="terms-text">
+                  <CmsText pageKey="membership-application" fieldKey="terms_article3_intro" tag="div" type="html" :fallback="'本会の会員は、スタンダード会員とプレミアムネット会員の2種類とし、その会員種別に応じた次のサービス（以下、「会員サービス」という）を利用できるものとします。'" />
+                </div>
 
-                <h4 class="service-title">【スタンダード会員】</h4>
+                <h4 class="service-title">
+                  <CmsText pageKey="membership-application" fieldKey="standard_title" tag="span" :fallback="'【スタンダード会員】'" />
+                </h4>
                 <div class="service-item">
                   <span class="service-number">①</span>
-                  <span class="service-text">機関誌「ちくぎん地域経済レポート」等、当社が発行する刊行物並びにダイレクトメール、E-Mail等による経済、産業、企業動向等、企業経営に役立つ情報サービス</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="standard_item1" tag="span" :fallback="'機関誌「ちくぎん地域経済レポート」等、当社が発行する刊行物並びにダイレクトメール、E-Mail等による経済、産業、企業動向等、企業経営に役立つ情報サービス'" /></span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">②</span>
-                  <span class="service-text">各種の糸営相談に対する課題解決に向けた提案（相談の内容によっては有料）</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="standard_item2" tag="span" :fallback="'各種の経営相談に対する課題解決に向けた提案（相談の内容によっては有料）'" /></span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">③</span>
-                  <span class="service-text">当社主催の各種セミナー、企画、イベント等の割引料金による案内</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="standard_item3" tag="span" :fallback="'当社主催の各種セミナー、企画、イベント等の割引料金による案内'" /></span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">④</span>
-                  <span class="service-text">当社が運営するインターネットサイト（スタンダード会員サイト）の利用</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="standard_item4" tag="span" :fallback="'当社が運営するインターネットサイト（スタンダード会員サイト）の利用'" /></span>
                 </div>
 
-                <h4 class="service-title">【プレミアムネット会員】</h4>
-                <p class="service-subtitle">スタンダード会員が利用できる上記①から④までのサービスに加えて</p>
+                <h4 class="service-title">
+                  <CmsText pageKey="membership-application" fieldKey="premium_title" tag="span" :fallback="'【プレミアムネット会員】'" />
+                </h4>
+                <p class="service-subtitle">
+                  <CmsText pageKey="membership-application" fieldKey="premium_intro" tag="span" :fallback="'スタンダード会員が利用できる上記①から④までのサービスに加えて'" />
+                </p>
                 <div class="service-item">
                   <span class="service-number">⑤</span>
-                  <span class="service-text">ブレミアムネット会員専用インターネットサイト（販路拡大等を目的としたビジネスマッチングサービスを含む）による企業経営に役当つ各種ビジネス情報の提供</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="premium_item5" tag="span" :fallback="'プレミアムネット会員専用インターネットサイト（販路拡大等を目的としたビジネスマッチングサービスを含む）による企業経営に役立つ各種ビジネス情報の提供'" /></span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">⑥</span>
-                  <span class="service-text">会員企業PR情報掲歳サービス</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="premium_item6" tag="span" :fallback="'会員企業PR情報掲載サービス'" /></span>
                 </div>
                 <div class="service-item">
                   <span class="service-number">⑦</span>
-                  <span class="service-text">日経BP発刊「日経トップリーダー」の送付。同社主催の「日経トップリーダー 経営セミナー」の案内</span>
+                  <span class="service-text"><CmsText pageKey="membership-application" fieldKey="premium_item7" tag="span" :fallback="'日経BP発刊「日経トップリーダー」の送付。同社主催の「日経トップリーダー 経営セミナー」の案内'" /></span>
                 </div>
               </div>
-            </div>
+          </div>
 
             <div class="terms-download">
               <a href="/pdf/chikugin_kiyaku2.pdf" class="download-link" target="_blank">
-                会員規約をPDFでダウンロード
+                <CmsText pageKey="membership-application" fieldKey="terms_download_label" tag="span" :fallback="'会員規約をPDFでダウンロード'" />
                 <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15 2.8125C12.5895 2.8125 10.2332 3.52728 8.22899 4.86646C6.22477 6.20564 4.66267 8.10907 3.74022 10.336C2.81778 12.563 2.57643 15.0135 3.04668 17.3777C3.51694 19.7418 4.67769 21.9134 6.38214 23.6179C8.08659 25.3223 10.2582 26.4831 12.6223 26.9533C14.9865 27.4236 17.437 27.1822 19.664 26.2598C21.8909 25.3373 23.7944 23.7752 25.1335 21.771C26.4727 19.7668 27.1875 17.4105 27.1875 15C27.1841 11.7687 25.899 8.67076 23.6141 6.3859C21.3292 4.10104 18.2313 2.81591 15 2.8125ZM18.4758 15.6633L13.7883 20.3508C13.7012 20.4379 13.5978 20.507 13.484 20.5541C13.3702 20.6013 13.2482 20.6255 13.125 20.6255C13.0018 20.6255 12.8798 20.6013 12.766 20.5541C12.6522 20.507 12.5488 20.4379 12.4617 20.3508C12.3746 20.2637 12.3055 20.1603 12.2584 20.0465C12.2112 19.9327 12.187 19.8107 12.187 19.6875C12.187 19.5643 12.2112 19.4423 12.2584 19.3285C12.3055 19.2147 12.3746 19.1113 12.4617 19.0242L16.4871 15L12.4617 10.9758C12.2858 10.7999 12.187 10.5613 12.187 10.3125C12.187 10.0637 12.2858 9.82513 12.4617 9.64922C12.6376 9.47331 12.8762 9.37448 13.125 9.37448C13.3738 9.37448 13.6124 9.47331 13.7883 9.64922L18.4758 14.3367C18.563 14.4238 18.6321 14.5272 18.6793 14.641C18.7265 14.7548 18.7507 14.8768 18.7507 15C18.7507 15.1232 18.7265 15.2452 18.6793 15.359C18.6321 15.4728 18.563 15.5762 18.4758 15.6633Z" fill="#DA5761"/>
                 </svg>
               </a>
-            </div>
+          </div>
 
             <div class="privacy-section">
-              <p class="privacy-text">弊社のプライバシーポリシー（個人情報保護方針）に同意をされる場合は、下記のチェックボックスにチェックを入れてください。</p>
+              <p class="privacy-text"><CmsText pageKey="membership-application" fieldKey="form_privacy_note" tag="span" :fallback="'弊社のプライバシーポリシー（個人情報保護方針）に同意をされる場合は、下記のチェックボックスにチェックを入れてください。'" /></p>
               <div class="privacy-checkbox">
                 <input type="checkbox" id="privacy-agree" v-model="formData.privacyAgreement" />
-                <label for="privacy-agree">個人情報保護方針に同意します<span class="required-mark">*</span></label>
+                <label for="privacy-agree"><CmsText pageKey="membership-application" fieldKey="form_privacy_agree" tag="span" :fallback="'個人情報保護方針に同意します'" /><span class="required-mark">*</span></label>
               </div>
             </div>
 
             <div class="submit-section">
               <button type="submit" class="submit-btn" :disabled="!canSubmit">
-                確認する
+                <CmsText pageKey="membership-application" fieldKey="form_button_confirm" tag="span" :fallback="'確認する'" />
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
                   <path d="M18.0302 12.4415L13.5581 17.0412C13.4649 17.1371 13.3384 17.191 13.2066 17.191C13.0747 17.191 12.9482 17.1371 12.855 17.0412C12.7618 16.9453 12.7094 16.8152 12.7094 16.6796C12.7094 16.544 12.7618 16.4139 12.855 16.318L16.4793 12.5909L6.7469 12.5909C6.61511 12.5909 6.48872 12.5371 6.39554 12.4413C6.30235 12.3454 6.25 12.2154 6.25 12.0799C6.25 11.9443 6.30235 11.8143 6.39554 11.7185C6.48872 11.6226 6.61511 11.5688 6.7469 11.5688L16.4793 11.5688L12.855 7.84171C12.7618 7.74581 12.7094 7.61574 12.7094 7.48012C12.7094 7.34449 12.7618 7.21443 12.855 7.11853C12.9482 7.02263 13.0747 6.96875 13.2066 6.96875C13.3384 6.96875 13.4649 7.02263 13.5581 7.11853L18.0302 11.7183C18.0764 11.7657 18.113 11.8221 18.138 11.8841C18.1631 11.9462 18.1759 12.0127 18.1759 12.0799C18.1759 12.147 18.1631 12.2135 18.138 12.2756C18.113 12.3376 18.0764 12.394 18.0302 12.4415Z" fill="#1A1A1A"/>
@@ -202,7 +223,6 @@
 </template>
 
 <script>
-import apiClient from '../services/apiClient.js';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
@@ -211,6 +231,7 @@ import HeroSection from './HeroSection.vue';
 import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
 
 export default {
   name: 'MembershipApplicationFormPage',
@@ -220,11 +241,12 @@ export default {
     Group27,
     AccessSection,
     HeroSection,
-    Breadcrumbs
+    Breadcrumbs,
+    CmsText
   },
   data() {
     return {
-      pageKey: 'membership',
+      pageKey: 'membership-application',
       formData: {
         subject: '',
         lastName: '',

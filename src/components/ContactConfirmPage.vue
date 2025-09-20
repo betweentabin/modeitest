@@ -4,37 +4,37 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="お問い合わせ確認"
-      subtitle="contact confirm"
+      :title="confirmTitle"
+      :subtitle="confirmSubtitle"
       heroImage="/img/Image_fx2.jpg"
       mediaKey="hero_contact"
       cms-page-key="contact"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['お問い合わせ', '確認']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle, confirmLabel]" />
 
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">お問い合わせ</h1>
+          <h1 class="form-title">{{ pageTitle }}</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">contact</span>
+            <span class="divider-text">{{ pageSubtitle }}</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
-            <span class="step-inactive">①お客様情報の入力</span>
-            <span class="step-active">　- ②記入内容のご確認　</span>
-            <span class="step-inactive">- ③完了</span>
+            <span class="step-inactive">{{ stepInput }}</span>
+            <span class="step-active">　- {{ stepConfirm }}　</span>
+            <span class="step-inactive">- {{ stepComplete }}</span>
           </div>
         </div>
 
         <div class="contact-form">
           <!-- Subject -->
           <div class="form-field">
-            <label class="field-label">件名</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_subject" tag="span" :fallback="'件名'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ getSubjectText(formData.subject) }}</div>
             </div>
@@ -42,7 +42,7 @@
 
           <!-- Name -->
           <div class="form-field">
-            <label class="field-label">お名前</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_name" tag="span" :fallback="'お名前'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.lastName }} {{ formData.firstName }}</div>
             </div>
@@ -50,7 +50,7 @@
 
           <!-- Furigana -->
           <div class="form-field">
-            <label class="field-label">ふりがな（全角ひらがな）</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_kana" tag="span" :fallback="'ふりがな（全角ひらがな）'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.lastNameKana }} {{ formData.firstNameKana }}</div>
             </div>
@@ -58,7 +58,7 @@
 
           <!-- Company Name -->
           <div class="form-field">
-            <label class="field-label">会社名</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_company" tag="span" :fallback="'会社名'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.companyName || '未入力' }}</div>
             </div>
@@ -66,7 +66,7 @@
 
           <!-- Position -->
           <div class="form-field">
-            <label class="field-label">役職</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_position" tag="span" :fallback="'役職'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.position || '未入力' }}</div>
             </div>
@@ -74,7 +74,7 @@
 
           <!-- Phone -->
           <div class="form-field">
-            <label class="field-label">電話番号</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_phone" tag="span" :fallback="'電話番号'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.phone || '未入力' }}</div>
             </div>
@@ -82,7 +82,7 @@
 
           <!-- Email -->
           <div class="form-field">
-            <label class="field-label">メールアドレス</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_email" tag="span" :fallback="'メールアドレス'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.email }}</div>
             </div>
@@ -90,7 +90,7 @@
 
           <!-- Inquiry Content -->
           <div class="form-field">
-            <label class="field-label">お問い合わせ内容</label>
+            <label class="field-label"><CmsText pageKey="contact" fieldKey="form_label_content" tag="span" :fallback="'お問い合わせ内容'" /></label>
             <div class="field-input">
               <div class="confirm-value content-value">{{ formData.content }}</div>
             </div>
@@ -106,10 +106,10 @@
                    <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
                    <path d="M5.9698 12.4415L10.4419 17.0412C10.5351 17.1371 10.6616 17.191 10.7934 17.191C10.9253 17.191 11.0518 17.1371 11.145 17.0412C11.2382 16.9453 11.2906 16.8152 11.2906 16.6796C11.2906 16.544 11.2382 16.4139 11.145 16.318L7.5207 12.5909L17.2531 12.5909C17.3849 12.5909 17.5113 12.5371 17.6045 12.4413C17.6977 12.3454 17.75 12.2154 17.75 12.0799C17.75 11.9443 17.6977 11.8143 17.6045 11.7185C17.5113 11.6226 17.3849 11.5688 17.2531 11.5688L7.5207 11.5688L11.145 7.84171C11.2382 7.74581 11.2906 7.61574 11.2906 7.48012C11.2906 7.34449 11.2382 7.21443 11.145 7.11853C11.0518 7.02263 10.9253 6.96875 10.7934 6.96875C10.6616 6.96875 10.5351 7.02263 10.4419 7.11853L5.9698 11.7183C5.9236 11.7657 5.887 11.8221 5.862 11.8841C5.8369 11.9462 5.8241 12.0127 5.8241 12.0799C5.8241 12.147 5.8369 12.2135 5.862 12.2756C5.887 12.3376 5.9236 12.394 5.9698 12.4415Z" fill="#1A1A1A"/>
                  </svg>
-                 戻る
+                 {{ buttonBack }}
                </button>
                <button type="button" class="submit-btn" @click="submitForm">
-                 送信する
+                 {{ buttonSubmit }}
                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                    <rect x="0.5" y="0.5" width="23" height="23" rx="5" fill="white"/>
                    <path d="M18.0302 12.4415L13.5581 17.0412C13.4649 17.1371 13.3384 17.191 13.2066 17.191C13.0747 17.191 12.9482 17.1371 12.855 17.0412C12.7618 16.9453 12.7094 16.8152 12.7094 16.6796C12.7094 16.544 12.7618 16.4139 12.855 16.318L16.4793 12.5909L6.7469 12.5909C6.61511 12.5909 6.48872 12.5371 6.39554 12.4413C6.30235 12.3454 6.25 12.2154 6.25 12.0799C6.25 11.9443 6.30235 11.8143 6.39554 11.7185C6.48872 11.6226 6.61511 11.5688 6.7469 11.5688L16.4793 11.5688L12.855 7.84171C12.7618 7.74581 12.7094 7.61574 12.7094 7.48012C12.7094 7.34449 12.7618 7.21443 12.855 7.11853C12.9482 7.02263 13.0747 6.96875 13.2066 6.96875C13.3384 6.96875 13.4649 7.02263 13.5581 7.11853L18.0302 11.7183C18.0764 11.7657 18.113 11.8221 18.138 11.8841C18.1631 11.9462 18.1759 12.0127 18.1759 12.0799C18.1759 12.147 18.1631 12.2135 18.138 12.2756C18.113 12.3376 18.0764 12.394 18.0302 12.4415Z" fill="#1A1A1A"/>
@@ -130,6 +130,8 @@
 </template>
 
 <script>
+import CmsText from '@/components/CmsText.vue'
+import { usePageText } from '@/composables/usePageText'
 import apiClient from '../services/apiClient.js';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
@@ -142,6 +144,7 @@ import { frame132131753022Data } from "../data.js";
 export default {
   name: 'ContactConfirmPage',
   components: {
+    CmsText,
     Navigation,
     Footer,
     Group27,
@@ -171,7 +174,21 @@ export default {
       frame132131753022Props: frame132131753022Data
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'contact') || 'contact' },
+    confirmTitle() { return this._pageText?.getText('confirm_title', 'お問い合わせ確認') || 'お問い合わせ確認' },
+    confirmSubtitle() { return this._pageText?.getText('confirm_subtitle', 'contact confirm') || 'contact confirm' },
+    confirmLabel() { return this._pageText?.getText('breadcrumb_confirm', '確認') || '確認' },
+    stepInput() { return this._pageText?.getText('step_input', '①お客様情報の入力') || '①お客様情報の入力' },
+    stepConfirm() { return this._pageText?.getText('step_confirm', '②記入内容のご確認') || '②記入内容のご確認' },
+    stepComplete() { return this._pageText?.getText('step_complete', '③完了') || '③完了' },
+    buttonBack() { return this._pageText?.getText('button_back', '戻る') || '戻る' },
+    buttonSubmit() { return this._pageText?.getText('button_submit', '送信する') || '送信する' },
+  },
   mounted() {
+    try { this._pageText = usePageText('contact'); this._pageText.load() } catch(e) {}
     // URLパラメータからフォームデータを取得
     const params = new URLSearchParams(this.$route.query);
     if (params.get('formData')) {

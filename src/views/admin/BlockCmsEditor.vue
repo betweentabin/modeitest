@@ -34,7 +34,7 @@
           </div>
 
           <!-- Layout view toggle (for key pages like company/aboutus/about/consult/membership) -->
-          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
+          <div class="field" v-if="currentPage && (['company','aboutus','about','consult','membership','services','membership-application','seminar-application','contact','navigation','footer'].some(k => (currentPage.slug||'').toLowerCase().includes(k)))">
             <label>編集モード</label>
             <div style="display:flex; gap:10px; align-items:center;">
               <label style="display:flex; gap:6px; align-items:center;">
@@ -184,8 +184,131 @@
           <!-- contact: シンプル構成ビュー（layoutMode） -->
           <template v-if="currentPage && currentPage.slug==='contact' && layoutMode">
             <div class="section-title">お問い合わせ（Contact）</div>
-            <div class="field"><label>フォーム見出し</label><input v-model="contactTexts.form_title" class="input" placeholder="お問い合わせフォーム" /></div>
-            
+
+            <div class="field" v-for="key in contactBasicKeys" :key="`contact-basic-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="contactTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">件名の選択肢</div>
+            <div class="field" v-for="key in contactOptionKeys" :key="`contact-option-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="contactTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">フォーム項目ラベル</div>
+            <div class="field" v-for="key in contactFieldLabelKeys" :key="`contact-label-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="contactTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">規約案内</div>
+            <div class="field" v-for="key in contactTextareaKeys" :key="`contact-textarea-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <textarea v-model="contactTexts[key]" class="textarea" rows="4"></textarea>
+            </div>
+            <div class="field" v-for="key in contactAgreementKeys" :key="`contact-agree-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="contactTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">連絡先ブロック</div>
+            <div class="field" v-for="key in contactInfoKeys" :key="`contact-info-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="contactTexts[key]" class="input" />
+            </div>
+          </template>
+
+          <template v-if="currentPage && currentPage.slug==='membership-application' && layoutMode">
+            <div class="section-title">会員申込フォーム</div>
+            <div class="field" v-for="key in membershipApplicationBasicKeys" :key="`membership-app-basic-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="membershipApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">件名の選択肢</div>
+            <div class="field" v-for="key in membershipApplicationOptionKeys" :key="`membership-app-option-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="membershipApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">フォーム項目ラベル</div>
+            <div class="field" v-for="key in membershipApplicationFieldLabelKeys" :key="`membership-app-label-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="membershipApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">規約セクション（見出し）</div>
+            <div class="field" v-for="key in membershipApplicationHeadingKeys" :key="`membership-app-heading-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="membershipApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">規約本文・説明</div>
+            <div class="field" v-for="key in membershipApplicationTextareaKeys" :key="`membership-app-textarea-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <textarea v-model="membershipApplicationTexts[key]" class="textarea" rows="4"></textarea>
+            </div>
+
+            <div class="section-title">規約同意・ボタン</div>
+            <div class="field" v-for="key in membershipApplicationAgreementKeys" :key="`membership-app-agree-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="membershipApplicationTexts[key]" class="input" />
+            </div>
+          </template>
+
+          <template v-if="currentPage && currentPage.slug==='seminar-application' && layoutMode">
+            <div class="section-title">セミナー申込フォーム</div>
+            <div class="field" v-for="key in seminarApplicationBasicKeys" :key="`seminar-app-basic-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="seminarApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">件名の選択肢</div>
+            <div class="field" v-for="key in seminarApplicationOptionKeys" :key="`seminar-app-option-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="seminarApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">フォーム項目ラベル</div>
+            <div class="field" v-for="key in seminarApplicationFieldLabelKeys" :key="`seminar-app-label-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="seminarApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">規約セクション（見出し）</div>
+            <div class="field" v-for="key in seminarApplicationHeadingKeys" :key="`seminar-app-heading-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="seminarApplicationTexts[key]" class="input" />
+            </div>
+
+            <div class="section-title">規約本文・説明</div>
+            <div class="field" v-for="key in seminarApplicationTextareaKeys" :key="`seminar-app-textarea-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <textarea v-model="seminarApplicationTexts[key]" class="textarea" rows="4"></textarea>
+            </div>
+
+            <div class="section-title">規約同意・ボタン</div>
+            <div class="field" v-for="key in seminarApplicationAgreementKeys" :key="`seminar-app-agree-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="seminarApplicationTexts[key]" class="input" />
+            </div>
+          </template>
+
+          <template v-if="currentPage && currentPage.slug==='navigation' && layoutMode">
+            <div class="section-title">ヘッダーナビ</div>
+            <div class="field" v-for="key in navigationKeys" :key="`navigation-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="navigationTexts[key]" class="input" />
+            </div>
+          </template>
+
+          <template v-if="currentPage && currentPage.slug==='footer' && layoutMode">
+            <div class="section-title">フッターナビ</div>
+            <div class="field" v-for="key in footerKeys" :key="`footer-${key}`">
+              <label>{{ displayLabel(key) }}</label>
+              <input v-model="footerTexts[key]" class="input" />
+            </div>
           </template>
 
           <div v-if="currentPage" class="section-title">子コンポーネント文言（基本）</div>
@@ -202,6 +325,10 @@
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='membership-application'" v-model="membershipApplicationTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='seminar-application'" v-model="seminarApplicationTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='navigation'" v-model="navigationTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='footer'" v-model="footerTexts.page_title" class="input" />
             <input v-else v-model="privacyTexts.page_title" class="input" />
           </div>
           <div v-if="currentPage" class="field">
@@ -217,6 +344,10 @@
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='membership-application'" v-model="membershipApplicationTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='seminar-application'" v-model="seminarApplicationTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='navigation'" v-model="navigationTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='footer'" v-model="footerTexts.page_subtitle" class="input" />
             <input v-else v-model="privacyTexts.page_subtitle" class="input" />
           </div>
           <div v-if="currentPage && currentPage.slug==='privacy-policy'" class="field">
@@ -422,113 +553,44 @@
               <label>英字</label>
               <input v-model="companyTexts.staff_subtitle" class="input" placeholder="MEMBER" />
             </div>
-            <!-- Staff cards: 文言編集（画像は下の各写真アップロードで管理） -->
-            <div class="layout-grid">
-              <div class="text-col">
-                <div class="field-group">
-                  <div class="group-title">森田</div>
-                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_morita_position" class="input" /></div>
-                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_morita_name" class="input" /></div>
-                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_morita_reading" class="input" /></div>
-                  <div class="field"><label>注記</label><input v-model="companyTexts.staff_morita_note" class="input" placeholder="（空でも可）" /></div>
+            <div class="help">スタッフは上から順番に表示されます。必要に応じて追加・並べ替え・削除を行ってください。</div>
+            <div
+              v-for="(member, idx) in companyStaff"
+              :key="member.__localId || `staff-${idx}`"
+              class="field staff-card"
+            >
+              <div class="staff-card-header">
+                <div class="staff-card-title">スタッフ {{ idx + 1 }}</div>
+                <div class="staff-card-actions">
+                  <button class="btn" @click="moveCompanyStaff(idx, -1)" :disabled="idx === 0">上へ</button>
+                  <button class="btn" @click="moveCompanyStaff(idx, 1)" :disabled="idx === companyStaff.length - 1">下へ</button>
+                  <button class="btn danger" @click="removeCompanyStaff(idx)">削除</button>
                 </div>
               </div>
-              <div class="text-col">
-                <div class="field-group">
-                  <div class="group-title">溝上</div>
-                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_mizokami_position" class="input" /></div>
-                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_mizokami_name" class="input" /></div>
-                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_mizokami_reading" class="input" /></div>
-                </div>
-              </div>
-            </div>
-            <div class="layout-grid">
-              <div class="text-col">
-                <div class="field-group">
-                  <div class="group-title">空閑</div>
-                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_kuga_position" class="input" /></div>
-                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_kuga_name" class="input" /></div>
-                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_kuga_reading" class="input" /></div>
-                </div>
-              </div>
-              <div class="text-col">
-                <div class="field-group">
-                  <div class="group-title">髙田</div>
-                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_takada_position" class="input" /></div>
-                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_takada_name" class="input" /></div>
-                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_takada_reading" class="input" /></div>
-                </div>
-              </div>
-            </div>
-            <div class="layout-grid">
-              <div class="text-col">
-                <div class="field-group">
-                  <div class="group-title">中村</div>
-                  <div class="field"><label>役職</label><input v-model="companyTexts.staff_nakamura_position" class="input" placeholder="（空でも可）" /></div>
-                  <div class="field"><label>氏名</label><input v-model="companyTexts.staff_nakamura_name" class="input" /></div>
-                  <div class="field"><label>ふりがな</label><input v-model="companyTexts.staff_nakamura_reading" class="input" /></div>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-              <label>写真（森田） company_profile_staff_morita</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_morita') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-actions">
-                    <input ref="img_company_profile_staff_morita" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_morita', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_morita')">アップロードファイル</button>
+              <div class="field"><label>氏名</label><input v-model="member.name" class="input" placeholder="氏名" /></div>
+              <div class="field"><label>ふりがな</label><input v-model="member.reading" class="input" placeholder="ふりがな" /></div>
+              <div class="field"><label>役職</label><input v-model="member.position" class="input" placeholder="役職" /></div>
+              <div class="field"><label>注記</label><input v-model="member.note" class="input" placeholder="（空でも可）" /></div>
+              <div class="field"><label>ID / スラッグ</label><input v-model="member.id" class="input" placeholder="例: morita" /></div>
+              <div class="field"><label>画像キー</label><input v-model="member.image_key" class="input" placeholder="company_profile_staff_***" @change="onCompanyStaffImageKeyChange(member)" /></div>
+              <div class="field"><label>画像URL（任意）</label><input v-model="member.image_url" class="input" placeholder="直接URLを指定する場合" /></div>
+              <div class="field">
+                <label>画像プレビュー</label>
+                <div class="page-image-row">
+                  <div class="img-preview"><img :src="resolveCompanyStaffPreview(member)" alt="preview" /></div>
+                  <div class="img-meta">
+                    <div class="img-actions">
+                      <button class="btn" @click="handleCompanyStaffImageUpload(member)" :disabled="!member.image_key">アップロードファイル</button>
+                      <button class="btn" v-if="member.image_url" @click="clearCompanyStaffImageUrl(member)">URLをクリア</button>
+                    </div>
+                    <div class="help" v-if="!member.image_key">画像アップロード前にキーを入力してください</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="field">
-              <label>写真（溝上） company_profile_staff_mizokami</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_mizokami') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-actions">
-                    <input ref="img_company_profile_staff_mizokami" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_mizokami', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_mizokami')">アップロードファイル</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-              <label>写真（空閑） company_profile_staff_kuga</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_kuga') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-actions">
-                    <input ref="img_company_profile_staff_kuga" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_kuga', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_kuga')">アップロードファイル</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-              <label>写真（髙田） company_profile_staff_takada</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_takada') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-actions">
-                    <input ref="img_company_profile_staff_takada" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_takada', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_takada')">アップロードファイル</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-              <label>写真（中村） company_profile_staff_nakamura</label>
-              <div class="page-image-row">
-                <div class="img-preview"><img :src="getImageUrlByKey('company_profile_staff_nakamura') || ''" alt="preview"/></div>
-                <div class="img-meta">
-                  <div class="img-actions">
-                    <input ref="img_company_profile_staff_nakamura" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('company_profile_staff_nakamura', $event)" />
-                    <button class="btn" @click="triggerCompanyImageUpload('company_profile_staff_nakamura')">アップロードファイル</button>
-                  </div>
-                </div>
-              </div>
+            <div class="actions" style="justify-content:flex-start; gap:8px;">
+              <button class="btn" @click="addCompanyStaff">+ 所員を追加</button>
+              <button class="btn" @click="resetCompanyStaffFromLegacy">既存テキストから再読込</button>
             </div>
 
             <!-- 決算報告（Financial Reports） -->
@@ -1350,6 +1412,147 @@ import AdminLayout from './AdminLayout.vue'
 import apiClient from '@/services/apiClient'
 import { getApiUrl } from '@/config/api.js'
 
+const CONTACT_BASIC_KEYS = ['form_title', 'form_label_subject', 'form_placeholder_select']
+const CONTACT_OPTION_KEYS = ['form_option_inquiry', 'form_option_membership', 'form_option_seminar', 'form_option_other']
+const CONTACT_FIELD_LABEL_KEYS = [
+  'form_label_name',
+  'form_label_kana',
+  'form_label_company',
+  'form_label_position',
+  'form_label_phone',
+  'form_label_email',
+  'form_label_content'
+]
+const CONTACT_TEXTAREA_KEYS = ['form_privacy_note']
+const CONTACT_AGREEMENT_KEYS = ['form_privacy_agree', 'form_button_confirm']
+const CONTACT_INFO_KEYS = ['contact_title', 'contact_label', 'contact_subtitle', 'contact_cta']
+
+const TRANSPARENT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+const COMPANY_STAFF_LEGACY = [
+  {
+    id: 'morita',
+    name: '森田 祥子',
+    reading: 'もりた さちこ',
+    position: '企画部　部長代理',
+    note: '（アジア福岡パートナーズへ出向）',
+    nameKey: 'staff_morita_name',
+    readingKey: 'staff_morita_reading',
+    positionKey: 'staff_morita_position',
+    noteKey: 'staff_morita_note',
+    imageKey: 'company_profile_staff_morita',
+    fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452',
+  },
+  {
+    id: 'mizokami',
+    name: '溝上 浩文',
+    reading: 'みぞかみ ひろふみ',
+    position: '取締役企画部長　兼調査部長',
+    note: '',
+    nameKey: 'staff_mizokami_name',
+    readingKey: 'staff_mizokami_reading',
+    positionKey: 'staff_mizokami_position',
+    noteKey: 'staff_mizokami_note',
+    imageKey: 'company_profile_staff_mizokami',
+    fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451',
+  },
+  {
+    id: 'kuga',
+    name: '空閑 重信',
+    reading: 'くが しげのぶ',
+    position: '代表取締役社長',
+    note: '',
+    nameKey: 'staff_kuga_name',
+    readingKey: 'staff_kuga_reading',
+    positionKey: 'staff_kuga_position',
+    noteKey: 'staff_kuga_note',
+    imageKey: 'company_profile_staff_kuga',
+    fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451',
+  },
+  {
+    id: 'takada',
+    name: '髙田 友里恵',
+    reading: 'たかだ ゆりえ',
+    position: '調査部　主任',
+    note: '',
+    nameKey: 'staff_takada_name',
+    readingKey: 'staff_takada_reading',
+    positionKey: 'staff_takada_position',
+    noteKey: 'staff_takada_note',
+    imageKey: 'company_profile_staff_takada',
+    fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/b21372a6aca15dfc189c6953aeb23f36f5d5e20b?width=451',
+  },
+  {
+    id: 'nakamura',
+    name: '中村 公栄',
+    reading: 'なかむら きえみ',
+    position: '',
+    note: '',
+    nameKey: 'staff_nakamura_name',
+    readingKey: 'staff_nakamura_reading',
+    positionKey: 'staff_nakamura_position',
+    noteKey: 'staff_nakamura_note',
+    imageKey: 'company_profile_staff_nakamura',
+    fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451',
+  },
+]
+
+const APPLICATION_BASIC_KEYS = ['page_title', 'page_subtitle', 'form_title', 'form_label_subject', 'form_placeholder_select']
+const APPLICATION_OPTION_KEYS = ['form_option_standard', 'form_option_premium', 'form_option_inquiry', 'form_option_other']
+const APPLICATION_FIELD_LABEL_KEYS = CONTACT_FIELD_LABEL_KEYS
+const APPLICATION_HEADING_KEYS = ['terms_article1_title', 'terms_article2_title', 'terms_article3_title', 'standard_title', 'premium_title', 'terms_download_label']
+const APPLICATION_TEXTAREA_KEYS = [
+  'form_privacy_note',
+  'terms_article1_body',
+  'terms_article2_body',
+  'terms_article3_intro',
+  'standard_item1',
+  'standard_item2',
+  'standard_item3',
+  'standard_item4',
+  'premium_intro',
+  'premium_item5',
+  'premium_item6',
+  'premium_item7'
+]
+const APPLICATION_AGREEMENT_KEYS = ['form_privacy_agree', 'form_button_confirm']
+
+const NAVIGATION_KEYS = [
+  'nav_about',
+  'nav_seminars',
+  'nav_publications',
+  'nav_information',
+  'nav_membership',
+  'nav_premium_benefits',
+  'nav_news',
+  'nav_company',
+  'nav_faq',
+  'nav_indicators',
+  'nav_statistics',
+  'nav_membership_standard',
+  'nav_membership_premium'
+]
+
+const FOOTER_KEYS = [
+  'link_home',
+  'link_company',
+  'link_about',
+  'link_news',
+  'link_faq',
+  'link_contact',
+  'link_seminar',
+  'link_publication',
+  'link_glossary',
+  'link_membership',
+  'link_membership_standard',
+  'link_membership_premium',
+  'link_cri_consulting',
+  'link_member_login',
+  'link_legal',
+  'link_privacy',
+  'link_terms',
+  'link_sitemap'
+]
+
 export default {
   name: 'BlockCmsEditor',
   components: { AdminLayout },
@@ -1389,6 +1592,7 @@ export default {
       // 会社概要 / コンサル / 研究所について（小コンポーネント文言）
       companyTexts: {},
       companyHtmls: {},
+      companyStaff: [],
       companyFinancialReports: [],
       consultingTexts: {},
       consultingHtmls: {},
@@ -1398,6 +1602,30 @@ export default {
       standardTexts: {},
       premiumTexts: {},
       contactTexts: {},
+      membershipApplicationTexts: {},
+      seminarApplicationTexts: {},
+      navigationTexts: {},
+      footerTexts: {},
+      contactBasicKeys: CONTACT_BASIC_KEYS,
+      contactOptionKeys: CONTACT_OPTION_KEYS,
+      contactFieldLabelKeys: CONTACT_FIELD_LABEL_KEYS,
+      contactTextareaKeys: CONTACT_TEXTAREA_KEYS,
+      contactAgreementKeys: CONTACT_AGREEMENT_KEYS,
+      contactInfoKeys: CONTACT_INFO_KEYS,
+      membershipApplicationBasicKeys: APPLICATION_BASIC_KEYS,
+      membershipApplicationOptionKeys: APPLICATION_OPTION_KEYS,
+      membershipApplicationFieldLabelKeys: APPLICATION_FIELD_LABEL_KEYS,
+      membershipApplicationHeadingKeys: APPLICATION_HEADING_KEYS,
+      membershipApplicationTextareaKeys: APPLICATION_TEXTAREA_KEYS,
+      membershipApplicationAgreementKeys: APPLICATION_AGREEMENT_KEYS,
+      seminarApplicationBasicKeys: APPLICATION_BASIC_KEYS,
+      seminarApplicationOptionKeys: APPLICATION_OPTION_KEYS,
+      seminarApplicationFieldLabelKeys: APPLICATION_FIELD_LABEL_KEYS,
+      seminarApplicationHeadingKeys: APPLICATION_HEADING_KEYS,
+      seminarApplicationTextareaKeys: APPLICATION_TEXTAREA_KEYS,
+      seminarApplicationAgreementKeys: APPLICATION_AGREEMENT_KEYS,
+      navigationKeys: NAVIGATION_KEYS,
+      footerKeys: FOOTER_KEYS,
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
       genericHtmls: {},
@@ -1564,12 +1792,141 @@ export default {
         },
         contact: {
           page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
-          form_title: 'フォーム見出し'
+          form_title: 'フォーム見出し',
+          form_label_subject: 'フォーム：件名ラベル',
+          form_placeholder_select: 'フォーム：プレースホルダー',
+          form_option_inquiry: '件名選択肢：サービスに関するお問い合わせ',
+          form_option_membership: '件名選択肢：会員に関するお問い合わせ',
+          form_option_seminar: '件名選択肢：セミナーに関するお問い合わせ',
+          form_option_other: '件名選択肢：その他',
+          form_label_name: 'フォーム：お名前ラベル',
+          form_label_kana: 'フォーム：ふりがなラベル',
+          form_label_company: 'フォーム：会社名ラベル',
+          form_label_position: 'フォーム：役職ラベル',
+          form_label_phone: 'フォーム：電話番号ラベル',
+          form_label_email: 'フォーム：メールアドレスラベル',
+          form_label_content: 'フォーム：お問い合わせ内容ラベル',
+          form_privacy_note: '規約案内文',
+          form_privacy_agree: '規約同意チェックラベル',
+          form_button_confirm: '送信ボタン文言',
+          contact_title: '連絡先ブロック：タイトル',
+          contact_label: '連絡先ブロック：ラベル',
+          contact_subtitle: '連絡先ブロック：サブタイトル',
+          contact_cta: '連絡先ブロック：ボタン文言'
         },
         glossary: {
           page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
           intro: '導入（本文）',
           contact_title: '問合せ（見出し）', contact_subtitle: '問合せ（説明）', contact_label: '問合せ（英字）', contact_cta: '問合せボタン'
+        },
+        'membership-application': {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          form_title: 'フォーム見出し',
+          form_label_subject: 'フォーム：会員タイプラベル',
+          form_placeholder_select: 'フォーム：プレースホルダー',
+          form_option_standard: '選択肢：スタンダード会員',
+          form_option_premium: '選択肢：プレミアムネット会員',
+          form_option_inquiry: '選択肢：会員に関するお問い合わせ',
+          form_option_other: '選択肢：その他',
+          form_label_name: 'フォーム：お名前ラベル',
+          form_label_kana: 'フォーム：ふりがなラベル',
+        form_label_company: 'フォーム：会社名ラベル',
+        form_label_position: 'フォーム：役職ラベル',
+        form_label_phone: 'フォーム：電話番号ラベル',
+        form_label_email: 'フォーム：メールアドレスラベル',
+        form_label_content: 'フォーム：入会希望内容ラベル',
+        terms_article1_title: '規約：第1条 見出し',
+        terms_article1_body: '規約：第1条 本文',
+        terms_article2_title: '規約：第2条 見出し',
+        terms_article2_body: '規約：第2条 本文',
+        terms_article3_title: '規約：第3条 見出し',
+        terms_article3_intro: '規約：第3条 導入文',
+          standard_title: 'スタンダード会員 見出し',
+          standard_item1: 'スタンダード会員 項目①',
+          standard_item2: 'スタンダード会員 項目②',
+          standard_item3: 'スタンダード会員 項目③',
+          standard_item4: 'スタンダード会員 項目④',
+          premium_title: 'プレミアム会員 見出し',
+          premium_intro: 'プレミアム会員 導入文',
+          premium_item5: 'プレミアム会員 項目⑤',
+          premium_item6: 'プレミアム会員 項目⑥',
+          premium_item7: 'プレミアム会員 項目⑦',
+          terms_download_label: '規約PDFリンク文言',
+          form_privacy_note: '規約案内文',
+          form_privacy_agree: '規約同意チェックラベル',
+          form_button_confirm: '送信ボタン文言'
+        },
+        'seminar-application': {
+          page_title: 'ページタイトル', page_subtitle: 'ページサブタイトル',
+          form_title: 'フォーム見出し',
+          form_label_subject: 'フォーム：会員タイプラベル',
+          form_placeholder_select: 'フォーム：プレースホルダー',
+          form_option_standard: '選択肢：スタンダード会員',
+          form_option_premium: '選択肢：プレミアムネット会員',
+          form_option_inquiry: '選択肢：会員に関するお問い合わせ',
+          form_option_other: '選択肢：その他',
+          form_label_name: 'フォーム：お名前ラベル',
+          form_label_kana: 'フォーム：ふりがなラベル',
+        form_label_company: 'フォーム：会社名ラベル',
+        form_label_position: 'フォーム：役職ラベル',
+        form_label_phone: 'フォーム：電話番号ラベル',
+        form_label_email: 'フォーム：メールアドレスラベル',
+        form_label_content: 'フォーム：入会希望内容ラベル',
+        terms_article1_title: '規約：第1条 見出し',
+        terms_article1_body: '規約：第1条 本文',
+        terms_article2_title: '規約：第2条 見出し',
+        terms_article2_body: '規約：第2条 本文',
+        terms_article3_title: '規約：第3条 見出し',
+        terms_article3_intro: '規約：第3条 導入文',
+          standard_title: 'スタンダード会員 見出し',
+          standard_item1: 'スタンダード会員 項目①',
+          standard_item2: 'スタンダード会員 項目②',
+          standard_item3: 'スタンダード会員 項目③',
+          standard_item4: 'スタンダード会員 項目④',
+          premium_title: 'プレミアム会員 見出し',
+          premium_intro: 'プレミアム会員 導入文',
+          premium_item5: 'プレミアム会員 項目⑤',
+          premium_item6: 'プレミアム会員 項目⑥',
+          premium_item7: 'プレミアム会員 項目⑦',
+          terms_download_label: '規約PDFリンク文言',
+          form_privacy_note: '規約案内文',
+          form_privacy_agree: '規約同意チェックラベル',
+          form_button_confirm: '送信ボタン文言'
+        },
+        navigation: {
+          nav_about: 'ヘッダー：私たちについて',
+          nav_seminars: 'ヘッダー：セミナー',
+          nav_publications: 'ヘッダー：刊行物',
+          nav_information: 'ヘッダー：各種情報',
+          nav_membership: 'ヘッダー：入会案内',
+          nav_premium_benefits: 'ヘッダー：プレミアム会員の特典',
+          nav_news: 'ヘッダー：お知らせ',
+          nav_company: 'ヘッダー：会社概要',
+          nav_faq: 'ヘッダー：よくある質問',
+          nav_indicators: 'ドロップダウン：経済指標',
+          nav_statistics: 'ドロップダウン：経済・調査統計',
+          nav_membership_standard: 'ドロップダウン：スタンダード会員',
+          nav_membership_premium: 'ドロップダウン：プレミアム会員'
+        },
+        footer: {
+          link_home: 'フッター：トップページ',
+          link_company: 'フッター：会社概要',
+          link_about: 'フッター：私たちについて',
+          link_news: 'フッター：お知らせ',
+          link_faq: 'フッター：よくある質問',
+          link_contact: 'フッター：お問い合わせ',
+          link_seminar: 'フッター：セミナー',
+          link_publication: 'フッター：刊行物',
+          link_glossary: 'フッター：用語集',
+          link_membership: 'フッター：入会案内',
+          link_membership_standard: 'フッター：スタンダード',
+          link_membership_premium: 'フッター：プレミアム',
+          link_cri_consulting: 'フッター：CRI経営コンサルティング',
+          link_member_login: 'フッター：会員ログイン',
+          link_legal: 'フッター：特定商取引法に関する表記',
+          link_privacy: 'フッター：プライバシーポリシー',
+          link_terms: 'フッター：利用規約',
+          link_sitemap: 'フッター：サイトマップ'
         }
       },
       // PageContent(CmsText) 側のキー。ページ選択時に推定（UIで変更可）
@@ -1608,7 +1965,7 @@ export default {
       if (!key) return false
       if (this.excludeKeys.has(key)) return false
       // 既に専用UIがあるものは除外
-      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','about','membership','standard-membership','premium-membership','contact'])
+      const specialized = new Set(['privacy','terms','transaction-law','company-profile','cri-consulting','about-institute','about','membership','standard-membership','premium-membership','contact','membership-application','seminar-application','navigation','footer'])
       if (specialized.has(key)) return false
       // texts/htmls のどちらかがあるときに表示
       const hasTexts = this.genericTexts && Object.keys(this.genericTexts).length > 0
@@ -1673,9 +2030,13 @@ export default {
       if (s.includes('sitemap')) return 'sitemap'
       if (s.includes('faq')) return 'faq'
       if (s.includes('glossary')) return 'glossary'
+      if (s.includes('membership-application')) return 'membership-application'
+      if (s.includes('seminar-application')) return 'seminar-application'
       if (s.includes('premium') && s.includes('membership')) return 'premium-membership'
       if (s.includes('standard') && s.includes('membership')) return 'standard-membership'
       if (s.includes('membership')) return 'membership'
+      if (s.includes('navigation')) return 'navigation'
+      if (s.includes('footer')) return 'footer'
       if (s.includes('contact')) return 'contact'
       if (s === 'home') return 'home'
       // '/services' uses MembershipPage content
@@ -1723,9 +2084,13 @@ export default {
         else if (slug.includes('sitemap')) this.pageContentKey = 'sitemap'
         else if (slug.includes('faq')) this.pageContentKey = 'faq'
         else if (slug.includes('glossary')) this.pageContentKey = 'glossary'
-        else if (slug.includes('premium')) this.pageContentKey = 'premium-membership'
+        else if (slug.includes('membership-application')) this.pageContentKey = 'membership-application'
+        else if (slug.includes('seminar-application')) this.pageContentKey = 'seminar-application'
+        else if (slug.includes('premium') && slug.includes('membership')) this.pageContentKey = 'premium-membership'
         else if (slug.includes('standard') && slug.includes('membership')) this.pageContentKey = 'standard-membership'
         else if (slug.includes('membership')) this.pageContentKey = 'membership'
+        else if (slug.includes('navigation')) this.pageContentKey = 'navigation'
+        else if (slug.includes('footer')) this.pageContentKey = 'footer'
         else if (slug.includes('contact')) this.pageContentKey = 'contact'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'membership'
@@ -1789,6 +2154,14 @@ export default {
                 url: typeof it?.url === 'string' ? it.url : ''
               })) : []
             })) : []
+            // staff
+            const staffRaw = Array.isArray(content?.staff) ? content.staff : []
+            if (staffRaw.length) {
+              this.companyStaff = this.normalizeCompanyStaffCollection(staffRaw)
+            } else {
+              this.companyStaff = this.defaultCompanyStaff()
+            }
+            if (!this.companyStaff.length) this.companyStaff = [this.normalizeCompanyStaffMember({}, 0)]
             // 初回は既存（静的）テキストをデフォルトとして投入
             if (!this.companyFinancialReports || this.companyFinancialReports.length === 0) {
               this.companyFinancialReports = this.defaultCompanyFinancialReports()
@@ -1796,6 +2169,7 @@ export default {
             if (!this.companyTexts.page_title) this.companyTexts.page_title = this.currentPage.title || ''
             if (!this.companyTexts.financial_reports_title) this.companyTexts.financial_reports_title = '決算報告'
             if (!this.companyTexts.financial_reports_subtitle) this.companyTexts.financial_reports_subtitle = 'financial reports'
+            this.missingImageKeys = this.calculateMissingImages()
           } else if (this.pageContentKey === 'cri-consulting') {
             this.consultingTexts = { ...(this.consultingTexts || {}), ...(texts || {}) }
             this.consultingHtmls = { ...(this.consultingHtmls || {}), ...(htmls || {}) }
@@ -1816,6 +2190,18 @@ export default {
             this.premiumTexts = { ...(this.premiumTexts || {}), ...(texts || {}) }
           } else if (this.pageContentKey === 'contact') {
             this.contactTexts = { ...(this.contactTexts || {}), ...(texts || {}) }
+          } else if (this.pageContentKey === 'membership-application') {
+            this.membershipApplicationTexts = { ...(this.membershipApplicationTexts || {}), ...(texts || {}) }
+            if (!this.membershipApplicationTexts.page_title) this.membershipApplicationTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'seminar-application') {
+            this.seminarApplicationTexts = { ...(this.seminarApplicationTexts || {}), ...(texts || {}) }
+            if (!this.seminarApplicationTexts.page_title) this.seminarApplicationTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'navigation') {
+            this.navigationTexts = { ...(this.navigationTexts || {}), ...(texts || {}) }
+            if (!this.navigationTexts.page_title) this.navigationTexts.page_title = this.currentPage.title || ''
+          } else if (this.pageContentKey === 'footer') {
+            this.footerTexts = { ...(this.footerTexts || {}), ...(texts || {}) }
+            if (!this.footerTexts.page_title) this.footerTexts.page_title = this.currentPage.title || ''
           } else if (this.pageContentKey === 'glossary') {
             // Glossary: texts/htmls はそのまま、items をロード
             this.genericTexts = {}
@@ -2058,6 +2444,148 @@ export default {
         }
       ]
     },
+    createStaffLocalId(index = 0){
+      return `staff-${Date.now()}-${Math.random().toString(36).slice(2)}-${index}`
+    },
+    normalizeCompanyStaffMember(member = {}, index = 0){
+      const imageObj = (member && typeof member.image === 'object') ? member.image : null
+      const imageKey = typeof member?.image_key === 'string' ? member.image_key : (typeof member?.imageKey === 'string' ? member.imageKey : '')
+      const imageUrl = typeof member?.image_url === 'string' ? member.image_url : (typeof member?.imageUrl === 'string' ? member.imageUrl : (imageObj?.url || ''))
+      return {
+        __localId: member.__localId || this.createStaffLocalId(index),
+        id: typeof member?.id === 'string' ? member.id : (typeof member?.slug === 'string' ? member.slug : ''),
+        name: typeof member?.name === 'string' ? member.name : '',
+        reading: typeof member?.reading === 'string' ? member.reading : '',
+        position: typeof member?.position === 'string' ? member.position : '',
+        note: typeof member?.note === 'string' ? member.note : '',
+        alt: typeof member?.alt === 'string' ? member.alt : (typeof member?.name === 'string' ? member.name : ''),
+        image_key: imageKey,
+        image_url: imageUrl,
+        image: imageObj ? {
+          url: imageObj.url || '',
+          path: imageObj.path || '',
+          filename: imageObj.filename || ''
+        } : null,
+      }
+    },
+    normalizeCompanyStaffCollection(list){
+      return Array.isArray(list)
+        ? list.map((member, index) => this.normalizeCompanyStaffMember(member, index))
+        : []
+    },
+    buildCompanyStaffFromLegacyTexts(){
+      try {
+        return COMPANY_STAFF_LEGACY.map((entry, index) => this.normalizeCompanyStaffMember({
+          id: entry.id,
+          name: (this.companyTexts && this.companyTexts[entry.nameKey]) || entry.name || '',
+          reading: (this.companyTexts && this.companyTexts[entry.readingKey]) || entry.reading || '',
+          position: (this.companyTexts && this.companyTexts[entry.positionKey]) || entry.position || '',
+          note: (this.companyTexts && this.companyTexts[entry.noteKey]) || entry.note || '',
+          image_key: entry.imageKey,
+          image_url: this.getImageUrlByKey(entry.imageKey) || entry.fallbackImage || '',
+          alt: (this.companyTexts && this.companyTexts[entry.nameKey]) || entry.name || '',
+        }, index))
+      } catch(_) {
+        return []
+      }
+    },
+    defaultCompanyStaff(){
+      return this.buildCompanyStaffFromLegacyTexts()
+    },
+    resolveCompanyStaffPreview(member){
+      if (!member) return TRANSPARENT_PIXEL
+      const direct = member.image_url && member.image_url.trim()
+      if (direct) return direct
+      const fromKey = member.image_key ? this.getImageUrlByKey(member.image_key) : ''
+      if (fromKey) return fromKey
+      if (member.image && typeof member.image === 'object' && member.image.url) return member.image.url
+      const legacy = COMPANY_STAFF_LEGACY.find(it => it.imageKey === member.image_key || it.id === member.id)
+      if (legacy && legacy.fallbackImage) return legacy.fallbackImage
+      return TRANSPARENT_PIXEL
+    },
+    handleCompanyStaffImageUpload(member){
+      if (!member || !member.image_key) {
+        alert('先に画像キーを入力してください')
+        return
+      }
+      this.uploadForKey(member.image_key)
+    },
+    clearCompanyStaffImageUrl(member){
+      if (!member) return
+      member.image_url = ''
+      this.missingImageKeys = this.calculateMissingImages()
+    },
+    onCompanyStaffImageKeyChange(member){
+      if (!member) return
+      if (member.image_key) member.image_key = member.image_key.trim()
+      this.missingImageKeys = this.calculateMissingImages()
+    },
+    addCompanyStaff(){
+      if (!Array.isArray(this.companyStaff)) this.companyStaff = []
+      const index = this.companyStaff.length
+      this.companyStaff.push(this.normalizeCompanyStaffMember({
+        id: '',
+        name: '',
+        reading: '',
+        position: '',
+        note: '',
+        image_key: '',
+        image_url: '',
+      }, index))
+      this.missingImageKeys = this.calculateMissingImages()
+    },
+    removeCompanyStaff(index){
+      if (!Array.isArray(this.companyStaff)) return
+      this.companyStaff.splice(index, 1)
+      this.companyStaff = this.normalizeCompanyStaffCollection(this.companyStaff)
+      this.missingImageKeys = this.calculateMissingImages()
+    },
+    moveCompanyStaff(index, delta){
+      if (!Array.isArray(this.companyStaff)) return
+      const target = index + delta
+      if (target < 0 || target >= this.companyStaff.length) return
+      const clone = [...this.companyStaff]
+      const [item] = clone.splice(index, 1)
+      clone.splice(target, 0, item)
+      this.companyStaff = this.normalizeCompanyStaffCollection(clone)
+      this.missingImageKeys = this.calculateMissingImages()
+    },
+    resetCompanyStaffFromLegacy(){
+      this.companyStaff = this.defaultCompanyStaff()
+      if (!this.companyStaff.length) this.companyStaff = [this.normalizeCompanyStaffMember({}, 0)]
+      this.missingImageKeys = this.calculateMissingImages()
+    },
+    sanitizeCompanyStaffMember(member, index){
+      const normalized = this.normalizeCompanyStaffMember(member, index)
+      const trimmedName = (normalized.name || '').trim()
+      const trimmedPosition = (normalized.position || '').trim()
+      const trimmedNote = (normalized.note || '').trim()
+      const trimmedImageKey = (normalized.image_key || '').trim()
+      const trimmedImageUrl = (normalized.image_url || '').trim()
+      const hasContent = trimmedName || trimmedPosition || trimmedNote || trimmedImageKey || trimmedImageUrl
+      if (!hasContent) return null
+      const payload = {
+        id: (normalized.id || `staff-${index + 1}`).trim(),
+        order: index,
+        name: trimmedName,
+        reading: (normalized.reading || '').trim(),
+        position: trimmedPosition,
+        note: trimmedNote,
+      }
+      if (normalized.alt && normalized.alt.trim() && normalized.alt.trim() !== payload.name) {
+        payload.alt = normalized.alt.trim()
+      }
+      if (trimmedImageKey) payload.image_key = trimmedImageKey
+      if (trimmedImageUrl) payload.image_url = trimmedImageUrl
+      if (normalized.image && (normalized.image.url || normalized.image.path || normalized.image.filename)) {
+        payload.image = {
+          url: normalized.image.url || '',
+          path: normalized.image.path || '',
+          filename: normalized.image.filename || ''
+        }
+      }
+      return payload
+    },
     async saveCompanyFinancialReports(){
       try {
         const reports = Array.isArray(this.companyFinancialReports) ? this.companyFinancialReports.map(r => ({
@@ -2178,16 +2706,22 @@ export default {
     expectedImageKeys(){
       const key = this.pageContentKey || ''
       if (key === 'company-profile') {
-        return [
+        const baseKeys = [
           'hero',
           'company_profile_philosophy',
           'company_profile_message',
-          'company_profile_staff_morita',
-          'company_profile_staff_mizokami',
-          'company_profile_staff_kuga',
-          'company_profile_staff_takada',
-          'company_profile_staff_nakamura',
         ]
+        const staffKeys = Array.isArray(this.companyStaff)
+          ? this.companyStaff.map(member => member && member.image_key).filter(k => typeof k === 'string' && k.length)
+          : []
+        const fallbackStaffKeys = COMPANY_STAFF_LEGACY.map(item => item.imageKey)
+        const keySet = new Set(baseKeys)
+        if (staffKeys.length) {
+          staffKeys.forEach(k => keySet.add(k))
+        } else {
+          fallbackStaffKeys.forEach(k => keySet.add(k))
+        }
+        return Array.from(keySet)
       }
       if (key === 'about' || key === 'about-institute') {
         return [
@@ -2307,6 +2841,17 @@ export default {
             try { if (mod.useMedia) { const m = mod.useMedia(); if (m && typeof m.ensure === 'function') m.ensure() } } catch(_) {}
           } catch(_) { /* ignore */ }
         await this.refreshPageImages()
+
+        // Ensure legacy PageContent is published so public API reflects the change
+        try {
+          await apiClient.adminUpdatePageContent(this.pageContentKey, { is_published: true })
+        } catch(_) { /* non-blocking */ }
+
+        // Notify other tabs (public page) to reload page content cache immediately
+        try {
+          const k = 'page_content_cache:' + String(this.pageContentKey)
+          localStorage.setItem(k, String(Date.now()))
+        } catch(_) { /* ignore */ }
       } else {
         alert('画像アップロードに失敗しました')
       }
@@ -2327,6 +2872,7 @@ export default {
         })
         const mkeys = (content && typeof content === 'object' && content.media_keys && typeof content.media_keys === 'object') ? content.media_keys : {}
         this.mediaKeys = { ...mkeys }
+        this.missingImageKeys = this.calculateMissingImages()
       } catch(_) {}
     },
     insertLastContentImage(){
@@ -2457,6 +3003,10 @@ export default {
       } else if (key === 'company-profile') {
         if (hasEntries(this.companyTexts)) patch.content.texts = { ...this.companyTexts }
         if (hasEntries(this.companyHtmls)) patch.content.htmls = { ...this.companyHtmls }
+        const staff = Array.isArray(this.companyStaff)
+          ? this.companyStaff.map((member, index) => this.sanitizeCompanyStaffMember(member, index)).filter(Boolean)
+          : []
+        patch.content.staff = staff
         const hist = Array.isArray(this.companyHistory) ? this.companyHistory
           .map(h => ({ year: String(h?.year || '').trim(), date: String(h?.date || '').trim(), body: String(h?.body || '').trim() }))
           .filter(h => h.year || h.date || h.body) : []
@@ -2516,6 +3066,14 @@ export default {
         if (hasEntries(this.premiumTexts)) patch.content.texts = { ...this.premiumTexts }
       } else if (key === 'contact') {
         if (hasEntries(this.contactTexts)) patch.content.texts = { ...this.contactTexts }
+      } else if (key === 'membership-application') {
+        if (hasEntries(this.membershipApplicationTexts)) patch.content.texts = { ...this.membershipApplicationTexts }
+      } else if (key === 'seminar-application') {
+        if (hasEntries(this.seminarApplicationTexts)) patch.content.texts = { ...this.seminarApplicationTexts }
+      } else if (key === 'navigation') {
+        if (hasEntries(this.navigationTexts)) patch.content.texts = { ...this.navigationTexts }
+      } else if (key === 'footer') {
+        if (hasEntries(this.footerTexts)) patch.content.texts = { ...this.footerTexts }
       } else {
         const hasGeneric = (hasEntries(this.genericTexts) || hasEntries(this.genericHtmls))
         if (hasEntries(this.genericTexts)) patch.content.texts = { ...this.genericTexts }
@@ -2571,6 +3129,7 @@ export default {
 .input, .textarea{ border:1px solid #ddd; border-radius:6px; padding:8px 10px; }
 .btn{ background:#1A1A1A; color:#fff; border:none; border-radius:6px; padding:8px 12px; cursor:pointer; }
 .btn.primary{ background:#DA5761; }
+.btn.danger{ background:#e25555; }
 .empty{ padding:16px; color:#777; }
 .modal{ position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
 .modal-inner{ background:#fff; border-radius:8px; padding:16px; width:360px; display:flex; flex-direction:column; gap:10px; }
@@ -2595,6 +3154,10 @@ export default {
   .image-col{ display:flex; flex-direction:column; gap:8px; }
   .field-group{ border:1px solid #eee; border-radius:8px; padding:10px; background:#fff; }
   .group-title{ font-weight:600; color:#1A1A1A; margin-bottom:6px; }
+  .staff-card{ border:1px solid #eee; border-radius:10px; padding:12px; background:#fff; margin-bottom:12px; }
+  .staff-card-header{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .staff-card-title{ font-weight:600; color:#1A1A1A; }
+  .staff-card-actions{ display:flex; gap:6px; flex-wrap:wrap; }
   @media (max-width: 960px){
     .layout-grid{ grid-template-columns: 1fr; }
   }

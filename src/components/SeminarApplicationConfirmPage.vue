@@ -4,35 +4,35 @@
     
     <!-- Hero Section -->
     <HeroSection 
-      title="セミナー申し込み"
-      subtitle="seminar application"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/Image_fx6.jpg"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['セミナー', '申し込み', '確認']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle, confirmLabel]" />
 
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">セミナー申し込み</h1>
+          <h1 class="form-title">{{ pageTitle }}</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">seminar application</span>
+            <span class="divider-text">{{ pageSubtitle }}</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
-            <span class="step-inactive">①お客様情報の入力</span>
-            <span class="step-active">　- ②記入内容のご確認　</span>
-            <span class="step-inactive">- ③完了</span>
+            <span class="step-inactive">{{ stepInput }}</span>
+            <span class="step-active">　- {{ stepConfirm }}　</span>
+            <span class="step-inactive">- {{ stepComplete }}</span>
           </div>
         </div>
 
         <div class="contact-form">
           <!-- Subject -->
           <div class="form-field">
-            <label class="field-label">会員タイプ</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_subject" tag="span" :fallback="'会員タイプ'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ getSubjectText(formData.subject) }}</div>
             </div>
@@ -40,7 +40,7 @@
 
           <!-- Name -->
           <div class="form-field">
-            <label class="field-label">お名前</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_name" tag="span" :fallback="'お名前'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.lastName }} {{ formData.firstName }}</div>
             </div>
@@ -48,7 +48,7 @@
 
           <!-- Furigana -->
           <div class="form-field">
-            <label class="field-label">ふりがな（全角ひらがな）</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_kana" tag="span" :fallback="'ふりがな（全角ひらがな）'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.lastNameKana }} {{ formData.firstNameKana }}</div>
             </div>
@@ -56,7 +56,7 @@
 
           <!-- Company Name -->
           <div class="form-field">
-            <label class="field-label">会社名</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_company" tag="span" :fallback="'会社名'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.companyName || '未入力' }}</div>
             </div>
@@ -64,7 +64,7 @@
 
           <!-- Position -->
           <div class="form-field">
-            <label class="field-label">役職</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_position" tag="span" :fallback="'役職'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.position || '未入力' }}</div>
             </div>
@@ -72,7 +72,7 @@
 
           <!-- Phone -->
           <div class="form-field">
-            <label class="field-label">電話番号</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_phone" tag="span" :fallback="'電話番号'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.phone || '未入力' }}</div>
             </div>
@@ -80,7 +80,7 @@
 
           <!-- Email -->
           <div class="form-field">
-            <label class="field-label">メールアドレス</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_email" tag="span" :fallback="'メールアドレス'" /></label>
             <div class="field-input">
               <div class="confirm-value">{{ formData.email }}</div>
             </div>
@@ -88,7 +88,7 @@
 
           <!-- Inquiry Content -->
           <div class="form-field">
-            <label class="field-label">参加希望内容・特記事項</label>
+            <label class="field-label"><CmsText pageKey="seminar-application" fieldKey="form_label_content" tag="span" :fallback="'参加希望内容・特記事項'" /></label>
             <div class="field-input">
               <div class="confirm-value content-value">{{ formData.content }}</div>
             </div>
@@ -128,6 +128,8 @@
 </template>
 
 <script>
+import CmsText from '@/components/CmsText.vue'
+import { usePageText } from '@/composables/usePageText'
 import apiClient from '../services/apiClient.js';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
@@ -140,6 +142,7 @@ import { frame132131753022Data } from "../data.js";
 export default {
   name: 'SeminarApplicationConfirmPage',
   components: {
+    CmsText,
     Navigation,
     Footer,
     Group27,
@@ -169,6 +172,18 @@ export default {
       frame132131753022Props: frame132131753022Data
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'セミナー申し込み') || 'セミナー申し込み' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'seminar application') || 'seminar application' },
+    formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
+    confirmLabel() { return this._pageText?.getText('breadcrumb_confirm', '確認') || '確認' },
+    stepInput() { return this._pageText?.getText('step_input', '①お客様情報の入力') || '①お客様情報の入力' },
+    stepConfirm() { return this._pageText?.getText('step_confirm', '②記入内容のご確認') || '②記入内容のご確認' },
+    stepComplete() { return this._pageText?.getText('step_complete', '③完了') || '③完了' },
+    buttonBack() { return this._pageText?.getText('button_back', '戻る') || '戻る' },
+    buttonSubmit() { return this._pageText?.getText('button_submit', '送信する') || '送信する' },
+  },
   mounted() {
     // URLパラメータからフォームデータを取得
     const params = new URLSearchParams(this.$route.query);
@@ -185,6 +200,7 @@ export default {
       const seminarId = this.$route.params.id;
       this.$router.push(`/seminars/${seminarId}/apply`);
     }
+    try { this._pageText = usePageText('seminar-application'); this._pageText.load() } catch(e) {}
   },
   methods: {
     goBack() {

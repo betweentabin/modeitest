@@ -4,43 +4,39 @@
       
       <!-- Hero Section -->
       <HeroSection 
-        title="入会申し込み"
-        subtitle="membership"
+        :title="completeHeroTitle"
+        :subtitle="completeHeroSubtitle"
         heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
       />
   
       <!-- Breadcrumbs -->
-      <Breadcrumbs :breadcrumbs="['入会申し込み', '完了']" />
+      <Breadcrumbs :breadcrumbs="[pageTitle, completeLabel]" />
   
       <!-- Form Section -->
       <section class="form-section">
         <div class="form-container">
           <div class="form-header">
-            <h1 class="form-title">入会申し込み完了</h1>
+            <h1 class="form-title">{{ completeTitle }}</h1>
             <div class="form-divider">
               <div class="divider-line"></div>
-              <span class="divider-text">membership</span>
+              <span class="divider-text">{{ pageSubtitle }}</span>
               <div class="divider-line"></div>
             </div>
             <div class="form-steps">
-              <span class="step-inactive">①入会情報の入力</span>
-              <span class="step-inactive">　- ②記入内容のご確認　</span>
-              <span class="step-active">- ③完了</span>
+              <span class="step-inactive">{{ stepInput }}</span>
+              <span class="step-inactive">　- {{ stepConfirm }}　</span>
+              <span class="step-active">- {{ stepComplete }}</span>
             </div>
           </div>
   
           <div class="contact-form">
             <!-- Completion Message -->
             <div class="completion-message">
-              <p class="completion-text">
-                入会申し込みが完了しました。<br>
-                申し込み内容の詳細は、後日メールにてご連絡いたします。<br>
-                ご不明な点がございましたら、お気軽にお問い合わせください。
-              </p>
+              <p class="completion-text" v-html="completeMessage"></p>
             </div>
             <!-- Back to top (home) button -->
             <ActionButton
-              :primaryText="'トップに戻る'"
+              :primaryText="buttonHome"
               :showSecondary="false"
               :maxWidth="'1014px'"
               @primary-click="$router.push('/')"
@@ -58,14 +54,16 @@
   </template>
   
   <script>
-  import Navigation from "./Navigation.vue";
-  import Footer from "./Footer.vue";
+import Navigation from "./Navigation.vue";
+import Footer from "./Footer.vue";
   import Group27 from "./Group27.vue";
   import AccessSection from './AccessSection.vue';
   import HeroSection from './HeroSection.vue';
   import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import ActionButton from './ActionButton.vue'
+import { usePageText } from '@/composables/usePageText'
+import CmsText from '@/components/CmsText.vue'
   
   export default {
     name: 'MembershipApplicationCompletePage',
@@ -75,15 +73,36 @@ import ActionButton from './ActionButton.vue'
       Group27,
       AccessSection,
       HeroSection,
-      Breadcrumbs,
-      ActionButton
+    Breadcrumbs,
+    ActionButton,
+    CmsText
+  },
+  data() {
+    return {
+      applicationNumber: null,
+      frame132131753022Props: frame132131753022Data
+    };
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '入会申し込み') || '入会申し込み' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
+    completeHeroTitle() { return this._pageText?.getText('complete_hero_title', this.pageTitle) || this.pageTitle },
+    completeHeroSubtitle() { return this._pageText?.getText('complete_hero_subtitle', this.pageSubtitle) || this.pageSubtitle },
+    completeTitle() { return this._pageText?.getText('complete_title', '入会申し込み完了') || '入会申し込み完了' },
+    completeLabel() { return this._pageText?.getText('breadcrumb_complete', '完了') || '完了' },
+    stepInput() { return this._pageText?.getText('step_input', '①入会情報の入力') || '①入会情報の入力' },
+    stepConfirm() { return this._pageText?.getText('step_confirm', '②記入内容のご確認') || '②記入内容のご確認' },
+    stepComplete() { return this._pageText?.getText('step_complete', '③完了') || '③完了' },
+    completeMessage() {
+      return this._pageText?.getHtml('complete_message', '入会申し込みが完了しました。<br>申し込み内容の詳細は、後日メールにてご連絡いたします。<br>ご不明な点がございましたら、お気軽にお問い合わせください。')
+        || '入会申し込みが完了しました。<br>申し込み内容の詳細は、後日メールにてご連絡いたします。<br>ご不明な点がございましたら、お気軽にお問い合わせください。'
     },
-    data() {
-      return {
-        applicationNumber: null,
-        frame132131753022Props: frame132131753022Data
-      };
-    },
+    buttonHome() { return this._pageText?.getText('button_home', 'トップに戻る') || 'トップに戻る' },
+  },
+  mounted() {
+    try { this._pageText = usePageText('membership-application'); this._pageText.load() } catch(e) {}
+  },
     mounted() {
       // URLパラメータから申し込み番号を取得
       const params = new URLSearchParams(this.$route.query);

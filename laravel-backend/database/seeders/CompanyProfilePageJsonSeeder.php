@@ -100,12 +100,66 @@ class CompanyProfilePageJsonSeeder extends Seeder
             [ 'year' => '2011', 'date' => '平成23年7月1日', 'body' => '社名変更　（株）ちくぎん地域経済研究所として新たにスタート。<br>主たる業務は調査・研究、人材開発、IT関連サービス、経営支援（経営サポート）、コンシェルジュサービス。' ],
         ];
 
+        // デフォルトの所員紹介データ（staff 配列）
+        $defaultStaff = [
+            [
+                'id' => 'morita',
+                'order' => 0,
+                'name' => '森田 祥子',
+                'reading' => 'もりた さちこ',
+                'position' => '企画部　部長代理',
+                'note' => '（アジア福岡パートナーズへ出向）',
+                'image_key' => 'company_profile_staff_morita',
+                'image_url' => $images['company_profile_staff_morita'],
+            ],
+            [
+                'id' => 'mizokami',
+                'order' => 1,
+                'name' => '溝上 浩文',
+                'reading' => 'みぞかみ ひろふみ',
+                'position' => '取締役企画部長　兼調査部長',
+                'note' => '',
+                'image_key' => 'company_profile_staff_mizokami',
+                'image_url' => $images['company_profile_staff_mizokami'],
+            ],
+            [
+                'id' => 'kuga',
+                'order' => 2,
+                'name' => '空閑 重信',
+                'reading' => 'くが しげのぶ',
+                'position' => '代表取締役社長',
+                'note' => '',
+                'image_key' => 'company_profile_staff_kuga',
+                'image_url' => $images['company_profile_staff_kuga'],
+            ],
+            [
+                'id' => 'takada',
+                'order' => 3,
+                'name' => '髙田 友里恵',
+                'reading' => 'たかだ ゆりえ',
+                'position' => '調査部　主任',
+                'note' => '',
+                'image_key' => 'company_profile_staff_takada',
+                'image_url' => $images['company_profile_staff_takada'],
+            ],
+            [
+                'id' => 'nakamura',
+                'order' => 4,
+                'name' => '中村 公栄',
+                'reading' => 'なかむら きえみ',
+                'position' => '',
+                'note' => '',
+                'image_key' => 'company_profile_staff_nakamura',
+                'image_url' => $images['company_profile_staff_nakamura'],
+            ],
+        ];
+
         $page = PageContent::where('page_key', $key)->first();
         if (!$page) {
             PageContent::create([
                 'page_key' => $key,
                 'title' => '会社概要',
-                'content' => ['texts' => $texts, 'htmls' => $defaultHtmls, 'images' => $images, 'history' => $defaultHistory],
+                'content' => ['texts' => $texts, 'htmls' => $defaultHtmls, 'images' => $images, 'history' => $defaultHistory, 'staff' => $defaultStaff],
                 'is_published' => true,
                 'published_at' => now(),
             ]);
@@ -124,6 +178,65 @@ class CompanyProfilePageJsonSeeder extends Seeder
         // history は未設定または空のときだけ初期値を設定（既存優先）
         if (empty($content['history']) || !is_array($content['history'])) {
             $content['history'] = $defaultHistory;
+        }
+
+        if (empty($content['staff']) || !is_array($content['staff'])) {
+            $content['staff'] = $defaultStaff;
+        } else {
+            $content['staff'] = array_values(array_map(function ($item, $index) use ($defaultStaff, $images) {
+                if (!is_array($item)) {
+                    $item = [];
+                }
+
+                $fallback = $defaultStaff[$index] ?? [];
+
+                $id = isset($item['id']) && is_string($item['id']) && trim($item['id']) !== ''
+                    ? trim($item['id'])
+                    : (isset($item['slug']) && is_string($item['slug']) && trim($item['slug']) !== ''
+                        ? trim($item['slug'])
+                        : ($fallback['id'] ?? ('staff-' . ($index + 1))));
+
+                $name = isset($item['name']) && is_string($item['name']) ? trim($item['name']) : ($fallback['name'] ?? '');
+                $reading = isset($item['reading']) && is_string($item['reading']) ? trim($item['reading']) : ($fallback['reading'] ?? '');
+                $position = isset($item['position']) && is_string($item['position']) ? trim($item['position']) : ($fallback['position'] ?? '');
+                $note = isset($item['note']) && is_string($item['note']) ? trim($item['note']) : ($fallback['note'] ?? '');
+                $alt = isset($item['alt']) && is_string($item['alt']) ? trim($item['alt']) : '';
+
+                $imageKey = isset($item['image_key']) && is_string($item['image_key']) && trim($item['image_key']) !== ''
+                    ? trim($item['image_key'])
+                    : ($fallback['image_key'] ?? null);
+
+                $imageUrl = isset($item['image_url']) && is_string($item['image_url']) && trim($item['image_url']) !== ''
+                    ? trim($item['image_url'])
+                    : ($fallback['image_url'] ?? ($imageKey && isset($images[$imageKey]) ? $images[$imageKey] : null));
+
+                $normalized = [
+                    'id' => $id,
+                    'order' => $index,
+                    'name' => $name,
+                    'reading' => $reading,
+                    'position' => $position,
+                    'note' => $note,
+                ];
+
+                if ($alt !== '' && $alt !== $name) {
+                    $normalized['alt'] = $alt;
+                }
+
+                if ($imageKey) {
+                    $normalized['image_key'] = $imageKey;
+                }
+
+                if ($imageUrl) {
+                    $normalized['image_url'] = $imageUrl;
+                }
+
+                if (isset($item['image']) && is_array($item['image'])) {
+                    $normalized['image'] = array_intersect_key($item['image'], array_flip(['url', 'path', 'filename']));
+                }
+
+                return $normalized;
+            }, $content['staff'], array_keys($content['staff'])));
         }
 
         // プライバシー方式との整合: content.html が未設定なら既存セクションから全文HTMLを合成
