@@ -33,7 +33,7 @@
         <!-- Year Filter -->
         <div class="year-filter">
           <button 
-            v-for="year in years" 
+            v-for="year in displayedYears" 
             :key="year"
             :class="['year-btn', { active: selectedYear === year }]"
             @click="selectYear(year)"
@@ -43,7 +43,7 @@
         </div>
 
         <!-- Download Button -->
-        <button class="filter-download-btn">さらに表示
+        <button v-if="hasMoreYears" @click="toggleShowAllYears" class="filter-download-btn">{{ showAllYears ? '少なく表示' : 'さらに表示' }}
           <div class="icon-box">
             <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="23" height="23" rx="5" fill="white"/>
@@ -222,23 +222,17 @@ export default {
       loading: true,
       selectedYear: 'all',
       selectedCategory: 'all',
+      showAllYears: false,
       error: null,
       currentPage: 1,
       totalPages: 1,
-      years: [],
+      years: ['2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015'],
       categories: [
         { id: 'all', name: '全て' },
-        { id: 'gdp', name: 'GDPと日銀短観' },
-        { id: 'economy', name: '景気' },
-        { id: 'regional', name: '景況（福岡市・北九州市・久留米市）' },
-        { id: 'consumption', name: '個人消費' },
-        { id: 'public', name: '公共投資' },
-        { id: 'investment', name: '民間企業設備投資' },
-        { id: 'trade', name: '貿易' },
-        { id: 'production', name: '生産' },
-        { id: 'employment', name: '雇用' },
-        { id: 'market', name: '株価と外国為替' },
-        { id: 'bankruptcy', name: '企業倒産' }
+        { id: 'quarterly', name: '四半期経済レポート' },
+        { id: 'annual', name: '年次経済統計' },
+        { id: 'regional', name: '地域経済調査' },
+        { id: 'industry', name: '産業別統計' }
       ],
       featuredPublication: null,
       publications: [],
@@ -292,6 +286,14 @@ export default {
       });
       // 4列×3行=12個のレイアウトに合わせて最初の12個を返す
       return filtered.slice(0, 12);
+    },
+    // 表示する年のリスト（最新10個、または全て）
+    displayedYears() {
+      return this.showAllYears ? this.years : this.years.slice(0, 10);
+    },
+    // 11個目以上の年があるかどうか
+    hasMoreYears() {
+      return this.years.length > 10;
     }
   },
   methods: {
@@ -515,6 +517,9 @@ export default {
     selectYear(year) {
       this.selectedYear = year;
     },
+    toggleShowAllYears() {
+      this.showAllYears = !this.showAllYears;
+    },
     selectCategory(categoryId) {
       this.selectedCategory = categoryId;
     },
@@ -725,8 +730,7 @@ export default {
 }
 
 .category-btn {
-  flex-shrink: 0;
-  min-width: max-content;
+  flex: 1;
   padding: 15px 20px;
   background: #F6D5D8;
   border: none;
@@ -1262,13 +1266,9 @@ export default {
   }
   
   .category-btn {
-    flex-shrink: 0 !important;
-    min-width: max-content !important;
-    width: auto !important;
-    border-right: 1px solid #DA5761 !important;
-    border-bottom: none !important;
-    font-size: 0.8rem !important;
-    padding: 12px 16px !important;
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #DA5761 !important;
   }
 }
 
@@ -1338,13 +1338,14 @@ export default {
   }
   
   .category-btn {
-    flex-shrink: 0 !important;
-    min-width: max-content !important;
     padding: 8px 10px !important;
     font-size: 0.6rem !important;
     border-right: 1px solid #DA5761 !important;
     border-bottom: none !important;
     border-radius: 0 !important;
+    margin-bottom: 0 !important;
+    min-width: 0 !important;
+    flex: 1 !important;
   }
 }
 
@@ -1421,14 +1422,8 @@ export default {
   }
   
   .category-btn {
-    flex-shrink: 0 !important;
-    min-width: max-content !important;
-    width: auto !important;
     padding: 15px 20px !important;
     font-size: 14px !important;
-    border-right: 1px solid #DA5761 !important;
-    border-bottom: none !important;
-    border-radius: 0 !important;
   }
 }
 
