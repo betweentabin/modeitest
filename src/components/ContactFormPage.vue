@@ -667,6 +667,7 @@ export default {
   font-size: 18px;
   font-weight: 400;
   color: #1A1A1A;
+  white-space: nowrap;
 }
 
 .submit-section {
@@ -1017,6 +1018,7 @@ export default {
   .privacy-text,
   .privacy-checkbox label {
     font-size: 16px !important;
+    white-space: nowrap !important;
   }
 
   .submit-btn {

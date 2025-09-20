@@ -387,18 +387,12 @@ export default {
         if (this.membershipFilter) params.membership_type = this.membershipFilter
         if (this.regionFilter) params.region = this.regionFilter
         if (this.industryFilter) params.industry = this.industryFilter
+        if (this.showFavoritesOnly) params.favorites_only = 1
 
         const response = await apiClient.get('/api/member/directory', { params })
 
         if (response.success) {
-          let membersData = response.data
-          
-          // お気に入りのみ表示フィルター
-          if (this.showFavoritesOnly) {
-            membersData = membersData.filter(member => member.is_favorite)
-          }
-
-          this.members = membersData.map(member => ({
+          this.members = response.data.map(member => ({
             ...member,
             favoriteLoading: false
           }))

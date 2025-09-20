@@ -4,24 +4,26 @@
     
     <!-- Hero Section -->
     <HeroSection 
+      cms-page-key="news"
+      title-field-key="detail_title"
+      subtitle-field-key="detail_subtitle"
       title="お知らせ詳細"
       subtitle="news detail"
       heroImage="/img/Image_fx3.jpg"
       mediaKey="hero_news"
-      cms-page-key="news"
     />
     
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['お知らせ', newsItem ? newsItem.title : '詳細']" />
+    <Breadcrumbs :breadcrumbs="breadcrumbs" />
 
     <div class="page-content">
       <div v-if="loading" class="loading-container">
-        <div class="loading-message">読み込み中...</div>
+        <div class="loading-message">{{ loadingLabel }}</div>
       </div>
       
       <div v-else-if="error" class="error-container">
-        <div class="error-message">{{ error }}</div>
-        <button @click="$router.push('/news')" class="back-btn">お知らせ一覧に戻る</button>
+        <div class="error-message">{{ error || errorNotFoundLabel }}</div>
+        <button @click="$router.push('/news')" class="back-btn">{{ backToListLabel }}</button>
       </div>
       
              <div v-else-if="newsItem" class="detail-container">
@@ -53,7 +55,7 @@
                </div>
 
              <!-- 一覧に戻るボタン -->
-             <button @click="$router.push('/news')" class="filter-download-btn">一覧に戻る
+             <button @click="$router.push('/news')" class="filter-download-btn">{{ backToListLabel }}
                 <div class="icon-box">
                   <svg class="arrow-icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="23" height="23" rx="5" fill="white"/>
@@ -93,6 +95,7 @@ import AccessSection from "./AccessSection.vue";
 import FixedSideButtons from "./FixedSideButtons.vue";
 import { frame132131753022Data } from "../data.js";
 import apiClient from '../services/apiClient.js';
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: "NewsDetailPage",
@@ -107,8 +110,26 @@ export default {
     AccessSection,
     FixedSideButtons
   },
+  computed: {
+    breadcrumbs() {
+      const label = this.pageText?.getText ? this.pageText.getText('breadcrumb_label', 'お知らせ') : 'お知らせ'
+      const detail = this.newsItem?.title || (this.pageText?.getText ? this.pageText.getText('detail_title', '詳細') : '詳細')
+      return [{ text: label, link: '/news' }, { text: detail }]
+    },
+    loadingLabel() {
+      return this.pageText?.getText ? this.pageText.getText('loading', '読み込み中...') : '読み込み中...'
+    },
+    backToListLabel() {
+      return this.pageText?.getText ? this.pageText.getText('back_to_list_label', '一覧に戻る') : '一覧に戻る'
+    },
+    errorNotFoundLabel() {
+      return this.pageText?.getText ? this.pageText.getText('error_not_found', 'お知らせが見つかりませんでした') : 'お知らせが見つかりませんでした'
+    }
+  },
   data() {
+    const pageText = usePageText('news')
     return {
+      pageText,
       frame132131753022Props: frame132131753022Data,
       loading: true,
       error: '',
@@ -118,6 +139,7 @@ export default {
     };
   },
   async mounted() {
+    try { await this.pageText.load() } catch (_) { /* ignore */ }
     await this.loadNewsDetail();
   },
   watch: {
@@ -136,7 +158,7 @@ export default {
         const res = await apiClient.getNotice(newsId)
         const n = res?.data || res
         if (!n || (!n.id && !n.notice)) {
-          this.error = 'お知らせが見つかりませんでした'
+          this.error = this.errorNotFoundLabel
           return
         }
         const notice = n.notice || n

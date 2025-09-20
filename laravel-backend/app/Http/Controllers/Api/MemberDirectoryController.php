@@ -251,17 +251,35 @@ class MemberDirectoryController extends Controller
                 });
             }
 
+            if ($request->filled('company')) {
+                $query->where('company_name', 'LIKE', "%{$request->company}%");
+            }
+
             if ($request->filled('membership_type')) {
                 $query->where('membership_type', $request->membership_type);
             }
 
             if ($request->filled('region')) {
-                $query->where('address', 'LIKE', "%{$request->region}%");
+                if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'region')) {
+                    $query->where('region', $request->region);
+                } else {
+                    $query->where('address', 'LIKE', "%{$request->region}%");
+                }
             }
 
             if ($request->filled('industry')) {
                 if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'industry')) {
                     $query->where('industry', $request->industry);
+                }
+            }
+
+            if ($request->boolean('favorites_only')) {
+                $favoriteIds = MemberFavorite::where('member_id', $member->id)
+                    ->pluck('favorite_member_id');
+                if ($favoriteIds->isNotEmpty()) {
+                    $query->whereIn('id', $favoriteIds);
+                } else {
+                    $query->whereRaw('1=0');
                 }
             }
 

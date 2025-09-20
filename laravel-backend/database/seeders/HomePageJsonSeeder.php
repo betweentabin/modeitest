@@ -21,6 +21,32 @@ class HomePageJsonSeeder extends Seeder
             'about_subtitle' => 'FOR YOU',
             // CTA button under about
             'cta_secondary' => '研究所について詳しく',
+
+            // Top CTA tiles
+            'tile_seminar_label' => 'セミナー',
+            'tile_seminar_subtitle' => 'seminar',
+            'tile_publications_label' => '刊行物',
+            'tile_publications_subtitle' => 'publications',
+            'tile_information_label' => '各種情報',
+            'tile_information_subtitle' => 'information',
+            'tile_membership_label' => '会員について',
+            'tile_membership_subtitle' => 'membership',
+
+            // Section headings
+            'news_section_label' => 'お知らせ',
+            'news_section_heading' => 'INFORMATION',
+            'publications_section_label' => '刊行物',
+            'publications_section_heading' => 'PUBLICATIONS',
+            'other_info_section_label' => 'その他の情報',
+            'other_info_section_heading' => 'OTHER Information',
+
+            // Other info cards
+            'other_info_economic_label' => '経済指標',
+            'other_info_economic_cta' => 'Viwe More .',
+            'other_info_financial_label' => '決算報告',
+            'other_info_financial_cta' => 'Viwe More .',
+            'other_info_glossary_label' => '用語集',
+            'other_info_glossary_cta' => 'Viwe More .',
         ];
 
         $htmls = [
@@ -55,4 +81,3 @@ class HomePageJsonSeeder extends Seeder
         ]);
     }
 }
-

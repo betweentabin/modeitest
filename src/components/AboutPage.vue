@@ -260,6 +260,7 @@ import axios from 'axios';
 import { getApiUrl } from '@/config/api';
 import { usePageText } from '@/composables/usePageText'
 import CmsText from '@/components/CmsText.vue'
+import { resolveMediaUrl } from '@/utils/url.js'
 
 export default {
   name: "AboutPage",
@@ -299,6 +300,7 @@ export default {
     try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
     try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
     try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
+    try { if (typeof this.__unwatchPageImages === 'function') this.__unwatchPageImages() } catch(_) {}
   },
   computed: {
     pageTitle() {
@@ -382,6 +384,14 @@ export default {
       } finally {
         this.loading = false
       }
+      try {
+        const readPageImages = () => {
+          const imgs = this._pageText?.page?.value?.content?.images
+          if (!imgs) return ''
+          try { return JSON.stringify(imgs) } catch (_) { return Object.keys(imgs).join('|') }
+        }
+        this.__unwatchPageImages = this.$watch(readPageImages, () => { try { this.$forceUpdate() } catch(_) {} })
+      } catch (_) {}
     } catch(e) { /* noop */ }
 
     // Page/media registry for responsive image fallback + live rerender
@@ -456,8 +466,21 @@ export default {
       // 1) ページ管理の画像を最優先（cache-busted）
       try {
         const imgs = this._pageText?.page?.value?.content?.images
-        const v = imgs && imgs[type]
-        if (typeof v === 'string' && v) return v
+        let v = imgs && imgs[type]
+        if (!v && imgs) {
+          const fallbackKeys = {
+            content: ['about_content', 'about_image', 'about_section_image', '0'],
+            message: ['about_message', 'message_image', '1'],
+          }
+          const candidates = fallbackKeys[type] || []
+          for (const key of candidates) {
+            if (Object.prototype.hasOwnProperty.call(imgs, key)) {
+              v = imgs[key]
+              if (v) break
+            }
+          }
+        }
+        if (typeof v === 'string' && v) return resolveMediaUrl(v)
         if (v && typeof v === 'object' && v.url) {
           let u = v.url
           try {
@@ -468,7 +491,7 @@ export default {
               }
             }
           } catch(_) {}
-          return u
+          return resolveMediaUrl(u)
         }
       } catch (_) {}
 
