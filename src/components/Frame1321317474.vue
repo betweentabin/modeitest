@@ -2,7 +2,12 @@
   <div :class="[`frame-1321317474`, className || ``]" @click="goToPublication" style="cursor: pointer;">
     <div class="frame-1321317473-2">
       <div class="overlap-group1">
-        <img class="x2-2-2" :src="x22" alt="2 2" />
+        <img
+          class="x2-2-2"
+          :src="x22 || fallbackImage"
+          alt="publication cover"
+          @error="onImgError"
+        />
         <div class="overlap-group-6">
           <div class="date-2 valign-text-middle inter-normal-ship-gray-15px">{{ date || '2025.04.28' }}</div>
           <div
@@ -25,9 +30,19 @@ export default {
   props: ["x22", "className", "date", "title"],
   directives: { shrinkOnWrap },
   methods: {
+    onImgError(e) {
+      // 画像読み込み失敗時はプレースホルダーに差し替え
+      if (e && e.target) e.target.src = this.fallbackImage
+    },
     goToPublication() {
       // 刊行物ページに遷移
       this.$router.push('/publication');
+    }
+  },
+  computed: {
+    fallbackImage() {
+      // 既存のデフォルト画像（data.js と整合）
+      return '/img/-----2-2.png'
     }
   }
 };
