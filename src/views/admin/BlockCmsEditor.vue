@@ -2663,6 +2663,7 @@ export default {
         const res = await apiClient.adminUpdatePageContent('company-profile', payload)
         if (res && res.success) {
           alert('沿革を保存しました')
+          try { localStorage.removeItem('page_content_cache:company-profile') } catch(_) {}
         } else {
           alert((res && (res.error || res.message)) || '保存に失敗しました')
         }
@@ -2691,6 +2692,13 @@ export default {
         // リクエストにより非表示
         'about-institute',
         'terms-of-service',
+        // フロー画面（確認/完了）は編集対象外
+        'contact-confirm',
+        'contact-complete',
+        'membership-application-confirm',
+        'membership-application-complete',
+        'seminar-application-confirm',
+        'seminar-application-complete',
       ])
     },
     // 表示用にフィルタ済みのページ一覧
@@ -3391,10 +3399,43 @@ export default {
       this.companyStaff = this.normalizeCompanyStaffCollection(clone)
       this.missingImageKeys = this.calculateMissingImages()
     },
-    resetCompanyStaffFromLegacy(){
-      this.companyStaff = this.defaultCompanyStaff()
-      if (!this.companyStaff.length) this.companyStaff = [this.normalizeCompanyStaffMember({}, 0)]
-      this.missingImageKeys = this.calculateMissingImages()
+    async resetCompanyStaffFromLegacy(){
+      try {
+        // 破棄確認
+        if (typeof window !== 'undefined') {
+          const ok = window.confirm('未保存の変更は失われます。保存済みデータ（または旧テキスト）を読み込みますか？')
+          if (!ok) return
+        }
+        // 1) まずは保存済みの PageContent.content.staff を優先して読み込み
+        let loaded = []
+        try {
+          const res = await apiClient.adminGetPageContent('company-profile')
+          const page = (res && (res.page || res.data?.page)) || null
+          const staff = page && page.content && Array.isArray(page.content.staff) ? page.content.staff : []
+          if (staff.length) {
+            loaded = staff.map((m, i) => this.normalizeCompanyStaffMember(m, i)).filter(Boolean)
+          }
+        } catch(_) { /* fallback to legacy texts */ }
+
+        // 2) 保存済みがなければ、旧テキストから再構築
+        if (!loaded.length) {
+          try {
+            loaded = this.buildCompanyStaffFromLegacyTexts().map((m, i) => this.normalizeCompanyStaffMember(m, i)).filter(Boolean)
+          } catch(_) { /* keep empty */ }
+        }
+
+        // 3) どちらも無ければ既定
+        if (!loaded.length) loaded = this.defaultCompanyStaff()
+        if (!loaded.length) loaded = [this.normalizeCompanyStaffMember({}, 0)]
+
+        this.companyStaff = loaded
+        this.missingImageKeys = this.calculateMissingImages()
+      } catch(_) {
+        // 最後の手段
+        this.companyStaff = this.defaultCompanyStaff()
+        if (!this.companyStaff.length) this.companyStaff = [this.normalizeCompanyStaffMember({}, 0)]
+        this.missingImageKeys = this.calculateMissingImages()
+      }
     },
     sanitizeCompanyStaffMember(member, index){
       const normalized = this.normalizeCompanyStaffMember(member, index)
@@ -3477,6 +3518,7 @@ export default {
         const res = await apiClient.adminUpdatePageContent('company-profile', payload)
         if (res && res.success) {
           alert('所員を保存しました')
+          try { localStorage.removeItem('page_content_cache:company-profile') } catch(_) {}
         } else {
           const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
           alert(msg)

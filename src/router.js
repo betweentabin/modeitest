@@ -227,6 +227,8 @@ const router = new Router({
       component: MembershipApplicationConfirmPage,
       meta: { title: "入会申し込み - 確認" }
     },
+    // Legacy/alias path for membership application confirm
+    { path: "/membership-application-confirm", redirect: "/membership/apply/confirm" },
     {
       path: "/membership/apply/complete",
       name: "membershipApplyComplete",
@@ -340,6 +342,8 @@ const router = new Router({
       component: ContactConfirmPage,
       meta: { title: "お問い合わせ確認 - ちくぎん地域経済研究所" }
     },
+    // Legacy/alias path for contact confirm
+    { path: "/contact-confirm", redirect: "/contact/confirm" },
     {
       path: "/contact/complete",
       name: "contactComplete",

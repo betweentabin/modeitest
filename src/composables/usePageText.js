@@ -104,6 +104,7 @@ export function usePageText(pageKey) {
       const isBrowser = typeof window !== 'undefined'
       // Detect preview/edit flags from hash or search (hash-mode friendly)
       let isPreview = false
+      let forcePublic = false
       if (isBrowser) {
         try {
           const hash = window.location.hash || ''
@@ -112,9 +113,15 @@ export function usePageText(pageKey) {
           const hasPreview = params.has('cmsPreview')
           const isEdit = params.has('cmsEdit') || params.get('cmsPreview') === 'edit'
           isPreview = !!(hasPreview || isEdit)
+          const fp = params.get('forcePublic')
+          forcePublic = (fp === '1' || fp === 'true')
         } catch (_) {
           isPreview = (window.location.search || '').includes('cmsPreview=1')
         }
+        try {
+          const lp = localStorage.getItem('use_public_page_api')
+          if (lp === '1' || lp === 'true') forcePublic = true
+        } catch (_) { /* noop */ }
       }
       const adminToken = isBrowser ? (localStorage.getItem('admin_token') || '') : ''
       const isEditing = !!(enabled && enabled.value)
@@ -138,7 +145,7 @@ export function usePageText(pageKey) {
       // 2) Fetch fresh from API
       let res
       // Prefer admin endpoint when: explicit preferAdmin, or URL preview/edit, or edit mode, and token present
-      if ((preferAdmin || isPreview || isEditing) && adminToken) {
+      if (!forcePublic && (preferAdmin || isPreview || isEditing) && adminToken) {
         // Use admin endpoint for preview to bypass is_published filter
         // Add cache-buster to avoid any intermediate caching returning stale data
         res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
