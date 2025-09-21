@@ -25,6 +25,7 @@
       <div>history(count={{ historyList.length }}):
         <pre style="white-space:pre-wrap; max-height:160px; overflow:auto;">{{ debugHistoryJson }}</pre>
       </div>
+      <div>historyHtml(length={{ debugHistoryHtmlLen }})</div>
     </div>
 
     <!-- CMS Preview Body under hero when preview/edit flags present -->
@@ -263,7 +264,9 @@
           </div>
         </div>
       </div>
-      <!-- CMSデータがない場合はフォールバックを表示 -->
+      <!-- Fallback to pre-rendered HTML when array is empty -->
+      <div v-else-if="historyHtmlBody" v-html="historyHtmlBody"></div>
+      <!-- Final static fallback (seed/default) -->
       <div v-else class="history-content">
         <div class="history-item">
           <div class="history-year">1988</div>
@@ -611,6 +614,13 @@ export default {
         return v === '1' || v === 'true'
       } catch(_) { return false }
     },
+    historyHtmlBody() {
+      try {
+        // Only used when history array is empty (template enforces this)
+        // Sanitization is handled by usePageText.getHtml
+        return this._pageText?.getHtml('history_body', '', { allowEmpty: false }) || ''
+      } catch (_) { return '' }
+    },
     displayedReports() {
       try {
         const c = this._pageText?.page?.value?.content
@@ -652,7 +662,10 @@ export default {
         const c = this._pageText?.page?.value?.content
         const arr = Array.isArray(c?.history) ? c.history : []
         const slim = arr.map(h => ({ y: h?.year || '', d: h?.date || '', b: h?.body || h?.title || '' }))
-        return JSON.stringify(slim)
+        // Include fallback HTML snapshot so key changes when it updates
+        let htmlFallback = ''
+        try { htmlFallback = this._pageText?.getHtml('history_body', '', { allowEmpty: true }) || '' } catch(_) {}
+        return JSON.stringify({ arr: slim, html: htmlFallback })
       } catch (_) { return '' }
     },
     staffVersion() {
@@ -685,6 +698,9 @@ export default {
         const arr = Array.isArray(c?.history) ? c.history : []
         return JSON.stringify(arr)
       } catch(_) { return '[]' }
+    },
+    debugHistoryHtmlLen() {
+      try { return (this.historyHtmlBody || '').length } catch(_) { return 0 }
     }
   },
   mounted() {

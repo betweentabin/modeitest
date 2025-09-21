@@ -2645,8 +2645,7 @@ export default {
       return new Set([
         'publications','publications-public','news','notice','notices',
         'seminars','seminars-current','seminars-past',
-        'economic-reports','statistics','economic-indicators',
-        'login','my-account'
+        'economic-reports','statistics','economic-indicators'
       ])
     },
     async saveCompanyHistory(){
@@ -2705,7 +2704,13 @@ export default {
     visiblePages(){
       try {
         const hidden = this.hiddenCmsSlugs
-        return (this.pages || []).filter(p => !hidden.has(String(p?.slug || '').toLowerCase()))
+        return (this.pages || []).filter(p => {
+          const slug = String(p?.slug || '').toLowerCase()
+          const meta = (p && (p.meta_json || p.meta)) || {}
+          const isHiddenBySlug = hidden.has(slug)
+          const isHiddenByMeta = !!(meta && (meta.hidden === true || meta.hidden === 'true'))
+          return !(isHiddenBySlug || isHiddenByMeta)
+        })
       } catch(_) { return this.pages || [] }
     }
   },
@@ -2771,7 +2776,7 @@ export default {
     },
     // preview helpers removed
     async loadPages(){
-      const res = await apiClient.listCmsPages({ search: this.search, per_page: 100 })
+      const res = await apiClient.listCmsPages({ search: this.search, per_page: 100, exclude_hidden: 1 })
       if (res.success) this.pages = res.data.data || []
       // Enhance titles with current PageContent page_title where available
       try { await this.applyPrettyTitles() } catch(_) {}
@@ -2825,6 +2830,7 @@ export default {
       if (s.includes('navigation')) return 'navigation'
       if (s.includes('footer')) return 'footer'
       if (s.includes('contact')) return 'contact'
+      if (s.includes('login')) return 'login'
       if (s === 'home') return 'home'
       // '/services' uses MembershipPage content
       if (s.includes('services')) return 'membership'

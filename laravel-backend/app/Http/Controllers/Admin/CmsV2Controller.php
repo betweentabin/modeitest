@@ -27,6 +27,16 @@ class CmsV2Controller extends Controller
                 $x->where('slug','like',"%{$s}%")->orWhere('title','like',"%{$s}%");
             });
         }
+        // Optionally exclude pages marked as hidden in meta_json
+        $excludeHidden = filter_var($request->get('exclude_hidden', false), FILTER_VALIDATE_BOOLEAN);
+        if ($excludeHidden) {
+            // Works on PostgreSQL/MySQL JSON columns
+            $q->where(function ($w) {
+                $w->whereNull('meta_json')
+                  ->orWhereNull('meta_json->hidden')
+                  ->orWhere('meta_json->hidden', '!=', true);
+            });
+        }
         $pages = $q->orderBy('updated_at','desc')->paginate($request->get('per_page', 20));
         return response()->json(['success' => true, 'data' => $pages]);
     }

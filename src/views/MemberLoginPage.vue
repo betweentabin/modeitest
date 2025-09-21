@@ -3,23 +3,24 @@
     <!-- Navigation -->
     <Navigation />
     
-    <!-- Hero Section -->
+    <!-- Hero Section (CMS連携: login) -->
     <HeroSection 
-      title="会員ログインページ"
-      subtitle="LOGIN PAGE"
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
       heroImage="/img/Image_fx8.jpg"
+      cms-page-key="login"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['会員ログイン']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="content-header">
-        <h2 class="page-title">会員ログインページ</h2>
+        <h2 class="page-title">{{ pageTitle }}</h2>
         <div class="title-decoration">
           <div class="line-left"></div>
-          <span class="title-english">LOGIN PAGE</span>
+          <span class="title-english">{{ pageSubtitle }}</span>
           <div class="line-right"></div>
         </div>
       </div>
@@ -27,10 +28,7 @@
       <div class="content-container">
         <!-- Login Description -->
         <div class="intro-section">
-          <p class="intro-text">
-            メールアドレスおよびパスワードを入力のうえ「ログイン」ボタンを押してください。<br>
-            ※ログイン情報は、各会員様の窓口ご担当宛にメールまたは郵送にてご案内しております。
-          </p>
+          <p class="intro-text">{{ introText }}</p>
         </div>
 
         <!-- Login Form -->
@@ -63,7 +61,7 @@
               :disabled="loading"
               class="login-button"
             >
-              <span>{{ loading ? 'ログイン中...' : 'ログインをする' }}</span>
+              <span>{{ loading ? 'ログイン中...' : buttonLogin }}</span>
               <svg class="login-icon" width="19" height="19" viewBox="0 0 19 19" fill="none">
                 <rect x="0.5" y="0.5" width="18" height="18" rx="5" fill="white"/>
                 <path d="M13.7193 10.2752L10.2194 13.875C10.1464 13.95 10.0475 13.9922 9.94427 13.9922C9.84107 13.9922 9.74211 13.95 9.66914 13.875C9.59617 13.7999 9.55517 13.6981 9.55517 13.592C9.55517 13.4858 9.59617 13.3841 9.66914 13.309L12.5055 10.3922L4.88888 10.3922C4.78574 10.3922 4.68683 10.35 4.6139 10.275C4.54097 10.2 4.5 10.0983 4.5 9.99219C4.5 9.88611 4.54097 9.78437 4.6139 9.70936C4.68683 9.63435 4.78574 9.59221 4.88888 9.59221L12.5055 9.59221L9.66914 6.67537C9.59617 6.60032 9.55517 6.49853 9.55517 6.39239C9.55517 6.28625 9.59617 6.18446 9.66914 6.1094C9.74211 6.03435 9.84107 5.99219 9.94427 5.99219C10.0475 5.99219 10.1464 6.03435 10.2194 6.1094L13.7193 9.7092C13.7554 9.74635 13.7841 9.79046 13.8037 9.83902C13.8233 9.88758 13.8333 9.93962 13.8333 9.99219C13.8333 10.0448 13.8233 10.0968 13.8037 10.1454C13.7841 10.1939 13.7554 10.238 13.7193 10.2752Z" fill="#1A1A1A"/>
@@ -102,6 +100,7 @@ import Footer from '@/components/Footer.vue'
 import FixedSideButtons from '@/components/FixedSideButtons.vue'
 import { frame132131753022Data } from '@/data'
 import apiClient from '@/services/apiClient'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: 'MemberLoginPage',
@@ -121,6 +120,16 @@ export default {
       error: '',
       frame132131753022Props: frame132131753022Data
     }
+  },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', '会員ログイン') || '会員ログイン' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'LOGIN') || 'LOGIN' },
+    introText() { return this._pageText?.getText('intro', '会員機能をご利用いただくにはログインが必要です。') || '会員機能をご利用いただくにはログインが必要です。' },
+    buttonLogin() { return this._pageText?.getText('button_login', 'ログイン') || 'ログイン' }
+  },
+  mounted() {
+    try { this._pageText = usePageText('login'); this._pageText.load() } catch(e) {}
   },
   methods: {
     async handleLogin() {

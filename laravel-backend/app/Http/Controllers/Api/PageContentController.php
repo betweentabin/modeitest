@@ -210,6 +210,31 @@ class PageContentController extends Controller
         }
         return [true, $ref];
     }
+
+    // Build safe, styled HTML from structured history[] for fallback rendering
+    private function buildHistoryHtml(array $history): string
+    {
+        $buf = [];
+        $buf[] = '<div class="history-content">';
+        foreach ($history as $h) {
+            if (!is_array($h)) continue;
+            $year = isset($h['year']) ? (string)$h['year'] : '';
+            $date = isset($h['date']) ? (string)$h['date'] : '';
+            // body may contain simple inline HTML authored by editors; keep as-is here, FE sanitizes on render
+            $body = isset($h['body']) ? (string)$h['body'] : (isset($h['title']) ? (string)$h['title'] : '');
+            $ey = htmlspecialchars($year, ENT_QUOTES, 'UTF-8');
+            $ed = htmlspecialchars($date, ENT_QUOTES, 'UTF-8');
+            $buf[] = '<div class="history-item">'
+                . '<div class="history-year">' . $ey . '</div>'
+                . '<div class="history-details">'
+                .   '<div class="history-date">' . $ed . '</div>'
+                .   '<div class="history-description">' . $body . '</div>'
+                . '</div>'
+              . '</div>';
+        }
+        $buf[] = '</div>';
+        return implode('', $buf);
+    }
     public function mediaUsage(): JsonResponse
     {
         $pages = PageContent::all();
@@ -677,6 +702,16 @@ class PageContentController extends Controller
 
                 // Deep-merge the rest (associative maps like texts/htmls/images)
                 $merged = array_replace_recursive($merged, $incoming);
+
+                // Auto-synthesize HTML fallback for history when structured array is present
+                try {
+                    if (isset($merged['history']) && is_array($merged['history'])) {
+                        $html = $this->buildHistoryHtml($merged['history']);
+                        if (!isset($merged['htmls']) || !is_array($merged['htmls'])) { $merged['htmls'] = []; }
+                        $merged['htmls']['history_body'] = $html;
+                    }
+                } catch (\Throwable $e) { /* ignore synthesis errors */ }
+
                 $validated['content'] = $merged;
             }
         }

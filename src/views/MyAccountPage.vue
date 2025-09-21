@@ -1,6 +1,15 @@
 <template>
   <div class="my-account-page">
     <Navigation />
+    <!-- Hero + Breadcrumbs (CMS連携: my-account) -->
+    <HeroSection 
+      :title="pageTitle"
+      :subtitle="pageSubtitle"
+      heroImage="/img/Image_fx10.jpg"
+      cms-page-key="my-account"
+    />
+    <Breadcrumbs :breadcrumbs="[pageTitle]" />
+    <div class="page-intro" v-if="introText">{{ introText }}</div>
     <div class="account-container">
       <div class="account-sidebar">
         <div class="sidebar-header">
@@ -435,16 +444,21 @@
 import { ref, computed, onMounted } from 'vue'
 // import { useRouter } from 'vue-router' // Vue 2では利用不可
 import Navigation from '@/components/Navigation.vue'
+import HeroSection from '@/components/HeroSection.vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Footer from '@/components/Footer.vue'
 import PublicationCard from '@/components/PublicationCard.vue'
 import { useMemberAuth } from '@/composables/useMemberAuth'
 import apiClient from '@/services/apiClient.js'
+import { usePageText } from '@/composables/usePageText'
 import { frame132131753022Data } from '../data.js'
 
 export default {
   name: 'MyAccountPage',
   components: {
     Navigation,
+    HeroSection,
+    Breadcrumbs,
     Footer,
     PublicationCard,
     MemberSeminarsTab: () => import('./partials/MemberSeminarsTab.vue'),
@@ -522,7 +536,14 @@ export default {
       ]
     }
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'マイアカウント') || 'マイアカウント' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'MY ACCOUNT') || 'MY ACCOUNT' },
+    introText() { return this._pageText?.getText('intro', '') || '' },
+  },
   async mounted() {
+    try { this._pageText = usePageText('my-account'); this._pageText.load() } catch(e) {}
     // プロフィール・ダッシュボード・お気に入りを並行ロード
     await this.fetchInitialData()
   },
