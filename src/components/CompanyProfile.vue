@@ -252,27 +252,8 @@
           <div class="divider-line"></div>
         </div>
       </div>
-      <div v-if="displayedHistory && displayedHistory.length" class="history-content">
-        <div 
-          v-for="(h, idx) in displayedHistory" 
-          :key="idx" 
-          class="history-item"
-        >
-          <div class="history-year">{{ h.year || '' }}</div>
-          <div class="history-details">
-            <div class="history-date">{{ h.date || '' }}</div>
-            <div class="history-description" v-html="h.body || h.title || ''"></div>
-          </div>
-        </div>
-      </div>
-      <div v-else class="history-content">
-        <div class="history-item">
-          <div class="history-year"></div>
-          <div class="history-details">
-            <div class="history-date"></div>
-            <div class="history-description">沿革データがありません。</div>
-          </div>
-        </div>
+      <div class="history-content">
+        <CmsText pageKey="company-profile" fieldKey="history_body" tag="div" type="html" />
       </div>
     </section>
 
