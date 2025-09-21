@@ -428,6 +428,7 @@ export default {
     return {
       pageKey: 'company-profile',
       pageLoaded: false,
+      stateHistory: [],
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       financialReports: [],
@@ -639,6 +640,9 @@ export default {
     },
     displayedHistory() {
       try {
+        if (Array.isArray(this.stateHistory) && this.stateHistory.length) {
+          return this.stateHistory
+        }
         if (Array.isArray(this._historyOverride) && this._historyOverride.length) {
           return this._historyOverride
         }
@@ -751,9 +755,9 @@ export default {
       // 常に強制ロードして最新データを反映し、その後セーフガードで公開APIの沿革も取り込む
       const loadResult = this._pageText.load(opts)
       if (loadResult && typeof loadResult.then === 'function') {
-        loadResult.then(() => { this.pageLoaded = true; this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.pageLoaded = true; this.fetchPublicHistorySafeguard() })
+        loadResult.then(() => { this.pageLoaded = true; this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard(); this.fetchHistoryDirect() }).catch(() => { this.pageLoaded = true; this.fetchPublicHistorySafeguard(); this.fetchHistoryDirect() })
       } else {
-        this.pageLoaded = true; this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard()
+        this.pageLoaded = true; this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard(); this.fetchHistoryDirect()
       }
     } catch(e) { /* noop */ }
     try {
@@ -810,6 +814,21 @@ export default {
           }))
         }
       } catch (_) { /* noop */ }
+    },
+    async fetchHistoryDirect() {
+      try {
+        const url = 'https://heroic-celebration-production.up.railway.app/api/public/pages/' + this.pageKey + '?_t=' + Date.now()
+        const res = await fetch(url, { credentials: 'omit' })
+        if (!res.ok) return
+        const body = await res.json()
+        const arr = Array.isArray(body?.data?.page?.content?.history) ? body.data.page.content.history : []
+        if (!arr.length) return
+        this.stateHistory = arr.map(h => ({
+          year: typeof h?.year === 'string' ? h.year : (h?.year ? String(h.year) : ''),
+          date: typeof h?.date === 'string' ? h.date : '',
+          body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : ''),
+        }))
+      } catch (_) { /* ignore network errors */ }
     },
     scrollTo(id) {
       try {
