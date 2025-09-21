@@ -649,7 +649,8 @@ export default {
         const v = htmls && Object.prototype.hasOwnProperty.call(htmls, 'history_body') ? htmls.history_body : ''
         if (typeof v === 'string' && v.length) return v
         // フォールバック: 配列から簡易HTMLを生成
-        const arr = this.historyList || []
+        // 最優先は公開APIからのセーフガード結果（_historyOverride）を含むdisplayedHistory
+        const arr = this.displayedHistory || this.historyList || []
         if (!Array.isArray(arr) || arr.length === 0) return ''
         const escape = (s) => String(s || '').replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))
         return arr.map(h => {
