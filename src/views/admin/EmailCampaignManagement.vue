@@ -109,6 +109,7 @@
                   <button class="small-btn" @click="openAttachments(c)">添付</button>
                   <button class="small-btn" @click="duplicate(c)">複製</button>
                   <button class="small-btn" @click="toggleTemplate(c)">{{ c.is_template ? 'テンプレ解除' : 'テンプレ化' }}</button>
+                  <button v-if="c.is_template" class="small-btn danger" @click="deleteTemplateFromList(c)">削除</button>
                   <button class="small-btn" @click="schedule(c)">予約</button>
                   <button class="small-btn danger" @click="sendNow(c)">即時送信</button>
                 </td>
@@ -502,6 +503,18 @@ export default {
         const res = await apiClient.createCampaignFromTemplate(t.id)
         if (res.success) { alert('テンプレートから作成しました'); this.closeTemplates(); this.loadCampaigns(1) }
       } catch(e) { alert('作成に失敗しました') }
+    },
+    async deleteTemplateFromList(c) {
+      if (!c || !c.is_template) return
+      if (!confirm(`テンプレート「${c.subject || ''}」を削除しますか？\n（添付ファイルも物理削除されます。取り消し不可）`)) return
+      try {
+        const res = await apiClient.deleteEmailTemplate(c.id)
+        if (res.success) {
+          this.campaigns = this.campaigns.filter(x => x.id !== c.id)
+        } else {
+          alert(res.error || '削除に失敗しました')
+        }
+      } catch(e) { alert('削除に失敗しました') }
     },
     async deleteTemplate(t) {
       if (!t) return

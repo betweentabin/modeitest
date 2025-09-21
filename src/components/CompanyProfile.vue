@@ -226,7 +226,7 @@
     </section>    
 
     <!-- History Section -->
-    <section id="history" class="history-section" v-if="!isEditPreview">
+    <section id="history" class="history-section" :key="historyVersion">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="history_title" tag="span" :fallback="'沿革'" />
@@ -625,6 +625,14 @@ export default {
         const c = this._pageText?.page?.value?.content
         return !(c && Object.prototype.hasOwnProperty.call(c, 'history'))
       } catch (_) { return true }
+    },
+    historyVersion() {
+      try {
+        const c = this._pageText?.page?.value?.content
+        const arr = Array.isArray(c?.history) ? c.history : []
+        const slim = arr.map(h => ({ y: h?.year || '', d: h?.date || '', b: h?.body || h?.title || '' }))
+        return JSON.stringify(slim)
+      } catch (_) { return '' }
     },
     staffVersion() {
       try {
