@@ -3257,9 +3257,29 @@ export default {
   }
   
   .main-publication-wrapper {
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    min-height: 300px !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  
+  .frame-1321317472 {
+    flex-direction: column !important;
+    gap: 15px !important;
+    width: 100% !important;
+    display: flex !important;
+  }
+  
+  .frame-1321317474 {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 300px !important;
   }
   
   .text-48 {
