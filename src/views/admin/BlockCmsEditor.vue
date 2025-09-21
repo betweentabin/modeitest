@@ -3570,6 +3570,19 @@ export default {
           if (meta.positionKey) acc[meta.positionKey] = String(m?.position || '').trim()
           if (meta.noteKey) acc[meta.noteKey] = String(m?.note || '').trim()
         })
+        // 動的キーも付与（staff_<id>_name 等）: 新規IDでもテキストが反映されるように
+        fromUi.forEach((m, i) => {
+          const id = (m && m.id) ? String(m.id) : `staff-${i+1}`
+          const prefix = `staff_${id}_`
+          const name = String(m?.name || '').trim()
+          const reading = String(m?.reading || '').trim()
+          const position = String(m?.position || '').trim()
+          const note = String(m?.note || '').trim()
+          if (name) acc[`${prefix}name`] = name
+          if (reading) acc[`${prefix}reading`] = reading
+          if (position) acc[`${prefix}position`] = position
+          if (note) acc[`${prefix}note`] = note
+        })
         // 見出し・英字も併せて保存
         if (this.companyTexts) {
           if (this.companyTexts.staff_title !== undefined) acc['staff_title'] = String(this.companyTexts.staff_title||'').trim()

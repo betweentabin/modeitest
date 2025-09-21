@@ -594,21 +594,35 @@ export default {
         // 3) 出力順: content.staff があればその並びを優先。無ければ textsBased の順。
         const order = contentStaff.length ? contentStaff.map((m, i) => (m && m.id) ? String(m.id) : `staff-${i}`) : textsBased.map(r => String(r.id))
 
-        // 4) マージ: テキストを最優先（name/reading/position/note）、画像は content.staff を優先
+        // 4) マージ: テキストは動的キー staff_<id>_* を最優先 → 旧レガシーキー → content.staff の値、画像は content.staff 優先
         const textsMap = new Map(textsBased.map(r => [String(r.id), r]))
+        const getTextOr = (key, fb) => {
+          try { return this._pageText?.getText(key, fb) ?? fb } catch(_) { return fb }
+        }
         const result = order.map((id, idx) => {
-          const t = textsMap.get(String(id)) || null
-          const c = byId.get(String(id)) || null
+          const sid = String(id || `staff-${idx}`)
+          const dyn = (suf, fb='') => getTextOr(`staff_${sid}_${suf}`, fb)
+          const t = textsMap.get(sid) || null
+          const c = byId.get(sid) || null
           const imageObj = c && c.image && typeof c.image === 'object' ? c.image : null
-          const baseName = t ? (t.name || '') : (c?.name || '')
+
+          const legacyName = t ? (t.name || '') : ''
+          const legacyReading = t ? (t.reading || '') : ''
+          const legacyPosition = t ? (t.position || '') : ''
+          const legacyNote = t ? (t.note || '') : ''
+
+          const name = dyn('name', legacyName) || (c?.name || '')
+          const reading = dyn('reading', legacyReading) || (c?.reading || '')
+          const position = dyn('position', legacyPosition) || (c?.position || '')
+          const note = dyn('note', legacyNote) || (c?.note || '')
+          const baseName = name || legacyName || (c?.name || '')
+
           return {
-            id: String(id || `staff-${idx}`),
-            // texts 優先
-            name: t ? (t.name || '') : (c?.name || ''),
-            reading: t ? (t.reading || '') : (c?.reading || ''),
-            position: t ? (t.position || '') : (c?.position || ''),
-            note: t ? (t.note || '') : (c?.note || ''),
-            // 画像は content.staff 優先（無ければ texts の既定/Fallback）
+            id: sid,
+            name,
+            reading,
+            position,
+            note,
             imageKey: (c?.image_key || c?.imageKey || t?.imageKey || ''),
             imageUrl: (c?.image_url || c?.imageUrl || imageObj?.url || t?.imageUrl || ''),
             alt: (c?.alt || baseName || ''),
