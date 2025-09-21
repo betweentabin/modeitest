@@ -7,6 +7,9 @@
         :title="completeHeroTitle"
         :subtitle="completeHeroSubtitle"
         heroImage="https://api.builder.io/api/v1/image/assets/TEMP/53cc5489ed3a3ad5de725cbc506b45ae898146f0?width=2880"
+        cms-page-key="membership-application"
+        title-field-key="complete_hero_title"
+        subtitle-field-key="complete_hero_subtitle"
       />
   
       <!-- Breadcrumbs -->

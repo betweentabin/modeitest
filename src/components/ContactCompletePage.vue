@@ -2,46 +2,45 @@
   <div class="contact-form-page">
     <Navigation />
     
-    <!-- Hero Section -->
+    <!-- Hero Section (CMS連携) -->
     <HeroSection 
-      title="お問い合わせ完了"
-      subtitle="contact complete"
+      :title="completeHeroTitle"
+      :subtitle="completeHeroSubtitle"
       heroImage="/img/Image_fx2.jpg"
       mediaKey="hero_contact"
       cms-page-key="contact"
+      title-field-key="complete_hero_title"
+      subtitle-field-key="complete_hero_subtitle"
     />
 
     <!-- Breadcrumbs -->
-    <Breadcrumbs :breadcrumbs="['お問い合わせ', '完了']" />
+    <Breadcrumbs :breadcrumbs="[pageTitle, completeLabel]" />
 
     <!-- Form Section -->
     <section class="form-section">
       <div class="form-container">
         <div class="form-header">
-          <h1 class="form-title">お問い合わせ完了</h1>
+          <h1 class="form-title">{{ completeTitle }}</h1>
           <div class="form-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">CONTACT COMPLETE</span>
+            <span class="divider-text">{{ pageSubtitle }}</span>
             <div class="divider-line"></div>
           </div>
           <div class="form-steps">
-            <span class="step-inactive">①お客様情報の入力</span>
-            <span class="step-inactive">　- ②記入内容のご確認　</span>
-            <span class="step-active">- ③完了</span>
+            <span class="step-inactive">{{ stepInput }}</span>
+            <span class="step-inactive">　- {{ stepConfirm }}　</span>
+            <span class="step-active">- {{ stepComplete }}</span>
           </div>
         </div>
 
         <div class="contact-form">
           <!-- Completion Message -->
           <div class="completion-message">
-            <p class="completion-text">
-              お客様の申し込みが、完了しました。<br>
-              弊社担当より5営業日以内に返信がございますので、今しばらくお待ちいただけますと幸いです。
-            </p>
+            <p class="completion-text" v-html="completeMessage"></p>
           </div>
           <!-- Back to top (home) button -->
           <ActionButton
-            :primaryText="'トップに戻る'"
+            :primaryText="buttonHome"
             :showSecondary="false"
             :maxWidth="'1014px'"
             @primary-click="$router.push('/')"
@@ -67,6 +66,7 @@ import HeroSection from './HeroSection.vue';
 import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import ActionButton from './ActionButton.vue'
+import { usePageText } from '@/composables/usePageText'
 
 export default {
   name: 'ContactCompletePage',
@@ -85,7 +85,25 @@ export default {
       frame132131753022Props: frame132131753022Data
     };
   },
+  computed: {
+    _pageRef() { return this._pageText?.page?.value },
+    pageTitle() { return this._pageText?.getText('page_title', 'お問い合わせ') || 'お問い合わせ' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'CONTACT') || 'CONTACT' },
+    completeHeroTitle() { return this._pageText?.getText('complete_hero_title', this.pageTitle) || this.pageTitle },
+    completeHeroSubtitle() { return this._pageText?.getText('complete_hero_subtitle', this.pageSubtitle) || this.pageSubtitle },
+    completeTitle() { return this._pageText?.getText('complete_title', 'お問い合わせ完了') || 'お問い合わせ完了' },
+    completeLabel() { return this._pageText?.getText('breadcrumb_complete', '完了') || '完了' },
+    stepInput() { return this._pageText?.getText('step_input', '①お客様情報の入力') || '①お客様情報の入力' },
+    stepConfirm() { return this._pageText?.getText('step_confirm', '②記入内容のご確認') || '②記入内容のご確認' },
+    stepComplete() { return this._pageText?.getText('step_complete', '③完了') || '③完了' },
+    completeMessage() {
+      return this._pageText?.getHtml('complete_message', 'お問い合わせ送信が完了しました。<br>担当より順次ご連絡いたします。')
+        || 'お問い合わせ送信が完了しました。<br>担当より順次ご連絡いたします。'
+    },
+    buttonHome() { return this._pageText?.getText('button_home', 'トップに戻る') || 'トップに戻る' },
+  },
   mounted() {
+    try { this._pageText = usePageText('contact'); this._pageText.load() } catch(e) {}
     // URLパラメータからお問い合わせ番号を取得
     const params = new URLSearchParams(this.$route.query);
     this.inquiryNumber = params.get('inquiryNumber');

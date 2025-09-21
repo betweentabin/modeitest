@@ -8,6 +8,8 @@
       :subtitle="completeHeroSubtitle"
       heroImage="/img/Image_fx6.jpg"
       cms-page-key="seminar-application"
+      title-field-key="complete_hero_title"
+      subtitle-field-key="complete_hero_subtitle"
     />
 
     <!-- Breadcrumbs -->

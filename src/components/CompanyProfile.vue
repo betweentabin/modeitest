@@ -571,24 +571,8 @@ export default {
         }
       } catch (_) {}
 
-      return this.defaultStaffRecords.map((record, index) => {
-        const get = (key, fallback) => {
-          if (!key) return fallback
-          try { return this._pageText?.getText(key, fallback) || fallback } catch (_) { return fallback }
-        }
-        const name = get(record.nameKey, record.name)
-        return {
-          id: record.id || `default-${index}`,
-          name,
-          reading: get(record.readingKey, record.reading || ''),
-          position: get(record.positionKey, record.position || ''),
-          note: get(record.noteKey, record.note || ''),
-          imageKey: record.imageKey || '',
-          imageUrl: record.imageUrl || '',
-          alt: record.alt || name || '',
-          fallbackImage: record.fallbackImage || '',
-        }
-      })
+      // staffが未設定の場合は空配列（フォールバックは使わない）
+      return []
     },
     staffCount() {
       return Array.isArray(this.staffEntries) ? this.staffEntries.length : 0

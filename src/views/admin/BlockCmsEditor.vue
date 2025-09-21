@@ -1105,6 +1105,7 @@
             <div class="actions" style="justify-content:flex-start; gap:8px;">
               <button class="btn" @click="addCompanyStaff">+ 所員を追加</button>
               <button class="btn" @click="resetCompanyStaffFromLegacy">既存テキストから再読込</button>
+              <button class="btn" @click="saveCompanyStaff">所員を保存</button>
             </div>
 
             <!-- 決算報告（Financial Reports） -->
@@ -3445,6 +3446,42 @@ export default {
           alert(msg)
         }
       } catch (e) {
+        alert('保存に失敗しました')
+      }
+    },
+    async saveCompanyStaff(){
+      try {
+        // Build staff from current UI (sanitize + keep order)
+        const staff = Array.isArray(this.companyStaff)
+          ? this.companyStaff.map((m, i) => this.sanitizeCompanyStaffMember(m, i)).filter(Boolean)
+          : []
+        const payload = { content: { staff }, is_published: true }
+        // Mirror staff to legacy texts for backward compatibility
+        try {
+          const legacyMap = new Map()
+          COMPANY_STAFF_LEGACY.forEach(e => legacyMap.set(e.id, e))
+          const fromStaff = staff.reduce((acc, m) => {
+            const id = (m && m.id) ? String(m.id) : ''
+            const meta = legacyMap.get(id)
+            if (!meta) return acc
+            if (meta.nameKey) acc[meta.nameKey] = String(m.name || '').trim()
+            if (meta.readingKey) acc[meta.readingKey] = String(m.reading || '').trim()
+            if (meta.positionKey) acc[meta.positionKey] = String(m.position || '').trim()
+            if (meta.noteKey) acc[meta.noteKey] = String(m.note || '').trim()
+            return acc
+          }, {})
+          if (Object.keys(fromStaff).length) {
+            payload.content.texts = { ...(payload.content.texts || {}), ...fromStaff }
+          }
+        } catch(_) { /* noop */ }
+        const res = await apiClient.adminUpdatePageContent('company-profile', payload)
+        if (res && res.success) {
+          alert('所員を保存しました')
+        } else {
+          const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
+          alert(msg)
+        }
+      } catch(e) {
         alert('保存に失敗しました')
       }
     },

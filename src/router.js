@@ -346,6 +346,8 @@ const router = new Router({
       component: ContactCompletePage,
       meta: { title: "お問い合わせ完了 - ちくぎん地域経済研究所" }
     },
+    // Legacy/alias path for contact complete
+    { path: "/contact-complete", redirect: "/contact/complete" },
     {
       path: "/sitemap",
       name: "sitemap",
