@@ -733,18 +733,12 @@ export default {
           if (token && token.length > 0) opts.preferAdmin = true
         }
       } catch (_) {}
-      // If router preloaded and history already present, skip redundant load
-      const hasHistoryNow = (() => {
-        try { const c = this._pageRef?.content; return Array.isArray(c?.history) && c.history.length > 0 } catch(_) { return false } })()
-      if (!hasHistoryNow) {
-        const loadResult = this._pageText.load(opts)
-        if (loadResult && typeof loadResult.then === 'function') {
-          loadResult.then(() => { this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.fetchPublicHistorySafeguard() })
-        } else {
-          this.recalculateStaffCarousel();
-          this.fetchPublicHistorySafeguard()
-        }
+      // 常に強制ロードして最新データを反映し、その後セーフガードで公開APIの沿革も取り込む
+      const loadResult = this._pageText.load(opts)
+      if (loadResult && typeof loadResult.then === 'function') {
+        loadResult.then(() => { this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.fetchPublicHistorySafeguard() })
       } else {
+        this.recalculateStaffCarousel();
         this.fetchPublicHistorySafeguard()
       }
     } catch(e) { /* noop */ }
