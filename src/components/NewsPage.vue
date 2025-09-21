@@ -163,6 +163,11 @@ export default {
   },
   async mounted() {
     await this.loadCategories()
+    // URLクエリ ?category=... を初期選択に反映
+    try {
+      const cat = this.$route?.query?.category
+      if (cat) this.selectedCategory = cat
+    } catch (_) {}
     await this.loadNews()
     try {
       this._pageText = usePageText(this.pageKey)

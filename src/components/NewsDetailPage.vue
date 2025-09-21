@@ -135,11 +135,13 @@ export default {
       error: '',
       newsItem: null,
       originalItem: null, // セミナー、刊行物、お知らせの元データ
-      relatedNews: []
+      relatedNews: [],
+      categories: []
     };
   },
   async mounted() {
     try { await this.pageText.load() } catch (_) { /* ignore */ }
+    await this.loadCategories();
     await this.loadNewsDetail();
   },
   watch: {
@@ -149,6 +151,18 @@ export default {
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        const res = await apiClient.get('/api/notices/categories', { timeout: 3500 })
+        let list = (res && res.success && Array.isArray(res.data)) ? res.data : (Array.isArray(res) ? res : [])
+        if (Array.isArray(list) && list.length && typeof list[0] === 'string') {
+          list = list.map((slug) => ({ slug, name: slug }))
+        }
+        this.categories = (list || []).filter(c => c && (c.slug || '').toString().trim() !== '')
+      } catch (e) {
+        this.categories = []
+      }
+    },
     async loadNewsDetail() {
       try {
         this.loading = true;
@@ -190,18 +204,8 @@ export default {
       return `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`;
     },
     getCategoryLabel(category) {
-      const map = {
-        // Notice サブタイプ
-        general: 'お知らせ',
-        system: 'システム',
-        event: 'イベント',
-        important: '重要',
-        notice: 'お知らせ',
-        // 互換: 旧タイプ表現
-        seminar: 'SEMINAR',
-        publication: 'PUBLICATION'
-      }
-      return map[category] || 'お知らせ'
+      const hit = this.categories.find(c => c.slug === category)
+      return hit ? hit.name : 'お知らせ'
     },
     getCategoryClass(category) {
       switch (category) {
