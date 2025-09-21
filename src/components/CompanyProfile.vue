@@ -141,7 +141,7 @@
             />
           </div>
           <div class="message-signature">
-            <CmsText pageKey="company-profile" fieldKey="message_signature" tag="div" :fallback="'株式会社 ちくぎん地域経済研究所代表取締役社長 空閑 重信'" />
+            <CmsText pageKey="company-profile" fieldKey="message_signature" tag="div" type="html" :fallback="'株式会社ちくぎん地域経済研究<br>所代表取締役社長 空閑 重信 願い申し上げます。'" />
           </div>
         </div>
         <img class="message-image" :src="media('company_profile_message', 'https://api.builder.io/api/v1/image/assets/TEMP/20aa75cfa1be4c2096a1f47bf126cf240173b231?width=1340')" alt="Message" />
@@ -460,17 +460,17 @@ export default {
       `,
       defaultStaffRecords: [
         {
-          id: 'morita',
-          name: '森田 祥子',
-          nameKey: 'staff_morita_name',
-          reading: 'もりた さちこ',
-          readingKey: 'staff_morita_reading',
-          position: '企画部　部長代理',
-          positionKey: 'staff_morita_position',
-          note: '（アジア福岡パートナーズへ出向）',
-          noteKey: 'staff_morita_note',
-          imageKey: 'company_profile_staff_morita',
-          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452',
+          id: 'kuga',
+          name: '空閑 重信',
+          nameKey: 'staff_kuga_name',
+          reading: 'くが しげのぶ',
+          readingKey: 'staff_kuga_reading',
+          position: '代表取締役社長',
+          positionKey: 'staff_kuga_position',
+          note: '',
+          noteKey: 'staff_kuga_note',
+          imageKey: 'company_profile_staff_kuga',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451',
         },
         {
           id: 'mizokami',
@@ -486,17 +486,17 @@ export default {
           fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/3eb35c11c5738cb9283fd65048f0db5c42dd1080?width=451',
         },
         {
-          id: 'kuga',
-          name: '空閑 重信',
-          nameKey: 'staff_kuga_name',
-          reading: 'くが しげのぶ',
-          readingKey: 'staff_kuga_reading',
-          position: '代表取締役社長',
-          positionKey: 'staff_kuga_position',
-          note: '',
-          noteKey: 'staff_kuga_note',
-          imageKey: 'company_profile_staff_kuga',
-          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/ce433d9c00a0ce68895c315df3a3c49aa626deff?width=451',
+          id: 'morita',
+          name: '森田 祥子',
+          nameKey: 'staff_morita_name',
+          reading: 'もりた さちこ',
+          readingKey: 'staff_morita_reading',
+          position: '企画部　部長代理',
+          positionKey: 'staff_morita_position',
+          note: '（アジア福岡パートナーズへ出向）',
+          noteKey: 'staff_morita_note',
+          imageKey: 'company_profile_staff_morita',
+          fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/013d1cd8a9cd502c97404091dee8168d1aa93903?width=452',
         },
         {
           id: 'takada',
@@ -1244,6 +1244,7 @@ section {
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 20px;
   font-weight: 400;
+  line-height: 1.2; /* message-bodyと同じ行間に */
 }
 
 .message-image {
