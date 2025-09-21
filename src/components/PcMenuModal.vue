@@ -235,6 +235,7 @@ export default {
   z-index: 2147483647;
   overflow-y: auto;
   animation: fadeIn 0.3s ease-out;
+  -webkit-overflow-scrolling: touch; /* iOSでのスムーズスクロール */
 }
 
 @keyframes fadeIn {
@@ -248,7 +249,7 @@ export default {
 
 .modal-container {
   width: 100%;
-  min-height: 700px;
+  min-height: 100vh;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -259,6 +260,8 @@ export default {
   align-self: flex-start;
   z-index: 2147483647;
   animation: slideDown 0.3s ease-out;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* iOSでのスムーズスクロール */
 }
 
 @keyframes slideDown {
@@ -317,12 +320,14 @@ export default {
   min-height: 335px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* 全画面サイズで上詰めに */
   align-items: center;
   gap: 50px;
   flex: 1;
   width: 100%;
   padding: 0 50px;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px); /* ヘッダーとボタン分を除いた高さ */
 }
 
 .nav-grid {
@@ -487,7 +492,8 @@ export default {
 @media (max-width: 1150px) {
   .modal-container {
     margin: 0;
-    min-height: auto;
+    min-height: 100vh;
+    max-height: 100vh;
   }
 
   .nav-grid {
@@ -601,6 +607,22 @@ export default {
 }
 
 @media (max-width: 550px) {
+  .modal-container {
+    gap: 20px;
+    padding-bottom: 20px;
+    min-height: auto; /* 自動高さでスクロール可能に */
+    max-height: none; /* 最大高さ制限を解除 */
+  }
+
+  .navigation-section {
+    margin-top: 10px;
+    padding: 0 20px;
+    max-height: none; /* 最大高さ制限を解除 */
+    gap: 30px;
+    overflow-y: visible; /* スクロール制限を解除 */
+    justify-content: flex-start; /* モバイルでは上詰めに */
+  }
+
   .nav-grid {
     width: 100%;
   }
@@ -610,13 +632,9 @@ export default {
     gap: 10px;
   }
 
-  .navigation-section {
-    margin-top: 10px;
-  }
-
   .nav-item {
     width: 100%;
-    padding: 20px 0;
+    padding: 15px 0;
     min-height: 0px;
   }
 
@@ -640,12 +658,18 @@ export default {
 /* 小さいモバイル対応 (480px以下) */
 @media (max-width: 480px) {
   .modal-container {
-    gap: 0px;
+    gap: 15px;
+    padding-bottom: 15px;
+    min-height: auto; /* 自動高さでスクロール可能に */
+    max-height: none; /* 最大高さ制限を解除 */
   }
 
   .navigation-section {
-    gap: 30px;
-    padding: 0 30px;
+    gap: 20px;
+    padding: 0 15px;
+    max-height: none; /* 最大高さ制限を解除 */
+    overflow-y: visible; /* スクロール制限を解除 */
+    justify-content: flex-start; /* モバイルでは上詰めに */
   }
   
   .modal-header {
