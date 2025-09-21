@@ -529,6 +529,7 @@ export default {
         <p>また、研究成果やネットワークを活用した経営コンサルティング機能により、多様な企業の生産・販売活動や医療・介護活動をサポートしています。</p>
         <p>ヒト・モノ・カネ・情報を最大限に活かし、地域の振興・発展に寄与することを目指しています。</p>
       `,
+      _historyOverride: null,
     };
   },
   computed: {
@@ -641,6 +642,9 @@ export default {
     },
     displayedHistory() {
       try {
+        if (Array.isArray(this._historyOverride) && this._historyOverride.length) {
+          return this._historyOverride
+        }
         const c = this._pageRef?.content
         const arr = Array.isArray(c?.history) ? c.history : []
         if (arr.length) {
@@ -714,16 +718,23 @@ export default {
     try {
       this._pageText = usePageText(this.pageKey)
       const opts = { force: true }
-      // 管理者ログイン時は管理APIを優先（未公開の最新も即時反映）
+      // 通常閲覧は公開API固定。cmsPreview/cmsEdit の時のみ管理APIを優先
       try {
-        const token = localStorage.getItem('admin_token')
-        if (token && token.length > 0) opts.preferAdmin = true
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const useAdmin = params.has('cmsPreview') || params.has('cmsEdit')
+        if (useAdmin) {
+          const token = localStorage.getItem('admin_token')
+          if (token && token.length > 0) opts.preferAdmin = true
+        }
       } catch (_) {}
       const loadResult = this._pageText.load(opts)
       if (loadResult && typeof loadResult.then === 'function') {
-        loadResult.then(() => this.recalculateStaffCarousel()).catch(() => {})
+        loadResult.then(() => { this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.fetchPublicHistorySafeguard() })
       } else {
-        this.recalculateStaffCarousel()
+        this.recalculateStaffCarousel();
+        this.fetchPublicHistorySafeguard()
       }
     } catch(e) { /* noop */ }
     try {
@@ -762,6 +773,25 @@ export default {
     window.removeEventListener('resize', this.adjustRectangleHeight);
   },
   methods: {
+    async fetchPublicHistorySafeguard() {
+      try {
+        const c = this._pageRef?.content
+        const hasHistory = Array.isArray(c?.history) && c.history.length
+        if (hasHistory) return
+        const api = (await import('@/services/apiClient.js')).default
+        const res = await api.get(`/api/public/pages/${this.pageKey}`, { silent: true, params: { _t: Date.now() } })
+        const body = res?.data || res
+        const page = body?.page || body?.data?.page || null
+        const arr = Array.isArray(page?.content?.history) ? page.content.history : []
+        if (arr.length) {
+          this._historyOverride = arr.map(h => ({
+            year: typeof h?.year === 'string' ? h.year : (h?.year ? String(h.year) : ''),
+            date: typeof h?.date === 'string' ? h.date : '',
+            body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : ''),
+          }))
+        }
+      } catch (_) { /* noop */ }
+    },
     scrollTo(id) {
       try {
         const el = this.$el.querySelector(`#${id}`)
