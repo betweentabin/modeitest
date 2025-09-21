@@ -20,10 +20,10 @@
     <div v-if="isDebug" style="background:#fff8e1; color:#333; padding:10px; margin:10px 0; border:1px dashed #f0c36d; font-size:12px;">
       <div><strong>CMS Debug</strong></div>
       <div>staff(count={{ staffEntries.length }}):
-        <pre style="white-space:pre-wrap; max-height:200px; overflow:auto;">{{ staffEntries.map(s=>({id:s.id,name:s.name,reading:s.reading,position:s.position,imageKey:s.imageKey}))) }}</pre>
+        <pre style="white-space:pre-wrap; max-height:200px; overflow:auto;">{{ debugStaffJson }}</pre>
       </div>
       <div>history(count={{ historyList.length }}):
-        <pre style="white-space:pre-wrap; max-height:160px; overflow:auto;">{{ historyList }}</pre>
+        <pre style="white-space:pre-wrap; max-height:160px; overflow:auto;">{{ debugHistoryJson }}</pre>
       </div>
     </div>
 
@@ -669,6 +669,21 @@ export default {
         }))
         return JSON.stringify(slim)
       } catch(_) { return '' }
+    },
+    debugStaffJson() {
+      try {
+        const content = this._pageText?.page?.value?.content
+        const arr = Array.isArray(content?.staff) ? content.staff : []
+        const slim = arr.map(s => ({ id: s?.id || '', name: s?.name || '', reading: s?.reading || '', position: s?.position || '', imageKey: s?.image_key || s?.imageKey || '' }))
+        return JSON.stringify(slim)
+      } catch(_) { return '[]' }
+    },
+    debugHistoryJson() {
+      try {
+        const c = this._pageText?.page?.value?.content
+        const arr = Array.isArray(c?.history) ? c.history : []
+        return JSON.stringify(arr)
+      } catch(_) { return '[]' }
     }
   },
   mounted() {
