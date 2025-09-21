@@ -3894,13 +3894,18 @@ export default {
               finalStaff = fromTexts
             } catch(_) { /* keep as is */ }
           } else if (overrideMap && Array.isArray(finalStaff) && finalStaff.length) {
-            // Merge overrides field-by-field by id
+            // Merge overrides field-by-field by id (UI優先: 空欄のみテキストで補完)
             finalStaff = finalStaff.map(member => {
               try {
                 const id = (member && member.id) ? String(member.id) : ''
                 if (!id || !overrideMap.has(id)) return member
                 const o = overrideMap.get(id) || {}
-                return { ...member, ...o }
+                const merged = { ...member }
+                if ((!merged.name || merged.name.trim() === '') && typeof o.name === 'string') merged.name = String(o.name).trim()
+                if ((!merged.reading || merged.reading.trim() === '') && typeof o.reading === 'string') merged.reading = String(o.reading).trim()
+                if ((!merged.position || merged.position.trim() === '') && typeof o.position === 'string') merged.position = String(o.position).trim()
+                if ((!merged.note || merged.note.trim() === '') && typeof o.note === 'string') merged.note = String(o.note).trim()
+                return merged
               } catch(_) { return member }
             })
           }

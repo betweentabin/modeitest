@@ -102,12 +102,10 @@ import CmsText from '@/components/CmsText.vue'
   },
   mounted() {
     try { this._pageText = usePageText('membership-application'); this._pageText.load() } catch(e) {}
-  },
-    mounted() {
-      // URLパラメータから申し込み番号を取得
-      const params = new URLSearchParams(this.$route.query);
-      this.applicationNumber = params.get('applicationNumber');
-    }
+    // URLパラメータから申し込み番号を取得
+    const params = new URLSearchParams(this.$route.query);
+    this.applicationNumber = params.get('applicationNumber');
+  }
   };
   </script>
   

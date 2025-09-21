@@ -208,6 +208,13 @@ const router = new Router({
       component: SeminarApplicationCompletePage,
       meta: { title: "セミナー申し込み - 完了" }
     },
+    // Legacy/alias path (no id) for seminar application complete
+    {
+      path: "/seminar-application-complete",
+      name: "seminarApplyCompleteLegacy",
+      component: SeminarApplicationCompletePage,
+      meta: { title: "セミナー申し込み - 完了" }
+    },
     {
       path: "/membership/apply",
       name: "membershipApplyForm",
@@ -226,6 +233,8 @@ const router = new Router({
       component: MembershipApplicationCompletePage,
       meta: { title: "入会申し込み - 完了" }
     },
+    // Legacy/alias path for membership application complete
+    { path: "/membership-application-complete", redirect: "/membership/apply/complete" },
     {
       path: "/seminar/archive",
       name: "seminarArchive",

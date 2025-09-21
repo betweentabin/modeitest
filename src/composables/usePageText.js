@@ -142,6 +142,12 @@ export function usePageText(pageKey) {
         // Use admin endpoint for preview to bypass is_published filter
         // Add cache-buster to avoid any intermediate caching returning stale data
         res = await apiClient.get(`/api/admin/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
+        // Fallback to public endpoint on failure (e.g., invalid/expired admin token in LS)
+        if (!res || res.success === false) {
+          try {
+            res = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
+          } catch (_) { /* keep error */ }
+        }
       } else {
         // Public endpoint for normal visitors (with cache-buster to avoid stale)
         res = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
