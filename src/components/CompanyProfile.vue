@@ -279,7 +279,7 @@
     </section>
 
     <!-- Staff Section -->
-    <section id="staff" class="staff-section" v-if="staffCount">
+    <section id="staff" class="staff-section" v-if="staffCount" :key="staffVersion">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="staff_title" tag="span" :fallback="'所員紹介'" />
@@ -625,6 +625,22 @@ export default {
         const c = this._pageText?.page?.value?.content
         return !(c && Object.prototype.hasOwnProperty.call(c, 'history'))
       } catch (_) { return true }
+    },
+    staffVersion() {
+      try {
+        const content = this._pageText?.page?.value?.content
+        const arr = Array.isArray(content?.staff) ? content.staff : []
+        const slim = arr.map(m => ({
+          id: m?.id || '',
+          name: m?.name || '',
+          reading: m?.reading || '',
+          position: m?.position || '',
+          note: m?.note || '',
+          image_key: m?.image_key || m?.imageKey || '',
+          image_url: m?.image_url || m?.imageUrl || ''
+        }))
+        return JSON.stringify(slim)
+      } catch(_) { return '' }
     }
   },
   mounted() {
