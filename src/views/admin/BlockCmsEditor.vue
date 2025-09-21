@@ -866,10 +866,16 @@
           <!-- company / consulting / about: 動的テキスト一覧（小コンポーネント） -->
           <div v-if="currentPage && (currentPage.slug==='company' || currentPage.slug==='cri-consulting' || currentPage.slug==='aboutus')" class="section-title">小コンポーネントの文言一覧（texts）</div>
           <template v-if="currentPage && ((currentPage.slug||'').toLowerCase().includes('company')) && !layoutMode">
-            <div class="field" v-for="(val, key) in companyTexts" :key="`company-${key}`">
+            <div 
+              class="field" 
+              v-for="(val, key) in companyTexts" 
+              :key="`company-${key}`"
+              v-if="!(String(key).startsWith('staff_') || key==='staff_title' || key==='staff_subtitle')"
+            >
               <label>{{ displayLabel(key) }}</label>
               <input v-model="companyTexts[key]" class="input" />
             </div>
+            <div class="help">スタッフの氏名・ふりがな・役職・注記は下の「所員紹介（Staff）」カードから編集してください。</div>
             <div class="field" v-for="(val, key) in companyHtmls" :key="`company-html-${key}`">
               <label>{{ displayLabel(key, true) }}</label>
               <textarea v-model="companyHtmls[key]" class="textarea" rows="3"></textarea>
@@ -3854,7 +3860,26 @@ export default {
           }
         }
 
+        // Finalize staff (SSOT)
         patch.content.staff = Array.isArray(finalStaff) ? finalStaff : []
+
+        // Mirror staff -> legacy texts for backward compatibility (read-only consumers)
+        try {
+          const legacyMap = new Map()
+          COMPANY_STAFF_LEGACY.forEach(e => legacyMap.set(e.id, e))
+          const fromStaff = (patch.content.staff || []).reduce((acc, m) => {
+            const id = (m && m.id) ? String(m.id) : ''
+            const meta = legacyMap.get(id)
+            if (!meta) return acc
+            if (meta.nameKey) acc[meta.nameKey] = String(m.name || '').trim()
+            if (meta.readingKey) acc[meta.readingKey] = String(m.reading || '').trim()
+            if (meta.positionKey) acc[meta.positionKey] = String(m.position || '').trim()
+            if (meta.noteKey) acc[meta.noteKey] = String(m.note || '').trim()
+            return acc
+          }, {})
+          if (!patch.content.texts) patch.content.texts = {}
+          patch.content.texts = { ...patch.content.texts, ...fromStaff }
+        } catch(_) { /* noop */ }
         const hist = Array.isArray(this.companyHistory) ? this.companyHistory
           .map(h => ({ year: String(h?.year || '').trim(), date: String(h?.date || '').trim(), body: String(h?.body || '').trim() }))
           .filter(h => h.year || h.date || h.body) : []
