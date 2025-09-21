@@ -36,7 +36,15 @@
       </div>
       
       <div class="about-content">
-        <img class="about-image" :src="img('about_image', 'https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340')" alt="会社画像" />
+        <CmsManagedImage
+          class="about-image"
+          page-key="about-institute"
+          field-key="about_image"
+          :fallback="'https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340'"
+          :fallback-keys="['about_image_mobile','about_image_sm','about_image@mobile','0']"
+          :placeholder-values="['/img/image.png']"
+          alt="会社画像"
+        />
         <div class="about-text">
           <div class="about-headline">
             <CmsText 
@@ -68,7 +76,15 @@
       
       <div class="service-cards">
         <div class="service-card" id="service-development">
-          <img class="service-image" :src="img('service1_image', 'https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870')" alt="開発・研究" />
+          <CmsManagedImage
+            class="service-image"
+            page-key="about-institute"
+            field-key="service1_image"
+            :fallback="'https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870'"
+            :fallback-keys="['service1_image_mobile','service1_image_sm','service1_image@mobile','1']"
+            :placeholder-values="['/img/image.png']"
+            alt="開発・研究"
+          />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service1_title" tag="span" :fallback="'開発・研究'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service1_desc" tag="span" :fallback="'ちくぎん地域経済研究所では、国・地方自治体・大学・企業などからのご要望を受け、様々な情報を収集・調査・分析をします。有意義な情報を分かりやすく発信していきます。'" /></p>
@@ -79,7 +95,15 @@
         </div>
         
         <div class="service-card" id="service-human-resources">
-          <img class="service-image" :src="img('service2_image', 'https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870')" alt="人材開発、セミナー" />
+          <CmsManagedImage
+            class="service-image"
+            page-key="about-institute"
+            field-key="service2_image"
+            :fallback="'https://api.builder.io/api/v1/image/assets/TEMP/f92b01ad91c11f2d63f1c851a4991b7316f2365d?width=870'"
+            :fallback-keys="['service2_image_mobile','service2_image_sm','service2_image@mobile']"
+            :placeholder-values="['/img/image.png']"
+            alt="人材開発、セミナー"
+          />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service2_title" tag="span" :fallback="'人材開発、セミナー'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service2_desc" tag="span" :fallback="'企業幹部、従業員または後継者(次世代育成)にマッチする効果的な研修を行います。ご要望に合わせて各種講演会、セミナー等の企画・運営を行うほか、様々なニーズに合わせて、外部専門家等の紹介・斡旋をいたします。'" /></p>
@@ -96,7 +120,15 @@
         </div>
         
         <div class="service-card" id="service-management-support">
-          <img class="service-image" :src="img('service3_image', 'https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870')" alt="経営支援" />
+          <CmsManagedImage
+            class="service-image"
+            page-key="about-institute"
+            field-key="service3_image"
+            :fallback="'https://api.builder.io/api/v1/image/assets/TEMP/9de269531d1458bd155965ea0ad95d1a7f468fe4?width=870'"
+            :fallback-keys="['service3_image_mobile','service3_image_sm','service3_image@mobile']"
+            :placeholder-values="['/img/image.png']"
+            alt="経営支援"
+          />
           <div class="service-content">
             <h3 class="service-title"><CmsText pageKey="about-institute" fieldKey="service3_title" tag="span" :fallback="'経営支援(経営サポート)'" /></h3>
             <p class="service-description"><CmsText pageKey="about-institute" fieldKey="service3_desc" tag="span" :fallback="'企業の皆様の経営課題解決に向けたお手伝いを行います。社内のバックオフィス業務構築などのお悩み事がありましたらご相談ください。'" /></p>
@@ -151,6 +183,7 @@ import { frame132131753022Data } from "../data";
 import { usePageText } from '@/composables/usePageText'
 import CmsText from '@/components/CmsText.vue'
 import CmsBlock from '@/components/CmsBlock.vue'
+import CmsManagedImage from '@/components/CmsManagedImage.vue'
 import { resolveMediaUrl } from '@/utils/url.js'
 
 export default {
@@ -166,7 +199,8 @@ export default {
     FixedSideButtons,
     ActionButton,
     CmsText,
-    CmsBlock
+    CmsBlock,
+    CmsManagedImage
   },
   data() {
     return {
