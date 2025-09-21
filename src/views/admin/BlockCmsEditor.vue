@@ -906,7 +906,15 @@
               class="field" 
               v-for="(val, key) in companyTexts" 
               :key="`company-${key}`"
-              v-if="!(String(key).startsWith('staff_') || key==='staff_title' || key==='staff_subtitle')"
+              v-if="!(
+                String(key).startsWith('staff_') ||
+                key==='staff_title' ||
+                key==='staff_subtitle' ||
+                key==='access_title_3' ||
+                key==='access_route_1' ||
+                key==='access_route_2' ||
+                key==='access_route_3'
+              )"
             >
               <label>{{ displayLabel(key) }}</label>
               <input v-model="companyTexts[key]" class="input" />
@@ -1140,9 +1148,6 @@
             </div>
             <div class="actions" style="justify-content:flex-start; gap:8px; flex-wrap:wrap;">
               <button class="btn" @click="addCompanyStaff">+ 所員を追加</button>
-              <button class="btn" @click="resetCompanyStaffFromLegacy">既存テキストから再読込</button>
-              <button class="btn" @click="saveCompanyStaffTexts">所員テキストを保存</button>
-              <button class="btn" @click="saveCompanyStaffVisuals">所員の画像・順序を保存</button>
               <button class="btn primary" @click="saveCompanyStaffUnified">所員を保存（統合）</button>
             </div>
 
@@ -1209,12 +1214,14 @@
             <div class="field"><label>駅2</label><input v-model="companyTexts.access_station_2" class="input" /></div>
             <div class="field"><label>バス</label><input v-model="companyTexts.access_bus_1" class="input" /></div>
 
-            <!-- ブロック3（車でのアクセス） -->
-            <div class="section-title">ルート（By Car）</div>
-            <div class="field"><label>見出し3</label><input v-model="companyTexts.access_title_3" class="input" placeholder="お車でお越しの方" /></div>
-            <div class="field"><label>ルート1</label><input v-model="companyTexts.access_route_1" class="input" /></div>
-            <div class="field"><label>ルート2</label><input v-model="companyTexts.access_route_2" class="input" /></div>
-            <div class="field"><label>ルート3</label><input v-model="companyTexts.access_route_3" class="input" /></div>
+            <!-- ブロック3（車でのアクセス） 非表示 -->
+            <template v-if="false">
+              <div class="section-title">ルート（By Car）</div>
+              <div class="field"><label>見出し3</label><input v-model="companyTexts.access_title_3" class="input" placeholder="お車でお越しの方" /></div>
+              <div class="field"><label>ルート1</label><input v-model="companyTexts.access_route_1" class="input" /></div>
+              <div class="field"><label>ルート2</label><input v-model="companyTexts.access_route_2" class="input" /></div>
+              <div class="field"><label>ルート3</label><input v-model="companyTexts.access_route_3" class="input" /></div>
+            </template>
 
             
           </template>
@@ -2735,6 +2742,11 @@ export default {
         // リクエストにより非表示
         'about-institute',
         'terms-of-service',
+        // 追加の非表示対象（ユーザー要望）
+        'media',
+        'my-account',
+        'financial-reports',
+        'news',
         // フロー画面（確認/完了）は編集対象外
         'contact-confirm',
         'contact-complete',
@@ -2751,7 +2763,9 @@ export default {
       try {
         const hidden = this.hiddenCmsSlugs
         return (this.pages || []).filter(p => {
-          const slug = String(p?.slug || '').toLowerCase()
+          // 正規化：先頭スラッシュを除去して比較
+          const slugRaw = String(p?.slug || '').toLowerCase()
+          const slug = slugRaw.startsWith('/') ? slugRaw.slice(1) : slugRaw
           const meta = (p && (p.meta_json || p.meta)) || {}
           const isHiddenBySlug = hidden.has(slug)
           const isHiddenByMeta = !!(meta && (meta.hidden === true || meta.hidden === 'true'))
