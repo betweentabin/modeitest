@@ -141,7 +141,7 @@
             />
           </div>
           <div class="message-signature">
-            <CmsText pageKey="company-profile" fieldKey="message_signature" tag="div" type="html" :fallback="'株式会社ちくぎん地域経済研究<br>所代表取締役社長 空閑 重信 願い申し上げます。'" />
+            <CmsText pageKey="company-profile" fieldKey="message_signature" tag="div" type="html" :fallback="'株式会社ちくぎん地域経済研究所<br>代表取締役社長 空閑 重信 願い申し上げます。'" />
           </div>
         </div>
         <img class="message-image" :src="media('company_profile_message', 'https://api.builder.io/api/v1/image/assets/TEMP/20aa75cfa1be4c2096a1f47bf126cf240173b231?width=1340')" alt="Message" />
