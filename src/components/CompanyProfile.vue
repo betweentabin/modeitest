@@ -430,6 +430,8 @@ export default {
       pageLoaded: false,
       stateHistory: [],
       stateStaff: [],
+      // Prefill map from localStorage cache to suppress initial flicker
+      _prefillImages: {},
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       financialReports: [],
@@ -527,6 +529,29 @@ export default {
       `,
       _historyOverride: null,
     };
+  },
+  created() {
+    // 1) Pre-hydrate PageContent cache and keep shallow copy of images for initial render
+    try {
+      this._pageText = usePageText(this.pageKey)
+      // Kick async load (non-blocking) so LS cache is refreshed in background
+      this._pageText.load({}).catch(() => {})
+      // Read last cached page images to avoid static fallback on first paint
+      try {
+        const raw = localStorage.getItem('page_content_cache:' + this.pageKey)
+        const cached = (raw && (raw.trim().startsWith('{') || raw.trim().startsWith('['))) ? JSON.parse(raw) : null
+        const imgs = cached?.content?.images
+        this._prefillImages = (imgs && typeof imgs === 'object') ? imgs : {}
+      } catch(_) { this._prefillImages = {} }
+    } catch (_) { /* noop */ }
+
+    // 2) Ensure page media registry early so responsive slots are ready on first render
+    try {
+      this._pageMedia = usePageMedia()
+      // non-blocking; ensures global media + per-page mapping
+      this._pageMedia.ensure(this.pageKey).catch(() => {})
+      this._media = this._pageMedia._media
+    } catch (_) { /* noop */ }
   },
   computed: {
     pageReady() {
@@ -787,6 +812,15 @@ export default {
       )
     } catch (_) {}
     this.loadFinancialReports();
+    // Re-render when page-managed images (content.images) change
+    try {
+      const readPageImages = () => {
+        const page = this._pageRef
+        const imgs = page && page.content && page.content.images
+        try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
+      }
+      this.$watch(readPageImages, () => { try { this.$forceUpdate() } catch(_) {} })
+    } catch(_) { /* noop */ }
     // lazy media registry (for staff/philosophy/message images)
     import('@/composables/usePageMedia').then(mod => {
       try {
@@ -841,15 +875,17 @@ export default {
         const res = await fetch(url, { credentials: 'omit' })
         if (!res.ok) return
         const body = await res.json()
-        const arr = Array.isArray(body?.data?.page?.content?.history) ? body.data.page.content.history : []
-        if (!arr.length) return
-        this.stateHistory = arr.map(h => ({
-          year: typeof h?.year === 'string' ? h.year : (h?.year ? String(h.year) : ''),
-          date: typeof h?.date === 'string' ? h.date : '',
-          body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : ''),
-        }))
+        // history はあれば反映、なくても処理継続
+        const historyArr = Array.isArray(body?.data?.page?.content?.history) ? body.data.page.content.history : []
+        if (historyArr.length) {
+          this.stateHistory = historyArr.map(h => ({
+            year: typeof h?.year === 'string' ? h.year : (h?.year ? String(h.year) : ''),
+            date: typeof h?.date === 'string' ? h.date : '',
+            body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : ''),
+          }))
+        }
 
-        // staff も同時に取り込む
+        // staff は history の有無に関係なく反映
         const staffArr = Array.isArray(body?.data?.page?.content?.staff) ? body.data.page.content.staff : []
         if (staffArr.length) {
           this.stateStaff = staffArr.map((m, idx) => ({
@@ -877,6 +913,22 @@ export default {
     },
     media(key, fallback = '') {
       try {
+        // 0) Prefill from cached images to suppress initial static fallback
+        const imgs0 = this._prefillImages
+        if (imgs0 && Object.prototype.hasOwnProperty.call(imgs0, key)) {
+          const v0 = imgs0[key]
+          let u0 = (v0 && typeof v0 === 'object') ? (v0.url || '') : (typeof v0 === 'string' ? v0 : '')
+          if (typeof u0 === 'string' && u0) {
+            try {
+              const ver = (v0 && typeof v0 === 'object' && v0.uploaded_at) ? (Date.parse(v0.uploaded_at) || null) : null
+              if (ver !== null && u0.startsWith('/storage/')) {
+                u0 += (u0.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
+            } catch(_) {}
+            return resolveMediaUrl(u0)
+          }
+        }
+
         // A-方針: ページ管理の content.images を最優先（文言と同じ経路で即時反映）
         const page = this._pageRef
         const imgs = page && page.content && page.content.images
