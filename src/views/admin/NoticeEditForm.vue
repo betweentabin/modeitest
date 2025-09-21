@@ -48,6 +48,7 @@
                   </label>
                 </div>
                 <p class="form-help">推奨サイズ: 800×450px（16:9）、最大5MB</p>
+                <p class="help-text">保存先: {{ imageUploadDirectory }}</p>
               </div>
             </div>
 
@@ -95,11 +96,21 @@
                     class="form-input"
                   >
                     <option value="">カテゴリーを選択</option>
-                    <option value="important">重要なお知らせ</option>
-                    <option value="event">イベント情報</option>
-                    <option value="system">システムメンテナンス</option>
-                    <option value="general">一般情報</option>
+                    <option v-for="c in categories" :key="c.slug || c.id" :value="c.slug">
+                      {{ c.name }}
+                    </option>
                   </select>
+                  <div class="inline-add-category">
+                    <input
+                      v-model="newCategoryName"
+                      type="text"
+                      class="form-input"
+                      placeholder="新しいカテゴリー名（日本語可）"
+                    />
+                    <button type="button" class="btn btn-secondary small" @click="addNewCategory" :disabled="addingCategory || !newCategoryName.trim()">
+                      {{ addingCategory ? '追加中...' : '＋ 追加' }}
+                    </button>
+                  </div>
                 </div>
                 
                 <div class="form-group">
@@ -290,6 +301,9 @@ export default {
         link_text: '',
         featured_image: ''
       },
+      categories: [],
+      newCategoryName: '',
+      addingCategory: false,
       loading: false,
       submitLoading: false,
       error: '',
@@ -304,6 +318,15 @@ export default {
     },
     noticeId() {
       return this.$route.params.id || this.$route.query.id
+    },
+    selectedCategoryName() {
+      const slug = this.formData.category
+      const c = this.categories.find(c => c.slug === slug)
+      return c ? c.name : ''
+    },
+    imageUploadDirectory() {
+      const base = 'public/media/notices'
+      return this.selectedCategoryName ? `${base}/${this.selectedCategoryName}` : base
     }
   },
   async mounted() {
@@ -314,6 +337,8 @@ export default {
       return
     }
 
+    await this.loadCategories()
+
     if (!this.isNew) {
       await this.fetchNoticeData()
     } else {
@@ -323,6 +348,51 @@ export default {
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        const res = await apiClient.getNewsCategories({ timeout: 3500 })
+        let list = (res && res.success) ? (Array.isArray(res.data) ? res.data : []) : []
+        if (!Array.isArray(list) || list.length === 0) {
+          try {
+            const pub = await apiClient.get('/api/notices/categories', { timeout: 2500 })
+            const arr = (pub && pub.success && Array.isArray(pub.data)) ? pub.data : []
+            if (arr.length) {
+              list = arr.map((slug, idx) => ({ id: `pub-${idx}`, name: slug, slug, is_active: true, sort_order: idx }))
+            }
+          } catch (_) { /* noop */ }
+        }
+        // 空スラッグは選択できないため除外
+        this.categories = list.filter(c => c && (c.slug || '').toString().trim() !== '')
+        // 既存の formData.category がリストにない場合は空にする
+        if (this.formData.category && !this.categories.some(c => c.slug === this.formData.category)) {
+          this.formData.category = ''
+        }
+      } catch (e) {
+        console.error('カテゴリ読み込み失敗', e)
+        this.categories = []
+      }
+    },
+    async addNewCategory() {
+      const name = (this.newCategoryName || '').trim()
+      if (!name) return
+      this.addingCategory = true
+      try {
+        const res = await apiClient.createNoticeCategory({ name })
+        if (!res || res.success === false || !res.data) {
+          throw new Error(res?.error || res?.message || 'カテゴリ追加に失敗しました')
+        }
+        const item = res.data
+        // リストに反映して選択
+        this.categories = [...this.categories, item]
+        this.formData.category = item.slug
+        this.newCategoryName = ''
+      } catch (e) {
+        console.error('カテゴリ追加失敗', e)
+        alert('カテゴリの追加に失敗しました')
+      } finally {
+        this.addingCategory = false
+      }
+    },
     async fetchNoticeData() {
       this.loading = true
       this.error = ''
@@ -340,6 +410,10 @@ export default {
             is_pinned: !!data.is_featured,
             is_published: !!data.is_published,
             featured_image: data.featured_image || ''
+          }
+          // カテゴリがまだ一覧にない場合は暫定追加（表示用）
+          if (this.formData.category && !this.categories.some(c => c.slug === this.formData.category)) {
+            this.categories = [...this.categories, { id: `cur-${Date.now()}`, slug: this.formData.category, name: this.formData.category }]
           }
         } else {
           throw new Error('Notice not found')
@@ -405,7 +479,7 @@ export default {
       try {
         const form = new FormData()
         form.append('file', file)
-        form.append('directory', 'public/media/notices')
+        form.append('directory', this.imageUploadDirectory)
         const res = await apiClient.upload('/api/admin/media/upload', form)
         if (!res || res.success === false || !res.file?.url) {
           const msg = res?.error || res?.message || 'アップロードに失敗しました'
@@ -687,14 +761,18 @@ export default {
   color: white;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: #c44853;
-}
+  .btn-primary:hover:not(:disabled) {
+    background-color: #c44853;
+  }
 
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.btn.small { padding: 8px 12px; min-width: auto; }
+
+.inline-add-category { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 8px; }
 
 /* 画像アップロード UI */
 .image-preview-container {

@@ -11,6 +11,22 @@ use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
+    private function sanitizePathComponent(string $name): string
+    {
+        $name = trim($name);
+        // Remove control chars
+        $name = preg_replace('/[\x00-\x1F\x7F]/u', '', $name);
+        // Disallow path separators and reserved characters; replace with a middle dot
+        $name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '・', $name);
+        if ($name === '') { $name = '名称未設定'; }
+        // Limit length
+        if (function_exists('mb_substr')) {
+            $name = mb_substr($name, 0, 100);
+        } else {
+            $name = substr($name, 0, 100);
+        }
+        return $name;
+    }
     /**
      * メディアファイル一覧を取得
      */
@@ -115,12 +131,13 @@ class MediaController extends Controller
             $directory = $request->get('directory', 'media');
             $directory = ltrim(preg_replace('#^public/#', '', $directory), '/');
             
-            // ファイル名を生成
+            // ファイル名を生成（日本語等も保持しつつ安全な文字だけに）
             $fileName = $request->get('name');
             if (!$fileName) {
                 $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
             } else {
-                $fileName = Str::slug(pathinfo($fileName, PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+                $base = $this->sanitizePathComponent(pathinfo($fileName, PATHINFO_FILENAME));
+                $fileName = $base . '.' . $file->getClientOriginalExtension();
             }
 
             // ファイルを保存
@@ -223,7 +240,7 @@ class MediaController extends Controller
             // 新しいパスを生成
             $directory = dirname($oldPath);
             $extension = pathinfo($oldPath, PATHINFO_EXTENSION);
-            $newFileName = Str::slug(pathinfo($newName, PATHINFO_FILENAME)) . '.' . $extension;
+            $newFileName = $this->sanitizePathComponent(pathinfo($newName, PATHINFO_FILENAME)) . '.' . $extension;
             $newPath = $directory . '/' . $newFileName;
 
             // ファイルを移動（名前変更）
@@ -300,7 +317,7 @@ class MediaController extends Controller
             $disk = Storage::disk('public');
             $parent = $request->get('parent', '');
             $parent = ltrim(preg_replace('#^public/#', '', $parent), '/');
-            $name = Str::slug($request->name);
+            $name = $this->sanitizePathComponent($request->name);
             $directoryPath = ltrim(rtrim($parent, '/'). '/' . $name, '/');
 
             if ($disk->exists($directoryPath)) {
