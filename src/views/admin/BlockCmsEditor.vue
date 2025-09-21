@@ -775,6 +775,7 @@
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug==='login'" v-model="loginTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='membership-application'" v-model="membershipApplicationTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='seminar-application'" v-model="seminarApplicationTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='navigation'" v-model="navigationTexts.page_title" class="input" />
@@ -794,6 +795,7 @@
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug==='login'" v-model="loginTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='membership-application'" v-model="membershipApplicationTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='seminar-application'" v-model="seminarApplicationTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='navigation'" v-model="navigationTexts.page_subtitle" class="input" />
@@ -804,6 +806,19 @@
             <label>導入文</label>
             <textarea v-model="privacyTexts.intro" class="textarea" rows="4"></textarea>
           </div>
+
+          <!-- login: 導入文・ボタン文言 -->
+          <template v-if="currentPage && currentPage.slug==='login' && layoutMode">
+            <div class="section-title">ログインページ文言</div>
+            <div class="field">
+              <label>説明文（intro）</label>
+              <textarea v-model="loginTexts.intro" class="textarea" rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>ボタン文言</label>
+              <input v-model="loginTexts.button_login" class="input" />
+            </div>
+          </template>
 
           <!-- privacy/terms/transaction-law: ヒーロー画像（レイアウト近似配置） -->
           <template v-if="currentPage && (currentPage.slug==='privacy-policy' || currentPage.slug==='terms' || currentPage.slug==='transaction-law')">
@@ -816,6 +831,25 @@
                   <div class="img-key">images.hero</div>
                   <div class="img-actions">
                     <input ref="img_hero_common" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
+                    <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
+                  </div>
+                </div>
+              </div>
+              <div class="help">推奨比率 16:9（md/lgプリセットで自動リサイズ配信）。</div>
+            </div>
+          </template>
+
+          <!-- login: ヒーロー画像（レイアウト近似配置） -->
+          <template v-if="currentPage && currentPage.slug==='login' && layoutMode">
+            <div class="section-title">ページ上部ヒーロー</div>
+            <div class="field">
+              <label>ヒーロー画像（hero）</label>
+              <div class="page-image-row">
+                <div class="img-preview"><img :src="getImageUrlByKey('hero') || ''" alt="preview"/></div>
+                <div class="img-meta">
+                  <div class="img-key">images.hero</div>
+                  <div class="img-actions">
+                    <input ref="img_hero_login" type="file" accept="image/*" style="display:none" @change="onCompanyImageSelected('hero', $event)" />
                     <button class="btn" @click="triggerCompanyImageUpload('hero')">アップロードファイル</button>
                   </div>
                 </div>
@@ -2235,7 +2269,7 @@ export default {
   name: 'BlockCmsEditor',
   components: { AdminLayout },
   data(){
-      return {
+    return {
       pages: [],
       search: '',
       currentPage: null,
@@ -2306,6 +2340,12 @@ export default {
       footerKeys: FOOTER_KEYS,
       // 一般ページ用: 動的に全texts/htmlsを編集するフォールバック
       genericTexts: {},
+      loginTexts: {
+        page_title: '',
+        page_subtitle: '',
+        intro: '',
+        button_login: ''
+      },
       genericHtmls: {},
       // Page images (content.images)
       pageImages: [],
@@ -2699,6 +2739,8 @@ export default {
         'membership-application-complete',
         'seminar-application-confirm',
         'seminar-application-complete',
+        // セミナー過去一覧ページは編集対象外
+        'seminars-past',
       ])
     },
     // 表示用にフィルタ済みのページ一覧
@@ -2888,6 +2930,7 @@ export default {
         else if (slug.includes('footer')) this.pageContentKey = 'footer'
         else if (slug.startsWith('contact-') && (slug.endsWith('-confirm') || slug.endsWith('-complete'))) this.pageContentKey = 'contact'
         else if (slug.includes('contact')) this.pageContentKey = 'contact'
+        else if (slug.includes('login')) this.pageContentKey = 'login'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'membership'
         // consulting / services ページは既定ONだが、ユーザ保存がある場合は尊重
@@ -3745,6 +3788,9 @@ export default {
           'contact_section_bg'
         ]
       }
+      if (key === 'login') {
+        return ['hero']
+      }
       if (key === 'privacy' || key === 'terms' || key === 'transaction-law') {
         return ['hero']
       }
@@ -4087,6 +4133,8 @@ export default {
         if (hasEntries(this.membershipApplicationTexts)) patch.content.texts = { ...this.membershipApplicationTexts }
       } else if (key === 'seminar-application') {
         if (hasEntries(this.seminarApplicationTexts)) patch.content.texts = { ...this.seminarApplicationTexts }
+      } else if (key === 'login') {
+        if (hasEntries(this.loginTexts)) patch.content.texts = { ...this.loginTexts }
       } else if (key === 'navigation') {
         if (hasEntries(this.navigationTexts)) patch.content.texts = { ...this.navigationTexts }
       } else if (key === 'footer') {

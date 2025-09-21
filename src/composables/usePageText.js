@@ -165,19 +165,47 @@ export function usePageText(pageKey) {
       let page = body?.page || body?.data?.page || null
       entry.page = page
 
-      // If we loaded via admin (preview/edit) but got empty structured arrays
-      // (e.g., history not present yet), try public endpoint and merge the
-      // missing sections. This prevents blank sections when admin cache is stale.
+      // If we loaded via admin (preview/edit) but got empty or stale structured arrays
+      // (e.g., history/staff not present or outdated), try public endpoint and merge the
+      // missing or shorter sections. This prevents blank/older sections when admin cache is stale.
       try {
         const usingAdmin = ((preferAdmin || isPreview || isEditing) && adminToken && !forcePublic)
-        const missingHistory = !(page && page.content && Array.isArray(page.content.history) && page.content.history.length)
-        if (usingAdmin && missingHistory) {
-          const pub = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
-          const pubBody = pub?.data || pub
-          const pubPage = pubBody?.page || pubBody?.data?.page || null
-          if (pubPage && pubPage.content && Array.isArray(pubPage.content.history) && pubPage.content.history.length) {
-            // Merge only missing sections to avoid overriding admin-only edits
-            const merged = { ...(page || {}), content: { ...(page?.content || {}), history: pubPage.content.history } }
+        if (usingAdmin) {
+          const adminHist = Array.isArray(page?.content?.history) ? page.content.history : []
+          const adminStaff = Array.isArray(page?.content?.staff) ? page.content.staff : []
+
+          let needPub = !adminHist.length || !adminStaff.length
+          let pubPage = null
+          if (!needPub) {
+            // We may still want public if it has a longer list than admin (stale snapshot)
+            // Fetch public lazily to compare lengths
+            const pubResp = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
+            const pubBody = pubResp?.data || pubResp
+            pubPage = pubBody?.page || pubBody?.data?.page || null
+            const pubHist = Array.isArray(pubPage?.content?.history) ? pubPage.content.history : []
+            const pubStaff = Array.isArray(pubPage?.content?.staff) ? pubPage.content.staff : []
+            const histIsStale = adminHist.length > 0 && pubHist.length > adminHist.length
+            const staffIsStale = adminStaff.length > 0 && pubStaff.length > adminStaff.length
+            needPub = histIsStale || staffIsStale
+          }
+          if (!pubPage && needPub) {
+            const pub = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
+            const pubBody = pub?.data || pub
+            pubPage = pubBody?.page || pubBody?.data?.page || null
+          }
+          if (pubPage && pubPage.content) {
+            const pubHist = Array.isArray(pubPage.content.history) ? pubPage.content.history : []
+            const pubStaff = Array.isArray(pubPage.content.staff) ? pubPage.content.staff : []
+            let mergedContent = { ...(page?.content || {}) }
+            // Merge history when admin is missing or shorter than public
+            if ((!adminHist.length && pubHist.length) || (adminHist.length && pubHist.length > adminHist.length)) {
+              mergedContent = { ...mergedContent, history: pubHist }
+            }
+            // Merge staff similarly (defensive)
+            if ((!adminStaff.length && pubStaff.length) || (adminStaff.length && pubStaff.length > adminStaff.length)) {
+              mergedContent = { ...mergedContent, staff: pubStaff }
+            }
+            const merged = { ...(page || {}), content: mergedContent }
             entry.page = merged
             page = merged
           }

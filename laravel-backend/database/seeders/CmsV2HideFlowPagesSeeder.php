@@ -16,6 +16,8 @@ class CmsV2HideFlowPagesSeeder extends Seeder
             'contact-confirm', 'contact-complete',
             'membership-application-confirm', 'membership-application-complete',
             'seminar-application-confirm', 'seminar-application-complete',
+            // listing page not intended for Block CMS editing
+            'seminars-past',
         ];
 
         foreach ($slugs as $slug) {
@@ -28,4 +30,3 @@ class CmsV2HideFlowPagesSeeder extends Seeder
         }
     }
 }
-
