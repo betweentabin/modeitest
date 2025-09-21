@@ -16,8 +16,18 @@ const getCurrentEnvironment = () => {
   try {
     // 明示オーバーライド（localStorage or クエリ）
     if (typeof window !== 'undefined') {
-      const params = new URLSearchParams((window.location.search || '').replace(/^\?/, ''))
+      const readSearch = () => new URLSearchParams((window.location.search || '').replace(/^\?/, ''))
+      const readHashQuery = () => {
+        try {
+          const h = window.location.hash || ''
+          const qs = h.includes('?') ? h.split('?')[1] : ''
+          return new URLSearchParams(qs)
+        } catch(_) { return new URLSearchParams('') }
+      }
+      const params = readSearch()
+      const hashParams = readHashQuery()
       const q = params.get('realApi') || params.get('useRealApi') || params.get('use_real_api')
+        || hashParams.get('realApi') || hashParams.get('useRealApi') || hashParams.get('use_real_api')
       if (q === '1' || q === 'true') {
         try { localStorage.setItem('use_real_api', '1') } catch(_) {}
       }
@@ -31,7 +41,7 @@ const getCurrentEnvironment = () => {
     return 'production'
   }
   
-  // ローカルホストの時はモックサーバーを使用
+  // ローカルホストの時は既定ではモック。ただし use_real_api=1 があれば上で development を返している。
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return 'mock'
   }

@@ -496,9 +496,11 @@ export default {
         const response = await apiClient.downloadEconomicReport(publicationId);
         
         if (response.success && response.data) {
-          if (response.data.file_url) {
+          // APIの差異（download_url/file_url）に両対応
+          const url = response.data.file_url || response.data.download_url;
+          if (url) {
             // ダウンロードURLにリダイレクト
-            window.open(response.data.file_url, '_blank');
+            window.open(url, '_blank');
           } else {
             throw new Error('ダウンロードURLが取得できませんでした');
           }

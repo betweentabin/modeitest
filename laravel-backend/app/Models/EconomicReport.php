@@ -183,12 +183,29 @@ class EconomicReport extends Model
         if (!$this->file_url) {
             return null;
         }
-        
+
         // すでにフルURLの場合はそのまま返す
-        if (str_starts_with($this->file_url, 'http')) {
+        if (str_starts_with($this->file_url, 'http://') || str_starts_with($this->file_url, 'https://')) {
             return $this->file_url;
         }
-        
-        return asset('storage/' . $this->file_url);
+
+        // 先頭スラッシュなどを正規化
+        $path = ltrim($this->file_url, '/');
+        // 既に `storage/` を含む場合は除去（Storage::disk('public')->url で付与されるため）
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, 8);
+        }
+        // 既に `public/` を含む場合は除去（publicディスクはpublic/以下が公開ルート）
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
+        }
+
+        // 公開ディスクのURL設定を優先（PUBLIC_STORAGE_URL を尊重）
+        try {
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        } catch (\Throwable $e) {
+            // フォールバック: APP_URL ベースの asset()
+            return asset('storage/' . $path);
+        }
     }
 }

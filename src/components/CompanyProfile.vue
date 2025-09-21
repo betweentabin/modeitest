@@ -19,6 +19,7 @@
     <!-- Debug Panel (only when ?cmsDebug=1) -->
     <div v-if="isDebug" style="background:#fff8e1; color:#333; padding:10px; margin:10px 0; border:1px dashed #f0c36d; font-size:12px;">
       <div><strong>CMS Debug</strong></div>
+      <div>apiBase: {{ apiBaseUrl }}</div>
       <div>staff(count={{ staffEntries.length }}):
         <pre style="white-space:pre-wrap; max-height:200px; overflow:auto;">{{ debugStaffJson }}</pre>
       </div>
@@ -419,6 +420,7 @@ import { usePageMedia } from '@/composables/usePageMedia'
 import { resolveMediaUrl } from '@/utils/url.js'
 import CmsBlock from '@/components/CmsBlock.vue'
 import CmsText from '@/components/CmsText.vue'
+import { getApiBaseUrl } from '@/config/api.js'
 
 import vector7 from "../../public/img/vector-7.svg";
 import { frame132131753022Data } from "../data";
@@ -660,6 +662,9 @@ export default {
         const v = params.get('cmsDebug')
         return v === '1' || v === 'true'
       } catch(_) { return false }
+    },
+    apiBaseUrl() {
+      try { return getApiBaseUrl() } catch(_) { return '' }
     },
     historyHtmlBody() {
       try {
