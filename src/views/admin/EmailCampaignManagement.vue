@@ -234,7 +234,10 @@
               <tbody>
                 <tr v-for="t in templates" :key="t.id">
                   <td>{{ t.id }}</td><td>{{ t.subject }}</td><td>{{ formatDateTime(t.updated_at) }}</td>
-                  <td><button class="small-btn" @click="createFromTemplate(t)">このテンプレで作成</button></td>
+                  <td>
+                    <button class="small-btn" @click="createFromTemplate(t)">このテンプレで作成</button>
+                    <button class="small-btn danger" style="margin-left:6px" @click="deleteTemplate(t)">削除</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -499,6 +502,20 @@ export default {
         const res = await apiClient.createCampaignFromTemplate(t.id)
         if (res.success) { alert('テンプレートから作成しました'); this.closeTemplates(); this.loadCampaigns(1) }
       } catch(e) { alert('作成に失敗しました') }
+    },
+    async deleteTemplate(t) {
+      if (!t) return
+      if (!confirm(`テンプレート「${t.subject || ''}」を削除しますか？\n（添付ファイルも物理削除されます）`)) return
+      try {
+        const res = await apiClient.deleteEmailTemplate(t.id)
+        if (res.success) {
+          this.templates = this.templates.filter(x => x.id !== t.id)
+        } else {
+          alert(res.error || '削除に失敗しました')
+        }
+      } catch(e) {
+        alert('削除に失敗しました')
+      }
     },
     formatDateTime(s) { return s ? new Date(s).toLocaleString('ja-JP') : '-' }
     ,formatSize(n) { if (!n && n!==0) return '-' ; const u=['B','KB','MB','GB']; let i=0; let v=n; while(v>=1024 && i<u.length-1){v/=1024;i++} return `${v.toFixed(v>=100?0: v>=10?1:2)} ${u[i]}` }

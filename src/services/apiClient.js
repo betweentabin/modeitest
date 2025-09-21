@@ -438,6 +438,10 @@ class ApiClient {
   async listEmailTemplates() {
     return this.get('/api/admin/emails/templates')
   }
+  
+  async deleteEmailTemplate(id) {
+    return this.delete(`/api/admin/emails/templates/${id}`)
+  }
 
   async markEmailTemplate(id) {
     return this.post(`/api/admin/emails/${id}/mark-template`)

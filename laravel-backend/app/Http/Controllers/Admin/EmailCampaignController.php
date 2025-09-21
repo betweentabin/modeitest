@@ -112,6 +112,35 @@ class EmailCampaignController extends Controller
         return $this->duplicate($id);
     }
 
+    // Templates: delete (only allowed for templates)
+    public function deleteTemplate($id)
+    {
+        $c = EmailCampaign::with('attachments')->findOrFail($id);
+        if (!$c->is_template) {
+            return response()->json(['success' => false, 'message' => 'このキャンペーンはテンプレートではありません'], 400);
+        }
+
+        // Delete attachments (physical + DB)
+        foreach ($c->attachments as $att) {
+            try {
+                if ($att->disk && $att->path) {
+                    Storage::disk($att->disk)->delete($att->path);
+                }
+            } catch (\Throwable $e) {
+                // ignore storage errors to proceed with DB cleanup
+            }
+            $att->delete();
+        }
+
+        // Delete recipients (usually none for templates)
+        EmailRecipient::where('campaign_id', $c->id)->delete();
+
+        // Delete campaign itself
+        $c->delete();
+
+        return response()->json(['success' => true]);
+    }
+
     // Duplicate campaign (content + attachments; recipients are not copied)
     public function duplicate($id)
     {

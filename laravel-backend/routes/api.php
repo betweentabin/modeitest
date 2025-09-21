@@ -329,6 +329,7 @@ Route::prefix('admin')->group(function () {
         Route::prefix('emails')->middleware('can:manage-mails')->group(function () {
             // static endpoints must be defined before "/{id}" to avoid conflicts
             Route::get('/templates', [App\Http\Controllers\Admin\EmailCampaignController::class, 'templates']);
+            Route::delete('/templates/{id}', [App\Http\Controllers\Admin\EmailCampaignController::class, 'deleteTemplate']);
 
             Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'store']);
