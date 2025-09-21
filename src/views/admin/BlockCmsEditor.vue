@@ -1143,6 +1143,7 @@
               <button class="btn" @click="resetCompanyStaffFromLegacy">既存テキストから再読込</button>
               <button class="btn" @click="saveCompanyStaffTexts">所員テキストを保存</button>
               <button class="btn" @click="saveCompanyStaffVisuals">所員の画像・順序を保存</button>
+              <button class="btn primary" @click="saveCompanyStaffUnified">所員を保存（統合）</button>
             </div>
 
             <!-- 決算報告（Financial Reports） -->
@@ -3599,6 +3600,31 @@ export default {
         const res = await apiClient.adminUpdatePageContent('company-profile', payload)
         if (res && res.success) {
           alert('所員の画像・順序を保存しました')
+          try { localStorage.removeItem('page_content_cache:company-profile') } catch(_) {}
+        } else {
+          const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
+          alert(msg)
+        }
+      } catch(e) { alert('保存に失敗しました') }
+    },
+
+    // 統合保存: テキスト＋画像＋順序を content.staff に一本化（textsは互換ミラー）
+    async saveCompanyStaffUnified(){
+      try {
+        const staff = Array.isArray(this.companyStaff)
+          ? this.companyStaff.map((m, i) => this.sanitizeCompanyStaffMember(m, i)).filter(Boolean)
+          : []
+        const payload = { content: { staff }, is_published: true }
+        // texts へミラー（互換用）
+        try {
+          const tx = this.buildStaffTextsFromUi()
+          if (tx && Object.keys(tx).length) {
+            payload.content.texts = { ...(payload.content.texts || {}), ...tx }
+          }
+        } catch(_) { /* noop */ }
+        const res = await apiClient.adminUpdatePageContent('company-profile', payload)
+        if (res && res.success) {
+          alert('所員（統合）を保存しました')
           try { localStorage.removeItem('page_content_cache:company-profile') } catch(_) {}
         } else {
           const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'

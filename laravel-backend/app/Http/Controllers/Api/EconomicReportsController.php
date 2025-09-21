@@ -130,8 +130,10 @@ class EconomicReportsController extends Controller
         try {
             $report = EconomicReport::published()->findOrFail($id);
 
-            // 会員限定チェック
-            if ($report->members_only && !auth()->check()) {
+            // 会員限定チェック（free は一般公開として扱う）
+            $level = strtolower((string) ($report->membership_level ?? ''));
+            $isFree = ($level === 'free');
+            if ($report->members_only && !$isFree && !auth()->check()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'このレポートは会員限定です。ログインしてください。',

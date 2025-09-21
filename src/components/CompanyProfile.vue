@@ -26,7 +26,6 @@
       <div>history(count={{ historyList.length }}):
         <pre style="white-space:pre-wrap; max-height:160px; overflow:auto;">{{ debugHistoryJson }}</pre>
       </div>
-      <div>historyHtml(length={{ debugHistoryHtmlLen }})</div>
     </div>
 
     <!-- CMS Preview Body under hero when preview/edit flags present -->
@@ -238,7 +237,7 @@
       </div>
     </section>    
 
-    <!-- History Section -->
+    <!-- History Section (direct from content.history[]) -->
     <section id="history" class="history-section" :key="historyVersion">
       <div class="section-header">
         <h2 class="section-title">
@@ -265,19 +264,12 @@
           </div>
         </div>
       </div>
-      <!-- Fallback to pre-rendered HTML when array is empty -->
-      <div v-else-if="historyHtmlBody" v-html="historyHtmlBody"></div>
-      <!-- Final static fallback (seed/default) -->
       <div v-else class="history-content">
-        <div 
-          class="history-item"
-          v-for="(h, idx) in defaultHistoryRecords"
-          :key="idx"
-        >
-          <div class="history-year">{{ h.year }}</div>
+        <div class="history-item">
+          <div class="history-year"></div>
           <div class="history-details">
-            <div class="history-date">{{ h.date }}</div>
-            <div class="history-description" v-html="h.body"></div>
+            <div class="history-date"></div>
+            <div class="history-description">沿革データがありません。</div>
           </div>
         </div>
       </div>
@@ -531,12 +523,6 @@ export default {
           fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451',
         },
       ],
-      // History section default fallback records (mirrors Financial Reports pattern)
-      defaultHistoryRecords: [
-        { year: '1988', date: '昭和63年1月30日', body: 'ちくぎんコンピュータサービス（株）設立' },
-        { year: '2010', date: '平成22年6月29日', body: 'ちくぎんコンピュータサービス（株）の定款変更により、経営コンサルティング業務・経済調査等業務を追加。' },
-        { year: '2011', date: '平成23年7月1日', body: '社名変更　（株）ちくぎん地域経済研究所として新たにスタート。<br>主たる業務は調査・研究、人材開発、IT関連サービス、経営支援（経営サポート）、コンシェルジュサービス。' },
-      ],
       aboutInstituteDescription: `
         <p>株式会社ちくぎん地域経済研究所は、筑邦銀行グループの一員として、地域社会の発展に貢献することを使命としています。</p>
         <p>私たちは産・官・学・金（金融機関）のネットワークを構築し、バイオ・アグリ・医療・介護をはじめとする様々な分野の調査研究を専門的に行っています。</p>
@@ -557,91 +543,54 @@ export default {
     staffEntries() {
       try {
         const content = this._pageRef?.content || {}
-        let contentStaff = Array.isArray(content?.staff) ? content.staff : []
-        // 並び順: order があれば昇順、無ければ配列順
-        try {
-          const hasOrder = contentStaff.some(m => typeof m?.order === 'number')
+        let arr = Array.isArray(content?.staff) ? content.staff : []
+        if (arr.length) {
+          const hasOrder = arr.some(m => typeof m?.order === 'number')
           if (hasOrder) {
-            contentStaff = [...contentStaff].sort((a,b) => {
+            arr = [...arr].sort((a,b) => {
               const ao = (typeof a?.order === 'number') ? a.order : Number.MAX_SAFE_INTEGER
               const bo = (typeof b?.order === 'number') ? b.order : Number.MAX_SAFE_INTEGER
               return ao - bo
             })
           }
-        } catch(_) {}
-
-        // 1) texts からテキスト優先のレコードを構築（氏名・ふりがな・役職・注記）
-        const textsBased = this.defaultStaffRecords.map((record, index) => {
-          const get = (key, fallback) => {
-            if (!key) return fallback
-            try { return this._pageText?.getText(key, fallback) || fallback } catch (_) { return fallback }
-          }
-          const name = get(record.nameKey, record.name)
-          return {
-            id: record.id || `default-${index}`,
-            name,
-            reading: get(record.readingKey, record.reading || ''),
-            position: get(record.positionKey, record.position || ''),
-            note: get(record.noteKey, record.note || ''),
-            imageKey: record.imageKey || '',
-            imageUrl: record.imageUrl || '',
-            alt: record.alt || name || '',
-            fallbackImage: record.fallbackImage || '',
-          }
-        })
-
-        // 2) content.staff をマップ化（画像や未知メンバーの保持、並び順も尊重）
-        const byId = new Map()
-        contentStaff.forEach((m, i) => {
-          if (!m || typeof m !== 'object') return
-          const id = (m.id || `staff-${i}`)
-          byId.set(String(id), m)
-        })
-
-        // 3) 出力順: content.staff があればその並びを優先。無ければ textsBased の順。
-        const order = contentStaff.length ? contentStaff.map((m, i) => (m && m.id) ? String(m.id) : `staff-${i}`) : textsBased.map(r => String(r.id))
-
-        // 4) マージ: テキストは動的キー staff_<id>_* を最優先 → 旧レガシーキー → content.staff の値、画像は content.staff 優先
-        const textsMap = new Map(textsBased.map(r => [String(r.id), r]))
-        const getTextOr = (key, fb) => {
-          try { return this._pageText?.getText(key, fb) ?? fb } catch(_) { return fb }
+          return arr.map((member, index) => {
+            if (!member || typeof member !== 'object') return null
+            const imageObj = member.image && typeof member.image === 'object' ? member.image : null
+            const id = member.id || `staff-${index}`
+            const name = member.name || ''
+            return {
+              id,
+              name,
+              reading: member.reading || '',
+              position: member.position || '',
+              note: member.note || '',
+              imageKey: member.image_key || member.imageKey || '',
+              imageUrl: member.image_url || member.imageUrl || (imageObj?.url || ''),
+              alt: member.alt || name || '',
+            }
+          }).filter(Boolean)
         }
-        const result = order.map((id, idx) => {
-          const sid = String(id || `staff-${idx}`)
-          const dyn = (suf, fb='') => getTextOr(`staff_${sid}_${suf}`, fb)
-          const t = textsMap.get(sid) || null
-          const c = byId.get(sid) || null
-          const imageObj = c && c.image && typeof c.image === 'object' ? c.image : null
+      } catch (_) {}
 
-          const legacyName = t ? (t.name || '') : ''
-          const legacyReading = t ? (t.reading || '') : ''
-          const legacyPosition = t ? (t.position || '') : ''
-          const legacyNote = t ? (t.note || '') : ''
-
-          const name = dyn('name', legacyName) || (c?.name || '')
-          const reading = dyn('reading', legacyReading) || (c?.reading || '')
-          const position = dyn('position', legacyPosition) || (c?.position || '')
-          const note = dyn('note', legacyNote) || (c?.note || '')
-          const baseName = name || legacyName || (c?.name || '')
-
-          return {
-            id: sid,
-            name,
-            reading,
-            position,
-            note,
-            imageKey: (c?.image_key || c?.imageKey || t?.imageKey || ''),
-            imageUrl: (c?.image_url || c?.imageUrl || imageObj?.url || t?.imageUrl || ''),
-            alt: (c?.alt || baseName || ''),
-            fallbackImage: t?.fallbackImage || '',
-          }
-        }).filter(Boolean)
-
-        // content も texts も無ければ空
-        return result.length ? result : []
-      } catch (_) {
-        return []
-      }
+      // フォールバック（content.staff が無い場合のみ）: 旧テキスト or 既定
+      return this.defaultStaffRecords.map((record, index) => {
+        const get = (key, fallback) => {
+          if (!key) return fallback
+          try { return this._pageText?.getText(key, fallback) || fallback } catch (_) { return fallback }
+        }
+        const name = get(record.nameKey, record.name)
+        return {
+          id: record.id || `default-${index}`,
+          name,
+          reading: get(record.readingKey, record.reading || ''),
+          position: get(record.positionKey, record.position || ''),
+          note: get(record.noteKey, record.note || ''),
+          imageKey: record.imageKey || '',
+          imageUrl: record.imageUrl || '',
+          alt: record.alt || name || '',
+          fallbackImage: record.fallbackImage || '',
+        }
+      })
     },
     staffCount() {
       return Array.isArray(this.staffEntries) ? this.staffEntries.length : 0
@@ -665,13 +614,6 @@ export default {
     },
     apiBaseUrl() {
       try { return getApiBaseUrl() } catch(_) { return '' }
-    },
-    historyHtmlBody() {
-      try {
-        // Only used when history array is empty (template enforces this)
-        // Sanitization is handled by usePageText.getHtml
-        return this._pageText?.getHtml('history_body', '', { allowEmpty: false }) || ''
-      } catch (_) { return '' }
     },
     displayedReports() {
       try {
@@ -709,10 +651,8 @@ export default {
           }))
         }
       } catch(_) {}
-      // If we have an HTML fallback prepared, prefer that (template handles it)
-      if (this.historyHtmlBody && this.historyHtmlBody.length) return []
-      // Finally, use local defaults (same strategy as financial reports)
-      return this.defaultHistoryRecords
+      // No fallback: render empty state in template
+      return []
     },
     historyList() {
       try {
@@ -731,10 +671,7 @@ export default {
         const c = this._pageRef?.content
         const arr = Array.isArray(c?.history) ? c.history : []
         const slim = arr.map(h => ({ y: h?.year || '', d: h?.date || '', b: h?.body || h?.title || '' }))
-        // Include fallback HTML snapshot so key changes when it updates
-        let htmlFallback = ''
-        try { htmlFallback = this._pageText?.getHtml('history_body', '', { allowEmpty: true }) || '' } catch(_) {}
-        return JSON.stringify({ arr: slim, html: htmlFallback })
+        return JSON.stringify({ arr: slim })
       } catch (_) { return '' }
     },
     staffVersion() {
@@ -767,9 +704,6 @@ export default {
         const arr = Array.isArray(c?.history) ? c.history : []
         return JSON.stringify(arr)
       } catch(_) { return '[]' }
-    },
-    debugHistoryHtmlLen() {
-      try { return (this.historyHtmlBody || '').length } catch(_) { return 0 }
     }
   },
   mounted() {
