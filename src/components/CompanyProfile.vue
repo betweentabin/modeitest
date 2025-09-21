@@ -252,7 +252,20 @@
           <div class="divider-line"></div>
         </div>
       </div>
-      <div class="history-content" v-html="historyBodyHtml"></div>
+      <div v-if="displayedHistory && displayedHistory.length" class="history-content">
+        <div 
+          v-for="(h, idx) in displayedHistory" 
+          :key="idx" 
+          class="history-item"
+        >
+          <div class="history-year">{{ h.year || '' }}</div>
+          <div class="history-details">
+            <div class="history-date">{{ h.date || '' }}</div>
+            <div class="history-description" v-html="h.body || h.title || ''"></div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="history-content">沿革データがありません。</div>
     </section>
 
     <!-- Staff Section -->
