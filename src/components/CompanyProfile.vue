@@ -251,9 +251,9 @@
           <div class="divider-line"></div>
         </div>
       </div>
-      <div v-if="historyList && historyList.length" class="history-content">
+      <div v-if="displayedHistory && displayedHistory.length" class="history-content">
         <div 
-          v-for="(h, idx) in historyList" 
+          v-for="(h, idx) in displayedHistory" 
           :key="idx" 
           class="history-item"
         >
@@ -268,25 +268,15 @@
       <div v-else-if="historyHtmlBody" v-html="historyHtmlBody"></div>
       <!-- Final static fallback (seed/default) -->
       <div v-else class="history-content">
-        <div class="history-item">
-          <div class="history-year">1988</div>
+        <div 
+          class="history-item"
+          v-for="(h, idx) in defaultHistoryRecords"
+          :key="idx"
+        >
+          <div class="history-year">{{ h.year }}</div>
           <div class="history-details">
-            <div class="history-date">昭和63年1月30日</div>
-            <div class="history-description">ちくぎんコンピュータサービス（株）設立</div>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-year">2010</div>
-          <div class="history-details">
-            <div class="history-date">平成22年6月29日</div>
-            <div class="history-description">ちくぎんコンピュータサービス（株）の定款変更により、経営コンサルティング業務・経済調査等業務を追加。</div>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-year">2011</div>
-          <div class="history-details">
-            <div class="history-date">平成23年7月1日</div>
-            <div class="history-description">社名変更　（株）ちくぎん地域経済研究所として新たにスタート。<br>主たる業務は調査・研究、人材開発、IT関連サービス、経営支援（経営サポート）、コンシェルジュサービス。</div>
+            <div class="history-date">{{ h.date }}</div>
+            <div class="history-description" v-html="h.body"></div>
           </div>
         </div>
       </div>
@@ -539,6 +529,12 @@ export default {
           fallbackImage: 'https://api.builder.io/api/v1/image/assets/TEMP/497e67c9baa8add863ab6c5cc32439cf23eea4c3?width=451',
         },
       ],
+      // History section default fallback records (mirrors Financial Reports pattern)
+      defaultHistoryRecords: [
+        { year: '1988', date: '昭和63年1月30日', body: 'ちくぎんコンピュータサービス（株）設立' },
+        { year: '2010', date: '平成22年6月29日', body: 'ちくぎんコンピュータサービス（株）の定款変更により、経営コンサルティング業務・経済調査等業務を追加。' },
+        { year: '2011', date: '平成23年7月1日', body: '社名変更　（株）ちくぎん地域経済研究所として新たにスタート。<br>主たる業務は調査・研究、人材開発、IT関連サービス、経営支援（経営サポート）、コンシェルジュサービス。' },
+      ],
       aboutInstituteDescription: `
         <p>株式会社ちくぎん地域経済研究所は、筑邦銀行グループの一員として、地域社会の発展に貢献することを使命としています。</p>
         <p>私たちは産・官・学・金（金融機関）のネットワークを構築し、バイオ・アグリ・医療・介護をはじめとする様々な分野の調査研究を専門的に行っています。</p>
@@ -644,6 +640,23 @@ export default {
         date_label: fr.report_info || '',
         items: Array.isArray(fr.report_links) ? fr.report_links.map(s => ({ label: s, url: '' })) : []
       }))
+    },
+    displayedHistory() {
+      try {
+        const c = this._pageText?.page?.value?.content
+        const arr = Array.isArray(c?.history) ? c.history : []
+        if (arr.length) {
+          return arr.map((h, i) => ({
+            year: typeof h?.year === 'string' ? h.year : (h?.year ? String(h.year) : ''),
+            date: typeof h?.date === 'string' ? h.date : '',
+            body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : ''),
+          }))
+        }
+      } catch(_) {}
+      // If we have an HTML fallback prepared, prefer that (template handles it)
+      if (this.historyHtmlBody && this.historyHtmlBody.length) return []
+      // Finally, use local defaults (same strategy as financial reports)
+      return this.defaultHistoryRecords
     },
     historyList() {
       try {
