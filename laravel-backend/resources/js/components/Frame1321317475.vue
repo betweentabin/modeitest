@@ -5,7 +5,7 @@
       <div class="overlap-group-8">
         <div class="date-3 valign-text-middle inter-normal-ship-gray-10px">2025.04.28</div>
         <div class="x-vol valign-text-middle inter-semi-bold-ship-gray-11px">{{ hotInformationVol324 }}</div>
-        <div class="viwe-more-3 valign-text-middle inter-normal-ship-gray-8px">Viwe More .</div>
+        <div class="viwe-more-3 valign-text-middle inter-normal-ship-gray-8px">View More .</div>
       </div>
     </div>
   </div>

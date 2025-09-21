@@ -15,7 +15,7 @@
         >
           {{ hotInformationVol324 }}
         </div>
-        <div class="viwe-more-3 valign-text-middle inter-normal-ship-gray-8px">Viwe More .</div>
+        <div class="viwe-more-3 valign-text-middle inter-normal-ship-gray-8px">View More .</div>
       </div>
     </div>
   </div>
