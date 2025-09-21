@@ -131,13 +131,26 @@ export function usePageText(pageKey) {
       // and then refresh from the network. This fixes multi‑second gaps while waiting
       // for the API when editors write page_content_cache in the same tab.
       if (isBrowser) {
+        // Allow opt-out of cache via URL flag (?cmsNoCache=1 or ?noCache=1) for hard refresh
+        let noCache = false
         try {
-          const raw = localStorage.getItem('page_content_cache:' + pageKey)
-          if (raw) {
-            const cached = JSON.parse(raw)
-            if (cached && typeof cached === 'object') {
-              entry.page = cached
+          const hash = window.location.hash || ''
+          const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+          const params = new URLSearchParams(qs)
+          const nc = params.get('cmsNoCache') || params.get('noCache')
+          noCache = (nc === '1' || nc === 'true')
+        } catch (_) { /* noop */ }
+        try {
+          if (!noCache) {
+            const raw = localStorage.getItem('page_content_cache:' + pageKey)
+            if (raw) {
+              const cached = JSON.parse(raw)
+              if (cached && typeof cached === 'object') {
+                entry.page = cached
+              }
             }
+          } else {
+            try { localStorage.removeItem('page_content_cache:' + pageKey) } catch (_) {}
           }
         } catch (_) { /* ignore cache read errors */ }
       }
