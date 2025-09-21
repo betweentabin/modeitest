@@ -222,7 +222,17 @@ export default {
     async loadCategories() {
       try {
         const res = await apiClient.getNewsCategories({ timeout: 3500 })
-        const list = (res && res.success) ? (Array.isArray(res.data) ? res.data : []) : []
+        let list = (res && res.success) ? (Array.isArray(res.data) ? res.data : []) : []
+        // Fallback to public categories if admin list is empty (or missing)
+        if (!Array.isArray(list) || list.length === 0) {
+          try {
+            const pub = await apiClient.get('/api/notices/categories', { timeout: 2500 })
+            const arr = (pub && pub.success && Array.isArray(pub.data)) ? pub.data : []
+            if (arr.length) {
+              list = arr.map((slug, idx) => ({ id: `pub-${idx}`, name: slug, slug, is_active: true, sort_order: idx }))
+            }
+          } catch(_) { /* noop */ }
+        }
         this.categories = list
         apiCache.set('admin:notice:categories', list)
       } catch (err) {

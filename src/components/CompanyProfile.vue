@@ -252,9 +252,7 @@
           <div class="divider-line"></div>
         </div>
       </div>
-      <div class="history-content">
-        <CmsText pageKey="company-profile" fieldKey="history_body" tag="div" type="html" />
-      </div>
+      <div class="history-content" v-html="historyBodyHtml"></div>
     </section>
 
     <!-- Staff Section -->
@@ -639,6 +637,9 @@ export default {
       } catch(_) {}
       // No fallback: render empty state in template
       return []
+    },
+    historyBodyHtml() {
+      try { return this._pageText?.getHtml('history_body', '') || '' } catch(_) { return '' }
     },
     historyList() {
       try {
