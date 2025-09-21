@@ -3017,11 +3017,28 @@ export default {
                 url: typeof it?.url === 'string' ? it.url : ''
               })) : []
             })) : []
-            // staff
+            // staff（images/order は content.staff、氏名等は texts.staff_* をプレフィル）
             const staffRaw = Array.isArray(content?.staff) ? content.staff : []
             if (staffRaw.length) {
-              this.companyStaff = this.normalizeCompanyStaffCollection(staffRaw)
+              const textsMap = (content && typeof content === 'object' && content.texts && typeof content.texts === 'object') ? content.texts : {}
+              const read = (key, fallback='') => {
+                try { const v = textsMap[key]; return (typeof v === 'string' && v.length) ? v : fallback } catch(_) { return fallback }
+              }
+              const legacyMap = new Map();
+              try { Array.isArray(COMPANY_STAFF_LEGACY) && COMPANY_STAFF_LEGACY.forEach(e => legacyMap.set(e.id, e)) } catch(_) {}
+              const enriched = staffRaw.map((m, i) => {
+                const id = (m && typeof m.id === 'string') ? m.id : `staff-${i+1}`
+                const meta = legacyMap.get(id)
+                const name = (m && m.name) || (meta ? read(meta.nameKey, meta.name||'') : '')
+                const reading = (m && m.reading) || (meta ? read(meta.readingKey, meta.reading||'') : '')
+                const position = (m && m.position) || (meta ? read(meta.positionKey, meta.position||'') : '')
+                const note = (m && m.note) || (meta ? read(meta.noteKey, meta.note||'') : '')
+                const alt = (m && m.alt) || name || ''
+                return { ...m, id, name, reading, position, note, alt }
+              })
+              this.companyStaff = this.normalizeCompanyStaffCollection(enriched)
             } else {
+              // texts のみからも復元
               this.companyStaff = this.defaultCompanyStaff()
             }
             if (!this.companyStaff.length) this.companyStaff = [this.normalizeCompanyStaffMember({}, 0)]
