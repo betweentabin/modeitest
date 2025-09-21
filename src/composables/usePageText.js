@@ -162,8 +162,27 @@ export function usePageText(pageKey) {
 
       // Accept both wrapped and direct payload shapes
       const body = res?.data || res
-      const page = body?.page || body?.data?.page || null
+      let page = body?.page || body?.data?.page || null
       entry.page = page
+
+      // If we loaded via admin (preview/edit) but got empty structured arrays
+      // (e.g., history not present yet), try public endpoint and merge the
+      // missing sections. This prevents blank sections when admin cache is stale.
+      try {
+        const usingAdmin = ((preferAdmin || isPreview || isEditing) && adminToken && !forcePublic)
+        const missingHistory = !(page && page.content && Array.isArray(page.content.history) && page.content.history.length)
+        if (usingAdmin && missingHistory) {
+          const pub = await apiClient.get(`/api/public/pages/${pageKey}`, { silent: true, params: { _t: Date.now() } })
+          const pubBody = pub?.data || pub
+          const pubPage = pubBody?.page || pubBody?.data?.page || null
+          if (pubPage && pubPage.content && Array.isArray(pubPage.content.history) && pubPage.content.history.length) {
+            // Merge only missing sections to avoid overriding admin-only edits
+            const merged = { ...(page || {}), content: { ...(page?.content || {}), history: pubPage.content.history } }
+            entry.page = merged
+            page = merged
+          }
+        }
+      } catch(_) { /* non-blocking */ }
 
       // 3) Write-through cache for next reload
       if (isBrowser && page) {
