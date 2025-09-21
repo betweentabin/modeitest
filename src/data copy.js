@@ -177,7 +177,7 @@ export const homePageData = {
     text112: "ちくぎん地域経済研究所について",
     forYou: "FOR YOU",
     text113: "産・官・学・金（金融）のネットワークによる<br />様々な分野の調査研究を通じ、企業活動などをサポートします。",
-    image1: "/img/image-2.png",
+    image1: "/img/Image_fx11.jpg",
     text120: "詳細はこちら",
     Information2: "Information",
     text121: "お知らせ",
