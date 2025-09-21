@@ -721,7 +721,7 @@ export default {
     this.setupCarouselScroll();
     try {
       this._pageText = usePageText(this.pageKey)
-      const opts = {}
+      const opts = { force: true }
       // 通常閲覧は公開API固定。cmsPreview/cmsEdit の時のみ管理APIを優先
       try {
         const hash = window.location.hash || ''
@@ -816,7 +816,7 @@ export default {
     media(key, fallback = '') {
       try {
         // A-方針: ページ管理の content.images を最優先（文言と同じ経路で即時反映）
-        const page = this._pageText && this._pageText.page && this._pageText.page.value
+        const page = this._pageRef
         const imgs = page && page.content && page.content.images
         if (imgs && Object.prototype.hasOwnProperty.call(imgs, key)) {
           const v = imgs[key]
