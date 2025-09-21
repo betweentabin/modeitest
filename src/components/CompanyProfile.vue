@@ -16,6 +16,17 @@
     <!-- Breadcrumbs -->
     <Breadcrumbs :breadcrumbs="[pageTitle]" />
 
+    <!-- Debug Panel (only when ?cmsDebug=1) -->
+    <div v-if="isDebug" style="background:#fff8e1; color:#333; padding:10px; margin:10px 0; border:1px dashed #f0c36d; font-size:12px;">
+      <div><strong>CMS Debug</strong></div>
+      <div>staff(count={{ staffEntries.length }}):
+        <pre style="white-space:pre-wrap; max-height:200px; overflow:auto;">{{ staffEntries.map(s=>({id:s.id,name:s.name,reading:s.reading,position:s.position,imageKey:s.imageKey}))) }}</pre>
+      </div>
+      <div>history(count={{ historyList.length }}):
+        <pre style="white-space:pre-wrap; max-height:160px; overflow:auto;">{{ historyList }}</pre>
+      </div>
+    </div>
+
     <!-- CMS Preview Body under hero when preview/edit flags present -->
     <div class="main-content" v-if="isEditPreview">
       <div class="content-container">
@@ -589,6 +600,15 @@ export default {
         const params = new URLSearchParams(qs)
         return params.has('cmsPreview') || params.has('cmsEdit')
       } catch (_) { return false }
+    },
+    isDebug() {
+      try {
+        const hash = window.location.hash || ''
+        const qs = hash.includes('?') ? hash.split('?')[1] : (window.location.search || '').slice(1)
+        const params = new URLSearchParams(qs)
+        const v = params.get('cmsDebug')
+        return v === '1' || v === 'true'
+      } catch(_) { return false }
     },
     displayedReports() {
       try {
