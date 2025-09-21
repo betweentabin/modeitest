@@ -26,6 +26,7 @@
       <div>history(count={{ historyList.length }}):
         <pre style="white-space:pre-wrap; max-height:160px; overflow:auto;">{{ debugHistoryJson }}</pre>
       </div>
+      <div>historyOverride(length={{ debugHistoryOverrideLen }})</div>
     </div>
 
     <!-- CMS Preview Body under hero when preview/edit flags present -->
@@ -708,6 +709,9 @@ export default {
         const arr = Array.isArray(c?.history) ? c.history : []
         return JSON.stringify(arr)
       } catch(_) { return '[]' }
+    },
+    debugHistoryOverrideLen() {
+      try { return Array.isArray(this._historyOverride) ? this._historyOverride.length : 0 } catch(_) { return 0 }
     }
   },
   mounted() {
@@ -717,7 +721,7 @@ export default {
     this.setupCarouselScroll();
     try {
       this._pageText = usePageText(this.pageKey)
-      const opts = { force: true }
+      const opts = {}
       // 通常閲覧は公開API固定。cmsPreview/cmsEdit の時のみ管理APIを優先
       try {
         const hash = window.location.hash || ''
@@ -729,11 +733,18 @@ export default {
           if (token && token.length > 0) opts.preferAdmin = true
         }
       } catch (_) {}
-      const loadResult = this._pageText.load(opts)
-      if (loadResult && typeof loadResult.then === 'function') {
-        loadResult.then(() => { this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.fetchPublicHistorySafeguard() })
+      // If router preloaded and history already present, skip redundant load
+      const hasHistoryNow = (() => {
+        try { const c = this._pageRef?.content; return Array.isArray(c?.history) && c.history.length > 0 } catch(_) { return false } })()
+      if (!hasHistoryNow) {
+        const loadResult = this._pageText.load(opts)
+        if (loadResult && typeof loadResult.then === 'function') {
+          loadResult.then(() => { this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.fetchPublicHistorySafeguard() })
+        } else {
+          this.recalculateStaffCarousel();
+          this.fetchPublicHistorySafeguard()
+        }
       } else {
-        this.recalculateStaffCarousel();
         this.fetchPublicHistorySafeguard()
       }
     } catch(e) { /* noop */ }
