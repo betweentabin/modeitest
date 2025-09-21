@@ -429,6 +429,7 @@ export default {
       pageKey: 'company-profile',
       pageLoaded: false,
       stateHistory: [],
+      stateStaff: [],
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       financialReports: [],
@@ -541,6 +542,25 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'ABOUT US') || 'ABOUT US' },
     staffEntries() {
       try {
+        // 0) 最優先: 直接fetchしたstateStaff
+        if (Array.isArray(this.stateStaff) && this.stateStaff.length) {
+          return this.stateStaff.map((member, index) => {
+            if (!member || typeof member !== 'object') return null
+            const imageObj = member.image && typeof member.image === 'object' ? member.image : null
+            const id = member.id || `staff-${index}`
+            const name = member.name || ''
+            return {
+              id,
+              name,
+              reading: member.reading || '',
+              position: member.position || '',
+              note: member.note || '',
+              imageKey: member.image_key || member.imageKey || '',
+              imageUrl: member.image_url || member.imageUrl || (imageObj?.url || ''),
+              alt: member.alt || name || '',
+            }
+          }).filter(Boolean)
+        }
         const content = this._pageRef?.content || {}
         let arr = Array.isArray(content?.staff) ? content.staff : []
         if (arr.length) {
@@ -828,6 +848,21 @@ export default {
           date: typeof h?.date === 'string' ? h.date : '',
           body: typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : ''),
         }))
+
+        // staff も同時に取り込む
+        const staffArr = Array.isArray(body?.data?.page?.content?.staff) ? body.data.page.content.staff : []
+        if (staffArr.length) {
+          this.stateStaff = staffArr.map((m, idx) => ({
+            id: m?.id || `staff-${idx}`,
+            name: m?.name || '',
+            reading: m?.reading || '',
+            position: m?.position || '',
+            note: m?.note || '',
+            image_key: m?.image_key || m?.imageKey || '',
+            image_url: m?.image_url || m?.imageUrl || (m?.image && typeof m.image === 'object' ? (m.image.url || '') : ''),
+            alt: m?.alt || (m?.name || '')
+          }))
+        }
       } catch (_) { /* ignore network errors */ }
     },
     scrollTo(id) {
