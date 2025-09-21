@@ -549,46 +549,78 @@ export default {
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'ABOUT US') || 'ABOUT US' },
     staffEntries() {
       try {
-        const content = this._pageText?.page?.value?.content
-        if (Array.isArray(content?.staff) && content.staff.length) {
-          return content.staff
-            .map((member, index) => {
-              if (!member || typeof member !== 'object') return null
-              const imageObj = member.image && typeof member.image === 'object' ? member.image : null
-              return {
-                id: member.id || `staff-${index}`,
-                name: member.name || '',
-                reading: member.reading || '',
-                position: member.position || '',
-                note: member.note || '',
-                imageKey: member.image_key || member.imageKey || '',
-                imageUrl: member.image_url || member.imageUrl || (imageObj?.url || ''),
-                alt: member.alt || member.name || '',
-              }
+        const content = this._pageText?.page?.value?.content || {}
+        let contentStaff = Array.isArray(content?.staff) ? content.staff : []
+        // 並び順: order があれば昇順、無ければ配列順
+        try {
+          const hasOrder = contentStaff.some(m => typeof m?.order === 'number')
+          if (hasOrder) {
+            contentStaff = [...contentStaff].sort((a,b) => {
+              const ao = (typeof a?.order === 'number') ? a.order : Number.MAX_SAFE_INTEGER
+              const bo = (typeof b?.order === 'number') ? b.order : Number.MAX_SAFE_INTEGER
+              return ao - bo
             })
-            .filter(Boolean)
-        }
-      } catch (_) {}
+          }
+        } catch(_) {}
 
-      // フォールバック: 旧テキスト（staff_*）または既定リストから構築
-      return this.defaultStaffRecords.map((record, index) => {
-        const get = (key, fallback) => {
-          if (!key) return fallback
-          try { return this._pageText?.getText(key, fallback) || fallback } catch (_) { return fallback }
-        }
-        const name = get(record.nameKey, record.name)
-        return {
-          id: record.id || `default-${index}`,
-          name,
-          reading: get(record.readingKey, record.reading || ''),
-          position: get(record.positionKey, record.position || ''),
-          note: get(record.noteKey, record.note || ''),
-          imageKey: record.imageKey || '',
-          imageUrl: record.imageUrl || '',
-          alt: record.alt || name || '',
-          fallbackImage: record.fallbackImage || '',
-        }
-      })
+        // 1) texts からテキスト優先のレコードを構築（氏名・ふりがな・役職・注記）
+        const textsBased = this.defaultStaffRecords.map((record, index) => {
+          const get = (key, fallback) => {
+            if (!key) return fallback
+            try { return this._pageText?.getText(key, fallback) || fallback } catch (_) { return fallback }
+          }
+          const name = get(record.nameKey, record.name)
+          return {
+            id: record.id || `default-${index}`,
+            name,
+            reading: get(record.readingKey, record.reading || ''),
+            position: get(record.positionKey, record.position || ''),
+            note: get(record.noteKey, record.note || ''),
+            imageKey: record.imageKey || '',
+            imageUrl: record.imageUrl || '',
+            alt: record.alt || name || '',
+            fallbackImage: record.fallbackImage || '',
+          }
+        })
+
+        // 2) content.staff をマップ化（画像や未知メンバーの保持、並び順も尊重）
+        const byId = new Map()
+        contentStaff.forEach((m, i) => {
+          if (!m || typeof m !== 'object') return
+          const id = (m.id || `staff-${i}`)
+          byId.set(String(id), m)
+        })
+
+        // 3) 出力順: content.staff があればその並びを優先。無ければ textsBased の順。
+        const order = contentStaff.length ? contentStaff.map((m, i) => (m && m.id) ? String(m.id) : `staff-${i}`) : textsBased.map(r => String(r.id))
+
+        // 4) マージ: テキストを最優先（name/reading/position/note）、画像は content.staff を優先
+        const textsMap = new Map(textsBased.map(r => [String(r.id), r]))
+        const result = order.map((id, idx) => {
+          const t = textsMap.get(String(id)) || null
+          const c = byId.get(String(id)) || null
+          const imageObj = c && c.image && typeof c.image === 'object' ? c.image : null
+          const baseName = t ? (t.name || '') : (c?.name || '')
+          return {
+            id: String(id || `staff-${idx}`),
+            // texts 優先
+            name: t ? (t.name || '') : (c?.name || ''),
+            reading: t ? (t.reading || '') : (c?.reading || ''),
+            position: t ? (t.position || '') : (c?.position || ''),
+            note: t ? (t.note || '') : (c?.note || ''),
+            // 画像は content.staff 優先（無ければ texts の既定/Fallback）
+            imageKey: (c?.image_key || c?.imageKey || t?.imageKey || ''),
+            imageUrl: (c?.image_url || c?.imageUrl || imageObj?.url || t?.imageUrl || ''),
+            alt: (c?.alt || baseName || ''),
+            fallbackImage: t?.fallbackImage || '',
+          }
+        }).filter(Boolean)
+
+        // content も texts も無ければ空
+        return result.length ? result : []
+      } catch (_) {
+        return []
+      }
     },
     staffCount() {
       return Array.isArray(this.staffEntries) ? this.staffEntries.length : 0

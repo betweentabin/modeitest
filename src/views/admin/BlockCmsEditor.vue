@@ -1102,10 +1102,11 @@
                 </div>
               </div>
             </div>
-            <div class="actions" style="justify-content:flex-start; gap:8px;">
+            <div class="actions" style="justify-content:flex-start; gap:8px; flex-wrap:wrap;">
               <button class="btn" @click="addCompanyStaff">+ 所員を追加</button>
               <button class="btn" @click="resetCompanyStaffFromLegacy">既存テキストから再読込</button>
-              <button class="btn" @click="saveCompanyStaff">所員を保存</button>
+              <button class="btn" @click="saveCompanyStaffTexts">所員テキストを保存</button>
+              <button class="btn" @click="saveCompanyStaffVisuals">所員の画像・順序を保存</button>
             </div>
 
             <!-- 決算報告（Financial Reports） -->
@@ -3417,8 +3418,14 @@ export default {
         try {
           const res = await apiClient.adminGetPageContent('company-profile')
           const page = (res && (res.page || res.data?.page)) || null
-          const staff = page && page.content && Array.isArray(page.content.staff) ? page.content.staff : []
+          let staff = page && page.content && Array.isArray(page.content.staff) ? page.content.staff : []
           if (staff.length) {
+            const hasOrder = staff.some(x => typeof x?.order === 'number')
+            if (hasOrder) staff = [...staff].sort((a,b)=>{
+              const ao = (typeof a?.order === 'number') ? a.order : Number.MAX_SAFE_INTEGER
+              const bo = (typeof b?.order === 'number') ? b.order : Number.MAX_SAFE_INTEGER
+              return ao - bo
+            })
             loaded = staff.map((m, i) => this.normalizeCompanyStaffMember(m, i)).filter(Boolean)
           }
         } catch(_) { /* fallback to legacy texts */ }
@@ -3496,42 +3503,80 @@ export default {
         alert('保存に失敗しました')
       }
     },
-    async saveCompanyStaff(){
+    // スタッフのテキストのみ保存（texts に反映）
+    async saveCompanyStaffTexts(){
       try {
-        // Build staff from current UI (sanitize + keep order)
-        const staff = Array.isArray(this.companyStaff)
-          ? this.companyStaff.map((m, i) => this.sanitizeCompanyStaffMember(m, i)).filter(Boolean)
-          : []
-        const payload = { content: { staff }, is_published: true }
-        // Mirror staff to legacy texts for backward compatibility
-        try {
-          const legacyMap = new Map()
-          COMPANY_STAFF_LEGACY.forEach(e => legacyMap.set(e.id, e))
-          const fromStaff = staff.reduce((acc, m) => {
-            const id = (m && m.id) ? String(m.id) : ''
-            const meta = legacyMap.get(id)
-            if (!meta) return acc
-            if (meta.nameKey) acc[meta.nameKey] = String(m.name || '').trim()
-            if (meta.readingKey) acc[meta.readingKey] = String(m.reading || '').trim()
-            if (meta.positionKey) acc[meta.positionKey] = String(m.position || '').trim()
-            if (meta.noteKey) acc[meta.noteKey] = String(m.note || '').trim()
-            return acc
-          }, {})
-          if (Object.keys(fromStaff).length) {
-            payload.content.texts = { ...(payload.content.texts || {}), ...fromStaff }
-          }
-        } catch(_) { /* noop */ }
+        const texts = this.buildStaffTextsFromUi()
+        if (!texts || !Object.keys(texts).length) {
+          alert('保存対象のテキストがありません')
+          return
+        }
+        const payload = { content: { texts }, is_published: true }
         const res = await apiClient.adminUpdatePageContent('company-profile', payload)
         if (res && res.success) {
-          alert('所員を保存しました')
+          alert('所員テキストを保存しました')
           try { localStorage.removeItem('page_content_cache:company-profile') } catch(_) {}
         } else {
           const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
           alert(msg)
         }
-      } catch(e) {
-        alert('保存に失敗しました')
-      }
+      } catch(e) { alert('保存に失敗しました') }
+    },
+
+    // スタッフの画像・順序のみ保存（content.staff に反映）
+    async saveCompanyStaffVisuals(){
+      try {
+        const visuals = Array.isArray(this.companyStaff) ? this.companyStaff.map((m, i) => {
+          const id = (m && m.id) ? String(m.id).trim() : `staff-${i+1}`
+          const out = { id, order: i }
+          const k = (m && m.image_key) ? String(m.image_key).trim() : ''
+          const u = (m && m.image_url) ? String(m.image_url).trim() : ''
+          if (k) out.image_key = k
+          if (u) out.image_url = u
+          if (m && m.image && (m.image.url || m.image.path || m.image.filename)) {
+            out.image = {
+              url: m.image.url || '', path: m.image.path || '', filename: m.image.filename || ''
+            }
+          }
+          // alt は任意
+          if (m && m.alt && String(m.alt).trim() && String(m.alt).trim() !== String(m.name||'')) out.alt = String(m.alt).trim()
+          return out
+        }).filter(Boolean) : []
+
+        const payload = { content: { staff: visuals }, is_published: true }
+        const res = await apiClient.adminUpdatePageContent('company-profile', payload)
+        if (res && res.success) {
+          alert('所員の画像・順序を保存しました')
+          try { localStorage.removeItem('page_content_cache:company-profile') } catch(_) {}
+        } else {
+          const msg = (res && (res.error || res.message)) || '保存に失敗しました（認証切れの可能性あり）'
+          alert(msg)
+        }
+      } catch(e) { alert('保存に失敗しました') }
+    },
+
+    buildStaffTextsFromUi(){
+      try {
+        const legacyMap = new Map()
+        COMPANY_STAFF_LEGACY.forEach(e => legacyMap.set(e.id, e))
+        const fromUi = Array.isArray(this.companyStaff) ? this.companyStaff : []
+        const acc = {}
+        fromUi.forEach((m, i) => {
+          const id = (m && m.id) ? String(m.id) : `staff-${i+1}`
+          const meta = legacyMap.get(id)
+          if (!meta) return
+          if (meta.nameKey) acc[meta.nameKey] = String(m?.name || '').trim()
+          if (meta.readingKey) acc[meta.readingKey] = String(m?.reading || '').trim()
+          if (meta.positionKey) acc[meta.positionKey] = String(m?.position || '').trim()
+          if (meta.noteKey) acc[meta.noteKey] = String(m?.note || '').trim()
+        })
+        // 見出し・英字も併せて保存
+        if (this.companyTexts) {
+          if (this.companyTexts.staff_title !== undefined) acc['staff_title'] = String(this.companyTexts.staff_title||'').trim()
+          if (this.companyTexts.staff_subtitle !== undefined) acc['staff_subtitle'] = String(this.companyTexts.staff_subtitle||'').trim()
+        }
+        return acc
+      } catch(_) { return {} }
     },
     async syncLegacyPageContentIfApplicable(){
       try {
@@ -3940,82 +3985,31 @@ export default {
         if (hasEntries(this.companyTexts)) patch.content.texts = { ...this.companyTexts }
         if (hasEntries(this.companyHtmls)) patch.content.htmls = { ...this.companyHtmls }
 
-        // Build staff from UI
-        const staffFromUi = Array.isArray(this.companyStaff)
-          ? this.companyStaff.map((member, index) => this.sanitizeCompanyStaffMember(member, index)).filter(Boolean)
-          : []
-
-        // Build override map from legacy text keys (if any staff_* text fields exist)
-        const makeOverrideMapFromTexts = () => {
-          const map = new Map()
-          try {
-            const texts = this.companyTexts || {}
-            let hasAny = false
-            COMPANY_STAFF_LEGACY.forEach(entry => {
-              const o = {}
-              const name = (texts[entry.nameKey] || '').trim()
-              const reading = (texts[entry.readingKey] || '').trim()
-              const position = (texts[entry.positionKey] || '').trim()
-              const note = (texts[entry.noteKey] || '').trim()
-              if (name) { o.name = name; hasAny = true }
-              if (reading) { o.reading = reading; hasAny = true }
-              if (position) { o.position = position; hasAny = true }
-              if (note) { o.note = note; hasAny = true }
-              if (Object.keys(o).length) map.set(entry.id, o)
-            })
-            return hasAny ? map : null
-          } catch (_) { return null }
-        }
-
-        const overrideMap = makeOverrideMapFromTexts()
-
-        // If layout mode is OFF, or there are overrides in texts, merge texts -> staff
-        let finalStaff = staffFromUi
-        if (!this.layoutMode || overrideMap) {
-          // If UI staff is empty, rebuild entirely from texts
-          if ((!finalStaff || finalStaff.length === 0) && overrideMap) {
-            try {
-              const fromTexts = this.buildCompanyStaffFromLegacyTexts().map((m, i) => this.sanitizeCompanyStaffMember(m, i)).filter(Boolean)
-              finalStaff = fromTexts
-            } catch(_) { /* keep as is */ }
-          } else if (overrideMap && Array.isArray(finalStaff) && finalStaff.length) {
-            // Merge overrides field-by-field by id (UI優先: 空欄のみテキストで補完)
-            finalStaff = finalStaff.map(member => {
-              try {
-                const id = (member && member.id) ? String(member.id) : ''
-                if (!id || !overrideMap.has(id)) return member
-                const o = overrideMap.get(id) || {}
-                const merged = { ...member }
-                if ((!merged.name || merged.name.trim() === '') && typeof o.name === 'string') merged.name = String(o.name).trim()
-                if ((!merged.reading || merged.reading.trim() === '') && typeof o.reading === 'string') merged.reading = String(o.reading).trim()
-                if ((!merged.position || merged.position.trim() === '') && typeof o.position === 'string') merged.position = String(o.position).trim()
-                if ((!merged.note || merged.note.trim() === '') && typeof o.note === 'string') merged.note = String(o.note).trim()
-                return merged
-              } catch(_) { return member }
-            })
+        // Build staff visuals (画像・順序のみ)
+        const visuals = Array.isArray(this.companyStaff) ? this.companyStaff.map((m, i) => {
+          const id = (m && m.id) ? String(m.id).trim() : `staff-${i+1}`
+          const out = { id, order: i }
+          const k = (m && m.image_key) ? String(m.image_key).trim() : ''
+          const u = (m && m.image_url) ? String(m.image_url).trim() : ''
+          if (k) out.image_key = k
+          if (u) out.image_url = u
+          if (m && m.image && (m.image.url || m.image.path || m.image.filename)) {
+            out.image = { url: m.image.url || '', path: m.image.path || '', filename: m.image.filename || '' }
           }
-        }
+          if (m && m.alt && String(m.alt).trim() && String(m.alt).trim() !== String(m.name||'')) out.alt = String(m.alt).trim()
+          return out
+        }).filter(Boolean) : []
+        patch.content.staff = visuals
 
-        // Finalize staff (SSOT)
-        patch.content.staff = Array.isArray(finalStaff) ? finalStaff : []
-
-        // Mirror staff -> legacy texts for backward compatibility (read-only consumers)
+        // staff テキストは buildStaffTextsFromUi で texts にミラー（公開側が texts 優先のため）
         try {
-          const legacyMap = new Map()
-          COMPANY_STAFF_LEGACY.forEach(e => legacyMap.set(e.id, e))
-          const fromStaff = (patch.content.staff || []).reduce((acc, m) => {
-            const id = (m && m.id) ? String(m.id) : ''
-            const meta = legacyMap.get(id)
-            if (!meta) return acc
-            if (meta.nameKey) acc[meta.nameKey] = String(m.name || '').trim()
-            if (meta.readingKey) acc[meta.readingKey] = String(m.reading || '').trim()
-            if (meta.positionKey) acc[meta.positionKey] = String(m.position || '').trim()
-            if (meta.noteKey) acc[meta.noteKey] = String(m.note || '').trim()
-            return acc
-          }, {})
-          if (!patch.content.texts) patch.content.texts = {}
-          patch.content.texts = { ...patch.content.texts, ...fromStaff }
+          const tx = this.buildStaffTextsFromUi()
+          if (tx && Object.keys(tx).length) {
+            if (!patch.content.texts) patch.content.texts = {}
+            patch.content.texts = { ...patch.content.texts, ...tx }
+          }
         } catch(_) { /* noop */ }
+
         const hist = Array.isArray(this.companyHistory) ? this.companyHistory
           .map(h => ({ year: String(h?.year || '').trim(), date: String(h?.date || '').trim(), body: String(h?.body || '').trim() }))
           .filter(h => h.year || h.date || h.body) : []
