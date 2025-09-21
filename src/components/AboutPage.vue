@@ -36,7 +36,7 @@
               page-key="about"
               field-key="content"
               :fallback="'/img/image-1.png'"
-              :fallback-keys="['about_content','about_image','about_section_image','0']"
+              :fallback-keys="['content_mobile','content_sm','content@mobile','about_content','about_image','about_section_image','0']"
               :placeholder-values="['/img/image-1.png','/img/image.png']"
               alt="ネットワークイメージ"
             />
@@ -88,7 +88,7 @@
               page-key="about"
               field-key="message"
               :fallback="'/img/image-2.png'"
-              :fallback-keys="['about_message','message_image','1']"
+              :fallback-keys="['message_mobile','message_sm','message@mobile','about_message','message_image','1']"
               :placeholder-values="['/img/image-2.png','/img/image.png']"
               alt="代表挨拶"
             />

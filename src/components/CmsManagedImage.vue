@@ -60,6 +60,7 @@ export default {
       try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
       try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
       try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
+      try { if (this.__onResize) window.removeEventListener('resize', this.__onResize) } catch(_) {}
       try { if (typeof this.__unwatchImages === 'function') this.__unwatchImages() } catch(_) {}
       try { if (typeof this.__unwatchMediaImages === 'function') this.__unwatchMediaImages() } catch(_) {}
       try { if (typeof this.__unwatchMediaLoaded === 'function') this.__unwatchMediaLoaded() } catch(_) {}
@@ -127,6 +128,9 @@ export default {
       try { window.addEventListener('storage', this.__onStorage) } catch(_) {}
       try { document.addEventListener('visibilitychange', this.__onVis) } catch(_) {}
       try { window.addEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
+      // viewport changes should re-evaluate responsive keys
+      this.__onResize = () => { this.bumpVersion() }
+      try { window.addEventListener('resize', this.__onResize) } catch(_) {}
     },
     async reloadAll(force = false) {
       await Promise.all([
@@ -163,25 +167,32 @@ export default {
         return false
       }
     },
+    viewport() {
+      try {
+        const w = typeof window !== 'undefined' ? window.innerWidth : 1200
+        if (w <= 600) return 'mobile'
+        if (w <= 1024) return 'tablet'
+        return 'desktop'
+      } catch(_) { return 'desktop' }
+    },
     getImageFromPage() {
       void this.imageVersion
       try {
         const imgs = this._pageText?.page?.value?.content?.images
         if (!imgs || typeof imgs !== 'object') return null
         const placeholders = new Set(this.placeholderValues || [])
-        const primary = imgs[this.fieldKey]
-        if (primary && !this.isPlaceholder(primary, placeholders)) {
-          return this.normalizeImage(primary)
-        }
-        const keys = Array.isArray(this.fallbackKeys) && this.fallbackKeys.length ? this.fallbackKeys : []
-        for (const key of keys) {
+        const vp = this.viewport()
+        const vpKeys = vp === 'mobile'
+          ? [ `${this.fieldKey}_mobile`, `${this.fieldKey}_sm`, `${this.fieldKey}@mobile` ]
+          : (vp === 'tablet' ? [ `${this.fieldKey}_tablet`, `${this.fieldKey}_md` ] : [])
+        const tryKeys = [ ...vpKeys, this.fieldKey, ...(Array.isArray(this.fallbackKeys) ? this.fallbackKeys : []) ]
+        for (const key of tryKeys) {
           if (!Object.prototype.hasOwnProperty.call(imgs, key)) continue
-          const candidate = imgs[key]
-          if (candidate && !this.isPlaceholder(candidate, placeholders)) {
-            return this.normalizeImage(candidate)
-          }
+          const v = imgs[key]
+          if (v && !this.isPlaceholder(v, placeholders)) return this.normalizeImage(v)
         }
-        return this.normalizeImage(primary)
+        // last resort: even placeholder primary to keep DOM stable
+        return this.normalizeImage(imgs[this.fieldKey])
       } catch(_) {
         return null
       }
