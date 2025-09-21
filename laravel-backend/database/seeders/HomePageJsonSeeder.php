@@ -42,11 +42,11 @@ class HomePageJsonSeeder extends Seeder
 
             // Other info cards
             'other_info_economic_label' => '経済指標',
-            'other_info_economic_cta' => 'Viwe More .',
+            'other_info_economic_cta' => 'View More .',
             'other_info_financial_label' => '決算報告',
-            'other_info_financial_cta' => 'Viwe More .',
+            'other_info_financial_cta' => 'View More .',
             'other_info_glossary_label' => '用語集',
-            'other_info_glossary_cta' => 'Viwe More .',
+            'other_info_glossary_cta' => 'View More .',
         ];
 
         $htmls = [

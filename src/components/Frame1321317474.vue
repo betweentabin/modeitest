@@ -16,7 +16,7 @@
           >
             {{ title || '事業継承から描く九州の未来' }}
           </div>
-          <div class="viwe-more-2 valign-text-middle inter-normal-ship-gray-10px">Viwe More .</div>
+          <div class="viwe-more-2 valign-text-middle inter-normal-ship-gray-10px">View More .</div>
         </div>
       </div>
     </div>

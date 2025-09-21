@@ -388,7 +388,7 @@
                           fieldKey="other_info_economic_cta"
                           tag="div"
                           class="viwe-more valign-text-middle inter-normal-ship-gray-10px"
-                          :fallback="'Viwe More .'"
+                          :fallback="'View More .'"
                         />
                       </div>
                       <div class="caret-right">
@@ -416,7 +416,7 @@
                           fieldKey="other_info_financial_cta"
                           tag="div"
                           class="viwe-more valign-text-middle inter-normal-ship-gray-10px"
-                          :fallback="'Viwe More .'"
+                          :fallback="'View More .'"
                         />
                       </div>
                       <div class="caret-right">
@@ -444,7 +444,7 @@
                           fieldKey="other_info_glossary_cta"
                           tag="div"
                           class="viwe-more valign-text-middle inter-normal-ship-gray-10px"
-                          :fallback="'Viwe More .'"
+                          :fallback="'View More .'"
                         />
                       </div>
                       <div class="caret-right">
