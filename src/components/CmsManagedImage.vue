@@ -49,19 +49,26 @@ export default {
   async mounted() {
     await this.init()
   },
+  beforeDestroy() {
+    this.teardown()
+  },
   beforeUnmount() {
-    try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
-    try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
-    try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
-    try { if (typeof this.__unwatchImages === 'function') this.__unwatchImages() } catch(_) {}
-    try { if (typeof this.__unwatchMediaImages === 'function') this.__unwatchMediaImages() } catch(_) {}
-    try { if (typeof this.__unwatchMediaLoaded === 'function') this.__unwatchMediaLoaded() } catch(_) {}
+    this.teardown()
   },
   methods: {
+    teardown() {
+      try { if (this.__onStorage) window.removeEventListener('storage', this.__onStorage) } catch(_) {}
+      try { if (this.__onVis) document.removeEventListener('visibilitychange', this.__onVis) } catch(_) {}
+      try { if (this.__onMediaUpdated) window.removeEventListener('cms-media-updated', this.__onMediaUpdated) } catch(_) {}
+      try { if (typeof this.__unwatchImages === 'function') this.__unwatchImages() } catch(_) {}
+      try { if (typeof this.__unwatchMediaImages === 'function') this.__unwatchMediaImages() } catch(_) {}
+      try { if (typeof this.__unwatchMediaLoaded === 'function') this.__unwatchMediaLoaded() } catch(_) {}
+    },
     async init() {
       await this.setupPageText()
       await this.setupPageMedia()
       this.setupListeners()
+      this.bumpVersion()
     },
     async setupPageText(force = false) {
       if (!this._pageText) {
@@ -157,6 +164,7 @@ export default {
       }
     },
     getImageFromPage() {
+      void this.imageVersion
       try {
         const imgs = this._pageText?.page?.value?.content?.images
         if (!imgs || typeof imgs !== 'object') return null
@@ -179,6 +187,7 @@ export default {
       }
     },
     getImageFromMedia() {
+      void this.imageVersion
       try {
         if (this._pageMedia && this._pageMedia.getResponsiveSlot) {
           const val = this._pageMedia.getResponsiveSlot(this.fieldKey, this.fieldKey, null)
