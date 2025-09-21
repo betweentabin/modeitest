@@ -898,6 +898,7 @@
             </div>
             <div class="actions" style="justify-content:flex-start;">
               <button class="btn" @click="companyHistory.push({ year:'', date:'', body:'' })">+ 沿革を追加</button>
+              <button class="btn" style="margin-left:8px;" @click="saveCompanyHistory">沿革を保存</button>
             </div>
           </template>
 
@@ -2647,6 +2648,27 @@ export default {
         'login','my-account'
       ])
     },
+    async saveCompanyHistory(){
+      try {
+        const hist = Array.isArray(this.companyHistory) ? this.companyHistory
+          .map((h, i) => ({
+            year: String(h?.year || '').trim(),
+            date: String(h?.date || '').trim(),
+            body: String(h?.body || '').trim(),
+            order: i,
+          }))
+          .filter(h => h.year || h.date || h.body) : []
+        const payload = { content: { history: hist }, is_published: true }
+        const res = await apiClient.adminUpdatePageContent('company-profile', payload)
+        if (res && res.success) {
+          alert('沿革を保存しました')
+        } else {
+          alert((res && (res.error || res.message)) || '保存に失敗しました')
+        }
+      } catch (e) {
+        alert('保存に失敗しました')
+      }
+    },
     showGenericEditor(){
       const key = (this.pageContentKey || '').trim()
       if (!key) return false
@@ -3097,6 +3119,8 @@ export default {
           } catch(_) {
             try { window.dispatchEvent(new Event('page-content-cache-write')) } catch(_) {}
           }
+          // Warm the browser cache so switching src renders instantly
+          try { this.prefetchPageImages(target) } catch(_) {}
         }
       } catch(_) {
         try { localStorage.setItem('page_content_cache:' + key, String(Date.now())) } catch(_) {}
@@ -3116,6 +3140,28 @@ export default {
           try { window.dispatchEvent(new Event('page-content-cache-fallback')) } catch(_) {}
         }
       }
+    },
+    prefetchPageImages(page){
+      const imgs = (page && page.content && page.content.images) || {}
+      const urls = []
+      const add = (u) => { if (typeof u === 'string' && u.length) urls.push(u) }
+      for (const k of Object.keys(imgs)){
+        const v = imgs[k]
+        if (typeof v === 'string') add(v)
+        else if (v && typeof v === 'object' && v.url){
+          let u = String(v.url)
+          try {
+            if (u.indexOf('/storage/') !== -1 && v.uploaded_at){
+              const ver = Date.parse(v.uploaded_at) || null
+              if (ver !== null) u += (u.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+            }
+          } catch(_) {}
+          add(u)
+        }
+        if (urls.length >= 8) break
+      }
+      // Kick off background fetches
+      try { urls.forEach(u => { const i = new Image(); i.decoding = 'async'; i.loading = 'eager'; i.src = u }) } catch(_) {}
     },
     async fetchPageContent(key = this.pageContentKey){
       try {

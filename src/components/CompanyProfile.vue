@@ -724,18 +724,25 @@ export default {
     },
     resolveStaffImage(member, index = 0) {
       if (!member) return ''
-      const direct = member.imageUrl || member.image_url
-      if (typeof direct === 'string' && direct.length) return direct
-
-      const imageObj = member.image && typeof member.image === 'object' ? member.image : null
-      const imageFromObject = imageObj?.url
-      if (typeof imageFromObject === 'string' && imageFromObject.length) return imageFromObject
-
+      // Prefer media registry (content.images / media store) using image_key
       const key = member.imageKey || member.image_key || ''
       const fallbackMeta = this.defaultStaffRecords[index] || {}
       const fallbackImage = member.fallbackImage || fallbackMeta.fallbackImage || ''
       const lookupKey = key || fallbackMeta.imageKey || ''
-      return this.media(lookupKey, fallbackImage)
+      const viaRegistry = this.media(lookupKey, '')
+      if (typeof viaRegistry === 'string' && viaRegistry.length) return viaRegistry
+
+      // Next, explicit URL fields from staff
+      const direct = member.imageUrl || member.image_url
+      if (typeof direct === 'string' && direct.length) return direct
+
+      // Next, object image
+      const imageObj = member.image && typeof member.image === 'object' ? member.image : null
+      const imageFromObject = imageObj?.url
+      if (typeof imageFromObject === 'string' && imageFromObject.length) return imageFromObject
+
+      // Fallback placeholder
+      return fallbackImage
     },
     calculateCarouselIndicators() {
       const totalStaffCount = this.staffCount;

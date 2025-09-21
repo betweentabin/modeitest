@@ -43,6 +43,9 @@
           :fallback="'https://api.builder.io/api/v1/image/assets/TEMP/ec1204f76835f4d00fb62a46530330165ae1b65e?width=1340'"
           :fallback-keys="['about_image_mobile','about_image_sm','about_image@mobile','0']"
           :placeholder-values="['/img/image.png']"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
           alt="会社画像"
         />
         <div class="about-text">
@@ -83,6 +86,9 @@
             :fallback="'https://api.builder.io/api/v1/image/assets/TEMP/a3c7e188d6e1f00b84c70555aa606fd2ebe0cc5b?width=870'"
             :fallback-keys="['service1_image_mobile','service1_image_sm','service1_image@mobile','1']"
             :placeholder-values="['/img/image.png']"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
             alt="開発・研究"
           />
           <div class="service-content">

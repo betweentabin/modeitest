@@ -38,6 +38,9 @@
               :fallback="'/img/image-1.png'"
               :fallback-keys="['content_mobile','content_sm','content@mobile','about_content','about_image','about_section_image','0']"
               :placeholder-values="['/img/image-1.png','/img/image.png']"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
               alt="ネットワークイメージ"
             />
           </div>
@@ -90,6 +93,9 @@
               :fallback="'/img/image-2.png'"
               :fallback-keys="['message_mobile','message_sm','message@mobile','about_message','message_image','1']"
               :placeholder-values="['/img/image-2.png','/img/image.png']"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
               alt="代表挨拶"
             />
           </div>
