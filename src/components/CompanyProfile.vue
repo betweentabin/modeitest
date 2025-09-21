@@ -545,15 +545,26 @@ export default {
             .map((member, index) => {
               if (!member || typeof member !== 'object') return null
               const imageObj = member.image && typeof member.image === 'object' ? member.image : null
+              const id = member.id || `staff-${index}`
+              // Fallback to texts when specific fields are empty (to allow quick text edits to reflect)
+              const fallbackMeta = (this.defaultStaffRecords || []).find(r => r.id === id) || (this.defaultStaffRecords || [])[index] || {}
+              const safeGet = (key, defVal) => {
+                if (!key) return defVal
+                try { return this._pageText?.getText(key, defVal) || defVal } catch(_) { return defVal }
+              }
+              const name = (member.name && String(member.name).trim()) || safeGet(fallbackMeta.nameKey, fallbackMeta.name || '')
+              const reading = (member.reading && String(member.reading).trim()) || safeGet(fallbackMeta.readingKey, fallbackMeta.reading || '')
+              const position = (member.position && String(member.position).trim()) || safeGet(fallbackMeta.positionKey, fallbackMeta.position || '')
+              const note = (member.note && String(member.note).trim()) || safeGet(fallbackMeta.noteKey, fallbackMeta.note || '')
               return {
-                id: member.id || `staff-${index}`,
-                name: member.name || '',
-                reading: member.reading || '',
-                position: member.position || '',
-                note: member.note || '',
-                imageKey: member.image_key || member.imageKey || '',
+                id,
+                name,
+                reading,
+                position,
+                note,
+                imageKey: member.image_key || member.imageKey || (fallbackMeta.imageKey || ''),
                 imageUrl: member.image_url || member.imageUrl || (imageObj?.url || ''),
-                alt: member.alt || member.name || '',
+                alt: member.alt || name || '',
               }
             })
             .filter(Boolean)

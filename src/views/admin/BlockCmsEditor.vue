@@ -3076,9 +3076,39 @@ export default {
       try {
         if (target && typeof target === 'object') {
           localStorage.setItem('page_content_cache:' + key, JSON.stringify(target))
+          try {
+            window.dispatchEvent(new CustomEvent('cms-media-updated', {
+              detail: { pageKey: key, reason: 'page-content-cache-write' }
+            }))
+          } catch(_) {}
+          try {
+            const evt = new StorageEvent('storage', {
+              key: 'page_content_cache:' + key,
+              newValue: localStorage.getItem('page_content_cache:' + key),
+              storageArea: localStorage
+            })
+            window.dispatchEvent(evt)
+          } catch(_) {
+            try { window.dispatchEvent(new Event('page-content-cache-write')) } catch(_) {}
+          }
         }
       } catch(_) {
         try { localStorage.setItem('page_content_cache:' + key, String(Date.now())) } catch(_) {}
+        try {
+          window.dispatchEvent(new CustomEvent('cms-media-updated', {
+            detail: { pageKey: key, reason: 'page-content-cache-fallback' }
+          }))
+        } catch(_) {}
+        try {
+          const evt = new StorageEvent('storage', {
+            key: 'page_content_cache:' + key,
+            newValue: localStorage.getItem('page_content_cache:' + key),
+            storageArea: localStorage
+          })
+          window.dispatchEvent(evt)
+        } catch(_) {
+          try { window.dispatchEvent(new Event('page-content-cache-fallback')) } catch(_) {}
+        }
       }
     },
     async fetchPageContent(key = this.pageContentKey){

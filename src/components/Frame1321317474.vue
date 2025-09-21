@@ -1,10 +1,10 @@
 <template>
   <div :class="[`frame-1321317474`, className || ``]" @click="goToPublication" style="cursor: pointer;">
     <div class="frame-1321317473-2">
-      <div class="overlap-group1">
+      <div class="overlap-group1" :style="bgStyle">
         <img
           class="x2-2-2"
-          :src="x22 || fallbackImage"
+          :src="resolvedImageUrl"
           alt="publication cover"
           @error="onImgError"
         />
@@ -43,6 +43,26 @@ export default {
     fallbackImage() {
       // 既存のデフォルト画像（data.js と整合）
       return '/img/-----2-2.png'
+    },
+    resolvedImageUrl() {
+      const url = this.x22 || ''
+      try {
+        const isHttps = typeof window !== 'undefined' && window.location && window.location.protocol === 'https:'
+        if (isHttps && typeof url === 'string' && url.startsWith('http://')) {
+          // モバイルSafari等の混在コンテンツ対策
+          return this.fallbackImage
+        }
+      } catch(_) {}
+      return url || this.fallbackImage
+    },
+    bgStyle() {
+      const url = this.resolvedImageUrl
+      return {
+        backgroundImage: `url(${url})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }
     }
   }
 };

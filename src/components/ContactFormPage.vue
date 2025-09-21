@@ -464,6 +464,9 @@ export default {
   color: #3F3F3F;
   line-height: 150%;
   min-width: 320px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .required-mark {
@@ -667,6 +670,9 @@ export default {
   font-size: 18px;
   font-weight: 400;
   color: #1A1A1A;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   white-space: nowrap;
 }
 

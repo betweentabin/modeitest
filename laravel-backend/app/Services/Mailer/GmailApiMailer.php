@@ -55,12 +55,35 @@ class GmailApiMailer
         return rtrim(strtr(base64_encode($raw), '+/', '-_'), '=');
     }
 
+    protected function needsEncoding(string $s): bool
+    {
+        return (bool) preg_match('/[^\x20-\x7E]/', $s); // non-ASCII
+    }
+
+    protected function encodePhrase(string $s): string
+    {
+        // Encode display-name using RFC 2047 encoded-word if non-ASCII
+        if ($this->needsEncoding($s)) {
+            return '=?UTF-8?B?'.base64_encode($s).'?=';
+        }
+        // Quote if it contains specials
+        if (preg_match('/[\(\)<>@,;:\\"\.\[\]\s]/', $s)) {
+            return '"'.addcslashes($s, '\\"').'"';
+        }
+        return $s;
+    }
+
+    protected function qpBase64(string $text): string
+    {
+        return chunk_split(base64_encode($text));
+    }
+
     public function send(array $payload): void
     {
         $cfg = $this->parseDsn();
         $fromAddress = $payload['from']['address'] ?? env('MAIL_FROM_ADDRESS');
         $fromName = $payload['from']['name'] ?? env('MAIL_FROM_NAME');
-        $from = $fromName ? sprintf('%s <%s>', $fromName, $fromAddress) : $fromAddress;
+        $fromPhrase = $fromName ? $this->encodePhrase($fromName).' <'.$fromAddress.'>' : $fromAddress;
 
         $to = $payload['to'] ?? [];
         if (!is_array($to)) $to = [$to];
@@ -75,7 +98,7 @@ class GmailApiMailer
         foreach ($to as $addr) {
             $mime = $this->buildMimeMessage(
                 to: (string) $addr,
-                from: $from,
+                from: $fromPhrase,
                 subject: $subject,
                 bodyHtml: $bodyHtml,
                 bodyText: $bodyText,
@@ -130,14 +153,17 @@ class GmailApiMailer
                 $alt = 'ALT_'.bin2hex(random_bytes(6));
                 $headers = $baseHeaders + ['Content-Type' => 'multipart/alternative; boundary='.$alt];
                 $out = $this->headersToString($headers);
-                $out .= '--'.$alt."\r\n".'Content-Type: text/plain; charset=UTF-8' . "\r\n\r\n" . ($bodyText ?? '') . "\r\n";
-                $out .= '--'.$alt."\r\n".'Content-Type: text/html; charset=UTF-8' . "\r\n\r\n" . ($bodyHtml ?? '') . "\r\n";
+                $out .= '--'.$alt."\r\n".'Content-Type: text/plain; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: base64' . "\r\n\r\n" . $this->qpBase64($bodyText ?? '') . "\r\n";
+                $out .= '--'.$alt."\r\n".'Content-Type: text/html; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: base64' . "\r\n\r\n" . $this->qpBase64($bodyHtml ?? '') . "\r\n";
                 $out .= '--'.$alt.'--' . "\r\n";
                 return $out;
             }
             // Plain single part
-            $headers = $baseHeaders + ['Content-Type' => ($hasHtml ? 'text/html' : 'text/plain').'; charset=UTF-8'];
-            return $this->headersToString($headers) . (($hasHtml ? $bodyHtml : $bodyText) ?? '');
+            $headers = $baseHeaders + [
+                'Content-Type' => ($hasHtml ? 'text/html' : 'text/plain').'; charset=UTF-8',
+                'Content-Transfer-Encoding' => 'base64',
+            ];
+            return $this->headersToString($headers) . $this->qpBase64(($hasHtml ? ($bodyHtml ?? '') : ($bodyText ?? '')));
         }
 
         // multipart/mixed with optional alternative body
@@ -148,12 +174,12 @@ class GmailApiMailer
         if ($hasHtml && $hasText) {
             $alt = 'ALT_'.bin2hex(random_bytes(6));
             $out .= '--'.$mixed."\r\n".'Content-Type: multipart/alternative; boundary='.$alt."\r\n\r\n";
-            $out .= '--'.$alt."\r\n".'Content-Type: text/plain; charset=UTF-8' . "\r\n\r\n" . ($bodyText ?? '') . "\r\n";
-            $out .= '--'.$alt."\r\n".'Content-Type: text/html; charset=UTF-8' . "\r\n\r\n" . ($bodyHtml ?? '') . "\r\n";
+            $out .= '--'.$alt."\r\n".'Content-Type: text/plain; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: base64' . "\r\n\r\n" . $this->qpBase64($bodyText ?? '') . "\r\n";
+            $out .= '--'.$alt."\r\n".'Content-Type: text/html; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: base64' . "\r\n\r\n" . $this->qpBase64($bodyHtml ?? '') . "\r\n";
             $out .= '--'.$alt.'--' . "\r\n";
         } else {
             // Single body part
-            $out .= '--'.$mixed."\r\n".'Content-Type: '.($hasHtml ? 'text/html' : 'text/plain').'; charset=UTF-8' . "\r\n\r\n" . (($hasHtml ? $bodyHtml : $bodyText) ?? '') . "\r\n";
+            $out .= '--'.$mixed."\r\n".'Content-Type: '.($hasHtml ? 'text/html' : 'text/plain').'; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: base64' . "\r\n\r\n" . $this->qpBase64(($hasHtml ? ($bodyHtml ?? '') : ($bodyText ?? ''))) . "\r\n";
         }
 
         // Append attachments
@@ -182,10 +208,11 @@ class GmailApiMailer
             if ($content === null) continue;
             $b64 = chunk_split(base64_encode($content));
 
+            $fallback = preg_replace('/[^A-Za-z0-9._-]/', '_', $filename);
             $out .= '--'.$mixed."\r\n";
-            $out .= 'Content-Type: '.$mime.'; name="'.$filename.'"' . "\r\n";
+            $out .= 'Content-Type: '.$mime.'; name="'.$fallback.'"' . "\r\n";
             $out .= 'Content-Transfer-Encoding: base64' . "\r\n";
-            $out .= 'Content-Disposition: attachment; filename="'.$filename.'"' . "\r\n\r\n";
+            $out .= 'Content-Disposition: attachment; filename="'.$fallback.'"; filename*=UTF-8\'\''.rawurlencode($filename)."\r\n\r\n";
             $out .= $b64 . "\r\n";
         }
 
