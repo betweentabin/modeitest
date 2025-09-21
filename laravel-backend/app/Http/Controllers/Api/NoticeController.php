@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\NewsArticle;
+use App\Models\NoticeCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -246,12 +247,35 @@ class NoticeController extends Controller
      */
     public function categories(): JsonResponse
     {
-        $categories = NewsArticle::where('type', 'notice')
+        // まず NewsArticle 側（実データ）から使用中のカテゴリslugを取得
+        $slugs = NewsArticle::where('type', 'notice')
             ->distinct()
             ->pluck('category')
             ->filter()
-            ->values();
+            ->values()
+            ->all();
 
-        return response()->json($categories);
+        // NoticeCategory にある表示名と突き合わせ（is_activeのみ公開）
+        $list = [];
+        if (!empty($slugs)) {
+            $records = NoticeCategory::whereIn('slug', $slugs)
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->get(['slug','name','sort_order','is_active']);
+
+            $found = [];
+            foreach ($records as $rec) {
+                $list[] = [ 'slug' => $rec->slug, 'name' => $rec->name ];
+                $found[$rec->slug] = true;
+            }
+            // カテゴリマスタに無いslugもフォールバックで提示（name=slug）
+            foreach ($slugs as $slug) {
+                if ($slug && !isset($found[$slug])) {
+                    $list[] = [ 'slug' => $slug, 'name' => $slug ];
+                }
+            }
+        }
+
+        return response()->json($list);
     }
 }

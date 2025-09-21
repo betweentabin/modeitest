@@ -39,29 +39,13 @@
           >
             全て
           </button>
-          <button 
-            :class="['category-btn', { active: selectedCategory === 'research' }]" 
-            @click="filterCategory('research')"
+          <button
+            v-for="c in categories"
+            :key="c.slug"
+            :class="['category-btn', { active: selectedCategory === c.slug }]"
+            @click="filterCategory(c.slug)"
           >
-            ちくぎん地域経済レポート
-          </button>
-          <button 
-            :class="['category-btn', { active: selectedCategory === 'quarterly' }]" 
-            @click="filterCategory('quarterly')"
-          >
-            ちくぎん地域経済レポート
-          </button>
-          <button 
-            :class="['category-btn', { active: selectedCategory === 'special' }]" 
-            @click="filterCategory('special')"
-          >
-            ちくぎん地域経済レポート
-          </button>
-          <button 
-            :class="['category-btn', { active: selectedCategory === 'free' }]" 
-            @click="filterCategory('free')"
-          >
-            ちくぎん地域経済レポート
+            {{ c.name }}
           </button>
         </div>
         
@@ -73,10 +57,7 @@
             class="category-select"
           >
             <option value="all">全て</option>
-            <option value="research">ちくぎん地域経済レポート</option>
-            <option value="quarterly">ちくぎん地域経済レポート</option>
-            <option value="special">ちくぎん地域経済レポート</option>
-            <option value="free">ちくぎん地域経済レポート</option>
+            <option v-for="c in categories" :key="c.slug" :value="c.slug">{{ c.name }}</option>
           </select>
         </div>
 
@@ -173,6 +154,7 @@ export default {
       currentPage: 1,
       totalPages: 1,
       selectedCategory: 'all',
+      categories: [],
       newsItems: [],
       loading: false,
       error: null,
@@ -180,6 +162,7 @@ export default {
     };
   },
   async mounted() {
+    await this.loadCategories()
     await this.loadNews()
     try {
       this._pageText = usePageText(this.pageKey)
@@ -215,6 +198,19 @@ export default {
     }
   },
   methods: {
+    async loadCategories() {
+      try {
+        const res = await apiClient.get('/api/notices/categories', { timeout: 3500 })
+        let list = (res && res.success && Array.isArray(res.data)) ? res.data : (Array.isArray(res) ? res : [])
+        if (Array.isArray(list) && list.length && typeof list[0] === 'string') {
+          list = list.map((slug) => ({ slug, name: slug }))
+        }
+        this.categories = (list || []).filter(c => c && (c.slug || '').toString().trim() !== '')
+      } catch (e) {
+        console.error('カテゴリ取得に失敗しました', e)
+        this.categories = []
+      }
+    },
     async loadNews() {
       this.loading = true
       try {
@@ -281,22 +277,8 @@ export default {
       return `${year}.${month}.${day}`;
     },
     getCategoryLabel(category) {
-      // お知らせ種別・カテゴリに応じて日本語ラベルを表示
-      const labels = {
-        seminar: 'セミナー',
-        publication: '刊行物',
-        notice: 'お知らせ',
-        // お知らせ（notice）のサブタイプ
-        general: 'お知らせ',
-        system: 'システム',
-        event: 'イベント',
-        important: '重要',
-        research: '研究',
-        quarterly: '四半期経済レポート',
-        special: '特集',
-        free: '一般公開'
-      }
-      return labels[category] || category || 'お知らせ'
+      const hit = this.categories.find(c => c.slug === category)
+      return hit ? hit.name : (category || 'お知らせ')
     },
     getCategoryClass(category) {
       // カテゴリ名をそのままクラスに使用（未定義はnotice）

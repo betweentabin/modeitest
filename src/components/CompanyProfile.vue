@@ -239,7 +239,7 @@
     </section>    
 
     <!-- History Section (direct from content.history[]) -->
-    <section id="history" class="history-section" :key="historyVersion">
+    <section id="history" class="history-section" :key="historyVersion" v-if="pageReady">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="history_title" tag="span" :fallback="'沿革'" />
@@ -256,7 +256,7 @@
     </section>
 
     <!-- Staff Section -->
-    <section id="staff" class="staff-section" v-if="staffCount" :key="staffVersion">
+    <section id="staff" class="staff-section" v-if="pageReady && staffCount" :key="staffVersion">
       <div class="section-header">
         <h2 class="section-title">
           <CmsText pageKey="company-profile" fieldKey="staff_title" tag="span" :fallback="'所員紹介'" />
@@ -414,6 +414,7 @@ export default {
   data() {
     return {
       pageKey: 'company-profile',
+      pageLoaded: false,
       vector7: vector7,
       frame132131753022Props: frame132131753022Data,
       financialReports: [],
@@ -513,6 +514,9 @@ export default {
     };
   },
   computed: {
+    pageReady() {
+      try { return this.isEditPreview || this.pageLoaded } catch(_) { return false }
+    },
     _pageRef() {
       try {
         const p = this._pageText && this._pageText.page
@@ -643,7 +647,17 @@ export default {
         const c = this._pageRef?.content || {}
         const htmls = (c && typeof c.htmls === 'object') ? c.htmls : ((c && typeof c.rich === 'object') ? c.rich : null)
         const v = htmls && Object.prototype.hasOwnProperty.call(htmls, 'history_body') ? htmls.history_body : ''
-        return (typeof v === 'string') ? v : ''
+        if (typeof v === 'string' && v.length) return v
+        // フォールバック: 配列から簡易HTMLを生成
+        const arr = this.historyList || []
+        if (!Array.isArray(arr) || arr.length === 0) return ''
+        const escape = (s) => String(s || '').replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))
+        return arr.map(h => {
+          const yr = escape(h?.year || '')
+          const dt = escape(h?.date || '')
+          const body = (typeof h?.body === 'string' ? h.body : (typeof h?.title === 'string' ? h.title : '')) || ''
+          return `<div class="history-item"><div class="history-year">${yr}</div><div class="history-details"><div class="history-date">${dt}</div><div class="history-description">${body}</div></div></div>`
+        }).join('')
       } catch(_) { return '' }
     },
     historyList() {
@@ -723,10 +737,9 @@ export default {
       // 常に強制ロードして最新データを反映し、その後セーフガードで公開APIの沿革も取り込む
       const loadResult = this._pageText.load(opts)
       if (loadResult && typeof loadResult.then === 'function') {
-        loadResult.then(() => { this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.fetchPublicHistorySafeguard() })
+        loadResult.then(() => { this.pageLoaded = true; this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard() }).catch(() => { this.pageLoaded = true; this.fetchPublicHistorySafeguard() })
       } else {
-        this.recalculateStaffCarousel();
-        this.fetchPublicHistorySafeguard()
+        this.pageLoaded = true; this.recalculateStaffCarousel(); this.fetchPublicHistorySafeguard()
       }
     } catch(e) { /* noop */ }
     try {
