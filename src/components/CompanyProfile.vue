@@ -639,7 +639,12 @@ export default {
       return []
     },
     historyBodyHtml() {
-      try { return this._pageText?.getHtml('history_body', '') || '' } catch(_) { return '' }
+      try {
+        const c = this._pageRef?.content || {}
+        const htmls = (c && typeof c.htmls === 'object') ? c.htmls : ((c && typeof c.rich === 'object') ? c.rich : null)
+        const v = htmls && Object.prototype.hasOwnProperty.call(htmls, 'history_body') ? htmls.history_body : ''
+        return (typeof v === 'string') ? v : ''
+      } catch(_) { return '' }
     },
     historyList() {
       try {
