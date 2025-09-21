@@ -309,6 +309,15 @@
                 <option value="premium">プレミアム会員のみ</option>
               </select>
             </div>
+            <div class="form-group half">
+              <label>会員限定（要ログイン）</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input v-model="formData.members_only" type="checkbox">
+                  会員限定にする
+                </label>
+              </div>
+            </div>
             <div class="form-group">
               <div class="checkbox-group">
                 <label class="checkbox-label">
@@ -385,6 +394,8 @@ export default {
         keywords: '',
         pages: 0,
         is_downloadable: true,
+        // free の時は一般公開 → members_only=false
+        members_only: false,
         membership_level: 'free',
         is_featured: false,
         is_published: false
@@ -493,6 +504,7 @@ export default {
         keywords: '',
         pages: 0,
         is_downloadable: true,
+        members_only: false,
         membership_level: 'free',
         is_featured: false,
         is_published: false
@@ -533,7 +545,7 @@ export default {
         payload.is_downloadable = !!payload.is_downloadable
         payload.is_featured = !!payload.is_featured
         payload.is_published = !!payload.is_published
-        // 互換: members_only と membership_level の整合
+        // 互換: members_only と membership_level の整合（最低限のガード）
         if (payload.membership_level && !['free','standard','premium'].includes(String(payload.membership_level))) {
           payload.membership_level = 'free'
         }

@@ -159,12 +159,24 @@ class EconomicReportManagementController extends Controller
             $data['author'] = $data['author'] ?? 'ちくぎん地域経済研究所';
             $data['publisher'] = $data['publisher'] ?? '株式会社ちくぎん地域経済研究所';
             $data['is_downloadable'] = $request->boolean('is_downloadable', true);
-            $data['members_only'] = $request->boolean('members_only', true);
+            // members_only は明示指定を優先、無ければ membership_level から補完
+            if ($request->has('members_only')) {
+                $data['members_only'] = (bool) $request->boolean('members_only');
+            } elseif ($request->has('membership_level')) {
+                $lvl = strtolower($request->input('membership_level'));
+                $data['members_only'] = $lvl !== 'free';
+            } else {
+                $data['members_only'] = $request->boolean('members_only', true);
+            }
             $data['is_featured'] = $request->boolean('is_featured');
             $data['is_published'] = $request->boolean('is_published');
-            // 互換：members_onlyからmembership_levelを補完
+            // 互換：members_onlyからmembership_levelを補完（明示指定が無い場合）
             if (!isset($data['membership_level'])) {
                 $data['membership_level'] = $data['members_only'] ? 'standard' : 'free';
+            }
+            // 明示的に members_only=false の場合は membership_level を 'free' に正規化
+            if (array_key_exists('members_only', $data) && $data['members_only'] === false) {
+                $data['membership_level'] = 'free';
             }
 
             // カバー画像のアップロード
@@ -245,11 +257,21 @@ class EconomicReportManagementController extends Controller
             ]);
 
             $data['is_downloadable'] = $request->boolean('is_downloadable', true);
-            $data['members_only'] = $request->boolean('members_only', true);
+            if ($request->has('members_only')) {
+                $data['members_only'] = (bool) $request->boolean('members_only');
+            } elseif ($request->has('membership_level')) {
+                $lvl = strtolower($request->input('membership_level'));
+                $data['members_only'] = $lvl !== 'free';
+            } else {
+                $data['members_only'] = $request->boolean('members_only', true);
+            }
             $data['is_featured'] = $request->boolean('is_featured');
             $data['is_published'] = $request->boolean('is_published');
             if (!isset($data['membership_level']) && $request->has('members_only')) {
                 $data['membership_level'] = $request->boolean('members_only') ? 'standard' : 'free';
+            }
+            if (array_key_exists('members_only', $data) && $data['members_only'] === false) {
+                $data['membership_level'] = 'free';
             }
 
             // カバー画像の更新
