@@ -888,16 +888,42 @@ export default {
         // staff は history の有無に関係なく反映
         const staffArr = Array.isArray(body?.data?.page?.content?.staff) ? body.data.page.content.staff : []
         if (staffArr.length) {
-          this.stateStaff = staffArr.map((m, idx) => ({
-            id: m?.id || `staff-${idx}`,
-            name: m?.name || '',
-            reading: m?.reading || '',
-            position: m?.position || '',
-            note: m?.note || '',
-            image_key: m?.image_key || m?.imageKey || '',
-            image_url: m?.image_url || m?.imageUrl || (m?.image && typeof m.image === 'object' ? (m.image.url || '') : ''),
-            alt: m?.alt || (m?.name || '')
-          }))
+          // texts に staff_* が格納されているため、defaultStaffRecords のキー対応を使って補完
+          const texts = (body?.data?.page?.texts && typeof body.data.page.texts === 'object') ? body.data.page.texts : {}
+          const readText = (key, fallback = '') => {
+            try {
+              const v = texts[key]
+              return (typeof v === 'string' && v.length) ? v : fallback
+            } catch(_) { return fallback }
+          }
+          this.stateStaff = staffArr.map((m, idx) => {
+            const id = m?.id || `staff-${idx}`
+            const base = {
+              id,
+              name: m?.name || '',
+              reading: m?.reading || '',
+              position: m?.position || '',
+              note: m?.note || '',
+              image_key: m?.image_key || m?.imageKey || '',
+              image_url: m?.image_url || m?.imageUrl || (m?.image && typeof m.image === 'object' ? (m.image.url || '') : ''),
+              alt: m?.alt || (m?.name || '')
+            }
+            // defaultStaffRecords からキー対応を取得して不足分を補完
+            try {
+              const rec = Array.isArray(this.defaultStaffRecords) ? this.defaultStaffRecords.find(r => r.id === id) : null
+              if (rec) {
+                base.name = base.name || readText(rec.nameKey, rec.name || '')
+                base.reading = base.reading || readText(rec.readingKey, rec.reading || '')
+                base.position = base.position || readText(rec.positionKey, rec.position || '')
+                base.note = base.note || readText(rec.noteKey, rec.note || '')
+                // 画像キーの補完（画像は media レジストリ優先のためキーのみ補完）
+                base.image_key = base.image_key || rec.imageKey || ''
+                // alt も名前で補完
+                base.alt = base.alt || base.name || ''
+              }
+            } catch(_) { /* noop */ }
+            return base
+          })
         }
       } catch (_) { /* ignore network errors */ }
     },
