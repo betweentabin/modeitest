@@ -31,7 +31,15 @@
         
         <div class="mission-content">
           <div class="mission-image">
-            <img :src="getImageUrl('content') || '/img/image-1.png'" alt="ネットワークイメージ" />
+            <CmsManagedImage
+              class="mission-image__img"
+              page-key="about"
+              field-key="content"
+              :fallback="'/img/image-1.png'"
+              :fallback-keys="['about_content','about_image','about_section_image','0']"
+              :placeholder-values="['/img/image-1.png','/img/image.png']"
+              alt="ネットワークイメージ"
+            />
           </div>
           <div class="mission-text">
             <h3>
@@ -75,7 +83,15 @@
             />
           </div>
           <div class="message-image">
-            <img :src="getImageUrl('message') || '/img/image-2.png'" alt="代表挨拶" />
+            <CmsManagedImage
+              class="message-image__img"
+              page-key="about"
+              field-key="message"
+              :fallback="'/img/image-2.png'"
+              :fallback-keys="['about_message','message_image','1']"
+              :placeholder-values="['/img/image-2.png','/img/image.png']"
+              alt="代表挨拶"
+            />
           </div>
         </div>
       </div>
@@ -260,6 +276,7 @@ import axios from 'axios';
 import { getApiUrl } from '@/config/api';
 import { usePageText } from '@/composables/usePageText'
 import CmsText from '@/components/CmsText.vue'
+import CmsManagedImage from '@/components/CmsManagedImage.vue'
 import { resolveMediaUrl } from '@/utils/url.js'
 
 export default {
@@ -272,7 +289,8 @@ export default {
     HeroSection,
     Breadcrumbs,
     CmsBlock,
-    CmsText
+    CmsText,
+    CmsManagedImage
   },
   data() {
     return {
@@ -670,7 +688,7 @@ export default {
   height: 100%;
 }
 
-.mission-image img {
+.mission-image__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -733,7 +751,7 @@ export default {
   height: 100%;
 }
 
-.message-image img {
+.message-image__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
