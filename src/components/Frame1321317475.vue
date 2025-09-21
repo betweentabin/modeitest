@@ -3,7 +3,7 @@
     <div class="overlap-group-7">
       <img
         class="x2-2-3"
-        :src="x22 || fallbackImage"
+        :src="resolvedImageUrl"
         alt="publication thumbnail"
         @error="onImgError"
       />
@@ -36,6 +36,16 @@ export default {
     fallbackImage() {
       // 小サムネイル用のデフォルト
       return '/img/-----2-2-4.png'
+    },
+    resolvedImageUrl() {
+      const url = this.x22 || ''
+      try {
+        const isHttps = typeof window !== 'undefined' && window.location && window.location.protocol === 'https:'
+        if (isHttps && typeof url === 'string' && url.startsWith('http://')) {
+          return this.fallbackImage
+        }
+      } catch(_) {}
+      return url || this.fallbackImage
     }
   }
 };

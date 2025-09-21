@@ -466,20 +466,34 @@ export default {
       // 1) ページ管理の画像を最優先（cache-busted）
       try {
         const imgs = this._pageText?.page?.value?.content?.images
-        let v = imgs && imgs[type]
-        if (!v && imgs) {
-          const fallbackKeys = {
-            content: ['about_content', 'about_image', 'about_section_image', '0'],
-            message: ['about_message', 'message_image', '1'],
-          }
+        const placeholders = {
+          content: new Set(['/img/image-1.png', '/img/image.png']),
+          message: new Set(['/img/image-2.png', '/img/image.png'])
+        }
+        const fallbackKeys = {
+          content: ['about_content', 'about_image', 'about_section_image', '0'],
+          message: ['about_message', 'message_image', '1'],
+        }
+
+        const pickImage = () => {
+          if (!imgs || typeof imgs !== 'object') return null
+          const primary = imgs[type]
+          const placeholderSet = placeholders[type] || new Set()
+          const isPlaceholder = typeof primary === 'string' && placeholderSet.has(primary)
+
+          if (primary && !isPlaceholder) return primary
+
           const candidates = fallbackKeys[type] || []
           for (const key of candidates) {
-            if (Object.prototype.hasOwnProperty.call(imgs, key)) {
-              v = imgs[key]
-              if (v) break
+            if (Object.prototype.hasOwnProperty.call(imgs, key) && imgs[key]) {
+              const candidate = imgs[key]
+              if (candidate) return candidate
             }
           }
+          return primary
         }
+
+        const v = pickImage()
         if (typeof v === 'string' && v) return resolveMediaUrl(v)
         if (v && typeof v === 'object' && v.url) {
           let u = v.url
