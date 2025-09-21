@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
             FinancialReportsPageJsonSeeder::class,
             MembershipApplicationPageJsonSeeder::class,
             SeminarApplicationPageJsonSeeder::class,
+            SeminarsPagesJsonSeeder::class,
             EconomicIndicatorSeeder::class,
             // Home page defaults (texts + hero slides + links)
             HomePageJsonSeeder::class,

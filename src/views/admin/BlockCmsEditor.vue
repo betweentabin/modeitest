@@ -775,6 +775,7 @@
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_title" class="input" />
+            <input v-else-if="currentPage.slug && currentPage.slug.startsWith('seminars')" v-model="genericTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='login'" v-model="loginTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='membership-application'" v-model="membershipApplicationTexts.page_title" class="input" />
             <input v-else-if="currentPage.slug==='seminar-application'" v-model="seminarApplicationTexts.page_title" class="input" />
@@ -795,6 +796,7 @@
             <input v-else-if="currentPage.slug==='standard-membership'" v-model="standardTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='premium-membership'" v-model="premiumTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='contact'" v-model="contactTexts.page_subtitle" class="input" />
+            <input v-else-if="currentPage.slug && currentPage.slug.startsWith('seminars')" v-model="genericTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='login'" v-model="loginTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='membership-application'" v-model="membershipApplicationTexts.page_subtitle" class="input" />
             <input v-else-if="currentPage.slug==='seminar-application'" v-model="seminarApplicationTexts.page_subtitle" class="input" />
@@ -2852,6 +2854,10 @@ export default {
       if (s.startsWith('contact-') && (s.endsWith('-confirm') || s.endsWith('-complete'))) return 'contact'
       if (s.startsWith('membership-application-') && (s.endsWith('-confirm') || s.endsWith('-complete'))) return 'membership-application'
       if (s.startsWith('seminar-application-') && (s.endsWith('-confirm') || s.endsWith('-complete'))) return 'seminar-application'
+      // Seminars pages
+      if (s === 'seminars' || s.startsWith('seminars/')) return 'seminars'
+      if (s.includes('seminars-current')) return 'seminars-current'
+      if (s.includes('seminars-past')) return 'seminars-past'
       if (s.includes('privacy')) return 'privacy'
       if (s.includes('legal') || s.includes('transaction')) return 'transaction-law'
       if (s.includes('terms')) return 'terms'
@@ -2933,6 +2939,9 @@ export default {
         else if (slug.includes('login')) this.pageContentKey = 'login'
         else if (slug === 'home') this.pageContentKey = 'home'
         else if (slug.includes('services')) this.pageContentKey = 'membership'
+        else if (slug.includes('seminars-current')) this.pageContentKey = 'seminars-current'
+        else if (slug.includes('seminars-past')) this.pageContentKey = 'seminars-past'
+        else if (slug === 'seminars') this.pageContentKey = 'seminars'
         // consulting / services ページは既定ONだが、ユーザ保存がある場合は尊重
         try {
           const pref = localStorage.getItem('cms_layout_mode')

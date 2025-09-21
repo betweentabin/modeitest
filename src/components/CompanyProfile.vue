@@ -544,12 +544,17 @@ export default {
     };
   },
   computed: {
-    _pageRef() { return this._pageText?.page?.value },
+    _pageRef() {
+      try {
+        const p = this._pageText && this._pageText.page
+        return (p && p.value !== undefined) ? p.value : p
+      } catch(_) { return null }
+    },
     pageTitle() { return this._pageText?.getText('page_title', '会社概要') || '会社概要' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'ABOUT US') || 'ABOUT US' },
     staffEntries() {
       try {
-        const content = this._pageText?.page?.value?.content || {}
+        const content = this._pageRef?.content || {}
         let contentStaff = Array.isArray(content?.staff) ? content.staff : []
         // 並び順: order があれば昇順、無ければ配列順
         try {
@@ -665,7 +670,7 @@ export default {
     },
     displayedReports() {
       try {
-        const c = this._pageText?.page?.value?.content
+        const c = this._pageRef?.content
         const arr = Array.isArray(c?.financial_reports) ? c.financial_reports : []
         if (arr.length) {
           return arr.map((r, i) => ({
@@ -689,7 +694,7 @@ export default {
     },
     displayedHistory() {
       try {
-        const c = this._pageText?.page?.value?.content
+        const c = this._pageRef?.content
         const arr = Array.isArray(c?.history) ? c.history : []
         if (arr.length) {
           return arr.map((h, i) => ({
@@ -706,19 +711,19 @@ export default {
     },
     historyList() {
       try {
-        const c = this._pageText?.page?.value?.content
+        const c = this._pageRef?.content
         return Array.isArray(c?.history) ? c.history : []
       } catch(_) { return [] }
     },
     historyAbsent() {
       try {
-        const c = this._pageText?.page?.value?.content
+        const c = this._pageRef?.content
         return !(c && Object.prototype.hasOwnProperty.call(c, 'history'))
       } catch (_) { return true }
     },
     historyVersion() {
       try {
-        const c = this._pageText?.page?.value?.content
+        const c = this._pageRef?.content
         const arr = Array.isArray(c?.history) ? c.history : []
         const slim = arr.map(h => ({ y: h?.year || '', d: h?.date || '', b: h?.body || h?.title || '' }))
         // Include fallback HTML snapshot so key changes when it updates
@@ -729,7 +734,7 @@ export default {
     },
     staffVersion() {
       try {
-        const content = this._pageText?.page?.value?.content
+        const content = this._pageRef?.content
         const arr = Array.isArray(content?.staff) ? content.staff : []
         const slim = arr.map(m => ({
           id: m?.id || '',
@@ -745,7 +750,7 @@ export default {
     },
     debugStaffJson() {
       try {
-        const content = this._pageText?.page?.value?.content
+        const content = this._pageRef?.content
         const arr = Array.isArray(content?.staff) ? content.staff : []
         const slim = arr.map(s => ({ id: s?.id || '', name: s?.name || '', reading: s?.reading || '', position: s?.position || '', imageKey: s?.image_key || s?.imageKey || '' }))
         return JSON.stringify(slim)
@@ -753,7 +758,7 @@ export default {
     },
     debugHistoryJson() {
       try {
-        const c = this._pageText?.page?.value?.content
+        const c = this._pageRef?.content
         const arr = Array.isArray(c?.history) ? c.history : []
         return JSON.stringify(arr)
       } catch(_) { return '[]' }
