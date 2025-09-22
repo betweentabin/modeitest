@@ -534,13 +534,12 @@ export default {
         { id: 'favorites', label: t('favorites', 'お気に入り'), icon: '' },
         { id: 'settings', label: t('settings', '設定'), icon: '' }
       ]
-    }
-  },
-  computed: {
+    },
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'マイアカウント') || 'マイアカウント' },
     pageSubtitle() { return this._pageText?.getText('page_subtitle', 'MY ACCOUNT') || 'MY ACCOUNT' },
     introText() { return this._pageText?.getText('intro', '') || '' },
+    
   },
   async mounted() {
     try { this._pageText = usePageText('my-account'); this._pageText.load() } catch(e) {}
