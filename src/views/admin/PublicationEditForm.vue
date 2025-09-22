@@ -14,7 +14,7 @@
           </div>
         </div>
 
-        <!-- 画像アップロード（PDFファイルのアップロードは廃止。URL入力を使用） -->
+        <!-- カバー画像のアップロード（PDFは下のファイル情報でアップロード） -->
         <div class="form-section">
           <h3 class="section-title">サムネイル</h3>
           <div class="form-row">
@@ -168,53 +168,15 @@
               </div>
             </div>
 
-            <!-- ファイル情報 -->
+            <!-- ファイル情報（URL入力ではなくアップロードに変更） -->
             <div class="form-section">
-              <h3 class="section-title">ファイル情報</h3>
-              
+              <h3 class="section-title">レポートファイル</h3>
               <div class="form-group">
-                <label for="file_url" class="form-label">
-                  ファイルURL
-                </label>
-                <input
-                  id="file_url"
-                  v-model="formData.file_url"
-                  type="url"
-                  class="form-input"
-                  placeholder="https://example.com/publication.pdf"
-                />
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="file_size" class="form-label">
-                    ファイルサイズ（MB）
-                  </label>
-                  <input
-                    id="file_size"
-                    v-model="formData.file_size"
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    class="form-input"
-                    placeholder="ファイルサイズ"
-                  />
-                </div>
-                
-                <div class="form-group">
-                  <label for="download_count" class="form-label">
-                    ダウンロード数
-                  </label>
-                  <input
-                    id="download_count"
-                    v-model="formData.download_count"
-                    type="number"
-                    min="0"
-                    class="form-input"
-                    placeholder="ダウンロード数"
-                    :disabled="isNew"
-                  />
-                </div>
+                <label class="form-label">PDFファイルを選択</label>
+                <input type="file" accept="application/pdf" @change="onPickPdf" />
+                <p class="form-help" v-if="pdfFile">選択中: {{ pdfFile.name }}</p>
+                <p class="form-help" v-else-if="formData.file_url">アップロード済みのPDFがあります。再アップロードで置き換えられます。</p>
+                <p class="form-help">アップロード後はDBに保存され、公開ページからダウンロード可能になります。</p>
               </div>
             </div>
 
@@ -316,6 +278,7 @@ export default {
       },
       coverImageFile: null,
       coverPreview: '',
+      pdfFile: null,
       // カテゴリー選択肢（管理のカテゴリー管理と同期）
       categories: [],
       loading: false,
@@ -378,6 +341,10 @@ export default {
       } else {
         this.coverPreview = ''
       }
+    },
+    onPickPdf(e) {
+      const f = e?.target?.files?.[0]
+      this.pdfFile = f || null
     },
     async loadCategories() {
       try {
@@ -442,6 +409,10 @@ export default {
         // Do NOT send existing cover_image URL as a string when uploading.
         // The admin backend expects cover_image to be a file if present.
         delete payload.cover_image
+        // URL/サイズ/ダウンロード数はUI非表示のため送らない（バックエンドで自動設定）
+        delete payload.file_url
+        delete payload.file_size
+        delete payload.download_count
         // Normalize booleans and skip empty strings (e.g., pages: '')
         Object.entries(payload).forEach(([k, v]) => {
           if (v === null || v === undefined) return
@@ -453,6 +424,7 @@ export default {
           fd.append(k, v)
         })
         if (this.coverImageFile) fd.append('cover_image', this.coverImageFile)
+        if (this.pdfFile) fd.append('pdf_file', this.pdfFile)
 
         let endpoint = '/api/admin/publications'
         let method = 'POST'

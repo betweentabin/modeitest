@@ -89,7 +89,7 @@ import CmsText from '@/components/CmsText.vue'
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '入会申し込み') || '入会申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'MEMBERSHIP') || 'MEMBERSHIP' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
     completeHeroTitle() { return this._pageText?.getText('complete_hero_title', this.pageTitle) || this.pageTitle },
     completeHeroSubtitle() { return this._pageText?.getText('complete_hero_subtitle', this.pageSubtitle) || this.pageSubtitle },
     completeTitle() { return this._pageText?.getText('complete_title', '入会申し込み完了') || '入会申し込み完了' },

@@ -86,7 +86,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'セミナー申し込み') || 'セミナー申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'SEMINAR APPLICATION') || 'SEMINAR APPLICATION' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'seminar application') || 'seminar application' },
     completeHeroTitle() { return this._pageText?.getText('complete_hero_title', this.pageTitle) || this.pageTitle },
     completeHeroSubtitle() { return this._pageText?.getText('complete_hero_subtitle', this.pageSubtitle) || this.pageSubtitle },
     completeTitle() { return this._pageText?.getText('complete_title', 'セミナー申し込み完了') || 'セミナー申し込み完了' },

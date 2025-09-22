@@ -273,7 +273,7 @@ export default {
     },
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'セミナー申し込み') || 'セミナー申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'SEMINAR APPLICATION') || 'SEMINAR APPLICATION' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'seminar application') || 'seminar application' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
   },
   mounted() {
@@ -298,7 +298,8 @@ export default {
       
       // 確認ページに遷移（フォームデータをURLパラメータで渡す）
       const formDataParam = encodeURIComponent(JSON.stringify(this.formData));
-      this.$router.push(`/membership/apply/confirm?formData=${formDataParam}`);
+      const seminarId = this.$route.params.id;
+      this.$router.push(`/seminars/${seminarId}/apply/confirm?formData=${formDataParam}`);
     },
     
     resetForm() {

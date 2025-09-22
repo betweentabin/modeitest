@@ -221,7 +221,8 @@
               >
             </div>
             
-            <div class="form-group half">
+            <!-- ページ数はUI上は非表示にする要望 -->
+            <div class="form-group half" v-if="false">
               <label>ページ数</label>
               <input 
                 v-model="formData.pages" 
@@ -318,13 +319,17 @@
                 </label>
               </div>
             </div>
-            <div class="form-group">
+          </div>
+
+          <!-- チェックボックス群は別行に配置して左寄せ -->
+          <div class="form-row">
+            <div class="form-group full">
+              <label>公開設定</label>
               <div class="checkbox-group">
                 <label class="checkbox-label">
                   <input v-model="formData.is_downloadable" type="checkbox">
                   ダウンロード可能
                 </label>
-                
                 <label class="checkbox-label">
                   <input v-model="formData.is_featured" type="checkbox">
                   特集レポート
@@ -1108,6 +1113,10 @@ export default {
   flex: 0 0 calc(50% - 10px);
 }
 
+.form-group.full {
+  flex: 1 1 100%;
+}
+
 .form-group label {
   font-weight: 500;
   color: #1a1a1a;
@@ -1139,6 +1148,7 @@ export default {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .checkbox-label {
