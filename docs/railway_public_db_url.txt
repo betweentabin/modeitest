@@ -1,4 +1,0 @@
-このファイルは参照用の公開DB接続URLです。アプリケーションはこのファイルを読み取りません（動作へ影響しません）。
-
-postgresql://postgres:RgvdpkoBgfjrvxjobxANPJrHfNIeyRkh@shinkansen.proxy.rlwy.net:47420/railway
-
