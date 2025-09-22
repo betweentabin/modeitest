@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PageContent;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,11 @@ use Illuminate\Support\Str;
 
 class PageContentController extends Controller
 {
+    private function editorUserId(): ?int
+    {
+        $u = auth()->user();
+        return ($u instanceof User) ? $u->id : null;
+    }
     // --- Image utilities (GD-based, no external deps) ---
     private function gdCanProcess(): bool
     {
@@ -606,7 +612,7 @@ class PageContentController extends Controller
                     'content' => [ 'images' => [] ],
                     'is_published' => true,
                     'published_at' => now(),
-                    'updated_by' => auth()->id(),
+                    'updated_by' => $this->editorUserId(),
                 ]);
             } else {
                 return response()->json([
@@ -643,7 +649,7 @@ class PageContentController extends Controller
             $validated['content'] = [ 'html' => $content ];
         }
 
-        $validated['updated_by'] = auth()->id();
+        $validated['updated_by'] = $this->editorUserId();
         $page = PageContent::create($validated);
 
         return response()->json($page, 201);
@@ -716,7 +722,7 @@ class PageContentController extends Controller
             }
         }
 
-        $validated['updated_by'] = auth()->id();
+        $validated['updated_by'] = $this->editorUserId();
         $page->update($validated);
 
         return response()->json($page);
@@ -769,7 +775,7 @@ class PageContentController extends Controller
 
             $page->update([
                 'content' => $content,
-                'updated_by' => auth()->id()
+                'updated_by' => $this->editorUserId()
             ]);
 
             return response()->json([
@@ -806,7 +812,7 @@ class PageContentController extends Controller
             
             $page->update([
                 'content' => $content,
-                'updated_by' => auth()->id()
+                'updated_by' => $this->editorUserId()
             ]);
 
             return response()->json(['message' => 'Image deleted successfully']);
@@ -828,7 +834,7 @@ class PageContentController extends Controller
                     'content' => [ 'images' => [] ],
                     'is_published' => true,
                     'published_at' => now(),
-                    'updated_by' => auth()->id(),
+                    'updated_by' => $this->editorUserId(),
                 ]);
             } else {
                 return response()->json(['message' => 'Page not found'], 404);
@@ -926,7 +932,7 @@ class PageContentController extends Controller
 
         $page->update([
             'content' => $content,
-            'updated_by' => auth()->id()
+            'updated_by' => $this->editorUserId()
         ]);
 
         return response()->json([
@@ -997,7 +1003,7 @@ class PageContentController extends Controller
         $content['html'] = $replaced;
         $page->update([
             'content' => $content,
-            'updated_by' => auth()->id()
+            'updated_by' => $this->editorUserId()
         ]);
 
         return response()->json([

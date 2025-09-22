@@ -22,14 +22,16 @@ class FinancialReportsSeeder extends Seeder
 
         DB::table('financial_reports')->insert([
             'company_name' => 'サンプル株式会社',
-            'fiscal_year' => (int) $now->year,
-            'quarter' => 'Q1',
-            'revenue' => 123456789,
-            'profit' => 9876543,
+            'report_type' => 'quarterly',
+            'fiscal_year' => (string) $now->year,
+            'fiscal_period' => 'Q1',
             'report_date' => $now->toDateString(),
+            'revenue' => 123456789,
+            'operating_income' => 9876543,
+            'net_income' => 9876543,
+            'is_published' => true,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
     }
 }
-

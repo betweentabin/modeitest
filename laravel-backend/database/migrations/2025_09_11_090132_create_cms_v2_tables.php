@@ -102,7 +102,6 @@ return new class extends Migration
             
             $table->foreign('page_id')->references('id')->on('cms_pages')->onDelete('cascade');
             $table->foreign('block_type_id')->references('id')->on('block_types');
-            $table->foreign('parent_block_id')->references('id')->on('page_blocks')->onDelete('cascade');
             
             $table->index('page_id');
             $table->index('block_type_id');
@@ -110,6 +109,17 @@ return new class extends Migration
             $table->index(['page_id', 'sort_order']);
             $table->index('parent_block_id');
         });
+
+        // Postgresでは同一テーブルの自己参照FKはテーブル作成後に付与するのが安全
+        if (Schema::hasTable('page_blocks')) {
+            Schema::table('page_blocks', function (Blueprint $table) {
+                try {
+                    $table->foreign('parent_block_id')->references('id')->on('page_blocks')->onDelete('cascade');
+                } catch (\Throwable $e) {
+                    // 既に付与済み、または他DBのためスキップ
+                }
+            });
+        }
 
         // 4. 再利用可能ブロックテーブル
         Schema::create('reusable_blocks', function (Blueprint $table) {

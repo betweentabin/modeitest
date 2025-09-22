@@ -220,7 +220,11 @@ class EconomicReportsSeeder extends Seeder
         ];
 
         foreach ($reports as $report) {
-            EconomicReport::create($report);
+            // タイトルユニーク制約に対応し、再実行時も安全に更新
+            EconomicReport::updateOrCreate(
+                ['title' => $report['title']],
+                $report
+            );
         }
     }
 }
