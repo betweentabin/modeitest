@@ -137,7 +137,7 @@ import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
-import apiClient from '@/services/apiClient.js'
+import apiClient from '../services/apiClient'
 
 export default {
   name: 'MembershipApplicationConfirmPage',

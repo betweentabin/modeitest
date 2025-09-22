@@ -130,7 +130,7 @@
 <script>
 import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
-import apiClient from '@/services/apiClient.js';
+import apiClient from '../services/apiClient';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
