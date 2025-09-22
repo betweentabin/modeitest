@@ -19,7 +19,7 @@
           <h3 class="section-title">サムネイル</h3>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">サムネイル画像（カバー）</label>
+              <label class="form-label">サムネイル画像（カバー） <span class="required">*</span></label>
               <div class="image-picker">
                 <img v-if="coverPreview || formData.cover_image" :src="coverPreview || formData.cover_image" alt="cover preview" class="image-preview" />
                 <input type="file" accept="image/*" @change="onPickCover" />
@@ -172,7 +172,7 @@
             <div class="form-section">
               <h3 class="section-title">レポートファイル</h3>
               <div class="form-group">
-                <label class="form-label">PDFファイルを選択</label>
+                <label class="form-label">PDFファイルを選択 <span class="required">*</span></label>
                 <input type="file" accept="application/pdf" @change="onPickPdf" />
                 <p class="form-help" v-if="pdfFile">選択中: {{ pdfFile.name }}</p>
                 <p class="form-help" v-else-if="formData.file_url">アップロード済みのPDFがあります。再アップロードで置き換えられます。</p>

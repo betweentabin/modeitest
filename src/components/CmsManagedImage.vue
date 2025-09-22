@@ -29,6 +29,7 @@ export default {
       __unwatchImages: null,
       __unwatchMediaImages: null,
       __unwatchMediaLoaded: null,
+      
     }
   },
   computed: {

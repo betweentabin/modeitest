@@ -812,15 +812,6 @@ export default {
       )
     } catch (_) {}
     this.loadFinancialReports();
-    // Re-render when page-managed images (content.images) change
-    try {
-      const readPageImages = () => {
-        const page = this._pageRef
-        const imgs = page && page.content && page.content.images
-        try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
-      }
-      this.$watch(readPageImages, () => { try { this.$forceUpdate() } catch(_) {} })
-    } catch(_) { /* noop */ }
     // lazy media registry (for staff/philosophy/message images)
     import('@/composables/usePageMedia').then(mod => {
       try {
@@ -845,6 +836,15 @@ export default {
         } catch (_) { /* noop */ }
       } catch(e) { /* noop */ }
     })
+    // Re-render when page-managed images (content.images) change
+    try {
+      const readPageImages = () => {
+        const page = this._pageRef
+        const imgs = page && page.content && page.content.images
+        try { return imgs ? JSON.stringify(imgs) : '' } catch(_) { return imgs ? Object.keys(imgs).join('|') : '' }
+      }
+      this.$watch(readPageImages, () => { try { this.$forceUpdate() } catch(_) {} })
+    } catch(_) { /* noop */ }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustRectangleHeight);

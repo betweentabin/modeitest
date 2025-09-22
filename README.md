@@ -1,12 +1,13 @@
-# ちくぎん地域経済研究所 — 本番引き継ぎ用 README（Xserver + ConoHa）
+# ちくぎん地域経済研究所 — 本番移行手順書（Xserver VPS / ConoHa / PostgreSQL）
 
-このREADMEだけで本番環境（Xserver と ConoHa）への引き継ぎ・アップロードまで完結できるようにまとめています。メール設定、APIの切替、CORS、スケジューラ／キューなど運用に必要なポイントも網羅しています。
+この手順書だけで、現状のテスト環境から Xserver VPS または ConoHa へ完全移行できるようにまとめています。初めてこのシステムを見る方でも手順通りに作業すれば移行できるよう、前提の確認から DNS、サーバー構築、アプリ配置、メール設定、API 切替、データ移行、動作確認、運用までを順序立てて記載しています。絵文字は使用していません。
 
 ## 構成と前提
 
 - フロントエンド: Vue.js 2.x（Vue CLI 4）／ビルド成果物は `dist/`
 - バックエンド: Laravel 10（`laravel-backend/`）
-- 推奨構成: フロント= Xserver（静的ホスティング）, API= ConoHa VPS（Nginx + PHP-FPM）
+- データベース: PostgreSQL（本番は PostgreSQL を利用します）
+- 推奨構成: フロント= Xserver 共有ホスティング（静的配信）, API= ConoHa または Xserver VPS（Nginx + PHP-FPM + PostgreSQL）
 - ドメイン例: `www.example.com`（フロント） / `api.example.com`（API）
 
 ディレクトリ概要
@@ -18,33 +19,56 @@
 ## 必要要件
 
 - Xserver: FTP/SFTP で `dist/` をアップできる権限、.htaccess 有効、独自ドメイン + SSL
-- ConoHa: Ubuntu 22.04 など、Nginx、PHP 8.2、Composer 2、MySQL 8 または PostgreSQL 14、git（任意）
+- ConoHa または Xserver VPS: Ubuntu 22.04 など、Nginx、PHP 8.2、Composer 2、PostgreSQL 14+、git（任意）
+
+事前準備（推奨）
+- フロント用ドメインと API 用サブドメインを取得し、DNS を設定します。
+  - 例: `www.example.com` → Xserver、`api.example.com` → ConoHa または Xserver VPS のグローバル IP へ A レコードを向けます。
+- SSL をフロント・API それぞれのサーバーで有効化します（Let’s Encrypt 等）。
+- 現行テスト環境（Railway 等）の DB バックアップ取得方法を確認します（PostgreSQL 推奨）。
 
 ## 本番手順の全体像（チェックリスト）
 
-1) APIドメインを決める（例: `api.example.com`）/ フロントドメイン（例: `www.example.com`）
-2) ConoHa に API を配置（後述の手順 A）
-3) Xserver にフロント（`dist/`）を配置し、.htaccess を設定（後述の手順 B）
-4) フロントの API 接続先を本番 API ドメインに切替（`src/config/api.js`）
-5) 画像/PDF配信の整合性（/storage）を調整（PUBLIC_STORAGE_URL or .htaccess リライト）
-6) メール送信（SMTP/Resend等）の環境変数設定と動作確認
-7) スケジューラ（cron）／キューワーカー（queue:work）を有効化
+1) フロント・API のドメインを確定し、DNS を設定します。
+2) API サーバー（ConoHa または Xserver VPS）を構築し、PostgreSQL をインストールして初期化します（手順 A）。
+3) Laravel API を配置し、環境変数を設定、マイグレーション／シーディングを実行します（手順 A）。
+4) フロントをビルドし、Xserver に `dist/` を配置、.htaccess を設定します（手順 B）。
+5) フロントの API 接続先を本番 API ドメインに切り替えます（`src/config/api.js` 参照）。
+6) 画像/PDF 配信の整合性（/storage）を調整します（`PUBLIC_STORAGE_URL` または .htaccess リライト）。
+7) メール送信（Xserver の SMTP など）の環境変数を設定し、送信テストを行います。
+8) スケジューラ（cron）とキューワーカー（queue:work）を有効化します。
+9) 既存データがある場合は、Railway などのテスト DB から PostgreSQL に移行します（付録参照）。
 
 ---
 
-## 手順 A: ConoHa へ API（Laravel）をデプロイ
+## 手順 A: API（Laravel + PostgreSQL）をデプロイ
+
+以下は ConoHa を例に記載します。Xserver VPS でも同様に実施できます（相違点は「手順 A-2」参照）。
 
 1. サーバー準備（Ubuntu 22.04 の例）
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y nginx php8.2 php8.2-fpm \
   php8.2-mbstring php8.2-xml php8.2-curl php8.2-zip php8.2-gd \
-  php8.2-pgsql php8.2-mysql unzip git curl
+  php8.2-pgsql unzip git curl
+sudo apt install -y postgresql postgresql-contrib
 # Composer
 cd /usr/local/bin && sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 ```
 
-2. コード配置
+2. PostgreSQL 初期設定
+```bash
+sudo systemctl enable postgresql --now
+sudo -u postgres psql <<'SQL'
+CREATE ROLE cri WITH LOGIN PASSWORD 'strong_password_here';
+CREATE DATABASE cri OWNER cri ENCODING 'UTF8';
+ALTER ROLE cri SET client_encoding TO 'utf8';
+ALTER ROLE cri SET timezone TO 'Asia/Tokyo';
+SQL
+```
+DB サーバーとアプリが同一ホストの場合はこのままで構いません。別ホストに分ける場合は `postgresql.conf` と `pg_hba.conf` の調整とファイアウォール設定が必要になります。
+
+3. コード配置
 ```bash
 sudo mkdir -p /var/www/cri-app && sudo chown -R $USER:www-data /var/www/cri-app
 cd /var/www/cri-app
@@ -56,7 +80,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-3. .env 設定（代表値）
+4. .env 設定（代表値）
 `laravel-backend/.env` を編集。最低限以下を設定してください。
 ```env
 APP_ENV=production
@@ -70,6 +94,8 @@ CORS_ALLOWED_ORIGINS=https://www.example.com
 
 # ストレージURL（絶対URLで返す）
 PUBLIC_STORAGE_URL=https://api.example.com/storage
+# 共有ホスティング等でシンボリックリンクが使えない場合は true
+PUBLIC_DISK_IN_PUBLIC=false
 
 # DB: PostgreSQL の例（デフォルト）
 DB_CONNECTION=pgsql
@@ -78,6 +104,7 @@ DB_PORT=5432
 DB_DATABASE=cri
 DB_USERNAME=cri
 DB_PASSWORD=your_password
+DB_SSLMODE=prefer
 
 # DB: MySQL を使う場合はこちら
 # DB_CONNECTION=mysql
@@ -115,7 +142,7 @@ MAIL_EHLO_DOMAIN=your-domain.jp
 # RESEND_API_KEY=your_resend_api_key
 ```
 
-4. ストレージとDB初期化
+5. ストレージとDB初期化
 ```bash
 cd /var/www/cri-app/laravel-backend
 php artisan storage:link
@@ -128,14 +155,14 @@ php artisan db:seed --force
   - `editor@chikugin-cri.co.jp` / `editor123`
   - `viewer@chikugin-cri.co.jp` / `viewer123`
 
-5. パーミッション
+6. パーミッション
 ```bash
 sudo chown -R www-data:www-data storage bootstrap/cache
 sudo find storage -type d -exec chmod 775 {} \;
 sudo find storage -type f -exec chmod 664 {} \;
 ```
 
-6. Nginx 設定
+7. Nginx 設定
 - サンプル: `deploy/konoha/nginx.conf`
   - `root` を `.../laravel-backend/public` に変更
   - `server_name` を `api.example.com` に変更
@@ -145,13 +172,13 @@ sudo ln -s /etc/nginx/sites-available/cri-app /etc/nginx/sites-enabled/cri-app
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-7. PHP-FPM 調整（任意）
+8. PHP-FPM 調整（任意）
 - サンプル: `deploy/konoha/php-fpm-pool.conf`
 ```bash
 sudo systemctl restart php8.2-fpm
 ```
 
-8. スケジューラ/キュー
+9. スケジューラ/キュー
 ```bash
 # 毎分スケジューラ（メール配信などのジョブ投入）
 crontab -e
@@ -170,11 +197,19 @@ crontab -e
 # sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl start laravel-worker:*
 ```
 
-9. 動作確認
+10. 動作確認
 ```bash
 curl -s https://api.example.com/api/health | jq
 curl -s https://api.example.com/api/test | jq
 ```
+
+### 手順 A-2: Xserver VPS で API を運用する場合
+
+基本手順は上記と同じです。違いは以下の点です。
+- OS イメージは Xserver VPS が提供する標準イメージを利用します（Ubuntu 系が推奨です）。
+- ファイアウォールやセキュリティグループの開放設定を Xserver VPS のコントロールパネルで有効化します（HTTP/HTTPS）。
+- Nginx/PHP/PostgreSQL のインストールと設定は同様です。Let’s Encrypt の証明書発行方法は Xserver VPS のガイドに従ってください。
+- 共有ホスティングではないため、`PUBLIC_DISK_IN_PUBLIC=true` は通常不要です。`php artisan storage:link` が問題なく動作します。
 
 ---
 
@@ -241,6 +276,40 @@ RewriteRule . /index.html [L]
 
 ---
 
+## 動的データ（API）と確認手順
+
+代表的な公開 API と想定呼び出し元を記載します。実際のルーティングは `laravel-backend/routes/api.php` を参照してください。
+
+- 刊行物（公開）
+  - 一覧: `GET /api/publications-v2`
+  - カテゴリ: `GET /api/publications-v2/categories`
+  - 詳細: `GET /api/publications-v2/{id}`
+  - ダウンロード: `GET /api/publications-v2/{id}/download`
+- お知らせ（公開）
+  - 一覧: `GET /api/news-v2`
+  - 詳細: `GET /api/news-v2/{id}`
+- 経済指標（公開）
+  - カテゴリ: `GET /api/economic-indicators/categories`
+  - 一覧: `GET /api/economic-indicators`
+- ページコンテンツ（公開）
+  - 一覧: `GET /api/public/pages`
+  - 詳細: `GET /api/public/pages/{pageKey}`
+
+確認例
+```bash
+curl -s https://api.example.com/api/publications-v2 | jq '.[0] | {id,title,file_url}'
+curl -s https://api.example.com/api/news-v2 | jq '.[0] | {id,title}'
+```
+
+管理 API での更新（例）
+- 管理ログイン: `POST /api/admin/login`
+- 刊行物の作成/更新/削除: `POST/PUT/DELETE /api/admin/publications`
+- 画像置換（モデル画像）: `POST /api/admin/media/replace-model-image`
+
+これらが正常に動作すれば、フロントの刊行物やニュースなどの動的データは自動的に反映されます。
+
+---
+
 ## API ベースURLの切替（フロント）
 
 - 現状（既定）: `src/config/api.js` の `production.baseURL` を本番APIへ書き換える
@@ -282,6 +351,47 @@ APIをローカルに向けたい場合は `src/config/api.js` の baseURL を `
 
 ---
 
+## 付録: データ移行（Railway 等 → 本番 PostgreSQL）
+
+既存のテスト環境データを本番へ移行する場合は、PostgreSQL でダンプ・リストアを行います。MySQL を利用していた場合は `database_migration_guide.md` に従いダンプ形式の変換が必要になります。
+
+1) テスト環境でダンプを取得します
+```bash
+pg_dump \
+  --no-owner --no-privileges \
+  --format=custom \
+  --file=backup.dump \
+  "$TEST_DATABASE_URL"
+```
+
+2) 本番 PostgreSQL にリストアします
+```bash
+# 事前に空のDBを作成済みであること（本手順Aのとおり）
+pg_restore \
+  --no-owner --no-privileges \
+  --clean --if-exists \
+  --dbname=postgresql://cri:your_password@127.0.0.1:5432/cri \
+  backup.dump
+```
+
+3) Laravel マイグレーションの整合性を確認します
+```bash
+php artisan migrate --force
+php artisan db:seed --force
+```
+既存レコードを壊さずに不足データだけを補うため、シーダは冪等に作成されています。必要に応じて `php artisan tinker` や管理 API でデータを確認します。
+
+4) ストレージファイル（画像・PDF）を移行します
+- 旧環境の `storage/app/public`（または公開 `public/storage`）を新環境へコピーします。
+- API 側の `PUBLIC_STORAGE_URL` を設定しておくと、返却URLが絶対化されフロントのリライト設定が簡素化できます。
+
+5) 最終確認
+- フロントから動的ページ（刊行物、ニュース、セミナー等）が期待通り表示されること
+- ダウンロードや画像が 200 で配信されること
+- 管理画面から新規作成・更新・削除が行えること
+
+---
+
 ## 付録: よく使う確認コマンド
 
 - API稼働確認: `curl -s https://api.example.com/api/health | jq`
@@ -290,3 +400,12 @@ APIをローカルに向けたい場合は `src/config/api.js` の baseURL を `
 - ジョブテーブル: `
   php artisan migrate:status | grep jobs
   `（`2019_08_19_000001_create_jobs_table.php` 等が適用済みであること）
+
+---
+
+## トラブルシューティング（抜粋）
+
+- CORS エラーが出る: `laravel-backend/config/cors.php` と `CORS_ALLOWED_ORIGINS` を確認します。フロントのドメインが完全一致で列挙されている必要があります。
+- 画像やPDFが表示されない: `php artisan storage:link` の実行と `PUBLIC_STORAGE_URL` の設定を確認します。Xserver 共有ホスティングでは `PUBLIC_DISK_IN_PUBLIC=true` も検討します。
+- メールが届かない: ポートと暗号化（465/SSL または 587/TLS）、`MAIL_FROM_ADDRESS`、`MAIL_EHLO_DOMAIN` を確認します。Xserver の SMTP クライアント情報に合わせてください。
+- 管理ログインに失敗する: シード済みの初期ユーザーでログインできない場合、`/api/debug/run-admin-seeder`（一時利用）で再投入し、直ちに無効化してください。

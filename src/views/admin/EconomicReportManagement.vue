@@ -281,7 +281,7 @@
 
           <div class="form-row">
             <div class="form-group half">
-              <label>カバー画像</label>
+              <label>カバー画像 <span class="required">*</span></label>
               <input 
                 @change="handleCoverImageChange" 
                 type="file" 
@@ -291,7 +291,7 @@
             </div>
             
             <div class="form-group half">
-              <label>レポートファイル</label>
+              <label>レポートファイル <span class="required">*</span></label>
               <input 
                 @change="handleFileChange" 
                 type="file" 

@@ -216,7 +216,37 @@ export default {
       mainHeadlineText: '産・官・学・金<span class="small-text">(金融機関)</span><br>をつなぐ架け橋へ',
       _pageMedia: null,
       _media: null,
+      // Prefill map to suppress initial static fallback before async loads
+      _prefillImages: {},
     };
+  },
+  created() {
+    // 1) Pre-hydrate PageContent and keep shallow copy of images for initial render
+    try {
+      this._pageText = usePageText(this.pageKey)
+      // Kick background load to refresh LS cache
+      this._pageText.load({}).catch(() => {})
+      // Read last cached images to avoid static fallback on first paint
+      try {
+        const raw = localStorage.getItem('page_content_cache:' + this.pageKey)
+        const looksJson = raw && (raw.trim().startsWith('{') || raw.trim().startsWith('['))
+        const cached = looksJson ? JSON.parse(raw) : null
+        const imgs = cached?.content?.images
+        this._prefillImages = (imgs && typeof imgs === 'object') ? imgs : {}
+      } catch(_) { this._prefillImages = {} }
+    } catch(_) { /* noop */ }
+
+    // 2) Ensure page media registry early (non-blocking)
+    try {
+      import('@/composables/usePageMedia').then(mod => {
+        try {
+          const { usePageMedia } = mod
+          this._pageMedia = usePageMedia()
+          this._pageMedia.ensure(this.pageKey).catch(() => {})
+          this._media = this._pageMedia._media
+        } catch(_) {}
+      })
+    } catch(_) { /* noop */ }
   },
   computed: {
     _pageRef() { return this._pageText?.page?.value },
@@ -357,6 +387,41 @@ export default {
   },
   methods: {
     media(key, fallback = '', mediaKey = '') {
+      // 0) Prefill from cached images to suppress initial static fallback
+      try {
+        const imgs0 = this._prefillImages
+        if (imgs0 && Object.prototype.hasOwnProperty.call(imgs0, key)) {
+          const v0 = imgs0[key]
+          let u0 = (v0 && typeof v0 === 'object') ? (v0.url || '') : (typeof v0 === 'string' ? v0 : '')
+          if (typeof u0 === 'string' && u0) {
+            try {
+              const ver = (v0 && typeof v0 === 'object' && v0.uploaded_at) ? (Date.parse(v0.uploaded_at) || null) : null
+              if (ver !== null && u0.indexOf('/storage/') !== -1) {
+                u0 += (u0.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+              }
+            } catch(_) {}
+            return resolveMediaUrl(u0)
+          }
+        }
+      } catch(_) {}
+
+      // 0.5) Try global media cache (cms_media_cache) for mediaKey or key
+      try {
+        const raw = localStorage.getItem('cms_media_cache')
+        if (raw) {
+          const json = JSON.parse(raw)
+          const images = json && json.images
+          const pick = (k) => {
+            const v = images && images[k]
+            return (typeof v === 'string' && v.length) ? v : ''
+          }
+          const byMediaKey = mediaKey ? pick(mediaKey) : ''
+          if (byMediaKey) return resolveMediaUrl(byMediaKey)
+          const byKey = pick(key)
+          if (byKey) return resolveMediaUrl(byKey)
+        }
+      } catch(_) {}
+
       try {
         const page = this._pageText && this._pageText.page && this._pageText.page.value
         const imgs = page && page.content && page.content.images
