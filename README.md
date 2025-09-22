@@ -323,6 +323,18 @@ curl -s https://api.example.com/api/news-v2 | jq '.[0] | {id,title}'
 - CORS 許可: `laravel-backend/config/cors.php` は `CORS_ALLOWED_ORIGINS`（カンマ区切り）を参照
 - 画像/PDFのURL: `PUBLIC_STORAGE_URL` を設定すると絶対URLを返すため、フロント側での `/storage` リライトが不要に
 
+## CDN 配信（推奨）
+
+- 目的: `/storage/...` の静的ファイル（画像・PDF）を API サーバー経由ではなく CDN から高速配信します。
+- 手順:
+  - CDN 側のオリジン（バックエンド）を `https://api.example.com/storage` に設定（パスベースのオリジンでも可）。
+  - API 環境変数に `PUBLIC_STORAGE_URL=https://cdn.example.com/storage` を設定。
+  - フロントは何も変更不要。Laravel は `Storage::disk('public')->url($path)` を通じて常に CDN の絶対URLを返します。
+- 補足:
+  - 既存の `vercel.json` の `/storage` リライトは、絶対URL（CDN）を返す構成では呼ばれません。残しておいても支障はありません。
+  - 画像差し替え時は新しいファイル名（タイムスタンプ付き）になるため、CDNキャッシュを個別パージしなくても URL 変更で実質バイパスされます。
+  - Canvas 等で画像を扱う場合は CDN 側で `Access-Control-Allow-Origin` を適切に付与してください。
+
 ---
 
 ## ローカル開発（参考）

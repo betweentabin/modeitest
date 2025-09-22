@@ -48,8 +48,8 @@ class MemberDirectoryController extends Controller
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('company_name', 'LIKE', "%{$search}%")
-                      ->orWhere('representative_name', 'LIKE', "%{$search}%")
-                      ->orWhere('address', 'LIKE', "%{$search}%");
+                      ->orWhere('representative_name', 'LIKE', "%{$search}%");
+                    // 住所は暗号化保存のためDB側のLIKE検索対象にしない
                 });
             }
 
@@ -67,9 +67,8 @@ class MemberDirectoryController extends Controller
             if ($request->filled('region')) {
                 if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'region')) {
                     $query->where('region', $request->region);
-                } else {
-                    $query->where('address', 'LIKE', "%{$request->region}%");
                 }
+                // 住所は暗号化保存のためfallbackのLIKE検索は実施しない
             }
 
             // 業種フィルター
@@ -246,8 +245,8 @@ class MemberDirectoryController extends Controller
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('company_name', 'LIKE', "%{$search}%")
-                      ->orWhere('representative_name', 'LIKE', "%{$search}%")
-                      ->orWhere('address', 'LIKE', "%{$search}%");
+                      ->orWhere('representative_name', 'LIKE', "%{$search}%");
+                    // 住所は暗号化保存のためDB側のLIKE検索対象にしない
                 });
             }
 
@@ -262,9 +261,8 @@ class MemberDirectoryController extends Controller
             if ($request->filled('region')) {
                 if (\Illuminate\Support\Facades\Schema::hasColumn('members', 'region')) {
                     $query->where('region', $request->region);
-                } else {
-                    $query->where('address', 'LIKE', "%{$request->region}%");
                 }
+                // 住所は暗号化保存のためfallbackのLIKE検索は実施しない
             }
 
             if ($request->filled('industry')) {

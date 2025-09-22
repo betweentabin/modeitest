@@ -214,7 +214,7 @@
           <form @submit.prevent="saveMember">
             <div class="form-row">
               <div class="form-group">
-                <label>会社名</label>
+                <label>会社名 <span class="required">*</span></label>
                 <input 
                   v-model="editForm.company_name" 
                   type="text" 
@@ -223,7 +223,7 @@
                 >
               </div>
               <div class="form-group">
-                <label>代表者名</label>
+                <label>代表者名 <span class="required">*</span></label>
                 <input 
                   v-model="editForm.representative_name" 
                   type="text" 
@@ -235,7 +235,7 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label>メールアドレス</label>
+                <label>メールアドレス <span class="required">*</span></label>
                 <input 
                   v-model="editForm.email" 
                   type="email" 
@@ -473,7 +473,7 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label>会員種別</label>
+                <label>会員種別 <span class="required">*</span></label>
                 <select v-model="addForm.membership_type" class="form-select">
                   <option value="free">無料</option>
                   <option value="basic">ベーシック</option>
@@ -482,7 +482,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>ステータス</label>
+                <label>ステータス <span class="required">*</span></label>
                 <select v-model="addForm.status" class="form-select">
                   <option value="pending">承認待ち</option>
                   <option value="active">アクティブ</option>
