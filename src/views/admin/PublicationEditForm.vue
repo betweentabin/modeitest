@@ -333,6 +333,31 @@ export default {
     }
   },
   methods: {
+    // Normalize various backend date formats to HTML date input format (YYYY-MM-DD)
+    normalizeDateForInput(val) {
+      if (!val) return ''
+      // If already YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val
+      // Handle YYYY/MM/DD or YYYY.M.D etc.
+      const m = String(val).match(/(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})/)
+      if (m) {
+        const y = m[1]
+        const mo = m[2].padStart(2, '0')
+        const d = m[3].padStart(2, '0')
+        return `${y}-${mo}-${d}`
+      }
+      // Try ISO string or Date-parsable
+      try {
+        const dt = new Date(val)
+        if (!isNaN(dt.getTime())) {
+          const y = dt.getFullYear()
+          const mo = String(dt.getMonth() + 1).padStart(2, '0')
+          const d = String(dt.getDate()).padStart(2, '0')
+          return `${y}-${mo}-${d}`
+        }
+      } catch(_) { /* noop */ }
+      return ''
+    },
     onPickCover(e) {
       const f = e?.target?.files?.[0]
       this.coverImageFile = f || null
@@ -377,8 +402,10 @@ export default {
         // 旧ルートは publication オブジェクトを直接返す（success ラッパーのみ）
         if (res && res.success && res.data) {
           const data = res.data.publication || res.data
+          const normalizedDate = this.normalizeDateForInput(data.publication_date)
           this.formData = {
             ...data,
+            publication_date: normalizedDate,
             issue_number: data.issue_number || '',
             download_count: data.download_count || 0
           }
@@ -406,6 +433,10 @@ export default {
         // Build multipart form
         const fd = new FormData()
         const payload = { ...this.formData }
+        // Ensure publication_date is in YYYY-MM-DD before sending
+        if (payload.publication_date) {
+          payload.publication_date = this.normalizeDateForInput(payload.publication_date)
+        }
         // Do NOT send existing cover_image URL as a string when uploading.
         // The admin backend expects cover_image to be a file if present.
         delete payload.cover_image

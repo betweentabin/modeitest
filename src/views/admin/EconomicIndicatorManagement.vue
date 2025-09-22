@@ -125,7 +125,8 @@
                 <option value="annual">年次</option>
               </select>
             </div>
-            <div class="form-group half">
+            <!-- 単位フィールドはUI上は非表示にする -->
+            <div class="form-group half" v-if="false">
               <label>単位</label>
               <input v-model="formData.unit" type="text" class="form-input" placeholder="例）% / ポイント / 円 など">
             </div>
@@ -319,4 +320,3 @@ export default {
 .cancel-btn { background:#f0f0f0; border:none; border-radius:4px; padding:8px 12px; cursor:pointer; }
 .save-btn { background:#da5761; color:white; border:none; border-radius:4px; padding:8px 12px; cursor:pointer; }
 </style>
-
