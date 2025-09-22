@@ -130,7 +130,7 @@
 <script>
 import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
-import apiClient from '../services/apiClient';
+// apiClient は送信時に動的importします（ビルド時の参照問題回避）
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
@@ -235,7 +235,8 @@ export default {
         }
 
         const seminarId = this.$route.params.id;
-        const res = await apiClient.registerForSeminar(seminarId, payload)
+        const { default: client } = await import('../services/apiClient.js')
+        const res = await client.registerForSeminar(seminarId, payload)
         if (!res || res.success === false) {
           throw new Error(res?.message || res?.error || '送信に失敗しました')
         }

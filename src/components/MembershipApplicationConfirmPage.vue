@@ -137,7 +137,7 @@ import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
-import apiClient from '../services/apiClient'
+// apiClient は送信時に動的importします（ビルド時の参照問題回避）
 
 export default {
   name: 'MembershipApplicationConfirmPage',
@@ -242,7 +242,8 @@ export default {
           inquiry_type: this.formData.subject || null
         }
 
-        const res = await apiClient.submitInquiry(payload)
+        const { default: client } = await import('../services/apiClient.js')
+        const res = await client.submitInquiry(payload)
         if (!res || res.success === false) {
           throw new Error(res?.message || res?.error || '送信に失敗しました')
         }
