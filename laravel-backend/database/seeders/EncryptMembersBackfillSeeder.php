@@ -1,0 +1,62 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Crypt;
+
+class EncryptMembersBackfillSeeder extends Seeder
+{
+    public function run(): void
+    {
+        if (!Schema::hasTable('members')) return;
+
+        $columns = array_filter([
+            Schema::hasColumn('members', 'phone') ? 'phone' : null,
+            Schema::hasColumn('members', 'postal_code') ? 'postal_code' : null,
+            Schema::hasColumn('members', 'position') ? 'position' : null,
+            Schema::hasColumn('members', 'department') ? 'department' : null,
+            Schema::hasColumn('members', 'address') ? 'address' : null,
+            Schema::hasColumn('members', 'concerns') ? 'concerns' : null,
+            Schema::hasColumn('members', 'notes') ? 'notes' : null,
+        ]);
+
+        if (empty($columns)) return;
+
+        $lastId = 0;
+        do {
+            $rows = DB::table('members')
+                ->select(array_merge(['id'], $columns))
+                ->where('id', '>', $lastId)
+                ->orderBy('id')
+                ->limit(500)
+                ->get();
+
+            foreach ($rows as $row) {
+                $updates = [];
+                foreach ($columns as $col) {
+                    $val = $row->$col;
+                    if ($val === null || $val === '') continue;
+                    $needsEncrypt = true;
+                    try {
+                        // if decrypt succeeds, it's already encrypted
+                        Crypt::decryptString($val);
+                        $needsEncrypt = false;
+                    } catch (\Throwable $e) {
+                        $needsEncrypt = true;
+                    }
+                    if ($needsEncrypt) {
+                        $updates[$col] = Crypt::encryptString((string) $val);
+                    }
+                }
+                if (!empty($updates)) {
+                    DB::table('members')->where('id', $row->id)->update($updates);
+                }
+                $lastId = $row->id;
+            }
+        } while ($rows->count() > 0);
+    }
+}
+

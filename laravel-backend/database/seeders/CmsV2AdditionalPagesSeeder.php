@@ -36,7 +36,7 @@ class CmsV2AdditionalPagesSeeder extends Seeder
             $row = CmsV2Page::where('slug', $p['slug'])->first();
             if (!$row) {
                 CmsV2Page::create([
-                    'id' => (string) Str::ulid(),
+                    'id' => (string) Str::uuid(),
                     'slug' => $p['slug'],
                     'title' => $p['title'],
                     'meta_json' => null,
@@ -48,4 +48,3 @@ class CmsV2AdditionalPagesSeeder extends Seeder
         }
     }
 }
-

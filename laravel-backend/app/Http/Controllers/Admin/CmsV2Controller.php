@@ -56,8 +56,8 @@ class CmsV2Controller extends Controller
             'title' => 'required|string|max:255',
             'meta_json' => 'array',
         ]);
-        // Always use ULID (26-char, no dashes) to match migration column type
-        $id = (string) Str::ulid();
+        // Use UUID to match current DB column types (uuid)
+        $id = (string) Str::uuid();
         $page = CmsV2Page::create([
             'id' => $id,
             'slug' => $data['slug'],
@@ -91,7 +91,7 @@ class CmsV2Controller extends Controller
         ]);
         $section = CmsV2Section::find($sid);
         if (!$section) {
-            $sidVal = (string) Str::ulid();
+            $sidVal = (string) Str::uuid();
             $section = CmsV2Section::create([
                 'id' => $sidVal,
                 'page_id' => $page->id,
@@ -132,7 +132,7 @@ class CmsV2Controller extends Controller
 
         // Save version for rollback
         CmsV2PageVersion::create([
-            'id' => (string) Str::ulid(),
+            'id' => (string) Str::uuid(),
             'page_id' => $page->id,
             'snapshot_json' => $snapshot,
             'created_by' => optional(request()->user())->id,
@@ -165,7 +165,7 @@ class CmsV2Controller extends Controller
         $data = file_get_contents($file->getRealPath());
         $checksum = hash('sha256', $data);
         $media = CmsV2Media::create([
-            'id' => (string) Str::ulid(),
+            'id' => (string) Str::uuid(),
             'filename' => $file->getClientOriginalName(),
             'mime' => $file->getClientMimeType(),
             'size' => $file->getSize(),
