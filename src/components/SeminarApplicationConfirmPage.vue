@@ -130,7 +130,7 @@
 <script>
 import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
-import apiClient from '../services/apiClient.js';
+import apiClient from '@/services/apiClient.js';
 import Navigation from "./Navigation.vue";
 import Footer from "./Footer.vue";
 import Group27 from "./Group27.vue";
@@ -175,7 +175,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', 'セミナー申し込み') || 'セミナー申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'SEMINAR APPLICATION') || 'SEMINAR APPLICATION' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'seminar application') || 'seminar application' },
     formTitle() { return this._pageText?.getText('form_title', this.pageTitle) || this.pageTitle },
     confirmLabel() { return this._pageText?.getText('breadcrumb_confirm', '確認') || '確認' },
     stepInput() { return this._pageText?.getText('step_input', '①お客様情報の入力') || '①お客様情報の入力' },
@@ -213,7 +213,7 @@ export default {
       const subjects = {
         'standard': 'スタンダード会員',
         'premium': 'プレミアムネット会員',
-        'inquiry': '会員に関するお問い合わせ',
+        'inquiry': 'セミナーに関するお問い合わせ',
         'other': 'その他'
       };
       return subjects[value] || value;
@@ -225,37 +225,27 @@ export default {
       this.submitError = null;
 
       try {
-        // subject表示用テキストとtypeコードを分離
-        const subjectMap = {
-          standard: 'スタンダード会員',
-          premium: 'プレミアムネット会員',
-          inquiry: '会員に関するお問い合わせ',
-          other: 'その他'
-        }
-
+        // セミナー申込のためのペイロード整形
         const payload = {
           name: `${this.formData.lastName} ${this.formData.firstName}`.trim(),
           email: this.formData.email,
           phone: this.formData.phone || '',
           company: this.formData.companyName || '',
-          subject: subjectMap[this.formData.subject] || this.formData.subject,
-          message: this.formData.content,
-          inquiry_type: this.formData.subject || null
+          special_requests: this.formData.content || ''
         }
 
-        const res = await apiClient.submitInquiry(payload)
+        const seminarId = this.$route.params.id;
+        const res = await apiClient.registerForSeminar(seminarId, payload)
         if (!res || res.success === false) {
           throw new Error(res?.message || res?.error || '送信に失敗しました')
         }
 
-        // v2: res.data.application_number or fallback to id from either v1/v2
-        const applicationNumber = res?.data?.application_number
-          || (res?.data?.application_id ? `APP-${String(res.data.application_id).padStart(6, '0')}` : null)
-          || (res?.application_id ? `APP-${String(res.application_id).padStart(6, '0')}` : null)
-          || `APP-${Date.now()}`
+        // registration_number を優先的に使用
+        const registrationNumber = res?.data?.registration_number
+          || res?.data?.registration?.registration_number
+          || `SEM${Date.now()}`
 
-        const seminarId = this.$route.params.id;
-        this.$router.push(`/seminars/${seminarId}/apply/complete?applicationNumber=${encodeURIComponent(applicationNumber)}`)
+        this.$router.push(`/seminars/${seminarId}/apply/complete?registrationNumber=${encodeURIComponent(registrationNumber)}`)
       } catch (err) {
         console.error('セミナー申し込み送信エラー:', err)
         this.submitError = err.message || 'エラーが発生しました。再度お試しください。'

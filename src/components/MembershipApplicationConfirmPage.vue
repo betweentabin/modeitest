@@ -137,6 +137,7 @@ import Breadcrumbs from './Breadcrumbs.vue';
 import { frame132131753022Data } from "../data.js";
 import CmsText from '@/components/CmsText.vue'
 import { usePageText } from '@/composables/usePageText'
+import apiClient from '@/services/apiClient.js'
 
 export default {
   name: 'MembershipApplicationConfirmPage',
@@ -174,7 +175,7 @@ export default {
   computed: {
     _pageRef() { return this._pageText?.page?.value },
     pageTitle() { return this._pageText?.getText('page_title', '入会申し込み') || '入会申し込み' },
-    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'MEMBERSHIP') || 'MEMBERSHIP' },
+    pageSubtitle() { return this._pageText?.getText('page_subtitle', 'membership') || 'membership' },
     confirmLabel() { return this._pageText?.getText('breadcrumb_confirm', '確認') || '確認' },
     stepInput() { return this._pageText?.getText('step_input', '①入会情報の入力') || '①入会情報の入力' },
     stepConfirm() { return this._pageText?.getText('step_confirm', '②記入内容のご確認') || '②記入内容のご確認' },
