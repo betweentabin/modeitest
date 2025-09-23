@@ -13,6 +13,73 @@ use Illuminate\Support\Facades\Validator;
 class MemberController extends Controller
 {
     /**
+     * Attempt to decrypt a Laravel-encrypted string.
+     * Handles possible double-encryption from legacy data by trying up to 2 passes.
+     */
+    private function maybeDecrypt($value)
+    {
+        if (!is_string($value) || $value === '') {
+            return $value;
+        }
+
+        $looksEncrypted = function ($str) {
+            // Laravel encryption payload is base64-encoded JSON with iv/value/mac
+            $decoded = base64_decode($str, true);
+            if ($decoded === false) return false;
+            $json = json_decode($decoded, true);
+            return is_array($json) && isset($json['iv'], $json['value'], $json['mac']);
+        };
+
+        $out = $value;
+        for ($i = 0; $i < 2; $i++) {
+            if (!$looksEncrypted($out)) break;
+            try {
+                $out = \Illuminate\Support\Facades\Crypt::decryptString($out);
+            } catch (\Throwable $e) {
+                // If decryption fails, return the best-effort value
+                return $value;
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Normalize member payload with decrypted fields for API responses.
+     */
+    private function presentMember(Member $m): array
+    {
+        return [
+            'id' => $m->id,
+            'company_name' => $m->company_name,
+            'representative_name' => $this->maybeDecrypt($m->representative_name),
+            'email' => $this->maybeDecrypt($m->email),
+            'phone' => $this->maybeDecrypt($m->phone),
+            'postal_code' => $this->maybeDecrypt($m->postal_code),
+            'address' => $this->maybeDecrypt($m->address),
+            'position' => $this->maybeDecrypt($m->position),
+            'department' => $this->maybeDecrypt($m->department),
+            'capital' => $m->capital,
+            'industry' => $m->industry,
+            'region' => $m->region,
+            'concerns' => $this->maybeDecrypt($m->concerns),
+            'notes' => $this->maybeDecrypt($m->notes),
+            'membership_type' => $m->membership_type,
+            'status' => $m->status,
+            'joined_date' => $m->joined_date,
+            'started_at' => $m->started_at,
+            'expiry_date' => $m->expiry_date,
+            'membership_expires_at' => $m->membership_expires_at,
+            'is_active' => (bool) $m->is_active,
+            'email_verified_at' => $m->email_verified_at,
+            'created_at' => $m->created_at,
+            'updated_at' => $m->updated_at,
+            // convenience fields used by UI
+            'is_expiring_soon' => $m->isExpiringSoon(),
+            'membership_level_value' => $m->getMembershipLevelValue(),
+        ];
+    }
+
+    /**
      * 会員一覧を取得
      */
     public function index(Request $request): JsonResponse
@@ -53,11 +120,9 @@ class MemberController extends Controller
         $perPage = $request->get('per_page', 15);
         $members = $query->paginate($perPage);
 
-        // 各会員の追加情報を含める
-        $members->getCollection()->transform(function ($member) {
-            $member->is_expiring_soon = $member->isExpiringSoon();
-            $member->membership_level_value = $member->getMembershipLevelValue();
-            return $member;
+        // Decrypt and normalize payloads in the collection
+        $members->getCollection()->transform(function (Member $member) {
+            return $this->presentMember($member);
         });
 
         return response()->json($members);
@@ -69,9 +134,10 @@ class MemberController extends Controller
     public function show($id): JsonResponse
     {
         $member = Member::findOrFail($id);
-        $member->is_expiring_soon = $member->isExpiringSoon();
-        $member->membership_level_value = $member->getMembershipLevelValue();
-        return response()->json($member);
+        return response()->json([
+            'success' => true,
+            'data' => $this->presentMember($member),
+        ]);
     }
 
     /**
@@ -79,7 +145,16 @@ class MemberController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        // Treat empty membership_expires_at as absent to satisfy nullable|date
+        $data = $request->all();
+        if (array_key_exists('membership_expires_at', $data)) {
+            $val = is_string($data['membership_expires_at']) ? trim($data['membership_expires_at']) : $data['membership_expires_at'];
+            if ($val === '' || $val === null) {
+                unset($data['membership_expires_at']);
+            }
+        }
+
+        $validator = Validator::make($data, [
             'company_name' => 'required|string|max:255',
             'representative_name' => 'required|string|max:100',
             'email' => 'required|string|email|max:255|unique:members,email_index',
@@ -104,7 +179,7 @@ class MemberController extends Controller
         if ($validator->fails()) {
             \Log::error('Member creation validation failed', [
                 'errors' => $validator->errors(),
-                'request_data' => $request->except(['password', 'password_confirmation'])
+                'request_data' => collect($data)->except(['password', 'password_confirmation'])->all(),
             ]);
             
             return response()->json([
@@ -112,7 +187,7 @@ class MemberController extends Controller
                 'message' => 'バリデーションエラー',
                 'errors' => $validator->errors(),
                 'debug' => [
-                    'received_fields' => array_keys($request->all()),
+                    'received_fields' => array_keys($data),
                     'validation_rules' => [
                         'company_name' => 'required|string|max:255',
                         'representative_name' => 'required|string|max:100',
@@ -142,7 +217,7 @@ class MemberController extends Controller
             'notes' => $request->notes,
             'membership_type' => $request->membership_type,
             'status' => $request->status ?? 'active',
-            'membership_expires_at' => $request->membership_expires_at,
+            'membership_expires_at' => $data['membership_expires_at'] ?? null,
             'is_active' => $request->boolean('is_active', true),
             'email_verified_at' => now(),
         ]);
@@ -226,12 +301,11 @@ class MemberController extends Controller
 
         // 更新後の情報を取得
         $member->refresh();
-        $member->is_expiring_soon = $member->isExpiringSoon();
-        $member->membership_level_value = $member->getMembershipLevelValue();
 
         return response()->json([
             'message' => '会員情報を更新しました',
-            'member' => $member
+            'member' => $this->presentMember($member),
+            'success' => true,
         ]);
     }
 
@@ -432,18 +506,18 @@ class MemberController extends Controller
             $line = [
                 $r->id,
                 $r->company_name,
-                $r->representative_name,
-                $r->email,
-                $r->phone,
-                $r->postal_code,
-                $r->address,
-                $r->position,
-                $r->department,
+                $this->maybeDecrypt($r->representative_name),
+                $this->maybeDecrypt($r->email),
+                $this->maybeDecrypt($r->phone),
+                $this->maybeDecrypt($r->postal_code),
+                $this->maybeDecrypt($r->address),
+                $this->maybeDecrypt($r->position),
+                $this->maybeDecrypt($r->department),
                 $r->industry,
                 $r->region,
                 is_null($r->capital) ? '' : (string)$r->capital,
-                $r->concerns,
-                $r->notes,
+                $this->maybeDecrypt($r->concerns),
+                $this->maybeDecrypt($r->notes),
                 $r->membership_type,
                 $r->status,
                 $r->is_active ? 'TRUE' : 'FALSE',

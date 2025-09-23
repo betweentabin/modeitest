@@ -965,23 +965,33 @@ export default {
       this.adding = true
       
       try {
-        console.log('Sending member data:', this.addForm)
-        const response = await apiClient.createAdminMember(this.addForm)
+        // 空文字を送らない（特に membership_expires_at は nullable|date のため空文字だと422）
+        const payload = { ...this.addForm }
+        if (!payload.membership_expires_at || String(payload.membership_expires_at).trim() === '') {
+          delete payload.membership_expires_at
+        }
+        console.log('Sending member data:', payload)
+        const response = await apiClient.createAdminMember(payload)
         
         if (response.success) {
           alert('新規会員を追加しました')
           this.closeAddModal()
           this.loadMembers(1) // 最初のページに戻る
         } else {
-          console.error('Validation errors:', response.errors)
-          console.error('Debug info:', response.debug)
+          const errs = response?.errors || (response?.raw && response.raw.errors) || null
+          const dbg = response?.debug || (response?.raw && response.raw.debug) || null
+          console.error('Validation errors:', errs)
+          console.error('Debug info:', dbg)
           
           // バリデーションエラーの詳細表示
-          let errorMessage = 'バリデーションエラー:\n'
-          if (response.errors) {
-            Object.keys(response.errors).forEach(field => {
-              errorMessage += `${field}: ${response.errors[field].join(', ')}\n`
+          let errorMessage = (response?.message || 'バリデーションエラー') + '\n'
+          if (errs && typeof errs === 'object') {
+            Object.keys(errs).forEach(field => {
+              const arr = Array.isArray(errs[field]) ? errs[field] : [String(errs[field] ?? '')]
+              errorMessage += `${field}: ${arr.filter(Boolean).join(', ')}\n`
             })
+          } else if (typeof response?.error === 'string') {
+            errorMessage += response.error
           }
           alert(errorMessage)
         }
