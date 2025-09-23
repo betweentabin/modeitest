@@ -145,7 +145,7 @@ class MemberController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        // Treat empty membership_expires_at as absent to satisfy nullable|date
+        // Normalize payload: remove empty date, set safe defaults
         $data = $request->all();
         if (array_key_exists('membership_expires_at', $data)) {
             $val = is_string($data['membership_expires_at']) ? trim($data['membership_expires_at']) : $data['membership_expires_at'];
@@ -153,11 +153,23 @@ class MemberController extends Controller
                 unset($data['membership_expires_at']);
             }
         }
+        // Default membership_type/status if not provided
+        if (empty($data['membership_type'])) {
+            $data['membership_type'] = 'free';
+        }
+        if (!array_key_exists('status', $data) || $data['status'] === null || $data['status'] === '') {
+            $data['status'] = 'active';
+        }
+        // Prepare case-insensitive email index for uniqueness
+        if (!empty($data['email']) && is_string($data['email'])) {
+            $data['email_index'] = mb_strtolower(trim($data['email']));
+        }
 
         $validator = Validator::make($data, [
             'company_name' => 'required|string|max:255',
             'representative_name' => 'required|string|max:100',
-            'email' => 'required|string|email|max:255|unique:members,email_index',
+            'email' => 'required|string|email|max:255',
+            'email_index' => 'required|string|max:255|unique:members,email_index',
             'password' => 'required|string|min:8|confirmed',
             // 基本プロフィール
             'phone' => 'nullable|string|max:20',
@@ -170,8 +182,8 @@ class MemberController extends Controller
             'region' => 'nullable|string|max:50',
             'concerns' => 'nullable|string',
             'notes' => 'nullable|string',
-            'membership_type' => 'required|in:free,basic,standard,premium',
-            'status' => 'required|in:pending,active,suspended,cancelled',
+            'membership_type' => 'in:free,basic,standard,premium',
+            'status' => 'in:pending,active,suspended,cancelled',
             'membership_expires_at' => 'nullable|date',
             'is_active' => 'boolean',
         ]);
@@ -191,7 +203,8 @@ class MemberController extends Controller
                     'validation_rules' => [
                         'company_name' => 'required|string|max:255',
                         'representative_name' => 'required|string|max:100',
-                        'email' => 'required|string|email|max:255|unique:members',
+                        'email' => 'required|string|email|max:255',
+                        'email_index' => 'required|string|max:255|unique:members,email_index',
                         'password' => 'required|string|min:8|confirmed',
                     ]
                 ]
@@ -199,33 +212,33 @@ class MemberController extends Controller
         }
 
         $member = Member::create([
-            'company_name' => $request->company_name,
-            'representative_name' => $request->representative_name,
-            'email' => $request->email,
-            'email_index' => mb_strtolower(trim($request->email)),
+            'company_name' => $data['company_name'],
+            'representative_name' => $data['representative_name'],
+            'email' => $data['email'],
+            'email_index' => $data['email_index'] ?? mb_strtolower(trim($data['email'])),
             // Hashing is handled by Member model mutator
-            'password' => $request->password,
-            'phone' => $request->phone,
-            'postal_code' => $request->postal_code,
-            'address' => $request->address,
-            'position' => $request->position,
-            'department' => $request->department,
-            'capital' => $request->capital,
-            'industry' => $request->industry,
-            'region' => $request->region,
-            'concerns' => $request->concerns,
-            'notes' => $request->notes,
-            'membership_type' => $request->membership_type,
-            'status' => $request->status ?? 'active',
-            'membership_expires_at' => $data['membership_expires_at'] ?? null,
-            'is_active' => $request->boolean('is_active', true),
+            'password' => $data['password'],
+            'phone' => $data['phone'] ?? null,
+            'postal_code' => $data['postal_code'] ?? null,
+            'address' => $data['address'] ?? null,
+            'position' => $data['position'] ?? null,
+            'department' => $data['department'] ?? null,
+            'capital' => $data['capital'] ?? null,
+            'industry' => $data['industry'] ?? null,
+            'region' => $data['region'] ?? null,
+            'concerns' => $data['concerns'] ?? null,
+            'notes' => $data['notes'] ?? null,
+            'membership_type' => $data['membership_type'] ?? 'free',
+            'status' => $data['status'] ?? 'active',
+            'membership_expires_at' => $data['membership_expires_at'] ?? null, // null = 無期限
+            'is_active' => array_key_exists('is_active', $data) ? (bool)$data['is_active'] : true,
             'email_verified_at' => now(),
         ]);
 
         return response()->json([
             'success' => true,
             'message' => '会員を作成しました',
-            'data' => $member
+            'data' => $this->presentMember($member)
         ], 201);
     }
 

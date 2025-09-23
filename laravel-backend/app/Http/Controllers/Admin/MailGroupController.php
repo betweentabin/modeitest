@@ -74,6 +74,70 @@ class MailGroupController extends Controller
 
     public function show($id)
     {
+        $intId = (int) $id;
+
+        // Handle virtual groups (negative IDs)
+        if ($intId < 0) {
+            try {
+                $name = '';
+                $description = '';
+                $memberIds = collect();
+
+                if ($intId === -1) {
+                    // 全会員（有効な会員）
+                    $name = '全会員';
+                    $description = '全ての有効な会員';
+                    $memberIds = \App\Models\Member::activeWithValidMembership()->pluck('id');
+                } elseif ($intId === -2) {
+                    // プレミアム会員
+                    $name = 'プレミアム会員';
+                    $description = 'プレミアム会員のみ';
+                    $memberIds = \App\Models\Member::where('is_active', true)
+                        ->where('membership_type', 'premium')
+                        ->where(function ($q) {
+                            $q->whereNull('membership_expires_at')
+                              ->orWhere('membership_expires_at', '>', now());
+                        })
+                        ->pluck('id');
+                } elseif ($intId === -3) {
+                    // セミナー参加者（会員IDありの申込からユニーク抽出）
+                    $name = 'セミナー参加者';
+                    $description = 'これまでに申込のあった会員';
+                    $memberIds = \App\Models\SeminarRegistration::active()
+                        ->whereNotNull('member_id')
+                        ->distinct('member_id')
+                        ->pluck('member_id');
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unknown virtual mail group',
+                    ], 404);
+                }
+
+                $members = $memberIds->map(function ($mid) {
+                    return ['member_id' => $mid];
+                })->values();
+
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'id' => $intId,
+                        'name' => $name,
+                        'description' => $description,
+                        'members' => $members,
+                        'members_count' => $members->count(),
+                        'virtual' => true,
+                    ]
+                ]);
+            } catch (\Throwable $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to load virtual group',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
+
         $group = MailGroup::with(['members' => function ($q) {
             $q->with('member:id,company_name,representative_name,email');
         }])->findOrFail($id);
@@ -110,6 +174,14 @@ class MailGroupController extends Controller
             'member_ids.*' => 'integer|exists:members,id',
         ]);
 
+        // 仮想グループの編集は禁止
+        if ((int)$id < 0) {
+            return response()->json([
+                'success' => false,
+                'message' => '仮想グループは編集できません。',
+            ], 422);
+        }
+
         $group = MailGroup::findOrFail($id);
 
         if ($validated['action'] === 'add') {
@@ -145,6 +217,15 @@ class MailGroupController extends Controller
         $request->validate([
             'file' => 'required|file|mimes:csv,txt|max:10240',
         ]);
+
+        // 仮想グループのCSV取り込みは禁止
+        if ((int)$id < 0) {
+            return response()->json([
+                'success' => false,
+                'message' => '仮想グループにはCSV取り込みできません。',
+            ], 422);
+        }
+
         $group = MailGroup::findOrFail($id);
 
         $path = $request->file('file')->getRealPath();

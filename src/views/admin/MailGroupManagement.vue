@@ -128,11 +128,12 @@
             </select>
             <button class="save-btn" @click="loadMemberCandidates">検索</button>
           </div>
-          <div class="form-row" style="align-items:center; gap:8px;">
+          <div v-if="!isVirtual(currentGroup)" class="form-row" style="align-items:center; gap:8px;">
             <label style="min-width:140px;">CSVで追加</label>
             <input ref="csvInput" type="file" accept=".csv,text/csv" @change="onCsvSelected" />
             <button class="small-btn" :disabled="!csvFile || uploadingCsv" @click="uploadCsv">{{ uploadingCsv ? 'アップロード中...' : '取り込み' }}</button>
           </div>
+          <div v-else class="hint" style="margin: 6px 0; color:#666;">仮想グループは編集できません（閲覧のみ）</div>
           <div class="candidate-list">
             <table class="data-table">
               <thead>
@@ -160,8 +161,8 @@
             </table>
           </div>
           <div class="form-row">
-            <button class="save-btn" :disabled="memberSaving || selectedCandidateIds.length===0" @click="addSelectedToGroup">選択を追加</button>
-            <button class="cancel-btn" :disabled="memberSaving || removeIds.length===0" @click="removeSelectedFromGroup">選択を削除</button>
+            <button class="save-btn" :disabled="memberSaving || selectedCandidateIds.length===0 || isVirtual(currentGroup)" @click="addSelectedToGroup">選択を追加</button>
+            <button class="cancel-btn" :disabled="memberSaving || removeIds.length===0 || isVirtual(currentGroup)" @click="removeSelectedFromGroup">選択を削除</button>
           </div>
         </div>
       </div>
