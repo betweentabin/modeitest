@@ -182,7 +182,9 @@ class MailGroupController extends Controller
 
         $mappedIds = [];
         if (!empty($emails)) {
-            $mappedIds = Member::whereIn('email', $emails)->pluck('id')->all();
+            // email は暗号化保存のため、照合は email_index（小文字トリム）で行う
+            $normalized = array_map(function ($e) { return mb_strtolower(trim($e)); }, $emails);
+            $mappedIds = Member::whereIn('email_index', $normalized)->pluck('id')->all();
         }
         $allIds = array_values(array_unique(array_merge($memberIds, $mappedIds)));
 

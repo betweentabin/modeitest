@@ -199,9 +199,10 @@ class EmailCampaignController extends Controller
                 if (!empty($normalIds)) {
                     $memberIds = MailGroupMember::whereIn('group_id', $normalIds)->pluck('member_id')->unique();
                     if ($memberIds->isNotEmpty()) {
-                        $rows = DB::table('members')->whereIn('id', $memberIds)->pluck('email', 'id');
-                        foreach ($rows as $memberId => $email) {
-                            if ($email) $emails->push(['email' => $email, 'member_id' => $memberId]);
+                        // Use Eloquent to apply encrypted cast (email decrypt on read)
+                        $rows = \App\Models\Member::whereIn('id', $memberIds)->get(['id','email']);
+                        foreach ($rows as $row) {
+                            if (!empty($row->email)) $emails->push(['email' => $row->email, 'member_id' => $row->id]);
                         }
                     }
                 }
@@ -235,9 +236,9 @@ class EmailCampaignController extends Controller
                     }
                     $virtualMemberIds = $virtualMemberIds->filter()->unique();
                     if ($virtualMemberIds->isNotEmpty()) {
-                        $rows = DB::table('members')->whereIn('id', $virtualMemberIds)->pluck('email', 'id');
-                        foreach ($rows as $memberId => $email) {
-                            if ($email) $emails->push(['email' => $email, 'member_id' => $memberId]);
+                        $rows = \App\Models\Member::whereIn('id', $virtualMemberIds)->get(['id','email']);
+                        foreach ($rows as $row) {
+                            if (!empty($row->email)) $emails->push(['email' => $row->email, 'member_id' => $row->id]);
                         }
                     }
                 }
