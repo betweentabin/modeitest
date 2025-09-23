@@ -889,7 +889,11 @@ export default {
         const staffArr = Array.isArray(body?.data?.page?.content?.staff) ? body.data.page.content.staff : []
         if (staffArr.length) {
           // texts に staff_* が格納されているため、defaultStaffRecords のキー対応を使って補完
-          const texts = (body?.data?.page?.texts && typeof body.data.page.texts === 'object') ? body.data.page.texts : {}
+          // 公開APIでは通常 page.content.texts 配下。互換のため page.texts も併用
+          const pageObj = body?.data?.page || {}
+          const texts = (
+            pageObj?.content && typeof pageObj.content === 'object' && typeof pageObj.content.texts === 'object'
+          ) ? pageObj.content.texts : (typeof pageObj.texts === 'object' ? pageObj.texts : {})
           const readText = (key, fallback = '') => {
             try {
               const v = texts[key]

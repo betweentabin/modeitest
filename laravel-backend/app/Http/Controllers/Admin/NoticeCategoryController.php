@@ -10,6 +10,42 @@ use Illuminate\Support\Str;
 
 class NoticeCategoryController extends Controller
 {
+    /**
+     * Common replacements for Japanese category names to English slugs.
+     * Extend this map as needed.
+     */
+    private function slugDictionary(): array
+    {
+        return [
+            'ニュース' => 'news',
+            'お知らせ' => 'news',
+            '新着' => 'news',
+            'イベント' => 'event',
+            '重要' => 'important',
+            '重要なお知らせ' => 'important',
+            'メンテナンス' => 'maintenance',
+            '障害' => 'incident',
+            '告知' => 'notice',
+            'セミナー' => 'seminar',
+            'レポート' => 'report',
+            'メディア' => 'media',
+        ];
+    }
+
+    /**
+     * Try to make a sensible base slug from provided text using a dictionary
+     * before falling back to Str::slug. Returns empty string if not possible.
+     */
+    private function slugifyBase(string $text): string
+    {
+        $text = trim($text);
+        if ($text === '') return '';
+        // Replace known Japanese terms with intended English words first.
+        $replaced = strtr($text, $this->slugDictionary());
+        $slug = Str::slug($replaced);
+        return $slug; // may be empty if transliteration failed
+    }
+
     private function makeUniqueSlug(string $base, ?int $ignoreId = null): string
     {
         $base = trim($base);
@@ -46,11 +82,10 @@ class NoticeCategoryController extends Controller
         ]);
         if ($v->fails()) return response()->json(['success'=>false,'errors'=>$v->errors()], 422);
         $data = $request->only(['name','slug','sort_order','is_active']);
-        // Robust slug generation: handle multibyte (e.g., Japanese) names and ensure uniqueness
-        $base = isset($data['slug']) && trim((string)$data['slug']) !== ''
-            ? Str::slug($data['slug'])
-            : Str::slug($data['name'] ?? '');
-        if (!$base) { $base = 'cat'; }
+        // Robust slug generation: map Japanese to English keywords before slugging
+        $providedSlug = isset($data['slug']) ? trim((string)$data['slug']) : '';
+        $base = $this->slugifyBase($providedSlug !== '' ? $providedSlug : ($data['name'] ?? ''));
+        if ($base === '') { $base = 'cat'; }
         $data['slug'] = $this->makeUniqueSlug($base);
         $item = NoticeCategory::create($data);
         return response()->json(['success'=>true,'data'=>$item], 201);
@@ -66,15 +101,15 @@ class NoticeCategoryController extends Controller
         ]);
         if ($v->fails()) return response()->json(['success'=>false,'errors'=>$v->errors()], 422);
         $data = $request->only(['name','slug','sort_order','is_active']);
-        // If slug is provided (even empty), or if name changes without slug, regenerate robustly
+        // If slug is provided (even empty), or if name changes without slug, regenerate using dictionary mapping
         if (array_key_exists('slug', $data)) {
-            $base = trim((string)($data['slug'] ?? ''));
-            if ($base === '') { $base = Str::slug($data['name'] ?? $item->name); }
-            if (!$base) { $base = 'cat'; }
+            $base = $this->slugifyBase((string)($data['slug'] ?? ''));
+            if ($base === '') { $base = $this->slugifyBase($data['name'] ?? $item->name); }
+            if ($base === '') { $base = 'cat'; }
             $data['slug'] = $this->makeUniqueSlug($base, $item->id);
         } elseif (isset($data['name'])) {
-            $base = Str::slug($data['name']);
-            if (!$base) { $base = 'cat'; }
+            $base = $this->slugifyBase($data['name']);
+            if ($base === '') { $base = 'cat'; }
             $data['slug'] = $this->makeUniqueSlug($base, $item->id);
         }
         $item->update($data);
