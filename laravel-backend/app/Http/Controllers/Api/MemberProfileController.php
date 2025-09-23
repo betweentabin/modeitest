@@ -11,6 +11,52 @@ use Illuminate\Validation\Rule;
 
 class MemberProfileController extends Controller
 {
+    private function maybeDecrypt($value)
+    {
+        if (!is_string($value) || $value === '') return $value;
+        $decoded = base64_decode($value, true);
+        if ($decoded === false) return $value;
+        $isPayload = function ($str) {
+            $arr = json_decode($str, true);
+            return is_array($arr) && isset($arr['iv'], $arr['value'], $arr['mac']);
+        };
+        $out = $value;
+        for ($i = 0; $i < 2; $i++) {
+            $decoded = base64_decode($out, true);
+            if ($decoded === false || !$isPayload($decoded)) break;
+            try { $out = \Illuminate\Support\Facades\Crypt::decryptString($out); }
+            catch (\Throwable $e) { return $value; }
+        }
+        return $out;
+    }
+
+    private function presentMember($member)
+    {
+        return [
+            'id' => $member->id,
+            'email' => $this->maybeDecrypt($member->email),
+            'company_name' => $member->company_name,
+            'representative_name' => $this->maybeDecrypt($member->representative_name),
+            'position' => $this->maybeDecrypt($member->position),
+            'department' => $this->maybeDecrypt($member->department),
+            'phone' => $this->maybeDecrypt($member->phone),
+            'postal_code' => $this->maybeDecrypt($member->postal_code),
+            'address' => $this->maybeDecrypt($member->address),
+            'capital' => $member->capital,
+            'industry' => $member->industry,
+            'region' => $member->region,
+            'concerns' => $this->maybeDecrypt($member->concerns),
+            'notes' => $this->maybeDecrypt($member->notes),
+            'membership_type' => $member->membership_type,
+            'status' => $member->status,
+            'joined_date' => $member->joined_date,
+            'started_at' => $member->started_at,
+            'membership_expires_at' => $member->membership_expires_at,
+            'is_active' => (bool)$member->is_active,
+            'created_at' => $member->created_at,
+            'updated_at' => $member->updated_at,
+        ];
+    }
     /**
      * 会員プロフィール情報を取得
      */
@@ -28,30 +74,7 @@ class MemberProfileController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'id' => $member->id,
-                    'email' => $member->email,
-                    'company_name' => $member->company_name,
-                    'representative_name' => $member->representative_name,
-                    'position' => $member->position,
-                    'department' => $member->department,
-                    'phone' => $member->phone,
-                    'postal_code' => $member->postal_code,
-                    'address' => $member->address,
-                    'capital' => $member->capital,
-                    'industry' => $member->industry,
-                    'region' => $member->region,
-                    'concerns' => $member->concerns,
-                    'notes' => $member->notes,
-                    'membership_type' => $member->membership_type,
-                    'status' => $member->status,
-                    'joined_date' => $member->joined_date,
-                    'started_at' => $member->started_at,
-                    'membership_expires_at' => $member->membership_expires_at,
-                    'is_active' => $member->is_active,
-                    'created_at' => $member->created_at,
-                    'updated_at' => $member->updated_at,
-                ]
+                'data' => $this->presentMember($member)
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -118,29 +141,7 @@ class MemberProfileController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'プロフィールを更新しました',
-                'data' => [
-                    'id' => $member->id,
-                    'email' => $member->email,
-                    'company_name' => $member->company_name,
-                    'representative_name' => $member->representative_name,
-                    'position' => $member->position,
-                    'department' => $member->department,
-                    'phone' => $member->phone,
-                    'postal_code' => $member->postal_code,
-                    'address' => $member->address,
-                    'capital' => $member->capital,
-                    'industry' => $member->industry,
-                    'region' => $member->region,
-                    'concerns' => $member->concerns,
-                    'notes' => $member->notes,
-                    'membership_type' => $member->membership_type,
-                    'status' => $member->status,
-                    'joined_date' => $member->joined_date,
-                    'started_at' => $member->started_at,
-                    'membership_expires_at' => $member->membership_expires_at,
-                    'is_active' => $member->is_active,
-                    'updated_at' => $member->updated_at,
-                ]
+                'data' => $this->presentMember($member)
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([

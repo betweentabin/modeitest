@@ -11,6 +11,23 @@ use Illuminate\Support\Facades\DB;
 
 class MemberDirectoryController extends Controller
 {
+    private function maybeDecrypt($value)
+    {
+        if (!is_string($value) || $value === '') return $value;
+        $decoded = base64_decode($value, true);
+        if ($decoded === false) return $value;
+        $json = json_decode($decoded, true);
+        if (!is_array($json) || !isset($json['iv'], $json['value'], $json['mac'])) return $value;
+        $out = $value;
+        for ($i = 0; $i < 2; $i++) {
+            $decoded = base64_decode($out, true);
+            $json = $decoded !== false ? json_decode($decoded, true) : null;
+            if (!is_array($json) || !isset($json['iv'], $json['value'], $json['mac'])) break;
+            try { $out = \Illuminate\Support\Facades\Crypt::decryptString($out); }
+            catch (\Throwable $e) { return $value; }
+        }
+        return $out;
+    }
     /**
      * 会員名簿一覧を取得（standard以上のみアクセス可能）
      */
@@ -111,10 +128,10 @@ class MemberDirectoryController extends Controller
                 return [
                     'id' => $item->id,
                     'company_name' => $item->company_name,
-                    'representative_name' => $item->representative_name,
-                    'email' => $item->email,
-                    'phone' => $item->phone,
-                    'address' => $item->address,
+                    'representative_name' => $this->maybeDecrypt($item->representative_name),
+                    'email' => $this->maybeDecrypt($item->email),
+                    'phone' => $this->maybeDecrypt($item->phone),
+                    'address' => $this->maybeDecrypt($item->address),
                     'membership_type' => $item->membership_type,
                     'joined_at' => $item->created_at,
                     'is_favorite' => in_array($item->id, $favoriteIds),
@@ -190,10 +207,10 @@ class MemberDirectoryController extends Controller
                 'data' => [
                     'id' => $targetMember->id,
                     'company_name' => $targetMember->company_name,
-                    'representative_name' => $targetMember->representative_name,
-                    'email' => $targetMember->email,
-                    'phone' => $targetMember->phone,
-                    'address' => $targetMember->address,
+                    'representative_name' => $this->maybeDecrypt($targetMember->representative_name),
+                    'email' => $this->maybeDecrypt($targetMember->email),
+                    'phone' => $this->maybeDecrypt($targetMember->phone),
+                    'address' => $this->maybeDecrypt($targetMember->address),
                     'membership_type' => $targetMember->membership_type,
                     'joined_at' => $targetMember->created_at,
                     'is_favorite' => $isFavorite,
@@ -223,11 +240,11 @@ class MemberDirectoryController extends Controller
                 ], 401);
             }
 
-            // premium会員のみCSVエクスポート可能
-            if ($member->membership_type !== 'premium') {
+            // スタンダード以上はCSVエクスポート可能
+            if (!in_array($member->membership_type, ['standard', 'premium'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'この機能はプレミアム会員でご利用いただけます'
+                    'message' => 'この機能はスタンダード会員以上でご利用いただけます'
                 ], 403);
             }
 
@@ -290,10 +307,10 @@ class MemberDirectoryController extends Controller
             foreach ($members as $member) {
                 $csvData .= implode(',', [
                     '"' . str_replace('"', '""', $member->company_name) . '"',
-                    '"' . str_replace('"', '""', $member->representative_name) . '"',
-                    '"' . str_replace('"', '""', $member->email) . '"',
-                    '"' . str_replace('"', '""', $member->phone) . '"',
-                    '"' . str_replace('"', '""', $member->address) . '"',
+                    '"' . str_replace('"', '""', $this->maybeDecrypt($member->representative_name)) . '"',
+                    '"' . str_replace('"', '""', $this->maybeDecrypt($member->email)) . '"',
+                    '"' . str_replace('"', '""', $this->maybeDecrypt($member->phone)) . '"',
+                    '"' . str_replace('"', '""', $this->maybeDecrypt($member->address)) . '"',
                     '"' . str_replace('"', '""', $member->membership_type) . '"',
                     '"' . $member->created_at->format('Y-m-d') . '"',
                 ]) . "\n";

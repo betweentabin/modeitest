@@ -10,6 +10,23 @@ use Illuminate\Http\Request;
 
 class MemberDashboardController extends Controller
 {
+    private function maybeDecrypt($value)
+    {
+        if (!is_string($value) || $value === '') return $value;
+        $decoded = base64_decode($value, true);
+        if ($decoded === false) return $value;
+        $json = json_decode($decoded, true);
+        if (!is_array($json) || !isset($json['iv'], $json['value'], $json['mac'])) return $value;
+        $out = $value;
+        for ($i = 0; $i < 2; $i++) {
+            $decoded = base64_decode($out, true);
+            $json = $decoded !== false ? json_decode($decoded, true) : null;
+            if (!is_array($json) || !isset($json['iv'], $json['value'], $json['mac'])) break;
+            try { $out = \Illuminate\Support\Facades\Crypt::decryptString($out); }
+            catch (\Throwable $e) { return $value; }
+        }
+        return $out;
+    }
     public function index(Request $request)
     {
         $member = $request->user();
@@ -32,10 +49,10 @@ class MemberDashboardController extends Controller
                 return [
                     'id' => $fav->favorite_member_id,
                     'company_name' => $fav->favoriteMember->company_name ?? '',
-                    'representative_name' => $fav->favoriteMember->representative_name ?? '',
-                    'email' => $fav->favoriteMember->email ?? null,
-                    'phone' => $fav->favoriteMember->phone ?? null,
-                    'address' => $fav->favoriteMember->address ?? null,
+                    'representative_name' => $this->maybeDecrypt($fav->favoriteMember->representative_name ?? ''),
+                    'email' => $this->maybeDecrypt($fav->favoriteMember->email ?? ''),
+                    'phone' => $this->maybeDecrypt($fav->favoriteMember->phone ?? ''),
+                    'address' => $this->maybeDecrypt($fav->favoriteMember->address ?? ''),
                     'membership_type' => $fav->favoriteMember->membership_type ?? 'free',
                     'favorited_at' => $fav->created_at,
                 ];
@@ -91,8 +108,8 @@ class MemberDashboardController extends Controller
                 'member' => [
                     'id' => $member->id,
                     'company_name' => $member->company_name,
-                    'representative_name' => $member->representative_name,
-                    'email' => $member->email,
+                    'representative_name' => $this->maybeDecrypt($member->representative_name),
+                    'email' => $this->maybeDecrypt($member->email),
                     'membership_type' => $memberType,
                     'membership_expires_at' => $expiresAt,
                     'is_active' => (bool)$member->is_active,

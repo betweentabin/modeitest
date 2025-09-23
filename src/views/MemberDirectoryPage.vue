@@ -9,8 +9,8 @@
           <h1 class="page-title">会員名簿</h1>
           <p class="page-description">
             スタンダード会員以上の方は、会員名簿を閲覧できます。
-            <span v-if="memberInfo && memberInfo.membership_type === 'premium'" class="premium-note">
-              プレミアム会員はCSVエクスポートも可能です。
+            <span v-if="hasDirectoryAccess" class="premium-note">
+              スタンダード会員以上はCSVエクスポートも可能です。
             </span>
           </p>
         </div>
@@ -79,7 +79,7 @@
                 </button>
                 
                 <button 
-                  v-if="memberInfo && canAccess(memberInfo.membership_type, 'premium', true)" 
+                  v-if="hasDirectoryAccess" 
                   @click="exportCSV" 
                   class="export-btn"
                   :disabled="exporting"
@@ -440,7 +440,7 @@ export default {
           if (response.success) {
             member.is_favorite = false
           } else {
-            throw new Error(response.message)
+            throw new Error(response.message || 'お気に入りから削除に失敗しました')
           }
         } else {
           // お気に入りに追加
@@ -448,12 +448,19 @@ export default {
           if (response.success) {
             member.is_favorite = true
           } else {
-            throw new Error(response.message)
+            // 既にお気に入り登録済みは実質成功として扱う
+            const msg = (response && (response.message || response.error)) || ''
+            if (typeof msg === 'string' && msg.includes('既にお気に入り')) {
+              member.is_favorite = true
+            } else {
+              throw new Error(response.message || 'お気に入り追加に失敗しました')
+            }
           }
         }
       } catch (error) {
         console.error('お気に入り操作に失敗:', error)
-        alert('お気に入り操作に失敗しました')
+        const msg = (error && error.message) ? error.message : 'お気に入り操作に失敗しました'
+        alert(msg)
       } finally {
         member.favoriteLoading = false
       }

@@ -11,6 +11,7 @@ class MemberFavorite extends Model
 
     protected $table = 'member_favorites';
     public $timestamps = false;
+    public $incrementing = false; // composite PK; avoid insertGetId
 
     protected $fillable = [
         'member_id',
