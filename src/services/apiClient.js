@@ -142,10 +142,13 @@ class ApiClient {
         const code = errJson?.error?.code || errJson?.code || response.status
         const message = errJson?.error?.message || errJson?.message || `HTTP error! status: ${response.status}`
         const details = errJson?.error?.details || null
+        const errors = errJson?.errors || errJson?.error?.errors || null
+        const debug = errJson?.debug || errJson?.error?.debug || null
         if (!options || !options.silent) {
           console.error(`API Error: ${response.status} ${response.statusText}`, errJson || errText)
         }
-        return { success: false, error: message, code, details, raw: errJson || errText }
+        // Normalize error shape so callers can rely on errors/debug/message
+        return { success: false, message, error: message, code, details, errors, debug, raw: errJson || errText }
       }
 
       // レスポンス種別指定（blob/arraybuffer/text等）
