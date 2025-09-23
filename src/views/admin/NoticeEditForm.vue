@@ -178,7 +178,7 @@
                 </label>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="false">
                 <label class="checkbox-label">
                   <input
                     v-model="formData.send_notification"
@@ -188,9 +188,7 @@
                   <span class="checkbox-custom"></span>
                   <span class="checkbox-text">会員にメール通知を送信する</span>
                 </label>
-                <p class="form-help">
-                  新規作成時のみ有効です
-                </p>
+                <p class="form-help">新規作成時のみ有効です</p>
               </div>
 
               <div class="form-group">

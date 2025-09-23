@@ -11,6 +11,7 @@
       subtitle-field-key="page_subtitle"
       :heroImage="media('hero', '/img/Image_fx10.jpg', 'hero_about_institute')"
       mediaKey="hero_about_institute"
+      :disablePrefill="true"
     />
 
     <!-- Breadcrumbs -->
@@ -387,41 +388,7 @@ export default {
   },
   methods: {
     media(key, fallback = '', mediaKey = '') {
-      // 0) Prefill from cached images to suppress initial static fallback
-      try {
-        const imgs0 = this._prefillImages
-        if (imgs0 && Object.prototype.hasOwnProperty.call(imgs0, key)) {
-          const v0 = imgs0[key]
-          let u0 = (v0 && typeof v0 === 'object') ? (v0.url || '') : (typeof v0 === 'string' ? v0 : '')
-          if (typeof u0 === 'string' && u0) {
-            try {
-              const ver = (v0 && typeof v0 === 'object' && v0.uploaded_at) ? (Date.parse(v0.uploaded_at) || null) : null
-              if (ver !== null && u0.indexOf('/storage/') !== -1) {
-                u0 += (u0.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
-              }
-            } catch(_) {}
-            return resolveMediaUrl(u0)
-          }
-        }
-      } catch(_) {}
-
-      // 0.5) Try global media cache (cms_media_cache) for mediaKey or key
-      try {
-        const raw = localStorage.getItem('cms_media_cache')
-        if (raw) {
-          const json = JSON.parse(raw)
-          const images = json && json.images
-          const pick = (k) => {
-            const v = images && images[k]
-            return (typeof v === 'string' && v.length) ? v : ''
-          }
-          const byMediaKey = mediaKey ? pick(mediaKey) : ''
-          if (byMediaKey) return resolveMediaUrl(byMediaKey)
-          const byKey = pick(key)
-          if (byKey) return resolveMediaUrl(byKey)
-        }
-      } catch(_) {}
-
+      // A) Prefer page-managed images first (latest from API when available)
       try {
         const page = this._pageText && this._pageText.page && this._pageText.page.value
         const imgs = page && page.content && page.content.images
@@ -441,6 +408,7 @@ export default {
         }
       } catch (_) {}
 
+      // B) Then use media registry (responsive slots)
       try {
         if (this._pageMedia) {
           const slot = this._pageMedia.getResponsiveSlot(key, mediaKey || key, fallback)
@@ -458,6 +426,45 @@ export default {
           }
         }
       } catch (_) {}
+
+      // C) As a last resort, use last LS prefill only when page images are not yet available
+      try {
+        const page = this._pageText && this._pageText.page && this._pageText.page.value
+        const imgs = page && page.content && page.content.images
+        if (!imgs) {
+          const imgs0 = this._prefillImages
+          if (imgs0 && Object.prototype.hasOwnProperty.call(imgs0, key)) {
+            const v0 = imgs0[key]
+            let u0 = (v0 && typeof v0 === 'object') ? (v0.url || '') : (typeof v0 === 'string' ? v0 : '')
+            if (typeof u0 === 'string' && u0) {
+              try {
+                const ver = (v0 && typeof v0 === 'object' && v0.uploaded_at) ? (Date.parse(v0.uploaded_at) || null) : null
+                if (ver !== null && u0.indexOf('/storage/') !== -1) {
+                  u0 += (u0.includes('?') ? '&' : '?') + '_t=' + encodeURIComponent(String(ver))
+                }
+              } catch(_) {}
+              return resolveMediaUrl(u0)
+            }
+          }
+        }
+      } catch(_) {}
+
+      // D) Optional: read global cms_media_cache as a final fallback
+      try {
+        const raw = localStorage.getItem('cms_media_cache')
+        if (raw) {
+          const json = JSON.parse(raw)
+          const images = json && json.images
+          const pick = (k) => {
+            const v = images && images[k]
+            return (typeof v === 'string' && v.length) ? v : ''
+          }
+          const byMediaKey = mediaKey ? pick(mediaKey) : ''
+          if (byMediaKey) return resolveMediaUrl(byMediaKey)
+          const byKey = pick(key)
+          if (byKey) return resolveMediaUrl(byKey)
+        }
+      } catch(_) {}
       return fallback
     },
     img(key, fallback = '') {

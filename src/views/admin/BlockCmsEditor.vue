@@ -2775,6 +2775,121 @@ export default {
     }
   },
   methods: {
+    // Backfill missing editor fields by merging texts/htmls
+    // from synonymous PageContent keys for the current page.
+    async hydrateMissingFromFallbacks() {
+      try {
+        const key = String(this.pageContentKey || '').trim()
+        if (!key) return
+        const candidates = this.fallbackCandidatesFor(key).filter(k => k && k !== key)
+        if (!candidates.length) return
+
+        // Helper: merge only missing or empty string values
+        const mergeMissing = (target, source) => {
+          if (!target || !source) return
+          Object.keys(source).forEach(k => {
+            const cur = target[k]
+            const val = source[k]
+            const isEmpty = (cur === undefined || cur === null || (typeof cur === 'string' && cur.trim() === ''))
+            if (isEmpty) target[k] = val
+          })
+        }
+
+        // Determine target state buckets by page kind
+        const assignTexts = (texts) => {
+          if (!texts) return
+          switch (key) {
+            case 'privacy': mergeMissing(this.privacyTexts, texts); break
+            case 'terms': mergeMissing(this.termsTexts, texts); break
+            case 'transaction-law': mergeMissing(this.tlTexts, texts); break
+            case 'company-profile': mergeMissing(this.companyTexts, texts); break
+            case 'cri-consulting': mergeMissing(this.consultingTexts, texts); break
+            case 'about-institute': mergeMissing(this.aboutTexts, texts); break
+            case 'about': mergeMissing(this.aboutTexts, texts); break
+            case 'membership': mergeMissing(this.membershipTexts, texts); break
+            case 'standard-membership': mergeMissing(this.standardTexts, texts); break
+            case 'premium-membership': mergeMissing(this.premiumTexts, texts); break
+            case 'contact': mergeMissing(this.contactTexts, texts); break
+            case 'membership-application': mergeMissing(this.membershipApplicationTexts, texts); break
+            case 'seminar-application': mergeMissing(this.seminarApplicationTexts, texts); break
+            case 'navigation': mergeMissing(this.navigationTexts, texts); break
+            case 'footer': mergeMissing(this.footerTexts, texts); break
+            case 'faq': mergeMissing(this.genericTexts, texts); break
+            case 'glossary': mergeMissing(this.genericTexts, texts); break
+            default: mergeMissing(this.genericTexts, texts); break
+          }
+        }
+        const assignHtmls = (htmls) => {
+          if (!htmls) return
+          switch (key) {
+            case 'terms': mergeMissing(this.termsHtmls, htmls); break
+            case 'transaction-law': mergeMissing(this.tlHtmls, htmls); break
+            case 'company-profile': mergeMissing(this.companyHtmls, htmls); break
+            case 'cri-consulting': mergeMissing(this.consultingHtmls, htmls); break
+            case 'about-institute': mergeMissing(this.aboutHtmls, htmls); break
+            case 'about': mergeMissing(this.aboutHtmls, htmls); break
+            case 'contact': mergeMissing(this.contactHtmls, htmls); break
+            default: mergeMissing(this.genericHtmls, htmls); break
+          }
+        }
+
+        for (const k of candidates) {
+          try {
+            const res = await apiClient.adminGetPageContent(k)
+            const content = res?.data?.page?.content || {}
+            const texts = (content && typeof content === 'object' && content.texts && typeof content.texts === 'object') ? content.texts : null
+            const htmls = (content && typeof content === 'object' && content.htmls && typeof content.htmls === 'object') ? content.htmls : null
+            // Merge into current state if fields are missing
+            assignTexts(texts)
+            assignHtmls(htmls)
+          } catch (_) { /* try next */ }
+        }
+      } catch (_) { /* silent backfill */ }
+    },
+    // Define synonym keys per logical page to search for backfill
+    fallbackCandidatesFor(key) {
+      const k = String(key || '').toLowerCase()
+      switch (k) {
+        case 'privacy':
+          return ['privacy', 'privacy-policy', 'privacy-poricy', 'privacy poricy']
+        case 'terms':
+          return ['terms', 'terms-of-service']
+        case 'transaction-law':
+          return ['transaction-law', 'legal', 'commercial-law']
+        case 'company-profile':
+          return ['company-profile', 'company']
+        case 'cri-consulting':
+          return ['cri-consulting', 'consulting']
+        case 'about-institute':
+          return ['about-institute', 'aboutus', 'about']
+        case 'about':
+          return ['about', 'aboutus', 'about-institute']
+        case 'membership':
+          return ['membership', 'services']
+        case 'standard-membership':
+          return ['standard-membership']
+        case 'premium-membership':
+          return ['premium-membership']
+        case 'contact':
+          return ['contact']
+        case 'membership-application':
+          return ['membership-application']
+        case 'seminar-application':
+          return ['seminar-application']
+        case 'navigation':
+          return ['navigation']
+        case 'footer':
+          return ['footer']
+        case 'faq':
+          return ['faq']
+        case 'glossary':
+          return ['glossary']
+        case 'home':
+          return ['home']
+        default:
+          return [k]
+      }
+    },
     getRegistryImageUrl(key){
       try {
         const m = this._media
@@ -3110,6 +3225,8 @@ export default {
             this.genericHtmls = { ...(htmls || {}) }
           }
         } catch(_) { /* noop */ }
+        // After initial load, attempt to backfill any blank fields from synonymous PageContent keys
+        try { await this.hydrateMissingFromFallbacks() } catch(_) {}
       }
     },
     triggerReplace(idx){

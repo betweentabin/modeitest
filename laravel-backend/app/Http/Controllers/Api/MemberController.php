@@ -399,11 +399,11 @@ class MemberController extends Controller
 
         $rows = $query->get([
             'id', 'company_name', 'representative_name', 'email', 'phone', 'postal_code', 'address',
-            'position', 'department', 'industry', 'region', 'capital',
+            'position', 'department', 'industry', 'region', 'capital', 'concerns', 'notes',
             'membership_type', 'status', 'is_active', 'joined_date', 'membership_expires_at', 'created_at'
         ]);
 
-        $csv = "ID,会社名,代表者名,メールアドレス,電話番号,郵便番号,住所,役職,部署,業種,地域,資本金,会員種別,状態,アクティブ,入会日,会員期限,登録日\n";
+        $csv = "ID,会社名,代表者名,メールアドレス,電話番号,郵便番号,住所,役職,部署,業種,地域,資本金,お困りごと,備考,会員種別,状態,アクティブ,入会日,会員期限,登録日\n";
 
         foreach ($rows as $r) {
             $formatDate = function ($value, $format = 'Y-m-d H:i:s') {
@@ -437,6 +437,8 @@ class MemberController extends Controller
                 $r->industry,
                 $r->region,
                 is_null($r->capital) ? '' : (string)$r->capital,
+                $r->concerns,
+                $r->notes,
                 $r->membership_type,
                 $r->status,
                 $r->is_active ? 'TRUE' : 'FALSE',
