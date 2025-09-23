@@ -342,9 +342,13 @@
                 class="favorite-item"
               >
                 <div class="favorite-info">
-                  <h4>{{ favorite.company_name }}</h4>
-                  <p>{{ favorite.representative_name }}</p>
-                  <span class="membership-type">{{ getMembershipLabel(favorite.membership_type) }}</span>
+                  <div class="favorite-heading">
+                    <h4 class="company-name">{{ favorite.company_name }}</h4>
+                    <span :class="['membership-type', `membership-${favorite.membership_type}`]">
+                      {{ getMembershipLabel(favorite.membership_type) }}
+                    </span>
+                  </div>
+                  <p class="representative-name">{{ favorite.representative_name }}</p>
                 </div>
                 <div class="favorite-actions">
                   <button @click="viewFavoriteDetail(favorite)" class="secondary-button">{{ cms?.labels?.buttons?.detail || '詳細' }}</button>
@@ -1203,6 +1207,38 @@ export default {
 }
 .edit-form .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
 @media (max-width: 768px) { .edit-form .form-row { flex-direction: column; } }
+
+/* お気に入り（マイアカウントの簡易カード） */
+.favorites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.favorite-item {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.favorite-info { margin-bottom: 12px; }
+.favorite-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.company-name { margin: 0; font-size: 16px; font-weight: 700; color: #1A1A1A; }
+.representative-name { margin: 4px 0 0; font-size: 14px; color: #666; }
+
+.membership-type {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.membership-free { background: #f1f1f1; color: #666; }
+.membership-standard { background: #e8f5e8; color: #2e7d32; }
+.membership-premium { background: #fff3e0; color: #ef6c00; }
+
+.favorite-actions { display: flex; gap: 10px; }
 
 .membership-card.membership-basic {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);

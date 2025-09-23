@@ -435,13 +435,17 @@ export default {
 
 .refresh-btn {
   padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--mandy, #DA5761);
+  color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
+  box-shadow: 0px 1px 2px #0000000d;
+  transition: all 0.2s ease;
 }
+
+.refresh-btn:hover { background-color: var(--hot-pink, #E56B75); }
 
 .refresh-btn:disabled {
   opacity: 0.6;
@@ -485,19 +489,19 @@ export default {
 }
 
 .directory-btn {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--mandy, #DA5761);
+  color: #fff;
   border: none;
   padding: 12px 24px;
   border-radius: 6px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0px 1px 2px #0000000d;
+  transition: all 0.2s ease;
 }
 
-.directory-btn:hover {
-  background-color: #0056b3;
-}
+.directory-btn:hover { background-color: var(--hot-pink, #E56B75); }
 
 /* お気に入り一覧 */
 .favorites-grid {
@@ -625,18 +629,18 @@ export default {
 }
 
 .contact-btn {
-  background: #007bff;
-  color: white;
-  border-color: #007bff;
+  background: var(--mandy, #DA5761);
+  color: #fff;
+  border-color: var(--mandy, #DA5761);
+  box-shadow: 0px 1px 2px #0000000d;
+  transition: all 0.2s ease;
 }
 
 .detail-btn:hover {
   background: #f5f5f5;
 }
 
-.contact-btn:hover {
-  opacity: 0.8;
-}
+.contact-btn:hover { background: var(--hot-pink, #E56B75); }
 
 /* モーダル */
 .modal-overlay {
