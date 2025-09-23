@@ -41,7 +41,11 @@ class EncryptMembersBackfillSeeder extends Seeder
                 $updates = [];
                 foreach ($columns as $col) {
                     $val = $row->$col;
-                    if ($val === null || $val === '') continue;
+                    if (is_string($val) && trim($val) === '') {
+                        $updates[$col] = null; // 空文字はnullへ正規化（復号エラー回避）
+                        continue;
+                    }
+                    if ($val === null) continue;
                     $needsEncrypt = true;
                     try {
                         // if decrypt succeeds, it's already encrypted

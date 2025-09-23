@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Normalize and backfill encrypted member fields early to prevent decrypt errors
+            EncryptMembersBackfillSeeder::class,
             AdminSeeder::class,
             AdminUserSeeder::class,
             EconomicStatisticsSeeder::class,
