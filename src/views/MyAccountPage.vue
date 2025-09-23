@@ -388,11 +388,13 @@
             </button>
           </div>
           
+          <!-- アカウント削除セクションを非表示に
           <div class="settings-card danger-zone">
             <h3>アカウントの削除</h3>
             <p>アカウントを削除すると、すべてのデータが失われます。この操作は取り消せません。</p>
             <button class="delete-button">アカウントを削除</button>
           </div>
+          -->
         </div>
       </div>
     </div>
