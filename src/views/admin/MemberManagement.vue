@@ -331,6 +331,18 @@
                   <input v-model="editForm.industry" type="text" class="form-input" />
                 </template>
               </div>
+              <div class="form-group">
+                <label>地域</label>
+                <template v-if="regionOptions && regionOptions.length">
+                  <select v-model="editForm.region" class="form-select">
+                    <option value="">未選択</option>
+                    <option v-for="r in regionOptions" :key="r.value || r" :value="r.value || r">{{ r.label || r }}</option>
+                  </select>
+                </template>
+                <template v-else>
+                  <input v-model="editForm.region" type="text" class="form-input" />
+                </template>
+              </div>
             </div>
 
             <div class="form-group">
@@ -538,6 +550,18 @@
                   <input v-model="addForm.industry" type="text" class="form-input" />
                 </template>
               </div>
+              <div class="form-group">
+                <label>地域</label>
+                <template v-if="regionOptions && regionOptions.length">
+                  <select v-model="addForm.region" class="form-select">
+                    <option value="">未選択</option>
+                    <option v-for="r in regionOptions" :key="r.value || r" :value="r.value || r">{{ r.label || r }}</option>
+                  </select>
+                </template>
+                <template v-else>
+                  <input v-model="addForm.region" type="text" class="form-input" />
+                </template>
+              </div>
             </div>
 
             <div class="form-group">
@@ -619,6 +643,7 @@ export default {
         // department: '', // 編集不可
         capital: null,
         industry: '',
+        region: '',
         password: '',
         password_confirmation: '',
         membership_type: 'free',
@@ -631,7 +656,8 @@ export default {
       },
       adding: false,
       // masters
-      industryOptions: []
+      industryOptions: [],
+      regionOptions: []
     }
   },
   computed: {
@@ -651,6 +677,7 @@ export default {
     // 常にサーバから復号済みの最新を取得
     this.loadMembers()
     this.loadMasters()
+    this.loadRegions()
   },
   methods: {
     async loadMasters() {
@@ -661,6 +688,16 @@ export default {
         }
       } catch (e) {
         console.warn('Failed to load masters', e)
+      }
+    },
+    async loadRegions() {
+      try {
+        const res = await apiClient.getRegions()
+        const list = res?.data?.regions || res?.data || res || []
+        this.regionOptions = list.map(x => ({ label: x.name || x, value: x.code || x })).filter(r => r.value)
+      } catch (e) {
+        console.warn('Failed to load regions', e)
+        this.regionOptions = []
       }
     },
     async loadMembers(page = 1) {
@@ -785,6 +822,7 @@ export default {
           // department: m.department, // 編集不可
           capital: m.capital,
           industry: m.industry,
+          region: m.region,
           concerns: m.concerns,
           notes: m.notes,
           membership_type: m.membership_type,
@@ -806,6 +844,7 @@ export default {
           position: m.position,
           capital: m.capital,
           industry: m.industry,
+          region: m.region,
           concerns: m.concerns,
           notes: m.notes,
           membership_type: m.membership_type,

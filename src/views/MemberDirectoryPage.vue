@@ -468,24 +468,45 @@ export default {
 
     async exportCSV() {
       this.exporting = true
-      
       try {
-        const params = {}
-        if (this.searchQuery) params.search = this.searchQuery
-        if (this.membershipFilter) params.membership_type = this.membershipFilter
-        if (this.regionFilter) params.region = this.regionFilter
-        if (this.industryFilter) params.industry = this.industryFilter
-        if (this.showFavoritesOnly) params.favorites_only = 1
+        // 画面に表示中（フィルタ適用後）のメンバーをCSV化
+        const header = [
+          'ID','会社名','代表者名','メール','電話','会員種別','地域','業種','ステータス','登録日'
+        ]
+        const rows = this.members.map(m => [
+          m.id,
+          m.company_name || '',
+          m.representative_name || '',
+          m.email || '',
+          m.phone || '',
+          m.membership_type || '',
+          m.region || '',
+          m.industry || '',
+          m.status || '',
+          this.formatDate(m.created_at)
+        ])
 
-        const response = await apiClient.get('/api/member/directory/export/csv', { params, responseType: 'blob' })
+        const toCsv = (arr) => arr
+          .map(row => row
+            .map(val => {
+              const s = String(val ?? '')
+              if (/[",\n]/.test(s)) {
+                return '"' + s.replace(/"/g, '""') + '"'
+              }
+              return s
+            })
+            .join(','))
+          .join('\n')
 
-        // CSVファイルをダウンロード
-        const blob = response.data instanceof Blob ? response.data : new Blob([response.data || ''], { type: 'text/csv' })
+        const csv = toCsv([header, ...rows])
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
         const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `会員名簿_${new Date().toISOString().slice(0, 10)}.csv`
-        link.click()
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `会員名簿_${new Date().toISOString().slice(0,10)}.csv`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
         window.URL.revokeObjectURL(url)
       } catch (error) {
         console.error('CSVエクスポートに失敗:', error)

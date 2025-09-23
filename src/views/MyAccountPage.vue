@@ -255,7 +255,8 @@
           
           <div v-if="!editMode" class="profile-actions">
             <button @click="startEdit" class="edit-button">{{ cms?.labels?.buttons?.editProfile || 'プロフィールを編集' }}</button>
-            <button @click="showPasswordForm = true" class="password-button">{{ cms?.labels?.buttons?.changePassword || 'パスワード変更' }}</button>
+            <!-- パスワード変更ボタンは要件により非表示 -->
+            <button v-if="false" @click="showPasswordForm = true" class="password-button">{{ cms?.labels?.buttons?.changePassword || 'パスワード変更' }}</button>
           </div>
         </div>
         
