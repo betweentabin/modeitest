@@ -238,13 +238,14 @@
       </div>
     </div>
 
-    <FooterComplete />
+    <Footer v-bind="frame132131753022Props" />
   </div>
 </template>
 
 <script>
 import Navigation from '@/components/Navigation.vue'
-import FooterComplete from '@/components/FooterComplete.vue'
+import Footer from '@/components/Footer.vue'
+import { frame132131753022Data } from '@/data.js'
 import { useMemberAuth } from '@/composables/useMemberAuth'
 import apiClient from '@/services/apiClient.js'
 import { getMembershipOptions, getMembershipLabel, canAccess } from '@/utils/membershipTypes'
@@ -253,10 +254,11 @@ export default {
   name: 'MemberDirectoryPage',
   components: {
     Navigation,
-    FooterComplete
+    Footer
   },
   data() {
     return {
+      frame132131753022Props: frame132131753022Data,
       memberInfo: null,
       hasDirectoryAccess: false,
       loading: false,
