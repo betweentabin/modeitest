@@ -82,7 +82,7 @@ class MemberController extends Controller
         $validator = Validator::make($request->all(), [
             'company_name' => 'required|string|max:255',
             'representative_name' => 'required|string|max:100',
-            'email' => 'required|string|email|max:255|unique:members',
+            'email' => 'required|string|email|max:255|unique:members,email_index',
             'password' => 'required|string|min:8|confirmed',
             // 基本プロフィール
             'phone' => 'nullable|string|max:20',
@@ -127,6 +127,7 @@ class MemberController extends Controller
             'company_name' => $request->company_name,
             'representative_name' => $request->representative_name,
             'email' => $request->email,
+            'email_index' => mb_strtolower(trim($request->email)),
             // Hashing is handled by Member model mutator
             'password' => $request->password,
             'phone' => $request->phone,
@@ -211,6 +212,10 @@ class MemberController extends Controller
             'joined_date',
             'expiry_date'
         ]);
+
+        if ($request->filled('email')) {
+            $updateData['email_index'] = mb_strtolower(trim($request->email));
+        }
 
         if ($request->password) {
             // Hashing is handled by Member model mutator

@@ -20,7 +20,7 @@ class MemberAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'company_name' => 'required|string|max:255',
             'representative_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:members',
+            'email' => 'required|string|email|max:255|unique:members,email_index',
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'postal_code' => 'nullable|string|max:10',
@@ -49,6 +49,7 @@ class MemberAuthController extends Controller
                 'company_name' => $request->company_name,
                 'representative_name' => $request->representative_name,
                 'email' => $request->email,
+                'email_index' => mb_strtolower(trim($request->email)),
                 'password' => $request->password, // Memberモデルでハッシュ化
                 'phone' => $request->phone,
                 'postal_code' => $request->postal_code,
@@ -107,7 +108,7 @@ class MemberAuthController extends Controller
         }
 
         try {
-            $member = Member::where('email', $request->email)->first();
+            $member = Member::where('email_index', mb_strtolower(trim($request->email)))->first();
 
             if (!$member || !Hash::check($request->password, $member->password)) {
                 return response()->json([

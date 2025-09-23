@@ -13,6 +13,7 @@ class Member extends Authenticatable
 
     protected $fillable = [
         'email',
+        'email_index',
         'password',
         'company_name',
         'representative_name',
@@ -42,6 +43,8 @@ class Member extends Authenticatable
     ];
 
     protected $casts = [
+        'email' => 'encrypted',
+        'representative_name' => 'encrypted',
         'joined_date' => 'date',
         'started_at' => 'date',
         'expiry_date' => 'date',
@@ -58,6 +61,27 @@ class Member extends Authenticatable
         'concerns' => 'encrypted',
         'notes' => 'encrypted',
     ];
+
+    // Keep a searchable/login index for email in plaintext (lowercased)
+    public function setEmailAttribute($value)
+    {
+        // Ensure encrypted at write time (avoid storing plaintext when using mutator)
+        if ($value === null || $value === '') {
+            $this->attributes['email'] = null;
+            $this->attributes['email_index'] = null;
+            return;
+        }
+        $raw = (string)$value;
+        try {
+            // If already encrypted (e.g., backfill), keep as-is
+            \Illuminate\Support\Facades\Crypt::decryptString($raw);
+            $this->attributes['email'] = $raw;
+        } catch (\Throwable $e) {
+            // Encrypt plaintext
+            $this->attributes['email'] = \Illuminate\Support\Facades\Crypt::encryptString($raw);
+        }
+        $this->attributes['email_index'] = mb_strtolower(trim($raw));
+    }
 
     // リレーションシップ
     public function activityLogs()

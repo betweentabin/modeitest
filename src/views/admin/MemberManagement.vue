@@ -648,16 +648,7 @@ export default {
     }
   },
   mounted() {
-    // 即表示: 短期キャッシュを使用（3分）
-    try {
-      const key = `admin:members:list:p${this.pagination.current_page}`
-      const cached = apiCache.get(key, 180)
-      if (cached && Array.isArray(cached.data)) {
-        this.members = cached.data
-        if (cached.pagination) this.pagination = cached.pagination
-        this.loading = false
-      }
-    } catch(e) { /* noop */ }
+    // 常にサーバから復号済みの最新を取得
     this.loadMembers()
     this.loadMasters()
   },
@@ -711,6 +702,16 @@ export default {
         console.error('Failed to load members:', error)
       } finally {
         this.loading = false
+      }
+    },
+    async viewDetails(member) {
+      try {
+        const res = await apiClient.getAdminMember(member.id, { timeout: 3500 })
+        const m = (res && res.success) ? res.data : member
+        this.viewingMember = { ...m }
+      } catch (e) {
+        console.warn('failed to fetch member detail, fallback to list item', e)
+        this.viewingMember = { ...member }
       }
     },
     async exportCsv() {
@@ -768,25 +769,51 @@ export default {
       this.loadMembers(this.pagination.current_page)
     },
     
-    editMember(member) {
-      this.editingMember = { ...member }
-      this.editForm = {
-        company_name: member.company_name,
-        representative_name: member.representative_name,
-        email: member.email,
-        phone: member.phone,
-        postal_code: member.postal_code,
-        position: member.position,
-        // department: member.department, // 編集不可
-        capital: member.capital,
-        industry: member.industry,
-        concerns: member.concerns,
-        notes: member.notes,
-        membership_type: member.membership_type,
-        status: member.status,
-        membership_expires_at: member.membership_expires_at ? 
-          new Date(member.membership_expires_at).toISOString().slice(0, 16) : '',
-        is_active: member.is_active
+    async editMember(member) {
+      try {
+        // 代表者名・メールなど暗号化カラムは必ずサーバから最新を取得して復号済みを使う
+        const res = await apiClient.getAdminMember(member.id, { timeout: 3500 })
+        const m = (res && res.success) ? res.data : member
+        this.editingMember = { ...m }
+        this.editForm = {
+          company_name: m.company_name,
+          representative_name: m.representative_name,
+          email: m.email,
+          phone: m.phone,
+          postal_code: m.postal_code,
+          position: m.position,
+          // department: m.department, // 編集不可
+          capital: m.capital,
+          industry: m.industry,
+          concerns: m.concerns,
+          notes: m.notes,
+          membership_type: m.membership_type,
+          status: m.status,
+          membership_expires_at: m.membership_expires_at ? 
+            new Date(m.membership_expires_at).toISOString().slice(0, 16) : '',
+          is_active: m.is_active
+        }
+      } catch (e) {
+        console.warn('failed to fetch member detail, fallback to list item', e)
+        const m = member
+        this.editingMember = { ...m }
+        this.editForm = {
+          company_name: m.company_name,
+          representative_name: m.representative_name,
+          email: m.email,
+          phone: m.phone,
+          postal_code: m.postal_code,
+          position: m.position,
+          capital: m.capital,
+          industry: m.industry,
+          concerns: m.concerns,
+          notes: m.notes,
+          membership_type: m.membership_type,
+          status: m.status,
+          membership_expires_at: m.membership_expires_at ? 
+            new Date(m.membership_expires_at).toISOString().slice(0, 16) : '',
+          is_active: m.is_active
+        }
       }
     },
     

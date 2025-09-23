@@ -14,6 +14,9 @@ class EncryptMembersBackfillSeeder extends Seeder
         if (!Schema::hasTable('members')) return;
 
         $columns = array_filter([
+            // Newly added sensitive fields
+            Schema::hasColumn('members', 'email') ? 'email' : null,
+            Schema::hasColumn('members', 'representative_name') ? 'representative_name' : null,
             Schema::hasColumn('members', 'phone') ? 'phone' : null,
             Schema::hasColumn('members', 'postal_code') ? 'postal_code' : null,
             Schema::hasColumn('members', 'position') ? 'position' : null,
@@ -51,6 +54,17 @@ class EncryptMembersBackfillSeeder extends Seeder
                         $updates[$col] = Crypt::encryptString((string) $val);
                     }
                 }
+                // Ensure email_index is populated if column exists and email present
+                if (Schema::hasColumn('members', 'email_index')) {
+                    $rawEmail = $row->email;
+                    try {
+                        // If encrypted, decrypt to compute index
+                        $rawEmail = $rawEmail ? Crypt::decryptString($rawEmail) : $rawEmail;
+                    } catch (\Throwable $e) {}
+                    if (!empty($rawEmail)) {
+                        $updates['email_index'] = mb_strtolower(trim((string)$rawEmail));
+                    }
+                }
                 if (!empty($updates)) {
                     DB::table('members')->where('id', $row->id)->update($updates);
                 }
@@ -59,4 +73,3 @@ class EncryptMembersBackfillSeeder extends Seeder
         } while ($rows->count() > 0);
     }
 }
-

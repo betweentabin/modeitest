@@ -95,7 +95,7 @@ class MemberProfileController extends Controller
                     'required',
                     'email',
                     'max:255',
-                    Rule::unique('members')->ignore($member->id),
+                    Rule::unique('members', 'email_index')->ignore($member->id),
                 ],
             ], [
                 'company_name.required' => '会社名は必須です',
@@ -106,6 +106,10 @@ class MemberProfileController extends Controller
             ]);
 
             // プロフィール更新
+            // email_index を同時更新
+            if (!empty($validated['email'])) {
+                $validated['email_index'] = mb_strtolower(trim($validated['email']));
+            }
             $member->update($validated);
 
             // 更新後のデータを返却

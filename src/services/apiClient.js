@@ -270,6 +270,10 @@ class ApiClient {
     return this.post('/api/admin/members', data)
   }
 
+  async getAdminMember(id, options = {}) {
+    return this.get(`/api/admin/members/${id}`, options)
+  }
+
   async updateAdminMember(id, data) {
     return this.put(`/api/admin/members/${id}`, data)
   }
